@@ -1,5 +1,3 @@
-#How to use GWT Test Utils
-
 = With Maven =
 
 == Pom configuration ==
