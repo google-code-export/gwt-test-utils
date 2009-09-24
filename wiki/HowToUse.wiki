@@ -1,0 +1,11 @@
+#How to use GWT Test Utils
+
+= With Maven =
+
+== Pom configuration ==
+
+== Under Maven build ==
+
+== Under eclipse, on a maven project ==
+
+= Without Maven =
