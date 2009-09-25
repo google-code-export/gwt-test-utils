@@ -8,10 +8,10 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.octo.gwt.test17.test.AbstractGWTTest;
 
-public class FlexTabPanel extends AbstractGWTTest {
+public class FlexTableTest extends AbstractGWTTest {
 
 	@Test
-	public void checkFlexTab() {
+	public void checkFlexTable() {
 
 		// Tables have no explicit size -- they resize automatically on demand.
 		FlexTable t = new FlexTable();

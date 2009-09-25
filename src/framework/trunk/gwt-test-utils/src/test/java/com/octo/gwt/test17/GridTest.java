@@ -26,8 +26,6 @@ public class GridTest extends AbstractGWTTest {
 	    g.setWidget(2, 2, b);
 	    
 	    Assert.assertEquals(b, g.getWidget(2, 2));
-	  
-
 	}
 
 }
