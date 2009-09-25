@@ -1,0 +1,38 @@
+package com.octo.gwt.test17;
+
+import org.junit.Assert;
+import org.junit.Test;
+
+import com.google.gwt.user.client.ui.ListBox;
+import com.octo.gwt.test17.test.AbstractGWTTest;
+
+public class ListBoxTest extends AbstractGWTTest {
+	
+	@Test
+	public void checkListBox() {
+		ListBox listBox = getListBox();
+		
+		Assert.assertEquals(2, listBox.getVisibleItemCount());
+		Assert.assertEquals(2, listBox.getItemCount());
+		Assert.assertEquals("item 0", listBox.getItemText(0));
+		Assert.assertEquals("item 1", listBox.getItemText(1));
+	}
+	
+	@Test
+	public void checkSelected() {
+		ListBox listBox = getListBox();
+		
+		listBox.setSelectedIndex(1);
+		Assert.assertEquals("item 1", listBox.getItemText(listBox.getSelectedIndex()));
+	}
+	
+	private ListBox getListBox() {
+		ListBox listBox = new ListBox(false);
+		listBox.setVisibleItemCount(2);
+		listBox.addItem("item 0");
+		listBox.addItem("item 1");
+		
+		return listBox;
+	}
+
+}
