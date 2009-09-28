@@ -25,17 +25,7 @@ public class PatchMainGWT {
 	public static GwtCreateHandler gwtCreateHandler = null;
 	
 	public static Hashtable<Class<?>, Object> createClass = new Hashtable<Class<?>, Object>();
-
-
-	//	private static Class<?> clientDomImpl;
-	//	
-	//	static {
-	//		try {
-	//			clientDomImpl = Class.forName("com.google.gwt.dom.client.DOMImpl");
-	//		} catch (Throwable e) {
-	//			throw new RuntimeException("Unable to find class", e);
-	//		}
-	//	}
+	
 
 	public static Object create(Class<?> classLiteral) {
 		if (classLiteral == DebugIdImpl.class) {

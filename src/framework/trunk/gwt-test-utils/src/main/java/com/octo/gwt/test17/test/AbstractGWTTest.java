@@ -32,5 +32,17 @@ public abstract class AbstractGWTTest {
 	protected void click(MenuBar parent, MenuItem clickedItem) {
 		parent.onBrowserEvent(new OverrideEvent(Event.ONCLICK, clickedItem.getElement()));
 	}
+	
+	protected void blur(Widget target) {
+		target.onBrowserEvent(new OverrideEvent(Event.ONBLUR));
+	}
+	
+	protected void focus(Widget target) {
+		target.onBrowserEvent(new OverrideEvent(Event.ONFOCUS));
+	}
+	
+	protected void change(Widget target) {
+		target.onBrowserEvent(new OverrideEvent(Event.ONCHANGE));
+	}
 
 }

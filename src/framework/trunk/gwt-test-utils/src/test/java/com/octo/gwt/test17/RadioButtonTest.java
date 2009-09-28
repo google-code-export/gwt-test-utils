@@ -21,7 +21,6 @@ public class RadioButtonTest extends AbstractGWTTest {
 	    Assert.assertEquals(false, rb0.getValue());
 	    Assert.assertEquals(true, rb1.getValue());
 	    Assert.assertEquals(false, rb2.getValue());
-
 	}
 
 }

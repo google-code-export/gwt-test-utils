@@ -43,11 +43,6 @@ public class PatchDOMImpl {
 		return l;
 	}
 	
-//	public static String getInnerHTML(Element elem) {
-//		UserElement e = UserElement.overrideCast(elem);
-//		return e.getInnerHTML();
-//	}
-	
 	public static String eventGetType(NativeEvent nativeEvent) {
 		OverrideEvent event = OverrideEvent.overrideCast(nativeEvent);
 		switch (event.getOverrideType()) {
@@ -55,29 +50,19 @@ public class PatchDOMImpl {
 			return "blur";
 		case Event.ONCLICK:
 			return "click";
+		case Event.ONFOCUS:
+			return "focus";
 			default :
 				throw new RuntimeException("Cannot get the String type of event with code [" 
 						+ event.getOverrideKeyCode() + "]");
 		}
 	}
 	
-//	public static int eventGetButton(NativeEvent nativeEvent) {
-//		OverrideEvent event = OverrideEvent.overrideCast(nativeEvent);
-//		
-//		return event.getOverrideButton();
-//	}
-	
 	public static boolean eventGetAltKey(NativeEvent nativeEvent) {
 		OverrideEvent event = OverrideEvent.overrideCast(nativeEvent);
 		
 		return event.isOverrideAltKey();
 	}
-	
-//	public static EventTarget eventGetRelatedTarget(NativeEvent nativeEvent) {
-//		OverrideEvent event = OverrideEvent.overrideCast(nativeEvent);
-//		return (EventTarget) event.getOverrideTargetElement();
-//		
-//	}
 
 	public static int eventGetTypeInt(String type) {
 		if (type.equals("blur")) {
@@ -123,11 +108,6 @@ public class PatchDOMImpl {
 		throw new RuntimeException("Unable to convert DOM Event \"" 
 				+ type + "\" to an integer");
 	}
-	
-//	public static int eventGetTypeInt(Event event) {
-//		OverrideEvent e = OverrideEvent.overrideCast(event);
-//		return e.getOverrideType();
-//	}
 
 	public static Element createElement(String tag) {
 				if ("option".equals(tag)) {
