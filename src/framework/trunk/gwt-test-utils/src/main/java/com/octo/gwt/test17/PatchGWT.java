@@ -6,6 +6,8 @@ import java.util.List;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.InputElement;
+import com.google.gwt.dom.client.LabelElement;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.OptionElement;
@@ -39,6 +41,7 @@ import com.octo.gwt.test17.internal.PatchElementMapperImpl;
 import com.octo.gwt.test17.internal.PatchFlexTable;
 import com.octo.gwt.test17.internal.PatchGrid;
 import com.octo.gwt.test17.internal.PatchHTMLTable;
+import com.octo.gwt.test17.internal.PatchInputElement;
 import com.octo.gwt.test17.internal.PatchListBox;
 import com.octo.gwt.test17.internal.PatchMainGWT;
 import com.octo.gwt.test17.internal.PatchNode;
@@ -317,6 +320,18 @@ public class PatchGWT {
 
 		PatchUtils.applyPatches(Grid.class, new Patch[] { 
 			new Patch("addRows", staticCall(PatchGrid.class, "addRows", "$1, $2, $3")) 
+		});
+		
+		PatchUtils.applyPatches(InputElement.class, new Patch[] {
+			new Patch("as", staticCall(PatchInputElement.class, "as", "$1")), 
+			new Patch("setTabIndex", castThisAndCall(OverrideInputElement.class, "setOverrideTabIndex", "$1")),
+			new Patch("isDefaultChecked", castThisAndCall(OverrideInputElement.class, "isOverrideDefaultChecked")),
+			new Patch("setDefaultChecked", castThisAndCall(OverrideInputElement.class, "setOverrideDefaultChecked", "$1")),
+			new Patch("setChecked", castThisAndCall(OverrideInputElement.class, "setOverrideChecked", "$1")),
+		});
+		
+		PatchUtils.applyPatches(LabelElement.class, new Patch[] {
+			new Patch("setHtmlFor", ""),
 		});
 	}
 

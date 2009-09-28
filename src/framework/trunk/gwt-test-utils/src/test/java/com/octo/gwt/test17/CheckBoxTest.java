@@ -8,22 +8,15 @@ import com.octo.gwt.test17.test.AbstractGWTTest;
 
 public class CheckBoxTest extends AbstractGWTTest {
 
-	//@Test
-	public void checkCheckBox() {
+	@Test
+	public void checkCheckBoxClick() {
 		// Make a new check box, and select it by default.
-		CheckBox cb = new CheckBox("Foo");
+		final CheckBox cb = new CheckBox("Foo");
 		cb.setValue(false);
-
-//		// Hook up a handler to find out when it's clicked.
-//		cb.addClickHandler(new ClickHandler() {
-//			public void onClick(ClickEvent event) {
-//				boolean checked = ((CheckBox) event.getSource()).getValue();
-//			}
-//		});
-		
 		
 		Assert.assertEquals(false, cb.getValue());
 		
+		//we must use the parent click method to simule the click without registering an handler
 		click(cb);
 		Assert.assertEquals(true, cb.getValue());
 		

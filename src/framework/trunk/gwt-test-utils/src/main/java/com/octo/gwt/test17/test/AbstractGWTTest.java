@@ -3,6 +3,7 @@ package com.octo.gwt.test17.test;
 import org.junit.Before;
 
 import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.Widget;
@@ -18,11 +19,16 @@ public abstract class AbstractGWTTest {
 		// reinit GWT
 		PatchGWT.reset();
 	}
-	
+
 	protected void click(Widget target) {
+		if (target instanceof CheckBox) {
+			CheckBox checkBox = (CheckBox) target;
+			checkBox.setValue(!checkBox.getValue());
+		} 
+
 		target.onBrowserEvent(new OverrideEvent(Event.ONCLICK));
 	}
-	
+
 	protected void click(MenuBar parent, MenuItem clickedItem) {
 		parent.onBrowserEvent(new OverrideEvent(Event.ONCLICK, clickedItem.getElement()));
 	}

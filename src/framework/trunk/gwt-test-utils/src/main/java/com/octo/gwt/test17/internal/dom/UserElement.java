@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import com.google.gwt.dom.client.InputElement;
 import com.google.gwt.user.client.Element;
+import com.octo.gwt.test17.overrides.OverrideInputElement;
 import com.octo.gwt.test17.overrides.OverrideStyle;
 
 public class UserElement extends Element {
@@ -101,6 +103,14 @@ public class UserElement extends Element {
 		if (o instanceof UserElement) {
 			UserElement e = (UserElement) o;
 			return e;
+		}
+		
+		if (o instanceof OverrideInputElement) {
+			return new UserElement((OverrideInputElement) o);
+		}
+		
+		if (o instanceof com.google.gwt.dom.client.Element) {
+			return new UserElement((com.google.gwt.dom.client.Element) o);
 		}
 		throw new RuntimeException("Unable to cast class " + o.getClass().getCanonicalName());
 	}
