@@ -10,8 +10,8 @@ public class CheckBoxTest extends AbstractGWTTest {
 
 	@Test
 	public void checkCheckBoxClick() {
-		// Make a new check box, and select it by default.
-		final CheckBox cb = new CheckBox("Foo");
+		// Make a new check box
+		final CheckBox cb = new CheckBox();
 		cb.setValue(false);
 		
 		Assert.assertEquals(false, cb.getValue());
@@ -19,10 +19,6 @@ public class CheckBoxTest extends AbstractGWTTest {
 		//we must use the parent click method to simule the click without registering an handler
 		click(cb);
 		Assert.assertEquals(true, cb.getValue());
-		
-		
-
-
 	}
 
 }
