@@ -47,6 +47,7 @@ import com.octo.gwt.test17.internal.PatchUIObject;
 import com.octo.gwt.test17.internal.dom.UserElement;
 import com.octo.gwt.test17.overrides.OverrideEvent;
 import com.octo.gwt.test17.overrides.OverrideHistory;
+import com.octo.gwt.test17.overrides.OverrideInputElement;
 import com.octo.gwt.test17.overrides.OverrideOptionElement;
 import com.octo.gwt.test17.overrides.OverrideSelectElement;
 import com.octo.gwt.test17.overrides.OverrideStyle;
@@ -155,6 +156,7 @@ public class PatchGWT {
 
 		PatchUtils.applyPatches(getClass(PatchConstants.CLIENT_DOM_IMPL_CLASS_NAME), new Patch[] {
 			new Patch("createElement", staticCall(PatchDOMImpl.class, "createElement", "$2")),
+			new Patch("createInputElement", "new " + OverrideInputElement.class.getCanonicalName() + "($1)"),
 			new Patch("eventGetType", staticCall(PatchDOMImpl.class, "eventGetType", "$1")),
 			new Patch("getParentElement", castAndCall(UserElement.class, "getOverrideParent")),
 			new Patch("eventGetButton", castAndCall(OverrideEvent.class, "getOverrideButton")),
@@ -316,8 +318,6 @@ public class PatchGWT {
 		PatchUtils.applyPatches(Grid.class, new Patch[] { 
 			new Patch("addRows", staticCall(PatchGrid.class, "addRows", "$1, $2, $3")) 
 		});
-
-
 	}
 
 	private static String staticCall(Class<?> clazz, String methodName, String args) {
