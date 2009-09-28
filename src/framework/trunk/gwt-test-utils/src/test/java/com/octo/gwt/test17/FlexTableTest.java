@@ -1,14 +1,20 @@
 package com.octo.gwt.test17;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.junit.Test;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.Widget;
 import com.octo.gwt.test17.test.AbstractGWTTest;
 
+@SuppressWarnings("deprecation")
 public class FlexTableTest extends AbstractGWTTest {
+	
+	private boolean clicked = false;
 
 	@Test
 	public void checkFlexTable() {
@@ -32,7 +38,54 @@ public class FlexTableTest extends AbstractGWTTest {
 		Assert.assertEquals(3, t.getRowCount());
 		Assert.assertEquals("bottom-right corner", t.getText(2, 2));
 		Assert.assertEquals(b, t.getWidget(1, 0));
-
+	}
+	
+	@Test
+	public void checkClickListenerNestedWidget() {
+		
+		clicked = false;
+		FlexTable t = new FlexTable();
+		
+		Button b = new Button("Wide Button");
+		b.addClickListener(new ClickListener() {
+			
+			public void onClick(Widget sender) {
+				clicked = !clicked;
+				
+			}
+		});
+		//add the button
+		t.setWidget(0, 0, b);
+		
+		Assert.assertEquals(false, clicked);
+		//simule the click
+		click(t.getWidget(0, 0));
+		
+		Assert.assertEquals(true, clicked);	
+	}
+	
+	@Test
+	public void checkClickHandlerNestedWidget() {
+		
+		clicked = false;
+		FlexTable t = new FlexTable();
+		
+		Button b = new Button("Wide Button");
+		b.addClickHandler(new ClickHandler() {
+			
+			public void onClick(ClickEvent event) {
+				clicked = !clicked;
+				
+			}
+		});
+		//add the button
+		t.setWidget(0, 0, b);
+		
+		Assert.assertEquals(false, clicked);
+		//simule the click
+		click(t.getWidget(0, 0));
+		
+		Assert.assertEquals(true, clicked);
 	}
 
 }
