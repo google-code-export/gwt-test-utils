@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import com.google.gwt.dom.client.InputElement;
 import com.google.gwt.user.client.Element;
 import com.octo.gwt.test17.overrides.OverrideInputElement;
 import com.octo.gwt.test17.overrides.OverrideStyle;
