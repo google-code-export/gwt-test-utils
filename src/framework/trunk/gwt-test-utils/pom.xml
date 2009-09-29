@@ -11,6 +11,10 @@
 		<version>0.1-SNAPSHOT</version>
 	</parent>
 
+	<scm>
+		<developerConnection>scm:svn:https://gwt-test-utils.googlecode.com/svn/src/framework/trunk</developerConnection>
+	</scm>
+	
 	<properties>
 		<java6_home>${env.JAVA6_HOME}</java6_home>
 	</properties>
