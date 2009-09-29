@@ -7,11 +7,11 @@
 
 	<servlet>
 		<servlet-name>first</servlet-name>
-		<servlet-class>com.octo.gwt.server.FirstServiceImpl</servlet-class>
+		<servlet-class>com.octo.gwt.test17.demo.demo1.server.FirstServiceImpl</servlet-class>
 	</servlet>
 	
 	<servlet-mapping>
 		<servlet-name>first</servlet-name>
-		<url-pattern>/com.octo.gwt.FirstModule/firstService</url-pattern>
+		<url-pattern>/com.octo.gwt.test17.demo.demo1.FirstModule/firstService</url-pattern>
 	</servlet-mapping>
 </web-app>

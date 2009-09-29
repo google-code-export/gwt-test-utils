@@ -1,18 +1,18 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	
+
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.octo.gwt.test17.demo</groupId>
 	<artifactId>demo1</artifactId>
 	<packaging>war</packaging>
 	<version>1.0</version>
-	<name>GWT 1.7 Tests Utils Demo Application</name>
-	
+	<name>GWT 1.7 Tests Utils Demo Application 1</name>
+
 	<properties>
 		<gwt.version>1.7.0</gwt.version>
-		<gwt.test.utils.version>0.1-SNAPSHOT</gwt.test.utils.version>
+		<gwt.test.utils.version>0.1</gwt.test.utils.version>
 	</properties>
-	
+
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
@@ -44,6 +44,13 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+
+	<repositories>
+		<repository>
+			<id>gwt-test-utils-repo</id>
+			<url>http://gwt-test-utils.googlecode.com/svn/maven/</url>
+		</repository>
+	</repositories>
 
 	<build>
 		<plugins>
