@@ -1,0 +1,14 @@
+<module>
+	<inherits name='com.google.gwt.user.User' />
+	<inherits name="com.google.gwt.i18n.I18N" />
+	<inherits name='com.google.gwt.user.theme.standard.Standard' />
+
+	<entry-point class='com.octo.gwt.client.FirstModule' />
+	
+	<stylesheet src='css/style.css' />
+
+	<!-- Client sources -->
+	<source path="beans" />
+	<source path="client" />
+
+</module>
