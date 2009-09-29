@@ -11,6 +11,10 @@
     <gwt.version>1.7.0</gwt.version>
   </properties>
   
+  <scm>
+	<developerConnection>scm:svn:https://gwt-test-utils.googlecode.com/svn/src/framework/trunk</developerConnection>
+  </scm>
+
   <modules>
     <module>gwt-test-utils</module>
     <module>gwt-test-utils-bootstrap</module>
