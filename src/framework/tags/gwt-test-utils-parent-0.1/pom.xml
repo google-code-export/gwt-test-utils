@@ -14,6 +14,13 @@
 		<developerConnection>scm:svn:https://gwt-test-utils.googlecode.com/svn/src/framework/tags/gwt-test-utils-parent-0.1</developerConnection>
 	</scm>
 
+	<distributionManagement>
+		<repository>
+			<id>repo</id>
+			<url>file:///tmp/repo</url>
+		</repository>
+	</distributionManagement>
+	
 	<modules>
 		<module>gwt-test-utils</module>
 		<module>gwt-test-utils-bootstrap</module>
