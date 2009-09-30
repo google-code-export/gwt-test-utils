@@ -67,7 +67,7 @@ So we have to customise Maven test plugin to add some options :
 </plugin>
 }}}
 
- * *{{{<jvm>}}}* : You have to ensure that unit tests will be run in a JVM 6 or higher , since JVM 5 is not able to modify native method on the fly. This option would not be required if the project is already build with a JVM 6 or higher. 
+ * *{{{<jvm>}}}* : You have to ensure that unit tests will be run in a JVM 6 or higher , since JVM 5 is not able to modify native methods on the fly. This option would not be required if the project is already build with a JVM 6 or higher. 
  * *{{{<argLine>}}}* : The JVM option required to execute the agent before unit tests.
 
 
@@ -80,3 +80,5 @@ Then, just open a new JUnit Run configuration, and specify in the "" text area t
 = Without Maven =
 
 To run your GWT unit tests without Maven, just add the gwt-test-utils-x.jar to the classpath and launch the tests with the argument _-javaagent:path_to_bootstrap.jar_.
+
+The needed jars are available through [http://gwt-test-utils.googlecode.com/svn/maven/ gwt-test-utils repository].
