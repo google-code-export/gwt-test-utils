@@ -27,6 +27,7 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTMLTable;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.UIObject;
@@ -41,6 +42,7 @@ import com.octo.gwt.test17.internal.PatchElementMapperImpl;
 import com.octo.gwt.test17.internal.PatchFlexTable;
 import com.octo.gwt.test17.internal.PatchGrid;
 import com.octo.gwt.test17.internal.PatchHTMLTable;
+import com.octo.gwt.test17.internal.PatchImage;
 import com.octo.gwt.test17.internal.PatchInputElement;
 import com.octo.gwt.test17.internal.PatchListBox;
 import com.octo.gwt.test17.internal.PatchMainGWT;
@@ -130,7 +132,9 @@ public class PatchGWT {
 			new Patch("setVisible", staticCall(PatchUIObject.class, "setPropertyOnElement", "$1, \"visible\", $2")).setNative(),
 			new Patch("isVisible", staticCall(PatchUIObject.class, "getPropertyOnElementBoolean", "$1, \"visible\"")).setNative(),
 			new Patch("getStyleName", staticCall(PatchUIObject.class, "getStyleName", "$1")).setStatic(),
-			//						new Patch("getElement", staticCall("cast", "element")), new Patch("getAbsoluteLeft", "0"), new Patch("getAbsoluteTop", "0"),
+			new Patch("getElement", staticCall(PatchUIObject.class, "cast", "element")), 
+//			new Patch("getAbsoluteLeft", "0"), 
+//			new Patch("getAbsoluteTop", "0"),
 			new Patch("extractLengthValue", "1.0"),  	
 		});
 
@@ -154,7 +158,7 @@ public class PatchGWT {
 		PatchUtils.applyPatches(Document.class, new Patch[] {
 			new Patch("get", staticCall(PatchDocument.class, "get")),
 			new Patch("getBody", staticCall(PatchDocument.class, "getBody")),
-			//new Patch("createImageElement", staticCall(PatchDocument.class, "createImageElement"))
+			new Patch("createImageElement", staticCall(PatchDocument.class, "createImageElement"))
 		});
 
 		PatchUtils.applyPatches(getClass(PatchConstants.CLIENT_DOM_IMPL_CLASS_NAME), new Patch[] {
@@ -169,6 +173,7 @@ public class PatchGWT {
 			new Patch("eventGetAltKey", castAndCall(OverrideEvent.class, "isOverrideAltKey")),
 			new Patch("selectAdd", staticCall(PatchDOMImpl.class, "selectAdd", "$1, $2, $3")), 
 			new Patch("selectGetOptions", staticCall(PatchDOMImpl.class, "selectGetOptions", "$1")),
+			new Patch("imgSetSrc", staticCall(PatchUIObject.class, "getPropertyOnElement", "$1, \"imgSrc\"")),
 			//			new Patch("eventGetKeyCode", castAndCall(OverrideEvent.class, "getOverrideKeyCode")),
 			//			new Patch("setEventListener", "return;"), 
 
@@ -181,8 +186,8 @@ public class PatchGWT {
 		});
 
 		PatchUtils.applyPatches(com.google.gwt.dom.client.Element.class, new Patch[] { 
-			//			new Patch("setId", castThisAndCall(UserElement.class, "setOverrideId", "$1")),
-			//			new Patch("getId", castThisAndCall(UserElement.class, "getOverrideId")),
+			new Patch("setId", castThisAndCall(UserElement.class, "setOverrideId", "$1")),
+			new Patch("getId", castThisAndCall(UserElement.class, "getOverrideId")),
 			new Patch("setAttribute", castThisAndCall(UserElement.class, "setOverrideAttribute", "$1, $2")),
 			new Patch("getAttribute", castThisAndCall(UserElement.class, "getOverrideAttribute", "$1")),
 			new Patch("setInnerHTML", castThisAndCall(UserElement.class, "setOverrideInnerHtml", "$1")),
@@ -190,11 +195,11 @@ public class PatchGWT {
 			new Patch("setInnerText", castThisAndCall(UserElement.class, "setOverrideInnerText", "$1")),
 			new Patch("getInnerText", castThisAndCall(UserElement.class, "getOverrideInnerText")),
 			new Patch("getStyle", castThisAndCall(UserElement.class, "getOverrideStyle")),
-			//			new Patch("setPropertyDouble", castThisAndCall(UserElement.class, "setOverrideProperty", "$1, Double.toString($2)")),
+			new Patch("setPropertyDouble", castThisAndCall(UserElement.class, "setOverrideProperty", "$1, Double.toString($2)")),
 			new Patch("setPropertyInt", castThisAndCall(UserElement.class, "setOverrideProperty", "$1, Integer.toString($2)")),
 			new Patch("setPropertyBoolean", castThisAndCall(UserElement.class, "setOverrideProperty", "$1, Boolean.toString($2)")),
 			new Patch("setPropertyString", castThisAndCall(UserElement.class, "setOverrideProperty", "$1, $2")),
-			//			new Patch("getPropertyDouble", "Double.parseDouble(" + castThisAndCall(UserElement.class, "getOverrideProperty", "$1") + ")"),
+			new Patch("getPropertyDouble", "Double.parseDouble(" + castThisAndCall(UserElement.class, "getOverrideProperty", "$1") + ")"),
 			new Patch("getPropertyInt", castThisAndCall(UserElement.class, "getOverridePropertyInt", "$1")),
 			new Patch("getPropertyBoolean", "Boolean.parseBoolean(" + castThisAndCall(UserElement.class, "getOverrideProperty", "$1") + ")"),
 			new Patch("getPropertyString", castThisAndCall(UserElement.class, "getOverrideProperty", "$1")), 
@@ -203,16 +208,8 @@ public class PatchGWT {
 			new Patch("getTagName", staticCall(PatchElement.class, "getTagName", "this")),
 		});
 
-
-		//		Patch patchArgEvent = 
-		//			new Patch("eventGetTypeInt", staticCall(PatchDOMImpl.class, "eventGetTypeInt", "$1"));
-		//		patchArgEvent.setArgClasses(new Class[] { Event.class});
-		//
-
-
 		PatchUtils.applyPatches(DOMImpl.class, new Patch[] { 
-			//			new Patch("getEventsSunk", "return 1;"),
-			//			patchArgEvent,
+			new Patch("getEventsSunk", "return 1;"),
 			new Patch("eventGetTypeInt", staticCall(PatchDOMImpl.class, "eventGetTypeInt", "$1"), new Class[] { String.class}),	
 			//new Patch("eventGetTypeInt", staticCall(PatchDOMImpl.class, "eventGetTypeInt", "$1"), new Class[] { Event.class}),
 			//			new Patch("eventGetShiftKey", castAndCall(OverrideEvent.class, "isOverrideShiftKey")),
@@ -321,7 +318,7 @@ public class PatchGWT {
 		PatchUtils.applyPatches(Grid.class, new Patch[] { 
 			new Patch("addRows", staticCall(PatchGrid.class, "addRows", "$1, $2, $3")) 
 		});
-		
+
 		PatchUtils.applyPatches(InputElement.class, new Patch[] {
 			new Patch("as", staticCall(PatchInputElement.class, "as", "$1")), 
 			new Patch("setTabIndex", castThisAndCall(OverrideInputElement.class, "setOverrideTabIndex", "$1")),
@@ -329,10 +326,15 @@ public class PatchGWT {
 			new Patch("setDefaultChecked", castThisAndCall(OverrideInputElement.class, "setOverrideDefaultChecked", "$1")),
 			new Patch("setChecked", castThisAndCall(OverrideInputElement.class, "setOverrideChecked", "$1")),
 		});
-		
+
 		PatchUtils.applyPatches(LabelElement.class, new Patch[] {
 			new Patch("setHtmlFor", ""),
 		});
+		
+		PatchUtils.applyPatches(Image.class, new Patch[] {
+			new Patch("getImageElement", staticCall(PatchImage.class, "getImageElement")),
+		});
+		
 	}
 
 	private static String staticCall(Class<?> clazz, String methodName, String args) {

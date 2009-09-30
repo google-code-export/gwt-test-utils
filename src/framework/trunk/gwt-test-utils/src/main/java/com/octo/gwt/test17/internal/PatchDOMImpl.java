@@ -33,7 +33,7 @@ public class PatchDOMImpl {
 		}
 		throw new UnsupportedOperationException("Not implemented yet");
 	}
-	
+
 	public static NodeList<OptionElement> selectGetOptions(SelectElement select) {
 		OverrideSelectElement s = OverrideSelectElement.overrideCast(select);
 		OverrideNodeList<OptionElement> l = new OverrideNodeList<OptionElement>();
@@ -42,25 +42,57 @@ public class PatchDOMImpl {
 		}
 		return l;
 	}
-	
+
 	public static String eventGetType(NativeEvent nativeEvent) {
 		OverrideEvent event = OverrideEvent.overrideCast(nativeEvent);
 		switch (event.getOverrideType()) {
 		case Event.ONBLUR:
 			return "blur";
+		case Event.ONCHANGE:
+			return "change";
 		case Event.ONCLICK:
 			return "click";
+		case Event.ONDBLCLICK:
+			return "dblclick";
 		case Event.ONFOCUS:
 			return "focus";
-			default :
-				throw new RuntimeException("Cannot get the String type of event with code [" 
-						+ event.getOverrideKeyCode() + "]");
+		case Event.ONKEYDOWN:
+			return "keydown";
+		case Event.ONKEYPRESS:
+			return "keypress";
+		case Event.ONKEYUP:
+			return "keyup";
+		case Event.ONLOAD:
+			return "load";
+		case Event.ONLOSECAPTURE:
+			return "losecapture";
+		case Event.ONMOUSEDOWN:
+			return "mousedown";	
+		case Event.ONMOUSEMOVE:
+			return "mousemove";
+		case Event.ONMOUSEOUT:
+			return "mouseout";
+		case Event.ONMOUSEOVER:
+			return "mouseover";
+		case Event.ONMOUSEUP:
+			return "mouseup";
+		case Event.ONSCROLL:
+			return "scroll";
+		case Event.ONERROR:
+			return "error";
+		case Event.ONMOUSEWHEEL:
+			return "mousewheel";
+		case Event.ONCONTEXTMENU:
+			return "contextmenu";
+		default :
+			throw new RuntimeException("Cannot get the String type of event with code [" 
+					+ event.getOverrideType() + "]");
 		}
 	}
-	
+
 	public static boolean eventGetAltKey(NativeEvent nativeEvent) {
 		OverrideEvent event = OverrideEvent.overrideCast(nativeEvent);
-		
+
 		return event.isOverrideAltKey();
 	}
 
@@ -104,18 +136,18 @@ public class PatchDOMImpl {
 		} else if (type.equals("contextmenu")) {
 			return Event.ONCONTEXTMENU;
 		}
-		
+
 		throw new RuntimeException("Unable to convert DOM Event \"" 
 				+ type + "\" to an integer");
 	}
 
 	public static Element createElement(String tag) {
-				if ("option".equals(tag)) {
-					return new OverrideOptionElement();
-				}
-				if ("select".equals(tag)) {
-					return new OverrideSelectElement();
-				}
+		if ("option".equals(tag)) {
+			return new OverrideOptionElement();
+		}
+		if ("select".equals(tag)) {
+			return new OverrideSelectElement();
+		}
 		//		if ("iframe".equals(tag)) {
 		//			return new OverrideIFrameElement();
 		//		}
@@ -144,7 +176,7 @@ public class PatchDOMImpl {
 						superClazz = cp.get("com.google.gwt.dom.client.AnchorElement");
 					} else if ("textarea".equals(tag)) {
 						superClazz = cp.get("com.google.gwt.dom.client.TextAreaElement");
-					}
+					} 
 				}
 				if (superClazz == null) {
 					throw new RuntimeException("Super class not found for tag " + tag);

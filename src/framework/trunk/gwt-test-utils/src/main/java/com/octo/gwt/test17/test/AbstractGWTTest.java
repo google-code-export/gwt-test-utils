@@ -44,5 +44,21 @@ public abstract class AbstractGWTTest {
 	protected void change(Widget target) {
 		target.onBrowserEvent(new OverrideEvent(Event.ONCHANGE));
 	}
+	
+	protected void mouseMove(Widget target) {
+		target.onBrowserEvent(new OverrideEvent(Event.ONMOUSEMOVE));
+	}
+	
+	protected void mouseDown(Widget target) {
+		target.onBrowserEvent(new OverrideEvent(Event.ONMOUSEDOWN));
+	}
+	
+	protected void mouseUp(Widget target) {
+		target.onBrowserEvent(new OverrideEvent(Event.ONMOUSEUP));
+	}
+	
+	protected void mouseWheel(Widget target) {
+		target.onBrowserEvent(new OverrideEvent(Event.ONMOUSEWHEEL));
+	}
 
 }
