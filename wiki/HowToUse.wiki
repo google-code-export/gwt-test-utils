@@ -2,8 +2,79 @@
 
 == Pom configuration ==
 
+First, you have to setup the required dependency in the _pom.xml_ :
+
+{{{
+<dependency>
+	<groupId>com.octo.gwt.test17</groupId>
+	<artifactId>gwt-test-utils</artifactId>
+	<version>${gwt.test.utils.version}</version>
+	<scope>test</scope>
+</dependency>
+}}}
+
+You also have to specify the gwt-test-utils Maven repository :
+
+{{{
+<repository>
+	<id>gwt-test-utils-repo</id>
+	<url>http://gwt-test-utils.googlecode.com/svn/maven/</url>
+</repository>
+}}}
+
 == Under Maven build ==
 
+During the build, we need Maven to copy the _bootstrap.jar_ file coming with _gwt-test-utils_ in the project buid directory (default is "_/target_"):
+{{{
+<plugin>
+	<groupId>org.apache.maven.plugins</groupId>
+	<artifactId>maven-dependency-plugin</artifactId>
+	<executions>
+		<execution>
+			<id>copy</id>
+			<phase>generate-resources</phase>
+			<goals>
+				<goal>copy</goal>
+			</goals>
+			<configuration>
+				<artifactItems>
+					<artifactItem>
+						<groupId>com.octo.gwt.test17</groupId>
+						<artifactId>gwt-test-utils-bootstrap</artifactId>
+						<version>${gwt.test.utils.version}</version>
+						<overWrite>true</overWrite>
+						<destFileName>bootstrap.jar</destFileName>
+						<outputDirectory>${project.build.directory}</outputDirectory>
+					</artifactItem>
+				</artifactItems>
+			</configuration>
+		</execution>
+	</executions>
+</plugin>
+}}}
+
+This JAR file contains a specific java agent which enables bytecode modifications in several GWT classes.
+So we have to customise Maven test plugin to add some options :
+
+{{{
+<plugin>
+	<groupId>org.apache.maven.plugins</groupId>
+	<artifactId>maven-surefire-plugin</artifactId>
+	<configuration>
+		<jvm>PATH_TO_A_JVM_6+</jvm>
+		<argLine>-javaagent:target/bootstrap.jar</argLine>
+	</configuration>
+</plugin>
+}}}
+
+ * *{{{<jvm>}}}* : You have to ensure that unit tests will be run in a JVM 6 or higher , since JVM 5 is not able to modify native method on the fly. This option would not be required if the project is already build with a JVM 6 or higher. 
+ * *{{{<argLine>}}}* : The JVM option required to execute the agent before unit tests.
+
+
 == Under eclipse, on a maven project ==
+
+To run your unit tests directly inside eclipse in a maven project, you should use the POM configurations explained above (dependency, repository and plugin configuration).
+
+Then, just open a new JUnit Run configuration, and specify in the "" text area the -javaagent option, with the correct _bootstrap.jar_ location
 
 = Without Maven =
