@@ -78,3 +78,5 @@ To run your unit tests directly inside eclipse in a maven project, you should us
 Then, just open a new JUnit Run configuration, and specify in the "" text area the -javaagent option, with the correct _bootstrap.jar_ location
 
 = Without Maven =
+
+To run your GWT unit tests without Maven, just add the gwt-test-utils-x.jar to the classpath and launch the tests with the argument _-javaagent:path_to_bootstrap.jar_.
