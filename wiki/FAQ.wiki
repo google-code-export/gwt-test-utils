@@ -1,0 +1,9 @@
+#summary Frequently Asked Questions
+
+== java5/6 (simule error) ==
+
+== Exception : cannot create class ?? ==
+
+== Exception : UnsatisfiedLinkError ?? ==
+
+== How to simule browser event on widget ? ==
