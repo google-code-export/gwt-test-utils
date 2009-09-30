@@ -1,5 +1,9 @@
 package com.octo.gwt.test17;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -99,5 +103,22 @@ public class ReflectionUtils {
 	public static void getStaticAndCallClear(Class<?> clazz, String fieldName) {
 		callClear(getStaticFieldValue(clazz, fieldName));
 	}
-
+	
+	@SuppressWarnings("unchecked")
+	public static <T> T serializeUnserialize(Object o) {
+		if (o == null) {
+			return null;
+		}
+		try {
+			ByteArrayOutputStream bos = new ByteArrayOutputStream();
+			ObjectOutputStream oos = new ObjectOutputStream(bos);
+			oos.writeObject(o);
+			ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
+			ObjectInputStream ois = new ObjectInputStream(bis);
+			return (T) ois.readObject();
+		} catch (Exception e) {
+			throw new RuntimeException("Unable to serialize / unserialize object " + o.getClass().getCanonicalName(), e);
+		}
+	}
+	
 }
