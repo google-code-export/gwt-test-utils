@@ -1,0 +1,6 @@
+start
+initApp
+assertExact;init;/root/widget(0)/widget(2)/text
+assertExact;init;/app/l/text
+runmacro;appendStatic
+append;End of 1st test

@@ -60,7 +60,7 @@ public class CsvRunner {
 		}
 	}
 
-	public void removeEmptyElements(List<String> list) {
+	private void removeEmptyElements(List<String> list) {
 		List<String> newList = new ArrayList<String>();
 		for(String s : list) {
 			if (!"".equals(s)) {
@@ -71,7 +71,7 @@ public class CsvRunner {
 		list.addAll(newList);
 	}
 	
-	public void transformArgs(List<String> list) {
+	private void transformArgs(List<String> list) {
 		List<String> newList = new ArrayList<String>();
 		for(String s : list) {
 			String out = s;
@@ -98,20 +98,15 @@ public class CsvRunner {
 			logger.debug(getProcessingMessagePrefix() + "Executing " + methodName + ", params " + Arrays.toString(filterArgs.toArray()));
 			List<Object> argList = new ArrayList<Object>();
 			for (Class<?> clazz : m.getParameterTypes()) {
-				if (clazz == CsvRunner.class) {
-					argList.add(this);
+				if (filterArgs.size() == 0) {
+					Assert.fail(getAssertionErrorMessagePrefix() + "Too few args for " + methodName);
 				}
-				else {
-					if (filterArgs.size() == 0) {
-						Assert.fail(getAssertionErrorMessagePrefix() + "Too few args for " + methodName);
-					}
-					if (clazz.isArray()) {
-						argList.add(filterArgs.toArray(new String[]{}));
-						filterArgs.clear();
-					} else {
-						argList.add(filterArgs.get(0));
-						filterArgs.remove(0);
-					}
+				if (clazz.isArray()) {
+					argList.add(filterArgs.toArray(new String[]{}));
+					filterArgs.clear();
+				} else {
+					argList.add(filterArgs.get(0));
+					filterArgs.remove(0);
 				}
 			}
 			if (filterArgs.size() != 0) {

@@ -19,7 +19,7 @@ import com.octo.gwt.test17.integ.CsvDirectory;
 import com.octo.gwt.test17.integ.CsvMacros;
 import com.octo.gwt.test17.integ.csvrunner.CsvReader;
 
-public class TestFileReader {
+public class DirectoryTestReader {
 
 	private String csvDirectory;
 
@@ -31,11 +31,11 @@ public class TestFileReader {
 
 	private HashMap<String, List<List<String>>> tests;
 
-	private HashMap<String, List<List<String>>> macros;
+	private HashMap<String, List<List<String>>> macroFiles;
 	
 	private List<Method> testMethods;
 
-	public TestFileReader(Class<?> clazz, ITestLauncher testLauncher) {
+	public DirectoryTestReader(Class<?> clazz) {
 		CsvDirectory csvDirectoryAnnotation = ReflectionUtils.getAnnotation(clazz, CsvDirectory.class);
 		if (csvDirectoryAnnotation == null) {
 			throw new RuntimeException("Missing annotation CsvDirectory");
@@ -59,7 +59,7 @@ public class TestFileReader {
 
 		try {
 			tests = new HashMap<String, List<List<String>>>();
-			macros = new HashMap<String, List<List<String>>>();
+			macroFiles = new HashMap<String, List<List<String>>>();
 			for (File f : directory.listFiles()) {
 				if (f.getName().endsWith(".csv")) {
 					String s = f.getName();
@@ -67,7 +67,7 @@ public class TestFileReader {
 					FileReader reader = new FileReader(f);
 					List<List<String>> sheet = CsvReader.readCsv(reader);
 					if (csvMacros.contains(s)) {
-						macros.put(s, sheet);
+						macroFiles.put(s, sheet);
 					} else {
 						tests.put(s, sheet);
 					}
@@ -75,8 +75,8 @@ public class TestFileReader {
 			}
 
 			ClassPool cp = ClassPool.getDefault();
-			CtClass newClazz = cp.makeClass(clazz.getCanonicalName() + ".generated");
-			newClazz.setSuperclass(cp.get(testLauncher.getClass().getCanonicalName()));
+			CtClass newClazz = cp.makeClass(clazz.getCanonicalName() + ".generated" + System.currentTimeMillis());
+			newClazz.setSuperclass(cp.get(clazz.getCanonicalName()));
 			List<String> methodList = new ArrayList<String>();
 			for (Entry<String, List<List<String>>> entry : tests.entrySet()) {
 				String methodName = "run_" + csvShortName + "_" + entry.getKey();
@@ -95,14 +95,6 @@ public class TestFileReader {
 		}
 	}
 
-	public HashMap<String, List<List<String>>> getMacros() {
-		return macros;
-	}
-
-	public void setMacros(HashMap<String, List<List<String>>> macros) {
-		this.macros = macros;
-	}
-
 	public List<Method> getTestMethods() {
 		return testMethods;
 	}
@@ -111,16 +103,20 @@ public class TestFileReader {
 		return Collections.unmodifiableSet(tests.keySet());
 	}
 	
-	public Set<String> getMacroList() {
-		return Collections.unmodifiableSet(macros.keySet());
+	public Set<String> getMacroFileList() {
+		return Collections.unmodifiableSet(macroFiles.keySet());
 	}
 	
 	public List<List<String>> getTest(String testName) {
 		return tests.get(testName);
 	}
 	
-	public List<List<String>> getMacro(String macroName) {
-		return macros.get(macroName);
+	public List<List<String>> getMacroFile(String macroName) {
+		return macroFiles.get(macroName);
+	}
+
+	public Object createObject() throws InstantiationException, IllegalAccessException {
+		return generatedClazz.newInstance();
 	}
 
 }

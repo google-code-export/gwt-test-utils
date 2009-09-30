@@ -3,14 +3,14 @@ package com.octo.gwt.test17.integ.tools;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class TestFileReaderTest {
+public class DirectoryTestReaderTest {
 
 	@Test
 	public void checkRep1() throws Exception {
-		TestFileReader reader = new TestFileReader(Rep1.class, new Launcher());
+		DirectoryTestReader reader = new DirectoryTestReader(Rep1.class);
 		Assert.assertEquals(2, reader.getTestList().size());
 		Assert.assertEquals(2, reader.getTestMethods().size());
-		Assert.assertEquals(1, reader.getMacroList().size());
+		Assert.assertEquals(1, reader.getMacroFileList().size());
 	}
 	
 }

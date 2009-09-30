@@ -80,7 +80,7 @@ public class PatchGWT {
 	}
 
 	public static void reset() throws Exception {
-		RootPanel.get();
+		RootPanel.get().clear();
 		OverrideHistory.reset();
 		PatchMainGWT.createClass.clear();
 		PatchMainGWT.gwtCreateHandler = null;
