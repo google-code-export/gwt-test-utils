@@ -32,7 +32,7 @@ public abstract class GwtCreateHandlerImpl implements GwtCreateHandler {
 		this.exceptionHandler = exceptionHandler;
 	}
 
-	public abstract Object findService(String serviceName);
+	public abstract Object findService(Class<?> remoteServiceClazz);
 	
 	public Object create(Class<?> classLiteral) {
 		logger.debug("Try to create class " + classLiteral.getCanonicalName());
@@ -43,15 +43,11 @@ public abstract class GwtCreateHandlerImpl implements GwtCreateHandler {
 				if (asyncClazz == null) {
 					throw new Exception("Async class not found : " + asyncName);
 				}
-				String serviceName = classLiteral.getSimpleName();
-				if (serviceName.startsWith("I")) {
-					serviceName = serviceName.substring(1);
-				}
-				logger.debug("Searching service named : " + serviceName);
-				Object service = findService(serviceName);
+				logger.debug("Searching service implementing " + classLiteral.getCanonicalName());
+				Object service = findService(classLiteral);
 				if (service == null) {
-					logger.error("Service not found " + serviceName);
-					throw new RuntimeException("Service not found " + serviceName);
+					logger.error("Service not found " + classLiteral.getCanonicalName());
+					throw new RuntimeException("Service not found " + classLiteral.getCanonicalName());
 				}
 				InvocationHandler handler = new GwtRpcInvocationHandler(asyncClazz, service, callbacks, exceptionHandler);
 				return Proxy.newProxyInstance(getClass().getClassLoader(), new Class[] { asyncClazz }, handler);

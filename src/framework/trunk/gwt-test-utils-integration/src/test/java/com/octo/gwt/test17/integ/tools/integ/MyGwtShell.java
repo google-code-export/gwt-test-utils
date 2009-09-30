@@ -25,8 +25,8 @@ public abstract class MyGwtShell extends AbstractGwtIntegrationShell {
 		PatchGWT.setGwtCreateHandler(new GwtCreateHandlerImpl() {
 			
 			@Override
-			public Object findService(String serviceName) {
-				if ("MyRemoteService".equals(serviceName)) {
+			public Object findService(Class<?> remoteServiceClazz) {
+				if (remoteServiceClazz == MyRemoteService.class) {
 					return new MyRemoteService() {
 						
 						public String myMethod(String param1) {
