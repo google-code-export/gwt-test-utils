@@ -2,8 +2,16 @@
 
 == java5/6 (simule error) ==
 
+==
 == Exception : cannot create class ?? ==
 
-== Exception : UnsatisfiedLinkError ?? ==
+== I get a {{{java.lang.UnsatisfiedLinkError}}} when launching my tests ==
+
 
 == How to simule browser event on widget ? ==
+
+{{{AbstractGWTTest}}} comes with some helpfull methods to simule a large panel of browser event, such as "onClick", "onDblClick", "onBlur", mouseMouve" etc.
+
+In case the method you need is not available, just try with :
+
+{{{yourWidget.onBrowserEvent(new OverrideEvent(Event.ONXXXX))}}}, where XXX is the GWT event you want to submit to your widget.
