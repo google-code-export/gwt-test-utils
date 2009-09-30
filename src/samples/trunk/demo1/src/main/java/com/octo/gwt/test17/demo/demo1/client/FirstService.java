@@ -8,5 +8,5 @@ import com.octo.gwt.test17.demo.demo1.beans.FooBean;
 public interface FirstService extends RemoteService {
 
 	public FooBean createBean(String name);
-	
+
 }
