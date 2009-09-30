@@ -67,7 +67,7 @@
 							<artifactItems>
 								<artifactItem>
 									<groupId>${project.groupId}</groupId>
-									<artifactId>${project.artifactId}-bootstrap</artifactId>
+									<artifactId>gwt-test-utils-bootstrap</artifactId>
 									<version>${project.version}</version>
 									<overWrite>true</overWrite>
 									<destFileName>bootstrap.jar</destFileName>
