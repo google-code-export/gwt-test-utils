@@ -10,7 +10,8 @@
 
 	<properties>
 		<gwt.version>1.7.0</gwt.version>
-		<gwt.test.utils.version>0.1</gwt.test.utils.version>
+		<gwt.test.utils.version>0.2-SNAPSHOT</gwt.test.utils.version>
+		<java6_home>${env.JAVA6_HOME}</java6_home>
 	</properties>
 
 	<dependencies>
@@ -31,17 +32,21 @@
 			<version>${gwt.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.google.gwt</groupId>
-			<artifactId>gwt-dev</artifactId>
-			<version>${gwt.version}</version>
-			<classifier>${env.PLATFORM}</classifier>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
 			<groupId>com.octo.gwt.test17</groupId>
 			<artifactId>gwt-test-utils</artifactId>
 			<version>${gwt.test.utils.version}</version>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.octo.gwt.test17</groupId>
+			<artifactId>gwt-test-utils-bootstrap</artifactId>
+			<version>${gwt.test.utils.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.14</version>
 		</dependency>
 	</dependencies>
 
@@ -74,7 +79,6 @@
 					<runTarget>com.octo.gwt.test17.demo.demo1.FirstModule/FirstModule.html</runTarget>
 					<style>OBF</style>
 					<extraJvmArgs>-Xmx512m</extraJvmArgs>
-					<i18nMessagesBundle>com.octo.gwt.test17.demo.demo1.client.i18n.Messages</i18nMessagesBundle>
 				</configuration>
 				<executions>
 					<execution>
@@ -84,17 +88,43 @@
 						</goals>
 					</execution>
 					<execution>
-						<id>i18n</id>
-						<phase>generate-sources</phase>
-						<goals>
-							<goal>i18n</goal>
-						</goals>
-					</execution>
-					<execution>
 						<id>generateAsync</id>
 						<goals>
 							<goal>generateAsync</goal>
 						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<jvm>${java6_home}/bin/java</jvm>
+					<argLine>-javaagent:target/bootstrap.jar</argLine>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>copy</id>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>copy</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>com.octo.gwt.test17</groupId>
+									<artifactId>gwt-test-utils-bootstrap</artifactId>
+									<version>${gwt.test.utils.version}</version>
+									<overWrite>true</overWrite>
+									<destFileName>bootstrap.jar</destFileName>
+									<outputDirectory>${project.build.directory}</outputDirectory>
+								</artifactItem>
+							</artifactItems>
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>
