@@ -13,17 +13,17 @@ import com.octo.gwt.test17.test.AbstractGWTTest;
 
 public class SimpleCompositeTest extends AbstractGWTTest {
 	
-	private SimpleComposite module;
+	private SimpleComposite composite;
 	
 	@Before
 	public void init() throws Exception {
-		module = new SimpleComposite();
+		composite = new SimpleComposite();
 	}
 	
 	@Test
 	public void checkMouseMoveOnPicture() {
-		Image img = ReflectionUtils.getPrivateFieldValue(module, "img");
-		Label label = ReflectionUtils.getPrivateFieldValue(module, "label");
+		Image img = ReflectionUtils.getPrivateFieldValue(composite, "img");
+		Label label = ReflectionUtils.getPrivateFieldValue(composite, "label");
 		
 		Assert.assertEquals(null, label.getText());
 		
@@ -35,9 +35,9 @@ public class SimpleCompositeTest extends AbstractGWTTest {
 	@Test
 	public void checkDisplayClick() {
 		
-		Button button = ReflectionUtils.getPrivateFieldValue(module, "button");
-		Label label = ReflectionUtils.getPrivateFieldValue(module, "label");
-		ListBox listBox = ReflectionUtils.getPrivateFieldValue(module, "listBox");
+		Button button = ReflectionUtils.getPrivateFieldValue(composite, "button");
+		Label label = ReflectionUtils.getPrivateFieldValue(composite, "label");
+		ListBox listBox = ReflectionUtils.getPrivateFieldValue(composite, "listBox");
 		listBox.setSelectedIndex(1);
 		
 		Assert.assertEquals(null, label.getText());
