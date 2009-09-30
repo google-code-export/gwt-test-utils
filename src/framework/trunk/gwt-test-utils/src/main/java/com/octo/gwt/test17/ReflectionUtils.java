@@ -14,6 +14,19 @@ import java.util.Set;
 
 public class ReflectionUtils {
 	
+	@SuppressWarnings("unchecked")
+	public static <T> T getAnnotation(Class<?> clazz, Class<T> annotationClass) {
+		for (Annotation a : clazz.getDeclaredAnnotations()) {
+			if (a.annotationType() == annotationClass) {
+				return (T) a;
+			}
+		}
+		if (clazz.getSuperclass() != null) {
+			return getAnnotation(clazz.getSuperclass(), annotationClass);
+		}
+		return null;
+	}
+	
 	private static void recurseGetAnnotatedField(List<Field> list, Class<?> target, Class<?> annotationClass) {
 		for (Field f : target.getDeclaredFields()) {
 			for (Annotation a : f.getDeclaredAnnotations()) {
