@@ -1,8 +1,10 @@
 package com.octo.gwt.test17.integ.tools.integ;
 
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
@@ -13,6 +15,8 @@ public class MyBeautifulApp implements EntryPoint {
 	private Button b1;
 	
 	private Button b2;
+	
+	private Button b3;
 	
 	private Label l;
 	
@@ -40,6 +44,24 @@ public class MyBeautifulApp implements EntryPoint {
 				l.setText("click on b2");
 			}
 			
+		});
+		b3 = new Button();
+		b3.addClickHandler(new ClickHandler() {
+			
+			public void onClick(ClickEvent arg0) {
+				MyRemoteServiceAsync remoteServiceAsync = GWT.create(MyRemoteService.class);
+				remoteServiceAsync.myMethod("prefix", new AsyncCallback<String>() {
+					
+					public void onSuccess(String arg0) {
+						l.setText(arg0);
+					}
+					
+					public void onFailure(Throwable arg0) {
+						l.setText("error");
+					}
+					
+				});	
+			}
 		});
 	}
 
