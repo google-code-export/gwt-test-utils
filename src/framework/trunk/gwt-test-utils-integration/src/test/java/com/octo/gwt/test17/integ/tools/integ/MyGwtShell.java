@@ -6,6 +6,7 @@ import org.junit.runner.RunWith;
 import com.octo.gwt.test17.PatchGWT;
 import com.octo.gwt.test17.integ.csvrunner.CsvRunner;
 import com.octo.gwt.test17.integ.csvrunner.Node;
+import com.octo.gwt.test17.integ.handler.GwtCreateHandlerImpl;
 import com.octo.gwt.test17.integ.junit.StandardJUnit4CsvRunner;
 import com.octo.gwt.test17.integ.tools.AbstractGwtIntegrationShell;
 import com.octo.gwt.test17.integ.tools.PrefixProcessor;
@@ -21,6 +22,25 @@ public abstract class MyGwtShell extends AbstractGwtIntegrationShell {
 	public void setUp() throws Exception {
 		PatchGWT.init();
 		PatchGWT.reset();
+		PatchGWT.setGwtCreateHandler(new GwtCreateHandlerImpl() {
+			
+			@Override
+			public Object findService(String serviceName) {
+				if ("MyRemoteService".equals(serviceName)) {
+					return new MyRemoteService() {
+						
+						public String myMethod(String param1) {
+							if (param1.contains("_suffix")) {
+								throw new RuntimeException();
+							}
+							return param1 + "_suffix";
+						}
+					};
+				}
+				return null;
+			}
+			
+		});
 	}
 	
 	public void initApp() {

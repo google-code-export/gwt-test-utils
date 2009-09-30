@@ -3,6 +3,7 @@ package com.octo.gwt.test17.integ.handler;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
@@ -17,8 +18,16 @@ public abstract class GwtCreateHandlerImpl implements GwtCreateHandler {
 	private Map<Method, IDeserializationCallback> callbacks;
 
 	private IGwtRpcExceptionHandler exceptionHandler;
+	
+	public GwtCreateHandlerImpl() {
+		this(new DefaultGwtRpcExceptionHandler());
+	}
 
-	public GwtCreateHandlerImpl(Map<Method, IDeserializationCallback> callbacks, IGwtRpcExceptionHandler exceptionHandler) {
+	public GwtCreateHandlerImpl(IGwtRpcExceptionHandler exceptionHandler) {
+		this(exceptionHandler, new HashMap<Method, IDeserializationCallback>());
+	}
+
+	public GwtCreateHandlerImpl(IGwtRpcExceptionHandler exceptionHandler, Map<Method, IDeserializationCallback> callbacks) {
 		this.callbacks = callbacks;
 		this.exceptionHandler = exceptionHandler;
 	}

@@ -50,7 +50,7 @@ public class MyBeautifulApp implements EntryPoint {
 			
 			public void onClick(ClickEvent arg0) {
 				MyRemoteServiceAsync remoteServiceAsync = GWT.create(MyRemoteService.class);
-				remoteServiceAsync.myMethod("prefix", new AsyncCallback<String>() {
+				remoteServiceAsync.myMethod(l.getText(), new AsyncCallback<String>() {
 					
 					public void onSuccess(String arg0) {
 						l.setText(arg0);

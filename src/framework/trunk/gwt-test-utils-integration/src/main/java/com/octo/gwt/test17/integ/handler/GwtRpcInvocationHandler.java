@@ -42,7 +42,7 @@ public class GwtRpcInvocationHandler implements InvocationHandler {
 	@SuppressWarnings("unchecked")
 	public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 		Object[] subArgs = new Object[args.length - 1];
-		for(int i = 0; i < args.length - 2; i ++) {
+		for(int i = 0; i < args.length - 1; i ++) {
 			subArgs[i] = args[i];
 		}
 		AsyncCallback<Object> callback = (AsyncCallback<Object>) args[args.length - 1];
