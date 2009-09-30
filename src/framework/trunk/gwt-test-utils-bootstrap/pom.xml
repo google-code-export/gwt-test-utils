@@ -10,15 +10,6 @@
 		<version>0.2-SNAPSHOT</version>
 	</parent>
 	
-	<dependencies>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>3.8.1</version>
-			<scope>test</scope>
-		</dependency>
-	</dependencies>
-	
 	<build>
 		<finalName>bootstrap</finalName>
 		<plugins>
