@@ -38,12 +38,6 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.octo.gwt.test17</groupId>
-			<artifactId>gwt-test-utils-bootstrap</artifactId>
-			<version>${gwt.test.utils.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
 			<version>1.2.14</version>
