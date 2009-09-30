@@ -5,11 +5,9 @@ import org.junit.Test;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Widget;
-import com.octo.gwt.test17.overrides.OverrideEvent;
 import com.octo.gwt.test17.test.AbstractGWTTest;
 
 @SuppressWarnings("deprecation")
@@ -74,21 +72,24 @@ public class ButtonTest extends AbstractGWTTest {
 
 	@Test
 	public void checkClickWithHander() {
+		
+		//create the button in a standard JVM
 		final Button b = new Button();
-
+		// add a handler to test the click
 		b.addClickHandler(new ClickHandler() {
 
 			public void onClick(ClickEvent event) {
 				b.setHTML("clicked");
-
 			}
+			
 		});
 
 		Assert.assertEquals(null, b.getHTML());
 
 		// simulate click
-		b.onBrowserEvent(new OverrideEvent(Event.ONCLICK));
+		click(b);
 
+		// assert that the "AbstractGWTTest.click(Widget)" method trigger the "onClick" handler's method
 		Assert.assertEquals("clicked", b.getHTML());
 	}
 
