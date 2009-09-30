@@ -25,6 +25,7 @@
 	<modules>
 		<module>gwt-test-utils</module>
 		<module>gwt-test-utils-bootstrap</module>
+		<module>gwt-test-utils-integration</module>
 	</modules>
 
 	<dependencies>
