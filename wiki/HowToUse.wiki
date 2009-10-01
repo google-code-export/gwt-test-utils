@@ -89,14 +89,13 @@ So we have to customise Maven test plugin to add some options :
  * *{{{<jvm>}}}* : You have to ensure that unit tests will be run in a JVM 6 or higher , since JVM 5 is not able to modify native methods on the fly. This option would not be required if the project is already build with a JVM 6 or higher. 
  * *{{{<argLine>}}}* : The JVM option required to execute the agent before unit tests.
 
+A full {{{pom.xml}}} example is available <a href="http://gwt-test-utils.googlecode.com/svn/src/samples/trunk/demo1/pom.xml">here</a>.
 
 == Under eclipse, on a maven project ==
 
 To run your unit tests directly inside eclipse in a maven project, you should use the POM configurations explained above (dependency, repository and plugin configuration).
 
-Then, just open a new JUnit Run configuration, and specify in the "" text area the -javaagent option, with the correct _bootstrap.jar_ location
-
-A full {{{pom.xml}}} example is available <a href="http://gwt-test-utils.googlecode.com/svn/src/samples/trunk/demo1/pom.xml">here</a>.
+Then, just open a new JUnit Run configuration, and specify in the "JVM Arguments" text area the -javaagent option, with the correct _bootstrap.jar_ location
 
 = Without Maven =
 
