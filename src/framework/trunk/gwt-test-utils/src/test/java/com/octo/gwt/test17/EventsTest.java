@@ -33,7 +33,7 @@ public class EventsTest extends AbstractGWTTest {
 			public void onClick(ClickEvent event) {
 				tested = !tested;
 			}
-			
+
 		});
 
 		Assert.assertEquals(false, tested);
@@ -45,6 +45,34 @@ public class EventsTest extends AbstractGWTTest {
 	}
 
 	@Test
+	public void checkClickEventAndError() {
+		Button b = new Button();
+		b.addClickHandler(new ClickHandler() {
+
+			public void onClick(ClickEvent event) {
+				//nothing to do
+
+			}
+
+		});
+
+		//the button is disabled
+		b.setVisible(false);
+
+		WidgetException exceptedEx = null;
+
+		try {
+			//simule the event
+			click(b);
+		} catch (WidgetException e) {
+			exceptedEx = e;
+		}
+
+		//Assert exception has been thrown
+		Assert.assertNotNull(exceptedEx);
+	}
+
+	@Test
 	public void checkBlurEvent() {
 		tested = false;
 		Button b = new Button();
@@ -53,7 +81,7 @@ public class EventsTest extends AbstractGWTTest {
 			public void onBlur(BlurEvent event) {
 				tested = !tested;
 			}
-			
+
 		});
 
 		Assert.assertEquals(false, tested);
@@ -73,7 +101,7 @@ public class EventsTest extends AbstractGWTTest {
 			public void onFocus(FocusEvent event) {
 				tested = !tested;	
 			}
-			
+
 		});
 
 		Assert.assertEquals(false, tested);
@@ -93,7 +121,7 @@ public class EventsTest extends AbstractGWTTest {
 			public void onMouseDown(MouseDownEvent event) {
 				tested = !tested;
 			}
-			
+
 		});
 
 		Assert.assertEquals(false, tested);
@@ -113,7 +141,7 @@ public class EventsTest extends AbstractGWTTest {
 			public void onMouseUp(MouseUpEvent event) {
 				tested = !tested;
 			}
-			
+
 		});
 
 		Assert.assertEquals(false, tested);
@@ -133,7 +161,7 @@ public class EventsTest extends AbstractGWTTest {
 			public void onMouseMove(MouseMoveEvent event) {
 				tested = !tested;
 			}
-			
+
 		});
 
 		Assert.assertEquals(false, tested);
@@ -143,17 +171,17 @@ public class EventsTest extends AbstractGWTTest {
 
 		Assert.assertEquals(true, tested);
 	}
-	
+
 	@Test
 	public void checkMouseWheelEvent() {
 		tested = false;
 		Button b = new Button();
 		b.addMouseWheelHandler(new MouseWheelHandler() {
-			
+
 			public void onMouseWheel(MouseWheelEvent event) {
 				tested = !tested;
 			}
-			
+
 		});
 
 		Assert.assertEquals(false, tested);

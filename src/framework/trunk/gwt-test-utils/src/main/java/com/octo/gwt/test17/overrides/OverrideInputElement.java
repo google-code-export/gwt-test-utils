@@ -15,6 +15,7 @@ public class OverrideInputElement extends InputElement {
 	private int overrideTabIndex;
 	private boolean overrideDefaultChecked = false;
 	private boolean overrideChecked = overrideDefaultChecked;
+	private boolean overrideDisabled = false;
 	
 	public OverrideInputElement(String type) {
 		this.type = type;
@@ -54,6 +55,14 @@ public class OverrideInputElement extends InputElement {
 
 	public void setOverrideChecked(boolean overrideChecked) {
 		this.overrideChecked = overrideChecked;
+	}
+
+	public boolean isOverrideDisabled() {
+		return overrideDisabled;
+	}
+
+	public void setOverrideDisabled(boolean overrideDisabled) {
+		this.overrideDisabled = overrideDisabled;
 	}
 
 	public static OverrideInputElement overrideCast(Object o) {

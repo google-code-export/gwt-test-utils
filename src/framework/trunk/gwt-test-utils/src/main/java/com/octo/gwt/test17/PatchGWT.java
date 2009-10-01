@@ -325,6 +325,8 @@ public class PatchGWT {
 			new Patch("isDefaultChecked", castThisAndCall(OverrideInputElement.class, "isOverrideDefaultChecked")),
 			new Patch("setDefaultChecked", castThisAndCall(OverrideInputElement.class, "setOverrideDefaultChecked", "$1")),
 			new Patch("setChecked", castThisAndCall(OverrideInputElement.class, "setOverrideChecked", "$1")),
+			new Patch("isDisabled", castThisAndCall(OverrideInputElement.class, "isOverrideDisabled")),
+			new Patch("setDisabled", castThisAndCall(OverrideInputElement.class, "setOverrideDisabled", "$1")),
 		});
 
 		PatchUtils.applyPatches(LabelElement.class, new Patch[] {

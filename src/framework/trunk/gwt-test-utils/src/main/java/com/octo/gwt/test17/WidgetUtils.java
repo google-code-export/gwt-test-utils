@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.CheckBox;
+import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.UIObject;
@@ -31,6 +32,7 @@ public class WidgetUtils {
 			checkBox.setValue(!checkBox.getValue());
 		} 
 
+		checkIsClickable(target, "click");
 		target.onBrowserEvent(new OverrideEvent(Event.ONCLICK));
 	}
 
@@ -64,6 +66,25 @@ public class WidgetUtils {
 	
 	public static void mouseWheel(Widget target) {
 		target.onBrowserEvent(new OverrideEvent(Event.ONMOUSEWHEEL));
+	}
+	
+	private static void checkIsClickable(Widget widget, String event) {
+		checkWidgetVisible(widget, event);
+
+		if (widget instanceof FocusWidget) {
+			if (!((FocusWidget) widget).isEnabled()) {
+				throw new WidgetException("Widget has to be enabled to apply the browser event \"" + event + "\"");
+			}
+		}
+	}
+	
+	private static void checkWidgetVisible(Widget widget, String event) {
+		if (!widget.isVisible()) {
+			throw new WidgetException("Widget has to be enabled to apply the browser event \"" + event + "\"");
+		}
+		if (widget.getParent() != null) {
+			checkWidgetVisible(widget.getParent(), event);
+		}
 	}
 
 }
