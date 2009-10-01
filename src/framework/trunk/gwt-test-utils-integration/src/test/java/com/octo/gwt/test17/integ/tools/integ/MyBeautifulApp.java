@@ -2,6 +2,8 @@ package com.octo.gwt.test17.integ.tools.integ;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -23,6 +25,8 @@ public class MyBeautifulApp implements EntryPoint {
 	
 	private TextBox t;
 	
+	private Label historyLabel;
+	
 	public void onModuleLoad() {
 		FlowPanel panel = new FlowPanel();
 		b1 = new Button();
@@ -34,6 +38,9 @@ public class MyBeautifulApp implements EntryPoint {
 		panel.add(l);
 		t = new TextBox();
 		panel.add(t);
+		historyLabel = new Label();
+		panel.add(historyLabel);
+		
 		RootPanel.get().add(panel);
 		
 		b1.addClickHandler(new ClickHandler() {
@@ -67,6 +74,14 @@ public class MyBeautifulApp implements EntryPoint {
 					
 				});	
 			}
+		});
+		
+		t.addChangeHandler(new ChangeHandler() {
+			
+			public void onChange(ChangeEvent event) {
+				historyLabel.setText("t was filled");
+			}
+			
 		});
 	}
 

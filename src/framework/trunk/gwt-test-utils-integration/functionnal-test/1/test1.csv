@@ -2,7 +2,7 @@ start
 initApp
 assertExact;init;/root/widget(0)/widget(2)/text
 assertExact;init;/app/l/text
-assertNumberExact;4;/root/widget(0)/widgetCount
+assertNumberExact;5;/root/widget(0)/widgetCount
 assertContain;nit;/app/l/text
 click;/app/b1
 assertExact;click on b1;/app/l/text
@@ -10,5 +10,6 @@ click;/app/b2
 assertExact;click on b2;/app/l/text
 fillTextBox;test;/app/t
 assertExact;test;/app/t/text
+assertExact;t was filled;/app/historyLabel/text
 runmacro;appendStatic
 append;End of 1st test
