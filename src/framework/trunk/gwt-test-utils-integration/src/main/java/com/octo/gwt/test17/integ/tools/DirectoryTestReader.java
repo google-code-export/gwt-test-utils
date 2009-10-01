@@ -38,13 +38,13 @@ public class DirectoryTestReader {
 	public DirectoryTestReader(Class<?> clazz) {
 		CsvDirectory csvDirectoryAnnotation = ReflectionUtils.getAnnotation(clazz, CsvDirectory.class);
 		if (csvDirectoryAnnotation == null) {
-			throw new RuntimeException("Missing annotation CsvDirectory");
+			throw new RuntimeException("Missing annotation \'@CsvDirectory\' on class [" + clazz.getCanonicalName() + "]");
 		}
 		csvDirectory = csvDirectoryAnnotation.value();
 		csvShortName = csvDirectory.substring(csvDirectory.lastIndexOf('/') + 1);
 		CsvMacros csvMacrosAnnotation = ReflectionUtils.getAnnotation(clazz, CsvMacros.class);
 		if (csvMacrosAnnotation == null) {
-			throw new RuntimeException("Missing annotation CsvMacros");
+			throw new RuntimeException("Missing annotation \'@CsvMacros\' on class [" + clazz.getCanonicalName() + "]");
 		}
 		this.csvMacros = new ArrayList<String>();
 		for(String s : csvMacrosAnnotation.value()) {
@@ -52,7 +52,7 @@ public class DirectoryTestReader {
 		}
 		File directory = new File(this.csvDirectory);
 		if (!directory.exists()) {
-			throw new RuntimeException("Not existing directory");
+			throw new RuntimeException("Firectory [" + this.csvDirectory + "] does not exist");
 		}
 	
 		testMethods = new ArrayList<Method>();
