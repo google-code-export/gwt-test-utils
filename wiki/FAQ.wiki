@@ -1,12 +1,21 @@
 #summary Frequently Asked Questions
 
-== java5/6 (simule error) ==
+== I get a {{{java.lang.UnsupportedClassVersionError}}}. Why ? ==
 
-==
-== Exception : cannot create class ?? ==
+The exception {{{java.lang.UnsupportedClassVersionError: Bad version number in .class file}}} will automatically be thrown if you are trying to launch your test with a JVM 5 or older.
 
-== I get a {{{java.lang.UnsatisfiedLinkError}}} when launching my tests ==
+In fact, the java agent developped to modify GWT component (contained in {{{bootstrap.jar}}}) had to be compile with a 1.6 JDK since JVM 5 is not able to modify native methods on the fly.
 
+So, you *must* launch your test with a JVM 6 or higher. Of course, the rest of your code can be compiled and run with any other Java version.
+
+
+== I get a {{{java.lang.RuntimeException: No managed create class for class :}}} What do I miss ? ==
+
+== I get a {{{java.lang.UnsatisfiedLinkError}}} when launching my tests. What can I do ?==
+
+This exception will be thrown whenever you use a widget fonctionnality which call a native JSNI method the framework does not patch yet for the standard JVM.
+
+Make sure you are using the lastest version of _gwt-test-utils_. If you are already up-to-date, please report an issue.
 
 == How to simule browser event on widget ? ==
 
