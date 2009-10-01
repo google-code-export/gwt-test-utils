@@ -4,7 +4,7 @@
 
 The exception {{{java.lang.UnsupportedClassVersionError: Bad version number in .class file}}} will automatically be thrown if you are trying to launch your test with a JVM 5 or older.
 
-In fact, the java agent developped to modify GWT component (contained in {{{bootstrap.jar}}}) had to be compile with a 1.6 JDK since JVM 5 is not able to modify native methods on the fly.
+In fact, the java agent developped to modify GWT component (contained in {{{bootstrap.jar}}}) had to be compiled with a 1.6 JDK, beacuse JVM 5 is not able to modify native methods on the fly.
 
 So, you *must* launch your test with a JVM 6 or higher. Of course, the rest of your code can be compiled and run with any other Java version.
 
