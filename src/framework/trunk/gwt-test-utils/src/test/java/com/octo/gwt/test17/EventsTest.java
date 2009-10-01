@@ -45,34 +45,6 @@ public class EventsTest extends AbstractGWTTest {
 	}
 
 	@Test
-	public void checkClickEventAndError() {
-		Button b = new Button();
-		b.addClickHandler(new ClickHandler() {
-
-			public void onClick(ClickEvent event) {
-				//nothing to do
-
-			}
-
-		});
-
-		//the button is disabled
-		b.setVisible(false);
-
-		WidgetException exceptedEx = null;
-
-		try {
-			//simule the event
-			click(b);
-		} catch (WidgetException e) {
-			exceptedEx = e;
-		}
-
-		//Assert exception has been thrown
-		Assert.assertNotNull(exceptedEx);
-	}
-
-	@Test
 	public void checkBlurEvent() {
 		tested = false;
 		Button b = new Button();

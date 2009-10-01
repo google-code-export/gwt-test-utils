@@ -2,6 +2,8 @@ package com.octo.gwt.test17;
 
 import java.util.List;
 
+import org.junit.Assert;
+
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.FocusWidget;
@@ -73,14 +75,14 @@ public class WidgetUtils {
 
 		if (widget instanceof FocusWidget) {
 			if (!((FocusWidget) widget).isEnabled()) {
-				throw new WidgetException("Widget has to be enabled to apply the browser event \"" + event + "\"");
+				Assert.fail("Widget has to be enabled to apply the browser event \"" + event + "\"");
 			}
 		}
 	}
 	
 	private static void checkWidgetVisible(Widget widget, String event) {
 		if (!widget.isVisible()) {
-			throw new WidgetException("Widget has to be enabled to apply the browser event \"" + event + "\"");
+			Assert.fail("Widget has to be enabled to apply the browser event \"" + event + "\"");
 		}
 		if (widget.getParent() != null) {
 			checkWidgetVisible(widget.getParent(), event);
