@@ -1,14 +1,24 @@
 package com.octo.gwt.test17.integ.tools;
 
+import java.lang.reflect.Method;
 import java.util.List;
 
 import org.junit.Assert;
 
+import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.ui.CheckBox;
+import com.google.gwt.user.client.ui.FocusWidget;
+import com.google.gwt.user.client.ui.Grid;
+import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.SuggestBox;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.octo.gwt.test17.WidgetUtils;
 import com.octo.gwt.test17.integ.csvrunner.CsvRunner;
 import com.octo.gwt.test17.integ.csvrunner.Node;
+import com.octo.gwt.test17.overrides.OverrideEvent;
 
 public abstract class AbstractGwtIntegrationShell {
 
@@ -17,7 +27,7 @@ public abstract class AbstractGwtIntegrationShell {
 	protected CsvRunner csvRunner;
 	
 	private MacroReader macroReader;
-
+	
 	public void setReader(DirectoryTestReader reader) {
 		this.reader = reader;
 		this.csvRunner = new CsvRunner();
@@ -104,6 +114,134 @@ public abstract class AbstractGwtIntegrationShell {
 	public void click(String objectLocalization) {
 		Widget widget = getObject(Widget.class, objectLocalization);
 		WidgetUtils.click(widget);
+	}
+
+	public void hasStyle(String style, String objectLocalization) {
+		Widget w = getObject(Widget.class, objectLocalization);
+		Assert.assertTrue(csvRunner.getAssertionErrorMessagePrefix() + "Style not found : " + style, w.getStyleName().contains(style));
+	}
+	
+	public void assertNotExist(String objectLocalization) {
+		Object o = getObject(Object.class, objectLocalization, false);
+		Assert.assertNull(csvRunner.getAssertionErrorMessagePrefix() + "Object exist", o);
+	}
+	
+	public void callMethod(String objectLocalization) {
+		getObject(Object.class, objectLocalization, false);
+	}
+	
+	public void isChecked(String objectLocalization) {
+		CheckBox checkBox = getObject(CheckBox.class, objectLocalization);
+		Assert.assertTrue(csvRunner.getAssertionErrorMessagePrefix() + "Checkbox not checked", checkBox.getValue());
+	}
+	
+	public void isNotChecked(String objectLocalization) {
+		CheckBox checkBox = getObject(CheckBox.class, objectLocalization);
+		Assert.assertTrue(csvRunner.getAssertionErrorMessagePrefix() + "Checkbox checked", !checkBox.getValue());
+	}
+	
+	public void clickOnTableRow(String rowIndex, String objectLocalization) {
+		Grid grid = getObject(Grid.class, objectLocalization);
+		checkWidgetVisible(grid, objectLocalization);
+		WidgetUtils.click(grid.getWidget(Integer.parseInt(rowIndex), 0));
+	}
+	
+	public void selectListBox(String value, String objectLocalization) {
+		ListBox listBox = getObject(ListBox.class, objectLocalization);
+		checkWidgetVisibleAndEnable(listBox, objectLocalization);
+		listBox.setSelectedIndex(Integer.parseInt(value));
+		listBox.onBrowserEvent(new OverrideEvent(Event.ONKEYUP));
+	}
+	
+	public void selectSuggest(String index, String objectLocalization) {
+		SuggestBox suggestBox = getObject(SuggestBox.class, objectLocalization);
+		checkWidgetVisible(suggestBox, objectLocalization);
+		MenuItem item = getObject(MenuItem.class, objectLocalization + "/suggestionMenu/items[" + Integer.parseInt(index) + "]");
+		for (Method m : SuggestBox.class.getDeclaredMethods()) {
+			if ("setNewSelection".equals(m.getName())) {
+				try {
+					m.setAccessible(true);
+					m.invoke(suggestBox, item);
+					return;
+				} catch (Exception e) {
+					throw new RuntimeException(e);
+				}
+			}
+		}
+		throw new RuntimeException("Method not found setNewSelection");
+	}
+	
+	// TODO: delete "ONCHANGE" events
+	public void fillTextBox(String value, String objectLocalization) {
+		Widget widget = getObject(Widget.class, objectLocalization);
+		TextBox textBox = (TextBox) widget;
+		checkWidgetVisibleAndEnable(textBox, objectLocalization);
+		textBox.setText(value);
+		textBox.onBrowserEvent(new OverrideEvent(Event.ONKEYUP));
+		textBox.onBrowserEvent(new OverrideEvent(Event.ONCHANGE));
+	}
+
+	public void fillInvisibleTextBox(String value, String objectLocalization) {
+		TextBox textBox = getObject(TextBox.class, objectLocalization);
+		textBox.setText(value);
+		textBox.onBrowserEvent(new OverrideEvent(Event.ONKEYUP));
+		textBox.onBrowserEvent(new OverrideEvent(Event.ONCHANGE));
+	}
+
+	public void fillListBox(String value, String objectLocalization) {
+		ListBox listBox = getObject(ListBox.class, objectLocalization);
+		checkWidgetVisibleAndEnable(listBox, objectLocalization);
+		listBox.setSelectedIndex(Integer.parseInt(value));
+		listBox.onBrowserEvent(new OverrideEvent(Event.ONCLICK));
+		listBox.onBrowserEvent(new OverrideEvent(Event.ONCHANGE));
+	}
+
+	public void fillSuggestBox(String value, String objectLocalization) {
+		SuggestBox suggestBox = getObject(SuggestBox.class, objectLocalization);
+		checkWidgetVisible(suggestBox, objectLocalization);
+		suggestBox.setText(value);
+		suggestBox.onBrowserEvent(new OverrideEvent(Event.ONKEYUP));
+	}
+	
+	public void isVisible(String objectLocalization) {
+		Widget widget = getObject(Widget.class, objectLocalization);
+		checkWidgetVisible(widget, objectLocalization);
+	}
+
+	public void isNotVisible(String objectLocalization) {
+		Widget widget = getObject(Widget.class, objectLocalization);
+		Assert.assertFalse(csvRunner.getAssertionErrorMessagePrefix() + "Visible " + objectLocalization, widget.isVisible());
+	}
+
+	public void isEnabled(String objectLocalization) {
+		FocusWidget button = getFocusWidget(objectLocalization);
+		Assert.assertTrue(csvRunner.getAssertionErrorMessagePrefix() + "is not Enabled " + objectLocalization, button.isEnabled());
+	}
+
+	public void isNotEnabled(String objectLocalization) {
+		FocusWidget button = getFocusWidget(objectLocalization);
+		Assert.assertFalse(csvRunner.getAssertionErrorMessagePrefix() + "is Enabled " + objectLocalization, button.isEnabled());
+	}
+	
+	private FocusWidget getFocusWidget(String objectLocalization) {
+		return getObject(FocusWidget.class, objectLocalization);
+	}
+	
+	private void checkWidgetVisibleAndEnable(FocusWidget widget, String objectLocalization) {
+		if (!widget.isEnabled()) {
+			Assert.fail(csvRunner.getAssertionErrorMessagePrefix() + "Widget have to be enabled : " + objectLocalization);
+		}
+		checkWidgetVisible(widget, objectLocalization);
+	}
+	
+	private void checkWidgetVisible(Widget widget, String objectLocalization) {
+		if (!widget.isVisible()) {
+			Assert.fail(csvRunner.getAssertionErrorMessagePrefix() + "Widget have to be visible : " + objectLocalization + ", "
+					+ widget.getClass().getCanonicalName());
+		}
+		if (widget.getParent() != null) {
+			checkWidgetVisible(widget.getParent(), objectLocalization);
+		}
 	}
 
 }
