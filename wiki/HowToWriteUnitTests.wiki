@@ -42,7 +42,7 @@ public class SimpleComposite extends Composite {
 }
 }}}
 
-When the button is clicked, the label display "_The button was clicked !_". This is very simple and works great when the SimpleComposite is added to GWT RootPanel.
+When the button is clicked, the label display "_The button was clicked !_". This is very simple and works great when the {{{SimpleComposite}}} is added to GWT {{{RootPanel}}}.
 
 Now, we want to write a unit test to ensure clicking the button always will display "_The button was clicked !_" in the label :
 
