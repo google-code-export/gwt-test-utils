@@ -9,6 +9,7 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.TextBox;
 
 public class MyBeautifulApp implements EntryPoint {
 
@@ -20,6 +21,8 @@ public class MyBeautifulApp implements EntryPoint {
 	
 	private Label l;
 	
+	private TextBox t;
+	
 	public void onModuleLoad() {
 		FlowPanel panel = new FlowPanel();
 		b1 = new Button();
@@ -29,6 +32,8 @@ public class MyBeautifulApp implements EntryPoint {
 		l = new Label();
 		l.setText("init");
 		panel.add(l);
+		t = new TextBox();
+		panel.add(t);
 		RootPanel.get().add(panel);
 		
 		b1.addClickHandler(new ClickHandler() {
