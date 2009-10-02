@@ -188,7 +188,7 @@ public abstract class AbstractGwtIntegrationShell {
 		textBox.onBrowserEvent(new OverrideEvent(Event.ONCHANGE));
 	}
 
-	public void fillListBox(String value, String objectLocalization) {
+	public void selectInListBox(String value, String objectLocalization) {
 		ListBox listBox = getObject(ListBox.class, objectLocalization);
 		checkWidgetVisibleAndEnable(listBox, objectLocalization);
 		listBox.setSelectedIndex(Integer.parseInt(value));
