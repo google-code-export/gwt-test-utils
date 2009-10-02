@@ -26,7 +26,7 @@ _gwt-test-utils_ will mock your {{{MyService}}} instance with <a href="http://ea
 
 Note the you *have to* use the annotation on the asynchronous version of the service interface.
 
-A complete example of mocking GWT RCP call is available in demonstration projects available in the <a href="http://code.google.com/p/gwt-test-utils/downloads/list">Downloads section</a>.
+A complete example of mocking GWT RCP call is available in demonstration projects available in the <a href="http://code.google.com/p/gwt-test-utils/wiki/HowToWriteUnitTests#Tests_with_a_GWT_RPC_call">wiki</a>.
 
 
 
