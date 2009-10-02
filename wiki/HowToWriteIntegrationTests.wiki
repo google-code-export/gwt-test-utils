@@ -1,13 +1,11 @@
-#summary This page explains how to write integration tests with _gwt-test-utils_
+#summary This page explains how to write integration tests with gwt-test-utils
 
 = Introduction =
 
-Add your content here.
+= Sample = 
 
+== First basic scenario ==
 
-= Details =
+== Scenario with server calls ==
 
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+== Scenario with server calls using Spring ==
