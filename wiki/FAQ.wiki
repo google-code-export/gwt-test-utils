@@ -9,7 +9,26 @@ In fact, the java agent developped to modify GWT component (contained in {{{boot
 So, you *must* launch your test with a JVM 6 or higher. Of course, the rest of your code can be compiled and run with any other Java version.
 
 
-== I get a {{{java.lang.RuntimeException: No managed create class for class :}}} What do I miss ? ==
+
+== I get a {{{ java.lang.RuntimeException: No mock registered for class}}} What do I miss ? == 
+
+It simply means that you forget to declare the class to be mocked.
+Let's assume you have a GWT Widget that make RCP call to the server via {{{MyService.myMethod()}}}.
+
+In your test class, you have to declare a mock for this service :
+
+{{{
+@Mock
+private MyServiceAsync myService;
+}}}
+
+_gwt-test-utils_ will mock your {{{MyService}}} instance with <a href="http://easymock.org/">{{{EasyMock}}}</a>.
+
+Note the you *have to* use the annotation on the asynchronous version of the service interface.
+
+A complete example of mocking GWT RCP call is available in demonstration projects available in the <a href="http://code.google.com/p/gwt-test-utils/downloads/list">Downloads section</a>.
+
+
 
 == I get a {{{java.lang.UnsatisfiedLinkError}}} when launching my tests. What can I do ?==
 
