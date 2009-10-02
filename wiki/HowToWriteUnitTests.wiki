@@ -1,3 +1,5 @@
+#summary This page explains how to write unit tests for GWT with gwt-test-utils
+
 = Samples =
 
 A complete sample application is available through the <a href="http://code.google.com/p/gwt-test-utils/downloads/list">Downloads section</a>.
