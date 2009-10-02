@@ -52,7 +52,7 @@ public class SimpleComposite extends Composite {
 		// Add click handlers to the button
 		button.addClickHandler(new ClickHandler() {
 
-			public void onClick(ClickEvent arg0) {
+			public void onClick(ClickEvent event) {
 				label.setText("The button was clicked with value : " + listBox.getItemText(listBox.getSelectedIndex()));
 			}
 		});
