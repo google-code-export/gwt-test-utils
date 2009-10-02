@@ -17,7 +17,7 @@ First, you have to setup the required dependency in the _pom.xml_ :
 </dependencies>   
 }}}
 
-If you want to run integration tests with _gwt-test-utils_ senarii writer feature, you would have to setup another dependency : 
+If you want to run integration tests with _gwt-test-utils_ scenario writer feature, you would have to setup another dependency : 
 
 {{{
 <dependencies>
