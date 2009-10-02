@@ -10,14 +10,31 @@ First, you have to setup the required dependency in the _pom.xml_ :
    <dependency>
       <groupId>com.octo.gwt.test17</groupId>
       <artifactId>gwt-test-utils</artifactId>
-         <version>${gwt.test.utils.version}</version>
+         <version>0.2</version>
          <scope>test</scope>
    </dependency>
    ...
 </dependencies>   
 }}}
 
-You also have to specify the gwt-test-utils Maven repository :
+If you want to run integration tests with _gwt-test-utils_ senarii writer feature, you would have to setup another dependency : 
+
+{{{
+<dependencies>
+   ...
+   <dependency>
+      <groupId>com.octo.gwt.test17</groupId>
+      <artifactId>gwt-test-utils-integration</artifactId>
+         <version>0.2</version>
+         <scope>test</scope>
+   </dependency>
+   ...
+</dependencies>   
+}}}
+
+Note that {{{gwt-test-utils-integration}}} module directly depends on {{{gwt-test-utils}}}, so you don't need to declare the first dependency in your {{{pom.xml}}}.
+
+In the two cases, you will also have to specify the gwt-test-utils Maven repository :
 
 {{{
 <repositories>
