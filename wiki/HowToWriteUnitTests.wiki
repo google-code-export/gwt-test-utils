@@ -1,6 +1,6 @@
 = Samples =
 
-A complete sample application is available through the *Downloads* section.
+A complete sample application is available through the <a href="http://code.google.com/p/gwt-test-utils/downloads/list">Downloads section</a>.
 
 == Tests on a button ==
 
