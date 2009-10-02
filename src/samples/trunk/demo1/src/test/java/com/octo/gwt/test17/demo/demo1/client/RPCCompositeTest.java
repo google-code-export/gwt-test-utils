@@ -16,7 +16,7 @@ import com.octo.gwt.test17.test.AbstractGWTEasyMockTest;
 public class RPCCompositeTest extends AbstractGWTEasyMockTest {
 
 	@Mock
-	private FirstServiceAsync service;
+	private MyServiceAsync service;
 
 	private RPCComposite composite;
 

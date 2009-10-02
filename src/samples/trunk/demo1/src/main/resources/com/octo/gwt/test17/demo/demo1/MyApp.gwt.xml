@@ -3,7 +3,7 @@
 	<inherits name="com.google.gwt.i18n.I18N" />
 	<inherits name='com.google.gwt.user.theme.standard.Standard' />
 
-	<entry-point class='com.octo.gwt.test17.demo.demo1.client.FirstModule' />
+	<entry-point class='com.octo.gwt.test17.demo.demo1.client.MyApp' />
 	
 	<stylesheet src='css/style.css' />
 

@@ -3,7 +3,7 @@ package com.octo.gwt.test17.demo.demo1.client;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.user.client.ui.RootPanel;
 
-public class FirstModule implements EntryPoint {
+public class MyApp implements EntryPoint {
 
 	/**
 	 * This is the entry point method.

@@ -20,7 +20,7 @@ public class RPCComposite extends Composite {
 	// version of the interface. The cast is always safe because the 
 	// generated proxy implements the asynchronous interface automatically.
 	//
-	private FirstServiceAsync service = (FirstServiceAsync) GWT.create(FirstService.class);
+	private MyServiceAsync service = (MyServiceAsync) GWT.create(MyService.class);
 
 	public RPCComposite() {
 		button.setText("Create a FooBean");

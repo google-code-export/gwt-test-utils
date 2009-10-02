@@ -68,8 +68,8 @@
 				<configuration>
 					<hostedWebapp>target/hostedWebapp</hostedWebapp>
 					<logLevel>INFO</logLevel>
-					<module>com.octo.gwt.test17.demo.demo1.FirstModule</module>
-					<runTarget>com.octo.gwt.test17.demo.demo1.FirstModule/FirstModule.html</runTarget>
+					<module>com.octo.gwt.test17.demo.demo1.MyApp</module>
+					<runTarget>com.octo.gwt.test17.demo.demo1.MyApp/MyApp.html</runTarget>
 					<style>OBF</style>
 					<extraJvmArgs>-Xmx512m</extraJvmArgs>
 				</configuration>

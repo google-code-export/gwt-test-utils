@@ -6,12 +6,12 @@
 	<display-name>Archetype Created Web Application</display-name>
 
 	<servlet>
-		<servlet-name>first</servlet-name>
-		<servlet-class>com.octo.gwt.test17.demo.demo1.server.FirstServiceImpl</servlet-class>
+		<servlet-name>myService</servlet-name>
+		<servlet-class>com.octo.gwt.test17.demo.demo1.server.MyServiceImpl</servlet-class>
 	</servlet>
 	
 	<servlet-mapping>
-		<servlet-name>first</servlet-name>
-		<url-pattern>/com.octo.gwt.test17.demo.demo1.FirstModule/firstService</url-pattern>
+		<servlet-name>myService</servlet-name>
+		<url-pattern>/com.octo.gwt.test17.demo.demo1.MyApp/myService</url-pattern>
 	</servlet-mapping>
 </web-app>

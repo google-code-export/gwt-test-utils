@@ -4,8 +4,8 @@ import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import com.octo.gwt.test17.demo.demo1.beans.FooBean;
 
-@RemoteServiceRelativePath("firstService")
-public interface FirstService extends RemoteService {
+@RemoteServiceRelativePath("myService")
+public interface MyService extends RemoteService {
 
 	public FooBean createBean(String name);
 
