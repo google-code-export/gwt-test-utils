@@ -4,6 +4,7 @@ import java.lang.reflect.Method;
 import java.util.List;
 
 import org.junit.Assert;
+import org.junit.Before;
 
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.CheckBox;
@@ -15,6 +16,8 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
+import com.octo.gwt.test17.GwtCreateHandler;
+import com.octo.gwt.test17.PatchGWT;
 import com.octo.gwt.test17.WidgetUtils;
 import com.octo.gwt.test17.integ.csvrunner.CsvRunner;
 import com.octo.gwt.test17.integ.csvrunner.Node;
@@ -27,6 +30,13 @@ public abstract class AbstractGwtIntegrationShell {
 	protected CsvRunner csvRunner;
 	
 	private MacroReader macroReader;
+	
+	@Before
+	public void setUp() throws Exception {
+		PatchGWT.init();
+		PatchGWT.reset();
+		PatchGWT.setGwtCreateHandler(getGwtCreateHandler());
+	}
 	
 	public void setReader(DirectoryTestReader reader) {
 		this.reader = reader;
@@ -53,7 +63,7 @@ public abstract class AbstractGwtIntegrationShell {
 		csvRunner.runSheet(reader.getTest(testName), this);		
 	}
 		
-	public PrefixProcessor findPrefixProcessor(String prefix) {
+	protected PrefixProcessor findPrefixProcessor(String prefix) {
 		if ("root".equals(prefix)) {
 			return new PrefixProcessor() {
 
@@ -63,6 +73,11 @@ public abstract class AbstractGwtIntegrationShell {
 				
 			};
 		}
+		return null;
+	}
+	
+	protected GwtCreateHandler getGwtCreateHandler() {
+		//this method can be overrided
 		return null;
 	}
 	
