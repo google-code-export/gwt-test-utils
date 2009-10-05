@@ -5,6 +5,6 @@ import com.octo.gwt.test17.integ.csvrunner.Node;
 
 public interface PrefixProcessor {
 
-	Object process(CsvRunner csvRunner, Node next);
+	Object process(CsvRunner csvRunner, Node next, boolean failOnError);
 
 }

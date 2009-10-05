@@ -57,8 +57,8 @@ public abstract class AbstractGwtIntegrationShell {
 		if ("root".equals(prefix)) {
 			return new PrefixProcessor() {
 
-				public Object process(CsvRunner csvRunner, Node next) {
-					return csvRunner.getValue(RootPanel.get(), next);
+				public Object process(CsvRunner csvRunner, Node next, boolean failOnError) {
+					return csvRunner.getValue(failOnError, RootPanel.get(), next);
 				}
 				
 			};
@@ -79,7 +79,7 @@ public abstract class AbstractGwtIntegrationShell {
 		Node next = n.getNext();
 		PrefixProcessor processor = findPrefixProcessor(prefix);
 		Assert.assertNotNull(csvRunner.getAssertionErrorMessagePrefix() + "Unkown prefix : <" + prefix + ">", processor);
-		Object o = processor.process(csvRunner, next);
+		Object o = processor.process(csvRunner, next, failOnError);
 		if (clazz.isInstance(o)) {
 			return (T) o;
 		}
@@ -110,10 +110,45 @@ public abstract class AbstractGwtIntegrationShell {
 		String s = getObject(String.class, objectLocalization);
 		Assert.assertTrue(csvRunner.getAssertionErrorMessagePrefix() + " not containing string " + value, s.contains(value));
 	}
+	
+	public void blur(String objectLocalization) {
+		Widget widget = getObject(Widget.class, objectLocalization);
+		WidgetUtils.blur(widget);
+	}
+	
+	public void change(String objectLocalization) {
+		Widget widget = getObject(Widget.class, objectLocalization);
+		WidgetUtils.change(widget);
+	}
 
 	public void click(String objectLocalization) {
 		Widget widget = getObject(Widget.class, objectLocalization);
 		WidgetUtils.click(widget);
+	}
+	
+	public void focus(String objectLocalization) {
+		Widget widget = getObject(Widget.class, objectLocalization);
+		WidgetUtils.focus(widget);
+	}
+	
+	public void mouseDown(String objectLocalization) {
+		Widget widget = getObject(Widget.class, objectLocalization);
+		WidgetUtils.mouseDown(widget);
+	}
+	
+	public void mouseMove(String objectLocalization) {
+		Widget widget = getObject(Widget.class, objectLocalization);
+		WidgetUtils.mouseMove(widget);
+	}
+	
+	public void mouseUp(String objectLocalization) {
+		Widget widget = getObject(Widget.class, objectLocalization);
+		WidgetUtils.mouseUp(widget);
+	}	
+	
+	public void mouseWheel(String objectLocalization) {
+		Widget widget = getObject(Widget.class, objectLocalization);
+		WidgetUtils.mouseWheel(widget);
 	}
 
 	public void hasStyle(String style, String objectLocalization) {
@@ -121,7 +156,7 @@ public abstract class AbstractGwtIntegrationShell {
 		Assert.assertTrue(csvRunner.getAssertionErrorMessagePrefix() + "Style not found : " + style, w.getStyleName().contains(style));
 	}
 	
-	public void assertNotExist(String objectLocalization) {
+	public void assertNull(String objectLocalization) {
 		Object o = getObject(Object.class, objectLocalization, false);
 		Assert.assertNull(csvRunner.getAssertionErrorMessagePrefix() + "Object exist", o);
 	}
@@ -150,7 +185,7 @@ public abstract class AbstractGwtIntegrationShell {
 		ListBox listBox = getObject(ListBox.class, objectLocalization);
 		checkWidgetVisibleAndEnable(listBox, objectLocalization);
 		listBox.setSelectedIndex(Integer.parseInt(value));
-		listBox.onBrowserEvent(new OverrideEvent(Event.ONKEYUP));
+		listBox.onBrowserEvent(new OverrideEvent(Event.ONCHANGE));
 	}
 	
 	public void selectSuggest(String index, String objectLocalization) {

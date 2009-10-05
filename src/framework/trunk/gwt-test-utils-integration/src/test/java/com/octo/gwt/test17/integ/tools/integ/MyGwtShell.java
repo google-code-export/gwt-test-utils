@@ -57,8 +57,8 @@ public abstract class MyGwtShell extends AbstractGwtIntegrationShell {
 		if ("app".equals(prefix)) {
 			return new PrefixProcessor() {
 				
-				public Object process(CsvRunner csvRunner, Node next) {
-					return csvRunner.getValue(app, next);
+				public Object process(CsvRunner csvRunner, Node next, boolean failOnError) {
+					return csvRunner.getValue(failOnError, app, next);
 				}
 				
 			};
