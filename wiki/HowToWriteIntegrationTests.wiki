@@ -28,10 +28,7 @@ So, just add the gwt-test-utils-integration JAR file in your classpath or add th
 
 == A basic scenario ==
 
-But first, let's write a combinaison of browser actions on a simple UI, with no server call.
-Although this could be done with the GWT API just like we did to write <a href="http://code.google.com/p/gwt-test-utils/wiki/HowToWriteUnitTests">UI unit tests</a>, it's interesting to do it with the CSV grammar to understand its basics.
-
-Let's code a simple GWT UI.
+But first, let's write a combinaison of browser actions on a simple UI, with no server call. Let's code a simple GWT UI.
 
 The main {{{EntryPoint}}} : 
 
@@ -141,23 +138,48 @@ Now, we can write the corresponding CSV senario and assertions which will use {{
 start
 initApp
 assertNull;/simpleComposite/label/text
-mouseMove;/root/widget(0)/img
+mouseMove;/simpleComposite/img
+assertExact;mouse moved on picture !;/simpleComposite/label/text
 assertExact;mouse moved on picture !;/root/widget(0)/label/text
 assertExact;mouse moved on picture !;/myApp/c1/label/text
-assertExact;mouse moved on picture !;/simpleComposite/label/text
 }}}
 
 First, we had to start the script with the instruction {{{start}}}.
 Than, we called the {{{MyTestShell.initApp()}}} method to instanciate the GWT application.
 
-Since the application is initialized, we can do some actions.
-So, let's explain the line {{{assertNull;/simpleComposite/label/text}}} : 
- *The first CSV cell desribe the action to do. {{{AbstractGwtIntegrationShell}}} provides some test statements, such as {{{assertNull}}}, {{{assertExact}}}, {{{assertNumberExact}}}, {{{assertContains}}} and so on.
- *Other cells are the argument. In that case, the {{{AbstractGwtIntegrationShell.assertNull(String objectLocalization)}}} requiers one only argument, the object Localisation in the UI.
+Since the application is initialized, we can do some actions. So, let's explain the line {{{assertNull;/simpleComposite/label/text}}} : 
+
+ * The first CSV cell desribe the action to do. Each action *must* have a corresponding method in the run test class, which can be retrieved by name. {{{AbstractGwtIntegrationShell}}} provides some test statements, such as {{{assertNull}}}, {{{assertExact}}}, {{{assertNumberExact}}}, {{{assertContains}}} and so on.
+ * Other cells are the action arguments. In that case, the {{{AbstractGwtIntegrationShell.assertNull(String objectLocalization)}}} requiers one only argument, the object localisation in the UI.
+
+Object localisation strings used to retrived objects in the UI use a _XPath-like_ syntax which is very easy to understand : {{{/simpleComposite/label/text}}} will retrieve the object binded to the "simpleComposite" prefix we defined by overriding {{{AbstractGwtIntegrationShell.findPrefixProcessor(String prefix)}}} method.
+It assumes this object have an inner property called "label" which have a method "getText()".
+So this line just assert the label of the text of our {{{SimpleComposite}}} is null when the application just has been initialized. 
 
 
+Then, we can simule the browser event on the image : {{{mouseMove;/root/widget(0)/img}}}.
 
+{{{AbstractGwtIntegrationShell}}} provides a lot of function to launch events on a widget : "click", "dblClick", "blur", "change", "mouseDown", "mouseUp" and so on.
+
+Finally, we have to assert that the label is correctly filled : 
+
+{{{
+assertExact;mouse moved on picture !;/simpleComposite/label/text
+assertExact;mouse moved on picture !;/root/widget(0)/label/text
+assertExact;mouse moved on picture !;/myApp/c1/label/text
+}}}
+
+Those 3 lines do exactly the same thing with 3 different prefix processors : 
+ * *simpleComposite* refers to the {{{SimpleComposite}}} instance we added in the {{{RootPanel}}} in {{{MyApp.onModuleLoad()}}}
+ * *root* refers to the {{{RootPanel}}} itself. The corresponding {{{PrefixProcessor}}} is registered in the {{{AbstractGwtIntegrationShell.findPrefixProcessor()}}} we called after overriding it.
+ * *myApp* refers to the custom {{{EntryPoint}}} instance we initialize though the {{{MyTestShell.initApp()}}} method.
+
+
+By the way, this scenario could have been written simply with the GWT API just like we did to write <a href="http://code.google.com/p/gwt-test-utils/wiki/HowToWriteUnitTests">UI unit tests</a>.
+
+Now that you know how to do it with the CSV grammar and understand its basics, let's write a more complex scenario.
 
 == Scenario with server calls ==
+
 
 == Scenario with server calls using Spring ==
