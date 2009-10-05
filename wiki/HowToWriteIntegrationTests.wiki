@@ -1,10 +1,162 @@
-#summary This page explains how to write integration tests for a GWT application with gwt-test-utils
+#summary This page explains how to write integration tests with gwt-test-utils
 
 = Introduction =
 
-= Sample = 
+Coding complex UI use cases can be boring and... complex, depending on the used UI technology. That's why _gwt-test-utils_ comes with features to do it in a easy way : it provides a CSV human-readable grammar to simule user browser actions and to validate results.
+It also enable to connect real server backends to do real integration tests.
 
-== First basic scenario ==
+= Samples = 
+
+== Common configuration ==
+
+To write integration tests with _gwt-test-utils_ CSV grammar, you will need to use the corresponding dependency just like explained in the <a href="http://code.google.com/p/gwt-test-utils/wiki/HowToUse">How to use page</a>.
+
+So, just add the gwt-test-utils-integration JAR file in your classpath or add the maven dependency : 
+
+{{{
+<dependencies>
+   ...
+   <dependency>
+      <groupId>com.octo.gwt.test17</groupId>
+      <artifactId>gwt-test-utils-integration</artifactId>
+         <version>0.2</version>
+         <scope>test</scope>
+   </dependency>
+   ...
+</dependencies>   
+}}}
+
+== A basic scenario ==
+
+But first, let's write a combinaison of browser actions on a simple UI, with no server call.
+Although this could be done with the GWT API just like we did to write <a href="http://code.google.com/p/gwt-test-utils/wiki/HowToWriteUnitTests">UI unit tests</a>, it's interesting to do it with the CSV grammar to understand its basics.
+
+Let's code a simple GWT UI.
+
+The main {{{EntryPoint}}} : 
+
+{{{
+public class MyApp implements EntryPoint {
+	
+   private SimpleComposite c1;
+
+   public void onModuleLoad() {
+      c1 = new SimpleComposite();
+      RootPanel.get().add(c1);
+   }
+}
+}}}
+
+And the added GWT composite : 
+
+{{{
+public class SimpleComposite extends Composite {
+
+   private Label label;
+   private Image img;
+
+   public SimpleComposite() {
+		
+      label = new Label();
+      img = new Image("img/logo.PNG");
+
+      // The wrapper panel
+      VerticalPanel vPanel = new VerticalPanel();
+      vPanel.setWidth("100%");
+      vPanel.setHorizontalAlignment(VerticalPanel.ALIGN_CENTER);
+      vPanel.add(img);
+      vPanel.add(label);
+
+      // All composites must call initWidget() in their constructors.
+      initWidget(vPanel);
+
+      VerticalPanel dialogVPanel = new VerticalPanel();
+      dialogVPanel.setWidth("100%");
+      dialogVPanel.setHorizontalAlignment(VerticalPanel.ALIGN_CENTER);
+
+      // Add mouse move handler to the image
+      img.addMouseMoveHandler(new MouseMoveHandler() {
+
+         public void onMouseMove(MouseMoveEvent event) {
+            label.setText("mouse moved on picture !");
+         }
+
+      });
+
+   }
+}
+}}}
+
+The UI comportement is straightforward : moving the mouse on the logo image will display the message _"mouse moved on picture"_ in the label.
+
+To run tests, we need a Run class which can told were to find CSV files to run and how to start the GWT UI without the GWT Hosted Mode.
+{{{AbstractGwtIntegrationShell}}} is the base class to do it :
+
+{{{
+@CsvDirectory("functionnal-tests")
+@RunWith(StandardJUnit4CsvRunner.class)
+public class MyTestShell extends AbstractGwtIntegrationShell {
+
+   private MyApp myApp;
+
+   public void initApp() {
+      myApp = new MyApp();
+      myApp.onModuleLoad();
+   }
+
+   @Override
+   public PrefixProcessor findPrefixProcessor(String prefix) {
+      if ("myApp".equals(prefix)) {
+         return new PrefixProcessor() {
+
+            public Object process(CsvRunner csvRunner, Node next, boolean failOnError) {
+               return csvRunner.getValue(failOnError, myApp, next);
+            }
+
+         };
+      } else if ("simpleComposite".equals(prefix)) {
+         return new PrefixProcessor() {
+
+            public Object process(CsvRunner csvRunner, Node next, boolean failOnError) {
+               return csvRunner.getValue(failOnError, RootPanel.get().getWidget(0), next);
+            }
+         };
+      } 
+
+      return super.findPrefixProcessor(prefix);
+   }
+}
+}}}
+
+The {{{@CsvDirectory}}} class annotation tells _gwt-test-utils_ where to find CSV files. In this case, all files with the extension _*.csv*_ in the project folder _functional-test_ will be loaded.
+
+We also write a simple "initApp" method which instanciate the application.
+
+Finally, we overrided the {{{AbstractGwtIntegrationShell.findPrefixProcessor(String prefix)}}} to add bring cool way to access the UI components.
+
+
+Now, we can write the corresponding CSV senario and assertions which will use {{{MyTestShell}}} functionalities : 
+
+{{{
+start
+initApp
+assertNull;/simpleComposite/label/text
+mouseMove;/root/widget(0)/img
+assertExact;mouse moved on picture !;/root/widget(0)/label/text
+assertExact;mouse moved on picture !;/myApp/c1/label/text
+assertExact;mouse moved on picture !;/simpleComposite/label/text
+}}}
+
+First, we had to start the script with the instruction {{{start}}}.
+Than, we called the {{{MyTestShell.initApp()}}} method to instanciate the GWT application.
+
+Since the application is initialized, we can do some actions.
+So, let's explain the line {{{assertNull;/simpleComposite/label/text}}} : 
+ *The first CSV cell desribe the action to do. {{{AbstractGwtIntegrationShell}}} provides some test statements, such as {{{assertNull}}}, {{{assertExact}}}, {{{assertNumberExact}}}, {{{assertContains}}} and so on.
+ *Other cells are the argument. In that case, the {{{AbstractGwtIntegrationShell.assertNull(String objectLocalization)}}} requiers one only argument, the object Localisation in the UI.
+
+
+
 
 == Scenario with server calls ==
 
