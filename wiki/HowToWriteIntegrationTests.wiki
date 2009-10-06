@@ -279,3 +279,38 @@ We just passed a full GWT integration test in a standard JVM, with a real servic
 Of course, this {{{getGwtCreateHandler()}}} implementation is quite basic. That's why _gwt-test-utils_ comes with another module to integrate the <a href="http://www.springsource.org/">Spring Framework</a> for server backends which are using it.
 
 == Scenario with server calls using Spring ==
+
+//TODO : code et document Spring integration...
+
+== Using CSV macros ==
+
+Sometimes, several of your integration test senarios could be quite redundant.
+_gwt_test_utils_ provide a CSV macro mecanism to group same instructions in the same file.
+
+Look at the test examples above : 
+
+ * In SimpleCompositeTest.csv :
+
+{{{
+start
+initApp
+assertNull;/simpleComposite/label/text
+mouseMove;/simpleComposite/img
+assertExact;mouse moved on picture !;/simpleComposite/label/text
+assertExact;mouse moved on picture !;/root/widget(0)/label/text
+assertExact;mouse moved on picture !;/myApp/c1/label/text
+}}}
+
+ * In RPCCompositeTest.csv : 
+
+{{{
+start
+initApp
+assertNull;/rpcComposite/label/text
+click;/rpcComposite/button
+assertExact;Hello OCTO !;/rpcComposite/label/text
+}}}
+
+It could be interessting to regroup the "initApp" and the first assertion statements in one common file for the two test cases.
+
+//TODO : finish
