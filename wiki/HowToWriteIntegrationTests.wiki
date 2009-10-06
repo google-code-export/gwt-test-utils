@@ -289,7 +289,7 @@ _gwt_test_utils_ provide a CSV macro mecanism to group same instructions in the 
 
 Look at the test examples above : 
 
- * In TestSimpleComposite.csv :
+ * In _TestSimpleComposite.csv_ :
 
 {{{
 start
@@ -301,7 +301,7 @@ assertExact;mouse moved on picture !;/root/widget(0)/label/text
 assertExact;mouse moved on picture !;/myApp/c1/label/text
 }}}
 
- * In TestRPCComposite.csv : 
+ * In _TestRPCComposite.csv_ : 
 
 {{{
 start
@@ -328,7 +328,7 @@ The first line of a macro must be {{{macro;NAME}}} with "NAME" the name of the m
 
 Than, just use it in your CSV test files : 
 
- * In TestSimpleComposite.csv :
+ * In _TestSimpleComposite.csv_ :
 
 {{{
 start
@@ -339,7 +339,7 @@ assertExact;mouse moved on picture !;/myApp/c1/label/text
 assertExact;mouse moved on picture !;/simpleComposite/label/text
 }}}
 
- * In TestRPCComposite.csv : 
+ * In _TestRPCComposite.csv_ : 
 
 {{{
 start
@@ -348,6 +348,18 @@ click;/rpcComposite/button
 assertExact;Hello OCTO !;/rpcComposite/label/text
 }}}
 
-Finally, there is one thing left to do : to specify _initMacro.csv_ as a Macro file for _gwt-test-utils_ to parse it correctly.
+Finally, there is one thing left to do : to specify _initMacro.csv_ as a Macro file for _gwt-test-utils_ to parse it correctly. It can be done with the {{{@CsvMacros}}} annotation : 
 
-//TODO : finish
+{{{
+@CsvDirectory("functional-tests")
+@CsvMacros("initMacro")
+@RunWith(StandardJUnit4CsvRunner.class)
+public class MyTestShell extends AbstractGwtIntegrationShell {
+
+   ...
+}
+}}}
+
+{{{@CsvMacros}}} takes a string array as a param to specify a list of file to load as CSV macros.
+
+In this simple case, {{{MyTestShell}}} will search for a single file : _functional-tests/initMacros*.csv*_, which will be loaded as a macro.
