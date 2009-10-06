@@ -1,6 +1,6 @@
 start
 runmacro;InitialisationMacro
-mouseMove;/root/widget(0)/img
+mouseMove;/simpleComposite/img
 assertExact;mouse moved on picture !;/root/widget(0)/label/text
 assertExact;mouse moved on picture !;/myApp/c1/label/text
 assertExact;mouse moved on picture !;/simpleComposite/label/text
