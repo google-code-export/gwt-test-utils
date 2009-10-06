@@ -121,7 +121,7 @@ public abstract class AbstractGwtIntegrationShell {
 		}
 	}
 
-	public void assertContain(String value, String objectLocalization) {
+	public void assertContains(String value, String objectLocalization) {
 		String s = getObject(String.class, objectLocalization);
 		Assert.assertTrue(csvRunner.getAssertionErrorMessagePrefix() + " not containing string " + value, s.contains(value));
 	}
