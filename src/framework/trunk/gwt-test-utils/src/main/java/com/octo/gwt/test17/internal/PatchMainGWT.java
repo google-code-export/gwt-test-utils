@@ -88,7 +88,7 @@ public class PatchMainGWT {
 		}
 		
 		if (o == null) {
-			throw new RuntimeException("No managed create class for class : " + classLiteral.getCanonicalName());
+			throw new RuntimeException("No mock registered for class : " + classLiteral.getCanonicalName());
 		}
 		return o;
 	}
