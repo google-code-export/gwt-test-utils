@@ -289,7 +289,7 @@ _gwt_test_utils_ provide a CSV macro mecanism to group same instructions in the 
 
 Look at the test examples above : 
 
- * In _TestSimpleComposite.csv_ :
+ * In {{{TestSimpleComposite.csv}}} :
 
 {{{
 start
@@ -301,7 +301,7 @@ assertExact;mouse moved on picture !;/root/widget(0)/label/text
 assertExact;mouse moved on picture !;/myApp/c1/label/text
 }}}
 
- * In _TestRPCComposite.csv_ : 
+ * In {{{TestRPCComposite.csv}}} : 
 
 {{{
 start
@@ -313,7 +313,7 @@ assertExact;Hello OCTO !;/rpcComposite/label/text
 
 It could be interessting to regroup the "initApp" and the first assertion statements in one common file for the two test cases.
 
-This could be done in _initMacro.csv_ : 
+This could be done in {{{initMacro.csv}}} : 
 
 {{{
 macro;InitialisationMacro
@@ -328,7 +328,7 @@ The first line of a macro must be {{{macro;NAME}}} with "NAME" the name of the m
 
 Than, just use it in your CSV test files : 
 
- * In _TestSimpleComposite.csv_ :
+ * In {{{TestSimpleComposite.csv}}} :
 
 {{{
 start
@@ -339,7 +339,7 @@ assertExact;mouse moved on picture !;/myApp/c1/label/text
 assertExact;mouse moved on picture !;/simpleComposite/label/text
 }}}
 
- * In _TestRPCComposite.csv_ : 
+ * In {{{TestRPCComposite.csv}}} : 
 
 {{{
 start
