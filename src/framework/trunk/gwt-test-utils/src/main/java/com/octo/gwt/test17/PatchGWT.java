@@ -63,6 +63,7 @@ import com.octo.gwt.test17.internal.PatchNode;
 import com.octo.gwt.test17.internal.PatchNodeList;
 import com.octo.gwt.test17.internal.PatchTextArea;
 import com.octo.gwt.test17.internal.PatchTextBox;
+import com.octo.gwt.test17.internal.PatchTimer;
 import com.octo.gwt.test17.internal.PatchUIObject;
 import com.octo.gwt.test17.internal.dom.UserElement;
 import com.octo.gwt.test17.overrides.OverrideAnchorElement;
@@ -290,8 +291,8 @@ public class PatchGWT {
 		});
 
 		PatchUtils.applyPatches(Timer.class, new Patch[] {
-			new Patch("createTimeout", "0"),
-			new Patch("clearTimeout", "")
+			new Patch("schedule", staticCall(PatchTimer.class, "schedule", "this, $1")),
+			new Patch("scheduleRepeating", staticCall(PatchTimer.class, "scheduleRepeating", "this, $1")),
 		});
 
 		PatchUtils.applyPatches(DeferredCommand.class, 
@@ -469,6 +470,10 @@ public class PatchGWT {
 
 	public static void setLocale(Locale locale) {
 		LOCALE = locale;
+	}
+	
+	public static void setInstanceCreator(InstanceCreator instanceCreator) {
+		PatchUtils.INSTANCE_CREATOR = instanceCreator;
 	}
 
 }

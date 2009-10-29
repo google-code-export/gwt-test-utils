@@ -5,6 +5,8 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gwt.core.client.GWT;
+
 import javassist.CannotCompileException;
 import javassist.ClassPool;
 import javassist.CtClass;
@@ -28,6 +30,12 @@ public class PatchUtils {
 	 * bootstrap.jar
 	 */
 	public static Method redefine;
+	
+	/**
+	 * Object used to try to create custom objects that normally would be 
+	 * instanciate through the {@link GWT#create(Class)} method.
+	 */
+	public static InstanceCreator INSTANCE_CREATOR = null;
 
 	/**
 	 * Search method to patch in clazz

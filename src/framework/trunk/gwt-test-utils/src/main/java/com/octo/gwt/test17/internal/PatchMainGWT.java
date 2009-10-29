@@ -129,6 +129,10 @@ public class PatchMainGWT {
 			o = gwtCreateHandler.create(classLiteral);
 		}
 		
+		if (o == null && PatchUtils.INSTANCE_CREATOR != null) {
+			o = PatchUtils.INSTANCE_CREATOR.createInstance(classLiteral);
+		}
+		
 		if (o == null) {
 			throw new RuntimeException("No mock registered for class : " + classLiteral.getCanonicalName());
 		}
