@@ -20,7 +20,7 @@ public abstract class AbstractGWTEasyMockTest extends AbstractGWTTest {
 
 	private List<Field> annotatedFieldToInject;
 
-	private Hashtable<Class<?>, Object> mockedObject = new Hashtable<Class<?>, Object>();
+	protected Hashtable<Class<?>, Object> mockedObject = new Hashtable<Class<?>, Object>();
 	
 	public AbstractGWTEasyMockTest() {
 		annotatedFieldToInject = ReflectionUtils.getAnnotatedField(this, Mock.class);
@@ -29,7 +29,7 @@ public abstract class AbstractGWTEasyMockTest extends AbstractGWTTest {
 		}
 	}
 
-	private void addMockedObject(Class<?> createClass, Class<?> mockClass, Object mock) {
+	protected void addMockedObject(Class<?> createClass, Class<?> mockClass, Object mock) {
 		PatchGWT.addCreateClass(createClass, mock);
 		mockedObject.put(mockClass, mock);
 	}

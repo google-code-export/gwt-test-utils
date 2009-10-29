@@ -27,6 +27,14 @@ public class WidgetUtils {
 	public static boolean hasStyle(UIObject object, String styleName) {
 		return object.getStyleName().contains(styleName);
 	}
+	
+	public static void blur(Widget target) {
+		target.onBrowserEvent(new OverrideEvent(Event.ONBLUR));
+	}
+	
+	public static void change(Widget target) {
+		target.onBrowserEvent(new OverrideEvent(Event.ONCHANGE));
+	}
 
 	public static void click(Widget target) {
 		if (target instanceof CheckBox) {
@@ -42,16 +50,20 @@ public class WidgetUtils {
 		parent.onBrowserEvent(new OverrideEvent(Event.ONCLICK, clickedItem.getElement()));
 	}
 	
-	public static void blur(Widget target) {
-		target.onBrowserEvent(new OverrideEvent(Event.ONBLUR));
-	}
-	
 	public static void focus(Widget target) {
 		target.onBrowserEvent(new OverrideEvent(Event.ONFOCUS));
 	}
 	
-	public static void change(Widget target) {
-		target.onBrowserEvent(new OverrideEvent(Event.ONCHANGE));
+	public static void keyDown(Widget target) {
+		target.onBrowserEvent(new OverrideEvent(Event.ONKEYDOWN));
+	}
+	
+	public static void keyPress(Widget target) {
+		target.onBrowserEvent(new OverrideEvent(Event.ONKEYPRESS));
+	}
+	
+	public static void keyUp(Widget target) {
+		target.onBrowserEvent(new OverrideEvent(Event.ONKEYUP));
 	}
 	
 	public static void mouseMove(Widget target) {

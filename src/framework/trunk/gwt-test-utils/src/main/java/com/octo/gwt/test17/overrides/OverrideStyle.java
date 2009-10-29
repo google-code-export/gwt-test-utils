@@ -35,6 +35,10 @@ public class OverrideStyle extends Style {
 			stringPropList.put("visible", Boolean.toString(propValue.equals("visible")));
 		}
 	}
+	
+	public void setOverridePropertyPx(String propName, int propValue) {
+		setOverrideProperty(propName, propValue + "px");
+	}
 
 	public String getOverrideProperty(String propName) {
 		return stringPropList.get(propName);

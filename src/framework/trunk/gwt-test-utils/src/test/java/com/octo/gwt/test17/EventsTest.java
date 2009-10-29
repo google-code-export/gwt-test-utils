@@ -9,6 +9,12 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.FocusHandler;
+import com.google.gwt.event.dom.client.KeyDownEvent;
+import com.google.gwt.event.dom.client.KeyDownHandler;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
+import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.dom.client.MouseMoveEvent;
@@ -80,6 +86,63 @@ public class EventsTest extends AbstractGWTTest {
 
 		//simule the event
 		focus(b);
+
+		Assert.assertEquals(true, tested);
+	}
+	
+	@Test
+	public void checkKeyDownEvent() {
+		tested = false;
+		Button b = new Button();
+		b.addKeyDownHandler(new KeyDownHandler() {
+			
+			public void onKeyDown(KeyDownEvent arg0) {
+				tested = !tested;	
+			}
+		});
+
+		Assert.assertEquals(false, tested);
+
+		//simule the event
+		keyDown(b);
+
+		Assert.assertEquals(true, tested);
+	}
+	
+	@Test
+	public void checkKeyPressEvent() {
+		tested = false;
+		Button b = new Button();
+		b.addKeyPressHandler(new KeyPressHandler() {
+			
+			public void onKeyPress(KeyPressEvent arg0) {
+				tested = !tested;	
+			}
+		});
+
+		Assert.assertEquals(false, tested);
+
+		//simule the event
+		keyPress(b);
+
+		Assert.assertEquals(true, tested);
+	}
+	
+	@Test
+	public void checkKeyUpEvent() {
+		tested = false;
+		Button b = new Button();
+		b.addKeyUpHandler(new KeyUpHandler() {
+			
+			public void onKeyUp(KeyUpEvent arg0) {
+				tested = !tested;	
+			}
+		});
+
+		Assert.assertEquals(false, tested);
+
+		//simule the event
+		keyUp(b);
 
 		Assert.assertEquals(true, tested);
 	}
