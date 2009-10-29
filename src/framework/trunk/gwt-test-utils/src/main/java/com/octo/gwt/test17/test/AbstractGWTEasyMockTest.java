@@ -1,6 +1,7 @@
 package com.octo.gwt.test17.test;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
@@ -9,7 +10,9 @@ import org.easymock.IAnswer;
 import org.easymock.classextension.EasyMock;
 import org.junit.Before;
 
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Widget;
 import com.octo.gwt.test17.Mock;
 import com.octo.gwt.test17.PatchGWT;
 import com.octo.gwt.test17.ReflectionUtils;
@@ -119,5 +122,22 @@ public abstract class AbstractGWTEasyMockTest extends AbstractGWTTest {
 		IAnswer<T> answer = new SuccessAnswer<T>(object);
 		EasyMock.expectLastCall().andAnswer((IAnswer<Object>) answer);
 	}
+
+	protected void mockAddToParent(Widget w, Widget parent) throws Exception {
+		w.removeFromParent();
+		EasyMock.expectLastCall();
 	
+		w.getElement();
+		EasyMock.expectLastCall().andReturn(DOM.createAnchor());
+	
+		Method m = Widget.class.getDeclaredMethod("setParent", Widget.class);
+		m.setAccessible(true);
+		m.invoke(w, EasyMock.eq(parent));
+		EasyMock.expectLastCall();
+	
+		if (PatchGWT.areAssertionEnabled()) {
+			w.getParent();
+			EasyMock.expectLastCall().andReturn(null);
+		}
+	}
 }

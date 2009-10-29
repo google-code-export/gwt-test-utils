@@ -133,5 +133,16 @@ public class ReflectionUtils {
 			throw new RuntimeException("Unable to serialize / unserialize object " + o.getClass().getCanonicalName(), e);
 		}
 	}
+
+	public static void setPrivateField(Object target, String fieldName, Object value) {
+		Field field = getUniqueFieldByName(target.getClass(), fieldName);
+		try {
+			field.set(target, value);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException(e.getMessage() + " Unable to set field, class " + fieldName + ", fieldClass " + target.getClass());
+		}
+		
+	}
 	
 }

@@ -40,9 +40,12 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.UIObject;
+import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.WidgetCollection;
 import com.google.gwt.user.client.ui.impl.FocusImpl;
 import com.google.gwt.user.client.ui.impl.FocusImplOld;
 import com.octo.gwt.test17.internal.PatchAnchorElement;
+import com.octo.gwt.test17.internal.PatchCheckBox;
 import com.octo.gwt.test17.internal.PatchDOM;
 import com.octo.gwt.test17.internal.PatchDOMImpl;
 import com.octo.gwt.test17.internal.PatchDeferredCommand;
@@ -58,7 +61,6 @@ import com.octo.gwt.test17.internal.PatchListBox;
 import com.octo.gwt.test17.internal.PatchMainGWT;
 import com.octo.gwt.test17.internal.PatchNode;
 import com.octo.gwt.test17.internal.PatchNodeList;
-import com.octo.gwt.test17.internal.PatchCheckBox;
 import com.octo.gwt.test17.internal.PatchTextArea;
 import com.octo.gwt.test17.internal.PatchTextBox;
 import com.octo.gwt.test17.internal.PatchUIObject;
@@ -97,11 +99,17 @@ public class PatchGWT {
 	}
 
 	public static void reset() throws Exception {
-		RootPanel.get().clear();
 		OverrideHistory.reset();
 		PatchMainGWT.createClass.clear();
 		PatchMainGWT.gwtCreateHandler = null;
 
+		WidgetCollection widgetCollection = ReflectionUtils.getPrivateFieldValue(RootPanel.get(), "children");
+		Widget[] array = ReflectionUtils.getPrivateFieldValue(widgetCollection, "array");
+		for(int i = 0; i < array.length; i ++) {
+			array[i] = null;
+		}
+		ReflectionUtils.setPrivateField(widgetCollection, "size", 0);
+		
 		ReflectionUtils.getStaticAndCallClear(Timer.class, "timers");
 		ReflectionUtils.getStaticAndCallClear(RootPanel.class, "rootPanels");
 		ReflectionUtils.getStaticAndCallClear(RootPanel.class, "widgetsToDetach");
