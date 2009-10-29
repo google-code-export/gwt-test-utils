@@ -34,6 +34,18 @@ public class GridTest extends AbstractGWTTest {
 
 		Assert.assertEquals(b, g.getWidget(2, 2));
 	}
+	
+	@Test
+	public void checkRemoveFromGrid() {
+		// Grids must be sized explicitly, though they can be resized later.
+		Grid g = new Grid(1, 1);
+
+		Button b = new Button("Does nothing, but could");
+		g.setWidget(0, 0, b);
+
+		
+		Assert.assertTrue("The button has not been removed from grid", g.remove(b));
+	}
 
 
 	@Test

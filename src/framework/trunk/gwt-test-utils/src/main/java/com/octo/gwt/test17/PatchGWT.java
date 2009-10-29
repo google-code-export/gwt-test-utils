@@ -348,7 +348,7 @@ public class PatchGWT {
 		PatchUtils.applyPatches(ElementMapperImpl.class, new Patch[] { 
 			new Patch("setIndex", staticCall(PatchElementMapperImpl.class, "setWidgetIndex", "$1, $2")),
 			new Patch("getIndex", staticCall(PatchElementMapperImpl.class, "getWidgetIndex", "$1")),
-//			new Patch("clearIndex", staticCall(PatchElementMapperImpl.class, "clearWidgetIndex", "$1")) 
+			new Patch("clearIndex", staticCall(PatchElementMapperImpl.class, "clearWidgetIndex", "$1")) 
 		});
 
 		PatchUtils.applyPatches(Grid.class, new Patch[] { 
