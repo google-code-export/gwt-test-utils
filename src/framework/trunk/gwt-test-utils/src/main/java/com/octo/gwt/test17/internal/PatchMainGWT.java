@@ -44,7 +44,6 @@ public class PatchMainGWT {
 	
 	public static Hashtable<Class<?>, Object> createClass = new Hashtable<Class<?>, Object>();
 	
-
 	public static Object create(Class<?> classLiteral) {
 		if (classLiteral == DebugIdImpl.class) {
 			return new UIObject.DebugIdImpl();

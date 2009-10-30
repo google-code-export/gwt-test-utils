@@ -151,6 +151,8 @@ public class PatchGWT {
 
 		PatchUtils.applyPatches(GWT.class, new Patch[] {
 			new Patch("create", staticCall(PatchMainGWT.class, "create", "$1")),
+			new Patch("getHostPageBaseURL", "\"getHostPageBaseURL/getModuleName\""), 
+			new Patch("getModuleName", "\"getModuleName\""),
 		});
 
 		PatchUtils.applyPatches(UIObject.class, new Patch[] { 
