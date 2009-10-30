@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import com.google.gwt.core.client.Duration;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.AnchorElement;
@@ -53,6 +54,7 @@ import com.octo.gwt.test17.internal.PatchDOM;
 import com.octo.gwt.test17.internal.PatchDOMImpl;
 import com.octo.gwt.test17.internal.PatchDeferredCommand;
 import com.octo.gwt.test17.internal.PatchDocument;
+import com.octo.gwt.test17.internal.PatchDuration;
 import com.octo.gwt.test17.internal.PatchElement;
 import com.octo.gwt.test17.internal.PatchElementMapperImpl;
 import com.octo.gwt.test17.internal.PatchFlexTable;
@@ -457,8 +459,15 @@ public class PatchGWT {
 		PatchUtils.applyPatches(URL.class, new Patch[] { 
 			new Patch("encodeComponentImpl", staticCall(PatchURL.class, "urlEncode", "$1")) 
 		});
-
-
+		
+		
+		PatchUtils.applyPatches(Duration.class, new Patch[] { 
+			new Patch("currentTimeMillis", staticCall(PatchDuration.class, "getTimeInMillisec")) 
+		});
+	}
+	
+	public static long currentTimeMillis() {
+		return 0;
 	}
 
 	private static String staticCall(Class<?> clazz, String methodName, String args) {
