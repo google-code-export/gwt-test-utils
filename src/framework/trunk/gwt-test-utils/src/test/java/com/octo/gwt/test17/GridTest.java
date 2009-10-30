@@ -46,6 +46,16 @@ public class GridTest extends AbstractGWTTest {
 		
 		Assert.assertTrue("The button has not been removed from grid", g.remove(b));
 	}
+	
+	@Test
+	public void checkAddStyleName() {
+		// Grids must be sized explicitly, though they can be resized later.
+		Grid g = new Grid(1, 1);
+		
+		g.getRowFormatter().addStyleName(0, "style");
+		
+		Assert.assertEquals("style", g.getRowFormatter().getStyleName(0));
+	}
 
 
 	@Test

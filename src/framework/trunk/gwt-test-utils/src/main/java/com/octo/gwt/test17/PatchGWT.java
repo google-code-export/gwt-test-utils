@@ -110,7 +110,7 @@ public class PatchGWT {
 			array[i] = null;
 		}
 		ReflectionUtils.setPrivateField(widgetCollection, "size", 0);
-		
+
 		ReflectionUtils.getStaticAndCallClear(Timer.class, "timers");
 		ReflectionUtils.getStaticAndCallClear(RootPanel.class, "rootPanels");
 		ReflectionUtils.getStaticAndCallClear(RootPanel.class, "widgetsToDetach");
@@ -158,6 +158,8 @@ public class PatchGWT {
 			new Patch("setVisible", staticCall(PatchUIObject.class, "setPropertyOnElement", "$1, \"visible\", $2")).setNative(),
 			new Patch("isVisible", staticCall(PatchUIObject.class, "getPropertyOnElementBoolean", "$1, \"visible\"")).setNative(),
 			new Patch("getStyleName", staticCall(PatchUIObject.class, "getStyleName", "$1")).setStatic(),
+			new Patch("setStyleName", staticCall(PatchUIObject.class, "setStyleName", "$1, $2, $3")).setArgClasses(new Class<?>[] {com.google.gwt.dom.client.Element.class, String.class, Boolean.TYPE }),
+			new Patch("setStyleName", staticCall(PatchUIObject.class, "setPropertyOnElement", "$1, \"className\", $2")).setArgClasses(new Class<?>[] {com.google.gwt.dom.client.Element.class, String.class}),
 			new Patch("getElement", staticCall(PatchUIObject.class, "cast", "element")), 
 			//			new Patch("getAbsoluteLeft", "0"), 
 			//			new Patch("getAbsoluteTop", "0"),
@@ -291,6 +293,7 @@ public class PatchGWT {
 		});
 
 		PatchUtils.applyPatches(Timer.class, new Patch[] {
+			new Patch("cancel", ""),
 			new Patch("schedule", staticCall(PatchTimer.class, "schedule", "this, $1")),
 			new Patch("scheduleRepeating", staticCall(PatchTimer.class, "scheduleRepeating", "this, $1")),
 		});
@@ -338,6 +341,10 @@ public class PatchGWT {
 					new Class[] { Element.class, Integer.TYPE }), 
 		});
 
+		PatchUtils.applyPatches(Class.forName(HTMLTable.class.getCanonicalName() + "$RowFormatter"), new Patch[] { 
+			new Patch("getRow", staticCall(PatchHTMLTable.class, "getRowRowFormatter", "$1, $2")), 
+		});
+
 		PatchUtils.applyPatches(FlexTable.class, new Patch[] { 
 			new Patch("addCells", staticCall(PatchFlexTable.class, "addCells", "$1, $2, $3")), 
 		});
@@ -375,7 +382,7 @@ public class PatchGWT {
 			new Patch("setAccessKey", castThisAndCall(OverrideInputElement.class, "setOverrideAccessKey", "$1")),
 			new Patch("getAccessKey", castThisAndCall(OverrideInputElement.class, "getOverrideAccessKey")),
 		});
-		
+
 		PatchUtils.applyPatches(AnchorElement.class, new Patch[] {
 			new Patch("as", staticCall(PatchAnchorElement.class, "as", "$1")), 
 			new Patch("setTabIndex", castThisAndCall(OverrideAnchorElement.class, "setOverrideTabIndex", "$1")),
@@ -384,7 +391,7 @@ public class PatchGWT {
 			new Patch("setAccessKey", castThisAndCall(OverrideAnchorElement.class, "setOverrideAccessKey", "$1")),
 			new Patch("focus", ""),
 		});
-		
+
 		PatchUtils.applyPatches(LabelElement.class, new Patch[] {
 			new Patch("setHtmlFor", ""),
 		});
@@ -402,24 +409,24 @@ public class PatchGWT {
 			new Patch("getCurrencyCode", "\"USD\""), 
 			new Patch("getCurrencySymbol", "\"$\"") 
 		});
-		
+
 		PatchUtils.applyPatches(TextBox.class, new Patch[] { 
 			new Patch("getInputElement", staticCall(PatchTextBox.class, "getInputElement", "this")),
 		});
-		
+
 		PatchUtils.applyPatches(TextArea.class, new Patch[] { 
 			new Patch("getTextAreaElement", staticCall(PatchTextArea.class, "getTextAreaElement", "this")),
 		});
-		
+
 		PatchUtils.applyPatches(TextAreaElement.class, new Patch[] { 
 			new Patch("setRows", castThisAndCall(OverrideTextAreaElement.class, "setOverrideRows", "$1")),
 			new Patch("getRows", castThisAndCall(OverrideTextAreaElement.class, "getOverrideRows")),
 		});
-		
+
 		PatchUtils.applyPatches(CheckBox.class, new Patch[] { 
 			new Patch("getName", staticCall(PatchCheckBox.class, "getName", "this")),
 		});
-		
+
 		PatchUtils.applyPatches(RadioButton.class, new Patch[] { 
 			new Patch("setName", staticCall(PatchCheckBox.class, "setName", "this, $1")),
 		});
@@ -471,7 +478,7 @@ public class PatchGWT {
 	public static void setLocale(Locale locale) {
 		LOCALE = locale;
 	}
-	
+
 	public static void setInstanceCreator(InstanceCreator instanceCreator) {
 		PatchUtils.INSTANCE_CREATOR = instanceCreator;
 	}

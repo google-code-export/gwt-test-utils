@@ -28,5 +28,10 @@ public class PatchHTMLTable {
 		UserElement c = r.getOverrideList().get(column);
 		return c;
 	}
+	
+	public static com.google.gwt.user.client.Element getRowRowFormatter(com.google.gwt.user.client.Element element, int row) {
+		UserElement e = UserElement.overrideCast(element);
+		return e.getOverrideList().get(row);
+	}
 
 }

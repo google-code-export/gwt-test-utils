@@ -2,7 +2,6 @@ package com.octo.gwt.test17.internal;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.user.client.DOM;
 import com.octo.gwt.test17.internal.dom.UserElement;
 import com.octo.gwt.test17.overrides.OverrideStyle;
 
@@ -16,8 +15,18 @@ public class PatchUIObject {
 	}
 	
 	public static String getStyleName(Element e) {
-		String s = DOM.getElementProperty(e.<com.google.gwt.user.client.Element> cast(), "className");
-		return s == null ? "" : s;
+//		String s = DOM.getElementProperty(e.<com.google.gwt.user.client.Element> cast(), "className");
+//		return s == null ? "" : s;
+		return getPropertyOnElement(e, "className");
+	}
+	
+	public static void setStyleName(Object o, String styleName, boolean add) {
+		if (!add) {
+			setPropertyOnElement(o, "className", styleName);
+		} else {
+			String style = getPropertyOnElement(o, "className");
+			setPropertyOnElement(o, "className", (style + " " + styleName).trim());
+		}
 	}
 
 	public static boolean getPropertyOnElementBoolean(Object o, String propName) {
