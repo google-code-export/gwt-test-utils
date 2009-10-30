@@ -8,6 +8,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.AnchorElement;
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.FrameElement;
 import com.google.gwt.dom.client.InputElement;
 import com.google.gwt.dom.client.LabelElement;
 import com.google.gwt.dom.client.Node;
@@ -32,6 +33,7 @@ import com.google.gwt.user.client.impl.HistoryImpl;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTMLTable;
 import com.google.gwt.user.client.ui.Image;
@@ -54,6 +56,7 @@ import com.octo.gwt.test17.internal.PatchDocument;
 import com.octo.gwt.test17.internal.PatchElement;
 import com.octo.gwt.test17.internal.PatchElementMapperImpl;
 import com.octo.gwt.test17.internal.PatchFlexTable;
+import com.octo.gwt.test17.internal.PatchFrame;
 import com.octo.gwt.test17.internal.PatchGrid;
 import com.octo.gwt.test17.internal.PatchHTMLTable;
 import com.octo.gwt.test17.internal.PatchImage;
@@ -70,6 +73,7 @@ import com.octo.gwt.test17.internal.PatchURL;
 import com.octo.gwt.test17.internal.dom.UserElement;
 import com.octo.gwt.test17.overrides.OverrideAnchorElement;
 import com.octo.gwt.test17.overrides.OverrideEvent;
+import com.octo.gwt.test17.overrides.OverrideFrameElement;
 import com.octo.gwt.test17.overrides.OverrideHistory;
 import com.octo.gwt.test17.overrides.OverrideInputElement;
 import com.octo.gwt.test17.overrides.OverrideOptionElement;
@@ -408,6 +412,15 @@ public class PatchGWT {
 
 		PatchUtils.applyPatches(Image.class, new Patch[] {
 			new Patch("getImageElement", staticCall(PatchImage.class, "getImageElement")),
+		});
+
+		PatchUtils.applyPatches(Frame.class, new Patch[] {
+			new Patch("getFrameElement", staticCall(PatchFrame.class, "getFrameElement", "this")),
+		});
+
+		PatchUtils.applyPatches(FrameElement.class, new Patch[] { 
+			new Patch("setSrc", castThisAndCall(OverrideFrameElement.class, "setOverrideSrc", "$1")),
+			new Patch("getSrc", castThisAndCall(OverrideFrameElement.class, "getOverrideSrc")), 
 		});
 
 		PatchUtils.applyPatches(CurrencyList.class, new Patch[] { 

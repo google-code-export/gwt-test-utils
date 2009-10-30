@@ -1,17 +1,22 @@
 package com.octo.gwt.test17.overrides;
 
 import com.google.gwt.dom.client.FrameElement;
+import com.octo.gwt.test17.internal.dom.UserElement;
 
 public class OverrideFrameElement extends FrameElement {
 
-	private String overrideSrc;
+	private UserElement wrappedElement;
+
+	public OverrideFrameElement(UserElement element) {
+		wrappedElement = element;
+	}
 
 	public String getOverrideSrc() {
-		return overrideSrc;
+		return wrappedElement.getOverrideAttribute("src");
 	}
 
 	public void setOverrideSrc(String overrideSrc) {
-		this.overrideSrc = overrideSrc;
+		wrappedElement.setOverrideAttribute("src", overrideSrc);
 	}
 
 	public static OverrideFrameElement overrideCast(Object o) {
