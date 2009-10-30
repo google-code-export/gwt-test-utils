@@ -159,6 +159,8 @@ public class PatchGWT {
 			new Patch("setElement", "setElement(" + staticCall(PatchUIObject.class, "cast", "$1") + ")").setFinal(),
 			new Patch("setStylePrimaryName", staticCall(PatchUIObject.class, "setPropertyOnElement", "$1, \"stylePrimaryName\", $2")).setStatic(),
 			new Patch("getStylePrimaryName", staticCall(PatchUIObject.class, "getPropertyOnElement", "$1, \"stylePrimaryName\"")).setStatic(),
+			new Patch("setTitle", staticCall(PatchUIObject.class, "setPropertyOnElement", "this.getElement(), \"title\", $1")),
+			new Patch("getTitle", staticCall(PatchUIObject.class, "getPropertyOnElement", "this.getElement(), \"title\"")),
 			new Patch("setVisible", staticCall(PatchUIObject.class, "setPropertyOnElement", "$1, \"visible\", $2")).setNative(),
 			new Patch("isVisible", staticCall(PatchUIObject.class, "getPropertyOnElementBoolean", "$1, \"visible\"")).setNative(),
 			new Patch("getStyleName", staticCall(PatchUIObject.class, "getStyleName", "$1")).setStatic(),
@@ -168,6 +170,10 @@ public class PatchGWT {
 			new Patch("getAbsoluteLeft", "0"), 
 			new Patch("getAbsoluteTop", "0"),
 			new Patch("extractLengthValue", "1.0"),  	
+		});
+
+		PatchUtils.applyPatches(Widget.class, new Patch[] { 
+			new Patch("onAttach", "") 
 		});
 
 
