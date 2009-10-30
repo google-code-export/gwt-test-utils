@@ -165,8 +165,8 @@ public class PatchGWT {
 			new Patch("setStyleName", staticCall(PatchUIObject.class, "setStyleName", "$1, $2, $3")).setArgClasses(new Class<?>[] {com.google.gwt.dom.client.Element.class, String.class, Boolean.TYPE }),
 			new Patch("setStyleName", staticCall(PatchUIObject.class, "setPropertyOnElement", "$1, \"className\", $2")).setArgClasses(new Class<?>[] {com.google.gwt.dom.client.Element.class, String.class}),
 			new Patch("getElement", staticCall(PatchUIObject.class, "cast", "element")), 
-			//			new Patch("getAbsoluteLeft", "0"), 
-			//			new Patch("getAbsoluteTop", "0"),
+			new Patch("getAbsoluteLeft", "0"), 
+			new Patch("getAbsoluteTop", "0"),
 			new Patch("extractLengthValue", "1.0"),  	
 		});
 
@@ -214,7 +214,7 @@ public class PatchGWT {
 			new Patch("imgSetSrc", staticCall(PatchUIObject.class, "getPropertyOnElement", "$1, \"imgSrc\"")),
 			new Patch("getBodyOffsetLeft", "0"), 
 			new Patch("getBodyOffsetTop", "0"),
-			//			new Patch("eventGetKeyCode", castAndCall(OverrideEvent.class, "getOverrideKeyCode")),
+			new Patch("eventGetKeyCode", castAndCall(OverrideEvent.class, "getOverrideKeyCode")),
 			//			new Patch("setEventListener", "return;"), 
 
 		});

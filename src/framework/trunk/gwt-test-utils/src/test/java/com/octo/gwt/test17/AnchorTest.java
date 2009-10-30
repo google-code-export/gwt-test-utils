@@ -7,7 +7,7 @@ import com.google.gwt.user.client.ui.Anchor;
 import com.octo.gwt.test17.test.AbstractGWTTest;
 
 public class AnchorTest extends AbstractGWTTest {
-	
+
 	@Test
 	public void checkText() {
 		Anchor a = new Anchor();
@@ -15,15 +15,31 @@ public class AnchorTest extends AbstractGWTTest {
 
 		Assert.assertEquals("toto", a.getText());
 	}
-	
+
 	@Test
 	public void checkHref() {
 		Anchor a = new Anchor("toto", "href");
 		a.setFocus(true);
 		a.setAccessKey('k');
-		
+
 		Assert.assertEquals("toto", a.getText());
 		Assert.assertEquals("href", a.getHref());
 	}
+
+	@Test
+	public void checkAbsoluteLeft() {
+		Anchor a = new Anchor();
+
+		Assert.assertEquals(0, a.getAbsoluteLeft());
+	}
+
+	@Test
+	public void checkAbsoluteTop() {
+		Anchor a = new Anchor();
+
+		Assert.assertEquals(0, a.getAbsoluteTop());
+	}
+
+
 
 }
