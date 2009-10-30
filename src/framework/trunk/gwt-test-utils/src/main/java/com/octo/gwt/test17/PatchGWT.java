@@ -16,6 +16,7 @@ import com.google.gwt.dom.client.OptionElement;
 import com.google.gwt.dom.client.SelectElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.TextAreaElement;
+import com.google.gwt.http.client.URL;
 import com.google.gwt.i18n.client.impl.CurrencyData;
 import com.google.gwt.i18n.client.impl.CurrencyList;
 import com.google.gwt.user.client.Command;
@@ -65,6 +66,7 @@ import com.octo.gwt.test17.internal.PatchTextArea;
 import com.octo.gwt.test17.internal.PatchTextBox;
 import com.octo.gwt.test17.internal.PatchTimer;
 import com.octo.gwt.test17.internal.PatchUIObject;
+import com.octo.gwt.test17.internal.PatchURL;
 import com.octo.gwt.test17.internal.dom.UserElement;
 import com.octo.gwt.test17.overrides.OverrideAnchorElement;
 import com.octo.gwt.test17.overrides.OverrideEvent;
@@ -430,6 +432,11 @@ public class PatchGWT {
 		PatchUtils.applyPatches(RadioButton.class, new Patch[] { 
 			new Patch("setName", staticCall(PatchCheckBox.class, "setName", "this, $1")),
 		});
+
+		PatchUtils.applyPatches(URL.class, new Patch[] { 
+			new Patch("encodeComponentImpl", staticCall(PatchURL.class, "urlEncode", "$1")) 
+		});
+
 
 	}
 
