@@ -32,9 +32,9 @@ import com.octo.gwt.test17.PatchGWT;
 import com.octo.gwt.test17.PatchUtils;
 import com.octo.gwt.test17.PatchUtils.BodyGetter;
 import com.octo.gwt.test17.internal.dom.UserDomImpl;
-import com.octo.gwt.test17.overrides.OverrideFormPanelImpl;
-import com.octo.gwt.test17.overrides.OverrideImagePrototype;
-import com.octo.gwt.test17.overrides.OverrideInputElement;
+import com.octo.gwt.test17.internal.overrides.OverrideFormPanelImpl;
+import com.octo.gwt.test17.internal.overrides.OverrideImagePrototype;
+import com.octo.gwt.test17.internal.overrides.OverrideInputElement;
 
 public class PatchMainGWT {
 

@@ -16,11 +16,11 @@ import com.google.gwt.dom.client.OptionElement;
 import com.google.gwt.dom.client.SelectElement;
 import com.google.gwt.user.client.Event;
 import com.octo.gwt.test17.internal.dom.UserElement;
-import com.octo.gwt.test17.overrides.OverrideEvent;
-import com.octo.gwt.test17.overrides.OverrideIFrameElement;
-import com.octo.gwt.test17.overrides.OverrideNodeList;
-import com.octo.gwt.test17.overrides.OverrideOptionElement;
-import com.octo.gwt.test17.overrides.OverrideSelectElement;
+import com.octo.gwt.test17.internal.overrides.OverrideEvent;
+import com.octo.gwt.test17.internal.overrides.OverrideIFrameElement;
+import com.octo.gwt.test17.internal.overrides.OverrideNodeList;
+import com.octo.gwt.test17.internal.overrides.OverrideOptionElement;
+import com.octo.gwt.test17.internal.overrides.OverrideSelectElement;
 
 public class PatchDOMImpl {
 

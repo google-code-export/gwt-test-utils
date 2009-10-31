@@ -3,7 +3,7 @@ package com.octo.gwt.test17.internal;
 import com.google.gwt.dom.client.TextAreaElement;
 import com.google.gwt.user.client.ui.TextArea;
 import com.octo.gwt.test17.internal.dom.UserElement;
-import com.octo.gwt.test17.overrides.OverrideTextAreaElement;
+import com.octo.gwt.test17.internal.overrides.OverrideTextAreaElement;
 
 public class PatchTextArea {
 

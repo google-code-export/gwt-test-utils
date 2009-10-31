@@ -11,7 +11,7 @@ import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
-import com.octo.gwt.test17.overrides.OverrideEvent;
+import com.octo.gwt.test17.internal.overrides.OverrideEvent;
 
 /**
  * Class which provide reflection utilities on {@link Widget} classes.

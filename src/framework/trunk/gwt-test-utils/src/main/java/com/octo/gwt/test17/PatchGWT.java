@@ -74,16 +74,16 @@ import com.octo.gwt.test17.internal.PatchTimer;
 import com.octo.gwt.test17.internal.PatchUIObject;
 import com.octo.gwt.test17.internal.PatchURL;
 import com.octo.gwt.test17.internal.dom.UserElement;
-import com.octo.gwt.test17.overrides.OverrideAnchorElement;
-import com.octo.gwt.test17.overrides.OverrideEvent;
-import com.octo.gwt.test17.overrides.OverrideFrameElement;
-import com.octo.gwt.test17.overrides.OverrideHistory;
-import com.octo.gwt.test17.overrides.OverrideImageElement;
-import com.octo.gwt.test17.overrides.OverrideInputElement;
-import com.octo.gwt.test17.overrides.OverrideOptionElement;
-import com.octo.gwt.test17.overrides.OverrideSelectElement;
-import com.octo.gwt.test17.overrides.OverrideStyle;
-import com.octo.gwt.test17.overrides.OverrideTextAreaElement;
+import com.octo.gwt.test17.internal.overrides.OverrideAnchorElement;
+import com.octo.gwt.test17.internal.overrides.OverrideEvent;
+import com.octo.gwt.test17.internal.overrides.OverrideFrameElement;
+import com.octo.gwt.test17.internal.overrides.OverrideHistory;
+import com.octo.gwt.test17.internal.overrides.OverrideImageElement;
+import com.octo.gwt.test17.internal.overrides.OverrideInputElement;
+import com.octo.gwt.test17.internal.overrides.OverrideOptionElement;
+import com.octo.gwt.test17.internal.overrides.OverrideSelectElement;
+import com.octo.gwt.test17.internal.overrides.OverrideStyle;
+import com.octo.gwt.test17.internal.overrides.OverrideTextAreaElement;
 
 public class PatchGWT {
 

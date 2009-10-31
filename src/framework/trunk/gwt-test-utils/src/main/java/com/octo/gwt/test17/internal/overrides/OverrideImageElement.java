@@ -1,16 +1,16 @@
-package com.octo.gwt.test17.overrides;
+package com.octo.gwt.test17.internal.overrides;
 
-import com.google.gwt.dom.client.FrameElement;
+import com.google.gwt.dom.client.ImageElement;
 import com.octo.gwt.test17.internal.dom.UserElement;
 
-public class OverrideFrameElement extends FrameElement implements UserElementWrapper {
-
+public class OverrideImageElement extends ImageElement implements UserElementWrapper {
+	
 	private UserElement wrappedElement;
-
-	public OverrideFrameElement(UserElement element) {
+	
+	public OverrideImageElement(UserElement element) {
 		wrappedElement = element;
 	}
-
+	
 	public String getOverrideSrc() {
 		return wrappedElement.getOverrideAttribute("src");
 	}
@@ -23,9 +23,9 @@ public class OverrideFrameElement extends FrameElement implements UserElementWra
 		return wrappedElement;
 	}
 
-	public static OverrideFrameElement overrideCast(Object o) {
-		if (o instanceof OverrideFrameElement) {
-			OverrideFrameElement e = (OverrideFrameElement) o;
+	public static OverrideImageElement overrideCast(Object o) {
+		if (o instanceof OverrideImageElement) {
+			OverrideImageElement e = (OverrideImageElement) o;
 			return e;
 		}
 		throw new RuntimeException("Unable to cast class " + o.getClass().getCanonicalName());

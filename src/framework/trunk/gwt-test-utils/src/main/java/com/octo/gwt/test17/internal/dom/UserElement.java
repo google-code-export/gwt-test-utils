@@ -5,8 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.google.gwt.user.client.Element;
-import com.octo.gwt.test17.overrides.OverrideInputElement;
-import com.octo.gwt.test17.overrides.OverrideStyle;
+import com.octo.gwt.test17.internal.overrides.OverrideInputElement;
+import com.octo.gwt.test17.internal.overrides.OverrideStyle;
 
 public class UserElement extends Element {
 	

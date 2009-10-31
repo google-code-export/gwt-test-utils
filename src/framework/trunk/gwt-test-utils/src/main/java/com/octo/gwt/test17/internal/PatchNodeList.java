@@ -2,7 +2,7 @@ package com.octo.gwt.test17.internal;
 
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
-import com.octo.gwt.test17.overrides.OverrideNodeList;
+import com.octo.gwt.test17.internal.overrides.OverrideNodeList;
 
 public class PatchNodeList {
 	

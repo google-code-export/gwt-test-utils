@@ -3,8 +3,8 @@ package com.octo.gwt.test17.internal;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.Element;
 import com.octo.gwt.test17.internal.dom.UserElement;
-import com.octo.gwt.test17.overrides.OverrideStyle;
-import com.octo.gwt.test17.overrides.UserElementWrapper;
+import com.octo.gwt.test17.internal.overrides.OverrideStyle;
+import com.octo.gwt.test17.internal.overrides.UserElementWrapper;
 
 public class PatchUIObject {
 	

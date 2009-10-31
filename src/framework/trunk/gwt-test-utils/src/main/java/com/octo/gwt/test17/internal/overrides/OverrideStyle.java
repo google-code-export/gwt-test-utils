@@ -1,4 +1,4 @@
-package com.octo.gwt.test17.overrides;
+package com.octo.gwt.test17.internal.overrides;
 
 import java.util.Hashtable;
 import java.util.Map.Entry;

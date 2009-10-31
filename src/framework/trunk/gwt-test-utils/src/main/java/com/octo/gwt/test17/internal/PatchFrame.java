@@ -2,7 +2,7 @@ package com.octo.gwt.test17.internal;
 
 import com.google.gwt.user.client.ui.Frame;
 import com.octo.gwt.test17.internal.dom.UserElement;
-import com.octo.gwt.test17.overrides.OverrideFrameElement;
+import com.octo.gwt.test17.internal.overrides.OverrideFrameElement;
 
 public class PatchFrame {
 

@@ -4,7 +4,7 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.SelectElement;
 import com.google.gwt.user.client.ui.ListBox;
 import com.octo.gwt.test17.internal.dom.UserElement;
-import com.octo.gwt.test17.overrides.OverrideSelectElement;
+import com.octo.gwt.test17.internal.overrides.OverrideSelectElement;
 
 public class PatchListBox {
 
