@@ -3,7 +3,7 @@ package com.octo.gwt.test17.overrides;
 import com.google.gwt.dom.client.TextAreaElement;
 import com.octo.gwt.test17.internal.dom.UserElement;
 
-public class OverrideTextAreaElement extends TextAreaElement {
+public class OverrideTextAreaElement extends TextAreaElement implements UserElementWrapper {
 
 	private UserElement wrappedElement;
 	
@@ -19,6 +19,10 @@ public class OverrideTextAreaElement extends TextAreaElement {
 		this.wrappedElement.setOverrideAttribute("rows", String.valueOf(overrideRows));
 	}
 	
+	public UserElement getWrappedElement() {
+		return wrappedElement;
+	}
+
 	public static OverrideTextAreaElement overrideCast(Object o) {
 		if (o instanceof OverrideTextAreaElement) {
 			OverrideTextAreaElement e = (OverrideTextAreaElement) o;

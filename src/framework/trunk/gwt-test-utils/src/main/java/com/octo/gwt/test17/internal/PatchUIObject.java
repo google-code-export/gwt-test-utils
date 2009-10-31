@@ -4,6 +4,7 @@ import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.Element;
 import com.octo.gwt.test17.internal.dom.UserElement;
 import com.octo.gwt.test17.overrides.OverrideStyle;
+import com.octo.gwt.test17.overrides.UserElementWrapper;
 
 public class PatchUIObject {
 	
@@ -48,6 +49,13 @@ public class PatchUIObject {
 			UserElement e = (UserElement) object;
 			return e;
 		}
+		
+		if (object instanceof UserElementWrapper) {
+			UserElementWrapper wrapper = (UserElementWrapper) object;
+			if (wrapper.getWrappedElement() != null)
+				return wrapper.getWrappedElement();
+		}
+		
 		if (object instanceof Element) {
 			Element e = (Element) object;
 			return new UserElement(e);

@@ -14,6 +14,14 @@ import com.octo.gwt.test17.test.AbstractGWTTest;
 public class ButtonTest extends AbstractGWTTest {
 
 	@Test
+	public void checkTitle() {
+		Button b = new Button();
+		b.setTitle("title");
+
+		Assert.assertEquals("title", b.getTitle());
+	}
+	
+	@Test
 	public void checkText() {
 		Button b = new Button();
 		b.setText("toto");

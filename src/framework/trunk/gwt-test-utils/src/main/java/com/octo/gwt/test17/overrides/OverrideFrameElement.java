@@ -3,7 +3,7 @@ package com.octo.gwt.test17.overrides;
 import com.google.gwt.dom.client.FrameElement;
 import com.octo.gwt.test17.internal.dom.UserElement;
 
-public class OverrideFrameElement extends FrameElement {
+public class OverrideFrameElement extends FrameElement implements UserElementWrapper {
 
 	private UserElement wrappedElement;
 
@@ -17,6 +17,10 @@ public class OverrideFrameElement extends FrameElement {
 
 	public void setOverrideSrc(String overrideSrc) {
 		wrappedElement.setOverrideAttribute("src", overrideSrc);
+	}
+
+	public UserElement getWrappedElement() {
+		return wrappedElement;
 	}
 
 	public static OverrideFrameElement overrideCast(Object o) {

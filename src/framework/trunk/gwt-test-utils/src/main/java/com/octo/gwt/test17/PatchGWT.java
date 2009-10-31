@@ -10,6 +10,7 @@ import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.AnchorElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.FrameElement;
+import com.google.gwt.dom.client.ImageElement;
 import com.google.gwt.dom.client.InputElement;
 import com.google.gwt.dom.client.LabelElement;
 import com.google.gwt.dom.client.Node;
@@ -77,6 +78,7 @@ import com.octo.gwt.test17.overrides.OverrideAnchorElement;
 import com.octo.gwt.test17.overrides.OverrideEvent;
 import com.octo.gwt.test17.overrides.OverrideFrameElement;
 import com.octo.gwt.test17.overrides.OverrideHistory;
+import com.octo.gwt.test17.overrides.OverrideImageElement;
 import com.octo.gwt.test17.overrides.OverrideInputElement;
 import com.octo.gwt.test17.overrides.OverrideOptionElement;
 import com.octo.gwt.test17.overrides.OverrideSelectElement;
@@ -128,6 +130,8 @@ public class PatchGWT {
 
 		HistoryImpl historyImpl = ReflectionUtils.getStaticFieldValue(History.class, "impl");
 		ReflectionUtils.callClear(ReflectionUtils.getPrivateFieldValue(ReflectionUtils.getPrivateFieldValue(ReflectionUtils.getPrivateFieldValue(historyImpl, "handlers"), "registry"), "map"));
+		
+		PatchTimer.clear();
 	}
 
 	public static void addCreateClass(Class<?> classLiteral, Object object) {
@@ -413,7 +417,12 @@ public class PatchGWT {
 		});
 
 		PatchUtils.applyPatches(Image.class, new Patch[] {
-			new Patch("getImageElement", staticCall(PatchImage.class, "getImageElement")),
+			new Patch("getImageElement", staticCall(PatchImage.class, "getImageElement", "this")),
+		});
+		
+		PatchUtils.applyPatches(ImageElement.class, new Patch[] { 
+			new Patch("setSrc", castThisAndCall(OverrideImageElement.class, "setOverrideSrc", "$1")),
+			new Patch("getSrc", castThisAndCall(OverrideImageElement.class, "getOverrideSrc")), 
 		});
 
 		PatchUtils.applyPatches(Frame.class, new Patch[] {
@@ -458,16 +467,11 @@ public class PatchGWT {
 
 		PatchUtils.applyPatches(URL.class, new Patch[] { 
 			new Patch("encodeComponentImpl", staticCall(PatchURL.class, "urlEncode", "$1")) 
-		});
-		
+		});	
 		
 		PatchUtils.applyPatches(Duration.class, new Patch[] { 
 			new Patch("currentTimeMillis", staticCall(PatchDuration.class, "getTimeInMillisec")) 
 		});
-	}
-	
-	public static long currentTimeMillis() {
-		return 0;
 	}
 
 	private static String staticCall(Class<?> clazz, String methodName, String args) {

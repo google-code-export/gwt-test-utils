@@ -3,7 +3,7 @@ package com.octo.gwt.test17.overrides;
 import com.google.gwt.dom.client.AnchorElement;
 import com.octo.gwt.test17.internal.dom.UserElement;
 
-public class OverrideAnchorElement extends AnchorElement {
+public class OverrideAnchorElement extends AnchorElement implements UserElementWrapper {
 	
 	private UserElement wrappedElement;
 	
@@ -33,6 +33,10 @@ public class OverrideAnchorElement extends AnchorElement {
 
 	public void setOverrideAccessKey(String overrideAccessKey) {
 		this.wrappedElement.setOverrideAttribute("accessKey", overrideAccessKey);
+	}
+
+	public UserElement getWrappedElement() {
+		return wrappedElement;
 	}
 
 	public static OverrideAnchorElement overrideCast(Object o) {

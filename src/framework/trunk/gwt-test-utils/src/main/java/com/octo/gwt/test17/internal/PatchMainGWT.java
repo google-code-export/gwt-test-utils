@@ -10,8 +10,6 @@ import java.util.Properties;
 
 import com.google.gwt.i18n.client.Constants;
 import com.google.gwt.i18n.client.Constants.DefaultStringValue;
-import com.google.gwt.i18n.client.constants.DateTimeConstants;
-import com.google.gwt.i18n.client.constants.NumberConstants;
 import com.google.gwt.i18n.client.impl.CldrImpl;
 import com.google.gwt.i18n.client.impl.CurrencyList;
 import com.google.gwt.i18n.client.impl.LocaleInfoImpl;
@@ -39,11 +37,11 @@ import com.octo.gwt.test17.overrides.OverrideImagePrototype;
 import com.octo.gwt.test17.overrides.OverrideInputElement;
 
 public class PatchMainGWT {
-	
+
 	public static GwtCreateHandler gwtCreateHandler = null;
-	
+
 	public static Hashtable<Class<?>, Object> createClass = new Hashtable<Class<?>, Object>();
-	
+
 	public static Object create(Class<?> classLiteral) {
 		if (classLiteral == DebugIdImpl.class) {
 			return new UIObject.DebugIdImpl();
@@ -65,11 +63,11 @@ public class PatchMainGWT {
 					if (methodName.equals("eventPreventDefault")) {
 						return "return;";
 					}
-					
+
 					if (methodName.equals("eventGetTarget")) {
 						return "return null;";
 					}
-					
+
 					return null;
 				}
 			});
@@ -122,43 +120,47 @@ public class PatchMainGWT {
 		if (ImageBundle.class.isAssignableFrom(classLiteral)) {
 			return generateImageWrapper(classLiteral);
 		}
-		
+
 		Object o = createClass.get(classLiteral);
 		if (gwtCreateHandler != null) {
 			o = gwtCreateHandler.create(classLiteral);
 		}
-		
+
 		if (o == null && PatchUtils.INSTANCE_CREATOR != null) {
 			o = PatchUtils.INSTANCE_CREATOR.createInstance(classLiteral);
 		}
-		
+
 		if (o == null) {
 			throw new RuntimeException("No mock registered for class : " + classLiteral.getCanonicalName());
 		}
 		return o;
 	}
-	
-	public static Object generateConstantWrapper(Class<?> clazz) {
-		InvocationHandler ih = new InvocationHandler() {
 
-			public Object invoke(Object arg0, Method arg1, Object[] arg2) throws Throwable {
-				if (arg0 instanceof DateTimeConstants) {
-					return extractFromPropertiesFile(DateTimeConstants.class, arg1);
-				} else if (arg0 instanceof NumberConstants) {
-					return extractFromPropertiesFile(NumberConstants.class, arg1);
-				} else {
-					DefaultStringValue v = arg1.getAnnotation(DefaultStringValue.class);
-					if (v == null) {
-						throw new UnsupportedOperationException("No annotation DefaultStringValue on method " + arg1.getName());
-					}
-					return v.value();
-				}
-			}
-
-		};
+	private static Object generateConstantWrapper(Class<?> clazz) {
+		InvocationHandler ih = new ConstantInvocationHandler(clazz);
 		return Proxy.newProxyInstance(clazz.getClassLoader(), new Class<?>[] { clazz }, ih);
+
+		//				InvocationHandler ih = new InvocationHandler() {
+		//		
+		//					public Object invoke(Object arg0, Method arg1, Object[] arg2) throws Throwable {
+		//						Proxy p = (Proxy) arg0;
+		//						if (arg0 instanceof DateTimeConstants) {
+		//							return extractFromPropertiesFile(DateTimeConstants.class, arg1);
+		//						} else if (arg0 instanceof NumberConstants) {
+		//							return extractFromPropertiesFile(NumberConstants.class, arg1);
+		//						} else {
+		//							DefaultStringValue v = arg1.getAnnotation(DefaultStringValue.class);
+		//							if (v == null) {
+		//								throw new UnsupportedOperationException("No annotation DefaultStringValue on method " + arg1.getName());
+		//							}
+		//							return v.value();
+		//						}
+		//					}
+		//		
+		//				};
+		//				return Proxy.newProxyInstance(clazz.getClassLoader(), new Class<?>[] { clazz }, ih);
 	}
-	
+
 	private static Object generateImageWrapper(Class<?> clazz) {
 		InvocationHandler ih = new InvocationHandler() {
 
@@ -172,14 +174,26 @@ public class PatchMainGWT {
 		};
 		return Proxy.newProxyInstance(clazz.getClassLoader(), new Class<?>[] { clazz }, ih);
 	}
-	
+
 	private static Object extractFromPropertiesFile(Class<?> clazz, Method method) throws IOException {
+		String line = null;
 		String localeLanguage = PatchGWT.getLocale().getLanguage();
 		String propertiesNameFile = "/" + clazz.getCanonicalName().replaceAll("\\.", "/") + "_" + localeLanguage + ".properties";
 		InputStream is = clazz.getResourceAsStream(propertiesNameFile);
-		Properties properties = new Properties();
-		properties.load(is);
-		String line = properties.getProperty(method.getName());
+		if (is != null) {
+			Properties properties = new Properties();
+			properties.load(is);
+			line = properties.getProperty(method.getName());
+		}
+		if (line == null) {
+			DefaultStringValue v = method.getAnnotation(DefaultStringValue.class);
+			if (v == null) {
+				throw new UnsupportedOperationException("No matching property \"" +  method.getName() + "\" for i18n class ["
+						+ clazz.getCanonicalName() + "]. Please use the DefaultStringValue annotation");
+			}
+
+			return v.value();
+		}
 		if (method.getReturnType() == String.class) {
 			return line;
 		}
@@ -187,4 +201,32 @@ public class PatchMainGWT {
 		return result;
 	}
 
+	//		private static Object extractFromPropertiesFile(Class<?> clazz, Method method) throws IOException {
+	//			String localeLanguage = PatchGWT.getLocale().getLanguage();
+	//			String propertiesNameFile = "/" + clazz.getCanonicalName().replaceAll("\\.", "/") + "_" + localeLanguage + ".properties";
+	//			InputStream is = clazz.getResourceAsStream(propertiesNameFile);
+	//			Properties properties = new Properties();
+	//			properties.load(is);
+	//			String line = properties.getProperty(method.getName());
+	//			if (method.getReturnType() == String.class) {
+	//				return line;
+	//			}
+	//			String [] result = line.split(", ");
+	//			return result;
+	//		}
+
+	private static class ConstantInvocationHandler implements InvocationHandler {
+
+		private Class<?> wrappedClass;
+
+		public ConstantInvocationHandler(Class<?> wrappedClass) {
+			this.wrappedClass = wrappedClass;
+		}
+
+		public Object invoke(Object arg0, Method arg1, Object[] arg2) throws Throwable {
+			return extractFromPropertiesFile(wrappedClass, arg1);
+
+		}
+
+	}
 }

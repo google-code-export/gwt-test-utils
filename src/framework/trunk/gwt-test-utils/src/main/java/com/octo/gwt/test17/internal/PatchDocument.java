@@ -3,6 +3,7 @@ package com.octo.gwt.test17.internal;
 import com.google.gwt.dom.client.BodyElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.ImageElement;
+import com.octo.gwt.test17.internal.dom.UserElement;
 import com.octo.gwt.test17.overrides.OverrideBodyElement;
 import com.octo.gwt.test17.overrides.OverrideDocument;
 import com.octo.gwt.test17.overrides.OverrideImageElement;
@@ -18,7 +19,7 @@ public class PatchDocument {
 	}
 
 	public static ImageElement createImageElement() {
-		return new OverrideImageElement();
+		return new OverrideImageElement(new UserElement(null));
 	}
 
 }

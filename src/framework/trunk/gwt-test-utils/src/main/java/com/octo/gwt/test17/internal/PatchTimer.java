@@ -1,16 +1,30 @@
 package com.octo.gwt.test17.internal;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.google.gwt.user.client.Timer;
 
 public class PatchTimer {
 
 	public static int DEFAULT_REPEAT_TIME = 5;
+	private static Map<Timer, Integer> CACHE = new HashMap<Timer, Integer>();
 
 	public static void schedule(Timer timer, int delayMillis) throws Exception {
 		if (delayMillis <= 0) {
 			throw new IllegalArgumentException("must be positive");
 		}
-		timer.run();
+
+		if (!CACHE.containsKey(timer)) {
+			CACHE.put(timer, 0);
+		}
+
+		int runTimes = CACHE.get(timer);
+		if (runTimes < DEFAULT_REPEAT_TIME) {
+			CACHE.put(timer, ++runTimes);
+			timer.run();
+		}
+
 	}
 
 	public static void scheduleRepeating(Timer timer, int periodMillis) throws Exception {
@@ -18,8 +32,19 @@ public class PatchTimer {
 			throw new IllegalArgumentException("must be positive");
 		}
 
-		for (int i = 0; i < DEFAULT_REPEAT_TIME; i++) {
+		if (!CACHE.containsKey(timer)) {
+			CACHE.put(timer, 0);
+		}
+
+		int runTimes = CACHE.get(timer);
+		while (runTimes < DEFAULT_REPEAT_TIME && CACHE.get(timer) < DEFAULT_REPEAT_TIME) {
+			CACHE.put(timer, ++runTimes);
 			timer.run();
 		}
+
+	}
+
+	public static void clear() {
+		CACHE.clear();
 	}
 }

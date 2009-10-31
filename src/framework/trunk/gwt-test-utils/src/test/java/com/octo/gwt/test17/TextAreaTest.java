@@ -17,6 +17,14 @@ public class TextAreaTest extends AbstractGWTTest {
 	}
 	
 	@Test
+	public void checkTitle() {
+		TextArea t = new TextArea();
+		t.setTitle("title");
+
+		Assert.assertEquals("title", t.getTitle());
+	}
+	
+	@Test
 	public void checkVisibleLines() {
 		TextArea t = new TextArea();
 		t.setVisibleLines(10);

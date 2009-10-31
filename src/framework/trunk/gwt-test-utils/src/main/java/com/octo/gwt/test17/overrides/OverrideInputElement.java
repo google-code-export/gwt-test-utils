@@ -4,7 +4,7 @@ import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.InputElement;
 import com.octo.gwt.test17.internal.dom.UserElement;
 
-public class OverrideInputElement extends InputElement {
+public class OverrideInputElement extends InputElement implements UserElementWrapper {
 
 	private UserElement wrappedElement;
 	
@@ -83,6 +83,10 @@ public class OverrideInputElement extends InputElement {
 
 	public void setOverrideMaxLength(int overrideMaxLength) {
 		this.wrappedElement.setOverrideAttribute("maxLength", String.valueOf(overrideMaxLength));
+	}
+
+	public UserElement getWrappedElement() {
+		return wrappedElement;
 	}
 
 	public static OverrideInputElement overrideCast(Object o) {

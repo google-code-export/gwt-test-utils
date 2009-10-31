@@ -39,6 +39,14 @@ public class AnchorTest extends AbstractGWTTest {
 
 		Assert.assertEquals(0, a.getAbsoluteTop());
 	}
+	
+	@Test
+	public void checkTitle() {
+		Anchor a = new Anchor();
+		a.setTitle("title");
+
+		Assert.assertEquals("title", a.getTitle());
+	}
 
 
 
