@@ -21,7 +21,7 @@ import com.octo.gwt.test17.PatchGWT;
 import com.octo.gwt.test17.WidgetUtils;
 import com.octo.gwt.test17.integ.csvrunner.CsvRunner;
 import com.octo.gwt.test17.integ.csvrunner.Node;
-import com.octo.gwt.test17.overrides.OverrideEvent;
+import com.octo.gwt.test17.internal.overrides.OverrideEvent;
 
 public abstract class AbstractGwtIntegrationShell {
 
