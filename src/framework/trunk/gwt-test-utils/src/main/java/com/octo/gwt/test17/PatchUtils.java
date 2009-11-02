@@ -1,11 +1,11 @@
 package com.octo.gwt.test17;
 
+import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.google.gwt.core.client.GWT;
+import java.util.Properties;
 
 import javassist.CannotCompileException;
 import javassist.ClassPool;
@@ -14,9 +14,13 @@ import javassist.CtConstructor;
 import javassist.CtMethod;
 import javassist.NotFoundException;
 
+import com.google.gwt.core.client.GWT;
+
 public class PatchUtils {
 
 	private static final String REDEFINE_METHOD = "redefineClass";
+	
+	private static final String LOAD_PROPERTIES_METHOD = "loadProperties";
 
 	private static final String REDEFINE_CLASS = "com.octo.gwt.test17.bootstrap.Startup";
 
@@ -30,6 +34,13 @@ public class PatchUtils {
 	 * bootstrap.jar
 	 */
 	public static Method redefine;
+	
+	/**
+	 * Method used to load properties files with encoding. Method is located in
+	 * bootstrap.jar
+	 */
+	public static Method loadProperties;
+	
 	
 	/**
 	 * Object used to try to create custom objects that normally would be 
@@ -178,8 +189,23 @@ public class PatchUtils {
 		}
 		PatchUtils.redefine = c.getMethod(REDEFINE_METHOD, Class.class, byte[].class);
 		if (PatchUtils.redefine == null) {
-			throw new RuntimeException("Method redefine not found in bootstrap class");
+			throw new RuntimeException("Method " + REDEFINE_METHOD + " not found in bootstrap class");
 		}
+	}
+	
+	public static void initLoadPropertiesMethod() throws Exception {
+		Class<?> c = Class.forName(REDEFINE_CLASS);
+		if (c == null) {
+			throw new RuntimeException("No bootstrap class found");
+		}
+		PatchUtils.loadProperties = c.getMethod(LOAD_PROPERTIES_METHOD, InputStream.class, String.class);
+		if (PatchUtils.loadProperties == null) {
+			throw new RuntimeException("Method " + LOAD_PROPERTIES_METHOD + " not found in bootstrap class");
+		}
+	}
+	
+	public static Properties loadProperties(InputStream inputStream, String charset) throws Exception {
+		return (Properties) loadProperties.invoke(null, inputStream, charset);
 	}
 
 	public interface BodyGetter {

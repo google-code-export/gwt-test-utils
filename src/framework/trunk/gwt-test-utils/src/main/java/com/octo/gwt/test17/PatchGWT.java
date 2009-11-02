@@ -20,6 +20,7 @@ import com.google.gwt.dom.client.SelectElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.TextAreaElement;
 import com.google.gwt.http.client.URL;
+import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.i18n.client.impl.CurrencyData;
 import com.google.gwt.i18n.client.impl.CurrencyList;
 import com.google.gwt.user.client.Command;
@@ -51,6 +52,7 @@ import com.google.gwt.user.client.ui.impl.FocusImpl;
 import com.google.gwt.user.client.ui.impl.FocusImplOld;
 import com.octo.gwt.test17.internal.PatchAnchorElement;
 import com.octo.gwt.test17.internal.PatchCheckBox;
+import com.octo.gwt.test17.internal.PatchCurrencyList;
 import com.octo.gwt.test17.internal.PatchDOM;
 import com.octo.gwt.test17.internal.PatchDOMImpl;
 import com.octo.gwt.test17.internal.PatchDeferredCommand;
@@ -111,6 +113,7 @@ public class PatchGWT {
 
 	public static void reset() throws Exception {
 		LOCALE = null;
+		PatchCurrencyList.reset();
 		OverrideHistory.reset();
 		PatchMainGWT.createClass.clear();
 		PatchMainGWT.gwtCreateHandler = null;
@@ -131,6 +134,11 @@ public class PatchGWT {
 
 		HistoryImpl historyImpl = ReflectionUtils.getStaticFieldValue(History.class, "impl");
 		ReflectionUtils.callClear(ReflectionUtils.getPrivateFieldValue(ReflectionUtils.getPrivateFieldValue(ReflectionUtils.getPrivateFieldValue(historyImpl, "handlers"), "registry"), "map"));
+		
+		ReflectionUtils.setStaticField(NumberFormat.class, "cachedDecimalFormat", null);
+		ReflectionUtils.setStaticField(NumberFormat.class, "cachedScientificFormat", null);
+		ReflectionUtils.setStaticField(NumberFormat.class, "cachedPercentFormat", null);
+		ReflectionUtils.setStaticField(NumberFormat.class, "cachedCurrencyFormat", null);
 		
 		PatchTimer.clear();
 	}
@@ -157,6 +165,7 @@ public class PatchGWT {
 		}
 
 		PatchUtils.initRedefineMethod();
+		PatchUtils.initLoadPropertiesMethod();
 
 		hasBeenPatched = true;
 
@@ -436,13 +445,13 @@ public class PatchGWT {
 		});
 
 		PatchUtils.applyPatches(CurrencyList.class, new Patch[] { 
-			new Patch("getDefault", "new " + CurrencyData.class.getCanonicalName() + "()"), 
+			new Patch("getDefault", staticCall(PatchCurrencyList.class, "getDefault")), 
 		});
-
+		
 		PatchUtils.applyPatches(CurrencyData.class, new Patch[] { 
-			new Patch("getFlagsAndPrecision", "0"), 
-			new Patch("getCurrencyCode", "\"USD\""), 
-			new Patch("getCurrencySymbol", "\"$\"") 
+			new Patch("getCurrencyCode", staticCall(PatchCurrencyList.class, "getCurrencyCode", "this")),
+			new Patch("getCurrencySymbol", staticCall(PatchCurrencyList.class, "getCurrencySymbol", "this")),
+			new Patch("getFlagsAndPrecision", staticCall(PatchCurrencyList.class, "getFlagsAndPrecision", "this")),
 		});
 
 		PatchUtils.applyPatches(TextBox.class, new Patch[] { 

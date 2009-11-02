@@ -140,26 +140,6 @@ public class PatchMainGWT {
 	private static Object generateConstantWrapper(Class<?> clazz) {
 		InvocationHandler ih = new ConstantInvocationHandler(clazz);
 		return Proxy.newProxyInstance(clazz.getClassLoader(), new Class<?>[] { clazz }, ih);
-
-		//				InvocationHandler ih = new InvocationHandler() {
-		//		
-		//					public Object invoke(Object arg0, Method arg1, Object[] arg2) throws Throwable {
-		//						Proxy p = (Proxy) arg0;
-		//						if (arg0 instanceof DateTimeConstants) {
-		//							return extractFromPropertiesFile(DateTimeConstants.class, arg1);
-		//						} else if (arg0 instanceof NumberConstants) {
-		//							return extractFromPropertiesFile(NumberConstants.class, arg1);
-		//						} else {
-		//							DefaultStringValue v = arg1.getAnnotation(DefaultStringValue.class);
-		//							if (v == null) {
-		//								throw new UnsupportedOperationException("No annotation DefaultStringValue on method " + arg1.getName());
-		//							}
-		//							return v.value();
-		//						}
-		//					}
-		//		
-		//				};
-		//				return Proxy.newProxyInstance(clazz.getClassLoader(), new Class<?>[] { clazz }, ih);
 	}
 
 	private static Object generateImageWrapper(Class<?> clazz) {
@@ -175,19 +155,29 @@ public class PatchMainGWT {
 		};
 		return Proxy.newProxyInstance(clazz.getClassLoader(), new Class<?>[] { clazz }, ih);
 	}
-
-	private static Object extractFromPropertiesFile(Class<?> clazz, Method method) throws IOException {
-		String line = null;
+	
+	public static Properties getProperties(String path) {
+		String propertiesNameFile = "/" + path + ".properties";
+		InputStream is = path.getClass().getResourceAsStream(propertiesNameFile);
+		try {
+			return PatchUtils.loadProperties(is, "UTF-8");
+		} catch (Exception e) {
+			throw new RuntimeException("Unable to load properties file " + path, e);
+		} 
+	}
+	public static Properties getLocalizedProperties(String prefix) throws IOException {
 		Locale locale = PatchGWT.getLocale();
 		if (locale == null) {
 			throw new RuntimeException("No locale specified, please call PactchGWT.setLocale(...)");
 		}
 		String localeLanguage = PatchGWT.getLocale().getLanguage();
-		String propertiesNameFile = "/" + clazz.getCanonicalName().replaceAll("\\.", "/") + "_" + localeLanguage + ".properties";
-		InputStream is = clazz.getResourceAsStream(propertiesNameFile);
-		if (is != null) {
-			Properties properties = new Properties();
-			properties.load(is);
+		return getProperties(prefix + "_" + localeLanguage);
+	}
+
+	private static Object extractFromPropertiesFile(Class<?> clazz, Method method) throws IOException {
+		String line = null;
+		Properties properties = getLocalizedProperties(clazz.getCanonicalName().replaceAll("\\.", "/"));
+		if (properties != null) {
 			line = properties.getProperty(method.getName());
 		}
 		if (line == null) {

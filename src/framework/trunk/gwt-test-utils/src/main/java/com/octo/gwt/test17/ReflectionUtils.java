@@ -144,5 +144,15 @@ public class ReflectionUtils {
 		}
 		
 	}
+
+	public static void setStaticField(Class<?> clazz, String fieldName, Object value) {
+		Field field = getUniqueFieldByName(clazz, fieldName);
+		try {
+			field.set(null, value);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException(e.getMessage() + " Unable to set field, class " + fieldName + ", fieldClass " + clazz);
+		}
+	}
 	
 }

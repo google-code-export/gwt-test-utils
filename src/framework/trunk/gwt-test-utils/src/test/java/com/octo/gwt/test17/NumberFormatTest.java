@@ -11,10 +11,10 @@ import com.octo.gwt.test17.test.AbstractGWTTest;
 public class NumberFormatTest extends AbstractGWTTest {
 
 	@Test
-	public void checkNumberFormatFr() {
+	public void checkNumberFormatFr() throws Exception {
 		PatchGWT.setLocale(Locale.FRENCH);
 		
-		Assert.assertEquals("10 $", NumberFormat.getCurrencyFormat().format(10));
+		Assert.assertEquals("10,00 €", NumberFormat.getCurrencyFormat().format(10));
 		Assert.assertEquals("3,142", NumberFormat.getDecimalFormat().format(3.1416));
 	}
 	
@@ -22,7 +22,7 @@ public class NumberFormatTest extends AbstractGWTTest {
 	public void checkNumberFormatUs() {
 		PatchGWT.setLocale(Locale.US);
 		
-		Assert.assertEquals("10 $", NumberFormat.getCurrencyFormat().format(10));
+		Assert.assertEquals("$10.00", NumberFormat.getCurrencyFormat().format(10));
 		Assert.assertEquals("3.142", NumberFormat.getDecimalFormat().format(3.1416));
 	}
 	
