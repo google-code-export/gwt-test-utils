@@ -92,7 +92,7 @@ public class PatchGWT {
 	 */
 	private static boolean hasBeenPatched = false;
 
-	private static Locale LOCALE = Locale.getDefault();
+	private static Locale LOCALE = null;
 
 	/**
 	 * List of already patched custom classes
@@ -110,6 +110,7 @@ public class PatchGWT {
 	}
 
 	public static void reset() throws Exception {
+		LOCALE = null;
 		OverrideHistory.reset();
 		PatchMainGWT.createClass.clear();
 		PatchMainGWT.gwtCreateHandler = null;

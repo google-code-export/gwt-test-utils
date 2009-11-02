@@ -6,6 +6,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.Hashtable;
+import java.util.Locale;
 import java.util.Properties;
 
 import com.google.gwt.i18n.client.Constants;
@@ -177,6 +178,10 @@ public class PatchMainGWT {
 
 	private static Object extractFromPropertiesFile(Class<?> clazz, Method method) throws IOException {
 		String line = null;
+		Locale locale = PatchGWT.getLocale();
+		if (locale == null) {
+			throw new RuntimeException("No locale specified, please call PactchGWT.setLocale(...)");
+		}
 		String localeLanguage = PatchGWT.getLocale().getLanguage();
 		String propertiesNameFile = "/" + clazz.getCanonicalName().replaceAll("\\.", "/") + "_" + localeLanguage + ".properties";
 		InputStream is = clazz.getResourceAsStream(propertiesNameFile);
