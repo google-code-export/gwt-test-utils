@@ -1,10 +1,12 @@
 package com.octo.gwt.test17;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Properties;
 
 import javassist.CannotCompileException;
@@ -15,6 +17,7 @@ import javassist.CtMethod;
 import javassist.NotFoundException;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.i18n.client.Constants.DefaultStringValue;
 
 public class PatchUtils {
 
@@ -204,8 +207,50 @@ public class PatchUtils {
 		}
 	}
 	
-	public static Properties loadProperties(InputStream inputStream, String charset) throws Exception {
-		return (Properties) loadProperties.invoke(null, inputStream, charset);
+	public static Properties getProperties(String path) {
+		String propertiesNameFile = "/" + path + ".properties";
+		InputStream is = path.getClass().getResourceAsStream(propertiesNameFile);
+
+		if (is != null) {
+			try {
+				return (Properties) loadProperties.invoke(null, is, "UTF-8");
+			} catch (Exception e) {
+				throw new RuntimeException("Unable to load properties file \"" + propertiesNameFile + "\"", e);
+			} 
+		} else {
+			// file does not exist
+			return null;
+		}
+	}
+	public static Properties getLocalizedProperties(String prefix) throws IOException {
+		Locale locale = PatchGWT.getLocale();
+		if (locale == null) {
+			throw new RuntimeException("No locale specified, please call PactchGWT.setLocale(...)");
+		}
+		String localeLanguage = PatchGWT.getLocale().getLanguage();
+		return getProperties(prefix + "_" + localeLanguage);
+	}
+
+	public static Object extractFromPropertiesFile(Class<?> clazz, Method method) throws IOException {
+		String line = null;
+		Properties properties = getLocalizedProperties(clazz.getCanonicalName().replaceAll("\\.", "/"));
+		if (properties != null) {
+			line = properties.getProperty(method.getName());
+		}
+		if (line == null) {
+			DefaultStringValue v = method.getAnnotation(DefaultStringValue.class);
+			if (v == null) {
+				throw new UnsupportedOperationException("No matching property \"" +  method.getName() + "\" for i18n class ["
+						+ clazz.getCanonicalName() + "]. Please use the DefaultStringValue annotation");
+			}
+
+			return v.value();
+		}
+		if (method.getReturnType() == String.class) {
+			return line;
+		}
+		String [] result = line.split(", ");
+		return result;
 	}
 
 	public interface BodyGetter {

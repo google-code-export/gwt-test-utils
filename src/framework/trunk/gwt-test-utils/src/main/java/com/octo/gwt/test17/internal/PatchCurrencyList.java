@@ -11,6 +11,7 @@ import java.util.Properties;
 import java.util.Set;
 
 import com.google.gwt.i18n.client.impl.CurrencyData;
+import com.octo.gwt.test17.PatchUtils;
 
 public class PatchCurrencyList {
 
@@ -32,9 +33,9 @@ public class PatchCurrencyList {
 			return;
 		}
 		try {
-			Properties currencyData = PatchMainGWT.getLocalizedProperties("com/google/gwt/i18n/client/impl/cldr/CurrencyData");
-			Properties currencyExtra = PatchMainGWT.getProperties("com/google/gwt/i18n/client/constants/CurrencyExtra");
-			Properties numberConstants = PatchMainGWT.getLocalizedProperties("com/google/gwt/i18n/client/constants/NumberConstants");
+			Properties currencyData = PatchUtils.getLocalizedProperties("com/google/gwt/i18n/client/impl/cldr/CurrencyData");
+			Properties currencyExtra = PatchUtils.getProperties("com/google/gwt/i18n/client/constants/CurrencyExtra");
+			Properties numberConstants = PatchUtils.getLocalizedProperties("com/google/gwt/i18n/client/constants/NumberConstants");
 			Set<Object> keySet = currencyData.keySet();
 			String[] currencies = new String[keySet.size()];
 			keySet.toArray(currencies);

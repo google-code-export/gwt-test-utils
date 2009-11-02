@@ -1,5 +1,6 @@
 package com.octo.gwt.test17.test;
 
+import org.junit.After;
 import org.junit.Before;
 
 import com.octo.gwt.test17.PatchGWT;
@@ -12,9 +13,18 @@ public abstract class AbstractGWTTest extends WidgetUtils {
 		initPatchGwt();
 	}
 	
+	@After
+	public void tearDownAbstractGwtTest() throws Exception {
+		resetPatchGwt();
+	}
+	
 	protected void initPatchGwt() throws Exception {
 		//initialisation du framework de mock GWT
 		PatchGWT.init();
+		
+	}
+	
+	protected void resetPatchGwt() throws Exception {
 		// reinit GWT
 		PatchGWT.reset();
 	}

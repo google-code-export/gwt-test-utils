@@ -1,16 +1,11 @@
 package com.octo.gwt.test17.internal;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.Hashtable;
-import java.util.Locale;
-import java.util.Properties;
 
 import com.google.gwt.i18n.client.Constants;
-import com.google.gwt.i18n.client.Constants.DefaultStringValue;
 import com.google.gwt.i18n.client.impl.CldrImpl;
 import com.google.gwt.i18n.client.impl.CurrencyList;
 import com.google.gwt.i18n.client.impl.LocaleInfoImpl;
@@ -29,7 +24,6 @@ import com.google.gwt.user.client.ui.impl.PopupImpl;
 import com.google.gwt.user.client.ui.impl.TextBoxImpl;
 import com.octo.gwt.test17.GwtCreateHandler;
 import com.octo.gwt.test17.PatchConstants;
-import com.octo.gwt.test17.PatchGWT;
 import com.octo.gwt.test17.PatchUtils;
 import com.octo.gwt.test17.PatchUtils.BodyGetter;
 import com.octo.gwt.test17.internal.dom.UserDomImpl;
@@ -155,60 +149,6 @@ public class PatchMainGWT {
 		};
 		return Proxy.newProxyInstance(clazz.getClassLoader(), new Class<?>[] { clazz }, ih);
 	}
-	
-	public static Properties getProperties(String path) {
-		String propertiesNameFile = "/" + path + ".properties";
-		InputStream is = path.getClass().getResourceAsStream(propertiesNameFile);
-		try {
-			return PatchUtils.loadProperties(is, "UTF-8");
-		} catch (Exception e) {
-			throw new RuntimeException("Unable to load properties file " + path, e);
-		} 
-	}
-	public static Properties getLocalizedProperties(String prefix) throws IOException {
-		Locale locale = PatchGWT.getLocale();
-		if (locale == null) {
-			throw new RuntimeException("No locale specified, please call PactchGWT.setLocale(...)");
-		}
-		String localeLanguage = PatchGWT.getLocale().getLanguage();
-		return getProperties(prefix + "_" + localeLanguage);
-	}
-
-	private static Object extractFromPropertiesFile(Class<?> clazz, Method method) throws IOException {
-		String line = null;
-		Properties properties = getLocalizedProperties(clazz.getCanonicalName().replaceAll("\\.", "/"));
-		if (properties != null) {
-			line = properties.getProperty(method.getName());
-		}
-		if (line == null) {
-			DefaultStringValue v = method.getAnnotation(DefaultStringValue.class);
-			if (v == null) {
-				throw new UnsupportedOperationException("No matching property \"" +  method.getName() + "\" for i18n class ["
-						+ clazz.getCanonicalName() + "]. Please use the DefaultStringValue annotation");
-			}
-
-			return v.value();
-		}
-		if (method.getReturnType() == String.class) {
-			return line;
-		}
-		String [] result = line.split(", ");
-		return result;
-	}
-
-	//		private static Object extractFromPropertiesFile(Class<?> clazz, Method method) throws IOException {
-	//			String localeLanguage = PatchGWT.getLocale().getLanguage();
-	//			String propertiesNameFile = "/" + clazz.getCanonicalName().replaceAll("\\.", "/") + "_" + localeLanguage + ".properties";
-	//			InputStream is = clazz.getResourceAsStream(propertiesNameFile);
-	//			Properties properties = new Properties();
-	//			properties.load(is);
-	//			String line = properties.getProperty(method.getName());
-	//			if (method.getReturnType() == String.class) {
-	//				return line;
-	//			}
-	//			String [] result = line.split(", ");
-	//			return result;
-	//		}
 
 	private static class ConstantInvocationHandler implements InvocationHandler {
 
@@ -219,7 +159,7 @@ public class PatchMainGWT {
 		}
 
 		public Object invoke(Object arg0, Method arg1, Object[] arg2) throws Throwable {
-			return extractFromPropertiesFile(wrappedClass, arg1);
+			return PatchUtils.extractFromPropertiesFile(wrappedClass, arg1);
 
 		}
 
