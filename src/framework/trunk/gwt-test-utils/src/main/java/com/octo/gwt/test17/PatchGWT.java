@@ -473,8 +473,11 @@ public class PatchGWT {
 
 		PatchUtils.applyPatches(CheckBox.class, new Patch[] { 
 			new Patch("getName", staticCall(PatchCheckBox.class, "getName", "this")),
+			new Patch("setName", staticCall(PatchCheckBox.class, "setName", "this, $1")),
 			new Patch("getText", staticCall(PatchCheckBox.class, "getText", "this")),
 			new Patch("setText", staticCall(PatchCheckBox.class, "setText", "this, $1")),
+			new Patch("getHTML", staticCall(PatchCheckBox.class, "getHTML", "this")),
+			new Patch("setHTML", staticCall(PatchCheckBox.class, "setHTML", "this, $1")),
 		});
 
 		PatchUtils.applyPatches(RadioButton.class, new Patch[] { 

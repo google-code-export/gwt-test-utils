@@ -24,5 +24,15 @@ public class PatchCheckBox {
 		UserElement element = (UserElement) box.getElement();
 		return element.getOverrideAttribute("text");
 	}
+	
+	public static void setHTML(CheckBox box, String html) {
+		UserElement element = (UserElement) box.getElement();
+		element.setOverrideAttribute("html", html);
+	}
+	
+	public static String getHTML(CheckBox box) {
+		UserElement element = (UserElement) box.getElement();
+		return element.getOverrideAttribute("html");
+	}
 
 }

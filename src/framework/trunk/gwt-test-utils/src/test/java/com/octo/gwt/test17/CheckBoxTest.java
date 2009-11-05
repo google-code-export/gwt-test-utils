@@ -10,7 +10,6 @@ public class CheckBoxTest extends AbstractGWTTest {
 
 	@Test
 	public void checkCheckBoxClick() {
-		// Make a new check box
 		final CheckBox cb = new CheckBox();
 		cb.setValue(false);
 		cb.setFocus(true);
@@ -23,11 +22,41 @@ public class CheckBoxTest extends AbstractGWTTest {
 	}
 	
 	@Test
-	public void checkText() {
-		// Make a new check box
+	public void checkName() {
 		final CheckBox cb = new CheckBox();
+		cb.setName("name");
+		Assert.assertEquals("name", cb.getName());
+	}
+	
+	@Test
+	public void checkText() {
+		final CheckBox cb = new CheckBox("foo");
+		Assert.assertEquals("foo", cb.getText());
 		cb.setText("text");
 		Assert.assertEquals("text", cb.getText());
+	}
+	
+	@Test
+	public void checkTitle() {
+		final CheckBox cb = new CheckBox();
+		cb.setTitle("title");
+		Assert.assertEquals("title", cb.getTitle());
+	}
+	
+	@Test
+	public void checkHTML() {
+		final CheckBox cb = new CheckBox("<h1>foo</h1>", true);
+		Assert.assertEquals("<h1>foo</h1>", cb.getHTML());
+		cb.setHTML("<h1>test</h1>");
+		Assert.assertEquals("<h1>test</h1>", cb.getHTML());
+	}
+	
+	@Test
+	public void checkChecked() {
+		final CheckBox cb = new CheckBox();
+		Assert.assertEquals(false, cb.getValue());
+		cb.setValue(true);
+		Assert.assertEquals(true, cb.getValue());
 	}
 
 }
