@@ -1,5 +1,6 @@
 package com.octo.gwt.test17.internal.dom;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -9,7 +10,7 @@ import com.octo.gwt.test17.internal.overrides.OverrideInputElement;
 import com.octo.gwt.test17.internal.overrides.OverrideStyle;
 
 public class UserElement extends Element {
-	
+
 	private com.google.gwt.dom.client.Element other;
 
 	private String id;
@@ -75,6 +76,10 @@ public class UserElement extends Element {
 	}
 
 	public String getOverrideProperty(String key) {
+		if ("tagName".equals(key)) {
+			String tagName = getTagName(other);
+			return tagName;
+		}
 		return propsList.get(key);
 	}
 
@@ -103,11 +108,11 @@ public class UserElement extends Element {
 			UserElement e = (UserElement) o;
 			return e;
 		}
-		
+
 		if (o instanceof OverrideInputElement) {
 			return new UserElement((OverrideInputElement) o);
 		}
-		
+
 		if (o instanceof com.google.gwt.dom.client.Element) {
 			return new UserElement((com.google.gwt.dom.client.Element) o);
 		}
@@ -127,17 +132,22 @@ public class UserElement extends Element {
 
 	@SuppressWarnings("unchecked")
 	public UserElement overrideClone(boolean deep) {
-		UserElement e = new UserElement(null);
-		e.overrideInnerHtml = this.overrideInnerHtml;
-		e.overrideInnerText = this.overrideInnerText;
-		e.overrideStyle = this.overrideStyle.clone(e);
-		e.propsList = (HashMap<String, String>) this.propsList.clone();
+		UserElement newUserElement = new UserElement(null);
+		newUserElement.overrideInnerHtml = this.overrideInnerHtml;
+		newUserElement.overrideInnerText = this.overrideInnerText;
+		newUserElement.overrideStyle = this.overrideStyle.clone(newUserElement);
+		newUserElement.propsList = (HashMap<String, String>) this.propsList.clone();
+		try {
+			newUserElement.other = other.getClass().newInstance();
+		} catch (Exception e) {
+			throw new RuntimeException("Unable to clone " + other.getClass().getCanonicalName(), e);
+		}
 		if (deep) {
 			for (UserElement c : childList) {
-				e.appendChild(c.overrideClone(deep));
+				newUserElement.appendChild(c.overrideClone(deep));
 			}
 		}
-		return e;
+		return newUserElement;
 	}
 
 	public String getOverrideId() {
@@ -159,6 +169,15 @@ public class UserElement extends Element {
 	public boolean isOrHasChild(Object child) {
 		UserElement c = overrideCast(child);
 		return this == c || childList.contains(c);
+	}
+
+	public static String getTagName(Object o) {
+		try {
+			Field f = o.getClass().getField("overrideTagName");
+			return (String) f.get(null);
+		} catch (Exception e) {
+			throw new RuntimeException("No overrideTagName found in class " + o.getClass().getCanonicalName(), e);
+		}
 	}
 
 }

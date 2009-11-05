@@ -27,15 +27,6 @@ public class OverrideEvent extends Event {
 
 	private Element overrideTargetElement;
 
-	public OverrideEvent(int type, Element elem, int row, int col) {
-		this.overrideType = type;
-		this.overrideMetaKey = false;
-		this.overrideCtrlKey = false;
-		this.overrideShiftKey = false;
-		this.overrideAltKey = false;
-		this.overrideKeyCode = 0;
-	}
-
 	public OverrideEvent(int type) {
 		this(type, NativeEvent.BUTTON_LEFT);
 	}
