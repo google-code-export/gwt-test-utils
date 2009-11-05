@@ -11,6 +11,44 @@ import com.octo.gwt.test17.test.AbstractGWTTest;
 public class RadioButtonTest extends AbstractGWTTest {
 
 	private boolean tested;
+	
+	@Test
+	public void checkName() {
+		RadioButton rb = new RadioButton("myRadioGroup", "foo");
+		rb.setName("name");
+		Assert.assertEquals("name", rb.getName());
+	}
+	
+	@Test
+	public void checkText() {
+		RadioButton rb = new RadioButton("myRadioGroup", "foo");
+		Assert.assertEquals("foo", rb.getText());
+		rb.setText("text");
+		Assert.assertEquals("text", rb.getText());
+	}
+	
+	@Test
+	public void checkTitle() {
+		RadioButton rb = new RadioButton("myRadioGroup", "foo");
+		rb.setTitle("title");
+		Assert.assertEquals("title", rb.getTitle());
+	}
+	
+	@Test
+	public void checkHTML() {
+		RadioButton rb = new RadioButton("myRadioGroup", "<h1>foo</h1>", true);
+		Assert.assertEquals("<h1>foo</h1>", rb.getHTML());
+		rb.setHTML("<h1>test</h1>");
+		Assert.assertEquals("<h1>test</h1>", rb.getHTML());
+	}
+	
+	@Test
+	public void checkVisible() {
+		RadioButton rb = new RadioButton("myRadioGroup", "foo");
+		Assert.assertEquals(true, rb.isVisible());
+		rb.setVisible(false);
+		Assert.assertEquals(false, rb.isVisible());
+	}
 
 	@Test
 	public void checkRadioButton() {

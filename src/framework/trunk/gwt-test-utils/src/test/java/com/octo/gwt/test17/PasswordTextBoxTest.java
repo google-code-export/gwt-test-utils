@@ -9,27 +9,32 @@ import com.octo.gwt.test17.test.AbstractGWTTest;
 public class PasswordTextBoxTest extends AbstractGWTTest {
 	
 	@Test
+	public void checkName() {
+		PasswordTextBox ptb = new PasswordTextBox();
+		ptb.setName("name");
+		Assert.assertEquals("name", ptb.getName());
+	}
+	
+	@Test
 	public void checkText() {
-		PasswordTextBox p = new PasswordTextBox();
-		p.setText("text");
-		
-		Assert.assertEquals("text", p.getText());
+		PasswordTextBox ptb = new PasswordTextBox();
+		ptb.setText("text");
+		Assert.assertEquals("text", ptb.getText());
 	}
 	
 	@Test
 	public void checkTitle() {
-		PasswordTextBox p = new PasswordTextBox();
-		p.setTitle("text");
-		
-		Assert.assertEquals("text", p.getTitle());
+		PasswordTextBox ptb = new PasswordTextBox();
+		ptb.setTitle("title");
+		Assert.assertEquals("title", ptb.getTitle());
 	}
 	
 	@Test
-	public void checkName() {
-		PasswordTextBox p = new PasswordTextBox();
-		p.setName("name");
-		
-		Assert.assertEquals("name", p.getName());
+	public void checkVisible() {
+		PasswordTextBox ptb = new PasswordTextBox();
+		Assert.assertEquals(true, ptb.isVisible());
+		ptb.setVisible(false);
+		Assert.assertEquals(false, ptb.isVisible());
 	}
 
 }

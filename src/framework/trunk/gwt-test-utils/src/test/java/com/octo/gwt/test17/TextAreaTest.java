@@ -9,10 +9,16 @@ import com.octo.gwt.test17.test.AbstractGWTTest;
 public class TextAreaTest extends AbstractGWTTest {
 	
 	@Test
+	public void checkName() {
+		TextArea t = new TextArea();
+		t.setName("name");
+		Assert.assertEquals("name", t.getName());
+	}
+	
+	@Test
 	public void checkText() {
 		TextArea t = new TextArea();
 		t.setText("text");
-		
 		Assert.assertEquals("text", t.getText());
 	}
 	
@@ -20,8 +26,15 @@ public class TextAreaTest extends AbstractGWTTest {
 	public void checkTitle() {
 		TextArea t = new TextArea();
 		t.setTitle("title");
-
 		Assert.assertEquals("title", t.getTitle());
+	}
+	
+	@Test
+	public void checkVisible() {
+		TextArea t = new TextArea();
+		Assert.assertEquals(true, t.isVisible());
+		t.setVisible(false);
+		Assert.assertEquals(false, t.isVisible());
 	}
 	
 	@Test

@@ -15,6 +15,21 @@ public class TabPanelTest extends AbstractGWTTest {
 	int selectedTabIndex = -1;
 	
 	@Test
+	public void checkTitle() {
+		TabPanel tp = new TabPanel();
+		tp.setTitle("title");
+		Assert.assertEquals("title", tp.getTitle());
+	}
+	
+	@Test
+	public void checkVisible() {
+		TabPanel tp = new TabPanel();
+		Assert.assertEquals(true, tp.isVisible());
+		tp.setVisible(false);
+		Assert.assertEquals(false, tp.isVisible());
+	}
+	
+	@Test
 	public void checkTabPanel() {
 		TabPanel tp = createTabPanel();
 	    

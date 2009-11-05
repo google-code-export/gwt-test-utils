@@ -20,6 +20,21 @@ public class MenuBarTest extends AbstractGWTTest {
 	};
 
 	private boolean called = false;
+	
+	@Test
+	public void checkTitle() {
+		MenuBar bar = new MenuBar();
+		bar.setTitle("title");
+		Assert.assertEquals("title", bar.getTitle());
+	}
+	
+	@Test
+	public void checkVisible() {
+		MenuBar bar = new MenuBar();
+		Assert.assertEquals(true, bar.isVisible());
+		bar.setVisible(false);
+		Assert.assertEquals(false, bar.isVisible());
+	}
 
 	@Test
 	public void checkAutoOpen() {

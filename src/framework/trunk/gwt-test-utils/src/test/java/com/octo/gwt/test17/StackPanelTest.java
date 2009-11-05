@@ -8,6 +8,21 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.StackPanel;
 
 public class StackPanelTest {
+	
+	@Test
+	public void checkTitle() {
+		StackPanel sp = new StackPanel();
+		sp.setTitle("title");
+		Assert.assertEquals("title", sp.getTitle());
+	}
+	
+	@Test
+	public void checkVisible() {
+		StackPanel sp = new StackPanel();
+		Assert.assertEquals(true, sp.isVisible());
+		sp.setVisible(false);
+		Assert.assertEquals(false, sp.isVisible());
+	}
 
 	@Test
 	public void checkStackPanel() {
