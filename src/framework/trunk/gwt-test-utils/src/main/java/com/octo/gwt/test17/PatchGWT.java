@@ -417,6 +417,8 @@ public class PatchGWT {
 			new Patch("as", staticCall(PatchAnchorElement.class, "as", "$1")), 
 			new Patch("setTabIndex", castThisAndCall(OverrideAnchorElement.class, "setOverrideTabIndex", "$1")),
 			new Patch("getTabIndex", castThisAndCall(OverrideAnchorElement.class, "getOverrideTabIndex")),
+			new Patch("setName", castThisAndCall(OverrideAnchorElement.class, "setOverrideName", "$1")),
+			new Patch("getName", castThisAndCall(OverrideAnchorElement.class, "getOverrideName")),
 			new Patch("setHref", castThisAndCall(OverrideAnchorElement.class, "setOverrideHref", "$1")),
 			new Patch("getHref", castThisAndCall(OverrideAnchorElement.class, "getOverrideHref")),
 			new Patch("setAccessKey", castThisAndCall(OverrideAnchorElement.class, "setOverrideAccessKey", "$1")),

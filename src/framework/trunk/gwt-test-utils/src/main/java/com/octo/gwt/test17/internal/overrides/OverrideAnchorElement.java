@@ -27,6 +27,14 @@ public class OverrideAnchorElement extends AnchorElement implements UserElementW
 		this.wrappedElement.setOverrideAttribute("href", overrideHref);
 	}
 	
+	public String getOverrideName() {
+		return this.wrappedElement.getOverrideAttribute("name");
+	}
+
+	public void setOverrideName(String overrideName) {
+		this.wrappedElement.setOverrideAttribute("name", overrideName);
+	}
+	
 	public char getOverrideAccessKey() {
 		return wrappedElement.getOverrideAttribute("accessKey").charAt(0);
 	}
