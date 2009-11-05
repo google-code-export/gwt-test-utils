@@ -117,12 +117,13 @@ public class PatchMainGWT {
 		}
 
 		Object o = createClass.get(classLiteral);
-		if (gwtCreateHandler != null) {
-			o = gwtCreateHandler.create(classLiteral);
-		}
-
+		
 		if (o == null && PatchUtils.INSTANCE_CREATOR != null) {
 			o = PatchUtils.INSTANCE_CREATOR.createInstance(classLiteral);
+		}
+		
+		if (o == null && gwtCreateHandler != null) {
+			o = gwtCreateHandler.create(classLiteral);
 		}
 
 		if (o == null) {
@@ -160,7 +161,6 @@ public class PatchMainGWT {
 
 		public Object invoke(Object arg0, Method arg1, Object[] arg2) throws Throwable {
 			return PatchUtils.extractFromPropertiesFile(wrappedClass, arg1);
-
 		}
 
 	}

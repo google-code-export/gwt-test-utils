@@ -14,16 +14,16 @@ public class NumberFormatTest extends AbstractGWTTest {
 	public void checkNumberFormatFr() throws Exception {
 		PatchGWT.setLocale(Locale.FRENCH);
 		
-		Assert.assertEquals("10,00 €", NumberFormat.getCurrencyFormat().format(10));
+		Assert.assertEquals("10,00 €", NumberFormat.getCurrencyFormat().format(10));
 		Assert.assertEquals("3,142", NumberFormat.getDecimalFormat().format(3.1416));
 	}
-	
+
 	@Test
 	public void checkNumberFormatUs() {
 		PatchGWT.setLocale(Locale.US);
-		
+
 		Assert.assertEquals("$10.00", NumberFormat.getCurrencyFormat().format(10));
 		Assert.assertEquals("3.142", NumberFormat.getDecimalFormat().format(3.1416));
 	}
-	
+
 }

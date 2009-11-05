@@ -165,7 +165,6 @@ public class PatchGWT {
 		}
 
 		PatchUtils.initRedefineMethod();
-		PatchUtils.initLoadPropertiesMethod();
 
 		hasBeenPatched = true;
 
@@ -394,6 +393,7 @@ public class PatchGWT {
 		});
 
 		PatchUtils.applyPatches(InputElement.class, new Patch[] {
+			new Patch("focus", ""),
 			new Patch("as", staticCall(PatchInputElement.class, "as", "$1")), 
 			new Patch("setTabIndex", castThisAndCall(OverrideInputElement.class, "setOverrideTabIndex", "$1")),
 			new Patch("isDefaultChecked", castThisAndCall(OverrideInputElement.class, "isOverrideDefaultChecked")),
@@ -416,10 +416,12 @@ public class PatchGWT {
 		PatchUtils.applyPatches(AnchorElement.class, new Patch[] {
 			new Patch("as", staticCall(PatchAnchorElement.class, "as", "$1")), 
 			new Patch("setTabIndex", castThisAndCall(OverrideAnchorElement.class, "setOverrideTabIndex", "$1")),
+			new Patch("getTabIndex", castThisAndCall(OverrideAnchorElement.class, "getOverrideTabIndex")),
 			new Patch("setHref", castThisAndCall(OverrideAnchorElement.class, "setOverrideHref", "$1")),
 			new Patch("getHref", castThisAndCall(OverrideAnchorElement.class, "getOverrideHref")),
 			new Patch("setAccessKey", castThisAndCall(OverrideAnchorElement.class, "setOverrideAccessKey", "$1")),
 			new Patch("focus", ""),
+			new Patch("blur", ""),
 		});
 
 		PatchUtils.applyPatches(LabelElement.class, new Patch[] {

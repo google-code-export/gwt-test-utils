@@ -13,6 +13,7 @@ public class CheckBoxTest extends AbstractGWTTest {
 		// Make a new check box
 		final CheckBox cb = new CheckBox();
 		cb.setValue(false);
+		cb.setFocus(true);
 		
 		Assert.assertEquals(false, cb.getValue());
 		

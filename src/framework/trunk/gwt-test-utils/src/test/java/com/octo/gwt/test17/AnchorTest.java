@@ -12,6 +12,7 @@ public class AnchorTest extends AbstractGWTTest {
 	public void checkText() {
 		Anchor a = new Anchor();
 		a.setText("toto");
+		a.setFocus(true);
 
 		Assert.assertEquals("toto", a.getText());
 	}
@@ -46,6 +47,14 @@ public class AnchorTest extends AbstractGWTTest {
 		a.setTitle("title");
 
 		Assert.assertEquals("title", a.getTitle());
+	}
+	
+	@Test
+	public void checkTabIndex() {
+		Anchor a = new Anchor();
+		a.setTabIndex(1);
+
+		Assert.assertEquals(1, a.getTabIndex());
 	}
 
 
