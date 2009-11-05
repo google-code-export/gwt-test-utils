@@ -7,7 +7,7 @@
 	<name>GWT 1.7 Tests Utils Parent</name>
 
 	<properties>
-		<gwt.version>1.7.0</gwt.version>
+		<gwt.version>1.7.1</gwt.version>
 	</properties>
 
 	<scm>
