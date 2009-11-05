@@ -25,4 +25,12 @@ public class ImageTest extends AbstractGWTTest {
 		i.setTitle("title");
 		Assert.assertEquals("title", i.getTitle());	
 	}
+
+	@Test
+	public void checkVisible() {
+		Image i = new Image();
+		Assert.assertEquals(true, i.isVisible());
+		i.setVisible(false);
+		Assert.assertEquals(false, i.isVisible());
+	}
 }

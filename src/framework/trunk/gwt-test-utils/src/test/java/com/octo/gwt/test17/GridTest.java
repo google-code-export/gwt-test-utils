@@ -15,6 +15,35 @@ import com.octo.gwt.test17.test.AbstractGWTTest;
 public class GridTest extends AbstractGWTTest {
 
 	private boolean clicked = false;
+	
+	@Test
+	public void checkText() {
+		Grid g = new Grid(1, 1);
+		g.setText(0, 0, "text");
+		Assert.assertEquals("text", g.getText(0, 0));
+	}
+	
+	@Test
+	public void checkTitle() {
+		Grid g = new Grid(1, 1);
+		g.setTitle("title");
+		Assert.assertEquals("title", g.getTitle());
+	}
+	
+	@Test
+	public void checkHTML() {
+		Grid g = new Grid(1, 1);
+		g.setHTML(0, 0, "<h1>test</h1>");
+		Assert.assertEquals("<h1>test</h1>", g.getHTML(0, 0));
+	}
+	
+	@Test
+	public void checkVisible() {
+		Grid g = new Grid(1, 1);
+		Assert.assertEquals(true, g.isVisible());
+		g.setVisible(false);
+		Assert.assertEquals(false, g.isVisible());
+	}
 
 	@Test
 	public void checkGrid() {

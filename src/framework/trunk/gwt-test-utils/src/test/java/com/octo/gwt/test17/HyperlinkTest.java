@@ -11,11 +11,35 @@ import com.octo.gwt.test17.test.AbstractGWTTest;
 public class HyperlinkTest extends AbstractGWTTest {
 	
 	@Test
+	public void checkTitle() {
+		Hyperlink link = new Hyperlink();
+		link.setTitle("title");
+		Assert.assertEquals("title", link.getTitle());
+	}
+	
+	@Test
+	public void checkHTMLAndToken() {
+		Hyperlink link = new Hyperlink("<h1>foo</h1>", true, "test-history-token");
+		Assert.assertEquals("test-history-token", link.getTargetHistoryToken());
+		Assert.assertEquals("<h1>foo</h1>", link.getHTML());
+		link.setHTML("<h1>test</h1>");
+		Assert.assertEquals("<h1>test</h1>", link.getHTML());
+	}
+	
+	@Test
 	public void checkHTML() {
 		Hyperlink link = new Hyperlink();
 		link.setHTML("link-HTML");
 		
 		Assert.assertEquals("link-HTML", link.getHTML());
+	}
+	
+	@Test
+	public void checkVisible() {
+		Hyperlink link = new Hyperlink();
+		Assert.assertEquals(true, link.isVisible());
+		link.setVisible(false);
+		Assert.assertEquals(false, link.isVisible());
 	}
 	
 	@Test

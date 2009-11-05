@@ -87,5 +87,34 @@ public class FlexTableTest extends AbstractGWTTest {
 		
 		Assert.assertEquals(true, clicked);
 	}
+	
+	@Test
+	public void checkText() {
+		FlexTable t = new FlexTable();
+		t.setText(1, 1, "text");
+		Assert.assertEquals("text", t.getText(1, 1));
+	}
+	
+	@Test
+	public void checkTitle() {
+		FlexTable t = new FlexTable();
+		t.setTitle("title");
+		Assert.assertEquals("title", t.getTitle());
+	}
+	
+	@Test
+	public void checkHTML() {
+		FlexTable t = new FlexTable();
+		t.setHTML(1, 1, "<h1>test</h1>");
+		Assert.assertEquals("<h1>test</h1>", t.getHTML(1, 1));
+	}
+	
+	@Test
+	public void checkVisible() {
+		FlexTable t = new FlexTable();
+		Assert.assertEquals(true, t.isVisible());
+		t.setVisible(false);
+		Assert.assertEquals(false, t.isVisible());
+	}
 
 }

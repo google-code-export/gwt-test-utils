@@ -25,6 +25,14 @@ public class AnchorTest extends AbstractGWTTest {
 
 		Assert.assertEquals("toto", a.getName());
 	}
+	
+	@Test
+	public void checkVisible() {
+		Anchor a = new Anchor();
+		Assert.assertEquals(true, a.isVisible());
+		a.setVisible(false);
+		Assert.assertEquals(false, a.isVisible());
+	}
 
 	@Test
 	public void checkHref() {
