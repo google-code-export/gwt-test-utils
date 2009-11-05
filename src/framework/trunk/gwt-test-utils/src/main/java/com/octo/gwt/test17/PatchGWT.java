@@ -114,6 +114,7 @@ public class PatchGWT {
 	public static void reset() throws Exception {
 		LOCALE = null;
 		PatchCurrencyList.reset();
+		PatchUtils.clearStrangeCharacterMapping();
 		OverrideHistory.reset();
 		PatchMainGWT.createClass.clear();
 		PatchMainGWT.gwtCreateHandler = null;
@@ -165,6 +166,7 @@ public class PatchGWT {
 		}
 
 		PatchUtils.initRedefineMethod();
+		PatchUtils.initLoadPropertiesMethod();
 
 		hasBeenPatched = true;
 

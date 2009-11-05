@@ -13,7 +13,9 @@ public class NumberFormatTest extends AbstractGWTTest {
 	@Test
 	public void checkNumberFormatFr() throws Exception {
 		PatchGWT.setLocale(Locale.FRENCH);
-		
+	
+		PatchUtils.addStrangeCharacterMapping('\u00A0', ' ');
+	
 		Assert.assertEquals("10,00 €", NumberFormat.getCurrencyFormat().format(10));
 		Assert.assertEquals("3,142", NumberFormat.getDecimalFormat().format(3.1416));
 	}

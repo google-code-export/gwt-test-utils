@@ -1,17 +1,14 @@
 package com.octo.gwt.test17;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.Map.Entry;
 
 import javassist.CannotCompileException;
 import javassist.ClassPool;
@@ -25,11 +22,31 @@ import com.google.gwt.i18n.client.Constants.DefaultStringValue;
 
 public class PatchUtils {
 
+	static class StrangeCharacterMapping {
+		
+		private char from;
+		
+		private char to;
+		
+		public String map(String s) {
+			return s.replace(from, to);
+		}
+		
+		public StrangeCharacterMapping(char from, char to) {
+			this.from = from;
+			this.to = to;
+		}
+		
+	}
+	
 	private static final String REDEFINE_METHOD = "redefineClass";
+	
+	private static final String LOAD_PROPERTIES = "loadProperties";
 
 	private static final String REDEFINE_CLASS = "com.octo.gwt.test17.bootstrap.Startup";
-
-	private static final Pattern PROPERTIES_PATTERN = Pattern.compile("^([^#!].*)=(.*)$");
+	
+	private static final List<StrangeCharacterMapping> strangeCharacterMappingList = new ArrayList<StrangeCharacterMapping>();
+	
 	/**
 	 * Classpool pour javassist
 	 */
@@ -40,6 +57,13 @@ public class PatchUtils {
 	 * bootstrap.jar
 	 */
 	public static Method redefine;
+
+
+	/**
+	 * Method used to load properties file with charset. Method is located in
+	 * bootstrap.jar
+	 */
+	public static Method loadProperties;
 
 	/**
 	 * Object used to try to create custom objects that normally would be 
@@ -191,135 +215,37 @@ public class PatchUtils {
 			throw new RuntimeException("Method " + REDEFINE_METHOD + " not found in bootstrap class");
 		}
 	}
+	
+	public static void initLoadPropertiesMethod() throws Exception {
+		Class<?> c = Class.forName(REDEFINE_CLASS);
+		if (c == null) {
+			throw new RuntimeException("No bootstrap class found");
+		}
+		PatchUtils.loadProperties = c.getMethod(LOAD_PROPERTIES, InputStream.class, String.class);
+		if (PatchUtils.loadProperties == null) {
+			throw new RuntimeException("Method " + LOAD_PROPERTIES + " not found in bootstrap class");
+		}
+	}
 
 	public static Properties getProperties(String path) {
 		String propertiesNameFile = "/" + path + ".properties";
-		return loadProperties(path.getClass().getResourceAsStream(propertiesNameFile));
-
-	}
-	private static Properties loadProperties(InputStream resourceAsStream) {
-
-		if (resourceAsStream == null) {
+		InputStream inputStream = path.getClass().getResourceAsStream(propertiesNameFile);
+		if (inputStream == null) {
 			return null;
 		}
 		try {
-			BufferedReader br = new BufferedReader(new InputStreamReader(resourceAsStream, "UTF-8"));		
-			Properties prop = new Properties();
-			String line;
-			while ((line = br.readLine()) != null) {
-				Matcher m = PROPERTIES_PATTERN.matcher(line);
-				if (m.matches()) {
-					prop.put(loadConvert(m.group(1).trim()), rencodeString(loadConvert(m.group(2).trim())));
+			Properties properties = (Properties) loadProperties.invoke(null, inputStream, "UTF-8");
+			for(Entry<Object, Object> entry : properties.entrySet()) {
+				for(StrangeCharacterMapping strangeCharacterMapping : strangeCharacterMappingList) {
+					entry.setValue(strangeCharacterMapping.map((String) entry.getValue()));
 				}
 			}
-
-			return prop;
+			return properties;
 		} catch (Exception e) {
-			throw new RuntimeException(e);
+			throw new RuntimeException("Unable to load property file" + path, e);
 		}
-
-		//		Properties temp = new Properties();
-		//		try {
-		//			temp.load(resourceAsStream);
-		//			
-		//			Properties prop = new Properties();
-		//			for (Entry<Object, Object> entry : temp.entrySet()) {
-		//				
-		//				String key = new String (((String) entry.getKey()).getBytes("ISO-8859-1"), "UTF-8");
-		//				String value = new String (((String) entry.getValue()).getBytes("ISO-8859-1"), "UTF-8");
-		//				
-		//				prop.put(key, value);
-		//			}
-		//			
-		//			return prop;
-		//		} catch (Exception e) {
-		//			throw new RuntimeException(e);
-		//		}
 	}
-
-	private static String loadConvert(String base) {
-		int off = 0;
-		int len = base.length();
-		char[] in = base.toCharArray();
-
-		char aChar;
-		char[] out = new char[base.length()]; 
-		int outLen = 0;
-		int end = off + len;
-
-		while (off < end) {
-			aChar = in[off++];
-			if (aChar == '\\') {
-				aChar = in[off++];   
-				if(aChar == 'u') {
-					// Read the xxxx
-					int value=0;
-					for (int i=0; i<4; i++) {
-						aChar = in[off++];  
-						switch (aChar) {
-						case '0': case '1': case '2': case '3': case '4':
-						case '5': case '6': case '7': case '8': case '9':
-							value = (value << 4) + aChar - '0';
-							break;
-						case 'a': case 'b': case 'c':
-						case 'd': case 'e': case 'f':
-							value = (value << 4) + 10 + aChar - 'a';
-							break;
-						case 'A': case 'B': case 'C':
-						case 'D': case 'E': case 'F':
-							value = (value << 4) + 10 + aChar - 'A';
-							break;
-						default:
-							throw new IllegalArgumentException(
-							"Malformed \\uxxxx encoding.");
-						}
-					}
-					out[outLen++] = (char)value;
-				} else {
-					if (aChar == 't') aChar = '\t'; 
-					else if (aChar == 'r') aChar = '\r';
-					else if (aChar == 'n') aChar = '\n';
-					else if (aChar == 'f') aChar = '\f'; 
-					out[outLen++] = aChar;
-				}
-			} else {
-				out[outLen++] = (char)aChar;
-			}
-		}
-		return new String (out, 0, outLen);
-	}
-
-	private static String rencodeString(String base) {
-		List<Byte> bytes = new ArrayList<Byte>();
-		byte[] baseBytes = base.getBytes();
-
-		for (int i = 0; i < baseBytes.length; i++) {
-
-			if (baseBytes[i] == (byte)-62 && i+1 < baseBytes.length && baseBytes[i+1] ==(byte)-96) {
-				//cas "espace" lors d'un lancement des tests via eclipse
-				for (byte b : " ".getBytes()) {
-					bytes.add(b);
-				}
-				i++;
-			} else if (baseBytes[i] == (byte)-96) {
-				// cas "espace" lors d'un lancement des tests via console maven
-				for (byte b : " ".getBytes()) {
-					bytes.add(b);
-				}
-			} else {
-				bytes.add(baseBytes[i]);
-			}	
-		}
-
-		byte[] correct = new byte[bytes.size()];
-
-		for (int i = 0; i < correct.length; i++) {
-			correct[i] = bytes.get(i);
-		}
-
-		return new String(correct);
-	}
-
+	
 	public static Properties getLocalizedProperties(String prefix) throws IOException {
 		Locale locale = PatchGWT.getLocale();
 		if (locale == null) {
@@ -385,6 +311,14 @@ public class PatchUtils {
 		} catch (Exception e) {
 			throw new RuntimeException("Unable to compile subclass of " + className, e);
 		}
+	}
+
+	public static void clearStrangeCharacterMapping() {
+		strangeCharacterMappingList.clear();
+	}
+	
+	public static void addStrangeCharacterMapping(char from, char to) {
+		strangeCharacterMappingList.add(new StrangeCharacterMapping(from, to));
 	}
 
 }
