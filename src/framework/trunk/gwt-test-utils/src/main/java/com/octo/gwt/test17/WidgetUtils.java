@@ -7,6 +7,7 @@ import org.junit.Assert;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.FocusWidget;
+import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.UIObject;
@@ -49,6 +50,11 @@ public class WidgetUtils {
 	public static void click(MenuBar parent, MenuItem clickedItem) {
 		parent.onBrowserEvent(new OverrideEvent(Event.ONCLICK, clickedItem.getElement()));
 	}
+	
+	public static void click(Grid grid, int row, int column) {
+		grid.onBrowserEvent(new OverrideEvent(Event.ONCLICK, grid.getWidget(row, column).getElement()));
+	}
+	
 	
 	public static void focus(Widget target) {
 		target.onBrowserEvent(new OverrideEvent(Event.ONFOCUS));

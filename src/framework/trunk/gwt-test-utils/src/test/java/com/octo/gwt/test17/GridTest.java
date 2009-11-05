@@ -8,6 +8,8 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Grid;
+import com.google.gwt.user.client.ui.SourcesTableEvents;
+import com.google.gwt.user.client.ui.TableListener;
 import com.google.gwt.user.client.ui.Widget;
 import com.octo.gwt.test17.test.AbstractGWTTest;
 
@@ -28,6 +30,47 @@ public class GridTest extends AbstractGWTTest {
 		Grid g = new Grid(1, 1);
 		g.setTitle("title");
 		Assert.assertEquals("title", g.getTitle());
+	}
+	
+	@Test
+	public void checkTableListner() {
+		clicked = false;
+		Grid g = new Grid(1, 1);
+		Button b = new Button("Does nothing, but could");
+		g.setWidget(0, 0, b);
+		g.addTableListener(new TableListener() {
+			
+			public void onCellClicked(SourcesTableEvents sender, int row, int cell) {
+				clicked = !clicked;		
+			}
+			
+		});
+		
+		click(g, 0, 0);
+		
+		Assert.assertTrue("TableListener should have been notified", clicked);
+		
+	}
+	
+	@Test
+	public void checkClickHander() {
+		clicked = false;
+		final Grid g = new Grid(1, 1);
+		final Button b = new Button("Does nothing, but could");
+		g.setWidget(0, 0, b);
+		g.addClickHandler(new ClickHandler() {
+			
+			public void onClick(ClickEvent event) {
+				clicked = !clicked;
+				Assert.assertEquals(b, ((Grid) event.getSource()).getWidget(0, 0));
+					
+			}
+		});
+		
+		click(g, 0, 0);
+		
+		Assert.assertTrue("TableListener should have been notified", clicked);
+		
 	}
 	
 	@Test
