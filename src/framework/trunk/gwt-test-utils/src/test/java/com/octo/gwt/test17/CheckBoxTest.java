@@ -21,5 +21,13 @@ public class CheckBoxTest extends AbstractGWTTest {
 		click(cb);
 		Assert.assertEquals(true, cb.getValue());
 	}
+	
+	@Test
+	public void checkText() {
+		// Make a new check box
+		final CheckBox cb = new CheckBox();
+		cb.setText("text");
+		Assert.assertEquals("text", cb.getText());
+	}
 
 }
