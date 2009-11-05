@@ -17,7 +17,7 @@ public class I18nTest extends AbstractGWTTest {
 		I18nConstants constants = GWT.create(I18nConstants.class);
 		
 		Assert.assertEquals("Bonjour", constants.hello());
-		Assert.assertEquals("Au revoir", constants.goodbye());
+		Assert.assertEquals("Au revoir et un caractère qui pue", constants.goodbye());
 	}
 
 }
