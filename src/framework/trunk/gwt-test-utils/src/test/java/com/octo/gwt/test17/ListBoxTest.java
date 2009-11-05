@@ -9,6 +9,35 @@ import com.octo.gwt.test17.test.AbstractGWTTest;
 public class ListBoxTest extends AbstractGWTTest {
 	
 	@Test
+	public void checkName() {
+		ListBox listBox = new ListBox(false);
+		listBox.setName("name");
+		Assert.assertEquals("name", listBox.getName());
+	}
+	
+	@Test
+	public void checkTabIndex() {
+		ListBox listBox = new ListBox(false);
+		listBox.setTabIndex(2);
+		Assert.assertEquals(2, listBox.getTabIndex());
+	}
+	
+	@Test
+	public void checkTitle() {
+		ListBox listBox = new ListBox(false);
+		listBox.setTitle("title");
+		Assert.assertEquals("title", listBox.getTitle());
+	}
+	
+	@Test
+	public void checkVisible() {
+		ListBox listBox = new ListBox(false);
+		Assert.assertEquals(true, listBox.isVisible());
+		listBox.setVisible(false);
+		Assert.assertEquals(false, listBox.isVisible());
+	}
+	
+	@Test
 	public void checkListBox() {
 		ListBox listBox = getListBox();
 		

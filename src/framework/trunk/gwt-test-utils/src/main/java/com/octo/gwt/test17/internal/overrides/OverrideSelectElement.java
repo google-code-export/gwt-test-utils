@@ -4,14 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gwt.dom.client.SelectElement;
+import com.octo.gwt.test17.internal.dom.UserElement;
 
 public class OverrideSelectElement extends SelectElement {
 
 	private List<OverrideOptionElement> list;
-	
-	private int overrideSize;
+	private UserElement wrapped;
 
-	public OverrideSelectElement() {
+	public OverrideSelectElement(UserElement wrapped) {
+		this.wrapped = wrapped;
 		list = new ArrayList<OverrideOptionElement>();
 	}
 
@@ -55,11 +56,19 @@ public class OverrideSelectElement extends SelectElement {
 	}
 
 	public int getOverrideSize() {
-		return overrideSize;
+		return Integer.valueOf(wrapped.getOverrideAttribute("size"));
 	}
 
 	public void setOverrideSize(int overrideSize) {
-		this.overrideSize = overrideSize;
+		wrapped.setOverrideAttribute("size", String.valueOf(overrideSize));
+	}
+	
+	public String getOverrideName() {
+		return wrapped.getOverrideAttribute("name");
+	}
+
+	public void setOverrideName(String overrideName) {
+		wrapped.setOverrideAttribute("name", overrideName);
 	}
 
 }

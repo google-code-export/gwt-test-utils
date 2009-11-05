@@ -148,7 +148,7 @@ public class PatchDOMImpl {
 			return new OverrideOptionElement();
 		}
 		if ("select".equals(tag)) {
-			return new OverrideSelectElement();
+			return new OverrideSelectElement(new UserElement(null));
 		}
 		if ("iframe".equals(tag)) {
 			return new OverrideIFrameElement(new UserElement(null));

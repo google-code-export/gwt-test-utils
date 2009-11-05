@@ -357,6 +357,8 @@ public class PatchGWT {
 			new Patch("setSelectedIndex", castThisAndCall(OverrideSelectElement.class, "setOverrideSelectedIndex", "$1")), 
 			new Patch("getSize", castThisAndCall(OverrideSelectElement.class, "getOverrideSize")), 
 			new Patch("setSize", castThisAndCall(OverrideSelectElement.class, "setOverrideSize", "$1")),
+			new Patch("getName", castThisAndCall(OverrideSelectElement.class, "getOverrideName")), 
+			new Patch("setName", castThisAndCall(OverrideSelectElement.class, "setOverrideName", "$1")),
 		});
 
 		PatchUtils.applyPatches(NodeList.class, new Patch[] { 
