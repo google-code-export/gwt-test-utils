@@ -11,6 +11,21 @@ import com.octo.gwt.test17.test.AbstractGWTTest;
 public class ComplexPanelTest extends AbstractGWTTest {
 
 	@Test
+	public void checkTitle() {
+		ComplexPanel panel = new FlowPanel();
+		panel.setTitle("title");
+		Assert.assertEquals("title", panel.getTitle());
+	}
+	
+	@Test
+	public void checkVisible() {
+		ComplexPanel panel = new FlowPanel();
+		Assert.assertEquals(true, panel.isVisible());
+		panel.setVisible(false);
+		Assert.assertEquals(false, panel.isVisible());
+	}
+	
+	@Test
 	public void checkCount() {
 		ComplexPanel panel = new FlowPanel();
 		panel.add(new Button());
