@@ -3,6 +3,7 @@ package com.octo.gwt.test17.integ.tools;
 import java.lang.reflect.Method;
 import java.util.List;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 
@@ -32,10 +33,24 @@ public abstract class AbstractGwtIntegrationShell {
 	private MacroReader macroReader;
 	
 	@Before
-	public void setUp() throws Exception {
-		PatchGWT.init();
-		PatchGWT.reset();
+	public void setUpAbstractGwtIntegrationShell() throws Exception {
+		initPatchGwt();
 		PatchGWT.setGwtCreateHandler(getGwtCreateHandler());
+	}
+	
+	@After
+	public void tearDownAbstractGwtIntegrationShell() throws Exception {
+		resetPatchGwt();
+	}
+	
+	protected void initPatchGwt() throws Exception {
+		//initialisation du framework de mock GWT
+		PatchGWT.init();
+	}
+	
+	protected void resetPatchGwt() throws Exception {
+		// reinit GWT
+		PatchGWT.reset();
 	}
 	
 	public void setReader(DirectoryTestReader reader) {

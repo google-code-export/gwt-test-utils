@@ -34,6 +34,10 @@ public abstract class GwtCreateHandlerImpl implements GwtCreateHandler {
 
 	public abstract Object findService(Class<?> remoteServiceClazz);
 	
+	public Object createObject(Class<?> classLiteral) throws Exception {
+		return classLiteral.newInstance();
+	}
+	
 	public Object create(Class<?> classLiteral) {
 		logger.debug("Try to create class " + classLiteral.getCanonicalName());
 		try {
@@ -53,7 +57,7 @@ public abstract class GwtCreateHandlerImpl implements GwtCreateHandler {
 				return Proxy.newProxyInstance(getClass().getClassLoader(), new Class[] { asyncClazz }, handler);
 			}
 			logger.debug("Creating class " + classLiteral.getCanonicalName());
-			Object o = classLiteral.newInstance();
+			Object o = createObject(classLiteral);
 			return o;
 		} catch (Exception e) {
 			logger.error("Unable to create class", e);
