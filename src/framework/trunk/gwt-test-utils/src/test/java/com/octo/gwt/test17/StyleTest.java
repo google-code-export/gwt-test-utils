@@ -21,7 +21,7 @@ public class StyleTest extends AbstractGWTTest {
 		Assert.assertEquals(true, WidgetUtils.hasStyle(b, "tata"));
 		Assert.assertEquals(true, WidgetUtils.hasStyle(b, "titi"));
 		Assert.assertEquals(true, WidgetUtils.hasStyle(b, "bouh"));
-		Assert.assertEquals(false, WidgetUtils.hasStyle(b, "toto"));
+		Assert.assertEquals(true, WidgetUtils.hasStyle(b, "toto"));
 	}
 
 }
