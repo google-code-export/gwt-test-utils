@@ -118,10 +118,6 @@ public class PatchMainGWT {
 
 		Object o = createClass.get(classLiteral);
 		
-		if (o == null && PatchUtils.INSTANCE_CREATOR != null) {
-			o = PatchUtils.INSTANCE_CREATOR.createInstance(classLiteral);
-		}
-		
 		if (o == null && gwtCreateHandler != null) {
 			o = gwtCreateHandler.create(classLiteral);
 		}

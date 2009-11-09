@@ -543,8 +543,4 @@ public class PatchGWT {
 		LOCALE = locale;
 	}
 
-	public static void setInstanceCreator(InstanceCreator instanceCreator) {
-		PatchUtils.INSTANCE_CREATOR = instanceCreator;
-	}
-
 }

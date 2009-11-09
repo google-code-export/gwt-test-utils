@@ -3,6 +3,7 @@ package com.octo.gwt.test17.test;
 import org.junit.After;
 import org.junit.Before;
 
+import com.octo.gwt.test17.GwtCreateHandler;
 import com.octo.gwt.test17.PatchGWT;
 import com.octo.gwt.test17.WidgetUtils;
 
@@ -11,6 +12,7 @@ public abstract class AbstractGWTTest extends WidgetUtils {
 	@Before
 	public void setUpAbstractGwtTest() throws Exception {
 		initPatchGwt();
+		PatchGWT.setGwtCreateHandler(getGwtCreateHandler());
 	}
 	
 	@After
@@ -27,6 +29,11 @@ public abstract class AbstractGWTTest extends WidgetUtils {
 	protected void resetPatchGwt() throws Exception {
 		// reinit GWT
 		PatchGWT.reset();
+	}
+	
+	protected GwtCreateHandler getGwtCreateHandler() {
+		//this method can be overrided
+		return null;
 	}
 
 }

@@ -17,7 +17,6 @@ import javassist.CtConstructor;
 import javassist.CtMethod;
 import javassist.NotFoundException;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.Constants.DefaultStringValue;
 
 public class PatchUtils {
@@ -64,12 +63,6 @@ public class PatchUtils {
 	 * bootstrap.jar
 	 */
 	public static Method loadProperties;
-
-	/**
-	 * Object used to try to create custom objects that normally would be 
-	 * instanciate through the {@link GWT#create(Class)} method.
-	 */
-	public static InstanceCreator INSTANCE_CREATOR = null;
 
 	/**
 	 * Search method to patch in clazz
