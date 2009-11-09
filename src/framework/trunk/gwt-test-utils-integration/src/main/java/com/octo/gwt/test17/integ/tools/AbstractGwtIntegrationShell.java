@@ -213,6 +213,16 @@ public abstract class AbstractGwtIntegrationShell {
 		Assert.assertTrue(csvRunner.getAssertionErrorMessagePrefix() + "Checkbox checked", !checkBox.getValue());
 	}
 	
+	public void assertInstanceOf(String objectLocalisation, String className) {
+		try {
+			Class<?> clazz = Class.forName(className);
+			Object o = getObject(Object.class, objectLocalisation);
+			Assert.assertTrue(clazz.isAssignableFrom(o.getClass()));
+		} catch (ClassNotFoundException e) {
+			Assert.fail("Cannot assert instance of [" + className + "] because the class cannot be found");
+		}
+	}
+	
 	public void clickOnTableRow(String rowIndex, String objectLocalization) {
 		Grid grid = getObject(Grid.class, objectLocalization);
 		checkWidgetVisible(grid, objectLocalization);
