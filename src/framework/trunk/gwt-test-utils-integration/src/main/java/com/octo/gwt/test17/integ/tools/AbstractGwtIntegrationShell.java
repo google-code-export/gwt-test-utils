@@ -288,18 +288,18 @@ public abstract class AbstractGwtIntegrationShell {
 		Assert.assertFalse(csvRunner.getAssertionErrorMessagePrefix() + "is Enabled " + objectLocalization, button.isEnabled());
 	}
 	
-	private FocusWidget getFocusWidget(String objectLocalization) {
+	protected FocusWidget getFocusWidget(String objectLocalization) {
 		return getObject(FocusWidget.class, objectLocalization);
 	}
 	
-	private void checkWidgetVisibleAndEnable(FocusWidget widget, String objectLocalization) {
+	protected void checkWidgetVisibleAndEnable(FocusWidget widget, String objectLocalization) {
 		if (!widget.isEnabled()) {
 			Assert.fail(csvRunner.getAssertionErrorMessagePrefix() + "Widget have to be enabled : " + objectLocalization);
 		}
 		checkWidgetVisible(widget, objectLocalization);
 	}
 	
-	private void checkWidgetVisible(Widget widget, String objectLocalization) {
+	protected void checkWidgetVisible(Widget widget, String objectLocalization) {
 		if (!widget.isVisible()) {
 			Assert.fail(csvRunner.getAssertionErrorMessagePrefix() + "Widget have to be visible : " + objectLocalization + ", "
 					+ widget.getClass().getCanonicalName());
