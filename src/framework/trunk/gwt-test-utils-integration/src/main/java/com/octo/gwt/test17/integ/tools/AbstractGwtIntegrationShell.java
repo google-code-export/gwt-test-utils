@@ -19,6 +19,7 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.octo.gwt.test17.GwtCreateHandler;
 import com.octo.gwt.test17.PatchGWT;
+import com.octo.gwt.test17.ReflectionUtils;
 import com.octo.gwt.test17.WidgetUtils;
 import com.octo.gwt.test17.integ.csvrunner.CsvRunner;
 import com.octo.gwt.test17.integ.csvrunner.Node;
@@ -156,6 +157,13 @@ public abstract class AbstractGwtIntegrationShell {
 		WidgetUtils.click(widget);
 	}
 	
+	public void clickMenuItem(String menuBarLocalization, String menuItemIndex) {
+		Widget menuBar = getObject(Widget.class, menuBarLocalization);
+		List<MenuItem> menuItems = ReflectionUtils.getPrivateFieldValue(menuBar, "items");
+		MenuItem itemToClick = menuItems.get(Integer.parseInt(menuItemIndex));
+		menuBar.onBrowserEvent(new OverrideEvent(Event.ONCLICK, itemToClick.getElement()));
+	}
+	
 	public void focus(String objectLocalization) {
 		Widget widget = getObject(Widget.class, objectLocalization);
 		WidgetUtils.focus(widget);
@@ -186,7 +194,7 @@ public abstract class AbstractGwtIntegrationShell {
 		Assert.assertTrue(csvRunner.getAssertionErrorMessagePrefix() + "Style not found : " + style, w.getStyleName().contains(style));
 	}
 	
-	public void assertNull(String objectLocalization) {
+	public void assertNotExist(String objectLocalization) {
 		Object o = getObject(Object.class, objectLocalization, false);
 		Assert.assertNull(csvRunner.getAssertionErrorMessagePrefix() + "Object exist", o);
 	}
@@ -251,6 +259,14 @@ public abstract class AbstractGwtIntegrationShell {
 		textBox.setText(value);
 		textBox.onBrowserEvent(new OverrideEvent(Event.ONKEYUP));
 		textBox.onBrowserEvent(new OverrideEvent(Event.ONCHANGE));
+	}
+	
+	public void fillListBox(String value, String objectLocalization) {
+		ListBox listBox = getObject(ListBox.class, objectLocalization);
+		checkWidgetVisibleAndEnable(listBox, objectLocalization);
+		listBox.setSelectedIndex(Integer.parseInt(value));
+		listBox.onBrowserEvent(new OverrideEvent(Event.ONCLICK));
+		listBox.onBrowserEvent(new OverrideEvent(Event.ONCHANGE));
 	}
 
 	public void selectInListBox(String value, String objectLocalization) {
