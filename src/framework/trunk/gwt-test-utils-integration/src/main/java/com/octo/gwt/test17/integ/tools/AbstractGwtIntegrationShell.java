@@ -8,6 +8,7 @@ import org.junit.Assert;
 import org.junit.Before;
 
 import com.google.gwt.user.client.ui.CheckBox;
+import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.ListBox;
@@ -156,6 +157,12 @@ public abstract class AbstractGwtIntegrationShell {
 		WidgetUtils.click(widget);
 	}
 	
+	public void clickPanel(String objectLocalization) {
+		FocusPanel widget = getObject(FocusPanel.class, objectLocalization);
+		checkWidgetVisibleAndEnable(widget, objectLocalization);
+		WidgetUtils.click(widget);
+	}
+	
 	public void clickMenuItem(String menuBarLocalization, String menuItemIndex) {
 		MenuBar menuBar = getObject(MenuBar.class, menuBarLocalization);
 		List<MenuItem> menuItems = ReflectionUtils.getPrivateFieldValue(menuBar, "items");
@@ -223,15 +230,9 @@ public abstract class AbstractGwtIntegrationShell {
 	}
 	
 	public void clickOnTableRow(String rowIndex, String objectLocalization) {
-		clickOnTableRow(rowIndex, "0", objectLocalization);
-	}
-	
-	public void clickOnTableRow(String rowIndex, String columnIndex, String objectLocalization) {
 		Grid grid = getObject(Grid.class, objectLocalization);
 		checkWidgetVisible(grid, objectLocalization);
-		int row = (rowIndex != null)? Integer.parseInt(rowIndex) : 0;
-		int column = (columnIndex != null)? Integer.parseInt(columnIndex) : 0;
-		WidgetUtils.click(grid, row, column);
+		WidgetUtils.click(grid, Integer.parseInt(rowIndex), 0);
 	}
 	
 	public void selectListBox(String value, String objectLocalization) {
@@ -327,6 +328,10 @@ public abstract class AbstractGwtIntegrationShell {
 		if (!widget.isEnabled()) {
 			Assert.fail(csvRunner.getAssertionErrorMessagePrefix() + "Widget have to be enabled : " + objectLocalization);
 		}
+		checkWidgetVisible(widget, objectLocalization);
+	}
+	
+	protected void checkWidgetVisibleAndEnable(FocusPanel widget, String objectLocalization) {
 		checkWidgetVisible(widget, objectLocalization);
 	}
 	
