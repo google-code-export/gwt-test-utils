@@ -7,11 +7,11 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 
-import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SuggestBox;
@@ -23,7 +23,6 @@ import com.octo.gwt.test17.ReflectionUtils;
 import com.octo.gwt.test17.WidgetUtils;
 import com.octo.gwt.test17.integ.csvrunner.CsvRunner;
 import com.octo.gwt.test17.integ.csvrunner.Node;
-import com.octo.gwt.test17.internal.overrides.OverrideEvent;
 
 public abstract class AbstractGwtIntegrationShell {
 
@@ -158,10 +157,10 @@ public abstract class AbstractGwtIntegrationShell {
 	}
 	
 	public void clickMenuItem(String menuBarLocalization, String menuItemIndex) {
-		Widget menuBar = getObject(Widget.class, menuBarLocalization);
+		MenuBar menuBar = getObject(MenuBar.class, menuBarLocalization);
 		List<MenuItem> menuItems = ReflectionUtils.getPrivateFieldValue(menuBar, "items");
 		MenuItem itemToClick = menuItems.get(Integer.parseInt(menuItemIndex));
-		menuBar.onBrowserEvent(new OverrideEvent(Event.ONCLICK, itemToClick.getElement()));
+		WidgetUtils.click(menuBar, itemToClick);
 	}
 	
 	public void focus(String objectLocalization) {
@@ -224,16 +223,22 @@ public abstract class AbstractGwtIntegrationShell {
 	}
 	
 	public void clickOnTableRow(String rowIndex, String objectLocalization) {
+		clickOnTableRow(rowIndex, "0", objectLocalization);
+	}
+	
+	public void clickOnTableRow(String rowIndex, String columnIndex, String objectLocalization) {
 		Grid grid = getObject(Grid.class, objectLocalization);
 		checkWidgetVisible(grid, objectLocalization);
-		WidgetUtils.click(grid.getWidget(Integer.parseInt(rowIndex), 0));
+		int row = (rowIndex != null)? Integer.parseInt(rowIndex) : 0;
+		int column = (columnIndex != null)? Integer.parseInt(columnIndex) : 0;
+		WidgetUtils.click(grid, row, column);
 	}
 	
 	public void selectListBox(String value, String objectLocalization) {
 		ListBox listBox = getObject(ListBox.class, objectLocalization);
 		checkWidgetVisibleAndEnable(listBox, objectLocalization);
 		listBox.setSelectedIndex(Integer.parseInt(value));
-		listBox.onBrowserEvent(new OverrideEvent(Event.ONCHANGE));
+		WidgetUtils.change(listBox);
 	}
 	
 	public void selectSuggest(String index, String objectLocalization) {
@@ -260,38 +265,38 @@ public abstract class AbstractGwtIntegrationShell {
 		TextBox textBox = (TextBox) widget;
 		checkWidgetVisibleAndEnable(textBox, objectLocalization);
 		textBox.setText(value);
-		textBox.onBrowserEvent(new OverrideEvent(Event.ONKEYUP));
-		textBox.onBrowserEvent(new OverrideEvent(Event.ONCHANGE));
+		WidgetUtils.keyUp(textBox);
+		WidgetUtils.change(textBox);
 	}
 
 	public void fillInvisibleTextBox(String value, String objectLocalization) {
 		TextBox textBox = getObject(TextBox.class, objectLocalization);
 		textBox.setText(value);
-		textBox.onBrowserEvent(new OverrideEvent(Event.ONKEYUP));
-		textBox.onBrowserEvent(new OverrideEvent(Event.ONCHANGE));
+		WidgetUtils.keyUp(textBox);
+		WidgetUtils.change(textBox);
 	}
 	
 	public void fillListBox(String value, String objectLocalization) {
 		ListBox listBox = getObject(ListBox.class, objectLocalization);
 		checkWidgetVisibleAndEnable(listBox, objectLocalization);
 		listBox.setSelectedIndex(Integer.parseInt(value));
-		listBox.onBrowserEvent(new OverrideEvent(Event.ONCLICK));
-		listBox.onBrowserEvent(new OverrideEvent(Event.ONCHANGE));
+		WidgetUtils.click(listBox);
+		WidgetUtils.change(listBox);
 	}
 
 	public void selectInListBox(String value, String objectLocalization) {
 		ListBox listBox = getObject(ListBox.class, objectLocalization);
 		checkWidgetVisibleAndEnable(listBox, objectLocalization);
 		listBox.setSelectedIndex(Integer.parseInt(value));
-		listBox.onBrowserEvent(new OverrideEvent(Event.ONCLICK));
-		listBox.onBrowserEvent(new OverrideEvent(Event.ONCHANGE));
+		WidgetUtils.click(listBox);
+		WidgetUtils.change(listBox);
 	}
 
 	public void fillSuggestBox(String value, String objectLocalization) {
 		SuggestBox suggestBox = getObject(SuggestBox.class, objectLocalization);
 		checkWidgetVisible(suggestBox, objectLocalization);
 		suggestBox.setText(value);
-		suggestBox.onBrowserEvent(new OverrideEvent(Event.ONKEYUP));
+		WidgetUtils.keyUp(suggestBox);
 	}
 	
 	public void isVisible(String objectLocalization) {
