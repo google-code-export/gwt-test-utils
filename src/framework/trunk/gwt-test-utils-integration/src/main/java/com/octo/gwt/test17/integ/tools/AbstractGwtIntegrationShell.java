@@ -1,6 +1,12 @@
 package com.octo.gwt.test17.integ.tools;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintStream;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.List;
 
 import org.junit.After;
@@ -344,5 +350,111 @@ public abstract class AbstractGwtIntegrationShell {
 			checkWidgetVisible(widget.getParent(), objectLocalization);
 		}
 	}
+	
+
+	// MODE INTERACTIF
+	private static final Class<?>[] baseList = { String.class, Integer.class, int.class, Class.class };
+
+	private Object getObject(String param, PrintStream os) {
+		Object o = getObject(Object.class, param);
+		os.println("Object found, class " + o.getClass().getCanonicalName());
+		if (contains(baseList, o.getClass())) {
+			os.println("Value : " + o.toString());
+		}
+		return o;
+	}
+
+	public void interactive() {
+		try {
+			PrintStream os = System.out;
+			BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+			os.println("Welcome in interactive mode !");
+			while (true) {
+				os.print("> ");
+				os.flush();
+				String line = br.readLine();
+				if ("quit".equals(line) || "q".equals(line)) {
+					os.println("Bye bye !");
+					return;
+				}
+				int index = line.indexOf(" ");
+				if (index == -1) {
+					os.println("Parse error");
+				} else {
+					String cmd = line.substring(0, index);
+					String param = line.substring(index + 1);
+					os.println("Command <" + cmd + ">, params : " + param);
+					if ("go".equals(cmd) || "getObject".equals(cmd)) {
+						try {
+							getObject(param, os);
+						} catch (AssertionError e) {
+							os.println("Not found : " + e.getMessage());
+						}
+					} else if ("lc".equals(cmd) || "listContent".equals(cmd)) {
+						try {
+							Object o = getObject(param, os);
+							printGetter(o, o.getClass(), os);
+						} catch (AssertionError e) {
+							os.println("Not found : " + e.getMessage());
+						}
+					} else if ("click".equals(cmd)) {
+						try {
+							click(param);
+							os.println("Click successful");
+						} catch (AssertionError e) {
+							os.println("Unable to click : " + e.getMessage());
+						}
+					} else {
+						os.println("Unknown command : " + cmd);
+					}
+				}
+			}
+		} catch (IOException e) {
+			Assert.fail("IO error " + e.toString());
+		}
+	}
+
+	private void printGetter(Object o, Class<?> clazz, PrintStream os) {
+		for (Method m : clazz.getDeclaredMethods()) {
+			if (m.getName().startsWith("get")) {
+				os.print("Getter [" + clazz.getSimpleName() + "] " + m.getName());
+				if (contains(baseList, m.getReturnType()) && m.getParameterTypes().length == 0) {
+					try {
+						Object res = m.invoke(o);
+						os.print(", value " + res);
+					} catch (Throwable e) {
+					}
+				}
+				os.println();
+			}
+		}
+		for (Field f : clazz.getDeclaredFields()) {
+			if (!Modifier.isStatic(f.getModifiers()) && !Modifier.isFinal(f.getModifiers())) {
+				os.print("Field [" + clazz.getSimpleName() + "] [" + f.getClass().getSimpleName() + "] " + f.getName());
+				if (contains(baseList, f.getType())) {
+					try {
+						Object res = f.get(o);
+						os.print(", value " + res);
+					} catch (Throwable e) {
+					}
+				}
+				os.println();
+			}
+		}
+		if (clazz.getSuperclass() != null) {
+			printGetter(o, clazz.getSuperclass(), os);
+		}
+	}
+	
+	private static boolean contains(Object[] array, Object valueToFind) {
+		for (int i = 0; i < array.length; i++) {
+            if (valueToFind.equals(array[i])) {
+                return true;
+            }
+        }
+        return false;
+	}
+
+	// MODE INTERACTIF
 
 }
