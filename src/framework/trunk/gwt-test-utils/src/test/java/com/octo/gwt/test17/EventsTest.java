@@ -73,6 +73,33 @@ public class EventsTest extends AbstractGWTTest {
 		panel.add(new Anchor());
 		
 		// Test
+		click(panel);
+		
+		// Assert
+		Assert.assertTrue("onClick event was not triggered", tested);
+		
+	}
+	
+	@Test
+	public void checkClickOnComplexPanelWithIndex() {
+		
+		// Set up
+		tested = false;
+		ComplexPanel panel = new StackPanel() {
+			
+			@Override
+			public void onBrowserEvent(com.google.gwt.user.client.Event event) {
+				super.onBrowserEvent(event);
+				
+				if (DOM.eventGetType(event) == Event.ONCLICK) {
+					tested = !tested;
+				}
+			};
+		};
+		
+		panel.add(new Anchor());
+		
+		// Test
 		click(panel, 0);
 		
 		// Assert
