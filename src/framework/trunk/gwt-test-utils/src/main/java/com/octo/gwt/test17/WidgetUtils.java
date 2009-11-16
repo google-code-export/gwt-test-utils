@@ -31,11 +31,11 @@ public class WidgetUtils {
 	}
 	
 	public static void blur(Widget target) {
-		target.onBrowserEvent(new OverrideEvent(Event.ONBLUR, target.getElement()));
+		target.onBrowserEvent(new OverrideEvent(Event.ONBLUR));
 	}
 	
 	public static void change(Widget target) {
-		target.onBrowserEvent(new OverrideEvent(Event.ONCHANGE, target.getElement()));
+		target.onBrowserEvent(new OverrideEvent(Event.ONCHANGE));
 	}
 
 	public static void click(Widget target) {
@@ -45,7 +45,7 @@ public class WidgetUtils {
 		} 
 
 		checkIsClickable(target, "click");
-		target.onBrowserEvent(new OverrideEvent(Event.ONCLICK, target.getElement()));
+		target.onBrowserEvent(new OverrideEvent(Event.ONCLICK));
 	}
 
 	public static void click(MenuBar parent, MenuItem clickedItem) {
@@ -61,35 +61,35 @@ public class WidgetUtils {
 	}
 	
 	public static void focus(Widget target) {
-		target.onBrowserEvent(new OverrideEvent(Event.ONFOCUS, target.getElement()));
+		target.onBrowserEvent(new OverrideEvent(Event.ONFOCUS));
 	}
 	
 	public static void keyDown(Widget target) {
-		target.onBrowserEvent(new OverrideEvent(Event.ONKEYDOWN, target.getElement()));
+		target.onBrowserEvent(new OverrideEvent(Event.ONKEYDOWN));
 	}
 	
 	public static void keyPress(Widget target) {
-		target.onBrowserEvent(new OverrideEvent(Event.ONKEYPRESS, target.getElement()));
+		target.onBrowserEvent(new OverrideEvent(Event.ONKEYPRESS));
 	}
 	
 	public static void keyUp(Widget target) {
-		target.onBrowserEvent(new OverrideEvent(Event.ONKEYUP, target.getElement()));
+		target.onBrowserEvent(new OverrideEvent(Event.ONKEYUP));
 	}
 	
 	public static void mouseMove(Widget target) {
-		target.onBrowserEvent(new OverrideEvent(Event.ONMOUSEMOVE, target.getElement()));
+		target.onBrowserEvent(new OverrideEvent(Event.ONMOUSEMOVE));
 	}
 	
 	public static void mouseDown(Widget target) {
-		target.onBrowserEvent(new OverrideEvent(Event.ONMOUSEDOWN, target.getElement()));
+		target.onBrowserEvent(new OverrideEvent(Event.ONMOUSEDOWN));
 	}
 	
 	public static void mouseUp(Widget target) {
-		target.onBrowserEvent(new OverrideEvent(Event.ONMOUSEUP, target.getElement()));
+		target.onBrowserEvent(new OverrideEvent(Event.ONMOUSEUP));
 	}
 	
 	public static void mouseWheel(Widget target) {
-		target.onBrowserEvent(new OverrideEvent(Event.ONMOUSEWHEEL, target.getElement()));
+		target.onBrowserEvent(new OverrideEvent(Event.ONMOUSEWHEEL));
 	}
 	
 	private static void checkIsClickable(Widget widget, String event) {
