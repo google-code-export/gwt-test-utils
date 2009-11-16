@@ -1,8 +1,10 @@
 package com.octo.gwt.test17;
 
+import org.easymock.EasyMock;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.octo.gwt.test17.test.AbstractGWTEasyMockTest;
@@ -16,8 +18,11 @@ public class RootPanelTest extends AbstractGWTEasyMockTest {
 	public void checkRootPanel1() throws Exception {
 		// Setup 
 		mockAddToParent(myWidget, RootPanel.get());
+		myWidget.getElement();
+		EasyMock.expectLastCall().andReturn(DOM.createAnchor());
 		
 		replay();
+		
 		// Test
 		RootPanel.get().add(myWidget);
 		
@@ -30,8 +35,9 @@ public class RootPanelTest extends AbstractGWTEasyMockTest {
 	@Test
 	public void checkRootPanel2() throws Exception {
 		// Setup 
-		mockAddToParent(myWidget, RootPanel.get());
-		
+		mockAddToParent(myWidget, RootPanel.get());	
+		myWidget.getElement();
+		EasyMock.expectLastCall().andReturn(DOM.createAnchor());
 		
 		replay();
 		// Test

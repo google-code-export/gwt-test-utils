@@ -6,6 +6,7 @@ import org.junit.Assert;
 
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.CheckBox;
+import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.MenuBar;
@@ -55,6 +56,9 @@ public class WidgetUtils {
 		grid.onBrowserEvent(new OverrideEvent(Event.ONCLICK, grid.getWidget(row, column).getElement()));
 	}
 	
+	public static void click(ComplexPanel panel, int index) {
+		panel.onBrowserEvent(new OverrideEvent(Event.ONCLICK, panel.getWidget(index).getElement()));
+	}
 	
 	public static void focus(Widget target) {
 		target.onBrowserEvent(new OverrideEvent(Event.ONFOCUS));

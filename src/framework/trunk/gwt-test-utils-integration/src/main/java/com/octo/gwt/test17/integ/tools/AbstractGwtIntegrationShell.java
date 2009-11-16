@@ -128,11 +128,21 @@ public abstract class AbstractGwtIntegrationShell {
 		return null;
 	}
 
+	/**
+	 * 
+	 * @param value
+	 * @param objectLocalization
+	 */
 	public void assertExact(String value, String objectLocalization) {
 		String s = getObject(String.class, objectLocalization);
 		Assert.assertEquals(csvRunner.getAssertionErrorMessagePrefix() + "Wrong string", value, s);
 	}
 
+	/**
+	 * 
+	 * @param value
+	 * @param objectLocalization
+	 */
 	public void assertNumberExact(String value, String objectLocalization) {
 		Integer i = getObject(Integer.class, objectLocalization, false);
 		if (i != null) {
@@ -143,26 +153,47 @@ public abstract class AbstractGwtIntegrationShell {
 		}
 	}
 
+	/**
+	 * 
+	 * @param value
+	 * @param objectLocalization
+	 */
 	public void assertContains(String value, String objectLocalization) {
 		String s = getObject(String.class, objectLocalization);
 		Assert.assertTrue(csvRunner.getAssertionErrorMessagePrefix() + " not containing string " + value, s.contains(value));
 	}
 	
+	/**
+	 * Launch a JavaScript "onBlur" event on the target object.
+	 * @param objectLocalization The targeted object localisation path.
+	 */
 	public void blur(String objectLocalization) {
 		Widget widget = getObject(Widget.class, objectLocalization);
 		WidgetUtils.blur(widget);
 	}
 	
+	/**
+	 * Launch a JavaScript "onChange" event on a object
+	 * @param objectLocalization The targeted object localisation path.
+	 */
 	public void change(String objectLocalization) {
 		Widget widget = getObject(Widget.class, objectLocalization);
 		WidgetUtils.change(widget);
 	}
 
+	/**
+	 * Launch a JavaScript "onClick" event on the target object.
+	 * @param objectLocalization The targeted object localisation path.
+	 */
 	public void click(String objectLocalization) {
 		Widget widget = getObject(Widget.class, objectLocalization);
 		WidgetUtils.click(widget);
 	}
 	
+	/**
+	 * Launch a JavaScript "onClick" event on a panel which is expected to be visible and enabled.
+	 * @param objectLocalization The targeted object localisation path.
+	 */
 	public void clickPanel(String objectLocalization) {
 		FocusPanel widget = getObject(FocusPanel.class, objectLocalization);
 		checkWidgetVisibleAndEnable(widget, objectLocalization);

@@ -35,6 +35,7 @@ import com.google.gwt.user.client.impl.ElementMapperImpl;
 import com.google.gwt.user.client.impl.HistoryImpl;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
+import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.Grid;
@@ -52,6 +53,7 @@ import com.google.gwt.user.client.ui.impl.FocusImpl;
 import com.google.gwt.user.client.ui.impl.FocusImplOld;
 import com.octo.gwt.test17.internal.PatchAnchorElement;
 import com.octo.gwt.test17.internal.PatchCheckBox;
+import com.octo.gwt.test17.internal.PatchComplexPanel;
 import com.octo.gwt.test17.internal.PatchCurrencyList;
 import com.octo.gwt.test17.internal.PatchDOM;
 import com.octo.gwt.test17.internal.PatchDOMImpl;
@@ -242,8 +244,6 @@ public class PatchGWT {
 			new Patch("getBodyOffsetLeft", "0"), 
 			new Patch("getBodyOffsetTop", "0"),
 			new Patch("eventGetKeyCode", castAndCall(OverrideEvent.class, "getOverrideKeyCode")),
-			//			new Patch("setEventListener", "return;"), 
-
 		});
 
 		PatchUtils.applyPatches(Button.class, new Patch[] {
@@ -278,19 +278,11 @@ public class PatchGWT {
 		PatchUtils.applyPatches(DOMImpl.class, new Patch[] { 
 			new Patch("getEventsSunk", "return 1;"),
 			new Patch("eventGetTypeInt", staticCall(PatchDOMImpl.class, "eventGetTypeInt", "$1"), new Class[] { String.class}),	
-			//new Patch("eventGetTypeInt", staticCall(PatchDOMImpl.class, "eventGetTypeInt", "$1"), new Class[] { Event.class}),
-			//			new Patch("eventGetShiftKey", castAndCall(OverrideEvent.class, "isOverrideShiftKey")),
-			//			new Patch("eventGetMetaKey", castAndCall(OverrideEvent.class, "isOverrideMetaKey")),
-			//			new Patch("eventGetCtrlKey", castAndCall(OverrideEvent.class, "isOverrideCtrlKey")),
-			//			new Patch("eventGetAltKey", castAndCall(OverrideEvent.class, "isOverrideAltKey")),
-			//			new Patch("eventGetKeyCode", castAndCall(OverrideEvent.class, "getOverrideKeyCode")),
 			new Patch("setEventListener", "return;"), 
 		});
 
 		PatchUtils.applyPatches(JavaScriptObject.class, new Patch[] { 
 			new Patch("cast", staticCall(PatchUIObject.class, "cast", "this")), 
-			//			new Patch("hashCode", "super.hashCode()"),
-			//			new Patch("createFunction", "null"), 
 		});
 
 		PatchUtils.applyPatches(Event.class, new Patch[] { 
@@ -313,7 +305,6 @@ public class PatchGWT {
 
 		PatchUtils.applyPatches(DOM.class, new Patch[] { 
 			new Patch("createUniqueId", staticCall(PatchDOM.class, "createUniqueId", "")),
-			//new Patch("getFirstChild", staticCall("getFirstChild", "$1")) 
 		});
 
 		PatchUtils.applyPatches(HistoryImpl.class, new Patch[] { 
@@ -335,7 +326,6 @@ public class PatchGWT {
 
 		PatchUtils.applyPatches(RootPanel.class, new Patch[] {
 			new Patch("getBodyElement", staticCall(PatchUIObject.class, "cast", staticCall(PatchDOMImpl.class, "createElement", "\"body\""))),
-			//new Patch("get", "if (" + staticCall("isReinit", "") + ") { rootPanels.clear(); widgetsToDetach.clear(); } return get(null);")
 		});
 
 		PatchUtils.applyPatches(History.class,
@@ -494,6 +484,10 @@ public class PatchGWT {
 		
 		PatchUtils.applyPatches(Duration.class, new Patch[] { 
 			new Patch("currentTimeMillis", staticCall(PatchDuration.class, "getTimeInMillisec")) 
+		});
+		
+		PatchUtils.applyPatches(ComplexPanel.class, new Patch[] { 
+			new Patch("getChildren", staticCall(PatchComplexPanel.class, "getChildren", "this")),
 		});
 	}
 
