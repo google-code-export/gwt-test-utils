@@ -23,7 +23,12 @@ import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.event.dom.client.MouseWheelEvent;
 import com.google.gwt.event.dom.client.MouseWheelHandler;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.ComplexPanel;
+import com.google.gwt.user.client.ui.StackPanel;
 import com.octo.gwt.test17.test.AbstractGWTTest;
 
 public class EventsTest extends AbstractGWTTest {
@@ -42,12 +47,37 @@ public class EventsTest extends AbstractGWTTest {
 
 		});
 
-		Assert.assertEquals(false, tested);
-
 		//simule the event
 		click(b);
 
-		Assert.assertEquals(true, tested);
+		Assert.assertTrue("onClick event was not triggered", tested);
+	}
+	
+	@Test
+	public void checkClickOnComplexPanel() {
+		
+		// Set up
+		tested = false;
+		ComplexPanel panel = new StackPanel() {
+			
+			@Override
+			public void onBrowserEvent(com.google.gwt.user.client.Event event) {
+				super.onBrowserEvent(event);
+				
+				if (DOM.eventGetType(event) == Event.ONCLICK) {
+					tested = !tested;
+				}
+			};
+		};
+		
+		panel.add(new Anchor());
+		
+		// Test
+		click(panel, 0);
+		
+		// Assert
+		Assert.assertTrue("onClick event was not triggered", tested);
+		
 	}
 
 	@Test
@@ -62,12 +92,10 @@ public class EventsTest extends AbstractGWTTest {
 
 		});
 
-		Assert.assertEquals(false, tested);
-
 		//simule the event
 		blur(b);
 
-		Assert.assertEquals(true, tested);
+		Assert.assertTrue("onBlur event was not triggered", tested);
 	}
 
 	@Test
@@ -82,12 +110,10 @@ public class EventsTest extends AbstractGWTTest {
 
 		});
 
-		Assert.assertEquals(false, tested);
-
 		//simule the event
 		focus(b);
 
-		Assert.assertEquals(true, tested);
+		Assert.assertTrue("onFocus event was not triggered", tested);
 	}
 	
 	@Test
@@ -101,12 +127,10 @@ public class EventsTest extends AbstractGWTTest {
 			}
 		});
 
-		Assert.assertEquals(false, tested);
-
 		//simule the event
 		keyDown(b);
 
-		Assert.assertEquals(true, tested);
+		Assert.assertTrue("onKeyDown event was not triggered", tested);
 	}
 	
 	@Test
@@ -120,12 +144,10 @@ public class EventsTest extends AbstractGWTTest {
 			}
 		});
 
-		Assert.assertEquals(false, tested);
-
 		//simule the event
 		keyPress(b);
 
-		Assert.assertEquals(true, tested);
+		Assert.assertTrue("onKeyPress event was not triggered", tested);
 	}
 	
 	@Test
@@ -139,12 +161,10 @@ public class EventsTest extends AbstractGWTTest {
 			}
 		});
 
-		Assert.assertEquals(false, tested);
-
 		//simule the event
 		keyUp(b);
 
-		Assert.assertEquals(true, tested);
+		Assert.assertTrue("onKeyUp event was not triggered", tested);
 	}
 
 	@Test
@@ -159,12 +179,10 @@ public class EventsTest extends AbstractGWTTest {
 
 		});
 
-		Assert.assertEquals(false, tested);
-
 		//simule the event
 		mouseDown(b);
 
-		Assert.assertEquals(true, tested);
+		Assert.assertTrue("onMouseDown event was not triggered", tested);
 	}
 
 	@Test
@@ -179,12 +197,10 @@ public class EventsTest extends AbstractGWTTest {
 
 		});
 
-		Assert.assertEquals(false, tested);
-
 		//simule the event
 		mouseUp(b);
 
-		Assert.assertEquals(true, tested);
+		Assert.assertTrue("onMouseUp event was not triggered", tested);
 	}
 
 	@Test
@@ -199,12 +215,10 @@ public class EventsTest extends AbstractGWTTest {
 
 		});
 
-		Assert.assertEquals(false, tested);
-
 		//simule the event
 		mouseMove(b);
 
-		Assert.assertEquals(true, tested);
+		Assert.assertTrue("onMouseMove event was not triggered", tested);
 	}
 
 	@Test
@@ -219,12 +233,10 @@ public class EventsTest extends AbstractGWTTest {
 
 		});
 
-		Assert.assertEquals(false, tested);
-
 		//simule the event
 		mouseWheel(b);
 
-		Assert.assertEquals(true, tested);
+		Assert.assertTrue("onMouseWheel event was not triggered", tested);
 	}
 
 }
