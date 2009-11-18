@@ -7,5 +7,5 @@ public class PatchDeferredCommand {
 	public static void immediateCommand(Command cmd) {
 		cmd.execute();
 	}
-	
+
 }

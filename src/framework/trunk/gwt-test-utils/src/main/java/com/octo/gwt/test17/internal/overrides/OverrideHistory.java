@@ -20,10 +20,10 @@ public class OverrideHistory extends HistoryImpl {
 	public static String getToken() {
 		return top;
 	}
-	
+
 	public static void reset() {
 		stack.clear();
-	}	
+	}
 
 	public static void back() {
 		stack.pop();

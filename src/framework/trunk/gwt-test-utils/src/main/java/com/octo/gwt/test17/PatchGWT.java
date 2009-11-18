@@ -174,7 +174,7 @@ public class PatchGWT {
 			throw new RuntimeException("Unable to load com.octo.gwt.test17.bootstrap.Startup.Startup class, you probably forgot to "
 					+ "add the JVM parameter: -javaagent:target/bootstrap.jar");
 		}
-		
+
 		PatchUtils.initRedefineMethod();
 		PatchUtils.initLoadPropertiesMethod();
 

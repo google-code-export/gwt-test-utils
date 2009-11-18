@@ -16,12 +16,12 @@ public class Rep1bisTest {
 		MyGwtShell.appender = "";
 		JUnitCore core = new JUnitCore();
 		Result r = core.run(new FilterRequest(new ClassRequest(Rep1Test.class), new Filter() {
-			
+
 			@Override
 			public boolean shouldRun(Description arg0) {
 				return arg0.getDisplayName().startsWith("run_1_test1");
 			}
-			
+
 			@Override
 			public String describe() {
 				return "toto";

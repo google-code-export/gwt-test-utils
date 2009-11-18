@@ -5,8 +5,6 @@ import junit.framework.Assert;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 
-import com.octo.gwt.test17.integ.csvrunner.Node;
-
 public class XPathTest {
 
 	private static final Logger logger = Logger.getLogger(XPathTest.class);

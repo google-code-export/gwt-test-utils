@@ -12,5 +12,5 @@ public class DirectoryTestReaderTest {
 		Assert.assertEquals(3, reader.getTestMethods().size());
 		Assert.assertEquals(1, reader.getMacroFileList().size());
 	}
-	
+
 }

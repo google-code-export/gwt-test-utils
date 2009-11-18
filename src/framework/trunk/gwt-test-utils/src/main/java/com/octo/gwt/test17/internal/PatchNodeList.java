@@ -5,7 +5,7 @@ import com.google.gwt.dom.client.NodeList;
 import com.octo.gwt.test17.internal.overrides.OverrideNodeList;
 
 public class PatchNodeList {
-	
+
 	public static int getLengthUserNodeList(NodeList<?> l) {
 		if (l instanceof OverrideNodeList<?>) {
 			OverrideNodeList<?> ll = (OverrideNodeList<?>) l;

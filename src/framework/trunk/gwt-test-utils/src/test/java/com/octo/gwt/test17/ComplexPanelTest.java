@@ -16,7 +16,7 @@ public class ComplexPanelTest extends AbstractGWTTest {
 		panel.setTitle("title");
 		Assert.assertEquals("title", panel.getTitle());
 	}
-	
+
 	@Test
 	public void checkVisible() {
 		ComplexPanel panel = new FlowPanel();
@@ -24,7 +24,7 @@ public class ComplexPanelTest extends AbstractGWTTest {
 		panel.setVisible(false);
 		Assert.assertEquals(false, panel.isVisible());
 	}
-	
+
 	@Test
 	public void checkCount() {
 		ComplexPanel panel = new FlowPanel();

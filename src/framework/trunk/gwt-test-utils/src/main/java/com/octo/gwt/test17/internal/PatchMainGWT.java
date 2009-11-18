@@ -117,7 +117,7 @@ public class PatchMainGWT {
 		}
 
 		Object o = createClass.get(classLiteral);
-		
+
 		if (o == null && gwtCreateHandler != null) {
 			o = gwtCreateHandler.create(classLiteral);
 		}

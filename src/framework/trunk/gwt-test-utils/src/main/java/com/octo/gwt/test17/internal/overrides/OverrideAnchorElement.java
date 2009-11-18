@@ -4,13 +4,13 @@ import com.google.gwt.dom.client.AnchorElement;
 import com.octo.gwt.test17.internal.dom.UserElement;
 
 public class OverrideAnchorElement extends AnchorElement implements UserElementWrapper {
-	
+
 	private UserElement wrappedElement;
-	
+
 	public OverrideAnchorElement(UserElement element) {
 		wrappedElement = element;
 	}
-	
+
 	public int getOverrideTabIndex() {
 		return Integer.valueOf(this.wrappedElement.getOverrideAttribute("tabIndex"));
 	}
@@ -18,7 +18,7 @@ public class OverrideAnchorElement extends AnchorElement implements UserElementW
 	public void setOverrideTabIndex(int overrideTabIndex) {
 		this.wrappedElement.setOverrideAttribute("tabIndex", String.valueOf(overrideTabIndex));
 	}
-	
+
 	public String getOverrideHref() {
 		return this.wrappedElement.getOverrideAttribute("href");
 	}
@@ -26,7 +26,7 @@ public class OverrideAnchorElement extends AnchorElement implements UserElementW
 	public void setOverrideHref(String overrideHref) {
 		this.wrappedElement.setOverrideAttribute("href", overrideHref);
 	}
-	
+
 	public String getOverrideName() {
 		return this.wrappedElement.getOverrideAttribute("name");
 	}
@@ -34,7 +34,7 @@ public class OverrideAnchorElement extends AnchorElement implements UserElementW
 	public void setOverrideName(String overrideName) {
 		this.wrappedElement.setOverrideAttribute("name", overrideName);
 	}
-	
+
 	public char getOverrideAccessKey() {
 		return wrappedElement.getOverrideAttribute("accessKey").charAt(0);
 	}

@@ -17,7 +17,7 @@ public class PatchCurrencyList {
 
 	private static List<CurrencyData> currencyDatas;
 	private static List<String[]> contents;
-	
+
 	private static CurrencyData create() {
 		try {
 			Constructor<CurrencyData> constructor = CurrencyData.class.getDeclaredConstructor();
@@ -27,7 +27,7 @@ public class PatchCurrencyList {
 			throw new RuntimeException(e);
 		}
 	}
-	
+
 	private static void init() {
 		if (contents != null) {
 			return;
@@ -41,13 +41,13 @@ public class PatchCurrencyList {
 			keySet.toArray(currencies);
 			Arrays.sort(currencies);
 			Map<String, String> nameMap = new HashMap<String, String>();
-	
+
 			String defCurrencyCode = numberConstants.getProperty("defCurrencyCode");
 			if (defCurrencyCode == null) {
 				defCurrencyCode = "USD";
 			}
-	
-			String [] defCurrencyObject = new String[]{defCurrencyCode, defCurrencyCode, Integer.toString(2), ""};
+
+			String[] defCurrencyObject = new String[] { defCurrencyCode, defCurrencyCode, Integer.toString(2), "" };
 			for (String currencyCode : currencies) {
 				String currencyEntry = currencyData.getProperty(currencyCode);
 				String[] currencySplit = currencyEntry.split("\\|");
@@ -106,7 +106,7 @@ public class PatchCurrencyList {
 				if (currencySymbol == null) {
 					currencySymbol = currencyCode;
 				}
-				String [] currencyObject = new String[]{currencyCode, currencySymbol, Integer.toString(currencyFlags), ""};
+				String[] currencyObject = new String[] { currencyCode, currencySymbol, Integer.toString(currencyFlags), "" };
 				if (portableSymbol.length() > 0) {
 					currencyObject[3] += portableSymbol;
 				}
@@ -121,7 +121,7 @@ public class PatchCurrencyList {
 			}
 			currencyDatas = new ArrayList<CurrencyData>();
 			contents = new ArrayList<String[]>();
-			
+
 			currencyDatas.add(create());
 			contents.add(defCurrencyObject);
 		} catch (IOException e) {
@@ -133,10 +133,10 @@ public class PatchCurrencyList {
 		init();
 		return currencyDatas.get(0);
 	}
-	
+
 	private static String[] get(CurrencyData currencyData) {
 		init();
-		for(int i = 0; i < currencyDatas.size(); i ++) {
+		for (int i = 0; i < currencyDatas.size(); i++) {
 			if (currencyDatas.get(i) == currencyData) {
 				return contents.get(i);
 			}
@@ -155,7 +155,7 @@ public class PatchCurrencyList {
 	public static int getFlagsAndPrecision(CurrencyData currencyData) {
 		return Integer.parseInt(get(currencyData)[2]);
 	}
-	
+
 	public static void reset() {
 		contents = null;
 		currencyDatas = null;

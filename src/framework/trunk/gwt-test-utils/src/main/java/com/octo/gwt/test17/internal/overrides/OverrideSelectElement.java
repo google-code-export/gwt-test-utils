@@ -62,7 +62,7 @@ public class OverrideSelectElement extends SelectElement {
 	public void setOverrideSize(int overrideSize) {
 		wrapped.setOverrideAttribute("size", String.valueOf(overrideSize));
 	}
-	
+
 	public String getOverrideName() {
 		return wrapped.getOverrideAttribute("name");
 	}

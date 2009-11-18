@@ -4,9 +4,9 @@ import com.google.gwt.dom.client.Element;
 import com.octo.gwt.test17.internal.dom.UserElement;
 
 public class PatchElementMapperImpl {
-	
+
 	private static final String widgetId = "__widgetID";
-	
+
 	public static void setWidgetIndex(Element e, int index) {
 		UserElement elem = UserElement.overrideCast(e);
 		elem.setOverrideProperty(widgetId, Integer.toString(index));

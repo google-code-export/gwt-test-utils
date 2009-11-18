@@ -13,21 +13,21 @@ public class CheckBoxTest extends AbstractGWTTest {
 		CheckBox cb = new CheckBox();
 		cb.setValue(false);
 		cb.setFocus(true);
-		
+
 		Assert.assertEquals(false, cb.getValue());
-		
+
 		//we must use the parent click method to simule the click without registering an handler
 		click(cb);
 		Assert.assertEquals(true, cb.getValue());
 	}
-	
+
 	@Test
 	public void checkName() {
 		CheckBox cb = new CheckBox();
 		cb.setName("name");
 		Assert.assertEquals("name", cb.getName());
 	}
-	
+
 	@Test
 	public void checkText() {
 		CheckBox cb = new CheckBox("foo");
@@ -35,14 +35,14 @@ public class CheckBoxTest extends AbstractGWTTest {
 		cb.setText("text");
 		Assert.assertEquals("text", cb.getText());
 	}
-	
+
 	@Test
 	public void checkTitle() {
 		CheckBox cb = new CheckBox();
 		cb.setTitle("title");
 		Assert.assertEquals("title", cb.getTitle());
 	}
-	
+
 	@Test
 	public void checkHTML() {
 		CheckBox cb = new CheckBox("<h1>foo</h1>", true);
@@ -50,7 +50,7 @@ public class CheckBoxTest extends AbstractGWTTest {
 		cb.setHTML("<h1>test</h1>");
 		Assert.assertEquals("<h1>test</h1>", cb.getHTML());
 	}
-	
+
 	@Test
 	public void checkVisible() {
 		CheckBox cb = new CheckBox();
@@ -58,7 +58,7 @@ public class CheckBoxTest extends AbstractGWTTest {
 		cb.setVisible(false);
 		Assert.assertEquals(false, cb.isVisible());
 	}
-	
+
 	@Test
 	public void checkChecked() {
 		CheckBox cb = new CheckBox();

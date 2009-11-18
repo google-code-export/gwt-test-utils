@@ -25,7 +25,7 @@ public class PatchNode {
 		UserElement p = UserElement.overrideCast(parent);
 		if (p.getOverrideList().size() > 0)
 			return p.getOverrideList().get(0);
-		else 
+		else
 			return null;
 	}
 

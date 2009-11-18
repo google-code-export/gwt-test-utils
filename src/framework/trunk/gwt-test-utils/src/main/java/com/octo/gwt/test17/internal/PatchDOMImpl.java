@@ -69,7 +69,7 @@ public class PatchDOMImpl {
 		case Event.ONLOSECAPTURE:
 			return "losecapture";
 		case Event.ONMOUSEDOWN:
-			return "mousedown";	
+			return "mousedown";
 		case Event.ONMOUSEMOVE:
 			return "mousemove";
 		case Event.ONMOUSEOUT:
@@ -86,9 +86,8 @@ public class PatchDOMImpl {
 			return "mousewheel";
 		case Event.ONCONTEXTMENU:
 			return "contextmenu";
-		default :
-			throw new RuntimeException("Cannot get the String type of event with code [" 
-					+ event.getOverrideType() + "]");
+		default:
+			throw new RuntimeException("Cannot get the String type of event with code [" + event.getOverrideType() + "]");
 		}
 	}
 
@@ -139,8 +138,7 @@ public class PatchDOMImpl {
 			return Event.ONCONTEXTMENU;
 		}
 
-		throw new RuntimeException("Unable to convert DOM Event \"" 
-				+ type + "\" to an integer");
+		throw new RuntimeException("Unable to convert DOM Event \"" + type + "\" to an integer");
 	}
 
 	public static Element createElement(String tag) {
@@ -178,7 +176,7 @@ public class PatchDOMImpl {
 						superClazz = cp.get("com.google.gwt.dom.client.AnchorElement");
 					} else if ("textarea".equals(tag)) {
 						superClazz = cp.get("com.google.gwt.dom.client.TextAreaElement");
-					} 
+					}
 				}
 				if (superClazz == null) {
 					throw new RuntimeException("Super class not found for tag " + tag);

@@ -20,7 +20,7 @@ public class ButtonTest extends AbstractGWTTest {
 
 		Assert.assertEquals("title", b.getTitle());
 	}
-	
+
 	@Test
 	public void checkText() {
 		Button b = new Button();
@@ -68,7 +68,7 @@ public class ButtonTest extends AbstractGWTTest {
 
 		Assert.assertEquals("test-button-style", b.getStyleName());
 	}
-	
+
 	@Test
 	public void checkStylePrimaryName() {
 		Button b = new Button();
@@ -80,7 +80,7 @@ public class ButtonTest extends AbstractGWTTest {
 
 	@Test
 	public void checkClickWithHander() {
-		
+
 		//create the button in a standard JVM
 		final Button b = new Button();
 		// add a handler to test the click
@@ -89,7 +89,7 @@ public class ButtonTest extends AbstractGWTTest {
 			public void onClick(ClickEvent event) {
 				b.setHTML("clicked");
 			}
-			
+
 		});
 
 		Assert.assertEquals(null, b.getHTML());

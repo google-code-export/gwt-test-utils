@@ -7,14 +7,14 @@ import com.octo.gwt.test17.internal.dom.UserElement;
 public class OverrideInputElement extends InputElement implements UserElementWrapper {
 
 	private UserElement wrappedElement;
-	
+
 	public OverrideInputElement(Document document) {
 	}
 
 	public OverrideInputElement(UserElement element) {
 		wrappedElement = element;
 	}
-	
+
 	public String getOverrideValue() {
 		return wrappedElement.getAttribute("value");
 	}
@@ -22,17 +22,17 @@ public class OverrideInputElement extends InputElement implements UserElementWra
 	public void setOverrideValue(String overrideValue) {
 		wrappedElement.setOverrideAttribute("value", overrideValue);
 	}
-	
+
 	public String getOverrideAccessKey() {
 		String temp = wrappedElement.getAttribute("accessKey");
-		
-		return (temp == null)? "" : temp;
+
+		return (temp == null) ? "" : temp;
 	}
 
 	public void setOverrideAccessKey(String overrideAccessKey) {
 		wrappedElement.setOverrideAttribute("accessKey", overrideAccessKey);
 	}
-	
+
 	public String getOverrideName() {
 		return wrappedElement.getAttribute("name");
 	}

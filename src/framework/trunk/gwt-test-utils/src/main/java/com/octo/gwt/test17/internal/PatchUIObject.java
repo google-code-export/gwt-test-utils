@@ -47,7 +47,7 @@ public class PatchUIObject {
 		String style = getStyleName(e);
 		String primaryStyle = getStylePrimaryName(e);
 
-		if (!style.contains(styleName)){
+		if (!style.contains(styleName)) {
 			if (primaryStyle.length() > 0 && !style.equals(primaryStyle)) {
 				setPropertyOnElement(e, "className", primaryStyle + " " + styleName);
 			} else {
@@ -61,7 +61,7 @@ public class PatchUIObject {
 			String style = getPropertyOnElement(e, "className");
 			if (style.contains(styleName)) {
 				int startIndex = style.indexOf(styleName);
-				startIndex = (startIndex > 0)? startIndex-1 : startIndex;
+				startIndex = (startIndex > 0) ? startIndex - 1 : startIndex;
 
 				style = style.substring(0, startIndex) + style.substring(style.indexOf(styleName) + styleName.length());
 			}

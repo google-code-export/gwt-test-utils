@@ -22,30 +22,30 @@ import com.google.gwt.i18n.client.Constants.DefaultStringValue;
 public class PatchUtils {
 
 	static class StrangeCharacterMapping {
-		
+
 		private char from;
-		
+
 		private char to;
-		
+
 		public String map(String s) {
 			return s.replace(from, to);
 		}
-		
+
 		public StrangeCharacterMapping(char from, char to) {
 			this.from = from;
 			this.to = to;
 		}
-		
+
 	}
-	
+
 	private static final String REDEFINE_METHOD = "redefineClass";
-	
+
 	private static final String LOAD_PROPERTIES = "loadProperties";
 
 	private static final String REDEFINE_CLASS = "com.octo.gwt.test17.bootstrap.Startup";
-	
+
 	private static final List<StrangeCharacterMapping> strangeCharacterMappingList = new ArrayList<StrangeCharacterMapping>();
-	
+
 	/**
 	 * Classpool pour javassist
 	 */
@@ -56,7 +56,6 @@ public class PatchUtils {
 	 * bootstrap.jar
 	 */
 	public static Method redefine;
-
 
 	/**
 	 * Method used to load properties file with charset. Method is located in
@@ -208,7 +207,7 @@ public class PatchUtils {
 			throw new RuntimeException("Method " + REDEFINE_METHOD + " not found in bootstrap class");
 		}
 	}
-	
+
 	public static void initLoadPropertiesMethod() throws Exception {
 		Class<?> c = Class.forName(REDEFINE_CLASS);
 		if (c == null) {
@@ -228,8 +227,8 @@ public class PatchUtils {
 		}
 		try {
 			Properties properties = (Properties) loadProperties.invoke(null, inputStream, "UTF-8");
-			for(Entry<Object, Object> entry : properties.entrySet()) {
-				for(StrangeCharacterMapping strangeCharacterMapping : strangeCharacterMappingList) {
+			for (Entry<Object, Object> entry : properties.entrySet()) {
+				for (StrangeCharacterMapping strangeCharacterMapping : strangeCharacterMappingList) {
 					entry.setValue(strangeCharacterMapping.map((String) entry.getValue()));
 				}
 			}
@@ -238,7 +237,7 @@ public class PatchUtils {
 			throw new RuntimeException("Unable to load property file" + path, e);
 		}
 	}
-	
+
 	public static Properties getLocalizedProperties(String prefix) throws IOException {
 		Locale locale = PatchGWT.getLocale();
 		if (locale == null) {
@@ -257,7 +256,7 @@ public class PatchUtils {
 		if (line == null) {
 			DefaultStringValue v = method.getAnnotation(DefaultStringValue.class);
 			if (v == null) {
-				throw new UnsupportedOperationException("No matching property \"" +  method.getName() + "\" for i18n class ["
+				throw new UnsupportedOperationException("No matching property \"" + method.getName() + "\" for i18n class ["
 						+ clazz.getCanonicalName() + "]. Please use the DefaultStringValue annotation");
 			}
 
@@ -266,7 +265,7 @@ public class PatchUtils {
 		if (method.getReturnType() == String.class) {
 			return line;
 		}
-		String [] result = line.split(", ");
+		String[] result = line.split(", ");
 		return result;
 	}
 
@@ -309,7 +308,7 @@ public class PatchUtils {
 	public static void clearStrangeCharacterMapping() {
 		strangeCharacterMappingList.clear();
 	}
-	
+
 	public static void addStrangeCharacterMapping(char from, char to) {
 		strangeCharacterMappingList.add(new StrangeCharacterMapping(from, to));
 	}

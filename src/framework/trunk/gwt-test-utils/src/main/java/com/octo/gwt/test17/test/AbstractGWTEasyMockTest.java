@@ -24,7 +24,7 @@ public abstract class AbstractGWTEasyMockTest extends AbstractGWTTest {
 	private List<Field> annotatedFieldToInject;
 
 	protected Hashtable<Class<?>, Object> mockedObject = new Hashtable<Class<?>, Object>();
-	
+
 	public AbstractGWTEasyMockTest() {
 		annotatedFieldToInject = ReflectionUtils.getAnnotatedField(this, Mock.class);
 		for (Field f : annotatedFieldToInject) {
@@ -55,7 +55,7 @@ public abstract class AbstractGWTEasyMockTest extends AbstractGWTTest {
 			f.set(this, mock);
 		}
 	}
-	
+
 	public void replay() {
 		for (Object o : mockedObject.values()) {
 			EasyMock.replay(o);
@@ -73,8 +73,6 @@ public abstract class AbstractGWTEasyMockTest extends AbstractGWTTest {
 			EasyMock.reset(o);
 		}
 	}
-	
-	
 
 	private static class FailureAnswer<Z> implements IAnswer<Z> {
 
@@ -126,15 +124,15 @@ public abstract class AbstractGWTEasyMockTest extends AbstractGWTTest {
 	protected void mockAddToParent(Widget w, Widget parent) throws Exception {
 		w.removeFromParent();
 		EasyMock.expectLastCall();
-	
+
 		w.getElement();
 		EasyMock.expectLastCall().andReturn(DOM.createAnchor());
-	
+
 		Method m = Widget.class.getDeclaredMethod("setParent", Widget.class);
 		m.setAccessible(true);
 		m.invoke(w, EasyMock.eq(parent));
 		EasyMock.expectLastCall();
-	
+
 		if (PatchGWT.areAssertionEnabled()) {
 			w.getParent();
 			EasyMock.expectLastCall().andReturn(null);

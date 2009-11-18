@@ -36,24 +36,24 @@ public class MyBeautifulApp implements EntryPoint {
 		FlowPanel panel = new FlowPanel();
 		b1 = new Button();
 		panel.add(b1);
-		
+
 		b2 = new Button();
 		panel.add(b2);
-		
+
 		l = new Label();
 		l.setText("init");
 		panel.add(l);
-		
+
 		t = new TextBox();
 		panel.add(t);
-		
+
 		historyLabel = new Label();
 		panel.add(historyLabel);
-		
+
 		invisibleTB = new TextBox();
 		invisibleTB.setVisible(false);
 		panel.add(invisibleTB);
-		
+
 		lb = new ListBox();
 		lb.addItem("lbText0");
 		lb.addItem("lbText1");
@@ -91,7 +91,7 @@ public class MyBeautifulApp implements EntryPoint {
 						l.setText("error");
 					}
 
-				});	
+				});
 			}
 		});
 
@@ -102,7 +102,7 @@ public class MyBeautifulApp implements EntryPoint {
 			}
 
 		});
-		
+
 		invisibleTB.addChangeHandler(new ChangeHandler() {
 
 			public void onChange(ChangeEvent event) {
@@ -110,7 +110,7 @@ public class MyBeautifulApp implements EntryPoint {
 			}
 
 		});
-		
+
 	}
 
 }

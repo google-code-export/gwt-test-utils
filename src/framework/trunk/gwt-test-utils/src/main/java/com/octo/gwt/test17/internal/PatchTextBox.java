@@ -6,7 +6,7 @@ import com.octo.gwt.test17.internal.dom.UserElement;
 import com.octo.gwt.test17.internal.overrides.OverrideInputElement;
 
 public class PatchTextBox {
-	
+
 	public static InputElement getInputElement(TextBox textBox) {
 		return new OverrideInputElement((UserElement) textBox.getElement());
 	}

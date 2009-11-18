@@ -17,7 +17,7 @@ public class AnchorTest extends AbstractGWTTest {
 
 		Assert.assertEquals("toto", a.getText());
 	}
-	
+
 	@Test
 	public void checkName() {
 		Anchor a = new Anchor();
@@ -25,7 +25,7 @@ public class AnchorTest extends AbstractGWTTest {
 
 		Assert.assertEquals("toto", a.getName());
 	}
-	
+
 	@Test
 	public void checkVisible() {
 		Anchor a = new Anchor();
@@ -57,7 +57,7 @@ public class AnchorTest extends AbstractGWTTest {
 
 		Assert.assertEquals(0, a.getAbsoluteTop());
 	}
-	
+
 	@Test
 	public void checkTitle() {
 		Anchor a = new Anchor();
@@ -65,7 +65,7 @@ public class AnchorTest extends AbstractGWTTest {
 
 		Assert.assertEquals("title", a.getTitle());
 	}
-	
+
 	@Test
 	public void checkTabIndex() {
 		Anchor a = new Anchor();
@@ -73,17 +73,15 @@ public class AnchorTest extends AbstractGWTTest {
 
 		Assert.assertEquals(1, a.getTabIndex());
 	}
-	
+
 	@Test
 	public void checkHTML() {
 		Anchor a = new Anchor("<h1>foo</h1>", true);
 		Assert.assertEquals("<h1>foo</h1>", a.getHTML());
-		
+
 		a.setHTML("<h1>test</h1>");
 
 		Assert.assertEquals("<h1>test</h1>", a.getHTML());
 	}
-
-
 
 }

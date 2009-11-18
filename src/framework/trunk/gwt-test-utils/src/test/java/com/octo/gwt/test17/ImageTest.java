@@ -12,7 +12,7 @@ public class ImageTest extends AbstractGWTTest {
 	public void checkURL() {
 		Image i = new Image("http://my-url");
 
-		Assert.assertEquals("http://my-url", i.getUrl());	
+		Assert.assertEquals("http://my-url", i.getUrl());
 
 		i.setUrl("newURL");
 
@@ -23,7 +23,7 @@ public class ImageTest extends AbstractGWTTest {
 	public void checkTitle() {
 		Image i = new Image();
 		i.setTitle("title");
-		Assert.assertEquals("title", i.getTitle());	
+		Assert.assertEquals("title", i.getTitle());
 	}
 
 	@Test

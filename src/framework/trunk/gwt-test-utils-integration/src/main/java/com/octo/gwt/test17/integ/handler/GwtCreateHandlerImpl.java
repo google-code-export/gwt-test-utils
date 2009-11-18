@@ -18,7 +18,7 @@ public abstract class GwtCreateHandlerImpl implements GwtCreateHandler {
 	private Map<Method, IDeserializationCallback> callbacks;
 
 	private IGwtRpcExceptionHandler exceptionHandler;
-	
+
 	public GwtCreateHandlerImpl() {
 		this(new DefaultGwtRpcExceptionHandler());
 	}
@@ -33,11 +33,11 @@ public abstract class GwtCreateHandlerImpl implements GwtCreateHandler {
 	}
 
 	public abstract Object findService(Class<?> remoteServiceClazz);
-	
+
 	public Object createObject(Class<?> classLiteral) throws Exception {
 		return classLiteral.newInstance();
 	}
-	
+
 	public Object create(Class<?> classLiteral) {
 		logger.debug("Try to create class " + classLiteral.getCanonicalName());
 		try {

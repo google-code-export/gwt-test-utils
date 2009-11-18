@@ -19,7 +19,7 @@ public class Patch {
 	public Patch(String methodName, String code) {
 		this(methodName, code, null);
 	}
-	
+
 	public Patch(String methodName, String code, Class<?>[] argsClasses) {
 		this.isFinal = null;
 		this.isNative = null;

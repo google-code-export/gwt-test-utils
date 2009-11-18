@@ -52,32 +52,32 @@ public class EventsTest extends AbstractGWTTest {
 
 		Assert.assertTrue("onClick event was not triggered", tested);
 	}
-	
+
 	@Test
 	public void checkClickOnComplexPanel() {
-		
+
 		// Set up
 		tested = false;
 		ComplexPanel panel = new StackPanel() {
-			
+
 			@Override
 			public void onBrowserEvent(com.google.gwt.user.client.Event event) {
 				super.onBrowserEvent(event);
-				
+
 				if (DOM.eventGetType(event) == Event.ONCLICK) {
 					tested = !tested;
 				}
 			};
 		};
-		
+
 		panel.add(new Anchor());
-		
+
 		// Test
 		click(panel, 0);
-		
+
 		// Assert
 		Assert.assertTrue("onClick event was not triggered", tested);
-		
+
 	}
 
 	@Test
@@ -105,7 +105,7 @@ public class EventsTest extends AbstractGWTTest {
 		b.addFocusHandler(new FocusHandler() {
 
 			public void onFocus(FocusEvent event) {
-				tested = !tested;	
+				tested = !tested;
 			}
 
 		});
@@ -115,15 +115,15 @@ public class EventsTest extends AbstractGWTTest {
 
 		Assert.assertTrue("onFocus event was not triggered", tested);
 	}
-	
+
 	@Test
 	public void checkKeyDownEvent() {
 		tested = false;
 		Button b = new Button();
 		b.addKeyDownHandler(new KeyDownHandler() {
-			
+
 			public void onKeyDown(KeyDownEvent arg0) {
-				tested = !tested;	
+				tested = !tested;
 			}
 		});
 
@@ -132,15 +132,15 @@ public class EventsTest extends AbstractGWTTest {
 
 		Assert.assertTrue("onKeyDown event was not triggered", tested);
 	}
-	
+
 	@Test
 	public void checkKeyPressEvent() {
 		tested = false;
 		Button b = new Button();
 		b.addKeyPressHandler(new KeyPressHandler() {
-			
+
 			public void onKeyPress(KeyPressEvent arg0) {
-				tested = !tested;	
+				tested = !tested;
 			}
 		});
 
@@ -149,15 +149,15 @@ public class EventsTest extends AbstractGWTTest {
 
 		Assert.assertTrue("onKeyPress event was not triggered", tested);
 	}
-	
+
 	@Test
 	public void checkKeyUpEvent() {
 		tested = false;
 		Button b = new Button();
 		b.addKeyUpHandler(new KeyUpHandler() {
-			
+
 			public void onKeyUp(KeyUpEvent arg0) {
-				tested = !tested;	
+				tested = !tested;
 			}
 		});
 

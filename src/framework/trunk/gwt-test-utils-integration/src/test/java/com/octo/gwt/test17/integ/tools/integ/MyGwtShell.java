@@ -13,22 +13,22 @@ import com.octo.gwt.test17.integ.tools.PrefixProcessor;
 
 @RunWith(StandardJUnit4CsvRunner.class)
 public abstract class MyGwtShell extends AbstractGwtIntegrationShell {
-	
+
 	public static String appender = "";
-	
+
 	private MyBeautifulApp app;
-	
+
 	@Before
 	public void setUp() throws Exception {
 		PatchGWT.init();
 		PatchGWT.reset();
 		PatchGWT.setGwtCreateHandler(new GwtCreateHandlerImpl() {
-			
+
 			@Override
 			public Object findService(Class<?> remoteServiceClazz) {
 				if (remoteServiceClazz == MyRemoteService.class) {
 					return new MyRemoteService() {
-						
+
 						public String myMethod(String param1) {
 							if (param1.contains("_suffix")) {
 								throw new RuntimeException();
@@ -39,10 +39,10 @@ public abstract class MyGwtShell extends AbstractGwtIntegrationShell {
 				}
 				return null;
 			}
-			
+
 		});
 	}
-	
+
 	public void initApp() {
 		app = new MyBeautifulApp();
 		app.onModuleLoad();
@@ -56,14 +56,14 @@ public abstract class MyGwtShell extends AbstractGwtIntegrationShell {
 	public PrefixProcessor findPrefixProcessor(String prefix) {
 		if ("app".equals(prefix)) {
 			return new PrefixProcessor() {
-				
+
 				public Object process(CsvRunner csvRunner, Node next, boolean failOnError) {
 					return csvRunner.getValue(failOnError, app, next);
 				}
-				
+
 			};
 		}
 		return super.findPrefixProcessor(prefix);
 	}
-	
+
 }

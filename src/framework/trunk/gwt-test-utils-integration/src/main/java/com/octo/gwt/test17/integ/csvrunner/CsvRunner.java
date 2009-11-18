@@ -62,7 +62,7 @@ public class CsvRunner {
 
 	private void removeEmptyElements(List<String> list) {
 		List<String> newList = new ArrayList<String>();
-		for(String s : list) {
+		for (String s : list) {
 			if (!"".equals(s)) {
 				newList.add(s);
 			}
@@ -70,10 +70,10 @@ public class CsvRunner {
 		list.clear();
 		list.addAll(newList);
 	}
-	
+
 	private void transformArgs(List<String> list) {
 		List<String> newList = new ArrayList<String>();
-		for(String s : list) {
+		for (String s : list) {
 			String out = s;
 			if ("*empty*".equals(s)) {
 				out = "";
@@ -85,7 +85,7 @@ public class CsvRunner {
 		list.clear();
 		list.addAll(newList);
 	}
-	
+
 	public void executeLine(String methodName, List<String> args, Object fixture) throws Exception {
 		if (methodName.indexOf("**") != 0) {
 			List<String> filterArgs = new ArrayList<String>(args);
@@ -102,7 +102,7 @@ public class CsvRunner {
 					Assert.fail(getAssertionErrorMessagePrefix() + "Too few args for " + methodName);
 				}
 				if (clazz.isArray()) {
-					argList.add(filterArgs.toArray(new String[]{}));
+					argList.add(filterArgs.toArray(new String[] {}));
 					filterArgs.clear();
 				} else {
 					argList.add(filterArgs.get(0));
@@ -113,7 +113,7 @@ public class CsvRunner {
 				Assert.fail(getAssertionErrorMessagePrefix() + "Too many args for " + methodName);
 			}
 			try {
-				Object [] finalArgList = argList.toArray(new Object[]{});
+				Object[] finalArgList = argList.toArray(new Object[] {});
 				m.invoke(fixture, finalArgList);
 			} catch (InvocationTargetException e) {
 				if (e.getCause() instanceof Exception) {

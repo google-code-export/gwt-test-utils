@@ -6,7 +6,7 @@ import com.octo.gwt.test17.internal.dom.UserElement;
 public class OverrideTextAreaElement extends TextAreaElement implements UserElementWrapper {
 
 	private UserElement wrappedElement;
-	
+
 	public OverrideTextAreaElement(UserElement element) {
 		wrappedElement = element;
 	}
@@ -18,7 +18,7 @@ public class OverrideTextAreaElement extends TextAreaElement implements UserElem
 	public void setOverrideRows(int overrideRows) {
 		this.wrappedElement.setOverrideAttribute("rows", String.valueOf(overrideRows));
 	}
-	
+
 	public UserElement getWrappedElement() {
 		return wrappedElement;
 	}

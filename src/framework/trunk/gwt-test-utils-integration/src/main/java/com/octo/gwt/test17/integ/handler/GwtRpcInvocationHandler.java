@@ -21,10 +21,11 @@ public class GwtRpcInvocationHandler implements InvocationHandler {
 	private HashMap<Method, Method> methodTable;
 
 	private Map<Method, IDeserializationCallback> callbacks;
-	
+
 	private IGwtRpcExceptionHandler exceptionHandler;
 
-	public GwtRpcInvocationHandler(Class<?> asyncClazz, Object target, Map<Method, IDeserializationCallback> callbacks, IGwtRpcExceptionHandler exceptionHandler) {
+	public GwtRpcInvocationHandler(Class<?> asyncClazz, Object target, Map<Method, IDeserializationCallback> callbacks,
+			IGwtRpcExceptionHandler exceptionHandler) {
 		this.target = target;
 		this.callbacks = callbacks;
 		this.exceptionHandler = exceptionHandler;
@@ -42,7 +43,7 @@ public class GwtRpcInvocationHandler implements InvocationHandler {
 	@SuppressWarnings("unchecked")
 	public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 		Object[] subArgs = new Object[args.length - 1];
-		for(int i = 0; i < args.length - 1; i ++) {
+		for (int i = 0; i < args.length - 1; i++) {
 			subArgs[i] = args[i];
 		}
 		AsyncCallback<Object> callback = (AsyncCallback<Object>) args[args.length - 1];

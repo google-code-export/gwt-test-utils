@@ -4,7 +4,7 @@ import com.google.gwt.dom.client.Element;
 import com.octo.gwt.test17.internal.dom.UserElement;
 
 public class PatchFlexTable {
-	
+
 	public static void addCells(Element element, int rows, int nums) {
 		UserElement e = UserElement.overrideCast(element);
 

@@ -20,8 +20,7 @@ public class OverrideEvent extends Event {
 
 	/**
 	 * A bit-field, defined by {@link NativeEvent#BUTTON_LEFT},
-	 *         {@link NativeEvent#BUTTON_MIDDLE}, and
-	 *         {@link NativeEvent#BUTTON_RIGHT}
+	 * {@link NativeEvent#BUTTON_MIDDLE}, and {@link NativeEvent#BUTTON_RIGHT}
 	 */
 	private int overrideButton;
 
@@ -30,7 +29,7 @@ public class OverrideEvent extends Event {
 	public OverrideEvent(int type) {
 		this(type, NativeEvent.BUTTON_LEFT);
 	}
-	
+
 	public OverrideEvent(int type, int button) {
 		this.overrideType = type;
 		this.overrideButton = button;
@@ -112,7 +111,7 @@ public class OverrideEvent extends Event {
 	public void setOverrideTargetElement(Element overrideTargetElement) {
 		this.overrideTargetElement = overrideTargetElement;
 	}
-	
+
 	public int getOverrideButton() {
 		return overrideButton;
 	}

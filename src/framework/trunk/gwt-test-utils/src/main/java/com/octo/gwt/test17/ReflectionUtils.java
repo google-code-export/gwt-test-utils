@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Set;
 
 public class ReflectionUtils {
-	
+
 	@SuppressWarnings("unchecked")
 	public static <T> T getAnnotation(Class<?> clazz, Class<T> annotationClass) {
 		for (Annotation a : clazz.getDeclaredAnnotations()) {
@@ -26,7 +26,7 @@ public class ReflectionUtils {
 		}
 		return null;
 	}
-	
+
 	private static void recurseGetAnnotatedField(List<Field> list, Class<?> target, Class<?> annotationClass) {
 		for (Field f : target.getDeclaredFields()) {
 			for (Annotation a : f.getDeclaredAnnotations()) {
@@ -39,13 +39,13 @@ public class ReflectionUtils {
 			recurseGetAnnotatedField(list, target.getSuperclass(), annotationClass);
 		}
 	}
-	
+
 	public static List<Field> getAnnotatedField(Object target, Class<?> annotationClass) {
 		List<Field> l = new ArrayList<Field>();
 		recurseGetAnnotatedField(l, target.getClass(), annotationClass);
 		return l;
 	}
-	
+
 	public static Set<Field> findFieldByName(Class<?> clazz, String fieldName) {
 		Set<Field> set = new HashSet<Field>();
 		for (Field f : clazz.getFields()) {
@@ -78,7 +78,7 @@ public class ReflectionUtils {
 		field.setAccessible(true);
 		return field;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public static <T> T getPrivateFieldValue(Object target, String fieldName) {
 		Field field = getUniqueFieldByName(target.getClass(), fieldName);
@@ -100,7 +100,7 @@ public class ReflectionUtils {
 			throw new RuntimeException(e.getMessage() + " Unable to get static field, class " + fieldName + ", fieldClass " + clazz);
 		}
 	}
-	
+
 	public static void callClear(Object o) {
 		try {
 			if (o != null) {
@@ -112,11 +112,11 @@ public class ReflectionUtils {
 			throw new RuntimeException(e.getMessage() + " Unable to call clear method on class " + o.getClass());
 		}
 	}
-	
+
 	public static void getStaticAndCallClear(Class<?> clazz, String fieldName) {
 		callClear(getStaticFieldValue(clazz, fieldName));
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public static <T> T serializeUnserialize(Object o) {
 		if (o == null) {
@@ -142,7 +142,7 @@ public class ReflectionUtils {
 			e.printStackTrace();
 			throw new RuntimeException(e.getMessage() + " Unable to set field, class " + fieldName + ", fieldClass " + target.getClass());
 		}
-		
+
 	}
 
 	public static void setStaticField(Class<?> clazz, String fieldName, Object value) {
@@ -154,5 +154,5 @@ public class ReflectionUtils {
 			throw new RuntimeException(e.getMessage() + " Unable to set field, class " + fieldName + ", fieldClass " + clazz);
 		}
 	}
-	
+
 }

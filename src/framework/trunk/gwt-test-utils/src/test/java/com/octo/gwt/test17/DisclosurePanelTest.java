@@ -18,14 +18,14 @@ public class DisclosurePanelTest extends AbstractGWTTest {
 
 		Assert.assertEquals("gwt-DisclosurePanel gwt-DisclosurePanel-open", dp.getStyleName());
 	}
-	
+
 	@Test
 	public void checkTitle() {
 		DisclosurePanel dp = new DisclosurePanel();
 		dp.setTitle("title");
 		Assert.assertEquals("title", dp.getTitle());
 	}
-	
+
 	@Test
 	public void checkVisible() {
 		DisclosurePanel dp = new DisclosurePanel();

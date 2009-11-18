@@ -11,14 +11,14 @@ import com.octo.gwt.test17.test.AbstractGWTTest;
 public class RadioButtonTest extends AbstractGWTTest {
 
 	private boolean tested;
-	
+
 	@Test
 	public void checkName() {
 		RadioButton rb = new RadioButton("myRadioGroup", "foo");
 		rb.setName("name");
 		Assert.assertEquals("name", rb.getName());
 	}
-	
+
 	@Test
 	public void checkText() {
 		RadioButton rb = new RadioButton("myRadioGroup", "foo");
@@ -26,14 +26,14 @@ public class RadioButtonTest extends AbstractGWTTest {
 		rb.setText("text");
 		Assert.assertEquals("text", rb.getText());
 	}
-	
+
 	@Test
 	public void checkTitle() {
 		RadioButton rb = new RadioButton("myRadioGroup", "foo");
 		rb.setTitle("title");
 		Assert.assertEquals("title", rb.getTitle());
 	}
-	
+
 	@Test
 	public void checkHTML() {
 		RadioButton rb = new RadioButton("myRadioGroup", "<h1>foo</h1>", true);
@@ -41,7 +41,7 @@ public class RadioButtonTest extends AbstractGWTTest {
 		rb.setHTML("<h1>test</h1>");
 		Assert.assertEquals("<h1>test</h1>", rb.getHTML());
 	}
-	
+
 	@Test
 	public void checkVisible() {
 		RadioButton rb = new RadioButton("myRadioGroup", "foo");
@@ -64,16 +64,16 @@ public class RadioButtonTest extends AbstractGWTTest {
 		Assert.assertEquals(true, rb1.getValue());
 		Assert.assertEquals(false, rb2.getValue());
 	}
-	
+
 	@Test
 	public void checkRadioButtonName() {
 		// Make some radio buttons, all in one group.
 		RadioButton rb0 = new RadioButton("myRadioGroup");
-		
+
 		//Assert.assertEquals("myRadioGroup", rb0.getName());
-		
+
 		rb0.setName("myNewRadioGroup");
-		
+
 		Assert.assertEquals("myNewRadioGroup", rb0.getName());
 	}
 

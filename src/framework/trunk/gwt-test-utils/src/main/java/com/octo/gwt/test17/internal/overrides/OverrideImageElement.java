@@ -4,13 +4,13 @@ import com.google.gwt.dom.client.ImageElement;
 import com.octo.gwt.test17.internal.dom.UserElement;
 
 public class OverrideImageElement extends ImageElement implements UserElementWrapper {
-	
+
 	private UserElement wrappedElement;
-	
+
 	public OverrideImageElement(UserElement element) {
 		wrappedElement = element;
 	}
-	
+
 	public String getOverrideSrc() {
 		return wrappedElement.getOverrideAttribute("src");
 	}

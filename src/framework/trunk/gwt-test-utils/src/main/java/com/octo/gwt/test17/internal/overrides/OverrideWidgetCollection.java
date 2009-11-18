@@ -12,7 +12,7 @@ import com.octo.gwt.test17.internal.dom.UserElement;
 public class OverrideWidgetCollection extends WidgetCollection {
 
 	private HasWidgets overrideParent;
-	
+
 	public OverrideWidgetCollection(HasWidgets parent) {
 		super(parent);
 		overrideParent = parent;
@@ -21,10 +21,10 @@ public class OverrideWidgetCollection extends WidgetCollection {
 	@Override
 	public void insert(Widget w, int beforeIndex) {
 		super.insert(w, beforeIndex);
-		
+
 		Iterator<Widget> it = iterator();
-		int i=0;
-		
+		int i = 0;
+
 		while (it.hasNext()) {
 			Widget current = it.next();
 			// check if mock

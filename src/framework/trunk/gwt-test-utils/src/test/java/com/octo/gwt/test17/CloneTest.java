@@ -9,7 +9,7 @@ import com.google.gwt.user.client.ui.Anchor;
 import com.octo.gwt.test17.test.AbstractGWTTest;
 
 public class CloneTest extends AbstractGWTTest {
-	
+
 	@Test
 	public void cloneTest() throws Exception {
 		Element anchor = new Anchor().getElement();

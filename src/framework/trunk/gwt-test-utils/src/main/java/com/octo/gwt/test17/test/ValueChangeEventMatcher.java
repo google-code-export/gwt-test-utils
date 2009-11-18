@@ -8,11 +8,11 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 public class ValueChangeEventMatcher<T> implements IArgumentMatcher {
 
 	private T expectedValue;
-	
+
 	private ValueChangeEventMatcher(T expectedValue) {
 		this.expectedValue = expectedValue;
 	}
-	
+
 	public void appendTo(StringBuffer buffer) {
 		buffer.append(expectedValue.toString());
 	}
@@ -30,5 +30,5 @@ public class ValueChangeEventMatcher<T> implements IArgumentMatcher {
 		EasyMock.reportMatcher(new ValueChangeEventMatcher(expectedValue));
 		return null;
 	}
-	
+
 }

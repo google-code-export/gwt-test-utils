@@ -7,5 +7,5 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 public interface IGwtRpcExceptionHandler {
 
 	void handle(InvocationTargetException invocationTargetException, AsyncCallback<?> callback);
-	
+
 }

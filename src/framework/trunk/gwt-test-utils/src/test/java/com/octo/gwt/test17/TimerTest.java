@@ -8,10 +8,10 @@ import com.google.gwt.user.client.Timer;
 import com.octo.gwt.test17.test.AbstractGWTTest;
 
 public class TimerTest extends AbstractGWTTest {
-	
+
 	boolean bool;
 	int i;
-	
+
 	@Test
 	public void checkSchedule() throws Exception {
 		bool = false;
@@ -22,12 +22,12 @@ public class TimerTest extends AbstractGWTTest {
 				bool = !bool;
 			}
 		};
-		
+
 		timer.schedule(500);
-		
+
 		Assert.assertTrue("The token was not set after Timer has run", bool);
 	}
-	
+
 	@Test
 	public void checkScheduleRepeating() throws Exception {
 		i = 0;
@@ -38,9 +38,9 @@ public class TimerTest extends AbstractGWTTest {
 				i++;
 			}
 		};
-		
+
 		timer.scheduleRepeating(500);
-		
+
 		Assert.assertTrue("timer should be run more than once", i > 1);
 	}
 }

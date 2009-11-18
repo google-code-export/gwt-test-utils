@@ -32,7 +32,7 @@ public class DirectoryTestReader {
 	private HashMap<String, List<List<String>>> tests;
 
 	private HashMap<String, List<List<String>>> macroFiles;
-	
+
 	private List<Method> testMethods;
 
 	public DirectoryTestReader(Class<?> clazz) {
@@ -47,14 +47,14 @@ public class DirectoryTestReader {
 			throw new RuntimeException("Missing annotation \'@CsvMacros\' on class [" + clazz.getCanonicalName() + "]");
 		}
 		this.csvMacros = new ArrayList<String>();
-		for(String s : csvMacrosAnnotation.value()) {
+		for (String s : csvMacrosAnnotation.value()) {
 			csvMacros.add(s);
 		}
 		File directory = new File(this.csvDirectory);
 		if (!directory.exists()) {
 			throw new RuntimeException("Firectory [" + this.csvDirectory + "] does not exist");
 		}
-	
+
 		testMethods = new ArrayList<Method>();
 
 		try {
@@ -102,15 +102,15 @@ public class DirectoryTestReader {
 	public Set<String> getTestList() {
 		return Collections.unmodifiableSet(tests.keySet());
 	}
-	
+
 	public Set<String> getMacroFileList() {
 		return Collections.unmodifiableSet(macroFiles.keySet());
 	}
-	
+
 	public List<List<String>> getTest(String testName) {
 		return tests.get(testName);
 	}
-	
+
 	public List<List<String>> getMacroFile(String macroName) {
 		return macroFiles.get(macroName);
 	}
