@@ -2,6 +2,8 @@ package com.octo.gwt.test17.internal.overrides;
 
 import java.util.Iterator;
 
+import net.sf.cglib.proxy.Enhancer;
+
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.WidgetCollection;
@@ -24,9 +26,13 @@ public class OverrideWidgetCollection extends WidgetCollection {
 		int i=0;
 		
 		while (it.hasNext()) {
-			UserElement e = (UserElement) it.next().getElement();
-			e.setOverrideProperty("__index", String.valueOf(i++));
-			e.setOverrideProperty("__owner", String.valueOf(overrideParent.hashCode()));
+			Widget current = it.next();
+			// check if mock
+			if (!Enhancer.isEnhanced(current.getClass())) {
+				UserElement e = (UserElement) current.getElement();
+				e.setOverrideProperty("__index", String.valueOf(i++));
+				e.setOverrideProperty("__owner", String.valueOf(overrideParent.hashCode()));
+			}
 		}
 	}
 }
