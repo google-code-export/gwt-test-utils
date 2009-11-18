@@ -10,7 +10,7 @@
 
 	<properties>
 		<gwt.version>1.7.0</gwt.version>
-    <gwt.test.utils.version>0.2</gwt.test.utils.version>
+    <gwt.test.utils.version>0.3</gwt.test.utils.version>
 	</properties>
 
 	<dependencies>
