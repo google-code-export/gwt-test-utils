@@ -183,7 +183,6 @@ public abstract class AbstractGwtIntegrationShell {
 	 */
 	public void change(String objectLocalization) {
 		Widget widget = getObject(Widget.class, objectLocalization);
-		checkWidgetVisibleAndEnable(widget, objectLocalization);
 		WidgetUtils.change(widget);
 	}
 
@@ -195,77 +194,50 @@ public abstract class AbstractGwtIntegrationShell {
 	 */
 	public void click(String objectLocalization) {
 		Widget widget = getObject(Widget.class, objectLocalization);
-		checkWidgetVisibleAndEnable(widget, objectLocalization);
-
-		if (widget instanceof CheckBox) {
-			CheckBox checkBox = (CheckBox) widget;
-			checkBox.setValue(!checkBox.getValue());
-		}
-
 		WidgetUtils.click(widget);
 	}
 
-	/**
-	 * Launch a JavaScript "onClick" event on a panel which is expected to be
-	 * visible and enabled.
-	 * 
-	 * @param objectLocalization
-	 *            The targeted object localisation path.
-	 */
+	public void clickComplexPanel(String objectLocalization, String index) {
+		ComplexPanel widget = getObject(ComplexPanel.class, objectLocalization);
+		checkWidgetVisible(widget, objectLocalization);
+		WidgetUtils.click(widget, Integer.valueOf(index));
+	}
+	
 	public void clickPanel(String objectLocalization) {
 		FocusPanel widget = getObject(FocusPanel.class, objectLocalization);
 		checkWidgetVisibleAndEnable(widget, objectLocalization);
 		WidgetUtils.click(widget);
 	}
 
-	public void clickComplexPanel(String objectLocalization, String widgetIndex) {
-		ComplexPanel widget = getObject(ComplexPanel.class, objectLocalization);
-		checkWidgetVisibleAndEnable(widget, objectLocalization);
-		WidgetUtils.click(widget, Integer.valueOf(widgetIndex));
-	}
-
-	public void clickMenuItem(String objectLocalization, String menuItemIndex) {
-		MenuBar menuBar = getObject(MenuBar.class, objectLocalization);
-		checkWidgetVisibleAndEnable(menuBar, objectLocalization);
-
+	public void clickMenuItem(String menuBarLocalization, String menuItemIndex) {
+		MenuBar menuBar = getObject(MenuBar.class, menuBarLocalization);
 		List<MenuItem> menuItems = ReflectionUtils.getPrivateFieldValue(menuBar, "items");
 		MenuItem itemToClick = menuItems.get(Integer.parseInt(menuItemIndex));
-
-		if (!itemToClick.isVisible()) {
-			Assert.fail(csvRunner.getAssertionErrorMessagePrefix() + "MenuItem[" + menuItemIndex + "] have to be visible : " + objectLocalization + ", "
-					+ MenuBar.class.getCanonicalName());
-		}
-
 		WidgetUtils.click(menuBar, itemToClick);
 	}
 
 	public void focus(String objectLocalization) {
 		Widget widget = getObject(Widget.class, objectLocalization);
-		checkWidgetVisible(widget, objectLocalization);
 		WidgetUtils.focus(widget);
 	}
 
 	public void mouseDown(String objectLocalization) {
 		Widget widget = getObject(Widget.class, objectLocalization);
-		checkWidgetVisible(widget, objectLocalization);
 		WidgetUtils.mouseDown(widget);
 	}
 
 	public void mouseMove(String objectLocalization) {
 		Widget widget = getObject(Widget.class, objectLocalization);
-		checkWidgetVisible(widget, objectLocalization);
 		WidgetUtils.mouseMove(widget);
 	}
 
 	public void mouseUp(String objectLocalization) {
 		Widget widget = getObject(Widget.class, objectLocalization);
-		checkWidgetVisible(widget, objectLocalization);
 		WidgetUtils.mouseUp(widget);
 	}
 
 	public void mouseWheel(String objectLocalization) {
 		Widget widget = getObject(Widget.class, objectLocalization);
-		checkWidgetVisible(widget, objectLocalization);
 		WidgetUtils.mouseWheel(widget);
 	}
 
@@ -398,12 +370,14 @@ public abstract class AbstractGwtIntegrationShell {
 		return getObject(FocusWidget.class, objectLocalization);
 	}
 
-	protected void checkWidgetVisibleAndEnable(Widget widget, String objectLocalization) {
-		if (widget instanceof FocusWidget) {
-			if (!((FocusWidget) widget).isEnabled()) {
-				Assert.fail(csvRunner.getAssertionErrorMessagePrefix() + "Widget have to be enabled : " + objectLocalization);
-			}
+	protected void checkWidgetVisibleAndEnable(FocusWidget widget, String objectLocalization) {
+		if (!widget.isEnabled()) {
+			Assert.fail(csvRunner.getAssertionErrorMessagePrefix() + "Widget have to be enabled : " + objectLocalization);
 		}
+		checkWidgetVisible(widget, objectLocalization);
+	}
+
+	protected void checkWidgetVisibleAndEnable(FocusPanel widget, String objectLocalization) {
 		checkWidgetVisible(widget, objectLocalization);
 	}
 
