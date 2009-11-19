@@ -12,14 +12,12 @@ public class StyleTest extends AbstractGWTTest {
 	public void checkStyles() {
 		Button b = new Button();
 		b.setStylePrimaryName("toto");
-		//		b.setStyleName("bouh");
 		b.addStyleName("tata");
 		b.addStyleName("titi");
 
 		Assert.assertEquals("toto", b.getStylePrimaryName());
 		Assert.assertEquals(true, WidgetUtils.hasStyle(b, "tata"));
 		Assert.assertEquals(true, WidgetUtils.hasStyle(b, "titi"));
-		//		Assert.assertEquals(true, WidgetUtils.hasStyle(b, "bouh"));
 		Assert.assertEquals(true, WidgetUtils.hasStyle(b, "toto"));
 	}
 
