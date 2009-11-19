@@ -14,6 +14,7 @@ import org.junit.Assert;
 import org.junit.Before;
 
 import com.google.gwt.user.client.ui.CheckBox;
+import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.Grid;
@@ -182,6 +183,7 @@ public abstract class AbstractGwtIntegrationShell {
 	 */
 	public void change(String objectLocalization) {
 		Widget widget = getObject(Widget.class, objectLocalization);
+		checkWidgetVisibleAndEnable(widget, objectLocalization);
 		WidgetUtils.change(widget);
 	}
 
@@ -193,6 +195,13 @@ public abstract class AbstractGwtIntegrationShell {
 	 */
 	public void click(String objectLocalization) {
 		Widget widget = getObject(Widget.class, objectLocalization);
+		checkWidgetVisibleAndEnable(widget, objectLocalization);
+
+		if (widget instanceof CheckBox) {
+			CheckBox checkBox = (CheckBox) widget;
+			checkBox.setValue(!checkBox.getValue());
+		}
+
 		WidgetUtils.click(widget);
 	}
 
@@ -209,35 +218,54 @@ public abstract class AbstractGwtIntegrationShell {
 		WidgetUtils.click(widget);
 	}
 
-	public void clickMenuItem(String menuBarLocalization, String menuItemIndex) {
-		MenuBar menuBar = getObject(MenuBar.class, menuBarLocalization);
+	public void clickComplexPanel(String objectLocalization, String widgetIndex) {
+		ComplexPanel widget = getObject(ComplexPanel.class, objectLocalization);
+		checkWidgetVisibleAndEnable(widget, objectLocalization);
+		WidgetUtils.click(widget, Integer.valueOf(widgetIndex));
+	}
+
+	public void clickMenuItem(String objectLocalization, String menuItemIndex) {
+		MenuBar menuBar = getObject(MenuBar.class, objectLocalization);
+		checkWidgetVisibleAndEnable(menuBar, objectLocalization);
+
 		List<MenuItem> menuItems = ReflectionUtils.getPrivateFieldValue(menuBar, "items");
 		MenuItem itemToClick = menuItems.get(Integer.parseInt(menuItemIndex));
+
+		if (!itemToClick.isVisible()) {
+			Assert.fail(csvRunner.getAssertionErrorMessagePrefix() + "MenuItem[" + menuItemIndex + "] have to be visible : " + objectLocalization + ", "
+					+ MenuBar.class.getCanonicalName());
+		}
+
 		WidgetUtils.click(menuBar, itemToClick);
 	}
 
 	public void focus(String objectLocalization) {
 		Widget widget = getObject(Widget.class, objectLocalization);
+		checkWidgetVisible(widget, objectLocalization);
 		WidgetUtils.focus(widget);
 	}
 
 	public void mouseDown(String objectLocalization) {
 		Widget widget = getObject(Widget.class, objectLocalization);
+		checkWidgetVisible(widget, objectLocalization);
 		WidgetUtils.mouseDown(widget);
 	}
 
 	public void mouseMove(String objectLocalization) {
 		Widget widget = getObject(Widget.class, objectLocalization);
+		checkWidgetVisible(widget, objectLocalization);
 		WidgetUtils.mouseMove(widget);
 	}
 
 	public void mouseUp(String objectLocalization) {
 		Widget widget = getObject(Widget.class, objectLocalization);
+		checkWidgetVisible(widget, objectLocalization);
 		WidgetUtils.mouseUp(widget);
 	}
 
 	public void mouseWheel(String objectLocalization) {
 		Widget widget = getObject(Widget.class, objectLocalization);
+		checkWidgetVisible(widget, objectLocalization);
 		WidgetUtils.mouseWheel(widget);
 	}
 
@@ -370,14 +398,12 @@ public abstract class AbstractGwtIntegrationShell {
 		return getObject(FocusWidget.class, objectLocalization);
 	}
 
-	protected void checkWidgetVisibleAndEnable(FocusWidget widget, String objectLocalization) {
-		if (!widget.isEnabled()) {
-			Assert.fail(csvRunner.getAssertionErrorMessagePrefix() + "Widget have to be enabled : " + objectLocalization);
+	protected void checkWidgetVisibleAndEnable(Widget widget, String objectLocalization) {
+		if (widget instanceof FocusWidget) {
+			if (!((FocusWidget) widget).isEnabled()) {
+				Assert.fail(csvRunner.getAssertionErrorMessagePrefix() + "Widget have to be enabled : " + objectLocalization);
+			}
 		}
-		checkWidgetVisible(widget, objectLocalization);
-	}
-
-	protected void checkWidgetVisibleAndEnable(FocusPanel widget, String objectLocalization) {
 		checkWidgetVisible(widget, objectLocalization);
 	}
 
@@ -426,21 +452,21 @@ public abstract class AbstractGwtIntegrationShell {
 					if ("go".equals(cmd) || "getObject".equals(cmd)) {
 						try {
 							getObject(param, os);
-						} catch (AssertionError e) {
+						} catch (Throwable e) {
 							os.println("Not found : " + e.getMessage());
 						}
 					} else if ("lc".equals(cmd) || "listContent".equals(cmd)) {
 						try {
 							Object o = getObject(param, os);
 							printGetter(o, o.getClass(), os);
-						} catch (AssertionError e) {
+						} catch (Throwable e) {
 							os.println("Not found : " + e.getMessage());
 						}
 					} else if ("click".equals(cmd)) {
 						try {
 							click(param);
 							os.println("Click successful");
-						} catch (AssertionError e) {
+						} catch (Throwable e) {
 							os.println("Unable to click : " + e.getMessage());
 						}
 					} else {
