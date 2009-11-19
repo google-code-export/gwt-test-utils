@@ -21,18 +21,18 @@ import com.google.gwt.i18n.client.Constants.DefaultStringValue;
 
 public class PatchUtils {
 
-	static class StrangeCharacterMapping {
+	static class SequenceReplacement {
 
-		private char from;
+		private String regex;
 
-		private char to;
+		private String to;
 
-		public String map(String s) {
-			return s.replace(from, to);
+		public String treat(String s) {
+			return s.replaceAll(regex, to);
 		}
 
-		public StrangeCharacterMapping(char from, char to) {
-			this.from = from;
+		public SequenceReplacement(String regex, String to) {
+			this.regex = regex;
 			this.to = to;
 		}
 
@@ -44,7 +44,7 @@ public class PatchUtils {
 
 	private static final String REDEFINE_CLASS = "com.octo.gwt.test17.bootstrap.Startup";
 
-	private static final List<StrangeCharacterMapping> strangeCharacterMappingList = new ArrayList<StrangeCharacterMapping>();
+	private static final List<SequenceReplacement> sequenceReplacementList = new ArrayList<SequenceReplacement>();
 
 	/**
 	 * Classpool pour javassist
@@ -228,8 +228,8 @@ public class PatchUtils {
 		try {
 			Properties properties = (Properties) loadProperties.invoke(null, inputStream, "UTF-8");
 			for (Entry<Object, Object> entry : properties.entrySet()) {
-				for (StrangeCharacterMapping strangeCharacterMapping : strangeCharacterMappingList) {
-					entry.setValue(strangeCharacterMapping.map((String) entry.getValue()));
+				for (SequenceReplacement strangeCharacterMapping : sequenceReplacementList) {
+					entry.setValue(strangeCharacterMapping.treat((String) entry.getValue()));
 				}
 			}
 			return properties;
@@ -260,7 +260,11 @@ public class PatchUtils {
 						+ clazz.getCanonicalName() + "]. Please use the DefaultStringValue annotation");
 			}
 
-			return v.value();
+			String result = v.value();
+			for (SequenceReplacement strangeCharacterMapping : sequenceReplacementList) {
+				result = strangeCharacterMapping.treat(result);
+			}
+			return result;
 		}
 		if (method.getReturnType() == String.class) {
 			return line;
@@ -305,12 +309,12 @@ public class PatchUtils {
 		}
 	}
 
-	public static void clearStrangeCharacterMapping() {
-		strangeCharacterMappingList.clear();
+	public static void clearSequenceReplacement() {
+		sequenceReplacementList.clear();
 	}
 
-	public static void addStrangeCharacterMapping(char from, char to) {
-		strangeCharacterMappingList.add(new StrangeCharacterMapping(from, to));
+	public static void replaceSequenceInProperties(String regex, String to) {
+		sequenceReplacementList.add(new SequenceReplacement(regex, to));
 	}
 
 }
