@@ -16,4 +16,9 @@ public class PatchImage {
 		}
 	}
 
+	public static void setWidth(Image image, int width) {
+		ImageElement e = (ImageElement) getImageElement(image);
+		e.setWidth(width);
+	}
+
 }

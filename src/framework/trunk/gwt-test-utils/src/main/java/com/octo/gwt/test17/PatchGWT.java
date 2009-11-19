@@ -197,7 +197,9 @@ public class PatchGWT {
 				new Patch("setStyleName", staticCall(PatchUIObject.class, "setStyleName", "$1, $2")).setArgClasses(new Class<?>[] {
 						com.google.gwt.dom.client.Element.class, String.class }),
 				new Patch("getElement", staticCall(PatchUIObject.class, "cast", "element")), new Patch("getAbsoluteLeft", "0"),
-				new Patch("getAbsoluteTop", "0"), new Patch("extractLengthValue", "1.0"), });
+				new Patch("getAbsoluteTop", "0"), new Patch("extractLengthValue", "1.0"),
+				new Patch("setWidth", staticCall(PatchUIObject.class, "setPropertyOnElement", "this.getElement(), \"width\", $1")),
+				new Patch("setHeight", staticCall(PatchUIObject.class, "setPropertyOnElement", "this.getElement(), \"height\", $1")), });
 
 		PatchUtils.applyPatches(Widget.class, new Patch[] { new Patch("onAttach", "") });
 
@@ -370,11 +372,13 @@ public class PatchGWT {
 
 		PatchUtils.applyPatches(LabelElement.class, new Patch[] { new Patch("setHtmlFor", ""), });
 
-		PatchUtils.applyPatches(Image.class, new Patch[] { new Patch("getImageElement", staticCall(PatchImage.class, "getImageElement", "this")), });
+		PatchUtils.applyPatches(Image.class, new Patch[] { new Patch("getImageElement", staticCall(PatchImage.class, "getImageElement", "this")) });
 
 		PatchUtils.applyPatches(ImageElement.class, new Patch[] {
 				new Patch("setSrc", castThisAndCall(OverrideImageElement.class, "setOverrideSrc", "$1")),
-				new Patch("getSrc", castThisAndCall(OverrideImageElement.class, "getOverrideSrc")), });
+				new Patch("getSrc", castThisAndCall(OverrideImageElement.class, "getOverrideSrc")),
+				new Patch("getHeight", castThisAndCall(OverrideImageElement.class, "getOverrideHeight")),
+				new Patch("getWidth", castThisAndCall(OverrideImageElement.class, "getOverrideWidth")), });
 
 		PatchUtils.applyPatches(Frame.class, new Patch[] { new Patch("getFrameElement", staticCall(PatchFrame.class, "getFrameElement", "this")), });
 

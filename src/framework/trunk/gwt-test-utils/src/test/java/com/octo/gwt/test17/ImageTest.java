@@ -33,4 +33,46 @@ public class ImageTest extends AbstractGWTTest {
 		i.setVisible(false);
 		Assert.assertEquals(false, i.isVisible());
 	}
+
+	@Test
+	public void checkWidthPx() {
+		Image i = new Image();
+		i.setWidth("20px");
+		Assert.assertEquals(20, i.getWidth());
+	}
+
+	@Test
+	public void checkWidthEm() {
+		Image i = new Image();
+		i.setWidth("20em");
+		Assert.assertEquals(20, i.getWidth());
+	}
+
+	@Test
+	public void checkWidth() {
+		Image i = new Image();
+		i.setWidth("20");
+		Assert.assertEquals(20, i.getWidth());
+	}
+
+	@Test
+	public void checkHeightPx() {
+		Image i = new Image();
+		i.setHeight("20px");
+		Assert.assertEquals(20, i.getHeight());
+	}
+
+	@Test
+	public void checkHeightEm() {
+		Image i = new Image();
+		i.setHeight("20em");
+		Assert.assertEquals(20, i.getHeight());
+	}
+
+	@Test
+	public void checkHeight() {
+		Image i = new Image();
+		i.setHeight("20");
+		Assert.assertEquals(20, i.getHeight());
+	}
 }

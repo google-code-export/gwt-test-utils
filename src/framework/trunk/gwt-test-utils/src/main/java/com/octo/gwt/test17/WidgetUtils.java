@@ -53,6 +53,12 @@ public class WidgetUtils {
 		parent.onBrowserEvent(new OverrideEvent(Event.ONCLICK, clickedItem.getElement()));
 	}
 
+	public static void click(MenuBar parent, int clickedItemIndex) {
+		List<MenuItem> menuItems = ReflectionUtils.getPrivateFieldValue(parent, "items");
+		MenuItem itemToClick = menuItems.get(clickedItemIndex);
+		parent.onBrowserEvent(new OverrideEvent(Event.ONCLICK, itemToClick.getElement()));
+	}
+
 	public static void click(Grid grid, int row, int column) {
 		grid.onBrowserEvent(new OverrideEvent(Event.ONCLICK, grid.getWidget(row, column).getElement()));
 	}
