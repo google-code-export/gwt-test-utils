@@ -16,6 +16,7 @@ public class OverrideStyle extends Style {
 		this.parent = parent;
 		this.stringPropList = new Hashtable<String, String>();
 		this.stringPropList.put("visible", "true");
+		this.stringPropList.put("whiteSpace", "nowrap");
 	}
 
 	public UserElement getParent() {

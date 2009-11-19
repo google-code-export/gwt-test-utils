@@ -15,6 +15,16 @@ public class ListBoxTest extends AbstractGWTTest {
 		Assert.assertEquals("name", listBox.getName());
 	}
 
+	@SuppressWarnings("deprecation")
+	@Test
+	public void checkIsMultipleSelect() {
+		ListBox listBox = new ListBox(false);
+		Assert.assertEquals(false, listBox.isMultipleSelect());
+
+		listBox.setMultipleSelect(true);
+		Assert.assertEquals(true, listBox.isMultipleSelect());
+	}
+
 	@Test
 	public void checkTabIndex() {
 		ListBox listBox = new ListBox(false);

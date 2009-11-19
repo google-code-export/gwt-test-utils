@@ -71,4 +71,12 @@ public class OverrideSelectElement extends SelectElement {
 		wrapped.setOverrideAttribute("name", overrideName);
 	}
 
+	public boolean isOverrideMultiple() {
+		return Boolean.valueOf(wrapped.getOverrideAttribute("multiple"));
+	}
+
+	public void setOverrideMultiple(boolean overrideMultiple) {
+		wrapped.setOverrideAttribute("multiple", String.valueOf(overrideMultiple));
+	}
+
 }

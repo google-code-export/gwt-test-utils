@@ -315,7 +315,9 @@ public class PatchGWT {
 				new Patch("getSize", castThisAndCall(OverrideSelectElement.class, "getOverrideSize")),
 				new Patch("setSize", castThisAndCall(OverrideSelectElement.class, "setOverrideSize", "$1")),
 				new Patch("getName", castThisAndCall(OverrideSelectElement.class, "getOverrideName")),
-				new Patch("setName", castThisAndCall(OverrideSelectElement.class, "setOverrideName", "$1")), });
+				new Patch("setName", castThisAndCall(OverrideSelectElement.class, "setOverrideName", "$1")),
+				new Patch("isMultiple", castThisAndCall(OverrideSelectElement.class, "isOverrideMultiple")),
+				new Patch("setMultiple", castThisAndCall(OverrideSelectElement.class, "setOverrideMultiple", "$1")), });
 
 		PatchUtils.applyPatches(NodeList.class, new Patch[] {
 				new Patch("getLength", staticCall(PatchNodeList.class, "getLengthUserNodeList", "this")),
