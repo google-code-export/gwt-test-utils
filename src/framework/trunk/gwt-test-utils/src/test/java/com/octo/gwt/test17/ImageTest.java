@@ -56,6 +56,12 @@ public class ImageTest extends AbstractGWTTest {
 	}
 
 	@Test
+	public void checkNullWidth() {
+		Image i = new Image();
+		Assert.assertEquals(0, i.getWidth());
+	}
+
+	@Test
 	public void checkHeightPx() {
 		Image i = new Image();
 		i.setHeight("20px");
@@ -74,5 +80,11 @@ public class ImageTest extends AbstractGWTTest {
 		Image i = new Image();
 		i.setHeight("20");
 		Assert.assertEquals(20, i.getHeight());
+	}
+
+	@Test
+	public void checkNullHeight() {
+		Image i = new Image();
+		Assert.assertEquals(0, i.getHeight());
 	}
 }

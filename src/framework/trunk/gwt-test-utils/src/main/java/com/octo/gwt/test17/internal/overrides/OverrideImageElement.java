@@ -47,6 +47,9 @@ public class OverrideImageElement extends ImageElement implements UserElementWra
 	}
 
 	private static int getDimension(String dimension) {
+		if (dimension == null || dimension.length() == 0)
+			return 0;
+
 		Matcher m = PATTERN.matcher(dimension);
 		if (m.matches())
 			return Integer.valueOf(m.group(1));
