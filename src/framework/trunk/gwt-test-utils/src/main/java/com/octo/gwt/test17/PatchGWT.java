@@ -185,17 +185,12 @@ public class PatchGWT {
 
 		PatchUtils.applyPatches(UIObject.class, new Patch[] {
 				new Patch("setElement", "setElement(" + staticCall(PatchUIObject.class, "cast", "$1") + ")").setFinal(),
-				new Patch("setStylePrimaryName", staticCall(PatchUIObject.class, "setStylePrimaryName", "$1, $2")).setStatic(),
-				new Patch("getStylePrimaryName", staticCall(PatchUIObject.class, "getStylePrimaryName", "$1")).setStatic(),
+				new Patch("updatePrimaryAndDependentStyleNames", staticCall(PatchUIObject.class, "updatePrimaryAndDependentStyleNames", "$1, $2")),
 				new Patch("setTitle", staticCall(PatchUIObject.class, "setPropertyOnElement", "this.getElement(), \"title\", $1")),
 				new Patch("getTitle", staticCall(PatchUIObject.class, "getPropertyOnElement", "this.getElement(), \"title\"")),
 				new Patch("setVisible", staticCall(PatchUIObject.class, "setPropertyOnElement", "$1, \"visible\", $2")).setNative(),
 				new Patch("isVisible", staticCall(PatchUIObject.class, "getPropertyOnElementBoolean", "$1, \"visible\"")).setNative(),
 				new Patch("getStyleName", staticCall(PatchUIObject.class, "getStyleName", "$1")).setStatic(),
-				new Patch("setStyleName", staticCall(PatchUIObject.class, "addOrRemoveStyle", "$1, $2, $3")).setArgClasses(new Class<?>[] {
-						com.google.gwt.dom.client.Element.class, String.class, Boolean.TYPE }),
-				new Patch("setStyleName", staticCall(PatchUIObject.class, "setStyleName", "$1, $2")).setArgClasses(new Class<?>[] {
-						com.google.gwt.dom.client.Element.class, String.class }),
 				new Patch("getElement", staticCall(PatchUIObject.class, "cast", "element")), new Patch("getAbsoluteLeft", "0"),
 				new Patch("getAbsoluteTop", "0"), new Patch("extractLengthValue", "1.0"),
 				new Patch("setWidth", staticCall(PatchUIObject.class, "setPropertyOnElement", "this.getElement(), \"width\", $1")),

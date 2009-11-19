@@ -2,11 +2,13 @@ package com.octo.gwt.test17.internal;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.ui.UIObject;
 import com.octo.gwt.test17.internal.dom.UserElement;
 import com.octo.gwt.test17.internal.overrides.OverrideStyle;
 import com.octo.gwt.test17.internal.overrides.UserElementWrapper;
 
-public class PatchUIObject {
+public class PatchUIObject extends UIObject {
 
 	public static String getPropertyOnElement(Object o, String propName) {
 		UserElement e = UserElement.overrideCast(o);
@@ -15,63 +17,35 @@ public class PatchUIObject {
 		return result != null ? result : "";
 	}
 
-	public static String getStylePrimaryName(Element elem) {
-		String fullClassName = getStyleName(elem);
-
-		// The primary style name is always the first token of the full CSS class
-		// name. There can be no leading whitespace in the class name, so it's not
-		// necessary to trim() it.
-		int spaceIdx = fullClassName.indexOf(' ');
-		if (spaceIdx >= 0) {
-			return fullClassName.substring(0, spaceIdx);
-		}
-		return fullClassName;
-	}
-
-	public static void setStylePrimaryName(Element e, String styleName) {
-		String style = getStyleName(e);
-		String oldPrimary = getStylePrimaryName(e);
-
-		if (oldPrimary.length() > 0) {
-			setPropertyOnElement(e, "className", style.replaceAll(oldPrimary, styleName + " "));
-		} else {
-			setPropertyOnElement(e, "className", styleName.trim() + " ");
-		}
-	}
-
 	public static String getStyleName(Element e) {
-		return getPropertyOnElement(e, "className");
+		String s = DOM.getElementProperty(e.<com.google.gwt.user.client.Element> cast(), "className");
+		return s == null ? "" : s;
 	}
 
-	public static void setStyleName(Element e, String styleName) {
-		String style = getStyleName(e);
-		String primaryStyle = getStylePrimaryName(e);
+	public static void updatePrimaryAndDependentStyleNames(Element elem, String newPrimaryStyle) {
 
-		if (!style.contains(styleName)) {
-			if (primaryStyle.length() > 0 && !style.equals(primaryStyle)) {
-				setPropertyOnElement(e, "className", primaryStyle + " " + styleName);
-			} else {
-				setPropertyOnElement(e, "className", styleName);
-			}
-		}
-	}
+		String[] classes = getStyleName(elem).split(" ");
 
-	public static void addOrRemoveStyle(Element e, String styleName, boolean add) {
-		if (!add) {
-			String style = getPropertyOnElement(e, "className");
-			if (style.contains(styleName)) {
-				int startIndex = style.indexOf(styleName);
-				startIndex = (startIndex > 0) ? startIndex - 1 : startIndex;
-
-				style = style.substring(0, startIndex) + style.substring(style.indexOf(styleName) + styleName.length());
-			}
-			setPropertyOnElement(e, "className", style);
+		if (classes.length < 1) {
+			setStyleName(elem, newPrimaryStyle);
 		} else {
+			String oldPrimaryStyle = classes[0];
+			int oldPrimaryStyleLen = oldPrimaryStyle.length();
 
-			String style = getPropertyOnElement(e, "className");
-			if (!style.contains(styleName)) {
-				setPropertyOnElement(e, "className", (style + " " + styleName).trim());
+			classes[0] = newPrimaryStyle;
+			for (int i = 1; i < classes.length; i++) {
+				String name = classes[i];
+				if (name.length() > oldPrimaryStyleLen && name.charAt(oldPrimaryStyleLen) == '-' && name.indexOf(oldPrimaryStyle) == 0) {
+					classes[i] = newPrimaryStyle + name.substring(oldPrimaryStyleLen);
+				}
 			}
+
+			StringBuilder sb = new StringBuilder();
+			for (String name : classes) {
+				sb.append(name + " ");
+			}
+
+			setStyleName(elem, sb.toString().trim());
 		}
 	}
 
