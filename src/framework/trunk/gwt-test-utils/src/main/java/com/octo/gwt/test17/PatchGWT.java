@@ -30,6 +30,7 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.impl.DOMImpl;
 import com.google.gwt.user.client.impl.ElementMapperImpl;
 import com.google.gwt.user.client.impl.HistoryImpl;
@@ -143,6 +144,9 @@ public class PatchGWT {
 		ReflectionUtils.setStaticField(NumberFormat.class, "cachedScientificFormat", null);
 		ReflectionUtils.setStaticField(NumberFormat.class, "cachedPercentFormat", null);
 		ReflectionUtils.setStaticField(NumberFormat.class, "cachedCurrencyFormat", null);
+		
+		ReflectionUtils.setStaticField(Window.class, "handlers", null);
+		ReflectionUtils.setStaticField(Event.class, "handlers", null);
 
 		PatchTimer.clear();
 	}
@@ -362,6 +366,8 @@ public class PatchGWT {
 				new Patch("getTabIndex", castThisAndCall(OverrideAnchorElement.class, "getOverrideTabIndex")),
 				new Patch("setName", castThisAndCall(OverrideAnchorElement.class, "setOverrideName", "$1")),
 				new Patch("getName", castThisAndCall(OverrideAnchorElement.class, "getOverrideName")),
+				new Patch("setTarget", castThisAndCall(OverrideAnchorElement.class, "setOverrideTarget", "$1")),
+				new Patch("getTarget", castThisAndCall(OverrideAnchorElement.class, "getOverrideTarget")),
 				new Patch("setHref", castThisAndCall(OverrideAnchorElement.class, "setOverrideHref", "$1")),
 				new Patch("getHref", castThisAndCall(OverrideAnchorElement.class, "getOverrideHref")),
 				new Patch("setAccessKey", castThisAndCall(OverrideAnchorElement.class, "setOverrideAccessKey", "$1")), new Patch("focus", ""),
