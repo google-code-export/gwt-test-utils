@@ -10,12 +10,10 @@ import java.util.Locale;
 import java.util.Properties;
 import java.util.Map.Entry;
 
-import javassist.CannotCompileException;
 import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtConstructor;
 import javassist.CtMethod;
-import javassist.NotFoundException;
 
 import com.google.gwt.i18n.client.Constants.DefaultStringValue;
 
@@ -64,61 +62,6 @@ public class PatchUtils {
 	public static Method loadProperties;
 
 	/**
-	 * Search method to patch in clazz
-	 * 
-	 * @param clazz
-	 * @param p
-	 * @return
-	 * @throws NotFoundException
-	 */
-	private static CtMethod findMethod(CtClass clazz, Patch p) throws NotFoundException {
-		List<CtMethod> l = new ArrayList<CtMethod>();
-		for (CtMethod m : clazz.getDeclaredMethods()) {
-			if (!m.getName().equals(p.methodName)) {
-				continue;
-			}
-
-			l.add(m);
-
-			if ((p.argsClasses != null) && (m.getParameterTypes().length != p.argsClasses.length)) {
-				l.remove(m);
-				continue;
-			}
-			if ((p.isFinal != null) && (Modifier.isFinal(m.getModifiers()) != p.isFinal)) {
-				l.remove(m);
-				continue;
-			}
-			if ((p.isStatic != null) && (Modifier.isStatic(m.getModifiers()) != p.isStatic)) {
-				l.remove(m);
-				continue;
-			}
-			if ((p.isNative != null) && (Modifier.isNative(m.getModifiers()) != p.isNative)) {
-				l.remove(m);
-				continue;
-			}
-
-			if (p.argsClasses != null) {
-				int i = 0;
-				for (Class<?> argClass : p.argsClasses) {
-					if (!argClass.getName().equals(m.getParameterTypes()[i].getName())) {
-						l.remove(m);
-						continue;
-					}
-					i++;
-				}
-			}
-
-		}
-		if (l.size() == 1) {
-			return l.get(0);
-		}
-		if (l.size() == 0) {
-			throw new RuntimeException("Unable to find " + p.methodName + " in class " + clazz.getName());
-		}
-		throw new RuntimeException("Multiple method " + p.methodName + " in class " + clazz.getName() + ", you have to set discriminators");
-	}
-
-	/**
 	 * Apply a list of patches on a clazz, and return new class bytecode
 	 * 
 	 * @param cp
@@ -134,40 +77,10 @@ public class PatchUtils {
 		}
 		CtClass ctClazz = cp.get(className);
 		for (Patch p : list) {
-			CtMethod m = findMethod(ctClazz, p);
-			ctClazz.removeMethod(m);
-			if (Modifier.isNative(m.getModifiers())) {
-				m.setModifiers(m.getModifiers() - Modifier.NATIVE);
-			}
-			String code = p.code;
-			try {
-				if (code.startsWith(Patch.INSERT_BEFORE)) {
-					m.insertBefore(code.substring(Patch.INSERT_BEFORE.length()));
-				} else {
-					if (code.indexOf("return") == -1 && code.indexOf("throw") == -1) {
-						code = "return " + code;
-					}
-					if (!code.endsWith(";")) {
-						code += ";";
-					}
-					m.setBody("{" + code + "}");
-				}
-			} catch (CannotCompileException e) {
-				System.err.println("Unable to compile code in class " + className);
-				System.err.println(code);
-				e.printStackTrace();
-				throw new RuntimeException("Unable to compile code", e);
-			}
-			ctClazz.addMethod(m);
+			p.apply(ctClazz);
 		}
 
-		try {
-			return ctClazz.toBytecode();
-		} catch (Exception e) {
-			System.err.println("Unable to compile code in class " + className);
-			e.printStackTrace();
-			throw new RuntimeException("Unable to compile code for class " + className, e);
-		}
+		return ctClazz.toBytecode();
 	}
 
 	/**
