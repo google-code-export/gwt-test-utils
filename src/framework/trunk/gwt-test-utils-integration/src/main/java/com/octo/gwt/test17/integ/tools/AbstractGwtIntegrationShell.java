@@ -202,7 +202,7 @@ public abstract class AbstractGwtIntegrationShell {
 		checkWidgetVisible(widget, objectLocalization);
 		WidgetUtils.click(widget, Integer.valueOf(index));
 	}
-	
+
 	public void clickPanel(String objectLocalization) {
 		FocusPanel widget = getObject(FocusPanel.class, objectLocalization);
 		checkWidgetVisibleAndEnable(widget, objectLocalization);
@@ -269,7 +269,8 @@ public abstract class AbstractGwtIntegrationShell {
 		try {
 			Class<?> clazz = Class.forName(className);
 			Object o = getObject(Object.class, objectLocalisation);
-			Assert.assertTrue(clazz.isAssignableFrom(o.getClass()));
+			Assert.assertTrue(csvRunner.getAssertionErrorMessagePrefix() + "Target object is not an instance of [" + className
+					+ "] but an instance of [" + o.getClass().getCanonicalName() + "]", clazz.isAssignableFrom(o.getClass()));
 		} catch (ClassNotFoundException e) {
 			Assert.fail("Cannot assert instance of [" + className + "] because the class cannot be found");
 		}
