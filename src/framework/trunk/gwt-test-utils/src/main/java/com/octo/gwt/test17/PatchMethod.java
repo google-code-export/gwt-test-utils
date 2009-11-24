@@ -11,8 +11,6 @@ import javassist.NotFoundException;
 
 public class PatchMethod implements Patch {
 
-	public static final String INSERT_BEFORE = "INSERT_BEFORE ";
-
 	public String methodName, code;
 
 	private Boolean isFinal, isNative, isStatic;
@@ -60,8 +58,8 @@ public class PatchMethod implements Patch {
 		}
 
 		try {
-			if (code.startsWith(PatchMethod.INSERT_BEFORE)) {
-				m.insertBefore(code.substring(PatchMethod.INSERT_BEFORE.length()));
+			if (code.startsWith(Patch.INSERT_BEFORE)) {
+				m.insertBefore(code.substring(Patch.INSERT_BEFORE.length()));
 			} else {
 				if (code.indexOf("return") == -1 && code.indexOf("throw") == -1) {
 					code = "return " + code;
