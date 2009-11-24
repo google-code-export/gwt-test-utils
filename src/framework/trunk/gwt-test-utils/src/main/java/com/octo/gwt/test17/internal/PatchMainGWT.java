@@ -23,6 +23,7 @@ import com.google.gwt.user.client.ui.impl.HyperlinkImpl;
 import com.google.gwt.user.client.ui.impl.PopupImpl;
 import com.google.gwt.user.client.ui.impl.TextBoxImpl;
 import com.octo.gwt.test17.GwtCreateHandler;
+import com.octo.gwt.test17.IGWTLogHandler;
 import com.octo.gwt.test17.PatchConstants;
 import com.octo.gwt.test17.PatchUtils;
 import com.octo.gwt.test17.PatchUtils.BodyGetter;
@@ -34,6 +35,8 @@ import com.octo.gwt.test17.internal.overrides.OverrideInputElement;
 public class PatchMainGWT {
 
 	public static GwtCreateHandler gwtCreateHandler = null;
+	
+	public static IGWTLogHandler gwtLogHandler = null;
 
 	public static Hashtable<Class<?>, Object> createClass = new Hashtable<Class<?>, Object>();
 
@@ -159,5 +162,11 @@ public class PatchMainGWT {
 			return PatchUtils.extractFromPropertiesFile(wrappedClass, arg1);
 		}
 
+	}
+	
+	public static void log(String message, Throwable t) {
+		if (gwtLogHandler != null) {
+			gwtLogHandler.log(message, t);
+		}
 	}
 }

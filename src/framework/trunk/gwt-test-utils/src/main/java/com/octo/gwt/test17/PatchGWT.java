@@ -121,6 +121,7 @@ public class PatchGWT {
 		OverrideHistory.reset();
 		PatchMainGWT.createClass.clear();
 		PatchMainGWT.gwtCreateHandler = null;
+		PatchMainGWT.gwtLogHandler = null;
 
 		WidgetCollection widgetCollection = ReflectionUtils.getPrivateFieldValue(RootPanel.get(), "children");
 		Widget[] array = ReflectionUtils.getPrivateFieldValue(widgetCollection, "array");
@@ -185,7 +186,8 @@ public class PatchGWT {
 		hasBeenPatched = true;
 
 		PatchUtils.applyPatches(GWT.class,
-				new Patch[] { new PatchMethod("create", staticCall(PatchMainGWT.class, "create", "$1")),
+				new Patch[] { new PatchMethod("log", staticCall(PatchMainGWT.class, "log", "$1, $2")),
+						new PatchMethod("create", staticCall(PatchMainGWT.class, "create", "$1")),
 						new PatchMethod("getHostPageBaseURL", "\"getHostPageBaseURL/getModuleName\""),
 						new PatchMethod("getModuleName", "\"getModuleName\""), });
 
@@ -486,6 +488,10 @@ public class PatchGWT {
 
 	public static void setLocale(Locale locale) {
 		LOCALE = locale;
+	}
+
+	public static void setLogHandler(IGWTLogHandler gwtLogHandler) {
+		PatchMainGWT.gwtLogHandler = gwtLogHandler;
 	}
 
 }
