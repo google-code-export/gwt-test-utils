@@ -9,6 +9,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.FocusHandler;
+import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.dom.client.KeyPressEvent;
@@ -122,14 +123,20 @@ public class EventsTest extends AbstractGWTTest {
 		Button b = new Button();
 		b.addKeyDownHandler(new KeyDownHandler() {
 
-			public void onKeyDown(KeyDownEvent arg0) {
-				tested = !tested;
+			public void onKeyDown(KeyDownEvent event) {
+				if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER)
+					tested = !tested;
 			}
 		});
 
-		//simule the event
-		keyDown(b);
+		// Test
+		keyDown(b, KeyCodes.KEY_ESCAPE);
+		// Assert
+		Assert.assertFalse("onKeyDown event should not be triggered", tested);
 
+		// Test 2
+		keyDown(b, KeyCodes.KEY_ENTER);
+		// Assert 2
 		Assert.assertTrue("onKeyDown event was not triggered", tested);
 	}
 
@@ -139,14 +146,20 @@ public class EventsTest extends AbstractGWTTest {
 		Button b = new Button();
 		b.addKeyPressHandler(new KeyPressHandler() {
 
-			public void onKeyPress(KeyPressEvent arg0) {
-				tested = !tested;
+			public void onKeyPress(KeyPressEvent event) {
+				if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER)
+					tested = !tested;
 			}
 		});
 
-		//simule the event
-		keyPress(b);
+		// Test
+		keyDown(b, KeyCodes.KEY_ESCAPE);
+		// Assert
+		Assert.assertFalse("onKeyPress event should not be triggered", tested);
 
+		// Test 2
+		keyPress(b, KeyCodes.KEY_ENTER);
+		// Assert 2
 		Assert.assertTrue("onKeyPress event was not triggered", tested);
 	}
 
@@ -156,14 +169,20 @@ public class EventsTest extends AbstractGWTTest {
 		Button b = new Button();
 		b.addKeyUpHandler(new KeyUpHandler() {
 
-			public void onKeyUp(KeyUpEvent arg0) {
-				tested = !tested;
+			public void onKeyUp(KeyUpEvent event) {
+				if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER)
+					tested = !tested;
 			}
 		});
 
-		//simule the event
-		keyUp(b);
+		// Test
+		keyDown(b, KeyCodes.KEY_ESCAPE);
+		// Assert
+		Assert.assertFalse("onKeyUp event should not be triggered", tested);
 
+		// Test 2
+		keyUp(b, KeyCodes.KEY_ENTER);
+		// Assert 2
 		Assert.assertTrue("onKeyUp event was not triggered", tested);
 	}
 

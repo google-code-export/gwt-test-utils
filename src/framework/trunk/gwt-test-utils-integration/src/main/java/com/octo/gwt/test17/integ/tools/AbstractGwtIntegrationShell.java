@@ -13,6 +13,7 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 
+import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.FocusPanel;
@@ -25,6 +26,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
+import com.octo.gwt.test17.ArrayUtils;
 import com.octo.gwt.test17.GwtCreateHandler;
 import com.octo.gwt.test17.PatchGWT;
 import com.octo.gwt.test17.ReflectionUtils;
@@ -313,14 +315,14 @@ public abstract class AbstractGwtIntegrationShell {
 		TextBox textBox = (TextBox) widget;
 		checkWidgetVisibleAndEnable(textBox, objectLocalization);
 		textBox.setText(value);
-		WidgetUtils.keyUp(textBox);
+		WidgetUtils.keyUp(textBox, KeyCodes.KEY_ENTER);
 		WidgetUtils.change(textBox);
 	}
 
 	public void fillInvisibleTextBox(String value, String objectLocalization) {
 		TextBox textBox = getObject(TextBox.class, objectLocalization);
 		textBox.setText(value);
-		WidgetUtils.keyUp(textBox);
+		WidgetUtils.keyUp(textBox, KeyCodes.KEY_ENTER);
 		WidgetUtils.change(textBox);
 	}
 
@@ -344,7 +346,7 @@ public abstract class AbstractGwtIntegrationShell {
 		SuggestBox suggestBox = getObject(SuggestBox.class, objectLocalization);
 		checkWidgetVisible(suggestBox, objectLocalization);
 		suggestBox.setText(value);
-		WidgetUtils.keyUp(suggestBox);
+		WidgetUtils.keyUp(suggestBox, KeyCodes.KEY_ENTER);
 	}
 
 	public void isVisible(String objectLocalization) {
@@ -398,7 +400,7 @@ public abstract class AbstractGwtIntegrationShell {
 	private Object getObject(String param, PrintStream os) {
 		Object o = getObject(Object.class, param);
 		os.println("Object found, class " + o.getClass().getCanonicalName());
-		if (contains(baseList, o.getClass())) {
+		if (ArrayUtils.contains(baseList, o.getClass())) {
 			os.println("Value : " + o.toString());
 		}
 		return o;
@@ -458,7 +460,7 @@ public abstract class AbstractGwtIntegrationShell {
 		for (Method m : clazz.getDeclaredMethods()) {
 			if (m.getName().startsWith("get")) {
 				os.print("Getter [" + clazz.getSimpleName() + "] " + m.getName());
-				if (contains(baseList, m.getReturnType()) && m.getParameterTypes().length == 0) {
+				if (ArrayUtils.contains(baseList, m.getReturnType()) && m.getParameterTypes().length == 0) {
 					try {
 						Object res = m.invoke(o);
 						os.print(", value " + res);
@@ -471,7 +473,7 @@ public abstract class AbstractGwtIntegrationShell {
 		for (Field f : clazz.getDeclaredFields()) {
 			if (!Modifier.isStatic(f.getModifiers()) && !Modifier.isFinal(f.getModifiers())) {
 				os.print("Field [" + clazz.getSimpleName() + "] [" + f.getClass().getSimpleName() + "] " + f.getName());
-				if (contains(baseList, f.getType())) {
+				if (ArrayUtils.contains(baseList, f.getType())) {
 					try {
 						Object res = f.get(o);
 						os.print(", value " + res);
@@ -484,15 +486,6 @@ public abstract class AbstractGwtIntegrationShell {
 		if (clazz.getSuperclass() != null) {
 			printGetter(o, clazz.getSuperclass(), os);
 		}
-	}
-
-	private static boolean contains(Object[] array, Object valueToFind) {
-		for (int i = 0; i < array.length; i++) {
-			if (valueToFind.equals(array[i])) {
-				return true;
-			}
-		}
-		return false;
 	}
 
 	// MODE INTERACTIF

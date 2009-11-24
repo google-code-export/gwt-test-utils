@@ -8,6 +8,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -25,6 +26,65 @@ public class ReflectionUtils {
 			return getAnnotation(clazz.getSuperclass(), annotationClass);
 		}
 		return null;
+	}
+
+	/**
+	 * Attempt to find a {@link Method} on the supplied class with the supplied
+	 * name and parameter types. Searches all superclasses up to
+	 * <code>Object</code>.
+	 * <p>
+	 * Returns <code>null</code> if no {@link Method} can be found.
+	 * 
+	 * @param clazz
+	 *            the class to introspect
+	 * @param name
+	 *            the name of the method
+	 * @param paramTypes
+	 *            the parameter types of the method (may be <code>null</code> to
+	 *            indicate any signature)
+	 * @return the Method object, or <code>null</code> if none found
+	 */
+	public static Method findMethod(Class<?> clazz, String name, Class<?>[] paramTypes) {
+		Class<?> searchType = clazz;
+		while (!Object.class.equals(searchType) && searchType != null) {
+			Method[] methods = (searchType.isInterface() ? searchType.getMethods() : searchType.getDeclaredMethods());
+			for (int i = 0; i < methods.length; i++) {
+				Method method = methods[i];
+				if (name.equals(method.getName()) && (paramTypes == null || Arrays.equals(paramTypes, method.getParameterTypes()))) {
+					return method;
+				}
+			}
+			searchType = searchType.getSuperclass();
+		}
+		return null;
+	}
+
+	/**
+	 * Perform the given callback operation on all matching methods of the given
+	 * class and superclasses.
+	 * <p>
+	 * The same named method occurring on subclass and superclass will appear
+	 * twice, unless excluded by a {@link MethodFilter}.
+	 * 
+	 * @param targetClass
+	 *            class to start looking at
+	 * @param mc
+	 *            the callback to invoke for each method
+	 * @see #doWithMethods(Class, MethodCallback, MethodFilter)
+	 */
+	public static void doWithMethods(Class<?> targetClass, MethodCallback mc) throws IllegalArgumentException {
+		// Keep backing up the inheritance hierarchy.
+		do {
+			Method[] methods = targetClass.getDeclaredMethods();
+			for (int i = 0; i < methods.length; i++) {
+				try {
+					mc.doWith(methods[i]);
+				} catch (IllegalAccessException ex) {
+					throw new IllegalStateException("Shouldn't be illegal to access method '" + methods[i].getName() + "': " + ex);
+				}
+			}
+			targetClass = targetClass.getSuperclass();
+		} while (targetClass != null);
 	}
 
 	private static void recurseGetAnnotatedField(List<Field> list, Class<?> target, Class<?> annotationClass) {
@@ -153,6 +213,20 @@ public class ReflectionUtils {
 			e.printStackTrace();
 			throw new RuntimeException(e.getMessage() + " Unable to set field, class " + fieldName + ", fieldClass " + clazz);
 		}
+	}
+
+	/**
+	 * Action to take on each method.
+	 */
+	public static interface MethodCallback {
+
+		/**
+		 * Perform an operation using the given method.
+		 * 
+		 * @param method
+		 *            the method to operate on
+		 */
+		void doWith(Method method) throws IllegalArgumentException, IllegalAccessException;
 	}
 
 }

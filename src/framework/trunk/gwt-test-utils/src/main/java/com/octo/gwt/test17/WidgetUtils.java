@@ -71,16 +71,16 @@ public class WidgetUtils {
 		target.onBrowserEvent(new OverrideEvent(Event.ONFOCUS));
 	}
 
-	public static void keyDown(Widget target) {
-		target.onBrowserEvent(new OverrideEvent(Event.ONKEYDOWN));
+	public static void keyDown(Widget target, int keyCode) {
+		target.onBrowserEvent(new OverrideEvent(Event.ONKEYDOWN).setOverrideKeyCode(keyCode));
 	}
 
-	public static void keyPress(Widget target) {
-		target.onBrowserEvent(new OverrideEvent(Event.ONKEYPRESS));
+	public static void keyPress(Widget target, int keyCode) {
+		target.onBrowserEvent(new OverrideEvent(Event.ONKEYPRESS).setOverrideKeyCode(keyCode));
 	}
 
-	public static void keyUp(Widget target) {
-		target.onBrowserEvent(new OverrideEvent(Event.ONKEYUP));
+	public static void keyUp(Widget target, int keyCode) {
+		target.onBrowserEvent(new OverrideEvent(Event.ONKEYUP).setOverrideKeyCode(keyCode));
 	}
 
 	public static void mouseMove(Widget target) {

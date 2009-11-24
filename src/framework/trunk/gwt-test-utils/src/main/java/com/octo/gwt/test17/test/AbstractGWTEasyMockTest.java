@@ -13,9 +13,11 @@ import org.junit.Before;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Widget;
+import com.octo.gwt.test17.ArrayUtils;
 import com.octo.gwt.test17.Mock;
 import com.octo.gwt.test17.PatchGWT;
 import com.octo.gwt.test17.ReflectionUtils;
+import com.octo.gwt.test17.ReflectionUtils.MethodCallback;
 
 public abstract class AbstractGWTEasyMockTest extends AbstractGWTTest {
 
@@ -137,5 +139,28 @@ public abstract class AbstractGWTEasyMockTest extends AbstractGWTTest {
 			w.getParent();
 			EasyMock.expectLastCall().andReturn(null);
 		}
+	}
+
+	protected <T> T createMockAndKeepOneMethod(Class<T> clazz, String methodName) {
+		return createMockAndKeepMethods(clazz, true, ReflectionUtils.findMethod(clazz, methodName, null));
+	}
+
+	@SuppressWarnings("unchecked")
+	protected <T> T createMockAndKeepMethods(Class<T> clazz, final boolean keepSetters, final Method... list) {
+		final List<Method> l = new ArrayList<Method>();
+		ReflectionUtils.doWithMethods(clazz, new MethodCallback() {
+
+			public void doWith(Method method) throws IllegalArgumentException, IllegalAccessException {
+				if (!ArrayUtils.contains(list, method)) {
+					if (!keepSetters || !method.getName().startsWith("set") || method.getReturnType() != void.class) {
+						l.add(method);
+					}
+				}
+			}
+
+		});
+		Object o = EasyMock.createMock(clazz, l.toArray(new Method[] {}));
+		mockedObject.put(clazz, o);
+		return (T) o;
 	}
 }
