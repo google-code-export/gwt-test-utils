@@ -6,8 +6,6 @@ import com.octo.gwt.test17.internal.dom.UserElement;
 public class OverrideAnchorElement extends AnchorElement implements UserElementWrapper {
 
 	private UserElement wrappedElement;
-	
-	private String overrideTarget;
 
 	public OverrideAnchorElement(UserElement element) {
 		wrappedElement = element;
@@ -50,11 +48,11 @@ public class OverrideAnchorElement extends AnchorElement implements UserElementW
 	}
 
 	public String getOverrideTarget() {
-		return overrideTarget;
+		return this.wrappedElement.getOverrideAttribute("target");
 	}
 
 	public void setOverrideTarget(String overrideTarget) {
-		this.overrideTarget = overrideTarget;
+		this.wrappedElement.setOverrideAttribute("target", overrideTarget);
 	}
 
 	public static OverrideAnchorElement overrideCast(Object o) {

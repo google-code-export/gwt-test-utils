@@ -9,6 +9,15 @@ import com.octo.gwt.test17.test.AbstractGWTTest;
 public class AnchorTest extends AbstractGWTTest {
 
 	@Test
+	public void checkTarget() {
+		Anchor a = new Anchor();
+		a.setFocus(true);
+
+		a.setTarget("myTarget");
+		Assert.assertEquals("myTarget", a.getTarget());
+	}
+
+	@Test
 	public void checkText() {
 		Anchor a = new Anchor("foo");
 		Assert.assertEquals("foo", a.getText());
