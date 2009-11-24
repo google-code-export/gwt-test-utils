@@ -11,7 +11,7 @@ public class JSONArrayTest extends AbstractGWTTest {
 	@Test
 	public void checkEmptyConstructor() throws Exception {
 
-		PatchGWT.patchClazz(JSONArray.class, new Patch[] { new PatchConstructor(null, new Class<?>[] {}), });
+		PatchGWT.patch(JSONArray.class, new Patch[] { new PatchConstructor(null, new Class<?>[] {}), });
 
 		JSONArray jsonArray = new JSONArray();
 

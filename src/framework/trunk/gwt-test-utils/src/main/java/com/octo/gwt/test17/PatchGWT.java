@@ -159,7 +159,7 @@ public class PatchGWT {
 		PatchMainGWT.gwtCreateHandler = gwtCreateHandler;
 	}
 
-	public static void patchClazz(Class<?> clazz, Patch[] listOfPatch) throws Exception {
+	public static void patch(Class<?> clazz, Patch[] listOfPatch) throws Exception {
 		if (alreadyPatched.contains(clazz.getCanonicalName())) {
 			return;
 		}
