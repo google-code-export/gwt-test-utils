@@ -176,6 +176,8 @@ public class PatchDOMImpl {
 						superClazz = cp.get("com.google.gwt.dom.client.AnchorElement");
 					} else if ("textarea".equals(tag)) {
 						superClazz = cp.get("com.google.gwt.dom.client.TextAreaElement");
+					} else if (tag.matches("^h[123456]$")) {
+						superClazz = cp.get("com.google.gwt.dom.client.HeadingElement");
 					}
 				}
 				if (superClazz == null) {
