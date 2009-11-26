@@ -5,6 +5,8 @@ import org.junit.Test;
 
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.HeadingElement;
+import com.google.gwt.dom.client.LIElement;
+import com.google.gwt.dom.client.UListElement;
 import com.octo.gwt.test17.test.AbstractGWTTest;
 
 public class DOMTest extends AbstractGWTTest {
@@ -55,6 +57,22 @@ public class DOMTest extends AbstractGWTTest {
 		HeadingElement h6 = Document.get().createHElement(6);
 
 		Assert.assertEquals("h6", h6.getTagName());
+	}
+
+	@Test
+	public void checkCreateUListElement() {
+
+		UListElement ul = (UListElement) Document.get().createElement("ul");
+
+		Assert.assertEquals("ul", ul.getTagName());
+	}
+
+	@Test
+	public void checkCreateLIElement() {
+
+		LIElement ul = (LIElement) Document.get().createElement("li");
+
+		Assert.assertEquals("li", ul.getTagName());
 	}
 
 }

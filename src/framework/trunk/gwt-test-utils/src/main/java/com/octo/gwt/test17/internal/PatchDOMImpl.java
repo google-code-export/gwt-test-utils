@@ -178,6 +178,10 @@ public class PatchDOMImpl {
 						superClazz = cp.get("com.google.gwt.dom.client.TextAreaElement");
 					} else if (tag.matches("^h[123456]$")) {
 						superClazz = cp.get("com.google.gwt.dom.client.HeadingElement");
+					} else if (tag.matches("ul")) {
+						superClazz = cp.get("com.google.gwt.dom.client.UListElement");
+					} else if (tag.matches("li")) {
+						superClazz = cp.get("com.google.gwt.dom.client.LIElement");
 					}
 				}
 				if (superClazz == null) {
