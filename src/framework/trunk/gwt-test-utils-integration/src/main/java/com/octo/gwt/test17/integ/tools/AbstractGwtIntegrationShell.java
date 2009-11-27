@@ -199,7 +199,7 @@ public abstract class AbstractGwtIntegrationShell {
 		WidgetUtils.click(widget);
 	}
 
-	public void clickComplexPanel(String objectLocalization, String index) {
+	public void clickComplexPanel(String index, String objectLocalization) {
 		ComplexPanel widget = getObject(ComplexPanel.class, objectLocalization);
 		checkWidgetVisible(widget, objectLocalization);
 		WidgetUtils.click(widget, Integer.valueOf(index));
@@ -334,12 +334,28 @@ public abstract class AbstractGwtIntegrationShell {
 		WidgetUtils.change(listBox);
 	}
 
-	public void selectInListBox(String value, String objectLocalization) {
+	public void selectInListBox(String index, String objectLocalization) {
 		ListBox listBox = getObject(ListBox.class, objectLocalization);
 		checkWidgetVisibleAndEnable(listBox, objectLocalization);
-		listBox.setSelectedIndex(Integer.parseInt(value));
+		listBox.setSelectedIndex(Integer.parseInt(index));
 		WidgetUtils.click(listBox);
 		WidgetUtils.change(listBox);
+	}
+	
+	public void selectInListBoxByText(String regex, String objectLocalization) {
+		ListBox listBox = getObject(ListBox.class, objectLocalization);
+		checkWidgetVisibleAndEnable(listBox, objectLocalization);
+		
+		int selectedIndex = WidgetUtils.getIndexInListBox(listBox, regex);
+		
+		if (selectedIndex != -1) {
+			listBox.setSelectedIndex(selectedIndex);
+			WidgetUtils.click(listBox);
+			WidgetUtils.change(listBox);
+		} else {
+			Assert.fail("Regex \"" + regex + "\" has not been matched in ListBox values");
+		}
+		
 	}
 
 	public void fillSuggestBox(String value, String objectLocalization) {

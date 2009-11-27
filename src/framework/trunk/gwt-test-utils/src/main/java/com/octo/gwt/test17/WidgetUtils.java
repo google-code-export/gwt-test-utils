@@ -9,6 +9,7 @@ import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.Grid;
+import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.UIObject;
@@ -22,6 +23,17 @@ import com.octo.gwt.test17.internal.overrides.OverrideEvent;
  * 
  */
 public class WidgetUtils {
+
+	public static int getIndexInListBox(ListBox listBox, String regex) {
+		int selectedIndex = -1;
+
+		for (int i = 0; i < listBox.getItemCount() && selectedIndex == -1; i++) {
+			if (listBox.getItemText(i) != null && listBox.getItemText(i).matches(regex))
+				selectedIndex = i;
+		}
+
+		return selectedIndex;
+	}
 
 	public static List<MenuItem> getMenuItems(MenuBar menuBar) {
 		return ReflectionUtils.getPrivateFieldValue(menuBar, "items");
