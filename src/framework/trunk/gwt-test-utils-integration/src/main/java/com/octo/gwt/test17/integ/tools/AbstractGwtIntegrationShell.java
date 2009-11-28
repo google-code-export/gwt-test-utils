@@ -196,7 +196,7 @@ public abstract class AbstractGwtIntegrationShell {
 	 */
 	public void click(String objectLocalization) {
 		Widget widget = getObject(Widget.class, objectLocalization);
-		WidgetUtils.click(widget);
+		WidgetUtils.click(widget, csvRunner.getAssertionErrorMessagePrefix(), objectLocalization);
 	}
 
 	public void clickComplexPanel(String index, String objectLocalization) {
@@ -208,7 +208,7 @@ public abstract class AbstractGwtIntegrationShell {
 	public void clickPanel(String objectLocalization) {
 		FocusPanel widget = getObject(FocusPanel.class, objectLocalization);
 		checkWidgetVisibleAndEnable(widget, objectLocalization);
-		WidgetUtils.click(widget);
+		WidgetUtils.click(widget, csvRunner.getAssertionErrorMessagePrefix(), objectLocalization);
 	}
 
 	public void clickMenuItem(String menuBarLocalization, String menuItemIndex) {
@@ -216,6 +216,12 @@ public abstract class AbstractGwtIntegrationShell {
 		List<MenuItem> menuItems = ReflectionUtils.getPrivateFieldValue(menuBar, "items");
 		MenuItem itemToClick = menuItems.get(Integer.parseInt(menuItemIndex));
 		WidgetUtils.click(menuBar, itemToClick);
+	}
+	
+	public void clickOnTableRow(String rowIndex, String objectLocalization) {
+		Grid grid = getObject(Grid.class, objectLocalization);
+		checkWidgetVisible(grid, objectLocalization);
+		WidgetUtils.click(grid, Integer.parseInt(rowIndex), 0);
 	}
 
 	public void focus(String objectLocalization) {
@@ -276,12 +282,6 @@ public abstract class AbstractGwtIntegrationShell {
 		} catch (ClassNotFoundException e) {
 			Assert.fail("Cannot assert instance of [" + className + "] because the class cannot be found");
 		}
-	}
-
-	public void clickOnTableRow(String rowIndex, String objectLocalization) {
-		Grid grid = getObject(Grid.class, objectLocalization);
-		checkWidgetVisible(grid, objectLocalization);
-		WidgetUtils.click(grid, Integer.parseInt(rowIndex), 0);
 	}
 
 	public void selectListBox(String value, String objectLocalization) {

@@ -57,7 +57,17 @@ public class WidgetUtils {
 			checkBox.setValue(!checkBox.getValue());
 		}
 
-		checkIsClickable(target, "click");
+		checkIsClickable(target, null, null);
+		target.onBrowserEvent(new OverrideEvent(Event.ONCLICK));
+	}
+
+	public static void click(Widget target, String errorPrefix, String widgetName) {
+		if (target instanceof CheckBox) {
+			CheckBox checkBox = (CheckBox) target;
+			checkBox.setValue(!checkBox.getValue());
+		}
+
+		checkIsClickable(target, errorPrefix, widgetName);
 		target.onBrowserEvent(new OverrideEvent(Event.ONCLICK));
 	}
 
@@ -111,23 +121,51 @@ public class WidgetUtils {
 		target.onBrowserEvent(new OverrideEvent(Event.ONMOUSEWHEEL));
 	}
 
-	private static void checkIsClickable(Widget widget, String event) {
-		checkWidgetVisible(widget, event);
+	private static void checkIsClickable(Widget widget, String errorPrefix, String widgetName) {
+		String action = "click";
+		checkWidgetVisible(widget, errorPrefix, widgetName, action);
 
 		if (widget instanceof FocusWidget) {
 			if (!((FocusWidget) widget).isEnabled()) {
-				Assert.fail("Widget has to be enabled to apply the browser event \"" + event + "\"");
+				Assert.fail(createFailureMessage(errorPrefix, widgetName, action, "enabled"));
 			}
 		}
 	}
 
-	private static void checkWidgetVisible(Widget widget, String event) {
+	private static void checkWidgetVisible(Widget widget, String errorPrefix, String widgetName, String action) {
+
+		String failureMessage = (errorPrefix != null) ? errorPrefix : "";
+
+		failureMessage += "Widget " + ((widgetName != null) ? "[" + widgetName + "]" : "");
+
+		failureMessage += " and its possible parents have to be enabled to apply the browser \"" + action + "\" event";
+
 		if (!widget.isVisible()) {
-			Assert.fail("Widget has to be enabled to apply the browser event \"" + event + "\"");
+			Assert.fail(createFailureMessage(errorPrefix, widgetName, action, "visible"));
 		}
 		if (widget.getParent() != null) {
-			checkWidgetVisible(widget.getParent(), event);
+			checkWidgetVisible(widget.getParent(), errorPrefix, widgetName, action);
 		}
+	}
+
+	private static String createFailureMessage(String errorPrefix, String widgetName, String action, String attribut) {
+		StringBuilder sb = new StringBuilder();
+
+		if (errorPrefix != null)
+			sb.append(errorPrefix);
+		if (widgetName != null)
+			sb.append("Widget [" + widgetName + "]");
+		else
+			sb.append("The targeted widget");
+
+		sb.append(" and its possible parents have to be ");
+		sb.append(attribut);
+		sb.append("to apply the browser \"");
+		sb.append(action);
+		sb.append("\" event");
+
+		return sb.toString();
+
 	}
 
 }
