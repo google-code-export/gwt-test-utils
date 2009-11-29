@@ -51,7 +51,7 @@ public class PatchMethod implements Patch {
 	}
 
 	public void apply(CtClass classToPatch) throws Exception {
-		CtMethod m = findMethod(classToPatch, this);
+		CtMethod m = findMethod(classToPatch);
 		classToPatch.removeMethod(m);
 		if (Modifier.isNative(m.getModifiers())) {
 			m.setModifiers(m.getModifiers() - Modifier.NATIVE);
@@ -80,39 +80,38 @@ public class PatchMethod implements Patch {
 	 * Search method to patch in clazz
 	 * 
 	 * @param clazz
-	 * @param p
 	 * @return
 	 * @throws NotFoundException
 	 */
-	private static CtMethod findMethod(CtClass clazz, PatchMethod p) throws NotFoundException {
+	private CtMethod findMethod(CtClass clazz) throws NotFoundException {
 		List<CtMethod> l = new ArrayList<CtMethod>();
 		for (CtMethod m : clazz.getDeclaredMethods()) {
-			if (!m.getName().equals(p.methodName)) {
+			if (!m.getName().equals(methodName)) {
 				continue;
 			}
 
 			l.add(m);
 
-			if ((p.argsClasses != null) && (m.getParameterTypes().length != p.argsClasses.length)) {
+			if ((argsClasses != null) && (m.getParameterTypes().length != argsClasses.length)) {
 				l.remove(m);
 				continue;
 			}
-			if ((p.isFinal != null) && (Modifier.isFinal(m.getModifiers()) != p.isFinal)) {
+			if ((isFinal != null) && (Modifier.isFinal(m.getModifiers()) != isFinal)) {
 				l.remove(m);
 				continue;
 			}
-			if ((p.isStatic != null) && (Modifier.isStatic(m.getModifiers()) != p.isStatic)) {
+			if ((isStatic != null) && (Modifier.isStatic(m.getModifiers()) != isStatic)) {
 				l.remove(m);
 				continue;
 			}
-			if ((p.isNative != null) && (Modifier.isNative(m.getModifiers()) != p.isNative)) {
+			if ((isNative != null) && (Modifier.isNative(m.getModifiers()) != isNative)) {
 				l.remove(m);
 				continue;
 			}
 
-			if (p.argsClasses != null) {
+			if (argsClasses != null) {
 				int i = 0;
-				for (Class<?> argClass : p.argsClasses) {
+				for (Class<?> argClass : argsClasses) {
 					if (!argClass.getName().equals(m.getParameterTypes()[i].getName())) {
 						l.remove(m);
 						continue;
@@ -126,8 +125,8 @@ public class PatchMethod implements Patch {
 			return l.get(0);
 		}
 		if (l.size() == 0) {
-			throw new RuntimeException("Unable to find " + p.methodName + " in class " + clazz.getName());
+			throw new RuntimeException("Unable to find " + methodName + " in class " + clazz.getName());
 		}
-		throw new RuntimeException("Multiple method " + p.methodName + " in class " + clazz.getName() + ", you have to set discriminators");
+		throw new RuntimeException("Multiple method " + methodName + " in class " + clazz.getName() + ", you have to set discriminators");
 	}
 }
