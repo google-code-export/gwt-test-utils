@@ -23,14 +23,12 @@ public class PatchConstructor implements Patch {
 	}
 
 	public void apply(CtClass classToPatch) throws Exception {
-		CtConstructor c = findConstructor(classToPatch, this);
+		CtConstructor c = findConstructor(classToPatch);
 		classToPatch.removeConstructor(c);
 
 		try {
 			if (code == null) {
 				c.setBody(null);
-			} else if (code.startsWith(Patch.INSERT_BEFORE)) {
-				c.insertBefore(code.substring(Patch.INSERT_BEFORE.length()));
 			} else {
 				if (!code.endsWith(";")) {
 					code += ";";
@@ -45,16 +43,16 @@ public class PatchConstructor implements Patch {
 
 	}
 
-	private static CtConstructor findConstructor(CtClass ctClass, PatchConstructor patch) throws NotFoundException {
+	private CtConstructor findConstructor(CtClass ctClass) throws NotFoundException {
 		List<CtConstructor> l = new ArrayList<CtConstructor>();
 
 		for (CtConstructor c : ctClass.getDeclaredConstructors()) {
-			if (patch.argsClasses == null || patch.argsClasses.length == c.getParameterTypes().length) {
+			if (argsClasses == null || argsClasses.length == c.getParameterTypes().length) {
 				l.add(c);
 
-				if (patch.argsClasses != null) {
+				if (argsClasses != null) {
 					int i = 0;
-					for (Class<?> argClass : patch.argsClasses) {
+					for (Class<?> argClass : argsClasses) {
 						if (!argClass.getName().equals(c.getParameterTypes()[i].getName())) {
 							l.remove(c);
 							continue;
@@ -74,5 +72,4 @@ public class PatchConstructor implements Patch {
 		throw new RuntimeException("Multiple constructor in class " + ctClass.getName() + ", you have to set parameter types discriminators");
 
 	}
-
 }
