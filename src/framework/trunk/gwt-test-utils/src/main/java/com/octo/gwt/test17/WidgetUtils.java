@@ -160,7 +160,7 @@ public class WidgetUtils {
 
 		sb.append(" and its possible parents have to be ");
 		sb.append(attribut);
-		sb.append("to apply the browser \"");
+		sb.append(" to apply the browser \"");
 		sb.append(action);
 		sb.append("\" event");
 
