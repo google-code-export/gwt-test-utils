@@ -126,6 +126,11 @@ public abstract class AbstractGwtIntegrationShell {
 		if (!failOnError) {
 			return null;
 		}
+		
+		if (o == null) {
+			Assert.fail(csvRunner.getAssertionErrorMessagePrefix() + "Targeted object [" + objectLocalization + "] is null");
+		}
+		
 		Assert.fail(csvRunner.getAssertionErrorMessagePrefix() + "Wrong object type, not a " + clazz.getCanonicalName() + " : "
 				+ o.getClass().getCanonicalName());
 		return null;
