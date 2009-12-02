@@ -6,7 +6,7 @@
   <xsl:output method="text"/>
 
   <xsl:template match="/log/logentry">
-    <xsl:value-of select="@revision"/><xsl:text> </xsl:text><xsl:value-of select="msg"/><xsl:text> </xsl:text>[<xsl:value-of select="author"/>]
+    <xsl:value-of select="@revision"/><xsl:text> </xsl:text><xsl:value-of select="msg"/><xsl:text> [</xsl:text><xsl:value-of select="author"/><xsl:text>]</xsl:text>
   </xsl:template>
 
 </xsl:stylesheet>
