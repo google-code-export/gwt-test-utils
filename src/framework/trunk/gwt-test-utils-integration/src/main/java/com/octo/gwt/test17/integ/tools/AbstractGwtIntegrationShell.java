@@ -145,7 +145,7 @@ public abstract class AbstractGwtIntegrationShell {
 		String s = getObject(String.class, objectLocalization);
 		Assert.assertEquals(csvRunner.getAssertionErrorMessagePrefix() + "Wrong string", value, s);
 	}
-
+	
 	/**
 	 * 
 	 * @param value
@@ -252,6 +252,16 @@ public abstract class AbstractGwtIntegrationShell {
 	public void mouseWheel(String objectLocalization) {
 		Widget widget = getObject(Widget.class, objectLocalization);
 		WidgetUtils.mouseWheel(widget);
+	}
+	
+	public void mouseOut(String objectLocalization) {
+		Widget widget = getObject(Widget.class, objectLocalization);
+		WidgetUtils.mouseOut(widget);
+	}
+	
+	public void mouseOver(String objectLocalization) {
+		Widget widget = getObject(Widget.class, objectLocalization);
+		WidgetUtils.mouseOver(widget);
 	}
 
 	public void hasStyle(String style, String objectLocalization) {

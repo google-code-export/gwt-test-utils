@@ -20,6 +20,10 @@ import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.dom.client.MouseMoveEvent;
 import com.google.gwt.event.dom.client.MouseMoveHandler;
+import com.google.gwt.event.dom.client.MouseOutEvent;
+import com.google.gwt.event.dom.client.MouseOutHandler;
+import com.google.gwt.event.dom.client.MouseOverEvent;
+import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.event.dom.client.MouseWheelEvent;
@@ -256,6 +260,42 @@ public class EventsTest extends AbstractGWTTest {
 		mouseWheel(b);
 
 		Assert.assertTrue("onMouseWheel event was not triggered", tested);
+	}
+	
+	@Test
+	public void checkMouseOverEvent() {
+		tested = false;
+		Button b = new Button();
+		b.addMouseOverHandler(new MouseOverHandler() {
+			
+			public void onMouseOver(MouseOverEvent event) {
+				tested = !tested;	
+			}
+			
+		});
+
+		//simule the event
+		mouseOver(b);
+
+		Assert.assertTrue("onMouseOver event was not triggered", tested);
+	}
+	
+	@Test
+	public void checkMouseOutEvent() {
+		tested = false;
+		Button b = new Button();
+		b.addMouseOutHandler(new MouseOutHandler() {
+			
+			public void onMouseOut(MouseOutEvent event) {
+				tested = !tested;
+			}
+			
+		});
+
+		//simule the event
+		mouseOut(b);
+
+		Assert.assertTrue("onMouseOut event was not triggered", tested);
 	}
 
 }

@@ -280,8 +280,10 @@ public class PatchGWT {
 
 		PatchUtils.applyPatches(JavaScriptObject.class, new Patch[] { new PatchMethod("cast", staticCall(PatchUIObject.class, "cast", "this")), });
 
-		PatchUtils.applyPatches(Event.class, new Patch[] { new PatchMethod("getTarget", staticCall(OverrideEvent.class, "overrideCast", "this")
-				+ ".getOverrideTargetElement()"), });
+		PatchUtils.applyPatches(Event.class, new Patch[] { 
+			new PatchMethod("getTarget", staticCall(OverrideEvent.class, "overrideCast", "this") + ".getOverrideTargetElement()"), 
+			new PatchMethod("getRelatedTarget", staticCall(OverrideEvent.class, "overrideCast", "this") + ".getOverrideTargetElement()"),
+		});
 
 		PatchUtils.applyPatches(Node.class, new Patch[] { new PatchMethod("appendChild", staticCall(PatchNode.class, "appendChild", "this, $1")),
 				new PatchMethod("cloneNode", castThisAndCall(UserElement.class, "overrideClone", "$1")),
