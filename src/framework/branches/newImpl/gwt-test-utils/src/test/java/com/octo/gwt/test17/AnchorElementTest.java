@@ -19,6 +19,12 @@ public class AnchorElementTest extends AbstractGWTTest {
 	}
 
 	@Test
+	public void checkAs() {
+		AnchorElement asElement = AnchorElement.as(a);
+		Assert.assertEquals(a, asElement);
+	}
+
+	@Test
 	public void checkBlur() {
 		// just check blur() does not throw any exception
 		a.blur();
@@ -44,40 +50,40 @@ public class AnchorElementTest extends AbstractGWTTest {
 	public void checkHref() {
 		Assert.assertNull("Href should be null", a.getHref());
 		// Set up
-		a.setHref("href");
+		a.setHref("Href");
 
 		// Assert
-		Assert.assertEquals("href", a.getHref());
+		Assert.assertEquals("Href", a.getHref());
 	}
 
 	@Test
 	public void checkHreflang() {
 		Assert.assertNull("Hreflang should be null", a.getHreflang());
 		// Set up
-		a.setHreflang("href");
+		a.setHreflang("Href");
 
 		// Assert
-		Assert.assertEquals("href", a.getHreflang());
+		Assert.assertEquals("Href", a.getHreflang());
 	}
 
 	@Test
 	public void checkName() {
 		Assert.assertNull("Name should be null", a.getName());
 		// Set up
-		a.setName("name");
+		a.setName("Name");
 
 		// Assert
-		Assert.assertEquals("name", a.getName());
+		Assert.assertEquals("Name", a.getName());
 	}
 
 	@Test
 	public void checkRel() {
 		Assert.assertNull("Rel should be null", a.getRel());
 		// Set up
-		a.setRel("rel");
+		a.setRel("Rel");
 
 		// Assert
-		Assert.assertEquals("rel", a.getRel());
+		Assert.assertEquals("Rel", a.getRel());
 	}
 
 	@Test
@@ -88,5 +94,25 @@ public class AnchorElementTest extends AbstractGWTTest {
 
 		// Assert
 		Assert.assertEquals(4, a.getTabIndex());
+	}
+
+	@Test
+	public void checkTarget() {
+		Assert.assertNull("Target should be null", a.getTarget());
+		// Set up
+		a.setTarget("Target");
+
+		// Assert
+		Assert.assertEquals("Target", a.getTarget());
+	}
+
+	@Test
+	public void checkType() {
+		Assert.assertNull("Type should be null", a.getType());
+		// Set up
+		a.setType("Type");
+
+		// Assert
+		Assert.assertEquals("Type", a.getType());
 	}
 }
