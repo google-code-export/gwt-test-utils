@@ -16,6 +16,8 @@ import javassist.CtConstructor;
 import javassist.CtMethod;
 
 import com.google.gwt.i18n.client.Constants.DefaultStringValue;
+import com.octo.gwt.test17.internal.patcher.Patcher;
+import com.octo.gwt.test17.internal.patcher.PropertyHolder;
 
 public class PatchUtils {
 
@@ -62,28 +64,6 @@ public class PatchUtils {
 	public static Method loadProperties;
 
 	/**
-	 * Apply a list of patches on a clazz, and return new class bytecode
-	 * 
-	 * @param cp
-	 * @param clazz
-	 * @param list
-	 * @throws Exception
-	 */
-	private static byte[] compilePatches(Class<?> clazz, Patch[] list) throws Exception {
-		String className = clazz.getCanonicalName();
-		if (clazz.isMemberClass()) {
-			int k = className.lastIndexOf(".");
-			className = className.substring(0, k) + "$" + className.substring(k + 1);
-		}
-		CtClass ctClazz = cp.get(className);
-		for (Patch p : list) {
-			p.apply(ctClazz);
-		}
-
-		return ctClazz.toBytecode();
-	}
-
-	/**
 	 * Replace class bytecode by another one
 	 * 
 	 * @param redefine
@@ -98,10 +78,6 @@ public class PatchUtils {
 			e.printStackTrace();
 			throw new RuntimeException("Unable to compile code for class " + clazz.getCanonicalName(), e);
 		}
-	}
-
-	public static void applyPatches(Class<?> clazz, Patch[] list) throws Exception {
-		replaceClass(clazz, compilePatches(clazz, list));
 	}
 
 	public static boolean areAssertionEnabled() {
@@ -119,6 +95,13 @@ public class PatchUtils {
 		if (PatchUtils.redefine == null) {
 			throw new RuntimeException("Method " + REDEFINE_METHOD + " not found in bootstrap class");
 		}
+	}
+
+	public static void patchFinalizeMethod() throws Exception {
+		CtClass objectClass = cp.get(Object.class.getCanonicalName());
+
+		CtMethod finalize = objectClass.getMethod("finalize", "()V");
+		finalize.insertAfter(PropertyHolder.class.getCanonicalName() + ".clearObject(this);");
 	}
 
 	public static void initLoadPropertiesMethod() throws Exception {
@@ -186,35 +169,26 @@ public class PatchUtils {
 		return result;
 	}
 
-	public interface BodyGetter {
-		String getBody(String methodName);
-	}
-
 	@SuppressWarnings("unchecked")
-	public static <T> T generateInstance(String className, BodyGetter bodyGetter) {
+	public static <T> T generateInstance(String className, Patcher patcher) {
 		try {
-			ClassPool cp = ClassPool.getDefault();
 			CtClass c = cp.makeClass(className + "SubClass");
 			CtClass superClazz = cp.get(className);
+
 			c.setSuperclass(superClazz);
 			CtConstructor constructor = new CtConstructor(new CtClass[] {}, c);
 			constructor.setBody(";");
 			c.addConstructor(constructor);
+
 			for (CtMethod m : superClazz.getMethods()) {
-				if ((m.getModifiers() & Modifier.ABSTRACT) == Modifier.ABSTRACT) {
+				if (Modifier.isAbstract(m.getModifiers())) {
 					CtMethod mm = new CtMethod(m.getReturnType(), m.getName(), m.getParameterTypes(), c);
-					mm.setModifiers(m.getModifiers() - Modifier.ABSTRACT);
-					String body = "throw new UnsupportedOperationException(\"" + m.getName() + " on generated sub class of " + className + "\");";
-					if (bodyGetter != null) {
-						String b = bodyGetter.getBody(m.getName());
-						if (b != null) {
-							body = b;
-						}
-					}
-					mm.setBody(body);
+					mm.setBody("{ throw new UnsupportedOperationException(\"" + m.getName() + " on generated sub class of " + c.getName() + "\"); }");
+					c.setModifiers(m.getModifiers() - Modifier.ABSTRACT);
 					c.addMethod(mm);
 				}
 			}
+			patch(c, patcher);
 			return (T) c.toClass().newInstance();
 
 		} catch (Exception e) {
@@ -230,4 +204,122 @@ public class PatchUtils {
 		sequenceReplacementList.add(new SequenceReplacement(regex, to));
 	}
 
+	public static void patch(Class<?> clazz, Patcher patcher) throws Exception {
+		CtClass c = cp.get(clazz.getCanonicalName());
+		patch(c, patcher);
+		replaceClass(clazz, c.toBytecode());
+	}
+
+	protected static void patch(CtClass c, Patcher patcher) throws Exception {
+		if (c == null) {
+			throw new IllegalArgumentException("the class to patch cannot be null");
+		}
+
+		if (patcher != null) {
+			patcher.initClass(c);
+		}
+
+		for (CtMethod m : c.getDeclaredMethods()) {
+			if (Modifier.isAbstract(m.getModifiers())) {
+				// don't patch now
+				continue;
+			} else if (patcher == null || !patcher.patchMethod(m)) {
+				// method has not been patch : try to patch if method is a native getter/setter
+
+				if (Modifier.isNative(m.getModifiers()) && !Modifier.isStatic(m.getModifiers())) {
+					String fieldName = getPropertyName(m);
+
+					if (fieldName == null || fieldName.length() == 0) {
+						// don't patch the native method
+						continue;
+					}
+
+					m.setModifiers(m.getModifiers() - Modifier.NATIVE);
+
+					if (m.getName().startsWith("get") || m.getName().startsWith("is")) {
+						m.setBody("{" + PropertyHolder.callGet(fieldName, m.getReturnType()) + "}");
+					} else if (m.getName().startsWith("set")) {
+						m.setBody("{" + PropertyHolder.callSet(fieldName, "($w)$1") + "}");
+					}
+				}
+			}
+		}
+	}
+
+	public static String getPropertyName(CtMethod m) throws Exception {
+		String fieldName = null;
+		if (m.getName().startsWith("get") && m.getParameterTypes().length == 0) {
+			fieldName = m.getName().substring(3);
+		} else if (m.getName().startsWith("is") && m.getParameterTypes().length == 0) {
+			fieldName = m.getName().substring(2);
+		} else if (m.getName().startsWith("set") && m.getParameterTypes().length == 1) {
+			fieldName = m.getName().substring(3);
+		}
+
+		return fieldName;
+	}
+
+	public static void replaceImplementation(CtMethod m, String src) throws Exception {
+		removeNativeModifier(m);
+
+		if (src != null) {
+			src = src.trim();
+			if (!src.startsWith("{")) {
+				if (!m.getReturnType().equals(CtClass.voidType) && !src.startsWith("return")) {
+					src = "{ return ($r)($w) " + src;
+				} else {
+					src = "{ " + src;
+				}
+			}
+
+			if (!src.endsWith("}")) {
+				if (!src.endsWith(";")) {
+					src = src + "; }";
+				} else {
+					src = src + " }";
+				}
+			}
+		}
+		m.setBody(src);
+	}
+
+	public static void replaceImplementation(CtMethod m, Class<?> classWithCode, String methodName, String args) throws Exception {
+		replaceImplementation(m, staticCall(classWithCode, methodName, args));
+	}
+
+	public static boolean matches(CtClass[] ctClassArgs, Class<?>[] argsClasses) throws Exception {
+		if (argsClasses == null) {
+			if (ctClassArgs.length > 0)
+				return false;
+			else
+				return true;
+		}
+
+		if (ctClassArgs.length != argsClasses.length) {
+			return false;
+		} else {
+			int i = 0;
+			for (Class<?> argClass : argsClasses) {
+				if (!argClass.getName().equals(ctClassArgs[i].getName())) {
+					return false;
+				}
+				i++;
+			}
+
+			return true;
+		}
+	}
+
+	private static void removeNativeModifier(CtMethod m) throws Exception {
+		if (Modifier.isNative(m.getModifiers())) {
+			m.setModifiers(m.getModifiers() - Modifier.NATIVE);
+		}
+	}
+
+	private static String staticCall(Class<?> clazz, String methodName, String args) {
+		if (args == null) {
+			args = "";
+		}
+		return clazz.getCanonicalName() + "." + methodName + "(" + args + ")";
+	}
 }

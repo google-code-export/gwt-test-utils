@@ -14,7 +14,11 @@ public class OverrideNodeList<T extends Node> extends NodeList<T> {
 		list = new ArrayList<T>();
 	}
 
-	public List<T> getOverrideList() {
+	public OverrideNodeList(List<T> list) {
+		this.list = list;
+	}
+
+	public List<T> getList() {
 		return list;
 	}
 
