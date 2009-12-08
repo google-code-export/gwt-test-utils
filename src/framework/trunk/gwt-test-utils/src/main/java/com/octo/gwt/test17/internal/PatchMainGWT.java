@@ -22,6 +22,7 @@ import com.google.gwt.user.client.ui.impl.FormPanelImpl;
 import com.google.gwt.user.client.ui.impl.HyperlinkImpl;
 import com.google.gwt.user.client.ui.impl.PopupImpl;
 import com.google.gwt.user.client.ui.impl.TextBoxImpl;
+import com.google.gwt.user.datepicker.client.DateBox;
 import com.octo.gwt.test17.GwtCreateHandler;
 import com.octo.gwt.test17.IGWTLogHandler;
 import com.octo.gwt.test17.PatchConstants;
@@ -95,6 +96,11 @@ public class PatchMainGWT {
 		if (classLiteral == FormPanelImpl.class) {
 			return new OverrideFormPanelImpl();
 		}
+		
+		if (classLiteral == DateBox.DefaultFormat.class) {
+			return new DateBox.DefaultFormat();
+		}
+		
 		if (classLiteral == HistoryImpl.class) {
 			return PatchUtils.generateInstance(HistoryImpl.class.getCanonicalName(), new BodyGetter() {
 				public String getBody(String methodName) {
