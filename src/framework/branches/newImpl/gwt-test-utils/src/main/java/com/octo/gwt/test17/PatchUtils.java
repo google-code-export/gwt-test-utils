@@ -17,7 +17,7 @@ import javassist.CtMethod;
 
 import com.google.gwt.i18n.client.Constants.DefaultStringValue;
 import com.octo.gwt.test17.internal.patcher.Patcher;
-import com.octo.gwt.test17.internal.patcher.PropertyHolder;
+import com.octo.gwt.test17.internal.patcher.dom.PropertyHolder;
 
 public class PatchUtils {
 
@@ -205,7 +205,13 @@ public class PatchUtils {
 	}
 
 	public static void patch(Class<?> clazz, Patcher patcher) throws Exception {
-		CtClass c = cp.get(clazz.getCanonicalName());
+		String className = clazz.getCanonicalName();
+		if (clazz.isMemberClass()) {
+			int k = className.lastIndexOf(".");
+			className = className.substring(0, k) + "$" + className.substring(k + 1);
+		}
+
+		CtClass c = cp.get(className);
 		patch(c, patcher);
 		replaceClass(clazz, c.toBytecode());
 	}
@@ -219,11 +225,13 @@ public class PatchUtils {
 			patcher.initClass(c);
 		}
 
+		String newBody;
+
 		for (CtMethod m : c.getDeclaredMethods()) {
 			if (Modifier.isAbstract(m.getModifiers())) {
 				// don't patch now
 				continue;
-			} else if (patcher == null || !patcher.patchMethod(m)) {
+			} else if (patcher == null || (newBody = patcher.getNewBody(m)) == null) {
 				// method has not been patch : try to patch if method is a native getter/setter
 
 				if (Modifier.isNative(m.getModifiers()) && !Modifier.isStatic(m.getModifiers())) {
@@ -242,6 +250,8 @@ public class PatchUtils {
 						m.setBody("{" + PropertyHolder.callSet(fieldName, "($w)$1") + "}");
 					}
 				}
+			} else {
+				PatchUtils.replaceImplementation(m, newBody);
 			}
 		}
 	}
@@ -262,7 +272,9 @@ public class PatchUtils {
 	public static void replaceImplementation(CtMethod m, String src) throws Exception {
 		removeNativeModifier(m);
 
-		if (src != null) {
+		if (src == null || src.trim().length() == 0) {
+			m.setBody(null);
+		} else {
 			src = src.trim();
 			if (!src.startsWith("{")) {
 				if (!m.getReturnType().equals(CtClass.voidType) && !src.startsWith("return")) {
@@ -279,15 +291,15 @@ public class PatchUtils {
 					src = src + " }";
 				}
 			}
+			m.setBody(src);
 		}
-		m.setBody(src);
 	}
 
-	public static void replaceImplementation(CtMethod m, Class<?> classWithCode, String methodName, String args) throws Exception {
-		replaceImplementation(m, staticCall(classWithCode, methodName, args));
-	}
+	//	public static void replaceImplementation(CtMethod m, Class<?> classWithCode, String methodName, String args) throws Exception {
+	//		replaceImplementation(m, staticCall(classWithCode, methodName, args));
+	//	}
 
-	public static boolean matches(CtClass[] ctClassArgs, Class<?>[] argsClasses) throws Exception {
+	public static boolean matches(CtClass[] ctClassArgs, Class<?>[] argsClasses) {
 		if (argsClasses == null) {
 			if (ctClassArgs.length > 0)
 				return false;
@@ -316,10 +328,10 @@ public class PatchUtils {
 		}
 	}
 
-	private static String staticCall(Class<?> clazz, String methodName, String args) {
+	public static String callMethod(Class<?> clazz, String staticMethodName, String args) {
 		if (args == null) {
 			args = "";
 		}
-		return clazz.getCanonicalName() + "." + methodName + "(" + args + ")";
+		return clazz.getCanonicalName() + "." + staticMethodName + "(" + args + ")";
 	}
 }

@@ -5,14 +5,11 @@ import javassist.CtMethod;
 public class JavaScriptObjectPatcher extends AbstractPatcher {
 
 	@Override
-	public boolean patchMethod(CtMethod m) throws Exception {
-		if ("hashCode".equals(m.getName())) {
-			replaceImplementation(m, "super.hashCode()");
-		} else {
-			return false;
+	public String getNewBody(CtMethod m) {
+		if (match(m, "hashCode")) {
+			return "super.hashCode()";
 		}
 
-		return true;
+		return null;
 	}
-
 }

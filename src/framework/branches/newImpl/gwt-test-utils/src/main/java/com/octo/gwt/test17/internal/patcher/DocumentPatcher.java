@@ -7,22 +7,27 @@ import com.google.gwt.dom.client.NodeFactory;
 
 public class DocumentPatcher extends AbstractPatcher {
 
-	private static Document DOCUMENT = NodeFactory.createDocument();
+	private static int ID = 0;
 
 	@Override
-	public boolean patchMethod(CtMethod m) throws Exception {
-		if ("get".equals(m.getName())) {
-			replaceImplementation(m, "get", null);
-		} else {
-			return false;
+	public String getNewBody(CtMethod m) {
+		if (match(m, "get")) {
+			return callMethod("get");
+		} else if (match(m, "createUniqueId")) {
+			return callMethod("createUniqueId");
 		}
 
-		return true;
+		return null;
 
 	}
 
 	public static Document get() {
-		return DOCUMENT;
+		return NodeFactory.getDocument();
+	}
+
+	public static String createUniqueId() {
+		ID++;
+		return "elem_" + Long.toString(ID);
 	}
 
 }

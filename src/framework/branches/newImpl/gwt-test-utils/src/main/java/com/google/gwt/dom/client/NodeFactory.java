@@ -10,18 +10,19 @@ import com.octo.gwt.test17.internal.overrides.OverrideQuoteElement;
 import com.octo.gwt.test17.internal.overrides.OverrideTableCellElement;
 import com.octo.gwt.test17.internal.overrides.OverrideTableColElement;
 import com.octo.gwt.test17.internal.overrides.OverrideTableSectionElement;
+import com.octo.gwt.test17.internal.patcher.dom.PropertyHolder;
 
 public class NodeFactory {
 
+	private static Map<String, Class<? extends Element>> elementMap = new HashMap<String, Class<? extends Element>>();
 	private static final Pattern H_PATTERN = Pattern.compile("^h[123456]$");
 
-	private static Map<String, Class<? extends Element>> elementMap = new HashMap<String, Class<? extends Element>>();
-
 	static {
+
 		elementMap.put("a", AnchorElement.class);
 		elementMap.put("area", AreaElement.class);
 		elementMap.put("base", BaseElement.class);
-		elementMap.put("body", BodyElement.class);
+		elementMap.put(BodyElement.TAG, BodyElement.class);
 		elementMap.put("br", BRElement.class);
 		elementMap.put("button", ButtonElement.class);
 		elementMap.put("div", DivElement.class);
@@ -46,6 +47,7 @@ public class NodeFactory {
 		elementMap.put("ol", OListElement.class);
 		elementMap.put("optgroup", OptGroupElement.class);
 		elementMap.put("option", OptionElement.class);
+		elementMap.put("options", OptionElement.class);
 		elementMap.put("p", ParagraphElement.class);
 		elementMap.put("param", ParamElement.class);
 		elementMap.put("pre", PreElement.class);
@@ -69,8 +71,22 @@ public class NodeFactory {
 		elementMap.put("ul", UListElement.class);
 	}
 
-	public static Document createDocument() {
-		return new Document();
+	public static final Document DOCUMENT = new Document();
+
+	private NodeFactory() {
+
+	}
+
+	public static Document getDocument() {
+		if (!PropertyHolder.get(DOCUMENT).containsKey("Body")) {
+			try {
+				PropertyHolder.get(DOCUMENT).put("Body", createElement("body"));
+			} catch (Exception e) {
+				throw new RuntimeException("Error while creating Document <body> element", e);
+			}
+		}
+		return DOCUMENT;
+
 	}
 
 	public static Text createText() {
@@ -82,32 +98,36 @@ public class NodeFactory {
 	}
 
 	public static Element createElement(String tag) throws Exception {
+		Element elem;
+
 		if (H_PATTERN.matcher(tag).matches()) {
-			return new OverrideHeadingElement(tag);
-		}
-		if (ModElement.TAG_INS.equals(tag) || ModElement.TAG_DEL.equals(tag)) {
-			return new OverrideModElement(tag);
-		}
-		if (QuoteElement.TAG_BLOCKQUOTE.equals(tag) || QuoteElement.TAG_Q.equals(tag)) {
-			return new OverrideQuoteElement(tag);
-		}
-		if (TableCellElement.TAG_TD.equals(tag) || TableCellElement.TAG_TH.equals(tag)) {
-			return new OverrideTableCellElement(tag);
-		}
-		if (TableColElement.TAG_COL.equals(tag) || TableColElement.TAG_COLGROUP.equals(tag)) {
-			return new OverrideTableColElement(tag);
+			elem = new OverrideHeadingElement(tag);
+		} else if (ModElement.TAG_INS.equals(tag) || ModElement.TAG_DEL.equals(tag)) {
+			elem = new OverrideModElement(tag);
+		} else if (QuoteElement.TAG_BLOCKQUOTE.equals(tag) || QuoteElement.TAG_Q.equals(tag)) {
+			elem = new OverrideQuoteElement(tag);
+		} else if (TableCellElement.TAG_TD.equals(tag) || TableCellElement.TAG_TH.equals(tag)) {
+			elem = new OverrideTableCellElement(tag);
+		} else if (TableColElement.TAG_COL.equals(tag) || TableColElement.TAG_COLGROUP.equals(tag)) {
+			elem = new OverrideTableColElement(tag);
+		} else if (TableSectionElement.TAG_TBODY.equals(tag) || TableSectionElement.TAG_TFOOT.equals(tag)
+				|| TableSectionElement.TAG_THEAD.equals(tag)) {
+			elem = new OverrideTableSectionElement(tag);
+		} else {
+			Class<? extends Element> clazz = elementMap.get(tag);
+
+			if (clazz == null)
+				throw new Exception("Cannot create element for tag <" + tag + ">");
+
+			elem = clazz.newInstance();
 		}
 
-		if (TableSectionElement.TAG_TBODY.equals(tag) || TableSectionElement.TAG_TFOOT.equals(tag) || TableSectionElement.TAG_THEAD.equals(tag)) {
-			return new OverrideTableSectionElement(tag);
+		// set the <body> element as default parent node
+		if (!BodyElement.TAG.equals(elem.getTagName())) {
+			Document.get().getBody().appendChild(elem);
 		}
 
-		Class<? extends Element> clazz = elementMap.get(tag);
+		return elem;
 
-		if (clazz == null)
-			throw new Exception("Cannot create element for tag <" + tag + ">");
-
-		return clazz.newInstance();
 	}
-
 }

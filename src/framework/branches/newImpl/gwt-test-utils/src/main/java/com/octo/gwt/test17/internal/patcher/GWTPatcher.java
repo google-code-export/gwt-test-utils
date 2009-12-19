@@ -12,6 +12,8 @@ import com.google.gwt.i18n.client.Constants;
 import com.google.gwt.i18n.client.impl.CldrImpl;
 import com.google.gwt.i18n.client.impl.CurrencyList;
 import com.google.gwt.i18n.client.impl.LocaleInfoImpl;
+import com.google.gwt.user.client.impl.DOMImpl;
+import com.google.gwt.user.client.impl.HistoryImpl;
 import com.google.gwt.user.client.impl.WindowImpl;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.ImageBundle;
@@ -27,8 +29,9 @@ import com.octo.gwt.test17.GwtCreateHandler;
 import com.octo.gwt.test17.IGWTLogHandler;
 import com.octo.gwt.test17.PatchConstants;
 import com.octo.gwt.test17.PatchUtils;
-import com.octo.gwt.test17.internal.overrides.OverrideFormPanelImpl;
 import com.octo.gwt.test17.internal.overrides.OverrideImagePrototype;
+import com.octo.gwt.test17.internal.patcher.dom.DOMImplPatcher;
+import com.octo.gwt.test17.internal.patcher.dom.DOMImplUserPatcher;
 
 public class GWTPatcher extends AbstractPatcher {
 
@@ -37,20 +40,18 @@ public class GWTPatcher extends AbstractPatcher {
 	public static Map<Class<?>, Object> createClass = new HashMap<Class<?>, Object>();
 
 	@Override
-	public boolean patchMethod(CtMethod m) throws Exception {
-		if ("create".equals(m.getName())) {
-			replaceImplementation(m, "create", "$1");
-		} else if ("log".equals(m.getName())) {
-			replaceImplementation(m, "log", "$1, $2");
-		} else if ("getHostPageBaseURL".equals(m.getName())) {
-			replaceImplementation(m, "return \"getHostPageBaseURL/getModuleName\";");
-		} else if ("getModuleName".equals(m.getName())) {
-			replaceImplementation(m, "return \"getModuleName\";");
-		} else {
-			return false;
+	public String getNewBody(CtMethod m) {
+		if (match(m, "create")) {
+			return callMethod("create", "$1");
+		} else if (match(m, "log")) {
+			return callMethod("log", "$1, $2");
+		} else if (match(m, "getHostPageBaseURL")) {
+			return "return \"getHostPageBaseURL/getModuleName\";";
+		} else if (match(m, "getModuleName")) {
+			return "return \"getModuleName\";";
 		}
 
-		return true;
+		return null;
 	}
 
 	public static void log(String message, Throwable t) {
@@ -72,9 +73,12 @@ public class GWTPatcher extends AbstractPatcher {
 		if (classLiteral.getCanonicalName().equals(PatchConstants.CLIENT_DOM_IMPL_CLASS_NAME)) {
 			return PatchUtils.generateInstance(PatchConstants.CLIENT_DOM_IMPL_CLASS_NAME, new DOMImplPatcher());
 		}
-		//		if (classLiteral == DOMImpl.class) {
-		//			return new UserDomImpl();
-		//		}
+		if (classLiteral == DOMImpl.class) {
+			return PatchUtils.generateInstance(DOMImpl.class.getCanonicalName(), new DOMImplUserPatcher());
+		}
+		if (classLiteral == HistoryImpl.class) {
+			return new HistoryImpl();
+		}
 		if (classLiteral == PopupImpl.class) {
 			return new PopupImpl();
 		}
@@ -94,7 +98,7 @@ public class GWTPatcher extends AbstractPatcher {
 			return new TextBoxImpl();
 		}
 		if (classLiteral == FormPanelImpl.class) {
-			return new OverrideFormPanelImpl();
+			return new FormPanelImpl();
 		}
 		if (classLiteral == CurrencyList.class) {
 			return new CurrencyList();
