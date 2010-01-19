@@ -18,6 +18,7 @@ import com.google.gwt.user.client.Event;
 import com.octo.gwt.test17.internal.dom.UserElement;
 import com.octo.gwt.test17.internal.overrides.OverrideEvent;
 import com.octo.gwt.test17.internal.overrides.OverrideIFrameElement;
+import com.octo.gwt.test17.internal.overrides.OverrideLabelElement;
 import com.octo.gwt.test17.internal.overrides.OverrideNodeList;
 import com.octo.gwt.test17.internal.overrides.OverrideOptionElement;
 import com.octo.gwt.test17.internal.overrides.OverrideSelectElement;
@@ -150,6 +151,9 @@ public class PatchDOMImpl {
 		}
 		if ("iframe".equals(tag)) {
 			return new OverrideIFrameElement(new UserElement(null));
+		}
+		if ("label".equals(tag)) {
+			return new OverrideLabelElement(new UserElement(null));
 		}
 		//		if ("form".equals(tag)) {
 		//			return new OverrideFormElement();

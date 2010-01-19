@@ -92,5 +92,12 @@ public class AnchorTest extends AbstractGWTTest {
 
 		Assert.assertEquals("<h1>test</h1>", a.getHTML());
 	}
+	
+	@Test
+	public void checkTagName() {
+		Anchor a = new Anchor();
+		
+		Assert.assertEquals("a", a.getElement().getTagName());
+	}
 
 }

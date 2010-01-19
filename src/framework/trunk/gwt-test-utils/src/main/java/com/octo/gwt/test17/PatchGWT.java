@@ -69,6 +69,7 @@ import com.octo.gwt.test17.internal.PatchGrid;
 import com.octo.gwt.test17.internal.PatchHTMLTable;
 import com.octo.gwt.test17.internal.PatchImage;
 import com.octo.gwt.test17.internal.PatchInputElement;
+import com.octo.gwt.test17.internal.PatchLabelElement;
 import com.octo.gwt.test17.internal.PatchListBox;
 import com.octo.gwt.test17.internal.PatchMainGWT;
 import com.octo.gwt.test17.internal.PatchNode;
@@ -85,6 +86,7 @@ import com.octo.gwt.test17.internal.overrides.OverrideFrameElement;
 import com.octo.gwt.test17.internal.overrides.OverrideHistory;
 import com.octo.gwt.test17.internal.overrides.OverrideImageElement;
 import com.octo.gwt.test17.internal.overrides.OverrideInputElement;
+import com.octo.gwt.test17.internal.overrides.OverrideLabelElement;
 import com.octo.gwt.test17.internal.overrides.OverrideOptionElement;
 import com.octo.gwt.test17.internal.overrides.OverrideSelectElement;
 import com.octo.gwt.test17.internal.overrides.OverrideStyle;
@@ -280,10 +282,9 @@ public class PatchGWT {
 
 		PatchUtils.applyPatches(JavaScriptObject.class, new Patch[] { new PatchMethod("cast", staticCall(PatchUIObject.class, "cast", "this")), });
 
-		PatchUtils.applyPatches(Event.class, new Patch[] { 
-			new PatchMethod("getTarget", staticCall(OverrideEvent.class, "overrideCast", "this") + ".getOverrideTargetElement()"), 
-			new PatchMethod("getRelatedTarget", staticCall(OverrideEvent.class, "overrideCast", "this") + ".getOverrideTargetElement()"),
-		});
+		PatchUtils.applyPatches(Event.class, new Patch[] {
+				new PatchMethod("getTarget", staticCall(OverrideEvent.class, "overrideCast", "this") + ".getOverrideTargetElement()"),
+				new PatchMethod("getRelatedTarget", staticCall(OverrideEvent.class, "overrideCast", "this") + ".getOverrideTargetElement()"), });
 
 		PatchUtils.applyPatches(Node.class, new Patch[] { new PatchMethod("appendChild", staticCall(PatchNode.class, "appendChild", "this, $1")),
 				new PatchMethod("cloneNode", castThisAndCall(UserElement.class, "overrideClone", "$1")),
@@ -391,7 +392,9 @@ public class PatchGWT {
 				new PatchMethod("setAccessKey", castThisAndCall(OverrideAnchorElement.class, "setOverrideAccessKey", "$1")),
 				new PatchMethod("focus", ""), new PatchMethod("blur", ""), });
 
-		PatchUtils.applyPatches(LabelElement.class, new Patch[] { new PatchMethod("setHtmlFor", ""), });
+		PatchUtils.applyPatches(LabelElement.class, new Patch[] { new PatchMethod("as", staticCall(PatchLabelElement.class, "as", "$1")),
+				new PatchMethod("setHtmlFor", castThisAndCall(OverrideLabelElement.class, "setOverrideHtmlFor", "$1")),
+				new PatchMethod("getHtmlFor", castThisAndCall(OverrideLabelElement.class, "getOverrideHtmlFor")), });
 
 		PatchUtils.applyPatches(Image.class,
 				new Patch[] { new PatchMethod("getImageElement", staticCall(PatchImage.class, "getImageElement", "this")) });
