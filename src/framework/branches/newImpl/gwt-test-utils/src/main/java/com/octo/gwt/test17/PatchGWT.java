@@ -50,7 +50,6 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.impl.DOMImpl;
 import com.google.gwt.user.client.impl.ElementMapperImpl;
 import com.google.gwt.user.client.impl.HistoryImpl;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.Frame;
@@ -67,7 +66,6 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.WidgetCollection;
 import com.google.gwt.user.client.ui.impl.FocusImpl;
 import com.google.gwt.user.client.ui.impl.FocusImplOld;
-import com.octo.gwt.test17.internal.patcher.ButtonPatcher;
 import com.octo.gwt.test17.internal.patcher.CheckBoxPatcher;
 import com.octo.gwt.test17.internal.patcher.CurrencyDataPatcher;
 import com.octo.gwt.test17.internal.patcher.CurrencyListPatcher;
@@ -225,7 +223,6 @@ public class PatchGWT {
 		PatchUtils.patch(GWT.class, new GWTPatcher());
 		PatchUtils.patch(JavaScriptObject.class, new JavaScriptObjectPatcher());
 
-		PatchUtils.patch(Button.class, new ButtonPatcher());
 		PatchUtils.patch(CheckBox.class, new CheckBoxPatcher());
 		PatchUtils.patch(CurrencyData.class, new CurrencyDataPatcher());
 		PatchUtils.patch(CurrencyList.class, new CurrencyListPatcher());
