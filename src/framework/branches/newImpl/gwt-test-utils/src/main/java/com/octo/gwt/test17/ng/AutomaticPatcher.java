@@ -27,52 +27,89 @@ public class AutomaticPatcher implements Patcher {
 		this.processedMethods = new ArrayList<Method>();
 	}
 
-	public String getNewBody(CtMethod m) throws Exception {
+	private Entry<Method, PatchMethod> findAnnotatedMethod(CtMethod m) throws Exception {
 		for(Entry<Method, PatchMethod> entry : annotatedMethods.entrySet()) {
 			if (m.getName().equals(entry.getKey().getName())) {
-				if (!Modifier.isStatic(entry.getKey().getModifiers())) {
-					throw new RuntimeException("Method " + entry.getKey() + " have to be static");
+				if (entry.getValue().args().length == 0) {
+					return entry;
 				}
-				if (entry.getValue().value() == PatchType.NEW_CODE_AS_STRING) {
-					processedMethods.add(entry.getKey());
-					List<Object> params = new ArrayList<Object>();
-					for(Class<?> clazz : entry.getKey().getParameterTypes()) {
-						if (clazz == CtClass.class) {
-							params.add(c);
-						}
-						else {
-							throw new RuntimeException("Not managed param " + clazz + " for method " + entry.getKey());
-						}
+				else {
+					if (hasSameSignature(entry.getValue().args(), m.getParameterTypes())) {
+						return entry;
 					}
-					if (entry.getKey().getReturnType() != String.class) {
-						throw new RuntimeException("Wrong return type " + entry.getKey().getReturnType() + " for method " + entry.getKey());
-					}
-					return (String) entry.getKey().invoke(null, params.toArray());
 				}
-				if (entry.getValue().value() == PatchType.STATIC_CALL) {
-					processedMethods.add(entry.getKey());
-					StringBuffer buffer = new StringBuffer();
-					buffer.append("{");
-					buffer.append("return ");
-					buffer.append(this.getClass().getCanonicalName() + "." + entry.getKey().getName());
-					buffer.append("(");
-					boolean append = false;
-					if (!Modifier.isStatic(m.getModifiers())) {
-						buffer.append("this");
-						append = true;
-					}
-					for(int i = 0; i < m.getParameterTypes().length; i ++) {
-						if (append) {
-							buffer.append(", ");
-						}
-						int j = i + 1;
-						buffer.append("$" + j);
-						append = true;
-					}
-					buffer.append(");");
-					buffer.append("}");
-					return buffer.toString();
+			}
+		}
+		return null;
+	}
+	
+	private boolean hasSameSignature(Class<?> [] classesAsked, CtClass [] classesFound) throws Exception {
+		if (classesAsked.length != classesFound.length) {
+			return false;
+		}
+		for(int i = 0; i < classesAsked.length; i ++) {
+			Class<?> clazz = null;
+			if (classesFound[i].isPrimitive()) {
+				if (classesFound[i] == CtClass.intType) {
+					clazz = Integer.class;
 				}
+			}
+			else {
+				clazz = Class.forName(classesFound[i].getName());
+			}
+			if (clazz != classesAsked[i]) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	public String getNewBody(CtMethod m) throws Exception {
+		Entry<Method, PatchMethod> e = findAnnotatedMethod(m);
+		if (e != null) {
+			Method annotatedMethod = e.getKey();
+			if (!Modifier.isStatic(annotatedMethod.getModifiers())) {
+				throw new RuntimeException("Method " + annotatedMethod + " have to be static");
+			}
+			if (e.getValue().value() == PatchType.NEW_CODE_AS_STRING) {
+				processedMethods.add(annotatedMethod);
+				List<Object> params = new ArrayList<Object>();
+				for(Class<?> clazz : annotatedMethod.getParameterTypes()) {
+					if (clazz == CtClass.class) {
+						params.add(c);
+					}
+					else {
+						throw new RuntimeException("Not managed param " + clazz + " for method " + annotatedMethod);
+					}
+				}
+				if (annotatedMethod.getReturnType() != String.class) {
+					throw new RuntimeException("Wrong return type " + annotatedMethod.getReturnType() + " for method " + annotatedMethod);
+				}
+				return (String) annotatedMethod.invoke(null, params.toArray());
+			}
+			if (e.getValue().value() == PatchType.STATIC_CALL) {
+				processedMethods.add(annotatedMethod);
+				StringBuffer buffer = new StringBuffer();
+				buffer.append("{");
+				buffer.append("return ");
+				buffer.append(this.getClass().getCanonicalName() + "." + annotatedMethod.getName());
+				buffer.append("(");
+				boolean append = false;
+				if (!Modifier.isStatic(m.getModifiers())) {
+					buffer.append("this");
+					append = true;
+				}
+				for(int i = 0; i < m.getParameterTypes().length; i ++) {
+					if (append) {
+						buffer.append(", ");
+					}
+					int j = i + 1;
+					buffer.append("$" + j);
+					append = true;
+				}
+				buffer.append(");");
+				buffer.append("}");
+				return buffer.toString();
 			}
 		}
 		return null;

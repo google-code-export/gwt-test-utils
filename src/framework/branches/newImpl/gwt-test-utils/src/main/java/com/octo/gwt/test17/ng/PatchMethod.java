@@ -11,4 +11,6 @@ public @interface PatchMethod {
 
 	PatchType value() default PatchType.STATIC_CALL;
 	
+	Class<?> [] args() default {};
+	
 }

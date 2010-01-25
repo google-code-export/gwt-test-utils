@@ -2,19 +2,12 @@ package com.octo.gwt.test17.internal.patcher;
 
 import java.math.BigDecimal;
 
-import javassist.CtMethod;
+import com.octo.gwt.test17.ng.AutomaticPatcher;
+import com.octo.gwt.test17.ng.PatchMethod;
 
-public class NumberFormatPatcher extends AbstractPatcher {
+public class NumberFormatPatcher extends AutomaticPatcher {
 
-	@Override
-	public String getNewBody(CtMethod m) {
-		if (match(m, "toFixed")) {
-			return callMethod("toFixed", "$1, $2");
-		}
-
-		return null;
-	}
-
+	@PatchMethod
 	public static String toFixed(double d, int digits) {
 		return String.valueOf(new BigDecimal(d).setScale(digits, BigDecimal.ROUND_DOWN).doubleValue());
 	}

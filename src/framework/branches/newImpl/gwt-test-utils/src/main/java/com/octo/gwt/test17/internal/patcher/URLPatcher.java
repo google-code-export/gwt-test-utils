@@ -3,19 +3,12 @@ package com.octo.gwt.test17.internal.patcher;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
-import javassist.CtMethod;
+import com.octo.gwt.test17.ng.AutomaticPatcher;
+import com.octo.gwt.test17.ng.PatchMethod;
 
-public class URLPatcher extends AbstractPatcher {
+public class URLPatcher extends AutomaticPatcher {
 
-	@Override
-	public String getNewBody(CtMethod m) {
-		if (match(m, "encodeComponentImpl")) {
-			return callMethod("encodeComponentImpl", "$1");
-		}
-
-		return null;
-	}
-
+	@PatchMethod
 	public static String encodeComponentImpl(String decodedURLComponent) {
 		try {
 			return URLEncoder.encode(decodedURLComponent, "UTF-8");

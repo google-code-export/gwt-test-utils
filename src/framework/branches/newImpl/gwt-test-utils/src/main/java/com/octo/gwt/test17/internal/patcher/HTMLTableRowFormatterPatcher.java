@@ -1,22 +1,15 @@
 package com.octo.gwt.test17.internal.patcher;
 
-import javassist.CtMethod;
-
 import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.ui.HTMLTable;
 import com.octo.gwt.test17.ElementUtils;
+import com.octo.gwt.test17.ng.AutomaticPatcher;
+import com.octo.gwt.test17.ng.PatchMethod;
 
-public class HTMLTableRowFormatterPatcher extends AbstractPatcher {
+public class HTMLTableRowFormatterPatcher extends AutomaticPatcher {
 
-	@Override
-	public String getNewBody(CtMethod m) {
-		if (match(m, "getRow")) {
-			return callMethod("getRow", "$1, $2");
-		}
-
-		return null;
-	}
-
-	public static Element getRow(Element elem, int row) {
+	@PatchMethod
+	public static Element getRow(HTMLTable.RowFormatter rowFormatter, Element elem, int row) {
 		return ElementUtils.castToUserElement((com.google.gwt.dom.client.Element) elem.getChildNodes().getItem(row));
 	}
 

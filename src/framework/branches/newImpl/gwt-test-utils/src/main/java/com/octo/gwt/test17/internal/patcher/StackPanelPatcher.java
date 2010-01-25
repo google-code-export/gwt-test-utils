@@ -1,24 +1,16 @@
 package com.octo.gwt.test17.internal.patcher;
 
-import javassist.CtMethod;
-
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.StackPanel;
 import com.google.gwt.user.client.ui.WidgetCollection;
 import com.octo.gwt.test17.ElementUtils;
 import com.octo.gwt.test17.ReflectionUtils;
+import com.octo.gwt.test17.ng.AutomaticPatcher;
+import com.octo.gwt.test17.ng.PatchMethod;
 
-public class StackPanelPatcher extends AbstractPatcher {
+public class StackPanelPatcher extends AutomaticPatcher {
 
-	@Override
-	public String getNewBody(CtMethod m) {
-		if (match(m, "findDividerIndex")) {
-			return callMethod("findDividerIndex", "this, $1");
-		}
-
-		return null;
-	}
-
+	@PatchMethod
 	public static int findDividerIndex(StackPanel panel, Element child) {
 		child = ElementUtils.castToDomElement(child);
 		WidgetCollection children = ReflectionUtils.getPrivateFieldValue(panel, "children");
