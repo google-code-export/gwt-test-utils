@@ -8,4 +8,5 @@ public interface Patcher {
 	public void initClass(CtClass c) throws Exception;
 
 	public String getNewBody(CtMethod m);
+	
 }

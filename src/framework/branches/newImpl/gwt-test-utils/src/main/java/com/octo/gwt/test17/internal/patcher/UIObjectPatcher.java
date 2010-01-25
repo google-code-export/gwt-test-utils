@@ -29,11 +29,26 @@ public class UIObjectPatcher extends AbstractPatcher {
 			return callMethod("replaceNode", "$1, $2");
 		} else if (matchWithArgs(m, "setStyleName", Element.class, String.class)) {
 			return callMethod("setStyleName", "$1, $2");
+		} else if (matchWithArgs(m, "extractLengthValue", String.class)) {
+			return callMethod("extractLengthValue", "$1");
 		}
-
 		return null;
 	}
 
+	public static double extractLengthValue(String s) {
+		if ("auto".equals(s) || "inherit".equals(s) || "".equals(s)) {
+			return 0;
+		}
+		StringBuffer buffer = new StringBuffer();
+		for(int i = 0; i < s.length(); i++) {
+			char c = s.charAt(i);
+			if (c >= '0' && c <= '9') {
+				buffer.append(c);
+			}
+		}
+		return Double.parseDouble(buffer.toString());
+	}
+	
 	public static boolean isVisible(Element elem) {
 		String display = elem.getStyle().getProperty("display");
 
@@ -74,7 +89,7 @@ public class UIObjectPatcher extends AbstractPatcher {
 
 	public static void replaceElement(UIObject uio, Element elem) {
 		elem = ElementUtils.castToUserElement(elem);
-		com.google.gwt.user.client.Element element = uio.getElement();
+		com.google.gwt.user.client.Element element = ReflectionUtils.getPrivateFieldValue(uio, "element");
 		if (element != null) {
 			// replace this.element in its parent with elem.
 			replaceNode(element, elem);

@@ -28,28 +28,28 @@ public class AbstractPatcher implements Patcher {
 		return null;
 	}
 
-	protected boolean match(CtMethod m, String regex) {
+	protected static boolean match(CtMethod m, String regex) {
 		return m.getName().matches(regex);
 	}
 
-	protected boolean matchWithArgs(CtMethod m, String regex, Class<?>... argsClasses) {
+	protected static boolean matchWithArgs(CtMethod m, String regex, Class<?>... argsClasses) {
 		return match(m, regex) && argsMatch(m, argsClasses);
 	}
 
+	private static boolean argsMatch(CtMethod m, Class<?>... argsClasses) {
+		try {
+			return PatchUtils.matches(m.getParameterTypes(), argsClasses);
+		} catch (NotFoundException e) {
+			throw new RuntimeException("Error while getting \"" + m.getName() + "\" method parameter types", e);
+		}
+	}
+	
 	protected String callMethod(String staticMethodName) {
 		return callMethod(staticMethodName, null);
 	}
 
 	protected String callMethod(String staticMethodName, String args) {
 		return PatchUtils.callMethod(this.getClass(), staticMethodName, args);
-	}
-
-	private boolean argsMatch(CtMethod m, Class<?>... argsClasses) {
-		try {
-			return PatchUtils.matches(m.getParameterTypes(), argsClasses);
-		} catch (NotFoundException e) {
-			throw new RuntimeException("Error while getting \"" + m.getName() + "\" method parameter types", e);
-		}
 	}
 
 	protected CtConstructor findConstructor(Class<?>... argsClasses) throws NotFoundException {
