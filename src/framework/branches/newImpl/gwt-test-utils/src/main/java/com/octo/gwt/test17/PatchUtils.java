@@ -255,6 +255,10 @@ public class PatchUtils {
 				PatchUtils.replaceImplementation(m, newBody);
 			}
 		}
+		
+		if (patcher != null) {
+			patcher.finalizeClass();
+		}
 	}
 
 	public static String getPropertyName(CtMethod m) throws Exception {

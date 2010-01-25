@@ -82,4 +82,7 @@ public class AbstractPatcher implements Patcher {
 
 	}
 
+	public void finalizeClass() throws Exception {
+	}
+
 }

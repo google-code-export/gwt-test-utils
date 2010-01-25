@@ -17,11 +17,14 @@ public class AutomaticPatcher implements Patcher {
 
 	private Map<Method, PatchMethod> annotatedMethods;
 	
+	private List<Method> processedMethods;
+	
 	private CtClass c;
 	
 	public void initClass(CtClass c) throws Exception {
 		this.c = c;
 		this.annotatedMethods = ReflectionUtils.getAnnotatedMethod(this.getClass(), PatchMethod.class);
+		this.processedMethods = new ArrayList<Method>();
 	}
 
 	public String getNewBody(CtMethod m) throws Exception {
@@ -31,6 +34,7 @@ public class AutomaticPatcher implements Patcher {
 					throw new RuntimeException("Method " + entry.getKey() + " have to be static");
 				}
 				if (entry.getValue().value() == PatchType.NEW_CODE_AS_STRING) {
+					processedMethods.add(entry.getKey());
 					List<Object> params = new ArrayList<Object>();
 					for(Class<?> clazz : entry.getKey().getParameterTypes()) {
 						if (clazz == CtClass.class) {
@@ -46,17 +50,24 @@ public class AutomaticPatcher implements Patcher {
 					return (String) entry.getKey().invoke(null, params.toArray());
 				}
 				if (entry.getValue().value() == PatchType.STATIC_CALL) {
+					processedMethods.add(entry.getKey());
 					StringBuffer buffer = new StringBuffer();
 					buffer.append("{");
 					buffer.append("return ");
 					buffer.append(this.getClass().getCanonicalName() + "." + entry.getKey().getName());
 					buffer.append("(");
-					for(int i = 0; i < entry.getKey().getParameterTypes().length; i ++) {
-						if (i > 0) {
+					boolean append = false;
+					if (!Modifier.isStatic(m.getModifiers())) {
+						buffer.append("this");
+						append = true;
+					}
+					for(int i = 0; i < m.getParameterTypes().length; i ++) {
+						if (append) {
 							buffer.append(", ");
 						}
 						int j = i + 1;
 						buffer.append("$" + j);
+						append = true;
 					}
 					buffer.append(");");
 					buffer.append("}");
@@ -65,6 +76,15 @@ public class AutomaticPatcher implements Patcher {
 			}
 		}
 		return null;
+	}
+
+	public void finalizeClass() throws Exception {
+		for(Method m : annotatedMethods.keySet()) {
+			if (!processedMethods.contains(m)) {
+				throw new RuntimeException("Not processed anotation " + m);
+			}
+		}
+		
 	}
 
 }

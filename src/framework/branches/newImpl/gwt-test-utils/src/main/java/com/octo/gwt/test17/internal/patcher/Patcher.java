@@ -9,4 +9,6 @@ public interface Patcher {
 
 	public String getNewBody(CtMethod m) throws Exception;
 	
+	public void finalizeClass() throws Exception;
+	
 }

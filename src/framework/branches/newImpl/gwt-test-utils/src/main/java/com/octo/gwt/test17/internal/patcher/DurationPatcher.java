@@ -1,18 +1,11 @@
 package com.octo.gwt.test17.internal.patcher;
 
-import javassist.CtMethod;
+import com.octo.gwt.test17.ng.AutomaticPatcher;
+import com.octo.gwt.test17.ng.PatchMethod;
 
-public class DurationPatcher extends AbstractPatcher {
+public class DurationPatcher extends AutomaticPatcher {
 
-	@Override
-	public String getNewBody(CtMethod m) {
-		if (match(m, "currentTimeMillis")) {
-			return callMethod("currentTimeMillis");
-		}
-
-		return null;
-	}
-
+	@PatchMethod
 	public static double currentTimeMillis() {
 		return System.currentTimeMillis();
 	}

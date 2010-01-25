@@ -10,24 +10,16 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
-import javassist.CtMethod;
-
 import com.google.gwt.i18n.client.impl.CurrencyData;
+import com.google.gwt.i18n.client.impl.CurrencyList;
 import com.octo.gwt.test17.PatchUtils;
+import com.octo.gwt.test17.ng.AutomaticPatcher;
+import com.octo.gwt.test17.ng.PatchMethod;
 
-public class CurrencyListPatcher extends AbstractPatcher {
+public class CurrencyListPatcher extends AutomaticPatcher {
 
 	private static List<CurrencyData> currencyDatas;
 	private static List<String[]> contents;
-
-	@Override
-	public String getNewBody(CtMethod m) {
-		if (match(m, "getDefault")) {
-			return callMethod("getDefault");
-		}
-
-		return null;
-	}
 
 	private static CurrencyData create() {
 		try {
@@ -140,7 +132,8 @@ public class CurrencyListPatcher extends AbstractPatcher {
 		}
 	}
 
-	public static CurrencyData getDefault() {
+	@PatchMethod
+	public static CurrencyData getDefault(CurrencyList currencyList) {
 		init();
 		return currencyDatas.get(0);
 	}
