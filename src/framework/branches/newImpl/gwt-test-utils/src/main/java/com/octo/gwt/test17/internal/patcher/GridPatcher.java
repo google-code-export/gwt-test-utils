@@ -1,22 +1,14 @@
 package com.octo.gwt.test17.internal.patcher;
 
-import javassist.CtMethod;
-
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.TableRowElement;
 import com.google.gwt.user.client.Element;
+import com.octo.gwt.test17.ng.AutomaticPatcher;
+import com.octo.gwt.test17.ng.PatchMethod;
 
-public class GridPatcher extends AbstractPatcher {
+public class GridPatcher extends AutomaticPatcher {
 
-	@Override
-	public String getNewBody(CtMethod m) {
-		if (match(m, "addRows")) {
-			return callMethod("addRows", "$1, $2, $3");
-		}
-
-		return null;
-	}
-
+	@PatchMethod
 	public static void addRows(Element table, int rows, int columns) {
 		for (int i = 0; i < rows; i++) {
 			table.appendChild(createRow(columns));

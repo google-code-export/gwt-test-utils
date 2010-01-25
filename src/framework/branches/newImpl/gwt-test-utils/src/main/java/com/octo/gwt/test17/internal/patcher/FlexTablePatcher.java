@@ -1,22 +1,14 @@
 package com.octo.gwt.test17.internal.patcher;
 
-import javassist.CtMethod;
-
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.TableRowElement;
 import com.google.gwt.user.client.Element;
+import com.octo.gwt.test17.ng.AutomaticPatcher;
+import com.octo.gwt.test17.ng.PatchMethod;
 
-public class FlexTablePatcher extends AbstractPatcher {
+public class FlexTablePatcher extends AutomaticPatcher {
 
-	@Override
-	public String getNewBody(CtMethod m) {
-		if (match(m, "addCells")) {
-			return callMethod("addCells", "$1, $2, $3");
-		}
-
-		return null;
-	}
-
+	@PatchMethod
 	public static void addCells(Element table, int row, int num) {
 		TableRowElement trCell = getCellElement(table, row);
 		for (int i = 0; i < num; i++) {

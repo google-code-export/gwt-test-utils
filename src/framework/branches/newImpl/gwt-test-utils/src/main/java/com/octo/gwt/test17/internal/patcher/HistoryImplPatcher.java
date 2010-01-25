@@ -2,34 +2,33 @@ package com.octo.gwt.test17.internal.patcher;
 
 import java.util.Stack;
 
-import javassist.CtMethod;
+import com.google.gwt.user.client.impl.HistoryImpl;
+import com.octo.gwt.test17.ng.AutomaticPatcher;
+import com.octo.gwt.test17.ng.PatchMethod;
 
-public class HistoryImplPatcher extends AbstractPatcher {
+public class HistoryImplPatcher extends AutomaticPatcher {
 
 	static Stack<String> stack = new Stack<String>();
 
 	private static String top = null;
-
-	@Override
-	public String getNewBody(CtMethod m) {
-		if (match(m, "init")) {
-			return "return true";
-		} else if (match(m, "nativeUpdate")) {
-			return "";
-		} else if (match(m, "getToken")) {
-			return callMethod("getToken");
-		} else if (match(m, "setToken")) {
-			return callMethod("setToken", "$1");
-		}
-
-		return null;
+	
+	@PatchMethod
+	public static boolean init(HistoryImpl historyImpl) {
+		return true;
 	}
 
+	@PatchMethod
+	public static void nativeUpdate(HistoryImpl historyImpl, String s) {
+		
+	}
+	
+	@PatchMethod
 	public static void setToken(String token) {
 		stack.push(token);
 		top = token;
 	}
 
+	@PatchMethod
 	public static String getToken() {
 		return top;
 	}

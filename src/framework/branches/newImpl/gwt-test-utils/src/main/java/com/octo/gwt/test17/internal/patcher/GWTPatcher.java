@@ -6,8 +6,6 @@ import java.lang.reflect.Proxy;
 import java.util.HashMap;
 import java.util.Map;
 
-import javassist.CtMethod;
-
 import com.google.gwt.i18n.client.Constants;
 import com.google.gwt.i18n.client.impl.CldrImpl;
 import com.google.gwt.i18n.client.impl.CurrencyList;
@@ -37,35 +35,34 @@ import com.octo.gwt.test17.PatchUtils;
 import com.octo.gwt.test17.internal.overrides.OverrideImagePrototype;
 import com.octo.gwt.test17.internal.patcher.dom.DOMImplPatcher;
 import com.octo.gwt.test17.internal.patcher.dom.DOMImplUserPatcher;
+import com.octo.gwt.test17.ng.AutomaticPatcher;
+import com.octo.gwt.test17.ng.PatchMethod;
 
 @SuppressWarnings("deprecation")
-public class GWTPatcher extends AbstractPatcher {
+public class GWTPatcher extends AutomaticPatcher {
 
 	public static GwtCreateHandler gwtCreateHandler = null;
 	public static IGWTLogHandler gwtLogHandler = null;
 	public static Map<Class<?>, Object> createClass = new HashMap<Class<?>, Object>();
-
-	@Override
-	public String getNewBody(CtMethod m) {
-		if (match(m, "create")) {
-			return callMethod("create", "$1");
-		} else if (match(m, "log")) {
-			return callMethod("log", "$1, $2");
-		} else if (match(m, "getHostPageBaseURL")) {
-			return "return \"getHostPageBaseURL/getModuleName\";";
-		} else if (match(m, "getModuleName")) {
-			return "return \"getModuleName\";";
-		}
-
-		return null;
+	
+	@PatchMethod
+	public static String getHostPageBaseURL() {
+		return "getHostPageBaseURL/getModuleName";
+	}
+	
+	@PatchMethod
+	public static String getModuleName() {
+		return "getModuleName";
 	}
 
+	@PatchMethod
 	public static void log(String message, Throwable t) {
 		if (gwtLogHandler != null) {
 			gwtLogHandler.log(message, t);
 		}
 	}
 
+	@PatchMethod
 	public static Object create(Class<?> classLiteral) {
 		if (classLiteral == DebugIdImpl.class) {
 			return new UIObject.DebugIdImpl();
