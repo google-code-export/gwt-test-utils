@@ -7,7 +7,6 @@ import javassist.CtClass;
 import javassist.CtPrimitiveType;
 
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.SelectElement;
 import com.octo.gwt.test17.ElementWrapper;
 
 public class PropertyHolder {
@@ -56,12 +55,6 @@ public class PropertyHolder {
 
 	public static Object getPropertValue(Object o, String propertyName) {
 		Object result = get(o).get(propertyName);
-		if (o instanceof SelectElement) {
-			SelectElement s = (SelectElement) o;
-			//s.getParentNode();
-			Object oo = s.cast();
-			System.out.println(oo.getClass());
-		}
 		return result;
 	}
 

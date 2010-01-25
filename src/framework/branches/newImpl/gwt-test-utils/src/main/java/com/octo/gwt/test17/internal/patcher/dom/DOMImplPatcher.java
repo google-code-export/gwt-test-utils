@@ -20,7 +20,6 @@ import com.octo.gwt.test17.PatchUtils;
 import com.octo.gwt.test17.internal.overrides.OverrideEvent;
 import com.octo.gwt.test17.internal.overrides.OverrideNodeList;
 import com.octo.gwt.test17.internal.patcher.AbstractPatcher;
-import com.sun.java.swing.plaf.windows.WindowsInternalFrameTitlePane.ScalableIconUIResource;
 
 public class DOMImplPatcher extends AbstractPatcher {
 
