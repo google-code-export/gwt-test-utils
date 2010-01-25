@@ -1,20 +1,41 @@
 package com.octo.gwt.test17.internal.patcher;
 
-import javassist.CtMethod;
+import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.ui.impl.FocusImpl;
+import com.octo.gwt.test17.ng.AutomaticPatcher;
+import com.octo.gwt.test17.ng.PatchMethod;
 
-import com.octo.gwt.test17.PatchUtils;
+public class FocusImplOldPatcher extends AutomaticPatcher {
 
-public class FocusImplOldPatcher extends AbstractPatcher {
-
-	@Override
-	public String getNewBody(CtMethod m) {
-		if (match(m, "createBlurHandler|createFocusHandler|createMouseHandler|focus|blur")) {
-			return "";
-		} else if (match(m, "createFocusable")) {
-			return PatchUtils.callMethod(FocusImplPatcher.class, "createFocusable", null);
-		}
-
+	@PatchMethod
+	public static void blur(FocusImpl focusImpl, Element element) {
+		
+	}
+	
+	@PatchMethod
+	public static void focus(FocusImpl focusImpl, Element element) {
+		
+	}
+	
+	@PatchMethod
+	public static JavaScriptObject createBlurHandler(FocusImpl focusImpl) {
 		return null;
+	}
+	
+	@PatchMethod
+	public static JavaScriptObject createFocusHandler(FocusImpl focusImpl) {
+		return null;
+	}
+	
+	@PatchMethod
+	public static JavaScriptObject createMouseHandler(FocusImpl focusImpl) {
+		return null;
+	}
+	
+	@PatchMethod
+	public static Element createFocusable(FocusImpl focusImpl) {
+		return FocusImplPatcher.createFocusable(focusImpl);
 	}
 
 }

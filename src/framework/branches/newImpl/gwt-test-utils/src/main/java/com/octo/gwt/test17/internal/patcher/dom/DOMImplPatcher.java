@@ -20,6 +20,7 @@ import com.octo.gwt.test17.PatchUtils;
 import com.octo.gwt.test17.internal.overrides.OverrideEvent;
 import com.octo.gwt.test17.internal.overrides.OverrideNodeList;
 import com.octo.gwt.test17.internal.patcher.AbstractPatcher;
+import com.octo.gwt.test17.ng.AutomaticSubclasser;
 
 public class DOMImplPatcher extends AbstractPatcher {
 
@@ -95,8 +96,7 @@ public class DOMImplPatcher extends AbstractPatcher {
 
 	public static ButtonElement createButtonElement(Document doc, String type) {
 		ButtonElement e = (ButtonElement) doc.createElement("button");
-		PropertyHolder.get(e).put("Type", type);
-
+		AutomaticSubclasser.setProperty(e, "Type", type);
 		return e;
 	}
 

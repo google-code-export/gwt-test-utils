@@ -1,45 +1,56 @@
 package com.octo.gwt.test17.internal.patcher;
 
-import javassist.CtMethod;
-
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.ui.impl.FocusImpl;
 import com.octo.gwt.test17.ElementUtils;
+import com.octo.gwt.test17.ElementWrapper;
 import com.octo.gwt.test17.internal.patcher.dom.PropertyHolder;
+import com.octo.gwt.test17.ng.AutomaticPatcher;
+import com.octo.gwt.test17.ng.AutomaticSubclasser;
+import com.octo.gwt.test17.ng.PatchMethod;
+import com.octo.gwt.test17.ng.SubClassedObject;
 
-public class FocusImplPatcher extends AbstractPatcher {
+public class FocusImplPatcher extends AutomaticPatcher {
 
-	@Override
-	public String getNewBody(CtMethod m) {
-		if (match(m, "blur|focus")) {
-			return "";
-		} else if (match(m, "createFocusable")) {
-			return callMethod("createFocusable");
-		} else if (match(m, "getTabIndex")) {
-			return callMethod("getTabIndex", "$1");
-		} else if (match(m, "setTabIndex")) {
-			return callMethod("setTabIndex", "$1, $2");
-		}
-
-		return null;
+	@PatchMethod
+	public static void blur(FocusImpl focusImpl, Element element) {
+		
+	}
+	
+	@PatchMethod
+	public static void focus(FocusImpl focusImpl, Element element) {
+		
 	}
 
-	public static Element createFocusable() {
+	@PatchMethod
+	public static Element createFocusable(FocusImpl focusImpl) {
 		DivElement div = Document.get().createDivElement();
 		return ElementUtils.castToUserElement(div);
 	}
 
-	public static int getTabIndex(Element elem) {
+	@PatchMethod
+	public static int getTabIndex(FocusImpl focusImpl, Element elem) {
+		if (elem instanceof ElementWrapper && ((ElementWrapper) elem).getWrappedElement() instanceof SubClassedObject) {
+			Object o = AutomaticSubclasser.getProperty(((ElementWrapper) elem).getWrappedElement(), "TabIndex");
+			return o == null ? 0 : (Integer) o;
+		}
 		Integer tabIndex = (Integer) PropertyHolder.get(elem).get("TabIndex");
 		if (tabIndex == null)
 			return 0;
 		else
 			return tabIndex;
 	}
-
-	public static void setTabIndex(Element elem, int index) {
-		PropertyHolder.get(elem).put("TabIndex", index);
+	
+	@PatchMethod
+	public static void setTabIndex(FocusImpl focusImpl, Element elem, int index) {
+		if (elem instanceof ElementWrapper && ((ElementWrapper) elem).getWrappedElement() instanceof SubClassedObject) {
+			AutomaticSubclasser.setProperty(((ElementWrapper) elem).getWrappedElement(), "TabIndex", index);
+		}
+		else {
+			PropertyHolder.get(elem).put("TabIndex", index);
+		}
 	}
 
 }
