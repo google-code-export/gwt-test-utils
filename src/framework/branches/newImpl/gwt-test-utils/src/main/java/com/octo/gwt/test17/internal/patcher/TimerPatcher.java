@@ -18,11 +18,14 @@ public class TimerPatcher extends AbstractPatcher {
 			return callMethod("schedule", "this, $1");
 		} else if (match(m, "scheduleRepeating")) {
 			return callMethod("scheduleRepeating", "this, $1");
+		} else if (match(m, "clearTimeout")) {
+			return "";
 		}
+
 
 		return null;
 	}
-
+	
 	public static void schedule(Timer timer, int delayMillis) throws Exception {
 		if (delayMillis <= 0) {
 			throw new IllegalArgumentException("must be positive");

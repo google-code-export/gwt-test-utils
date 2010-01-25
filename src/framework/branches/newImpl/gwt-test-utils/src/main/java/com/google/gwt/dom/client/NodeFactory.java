@@ -11,6 +11,7 @@ import com.octo.gwt.test17.internal.overrides.OverrideTableCellElement;
 import com.octo.gwt.test17.internal.overrides.OverrideTableColElement;
 import com.octo.gwt.test17.internal.overrides.OverrideTableSectionElement;
 import com.octo.gwt.test17.internal.patcher.dom.PropertyHolder;
+import com.octo.gwt.test17.ng.AutomaticSubclasser;
 
 public class NodeFactory {
 
@@ -99,6 +100,10 @@ public class NodeFactory {
 
 	public static Element createElement(String tag) throws Exception {
 		Element elem;
+		
+		if ("select".equals(tag)) {
+			return (Element) AutomaticSubclasser.map.get(SelectElement.class).newInstance();
+		}
 
 		if (H_PATTERN.matcher(tag).matches()) {
 			elem = new OverrideHeadingElement(tag);

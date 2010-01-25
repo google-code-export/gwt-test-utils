@@ -106,6 +106,25 @@ public class ReflectionUtils {
 		return l;
 	}
 
+	private static void recurseGetAnnotatedMethod(List<Method> list, Class<?> target, Class<?> annotationClass) {
+		for (Method m : target.getDeclaredMethods()) {
+			for (Annotation a : m.getDeclaredAnnotations()) {
+				if (a.annotationType() == annotationClass) {
+					list.add(m);
+				}
+			}
+		}
+		if (target.getSuperclass() != null) {
+			recurseGetAnnotatedMethod(list, target.getSuperclass(), annotationClass);
+		}
+	}
+
+	public static List<Method> getAnnotatedMethod(Class<?> target, Class<?> annotationClass) {
+		List<Method> l = new ArrayList<Method>();
+		recurseGetAnnotatedMethod(l, target, annotationClass);
+		return l;
+	}
+
 	public static Set<Field> findFieldByName(Class<?> clazz, String fieldName) {
 		Set<Field> set = new HashSet<Field>();
 		for (Field f : clazz.getFields()) {

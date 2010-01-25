@@ -115,6 +115,33 @@ public class DocumentTest extends AbstractGWTTest {
 		Assert.assertEquals("button", e.getTagName());
 		Assert.assertEquals("button", e.getType());
 	}
+	
+	@Test
+	public void checkIsCompat() {
+		// Test
+		boolean result = d.isCSS1Compat();
+
+		// Assert
+		Assert.assertEquals(false, result);
+	}
+	
+	@Test
+	public void checkBodyLeft() {
+		// Test
+		int result = d.getBodyOffsetLeft();
+
+		// Assert
+		Assert.assertEquals(0, result);
+	}
+	
+	@Test
+	public void checkBodyTop() {
+		// Test
+		int result = d.getBodyOffsetTop();
+
+		// Assert
+		Assert.assertEquals(0, result);
+	}
 
 	@Test
 	public void checkCreateResetButtonElement() {

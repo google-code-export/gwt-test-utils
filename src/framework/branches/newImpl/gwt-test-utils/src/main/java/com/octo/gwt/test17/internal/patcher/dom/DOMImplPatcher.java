@@ -20,6 +20,7 @@ import com.octo.gwt.test17.PatchUtils;
 import com.octo.gwt.test17.internal.overrides.OverrideEvent;
 import com.octo.gwt.test17.internal.overrides.OverrideNodeList;
 import com.octo.gwt.test17.internal.patcher.AbstractPatcher;
+import com.sun.java.swing.plaf.windows.WindowsInternalFrameTitlePane.ScalableIconUIResource;
 
 public class DOMImplPatcher extends AbstractPatcher {
 
@@ -85,8 +86,11 @@ public class DOMImplPatcher extends AbstractPatcher {
 			return callMethod("selectGetOptions", "$1");
 		} else if (match(m, "eventGetTarget")) {
 			return "return null";
+		} else if (match(m, "getBodyOffsetLeft")) {
+			return "return 0";
+		} else if (match(m, "getBodyOffsetTop")) {
+			return "return 0";
 		}
-
 		return null;
 	}
 
@@ -119,7 +123,7 @@ public class DOMImplPatcher extends AbstractPatcher {
 		elem = ElementUtils.castToDomElement(elem);
 		return (String) PropertyHolder.get(elem).get("InnerHTML");
 	}
-
+	
 	public static String getInnerText(Element elem) {
 		elem = ElementUtils.castToDomElement(elem);
 		return (String) PropertyHolder.get(elem).get("InnerText");
@@ -196,7 +200,8 @@ public class DOMImplPatcher extends AbstractPatcher {
 
 	public static int getScrollLeft(Element elem) {
 		elem = ElementUtils.castToDomElement(elem);
-		return (Integer) PropertyHolder.get(elem).get("ScrollLeft");
+		Integer srcollLeft = (Integer) PropertyHolder.get(elem).get("ScrollLeft");
+		return (srcollLeft != null) ? srcollLeft : 0;
 	}
 
 	public static boolean isOrHasChild(Node parent, Node child) {

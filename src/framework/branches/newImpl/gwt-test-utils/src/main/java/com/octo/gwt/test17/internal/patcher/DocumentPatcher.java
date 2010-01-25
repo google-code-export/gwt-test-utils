@@ -15,6 +15,8 @@ public class DocumentPatcher extends AbstractPatcher {
 			return callMethod("get");
 		} else if (match(m, "createUniqueId")) {
 			return callMethod("createUniqueId");
+		} else if (match(m, "getCompatMode")) {
+			return "return \"toto\"";
 		}
 
 		return null;

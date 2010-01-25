@@ -118,7 +118,6 @@ import com.octo.gwt.test17.internal.patcher.dom.NodeListPatcher;
 import com.octo.gwt.test17.internal.patcher.dom.NodePatcher;
 import com.octo.gwt.test17.internal.patcher.dom.OptionElementPatcher;
 import com.octo.gwt.test17.internal.patcher.dom.PropertyHolder;
-import com.octo.gwt.test17.internal.patcher.dom.SelectElementPatcher;
 import com.octo.gwt.test17.internal.patcher.dom.SpanElementPatcher;
 import com.octo.gwt.test17.internal.patcher.dom.StylePatcher;
 import com.octo.gwt.test17.internal.patcher.dom.TableCaptionElementPatcher;
@@ -128,6 +127,7 @@ import com.octo.gwt.test17.internal.patcher.dom.TableElementPatcher;
 import com.octo.gwt.test17.internal.patcher.dom.TableRowElementPatcher;
 import com.octo.gwt.test17.internal.patcher.dom.TableSectionElementPatcher;
 import com.octo.gwt.test17.internal.patcher.dom.TextAreaElementPatcher;
+import com.octo.gwt.test17.ng.AutomaticElementSubclasser;
 
 public class PatchGWT {
 
@@ -277,7 +277,7 @@ public class PatchGWT {
 		PatchUtils.patch(NodeList.class, new NodeListPatcher());
 		PatchUtils.patch(Node.class, new NodePatcher());
 		PatchUtils.patch(OptionElement.class, new OptionElementPatcher());
-		PatchUtils.patch(SelectElement.class, new SelectElementPatcher());
+		PatchUtils.patch(SelectElement.class, new AutomaticElementSubclasser());
 		PatchUtils.patch(SpanElement.class, new SpanElementPatcher());
 		PatchUtils.patch(Style.class, new StylePatcher());
 		PatchUtils.patch(TableCaptionElement.class, new TableCaptionElementPatcher());

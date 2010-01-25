@@ -10,6 +10,7 @@ import java.util.Locale;
 import java.util.Properties;
 import java.util.Map.Entry;
 
+import javassist.CannotCompileException;
 import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtConstructor;
@@ -242,7 +243,7 @@ public class PatchUtils {
 						continue;
 					}
 
-					m.setModifiers(m.getModifiers() - Modifier.NATIVE);
+					removeNativeModifier(m);
 
 					if (m.getName().startsWith("get") || m.getName().startsWith("is")) {
 						m.setBody("{" + PropertyHolder.callGet(fieldName, m.getReturnType()) + "}");
@@ -291,7 +292,12 @@ public class PatchUtils {
 					src = src + " }";
 				}
 			}
-			m.setBody(src);
+			try {
+				m.setBody(src);
+			}
+			catch (CannotCompileException e) {
+				throw new RuntimeException("Unable to compile body " + src, e);
+			}
 		}
 	}
 
