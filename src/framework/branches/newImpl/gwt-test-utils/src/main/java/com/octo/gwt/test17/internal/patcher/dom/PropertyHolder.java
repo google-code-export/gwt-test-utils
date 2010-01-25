@@ -23,6 +23,7 @@ public class PropertyHolder {
 			// init with DOM properties
 			if (o instanceof Element) {
 				result.put("AccessKey", "");
+				result.put("ClassName", "");
 			}
 			CACHE.put(o, result);
 		}

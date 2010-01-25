@@ -12,13 +12,18 @@ import com.google.gwt.i18n.client.Constants;
 import com.google.gwt.i18n.client.impl.CldrImpl;
 import com.google.gwt.i18n.client.impl.CurrencyList;
 import com.google.gwt.i18n.client.impl.LocaleInfoImpl;
+import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.resources.client.impl.ImageResourcePrototype;
 import com.google.gwt.user.client.impl.DOMImpl;
 import com.google.gwt.user.client.impl.HistoryImpl;
 import com.google.gwt.user.client.impl.WindowImpl;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.ImageBundle;
+import com.google.gwt.user.client.ui.MenuBar;
+import com.google.gwt.user.client.ui.OverrideDefaultImages;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.UIObject.DebugIdImpl;
+import com.google.gwt.user.client.ui.impl.ClippedImageImpl;
 import com.google.gwt.user.client.ui.impl.FocusImpl;
 import com.google.gwt.user.client.ui.impl.FocusImplOld;
 import com.google.gwt.user.client.ui.impl.FormPanelImpl;
@@ -33,6 +38,7 @@ import com.octo.gwt.test17.internal.overrides.OverrideImagePrototype;
 import com.octo.gwt.test17.internal.patcher.dom.DOMImplPatcher;
 import com.octo.gwt.test17.internal.patcher.dom.DOMImplUserPatcher;
 
+@SuppressWarnings("deprecation")
 public class GWTPatcher extends AbstractPatcher {
 
 	public static GwtCreateHandler gwtCreateHandler = null;
@@ -106,6 +112,24 @@ public class GWTPatcher extends AbstractPatcher {
 		if (Constants.class.isAssignableFrom(classLiteral)) {
 			return generateConstantWrapper(classLiteral);
 		}
+
+		if (classLiteral == MenuBar.Resources.class) {
+			return new MenuBar.Resources() {
+
+				public ImageResource menuBarSubMenuIcon() {
+					return new ImageResourcePrototype(null, null, 0, 0, 0, 0, false);
+				}
+			};
+		}
+
+		if (classLiteral == OverrideDefaultImages.getDefaultImagesClass()) {
+			return OverrideDefaultImages.getInstance();
+		}
+
+		if (classLiteral == ClippedImageImpl.class) {
+			return new ClippedImageImpl();
+		}
+
 		if (ImageBundle.class.isAssignableFrom(classLiteral)) {
 			return generateImageWrapper(classLiteral);
 		}

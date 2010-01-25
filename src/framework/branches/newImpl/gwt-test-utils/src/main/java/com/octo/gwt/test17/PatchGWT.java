@@ -89,6 +89,7 @@ import com.octo.gwt.test17.internal.patcher.HistoryPatcher;
 import com.octo.gwt.test17.internal.patcher.ImagePatcher;
 import com.octo.gwt.test17.internal.patcher.JavaScriptObjectPatcher;
 import com.octo.gwt.test17.internal.patcher.ListBoxPatcher;
+import com.octo.gwt.test17.internal.patcher.NumberFormatPatcher;
 import com.octo.gwt.test17.internal.patcher.Patcher;
 import com.octo.gwt.test17.internal.patcher.RootPanelPatch;
 import com.octo.gwt.test17.internal.patcher.StackPanelPatcher;
@@ -244,6 +245,7 @@ public class PatchGWT {
 		PatchUtils.patch(HTMLTable.RowFormatter.class, new HTMLTableRowFormatterPatcher());
 		PatchUtils.patch(Image.class, new ImagePatcher());
 		PatchUtils.patch(ListBox.class, new ListBoxPatcher());
+		PatchUtils.patch(NumberFormat.class, new NumberFormatPatcher());
 		PatchUtils.patch(RootPanel.class, new RootPanelPatch());
 		PatchUtils.patch(StackPanel.class, new StackPanelPatcher());
 		PatchUtils.patch(TextArea.class, new TextAreaPatcher());

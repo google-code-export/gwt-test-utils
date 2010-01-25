@@ -4,6 +4,7 @@ import java.util.Map;
 
 import javassist.CtMethod;
 
+import com.google.gwt.dom.client.ButtonElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.InputElement;
@@ -28,6 +29,8 @@ public class DOMImplPatcher extends AbstractPatcher {
 	public String getNewBody(CtMethod m) {
 		if (match(m, "createElement")) {
 			return PatchUtils.callMethod(NodeFactory.class, "createElement", "$2");
+		} else if (match(m, "createButtonElement")) {
+			return callMethod("createButtonElement", "$1, $2");
 		} else if (match(m, "createInputElement")) {
 			return callMethod("createInputElement", "$1, $2, null");
 		} else if (match(m, "createInputRadioElement")) {
@@ -40,6 +43,10 @@ public class DOMImplPatcher extends AbstractPatcher {
 			return callMethod("getInnerText", "$1");
 		} else if (match(m, "setInnerText")) {
 			return callMethod("setInnerText", "$1, $2");
+		} else if (match(m, "getAbsoluteLeft")) {
+			return callMethod("getAbsoluteLeft", "$1");
+		} else if (match(m, "getAbsoluteTop")) {
+			return callMethod("getAbsoluteTop", "$1");
 		} else if (match(m, "getFirstChildElement")) {
 			return callMethod("getFirstChildElement", "$1");
 		} else if (match(m, "getParentElement")) {
@@ -83,6 +90,13 @@ public class DOMImplPatcher extends AbstractPatcher {
 		return null;
 	}
 
+	public static ButtonElement createButtonElement(Document doc, String type) {
+		ButtonElement e = (ButtonElement) doc.createElement("button");
+		PropertyHolder.get(e).put("Type", type);
+
+		return e;
+	}
+
 	public static InputElement createInputElement(Document doc, String type, String name) {
 		InputElement e = (InputElement) doc.createElement("input");
 		PropertyHolder.get(e).put("Type", type);
@@ -116,6 +130,18 @@ public class DOMImplPatcher extends AbstractPatcher {
 		PropertyHolder.get(elem).put("InnerText", text);
 	}
 
+	public static int getAbsoluteLeft(Element elem) {
+		elem = ElementUtils.castToDomElement(elem);
+		Integer absoluteLeft = (Integer) PropertyHolder.get(elem).get("AbsoluteLeft");
+		return (absoluteLeft != null) ? absoluteLeft : 0;
+	}
+
+	public static int getAbsoluteTop(Element elem) {
+		elem = ElementUtils.castToDomElement(elem);
+		Integer absoluteTop = (Integer) PropertyHolder.get(elem).get("AbsoluteTop");
+		return (absoluteTop != null) ? absoluteTop : 0;
+	}
+
 	public static Element getFirstChildElement(Element elem) {
 		elem = ElementUtils.castToDomElement(elem);
 		NodeList<Node> nodeList = elem.getChildNodes();
@@ -130,7 +156,7 @@ public class DOMImplPatcher extends AbstractPatcher {
 		return null;
 	}
 
-	public static Element getParentElement(Element elem) {
+	public static Element getParentElement(Node elem) {
 		elem = ElementUtils.castToDomElement(elem);
 		Node parent = elem.getParentNode();
 
@@ -173,7 +199,7 @@ public class DOMImplPatcher extends AbstractPatcher {
 		return (Integer) PropertyHolder.get(elem).get("ScrollLeft");
 	}
 
-	public static boolean isOrHasChild(Element parent, Element child) {
+	public static boolean isOrHasChild(Node parent, Node child) {
 		parent = ElementUtils.castToDomElement(parent);
 		child = ElementUtils.castToDomElement(child);
 		if (parent.equals(child)) {

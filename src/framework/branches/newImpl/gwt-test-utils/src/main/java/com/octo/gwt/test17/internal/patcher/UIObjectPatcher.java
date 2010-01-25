@@ -4,10 +4,10 @@ import javassist.CtMethod;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
-import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.UIObject;
 import com.octo.gwt.test17.ElementUtils;
 import com.octo.gwt.test17.ReflectionUtils;
+import com.octo.gwt.test17.internal.patcher.dom.PropertyHolder;
 
 public class UIObjectPatcher extends AbstractPatcher {
 
@@ -92,13 +92,12 @@ public class UIObjectPatcher extends AbstractPatcher {
 		}
 	}
 
-	public static String getStyleName(Element e) {
-		String s = DOM.getElementProperty(e.<com.google.gwt.user.client.Element> cast(), "className");
-		return s == null ? "" : s;
+	public static String getStyleName(Element elem) {
+		return (String) PropertyHolder.get(elem).get("ClassName");
 	}
 
 	public static void setStyleName(Element elem, String styleName) {
-		DOM.setElementProperty(ElementUtils.castToUserElement(elem), "className", styleName);
+		PropertyHolder.get(elem).put("ClassName", styleName);
 	}
 
 }

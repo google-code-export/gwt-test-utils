@@ -4,6 +4,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.google.gwt.dom.client.ButtonElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.InputElement;
 import com.octo.gwt.test17.test.AbstractGWTTest;
@@ -24,7 +25,6 @@ public class DocumentTest extends AbstractGWTTest {
 		Assert.assertEquals("base", d.createBaseElement().getTagName());
 		Assert.assertEquals("body", d.createElement("body").getTagName());
 		Assert.assertEquals("br", d.createBRElement().getTagName());
-		Assert.assertEquals("button", d.createButtonElement().getTagName());
 		Assert.assertEquals("div", d.createDivElement().getTagName());
 		Assert.assertEquals("dl", d.createDLElement().getTagName());
 		Assert.assertEquals("fieldset", d.createFieldSetElement().getTagName());
@@ -94,5 +94,35 @@ public class DocumentTest extends AbstractGWTTest {
 		// Assert
 		Assert.assertEquals("RADIO", e.getType());
 		Assert.assertEquals("test", e.getName());
+	}
+
+	@Test
+	public void checkCreateSubmitButtonElement() {
+		// Test
+		ButtonElement e = d.createSubmitButtonElement();
+
+		// Assert
+		Assert.assertEquals("button", e.getTagName());
+		Assert.assertEquals("submit", e.getType());
+	}
+
+	@Test
+	public void checkCreatePushButtonElement() {
+		// Test
+		ButtonElement e = d.createPushButtonElement();
+
+		// Assert
+		Assert.assertEquals("button", e.getTagName());
+		Assert.assertEquals("button", e.getType());
+	}
+
+	@Test
+	public void checkCreateResetButtonElement() {
+		// Test
+		ButtonElement e = d.createResetButtonElement();
+
+		// Assert
+		Assert.assertEquals("button", e.getTagName());
+		Assert.assertEquals("reset", e.getType());
 	}
 }

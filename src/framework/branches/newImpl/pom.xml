@@ -4,11 +4,11 @@
 	<groupId>com.octo.gwt.test17</groupId>
 	<artifactId>gwt-test-utils-parent</artifactId>
 	<packaging>pom</packaging>
-	<version>0.6-SNAPSHOT</version>
+	<version>1.0-SNAPSHOT</version>
 	<name>GWT 1.7 Tests Utils Parent</name>
 
 	<properties>
-		<gwt.version>1.7.1</gwt.version>
+		<gwt.version>2.0.0</gwt.version>
 	</properties>
 
 	<scm>

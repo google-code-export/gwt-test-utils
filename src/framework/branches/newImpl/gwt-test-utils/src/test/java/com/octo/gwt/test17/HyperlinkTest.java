@@ -52,6 +52,7 @@ public class HyperlinkTest extends AbstractGWTTest {
 
 	private Boolean bool = false;
 
+	@SuppressWarnings("deprecation")
 	@Test
 	public void checkClick() {
 		Hyperlink link = new Hyperlink();
