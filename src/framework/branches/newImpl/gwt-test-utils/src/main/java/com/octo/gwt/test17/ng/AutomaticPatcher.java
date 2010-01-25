@@ -4,6 +4,8 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javassist.CtClass;
 import javassist.CtMethod;
@@ -13,7 +15,7 @@ import com.octo.gwt.test17.internal.patcher.Patcher;
 
 public class AutomaticPatcher implements Patcher {
 
-	private List<Method> annotatedMethods;
+	private Map<Method, PatchMethod> annotatedMethods;
 	
 	private CtClass c;
 	
@@ -23,24 +25,43 @@ public class AutomaticPatcher implements Patcher {
 	}
 
 	public String getNewBody(CtMethod m) throws Exception {
-		for(Method annotatedMethod : annotatedMethods) {
-			if (m.getName().equals(annotatedMethod.getName())) {
-				List<Object> params = new ArrayList<Object>();
-				for(Class<?> clazz : annotatedMethod.getParameterTypes()) {
-					if (clazz == CtClass.class) {
-						params.add(c);
+		for(Entry<Method, PatchMethod> entry : annotatedMethods.entrySet()) {
+			if (m.getName().equals(entry.getKey().getName())) {
+				if (!Modifier.isStatic(entry.getKey().getModifiers())) {
+					throw new RuntimeException("Method " + entry.getKey() + " have to be static");
+				}
+				if (entry.getValue().value() == PatchType.NEW_CODE_AS_STRING) {
+					List<Object> params = new ArrayList<Object>();
+					for(Class<?> clazz : entry.getKey().getParameterTypes()) {
+						if (clazz == CtClass.class) {
+							params.add(c);
+						}
+						else {
+							throw new RuntimeException("Not managed param " + clazz + " for method " + entry.getKey());
+						}
 					}
-					else {
-						throw new RuntimeException("Not managed param " + clazz + " for method " + annotatedMethod);
+					if (entry.getKey().getReturnType() != String.class) {
+						throw new RuntimeException("Wrong return type " + entry.getKey().getReturnType() + " for method " + entry.getKey());
 					}
+					return (String) entry.getKey().invoke(null, params.toArray());
 				}
-				if (annotatedMethod.getReturnType() != String.class) {
-					throw new RuntimeException("Wrong return type " + annotatedMethod.getReturnType() + " for method " + annotatedMethod);
+				if (entry.getValue().value() == PatchType.STATIC_CALL) {
+					StringBuffer buffer = new StringBuffer();
+					buffer.append("{");
+					buffer.append("return ");
+					buffer.append(this.getClass().getCanonicalName() + "." + entry.getKey().getName());
+					buffer.append("(");
+					for(int i = 0; i < entry.getKey().getParameterTypes().length; i ++) {
+						if (i > 0) {
+							buffer.append(", ");
+						}
+						int j = i + 1;
+						buffer.append("$" + j);
+					}
+					buffer.append(");");
+					buffer.append("}");
+					return buffer.toString();
 				}
-				if (!Modifier.isStatic(annotatedMethod.getModifiers())) {
-					throw new RuntimeException("Method " + annotatedMethod + " have to be static");
-				}
-				return (String) annotatedMethod.invoke(null, params.toArray());
 			}
 		}
 		return null;

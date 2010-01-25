@@ -9,8 +9,10 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class ReflectionUtils {
@@ -106,23 +108,24 @@ public class ReflectionUtils {
 		return l;
 	}
 
-	private static void recurseGetAnnotatedMethod(List<Method> list, Class<?> target, Class<?> annotationClass) {
+	@SuppressWarnings("unchecked")
+	private static <T extends Annotation> void recurseGetAnnotatedMethod(Map<Method, T> map, Class<?> target, Class<?> annotationClass) {
 		for (Method m : target.getDeclaredMethods()) {
 			for (Annotation a : m.getDeclaredAnnotations()) {
 				if (a.annotationType() == annotationClass) {
-					list.add(m);
+					map.put(m, (T) a);
 				}
 			}
 		}
 		if (target.getSuperclass() != null) {
-			recurseGetAnnotatedMethod(list, target.getSuperclass(), annotationClass);
+			recurseGetAnnotatedMethod(map, target.getSuperclass(), annotationClass);
 		}
 	}
 
-	public static List<Method> getAnnotatedMethod(Class<?> target, Class<?> annotationClass) {
-		List<Method> l = new ArrayList<Method>();
-		recurseGetAnnotatedMethod(l, target, annotationClass);
-		return l;
+	public static <T extends Annotation> Map<Method, T> getAnnotatedMethod(Class<?> target, Class<T> annotationClass) {
+		Map<Method, T> map = new HashMap<Method, T>();
+		recurseGetAnnotatedMethod(map, target, annotationClass);
+		return map;
 	}
 
 	public static Set<Field> findFieldByName(Class<?> clazz, String fieldName) {

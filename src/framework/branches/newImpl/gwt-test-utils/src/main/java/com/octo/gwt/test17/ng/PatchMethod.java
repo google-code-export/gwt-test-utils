@@ -9,4 +9,6 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 public @interface PatchMethod {
 
+	PatchType value() default PatchType.STATIC_CALL;
+	
 }
