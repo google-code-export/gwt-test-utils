@@ -33,7 +33,7 @@ import com.octo.gwt.test17.IGWTLogHandler;
 import com.octo.gwt.test17.PatchConstants;
 import com.octo.gwt.test17.PatchUtils;
 import com.octo.gwt.test17.internal.overrides.OverrideImagePrototype;
-import com.octo.gwt.test17.internal.patcher.dom.DOMImplPatcher;
+import com.octo.gwt.test17.internal.patcher.dom.DOMImplSubClassPatcher;
 import com.octo.gwt.test17.internal.patcher.dom.DOMImplUserSubClassPatcher;
 import com.octo.gwt.test17.ng.AutomaticPatcher;
 import com.octo.gwt.test17.ng.PatchMethod;
@@ -74,7 +74,7 @@ public class GWTPatcher extends AutomaticPatcher {
 			return new WindowImpl();
 		}
 		if (classLiteral.getCanonicalName().equals(PatchConstants.CLIENT_DOM_IMPL_CLASS_NAME)) {
-			return PatchUtils.generateInstance(PatchConstants.CLIENT_DOM_IMPL_CLASS_NAME, new DOMImplPatcher());
+			return PatchUtils.generateInstance(PatchConstants.CLIENT_DOM_IMPL_CLASS_NAME, new DOMImplSubClassPatcher());
 		}
 		if (classLiteral == DOMImpl.class) {
 			return PatchUtils.generateInstance(DOMImpl.class.getCanonicalName(), new DOMImplUserSubClassPatcher());

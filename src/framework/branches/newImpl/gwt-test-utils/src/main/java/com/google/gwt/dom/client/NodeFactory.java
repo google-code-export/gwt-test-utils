@@ -100,43 +100,48 @@ public class NodeFactory {
 		return new Node();
 	}
 
-	public static Element createElement(String tag) throws Exception {
-		Element elem;
+	public static Element createElement(String tag) {
+		try {
+			Element elem;
+		
+			
+			Class<?> subClazz = subclassedMap.get(tag);
+			
+			if (H_PATTERN.matcher(tag).matches()) {
+				elem = new OverrideHeadingElement(tag);
+			} else if (ModElement.TAG_INS.equals(tag) || ModElement.TAG_DEL.equals(tag)) {
+				elem = new OverrideModElement(tag);
+			} else if (QuoteElement.TAG_BLOCKQUOTE.equals(tag) || QuoteElement.TAG_Q.equals(tag)) {
+				elem = new OverrideQuoteElement(tag);
+			} else if (TableCellElement.TAG_TD.equals(tag) || TableCellElement.TAG_TH.equals(tag)) {
+				elem = new OverrideTableCellElement(tag);
+			} else if (TableColElement.TAG_COL.equals(tag) || TableColElement.TAG_COLGROUP.equals(tag)) {
+				elem = new OverrideTableColElement(tag);
+			} else if (TableSectionElement.TAG_TBODY.equals(tag) || TableSectionElement.TAG_TFOOT.equals(tag)
+					|| TableSectionElement.TAG_THEAD.equals(tag)) {
+				elem = new OverrideTableSectionElement(tag);
+			} else if (subClazz != null) {
+				elem = (Element) AutomaticSubclasser.map.get(subClazz).newInstance();
+			}
+			else {
+				Class<? extends Element> clazz = elementMap.get(tag);
 	
-		
-		Class<?> subClazz = subclassedMap.get(tag);
-		
-		if (H_PATTERN.matcher(tag).matches()) {
-			elem = new OverrideHeadingElement(tag);
-		} else if (ModElement.TAG_INS.equals(tag) || ModElement.TAG_DEL.equals(tag)) {
-			elem = new OverrideModElement(tag);
-		} else if (QuoteElement.TAG_BLOCKQUOTE.equals(tag) || QuoteElement.TAG_Q.equals(tag)) {
-			elem = new OverrideQuoteElement(tag);
-		} else if (TableCellElement.TAG_TD.equals(tag) || TableCellElement.TAG_TH.equals(tag)) {
-			elem = new OverrideTableCellElement(tag);
-		} else if (TableColElement.TAG_COL.equals(tag) || TableColElement.TAG_COLGROUP.equals(tag)) {
-			elem = new OverrideTableColElement(tag);
-		} else if (TableSectionElement.TAG_TBODY.equals(tag) || TableSectionElement.TAG_TFOOT.equals(tag)
-				|| TableSectionElement.TAG_THEAD.equals(tag)) {
-			elem = new OverrideTableSectionElement(tag);
-		} else if (subClazz != null) {
-			elem = (Element) AutomaticSubclasser.map.get(subClazz).newInstance();
+				if (clazz == null)
+					throw new RuntimeException("Cannot create element for tag <" + tag + ">");
+	
+				elem = clazz.newInstance();
+			}
+	
+			// set the <body> element as default parent node
+			if (!BodyElement.TAG.equals(elem.getTagName())) {
+				Document.get().getBody().appendChild(elem);
+			}
+	
+			return elem;
 		}
-		else {
-			Class<? extends Element> clazz = elementMap.get(tag);
-
-			if (clazz == null)
-				throw new Exception("Cannot create element for tag <" + tag + ">");
-
-			elem = clazz.newInstance();
+		catch(Exception e) {
+			throw new RuntimeException("Cannot create element for tag <" + tag + ">", e);
 		}
-
-		// set the <body> element as default parent node
-		if (!BodyElement.TAG.equals(elem.getTagName())) {
-			Document.get().getBody().appendChild(elem);
-		}
-
-		return elem;
 
 	}
 }
