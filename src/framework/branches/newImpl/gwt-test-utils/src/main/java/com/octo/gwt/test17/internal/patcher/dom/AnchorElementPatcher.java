@@ -1,21 +1,19 @@
 package com.octo.gwt.test17.internal.patcher.dom;
 
-import javassist.CtMethod;
-
 import com.google.gwt.dom.client.AnchorElement;
+import com.octo.gwt.test17.ng.AutomaticElementSubclasser;
+import com.octo.gwt.test17.ng.PatchMethod;
 
-public class AnchorElementPatcher extends AbstractElementPatcher<AnchorElement> {
+public class AnchorElementPatcher extends AutomaticElementSubclasser {
 
-	public AnchorElementPatcher() {
-		super(AnchorElement.class);
+	@PatchMethod
+	public static void blur(AnchorElement anchorElement) {
+		
 	}
-
-	public String getNewBody(CtMethod m) {
-		if (match(m, "blur|focus")) {
-			return "";
-		} else {
-			return super.getNewBody(m);
-		}
+	
+	@PatchMethod
+	public static void focus(AnchorElement anchorElement) {
+		
 	}
-
+	
 }

@@ -53,6 +53,9 @@ public class AutomaticPatcher implements Patcher {
 				if (classesFound[i] == CtClass.intType) {
 					clazz = Integer.class;
 				}
+				else {
+					throw new RuntimeException("Not managed type " + classesFound[i]);
+				}
 			}
 			else {
 				clazz = Class.forName(classesFound[i].getName());

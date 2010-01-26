@@ -22,7 +22,7 @@ public class NodeFactory {
 
 	static {
 
-		elementMap.put("a", AnchorElement.class);
+		subclassedMap.put("a", AnchorElement.class);
 		elementMap.put("area", AreaElement.class);
 		elementMap.put("base", BaseElement.class);
 		subclassedMap.put(BodyElement.TAG, BodyElement.class);

@@ -6,6 +6,12 @@ public class PropertyContainer extends HashMap<String, Object> {
 
 	private static final long serialVersionUID = -2421991095282208998L;
 
+	public PropertyContainer() {
+		super();
+		put("AccessKey", "");
+		put("ClassName", "");
+	}
+	
 	public void put(String key, boolean value) {
 		put(key, new Boolean(value));
 	}
