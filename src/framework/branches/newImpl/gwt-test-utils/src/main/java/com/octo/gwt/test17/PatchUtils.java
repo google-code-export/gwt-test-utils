@@ -17,7 +17,6 @@ import javassist.CtConstructor;
 import javassist.CtMethod;
 
 import com.google.gwt.i18n.client.Constants.DefaultStringValue;
-import com.octo.gwt.test17.internal.patcher.Patcher;
 import com.octo.gwt.test17.internal.patcher.dom.PropertyHolder;
 
 public class PatchUtils {
@@ -171,7 +170,7 @@ public class PatchUtils {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static <T> T generateInstance(String className, Patcher patcher) {
+	public static <T> T generateInstance(String className, IPatcher patcher) {
 		try {
 			CtClass c = cp.makeClass(className + "SubClass");
 			CtClass superClazz = cp.get(className);
@@ -205,7 +204,7 @@ public class PatchUtils {
 		sequenceReplacementList.add(new SequenceReplacement(regex, to));
 	}
 
-	public static void patch(Class<?> clazz, Patcher patcher) throws Exception {
+	public static void patch(Class<?> clazz, IPatcher patcher) throws Exception {
 		String className = clazz.getCanonicalName();
 		if (clazz.isMemberClass()) {
 			int k = className.lastIndexOf(".");
@@ -217,7 +216,7 @@ public class PatchUtils {
 		replaceClass(clazz, c.toBytecode());
 	}
 
-	protected static void patch(CtClass c, Patcher patcher) throws Exception {
+	protected static void patch(CtClass c, IPatcher patcher) throws Exception {
 		if (c == null) {
 			throw new IllegalArgumentException("the class to patch cannot be null");
 		}

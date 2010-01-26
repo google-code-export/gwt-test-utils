@@ -88,7 +88,6 @@ import com.octo.gwt.test17.internal.patcher.ImagePatcher;
 import com.octo.gwt.test17.internal.patcher.JavaScriptObjectPatcher;
 import com.octo.gwt.test17.internal.patcher.ListBoxPatcher;
 import com.octo.gwt.test17.internal.patcher.NumberFormatPatcher;
-import com.octo.gwt.test17.internal.patcher.Patcher;
 import com.octo.gwt.test17.internal.patcher.RootPanelPatch;
 import com.octo.gwt.test17.internal.patcher.StackPanelPatcher;
 import com.octo.gwt.test17.internal.patcher.TextAreaPatcher;
@@ -123,7 +122,7 @@ public class PatchGWT {
 	 */
 	private static List<String> alreadyPatched = new ArrayList<String>();
 
-	public static void patch(Class<?> clazz, Patcher patcher) throws Exception {
+	public static void patch(Class<?> clazz, IPatcher patcher) throws Exception {
 		if (alreadyPatched.contains(clazz.getCanonicalName())) {
 			return;
 		}

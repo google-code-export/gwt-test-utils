@@ -10,10 +10,10 @@ import java.util.Map.Entry;
 import javassist.CtClass;
 import javassist.CtMethod;
 
+import com.octo.gwt.test17.IPatcher;
 import com.octo.gwt.test17.ReflectionUtils;
-import com.octo.gwt.test17.internal.patcher.Patcher;
 
-public class AutomaticPatcher implements Patcher {
+public class AutomaticPatcher implements IPatcher {
 
 	private Map<Method, PatchMethod> annotatedMethods;
 	

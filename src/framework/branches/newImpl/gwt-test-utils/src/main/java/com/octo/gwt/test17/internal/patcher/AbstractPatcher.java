@@ -9,8 +9,9 @@ import javassist.CtMethod;
 import javassist.NotFoundException;
 
 import com.octo.gwt.test17.PatchUtils;
+import com.octo.gwt.test17.IPatcher;
 
-public class AbstractPatcher implements Patcher {
+public class AbstractPatcher implements IPatcher {
 
 	protected CtClass ctClass;
 

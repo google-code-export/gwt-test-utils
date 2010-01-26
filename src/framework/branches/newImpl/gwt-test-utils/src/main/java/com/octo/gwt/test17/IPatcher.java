@@ -1,9 +1,9 @@
-package com.octo.gwt.test17.internal.patcher;
+package com.octo.gwt.test17;
 
 import javassist.CtClass;
 import javassist.CtMethod;
 
-public interface Patcher {
+public interface IPatcher {
 
 	public void initClass(CtClass c) throws Exception;
 
