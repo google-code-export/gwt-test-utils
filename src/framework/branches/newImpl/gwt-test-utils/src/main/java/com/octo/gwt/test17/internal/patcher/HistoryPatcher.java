@@ -1,22 +1,14 @@
 package com.octo.gwt.test17.internal.patcher;
 
-import javassist.CtMethod;
-
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.impl.HistoryImpl;
 import com.octo.gwt.test17.ReflectionUtils;
+import com.octo.gwt.test17.ng.AutomaticPatcher;
+import com.octo.gwt.test17.ng.PatchMethod;
 
-public class HistoryPatcher extends AbstractPatcher {
+public class HistoryPatcher extends AutomaticPatcher {
 
-	@Override
-	public String getNewBody(CtMethod m) {
-		if (match(m, "back")) {
-			return callMethod("back");
-		}
-
-		return null;
-	}
-
+	@PatchMethod
 	public static void back() {
 		HistoryImplPatcher.stack.pop();
 		String token = HistoryImplPatcher.stack.pop();

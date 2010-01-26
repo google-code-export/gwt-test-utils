@@ -1,28 +1,19 @@
 package com.octo.gwt.test17.internal.patcher;
 
-import javassist.CtMethod;
-
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.IncrementalCommand;
+import com.octo.gwt.test17.ng.AutomaticPatcher;
+import com.octo.gwt.test17.ng.PatchMethod;
 
-public class DeferredCommandPatcher extends AbstractPatcher {
+public class DeferredCommandPatcher extends AutomaticPatcher {
 
-	@Override
-	public String getNewBody(CtMethod m) {
-		if (matchWithArgs(m, "addCommand", Command.class)) {
-			return callMethod("addCommand", "$1");
-		} else if (matchWithArgs(m, "addCommand", IncrementalCommand.class)) {
-			return callMethod("addIncrementalCommand", "$1");
-		}
-
-		return null;
-	}
-
+	@PatchMethod(args={Command.class})
 	public static void addCommand(Command command) {
 		command.execute();
 	}
 
-	public static void addIncrementalCommand(IncrementalCommand command) {
+	@PatchMethod(args={IncrementalCommand.class})
+	public static void addCommand(IncrementalCommand command) {
 		command.execute();
 	}
 

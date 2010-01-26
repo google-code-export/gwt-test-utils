@@ -1,33 +1,26 @@
 package com.octo.gwt.test17.internal.patcher;
 
-import javassist.CtMethod;
-
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.NodeFactory;
+import com.octo.gwt.test17.ng.AutomaticPatcher;
+import com.octo.gwt.test17.ng.PatchMethod;
 
-public class DocumentPatcher extends AbstractPatcher {
+public class DocumentPatcher extends AutomaticPatcher {
 
 	private static int ID = 0;
 
-	@Override
-	public String getNewBody(CtMethod m) {
-		if (match(m, "get")) {
-			return callMethod("get");
-		} else if (match(m, "createUniqueId")) {
-			return callMethod("createUniqueId");
-		} else if (match(m, "getCompatMode")) {
-			return "return \"toto\"";
-		}
-
-		return null;
-
+	@PatchMethod
+	public static String getCompatMode(Document document) {
+		return "toto";
 	}
-
+	
+	@PatchMethod
 	public static Document get() {
 		return NodeFactory.getDocument();
 	}
 
-	public static String createUniqueId() {
+	@PatchMethod
+	public static String createUniqueId(Document document) {
 		ID++;
 		return "elem_" + Long.toString(ID);
 	}
