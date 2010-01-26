@@ -8,7 +8,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import javassist.CtClass;
+import javassist.CtConstructor;
 import javassist.CtMethod;
+import javassist.NotFoundException;
 
 import com.octo.gwt.test17.IPatcher;
 import com.octo.gwt.test17.ReflectionUtils;
@@ -132,6 +134,36 @@ public class AutomaticPatcher implements IPatcher {
 			}
 		}
 		
+	}
+	
+	protected CtConstructor findConstructor(CtClass ctClass, Class<?>... argsClasses) throws NotFoundException {
+		List<CtConstructor> l = new ArrayList<CtConstructor>();
+
+		for (CtConstructor c : ctClass.getDeclaredConstructors()) {
+			if (argsClasses == null || argsClasses.length == c.getParameterTypes().length) {
+				l.add(c);
+
+				if (argsClasses != null) {
+					int i = 0;
+					for (Class<?> argClass : argsClasses) {
+						if (!argClass.getName().equals(c.getParameterTypes()[i].getName())) {
+							l.remove(c);
+							continue;
+						}
+						i++;
+					}
+				}
+			}
+		}
+
+		if (l.size() == 1) {
+			return l.get(0);
+		}
+		if (l.size() == 0) {
+			throw new RuntimeException("Unable to find a constructor with the specifed parameter types in class " + ctClass.getName());
+		}
+		throw new RuntimeException("Multiple constructor in class " + ctClass.getName() + ", you have to set parameter types discriminators");
+
 	}
 
 }

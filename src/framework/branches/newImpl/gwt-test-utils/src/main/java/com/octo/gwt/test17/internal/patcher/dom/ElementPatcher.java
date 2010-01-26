@@ -5,8 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javassist.CtClass;
 import javassist.CtConstructor;
-import javassist.CtMethod;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
@@ -15,16 +15,18 @@ import com.google.gwt.dom.client.Style;
 import com.octo.gwt.test17.ReflectionUtils;
 import com.octo.gwt.test17.internal.overrides.OverrideNodeList;
 import com.octo.gwt.test17.internal.overrides.TagAware;
-import com.octo.gwt.test17.internal.patcher.AbstractPatcher;
+import com.octo.gwt.test17.ng.AutomaticPatcher;
+import com.octo.gwt.test17.ng.PatchMethod;
 
-public class ElementPatcher extends AbstractPatcher {
+public class ElementPatcher extends AutomaticPatcher {
 
 	public static final String PROPERTY_MAP_FIELD = "propertyMap";
 	public static final String STYLE_FIELD = "style";
 
 	@Override
-	public void initClass() throws Exception {
-		CtConstructor cons = findConstructor();
+	public void initClass(CtClass c) throws Exception {
+		super.initClass(c);
+		CtConstructor cons = findConstructor(c);
 		StringBuilder sb = new StringBuilder();
 		// init style property
 		sb.append("{");
@@ -35,33 +37,7 @@ public class ElementPatcher extends AbstractPatcher {
 		cons.setBody(sb.toString());
 	}
 
-	@Override
-	public String getNewBody(CtMethod m) {
-		if (match(m, "getStyle")) {
-			return callMethod("getStyle", "this");
-		} else if (match(m, "getPropertyBoolean")) {
-			return callMethod("getPropertyBoolean", "this, $1");
-		} else if (match(m, "getPropertyDouble")) {
-			return callMethod("getPropertyDouble", "this, $1");
-		} else if (match(m, "getPropertyInt")) {
-			return callMethod("getPropertyInt", "this, $1");
-		} else if (match(m, "getPropertyString")) {
-			return callMethod("getPropertyString", "this, $1");
-		} else if (match(m, "setProperty.*")) {
-			return callMethod("setProperty", "this, $1, ($w) $2");
-		} else if (match(m, "setAttribute")) {
-			return callMethod("setAttribute", "this, $1, $2");
-		} else if (match(m, "getTagName")) {
-			return callMethod("getTagName", "this");
-		} else if (match(m, "getElementsByTagName")) {
-			return callMethod("getElementsByTagName", "this, $1");
-		} else if (match(m, "removeAttribute")) {
-			return callMethod("removeAttribute", "this, $1");
-		}
-
-		return null;
-	}
-
+	@PatchMethod
 	public static String getTagName(Element element) {
 		if (element == null)
 			return null;
@@ -72,10 +48,12 @@ public class ElementPatcher extends AbstractPatcher {
 		return ReflectionUtils.getStaticFieldValue(element.getClass(), "TAG");
 	}
 
+	@PatchMethod
 	public static Style getStyle(Element element) {
 		return (Style) PropertyHolder.get(element).get(STYLE_FIELD);
 	}
 
+	@PatchMethod
 	public static NodeList<Element> getElementsByTagName(Element elem, String name) {
 		NodeList<Node> nodeList = elem.getChildNodes();
 
@@ -98,12 +76,14 @@ public class ElementPatcher extends AbstractPatcher {
 		return new OverrideNodeList<Element>(list);
 	}
 
+	@PatchMethod
 	@SuppressWarnings("unchecked")
 	public static void removeAttribute(Element elem, String name) {
 		Map<String, String> attrs = (Map<String, String>) PropertyHolder.get(elem).get(PROPERTY_MAP_FIELD);
 		attrs.remove(name);
 	}
 
+	@PatchMethod
 	@SuppressWarnings("unchecked")
 	public static boolean getPropertyBoolean(Element element, String propertyName) {
 		Map<String, Object> propertyMap = (Map<String, Object>) PropertyHolder.get(element).get(PROPERTY_MAP_FIELD);
@@ -117,6 +97,7 @@ public class ElementPatcher extends AbstractPatcher {
 		return b;
 	}
 
+	@PatchMethod
 	@SuppressWarnings("unchecked")
 	public static double getPropertyDouble(Element element, String propertyName) {
 		Map<String, Object> propertyMap = (Map<String, Object>) PropertyHolder.get(element).get(PROPERTY_MAP_FIELD);
@@ -130,6 +111,7 @@ public class ElementPatcher extends AbstractPatcher {
 		return d;
 	}
 
+	@PatchMethod
 	@SuppressWarnings("unchecked")
 	public static int getPropertyInt(Element element, String propertyName) {
 		Map<String, Object> propertyMap = (Map<String, Object>) PropertyHolder.get(element).get(PROPERTY_MAP_FIELD);
@@ -143,6 +125,7 @@ public class ElementPatcher extends AbstractPatcher {
 		return i;
 	}
 
+	@PatchMethod
 	@SuppressWarnings("unchecked")
 	public static String getPropertyString(Element element, String propertyName) {
 		if ("tagName".equals(propertyName)) {
@@ -153,12 +136,35 @@ public class ElementPatcher extends AbstractPatcher {
 		return (String) propertyMap.get(propertyName);
 	}
 
+	@PatchMethod
 	@SuppressWarnings("unchecked")
-	public static void setProperty(Element element, String propertyName, Object value) {
+	public static void setPropertyString(Element element, String propertyName, String value) {
+		Map<String, Object> propertyMap = (Map<String, Object>) PropertyHolder.get(element).get(PROPERTY_MAP_FIELD);
+		propertyMap.put(propertyName, value);
+	}
+	
+	@SuppressWarnings("unchecked")
+	@PatchMethod
+	public static void setPropertyInt(Element element, String propertyName, int value) {
+		Map<String, Object> propertyMap = (Map<String, Object>) PropertyHolder.get(element).get(PROPERTY_MAP_FIELD);
+		propertyMap.put(propertyName, value);
+	}
+	
+	@SuppressWarnings("unchecked")
+	@PatchMethod
+	public static void setPropertyBoolean(Element element, String propertyName, boolean value) {
+		Map<String, Object> propertyMap = (Map<String, Object>) PropertyHolder.get(element).get(PROPERTY_MAP_FIELD);
+		propertyMap.put(propertyName, value);
+	}
+	
+	@SuppressWarnings("unchecked")
+	@PatchMethod
+	public static void setPropertyDouble(Element element, String propertyName, double value) {
 		Map<String, Object> propertyMap = (Map<String, Object>) PropertyHolder.get(element).get(PROPERTY_MAP_FIELD);
 		propertyMap.put(propertyName, value);
 	}
 
+	@PatchMethod
 	@SuppressWarnings("unchecked")
 	public static void setAttribute(Element element, String attributeName, String value) {
 		Map<String, String> attributMap = (Map<String, String>) PropertyHolder.get(element).get(PROPERTY_MAP_FIELD);
