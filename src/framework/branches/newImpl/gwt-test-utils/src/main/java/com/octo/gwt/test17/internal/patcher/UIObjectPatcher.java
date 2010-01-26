@@ -1,41 +1,24 @@
 package com.octo.gwt.test17.internal.patcher;
 
-import javassist.CtMethod;
-
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.user.client.ui.UIObject;
 import com.octo.gwt.test17.ElementUtils;
 import com.octo.gwt.test17.ReflectionUtils;
 import com.octo.gwt.test17.internal.patcher.dom.PropertyHolder;
+import com.octo.gwt.test17.ng.AutomaticPatcher;
+import com.octo.gwt.test17.ng.PatchMethod;
+import com.octo.gwt.test17.ng.PatchType;
 
-public class UIObjectPatcher extends AbstractPatcher {
+public class UIObjectPatcher extends AutomaticPatcher {
 
-	@Override
-	public String getNewBody(CtMethod m) {
-		if (matchWithArgs(m, "setElement", Element.class)) {
-			return "setElement(" + ElementUtils.class.getCanonicalName() + ".castToUserElement($1))";
-		} else if (matchWithArgs(m, "isVisible", Element.class)) {
-			return callMethod("isVisible", "$1");
-		} else if (matchWithArgs(m, "setVisible", Element.class, Boolean.TYPE)) {
-			return callMethod("setVisible", "$1, $2");
-		} else if (match(m, "updatePrimaryAndDependentStyleNames")) {
-			return callMethod("updatePrimaryAndDependentStyleNames", "$1, $2");
-		} else if (matchWithArgs(m, "getStyleName", Element.class)) {
-			return callMethod("getStyleName", "$1");
-		} else if (match(m, "replaceElement")) {
-			return callMethod("replaceElement", "this, $1");
-		} else if (match(m, "replaceNode")) {
-			return callMethod("replaceNode", "$1, $2");
-		} else if (matchWithArgs(m, "setStyleName", Element.class, String.class)) {
-			return callMethod("setStyleName", "$1, $2");
-		} else if (matchWithArgs(m, "extractLengthValue", String.class)) {
-			return callMethod("extractLengthValue", "$1");
-		}
-		return null;
+	@PatchMethod(value=PatchType.NEW_CODE_AS_STRING, args={Element.class})
+	public static String setElement() {
+		return "setElement(" + ElementUtils.class.getCanonicalName() + ".castToUserElement($1))";
 	}
-
-	public static double extractLengthValue(String s) {
+	
+	@PatchMethod
+	public static double extractLengthValue(UIObject uiObject, String s) {
 		if ("auto".equals(s) || "inherit".equals(s) || "".equals(s)) {
 			return 0;
 		}
@@ -48,18 +31,21 @@ public class UIObjectPatcher extends AbstractPatcher {
 		}
 		return Double.parseDouble(buffer.toString());
 	}
-	
+
+	@PatchMethod(args={Element.class})
 	public static boolean isVisible(Element elem) {
 		String display = elem.getStyle().getProperty("display");
 
 		return !(display != null && display.equals("none"));
 	}
 
+	@PatchMethod(args={Element.class, Boolean.class})
 	public static void setVisible(Element elem, boolean visible) {
 		String display = (visible) ? "" : "none";
 		elem.getStyle().setProperty("display", display);
 	}
 
+	@PatchMethod
 	public static void updatePrimaryAndDependentStyleNames(Element elem, String newPrimaryStyle) {
 
 		String[] classes = getStyleName(elem).split(" ");
@@ -87,18 +73,20 @@ public class UIObjectPatcher extends AbstractPatcher {
 		}
 	}
 
-	public static void replaceElement(UIObject uio, Element elem) {
+	@PatchMethod
+	public static void replaceElement(UIObject uiObject, Element elem) {
 		elem = ElementUtils.castToUserElement(elem);
-		com.google.gwt.user.client.Element element = ReflectionUtils.getPrivateFieldValue(uio, "element");
+		com.google.gwt.user.client.Element element = ReflectionUtils.getPrivateFieldValue(uiObject, "element");
 		if (element != null) {
 			// replace this.element in its parent with elem.
-			replaceNode(element, elem);
+			replaceNode(uiObject, element, elem);
 		}
 
-		ReflectionUtils.setPrivateField(uio, "element", elem);
+		ReflectionUtils.setPrivateField(uiObject, "element", elem);
 	}
 
-	public static void replaceNode(Element node, Element newNode) {
+	@PatchMethod
+	public static void replaceNode(UIObject uiObject, Element node, Element newNode) {
 		Node parent = node.getParentNode();
 
 		if (parent != null) {
@@ -107,10 +95,12 @@ public class UIObjectPatcher extends AbstractPatcher {
 		}
 	}
 
+	@PatchMethod(args={Element.class})
 	public static String getStyleName(Element elem) {
 		return (String) PropertyHolder.get(elem).get("ClassName");
 	}
 
+	@PatchMethod(args={Element.class, String.class})
 	public static void setStyleName(Element elem, String styleName) {
 		PropertyHolder.get(elem).put("ClassName", styleName);
 	}

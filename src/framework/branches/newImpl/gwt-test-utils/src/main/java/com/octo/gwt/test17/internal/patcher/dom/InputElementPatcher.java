@@ -1,27 +1,41 @@
 package com.octo.gwt.test17.internal.patcher.dom;
 
-import javassist.CtMethod;
+import javassist.CtClass;
 
 import com.google.gwt.dom.client.InputElement;
+import com.octo.gwt.test17.ng.AutomaticElementSubclasser;
+import com.octo.gwt.test17.ng.PatchMethod;
+import com.octo.gwt.test17.ng.PatchType;
 
-public class InputElementPatcher extends AbstractElementPatcher<InputElement> {
+public class InputElementPatcher extends AutomaticElementSubclasser {
 
-	public InputElementPatcher() {
-		super(InputElement.class);
+	@PatchMethod
+	public static void focus(InputElement inputElement) {
+		
 	}
-
-	@Override
-	public String getNewBody(CtMethod m) {
-		if (match(m, "blur|click|focus|select")) {
-			return "";
-		} else if (match(m, "useMap")) {
-			try {
-				return "{ " + PropertyHolder.callGet("UseMap", m.getReturnType()) + " }";
-			} catch (Exception e) {
-				throw new RuntimeException("Error while patching InputElement.useMap()", e);
-			}
-		} else {
-			return super.getNewBody(m);
+	
+	@PatchMethod
+	public static void blur(InputElement inputElement) {
+		
+	}
+	
+	@PatchMethod
+	public static void click(InputElement inputElement) {
+		
+	}
+	
+	@PatchMethod
+	public static void select(InputElement inputElement) {
+		
+	}
+	
+	@PatchMethod(value=PatchType.NEW_CODE_AS_STRING)
+	public static String useMap() {
+		try {
+			return "{ " + PropertyHolder.callGet("UseMap", CtClass.booleanType) + " }";
+		} catch (Exception e) {
+			throw new RuntimeException("Error while patching InputElement.useMap()", e);
 		}
 	}
+	
 }

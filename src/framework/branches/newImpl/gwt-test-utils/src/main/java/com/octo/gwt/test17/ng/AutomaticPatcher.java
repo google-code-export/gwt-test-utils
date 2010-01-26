@@ -29,8 +29,12 @@ public class AutomaticPatcher implements IPatcher {
 
 	private Entry<Method, PatchMethod> findAnnotatedMethod(CtMethod m) throws Exception {
 		for(Entry<Method, PatchMethod> entry : annotatedMethods.entrySet()) {
-			if (m.getName().equals(entry.getKey().getName())) {
-				if (entry.getValue().args().length == 0) {
+			String methodName = entry.getKey().getName();
+			if (entry.getValue().methodName().length() > 0) {
+				methodName = entry.getValue().methodName();
+			}
+			if (m.getName().equals(methodName)) {
+				if (entry.getValue().args().length == 1 && entry.getValue().args()[0] == PatchMethod.class) {
 					return entry;
 				}
 				else {
@@ -52,6 +56,9 @@ public class AutomaticPatcher implements IPatcher {
 			if (classesFound[i].isPrimitive()) {
 				if (classesFound[i] == CtClass.intType) {
 					clazz = Integer.class;
+				}
+				else if (classesFound[i] == CtClass.booleanType) {
+					clazz = Boolean.class;
 				}
 				else {
 					throw new RuntimeException("Not managed type " + classesFound[i]);

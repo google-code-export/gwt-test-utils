@@ -39,7 +39,7 @@ public class NodeFactory {
 		elementMap.put("hr", HRElement.class);
 		subclassedMap.put("iframe", IFrameElement.class);
 		subclassedMap.put("img", ImageElement.class);
-		elementMap.put("input", InputElement.class);
+		subclassedMap.put("input", InputElement.class);
 		subclassedMap.put("label", LabelElement.class);
 		subclassedMap.put("legend", LegendElement.class);
 		elementMap.put("li", LIElement.class);

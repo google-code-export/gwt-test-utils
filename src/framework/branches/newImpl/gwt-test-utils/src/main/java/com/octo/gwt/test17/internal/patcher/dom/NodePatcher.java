@@ -24,14 +24,15 @@ public class NodePatcher extends AbstractPatcher {
 
 	@Override
 	public void initClass() throws Exception {
+		super.initClass();
+		
 		CtConstructor cons = findConstructor();
 
 		StringBuilder sb = new StringBuilder();
-
-		sb.append("{ ");
+		sb.append("{");
 		sb.append(PropertyHolder.callSet(NODE_LIST_FIELD, "new " + OverrideNodeList.class.getCanonicalName() + "()"));
 		sb.append(PropertyHolder.callSet(OWNER_FIELD, NodeFactory.class.getCanonicalName() + ".DOCUMENT"));
-		sb.append(" }");
+		sb.append("}");
 		cons.setBody(sb.toString());
 	}
 

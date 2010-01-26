@@ -102,10 +102,10 @@ public class DOMImplPatcher extends AbstractPatcher {
 
 	public static InputElement createInputElement(Document doc, String type, String name) {
 		InputElement e = (InputElement) doc.createElement("input");
-		PropertyHolder.get(e).put("Type", type);
-
+		AutomaticSubclasser.setProperty(e, "Type", type);
+		
 		if (name != null) {
-			PropertyHolder.get(e).put("Name", name);
+			AutomaticSubclasser.setProperty(e, "Name", name);
 		}
 
 		return e;
