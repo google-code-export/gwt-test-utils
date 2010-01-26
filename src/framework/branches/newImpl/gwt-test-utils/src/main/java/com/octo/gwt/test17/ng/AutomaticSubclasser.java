@@ -11,7 +11,6 @@ import javassist.CtField;
 import javassist.CtMethod;
 
 import com.octo.gwt.test17.PatchUtils;
-import com.octo.gwt.test17.ReflectionUtils;
 
 public class AutomaticSubclasser extends AutomaticPatcher {
 
@@ -40,6 +39,10 @@ public class AutomaticSubclasser extends AutomaticPatcher {
 		cons.append("}");	
 		constructor.setBody(cons.toString());
 		subClass.addConstructor(constructor);
+		
+		CtMethod getProperties = new CtMethod(cp.get(PropertyContainer.class.getCanonicalName()), "getOverrideProperties", new CtClass[]{}, subClass);
+		getProperties.setBody("return " + PROPERTIES + ";");
+		subClass.addMethod(getProperties);
 		
 		subClazz = subClass.toClass();
 		
@@ -87,16 +90,6 @@ public class AutomaticSubclasser extends AutomaticPatcher {
 		buffer.append(subClazz.getCanonicalName() + " casted = (" + subClazz.getCanonicalName() + ") this;");
 		buffer.append("casted." + PROPERTIES + ".put(\"" + fieldName + "\", $1);");
 		return buffer.toString();
-	}
-	
-	public static void setProperty(Object o, String propertyName, Object propertyValue) {
-		PropertyContainer propertyContainer = ReflectionUtils.getPrivateFieldValue(o, PROPERTIES);
-		propertyContainer.put(propertyName, propertyValue);
-	}
-	
-	public static Object getProperty(Object o, String propertyName) {
-		PropertyContainer propertyContainer = ReflectionUtils.getPrivateFieldValue(o, PROPERTIES);
-		return propertyContainer.get(propertyName);
 	}
 
 }

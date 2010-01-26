@@ -17,8 +17,8 @@ import com.octo.gwt.test17.ElementUtils;
 import com.octo.gwt.test17.internal.overrides.OverrideEvent;
 import com.octo.gwt.test17.internal.overrides.OverrideNodeList;
 import com.octo.gwt.test17.ng.AutomaticPatcher;
-import com.octo.gwt.test17.ng.AutomaticSubclasser;
 import com.octo.gwt.test17.ng.PatchMethod;
+import com.octo.gwt.test17.ng.SubClassedObject;
 
 public class DOMImplPatcher extends AutomaticPatcher {
 
@@ -58,7 +58,7 @@ public class DOMImplPatcher extends AutomaticPatcher {
 	@PatchMethod
 	public static ButtonElement createButtonElement(Object domImpl, Document doc, String type) {
 		ButtonElement e = (ButtonElement) doc.createElement("button");
-		AutomaticSubclasser.setProperty(e, "Type", type);
+		SubClassedObject.Helper.setProperty(e, "Type", type);
 		return e;
 	}
 	
@@ -293,10 +293,10 @@ public class DOMImplPatcher extends AutomaticPatcher {
 
 	public static InputElement createInputElement(Document doc, String type, String name) {
 		InputElement e = (InputElement) doc.createElement("input");
-		AutomaticSubclasser.setProperty(e, "Type", type);
+		SubClassedObject.Helper.setProperty(e, "Type", type);
 		
 		if (name != null) {
-			AutomaticSubclasser.setProperty(e, "Name", name);
+			SubClassedObject.Helper.setProperty(e, "Name", name);
 		}
 
 		return e;
