@@ -18,6 +18,7 @@ public class ButtonTest extends AbstractGWTTest {
 	@Test
 	public void checkWrap() {
 		// Set up
+		
 		ButtonElement element = Document.get().createButtonElement();
 		element.setTabIndex(3);
 

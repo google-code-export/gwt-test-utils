@@ -35,7 +35,6 @@ public class NodeFactory {
 		elementMap.put("frame", FrameElement.class);
 		elementMap.put("frameset", FrameSetElement.class);
 		elementMap.put("head", HeadElement.class);
-		elementMap.put("heading", HeadingElement.class);
 		elementMap.put("hr", HRElement.class);
 		subclassedMap.put("iframe", IFrameElement.class);
 		subclassedMap.put("img", ImageElement.class);

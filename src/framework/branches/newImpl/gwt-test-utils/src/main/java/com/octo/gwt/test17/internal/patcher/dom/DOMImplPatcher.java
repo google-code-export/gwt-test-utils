@@ -29,22 +29,6 @@ public class DOMImplPatcher extends AutomaticPatcher {
 		return NodeFactory.createElement(tag);
 	}
 	
-	/*
-	@Override
-	public String getNewBody(CtMethod m) {
-			} else if (match(m, "eventPreventDefault")) {
-			return "";
-		} else if (match(m, "eventGetTarget")) {
-			return "return null";
-		} else if (match(m, "getBodyOffsetLeft")) {
-			return "return 0";
-		} else if (match(m, "getBodyOffsetTop")) {
-			return "return 0";
-		}
-		return null;
-	}
-	*/
-
 	@PatchMethod
 	public static int getBodyOffsetLeft(Object domImpl, Document doc) {
 		return 0;

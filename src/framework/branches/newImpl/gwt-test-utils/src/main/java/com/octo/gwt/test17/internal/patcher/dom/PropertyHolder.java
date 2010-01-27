@@ -8,6 +8,7 @@ import javassist.CtPrimitiveType;
 
 import com.google.gwt.dom.client.Element;
 import com.octo.gwt.test17.ElementWrapper;
+import com.octo.gwt.test17.ng.SubClassedObject;
 
 public class PropertyHolder {
 
@@ -38,6 +39,20 @@ public class PropertyHolder {
 	public static Map<String, Object> get(Object o) {
 		if (o instanceof ElementWrapper) {
 			o = ((ElementWrapper) o).getWrappedElement();
+		}
+		if (o != null) {
+			if (o instanceof SubClassedObject) {
+				
+			}
+			else {
+				System.out.println("Not subclassed object " + o.getClass());
+			}
+			if (o instanceof Element) {
+				
+			}
+			else {
+				System.err.println("Not element object " + o.getClass());
+			}
 		}
 		Map<String, Object> result = CACHE.get(o);
 		if (result == null) {

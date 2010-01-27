@@ -12,7 +12,7 @@ public interface SubClassedObject {
 				subClassedObject.getOverrideProperties().put(propertyName, propertyValue);
 			}
 			else {
-				throw new RuntimeException("Bad object for setProperty " + o.getClass());
+				throw new RuntimeException("Not SubClassedObject for setProperty " + o.getClass());
 			}
 		}
 		
@@ -23,7 +23,7 @@ public interface SubClassedObject {
 				return (T) subClassedObject.getOverrideProperties().get(propertyName);
 			}
 			else {
-				throw new RuntimeException("Bad object for getProperty " + o.getClass());
+				throw new RuntimeException("Not SubClassedObject for getProperty " + o.getClass());
 			}
 		}
 		
