@@ -1,8 +1,10 @@
 package com.octo.gwt.test17;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Properties;
 
 import com.google.gwt.core.client.Duration;
 import com.google.gwt.core.client.GWT;
@@ -144,6 +146,8 @@ public class PatchGWT {
 	 * List of already patched custom classes
 	 */
 	private static List<String> alreadyPatched = new ArrayList<String>();
+	
+	public static String BOOTSTRAP_CLASS = null;
 
 	public static void patch(Class<?> clazz, IPatcher patcher) throws Exception {
 		if (alreadyPatched.contains(clazz.getCanonicalName())) {
@@ -212,10 +216,14 @@ public class PatchGWT {
 			return;
 		}
 
+		Properties properties = new Properties();
+		InputStream inputStream = properties.getClass().getResourceAsStream("/META-INF/gwt-test-utils-bootstrap.properties");
+		properties.load(inputStream);
+		BOOTSTRAP_CLASS = properties.getProperty("className");
 		try {
-			Class.forName("com.octo.gwt.test17.bootstrap.Startup");
+			Class.forName(BOOTSTRAP_CLASS);
 		} catch (ClassNotFoundException e) {
-			throw new RuntimeException("Unable to load com.octo.gwt.test17.bootstrap.Startup.Startup class, you probably forgot to "
+			throw new RuntimeException("Unable to load " + BOOTSTRAP_CLASS + " class, you probably forgot to "
 					+ "add the JVM parameter: -javaagent:target/bootstrap.jar");
 		}
 

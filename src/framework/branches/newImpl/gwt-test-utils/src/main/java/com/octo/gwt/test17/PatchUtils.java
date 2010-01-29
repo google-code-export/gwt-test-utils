@@ -41,8 +41,6 @@ public class PatchUtils {
 
 	private static final String LOAD_PROPERTIES = "loadProperties";
 
-	private static final String REDEFINE_CLASS = "com.octo.gwt.test17.bootstrap.Startup";
-
 	private static final List<SequenceReplacement> sequenceReplacementList = new ArrayList<SequenceReplacement>();
 
 	/**
@@ -86,7 +84,7 @@ public class PatchUtils {
 	}
 
 	public static void initRedefineMethod() throws Exception {
-		Class<?> c = Class.forName(REDEFINE_CLASS);
+		Class<?> c = Class.forName(PatchGWT.BOOTSTRAP_CLASS);
 		if (c == null) {
 			throw new RuntimeException("No bootstrap class found");
 		}
@@ -97,7 +95,7 @@ public class PatchUtils {
 	}
 
 	public static void initLoadPropertiesMethod() throws Exception {
-		Class<?> c = Class.forName(REDEFINE_CLASS);
+		Class<?> c = Class.forName(PatchGWT.BOOTSTRAP_CLASS);
 		if (c == null) {
 			throw new RuntimeException("No bootstrap class found");
 		}
