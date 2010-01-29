@@ -1,9 +1,60 @@
-package com.google.gwt.dom.client;
+package com.octo.gwt.test17.internal.patcher.dom;
 
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.google.gwt.dom.client.AnchorElement;
+import com.google.gwt.dom.client.AreaElement;
+import com.google.gwt.dom.client.BRElement;
+import com.google.gwt.dom.client.BaseElement;
+import com.google.gwt.dom.client.BodyElement;
+import com.google.gwt.dom.client.ButtonElement;
+import com.google.gwt.dom.client.DListElement;
+import com.google.gwt.dom.client.DivElement;
+import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.FieldSetElement;
+import com.google.gwt.dom.client.FormElement;
+import com.google.gwt.dom.client.FrameElement;
+import com.google.gwt.dom.client.FrameSetElement;
+import com.google.gwt.dom.client.HRElement;
+import com.google.gwt.dom.client.HeadElement;
+import com.google.gwt.dom.client.HeadingElement;
+import com.google.gwt.dom.client.IFrameElement;
+import com.google.gwt.dom.client.ImageElement;
+import com.google.gwt.dom.client.InputElement;
+import com.google.gwt.dom.client.LIElement;
+import com.google.gwt.dom.client.LabelElement;
+import com.google.gwt.dom.client.LegendElement;
+import com.google.gwt.dom.client.LinkElement;
+import com.google.gwt.dom.client.MapElement;
+import com.google.gwt.dom.client.MetaElement;
+import com.google.gwt.dom.client.ModElement;
+import com.google.gwt.dom.client.Node;
+import com.google.gwt.dom.client.OListElement;
+import com.google.gwt.dom.client.ObjectElement;
+import com.google.gwt.dom.client.OptGroupElement;
+import com.google.gwt.dom.client.OptionElement;
+import com.google.gwt.dom.client.ParagraphElement;
+import com.google.gwt.dom.client.ParamElement;
+import com.google.gwt.dom.client.PreElement;
+import com.google.gwt.dom.client.QuoteElement;
+import com.google.gwt.dom.client.ScriptElement;
+import com.google.gwt.dom.client.SelectElement;
+import com.google.gwt.dom.client.SpanElement;
+import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.StyleElement;
+import com.google.gwt.dom.client.TableCaptionElement;
+import com.google.gwt.dom.client.TableCellElement;
+import com.google.gwt.dom.client.TableColElement;
+import com.google.gwt.dom.client.TableElement;
+import com.google.gwt.dom.client.TableRowElement;
+import com.google.gwt.dom.client.TableSectionElement;
+import com.google.gwt.dom.client.Text;
+import com.google.gwt.dom.client.TextAreaElement;
+import com.google.gwt.dom.client.TitleElement;
+import com.google.gwt.dom.client.UListElement;
 import com.octo.gwt.test17.ng.SubClassedHelper;
 
 public class NodeFactory {
@@ -16,7 +67,7 @@ public class NodeFactory {
 		subclassedMap.put("a", AnchorElement.class);
 		subclassedMap.put("area", AreaElement.class);
 		subclassedMap.put("base", BaseElement.class);
-		subclassedMap.put(BodyElement.TAG, BodyElement.class);
+		subclassedMap.put("body", BodyElement.class);
 		subclassedMap.put("br", BRElement.class);
 		subclassedMap.put("button", ButtonElement.class);
 		subclassedMap.put("div", DivElement.class);
@@ -134,7 +185,7 @@ public class NodeFactory {
 			}
 	
 			// set the <body> element as default parent node
-			if (!BodyElement.TAG.equals(elem.getTagName())) {
+			if (!"body".equals(elem.getTagName())) {
 				Document.get().getBody().appendChild(elem);
 			}
 	

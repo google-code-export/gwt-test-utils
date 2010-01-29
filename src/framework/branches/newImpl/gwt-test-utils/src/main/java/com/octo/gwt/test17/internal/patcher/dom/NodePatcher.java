@@ -2,11 +2,13 @@ package com.octo.gwt.test17.internal.patcher.dom;
 
 import java.util.Map.Entry;
 
+import javassist.CtClass;
+import javassist.CtConstructor;
+
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
-import com.google.gwt.dom.client.NodeFactory;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Text;
 import com.octo.gwt.test17.ElementUtils;
@@ -19,7 +21,15 @@ import com.octo.gwt.test17.ng.SubClassedHelper;
 public class NodePatcher extends AutomaticSubclasser {
 
 	public static final String NODE_LIST_FIELD = "ChildNodes";
-	private static final String PARENT_NODE_FIELD = "ParentNode";
+	public static final String PARENT_NODE_FIELD = "ParentNode";
+
+	@Override
+	public void initClass(CtClass c) throws Exception {
+		super.initClass(c);
+		CtConstructor cons = findConstructor(c);
+		
+		cons.insertAfter(SubClassedHelper.getCodeSetProperty("this", NodePatcher.NODE_LIST_FIELD, "new " + OverrideNodeList.class.getCanonicalName() + "()", true) + ";");
+	}
 
 	@PatchMethod
 	public static Document getOwnerDocument(Node node) {
@@ -249,10 +259,15 @@ public class NodePatcher extends AutomaticSubclasser {
 				n.put(entry.getKey(), new Boolean((Boolean) entry.getValue()));
 			}
 			else if (entry.getValue() instanceof Style) {
-				// FIXME cloner
-				n.put(entry.getKey(), entry.getValue());
+				Style newStyle = NodeFactory.createStyle();
+				PropertyContainer o = SubClassedHelper.getSubClassedObjectOrNull(entry.getValue()).getOverrideProperties();
+				PropertyContainer nn = SubClassedHelper.getSubClassedObjectOrNull(newStyle).getOverrideProperties();
+				nn.clear();
+				
+				fillNewPropertyContainer(nn, o);
+				n.put(entry.getKey(), newStyle);
 			}
-					else if (entry.getValue() instanceof OverrideNodeList<?>) {
+			else if (entry.getValue() instanceof OverrideNodeList<?>) {
 			}
 			else if (entry.getValue() instanceof PropertyContainer) {
 				PropertyContainer nn = new PropertyContainer();

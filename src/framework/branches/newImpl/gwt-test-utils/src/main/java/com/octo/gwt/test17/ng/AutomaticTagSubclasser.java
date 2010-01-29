@@ -8,7 +8,7 @@ import javassist.CtConstructor;
 import javassist.CtField;
 import javassist.CtMethod;
 
-public class AutomaticTagSubClasser extends AutomaticElementSubclasser {
+public class AutomaticTagSubclasser extends AutomaticElementSubclasser {
 
 	private static final String OVERRIDE_TAG = "overrideTag";
 

@@ -109,7 +109,6 @@ public class GWTPatcher extends AutomaticPatcher {
 		if (Constants.class.isAssignableFrom(classLiteral)) {
 			return generateConstantWrapper(classLiteral);
 		}
-
 		if (classLiteral == MenuBar.Resources.class) {
 			return new MenuBar.Resources() {
 

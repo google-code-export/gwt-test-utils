@@ -8,7 +8,6 @@ import javassist.CtConstructor;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
-import com.google.gwt.dom.client.NodeFactory;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Style;
 import com.octo.gwt.test17.ReflectionUtils;
@@ -24,6 +23,8 @@ public class ElementPatcher extends AutomaticGetAndSetPatcher {
 	public static final String PROPERTY_MAP_FIELD = "propertyMap";
 	public static final String ATTRIBUTE_MAP_FIELD = "attributeMap";
 	public static final String STYLE_FIELD = "style";
+	public static final String CLASSNAME_FIELD = "ClassName";
+	public static final String ACCESSKEY_FIELD = "AccessKey";
 
 	@Override
 	public void initClass(CtClass c) throws Exception {
@@ -33,6 +34,9 @@ public class ElementPatcher extends AutomaticGetAndSetPatcher {
 		cons.insertAfter(SubClassedHelper.getCodeSetProperty("this", STYLE_FIELD, NodeFactory.class.getCanonicalName() + ".createStyle()", true) + ";");
 		cons.insertAfter(SubClassedHelper.getCodeSetProperty("this", PROPERTY_MAP_FIELD, "new " + PropertyContainer.class.getCanonicalName() + "()", true) + ";");
 		cons.insertAfter(SubClassedHelper.getCodeSetProperty("this", ATTRIBUTE_MAP_FIELD, "new " + PropertyContainer.class.getCanonicalName() + "()", true) + ";");
+		cons.insertAfter(SubClassedHelper.getCodeSetProperty("this", ATTRIBUTE_MAP_FIELD, "new " + PropertyContainer.class.getCanonicalName() + "()", true) + ";");
+		cons.insertAfter(SubClassedHelper.getCodeSetProperty("this", CLASSNAME_FIELD, "\"\"", true) + ";");
+		cons.insertAfter(SubClassedHelper.getCodeSetProperty("this", ACCESSKEY_FIELD, "\"\"", true) + ";");
 	}
 
 	@PatchMethod

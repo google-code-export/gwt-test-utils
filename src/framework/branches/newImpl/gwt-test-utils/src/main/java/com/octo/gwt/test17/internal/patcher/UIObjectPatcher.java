@@ -5,6 +5,7 @@ import com.google.gwt.dom.client.Node;
 import com.google.gwt.user.client.ui.UIObject;
 import com.octo.gwt.test17.ElementUtils;
 import com.octo.gwt.test17.ReflectionUtils;
+import com.octo.gwt.test17.internal.patcher.dom.ElementPatcher;
 import com.octo.gwt.test17.ng.AutomaticPatcher;
 import com.octo.gwt.test17.ng.PatchMethod;
 import com.octo.gwt.test17.ng.PatchType;
@@ -97,12 +98,12 @@ public class UIObjectPatcher extends AutomaticPatcher {
 
 	@PatchMethod(args={Element.class})
 	public static String getStyleName(Element elem) {
-		return SubClassedHelper.getProperty(elem, "ClassName");
+		return SubClassedHelper.getProperty(elem, ElementPatcher.CLASSNAME_FIELD);
 	}
 
 	@PatchMethod(args={Element.class, String.class})
 	public static void setStyleName(Element elem, String styleName) {
-		SubClassedHelper.setProperty(elem, "ClassName", styleName);
+		SubClassedHelper.setProperty(elem, ElementPatcher.CLASSNAME_FIELD, styleName);
 	}
 
 }

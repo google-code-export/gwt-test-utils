@@ -4,7 +4,7 @@ import javassist.CtClass;
 import javassist.CtConstructor;
 
 import com.google.gwt.dom.client.Document;
-import com.google.gwt.dom.client.NodeFactory;
+import com.octo.gwt.test17.internal.patcher.dom.NodeFactory;
 import com.octo.gwt.test17.ng.AutomaticSubclasser;
 import com.octo.gwt.test17.ng.PatchMethod;
 import com.octo.gwt.test17.ng.SubClassedHelper;

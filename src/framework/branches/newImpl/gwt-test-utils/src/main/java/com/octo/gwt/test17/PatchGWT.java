@@ -129,7 +129,7 @@ import com.octo.gwt.test17.internal.patcher.dom.NodePatcher;
 import com.octo.gwt.test17.internal.patcher.dom.StylePatcher;
 import com.octo.gwt.test17.ng.AutomaticElementSubclasser;
 import com.octo.gwt.test17.ng.AutomaticSubclasser;
-import com.octo.gwt.test17.ng.AutomaticTagSubClasser;
+import com.octo.gwt.test17.ng.AutomaticTagSubclasser;
 
 public class PatchGWT {
 
@@ -272,7 +272,7 @@ public class PatchGWT {
 		PatchUtils.patch(FormElement.class, new AutomaticElementSubclasser());
 		PatchUtils.patch(HeadElement.class, new AutomaticElementSubclasser());
 		PatchUtils.patch(HRElement.class, new AutomaticElementSubclasser());
-		PatchUtils.patch(HeadingElement.class, new AutomaticTagSubClasser());
+		PatchUtils.patch(HeadingElement.class, new AutomaticTagSubclasser());
 		PatchUtils.patch(IFrameElement.class, new AutomaticElementSubclasser());
 		PatchUtils.patch(ImageElement.class, new AutomaticElementSubclasser());
 		PatchUtils.patch(InputElement.class, new InputElementPatcher());
@@ -284,7 +284,7 @@ public class PatchGWT {
 		PatchUtils.patch(Node.class, new NodePatcher());
 		PatchUtils.patch(MapElement.class, new AutomaticElementSubclasser());
 		PatchUtils.patch(MetaElement.class, new AutomaticElementSubclasser());
-		PatchUtils.patch(ModElement.class, new AutomaticTagSubClasser());
+		PatchUtils.patch(ModElement.class, new AutomaticTagSubclasser());
 		PatchUtils.patch(ObjectElement.class, new AutomaticElementSubclasser());
 		PatchUtils.patch(OptionElement.class, new AutomaticElementSubclasser());
 		PatchUtils.patch(OListElement.class, new AutomaticElementSubclasser());
@@ -292,18 +292,18 @@ public class PatchGWT {
 		PatchUtils.patch(ParagraphElement.class, new AutomaticElementSubclasser());
 		PatchUtils.patch(ParamElement.class, new AutomaticElementSubclasser());
 		PatchUtils.patch(PreElement.class, new AutomaticElementSubclasser());
-		PatchUtils.patch(QuoteElement.class, new AutomaticTagSubClasser());
+		PatchUtils.patch(QuoteElement.class, new AutomaticTagSubclasser());
 		PatchUtils.patch(ScriptElement.class, new AutomaticElementSubclasser());
 		PatchUtils.patch(StyleElement.class, new AutomaticElementSubclasser());
 		PatchUtils.patch(SelectElement.class, new AutomaticElementSubclasser());
 		PatchUtils.patch(SpanElement.class, new AutomaticElementSubclasser());
 		PatchUtils.patch(Style.class, new StylePatcher());
 		PatchUtils.patch(TableCaptionElement.class, new AutomaticElementSubclasser());
-		PatchUtils.patch(TableCellElement.class, new AutomaticTagSubClasser());
-		PatchUtils.patch(TableColElement.class, new AutomaticTagSubClasser());
+		PatchUtils.patch(TableCellElement.class, new AutomaticTagSubclasser());
+		PatchUtils.patch(TableColElement.class, new AutomaticTagSubclasser());
 		PatchUtils.patch(TableElement.class, new AutomaticElementSubclasser());
 		PatchUtils.patch(TableRowElement.class, new AutomaticElementSubclasser());
-		PatchUtils.patch(TableSectionElement.class, new AutomaticTagSubClasser());
+		PatchUtils.patch(TableSectionElement.class, new AutomaticTagSubclasser());
 		PatchUtils.patch(TextAreaElement.class, new AutomaticElementSubclasser());
 		PatchUtils.patch(Text.class, new AutomaticSubclasser());
 		PatchUtils.patch(TitleElement.class, new AutomaticElementSubclasser());

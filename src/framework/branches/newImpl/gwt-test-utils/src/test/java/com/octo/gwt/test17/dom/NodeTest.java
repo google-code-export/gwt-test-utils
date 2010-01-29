@@ -9,9 +9,9 @@ import com.google.gwt.dom.client.BaseElement;
 import com.google.gwt.dom.client.ButtonElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Node;
-import com.google.gwt.dom.client.NodeFactory;
 import com.octo.gwt.test17.PatchGWT;
 import com.octo.gwt.test17.internal.overrides.OverrideNodeList;
+import com.octo.gwt.test17.internal.patcher.dom.NodeFactory;
 import com.octo.gwt.test17.test.AbstractGWTTest;
 
 @SuppressWarnings("deprecation")
