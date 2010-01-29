@@ -17,7 +17,6 @@ import javassist.CtConstructor;
 import javassist.CtMethod;
 
 import com.google.gwt.i18n.client.Constants.DefaultStringValue;
-import com.octo.gwt.test17.internal.patcher.dom.PropertyHolder;
 
 public class PatchUtils {
 
@@ -95,13 +94,6 @@ public class PatchUtils {
 		if (PatchUtils.redefine == null) {
 			throw new RuntimeException("Method " + REDEFINE_METHOD + " not found in bootstrap class");
 		}
-	}
-
-	public static void patchFinalizeMethod() throws Exception {
-		CtClass objectClass = cp.get(Object.class.getCanonicalName());
-
-		CtMethod finalize = objectClass.getMethod("finalize", "()V");
-		finalize.insertAfter(PropertyHolder.class.getCanonicalName() + ".clearObject(this);");
 	}
 
 	public static void initLoadPropertiesMethod() throws Exception {
@@ -225,33 +217,16 @@ public class PatchUtils {
 			patcher.initClass(c);
 		}
 
-		String newBody;
-
 		for (CtMethod m : c.getDeclaredMethods()) {
 			if (Modifier.isAbstract(m.getModifiers())) {
 				// don't patch now
 				continue;
-			} else if (patcher == null || (newBody = patcher.getNewBody(m)) == null) {
-				// method has not been patch : try to patch if method is a native getter/setter
-
-				if (Modifier.isNative(m.getModifiers()) && !Modifier.isStatic(m.getModifiers())) {
-					String fieldName = getPropertyName(m);
-
-					if (fieldName == null || fieldName.length() == 0) {
-						// don't patch the native method
-						continue;
-					}
-
-					removeNativeModifier(m);
-
-					if (m.getName().startsWith("get") || m.getName().startsWith("is")) {
-						m.setBody("{" + PropertyHolder.callGet(fieldName, m.getReturnType()) + "}");
-					} else if (m.getName().startsWith("set")) {
-						m.setBody("{" + PropertyHolder.callSet(fieldName, "($w)$1") + "}");
-					}
+			} 
+			else if (patcher != null) {
+				String newBody = patcher.getNewBody(m);
+				if (newBody != null) {
+					PatchUtils.replaceImplementation(m, newBody);
 				}
-			} else {
-				PatchUtils.replaceImplementation(m, newBody);
 			}
 		}
 		

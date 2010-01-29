@@ -19,24 +19,46 @@ import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.FieldSetElement;
 import com.google.gwt.dom.client.FormElement;
+import com.google.gwt.dom.client.FrameElement;
+import com.google.gwt.dom.client.FrameSetElement;
+import com.google.gwt.dom.client.HRElement;
+import com.google.gwt.dom.client.HeadElement;
+import com.google.gwt.dom.client.HeadingElement;
 import com.google.gwt.dom.client.IFrameElement;
 import com.google.gwt.dom.client.ImageElement;
 import com.google.gwt.dom.client.InputElement;
+import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.LabelElement;
 import com.google.gwt.dom.client.LegendElement;
+import com.google.gwt.dom.client.LinkElement;
+import com.google.gwt.dom.client.MapElement;
+import com.google.gwt.dom.client.MetaElement;
+import com.google.gwt.dom.client.ModElement;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
+import com.google.gwt.dom.client.OListElement;
+import com.google.gwt.dom.client.ObjectElement;
+import com.google.gwt.dom.client.OptGroupElement;
 import com.google.gwt.dom.client.OptionElement;
+import com.google.gwt.dom.client.ParagraphElement;
+import com.google.gwt.dom.client.ParamElement;
+import com.google.gwt.dom.client.PreElement;
+import com.google.gwt.dom.client.QuoteElement;
+import com.google.gwt.dom.client.ScriptElement;
 import com.google.gwt.dom.client.SelectElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.StyleElement;
 import com.google.gwt.dom.client.TableCaptionElement;
 import com.google.gwt.dom.client.TableCellElement;
 import com.google.gwt.dom.client.TableColElement;
 import com.google.gwt.dom.client.TableElement;
 import com.google.gwt.dom.client.TableRowElement;
 import com.google.gwt.dom.client.TableSectionElement;
+import com.google.gwt.dom.client.Text;
 import com.google.gwt.dom.client.TextAreaElement;
+import com.google.gwt.dom.client.TitleElement;
+import com.google.gwt.dom.client.UListElement;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.i18n.client.impl.CurrencyData;
@@ -88,7 +110,7 @@ import com.octo.gwt.test17.internal.patcher.ImagePatcher;
 import com.octo.gwt.test17.internal.patcher.JavaScriptObjectPatcher;
 import com.octo.gwt.test17.internal.patcher.ListBoxPatcher;
 import com.octo.gwt.test17.internal.patcher.NumberFormatPatcher;
-import com.octo.gwt.test17.internal.patcher.RootPanelPatch;
+import com.octo.gwt.test17.internal.patcher.RootPanelPatcher;
 import com.octo.gwt.test17.internal.patcher.StackPanelPatcher;
 import com.octo.gwt.test17.internal.patcher.TextAreaPatcher;
 import com.octo.gwt.test17.internal.patcher.TextBoxPatcher;
@@ -104,9 +126,10 @@ import com.octo.gwt.test17.internal.patcher.dom.ElementPatcher;
 import com.octo.gwt.test17.internal.patcher.dom.InputElementPatcher;
 import com.octo.gwt.test17.internal.patcher.dom.NodeListPatcher;
 import com.octo.gwt.test17.internal.patcher.dom.NodePatcher;
-import com.octo.gwt.test17.internal.patcher.dom.PropertyHolder;
 import com.octo.gwt.test17.internal.patcher.dom.StylePatcher;
 import com.octo.gwt.test17.ng.AutomaticElementSubclasser;
+import com.octo.gwt.test17.ng.AutomaticSubclasser;
+import com.octo.gwt.test17.ng.AutomaticTagSubClasser;
 
 public class PatchGWT {
 
@@ -141,7 +164,6 @@ public class PatchGWT {
 	}
 
 	public static void reset() throws Exception {
-		PropertyHolder.clear();
 		LOCALE = null;
 		HistoryImplPatcher.clear();
 		CurrencyListPatcher.reset();
@@ -199,8 +221,7 @@ public class PatchGWT {
 
 		PatchUtils.initRedefineMethod();
 		PatchUtils.initLoadPropertiesMethod();
-		PatchUtils.patchFinalizeMethod();
-
+		
 		PatchUtils.patch(GWT.class, new GWTPatcher());
 		PatchUtils.patch(JavaScriptObject.class, new JavaScriptObjectPatcher());
 
@@ -224,7 +245,7 @@ public class PatchGWT {
 		PatchUtils.patch(Image.class, new ImagePatcher());
 		PatchUtils.patch(ListBox.class, new ListBoxPatcher());
 		PatchUtils.patch(NumberFormat.class, new NumberFormatPatcher());
-		PatchUtils.patch(RootPanel.class, new RootPanelPatch());
+		PatchUtils.patch(RootPanel.class, new RootPanelPatcher());
 		PatchUtils.patch(StackPanel.class, new StackPanelPatcher());
 		PatchUtils.patch(TextArea.class, new TextAreaPatcher());
 		PatchUtils.patch(TextBox.class, new TextBoxPatcher());
@@ -233,39 +254,61 @@ public class PatchGWT {
 		PatchUtils.patch(URL.class, new URLPatcher());
 
 		PatchUtils.patch(AnchorElement.class, new AnchorElementPatcher());
-		PatchUtils.patch(AreaElement.class, null);
-		PatchUtils.patch(BaseElement.class, null);
+		PatchUtils.patch(AreaElement.class, new AutomaticElementSubclasser());
+		PatchUtils.patch(BaseElement.class, new AutomaticElementSubclasser());
 		PatchUtils.patch(BodyElement.class, new AutomaticElementSubclasser());
-		PatchUtils.patch(BRElement.class, null);
+		PatchUtils.patch(BRElement.class, new AutomaticElementSubclasser());
 		PatchUtils.patch(ButtonElement.class, new AutomaticElementSubclasser());
 		PatchUtils.patch(DivElement.class, new AutomaticElementSubclasser());
-		PatchUtils.patch(DListElement.class, null);
+		PatchUtils.patch(DListElement.class, new AutomaticElementSubclasser());
 		PatchUtils.patch(Class.forName(PatchConstants.CLIENT_DOM_IMPL_CLASS_NAME), new DOMImplPatcher());
 		PatchUtils.patch(DOMImpl.class, new DOMImplUserPatcher());
 		PatchUtils.patch(DOM.class, new DOMPatcher());
 		PatchUtils.patch(Element.class, new ElementPatcher());
 		PatchUtils.patch(ElementMapperImpl.class, new ElementMapperImplPatcher());
 		PatchUtils.patch(FieldSetElement.class, new AutomaticElementSubclasser());
+		PatchUtils.patch(FrameElement.class, new AutomaticElementSubclasser());
+		PatchUtils.patch(FrameSetElement.class, new AutomaticElementSubclasser());
 		PatchUtils.patch(FormElement.class, new AutomaticElementSubclasser());
+		PatchUtils.patch(HeadElement.class, new AutomaticElementSubclasser());
+		PatchUtils.patch(HRElement.class, new AutomaticElementSubclasser());
+		PatchUtils.patch(HeadingElement.class, new AutomaticTagSubClasser());
 		PatchUtils.patch(IFrameElement.class, new AutomaticElementSubclasser());
 		PatchUtils.patch(ImageElement.class, new AutomaticElementSubclasser());
 		PatchUtils.patch(InputElement.class, new InputElementPatcher());
+		PatchUtils.patch(LIElement.class, new AutomaticElementSubclasser());
 		PatchUtils.patch(LabelElement.class, new AutomaticElementSubclasser());
 		PatchUtils.patch(LegendElement.class, new AutomaticElementSubclasser());
+		PatchUtils.patch(LinkElement.class, new AutomaticElementSubclasser());
 		PatchUtils.patch(NodeList.class, new NodeListPatcher());
 		PatchUtils.patch(Node.class, new NodePatcher());
+		PatchUtils.patch(MapElement.class, new AutomaticElementSubclasser());
+		PatchUtils.patch(MetaElement.class, new AutomaticElementSubclasser());
+		PatchUtils.patch(ModElement.class, new AutomaticTagSubClasser());
+		PatchUtils.patch(ObjectElement.class, new AutomaticElementSubclasser());
 		PatchUtils.patch(OptionElement.class, new AutomaticElementSubclasser());
+		PatchUtils.patch(OListElement.class, new AutomaticElementSubclasser());
+		PatchUtils.patch(OptGroupElement.class, new AutomaticElementSubclasser());
+		PatchUtils.patch(ParagraphElement.class, new AutomaticElementSubclasser());
+		PatchUtils.patch(ParamElement.class, new AutomaticElementSubclasser());
+		PatchUtils.patch(PreElement.class, new AutomaticElementSubclasser());
+		PatchUtils.patch(QuoteElement.class, new AutomaticTagSubClasser());
+		PatchUtils.patch(ScriptElement.class, new AutomaticElementSubclasser());
+		PatchUtils.patch(StyleElement.class, new AutomaticElementSubclasser());
 		PatchUtils.patch(SelectElement.class, new AutomaticElementSubclasser());
 		PatchUtils.patch(SpanElement.class, new AutomaticElementSubclasser());
 		PatchUtils.patch(Style.class, new StylePatcher());
 		PatchUtils.patch(TableCaptionElement.class, new AutomaticElementSubclasser());
-		PatchUtils.patch(TableCellElement.class, new AutomaticElementSubclasser());
-		PatchUtils.patch(TableColElement.class, new AutomaticElementSubclasser());
+		PatchUtils.patch(TableCellElement.class, new AutomaticTagSubClasser());
+		PatchUtils.patch(TableColElement.class, new AutomaticTagSubClasser());
 		PatchUtils.patch(TableElement.class, new AutomaticElementSubclasser());
 		PatchUtils.patch(TableRowElement.class, new AutomaticElementSubclasser());
-		PatchUtils.patch(TableSectionElement.class, new AutomaticElementSubclasser());
+		PatchUtils.patch(TableSectionElement.class, new AutomaticTagSubClasser());
 		PatchUtils.patch(TextAreaElement.class, new AutomaticElementSubclasser());
-
+		PatchUtils.patch(Text.class, new AutomaticSubclasser());
+		PatchUtils.patch(TitleElement.class, new AutomaticElementSubclasser());
+		PatchUtils.patch(UListElement.class, new AutomaticElementSubclasser());
+		
 		hasBeenPatched = true;
 	}
 

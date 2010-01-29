@@ -14,6 +14,7 @@ import com.google.gwt.dom.client.NodeFactory;
 import com.google.gwt.dom.client.NodeList;
 import com.octo.gwt.test17.test.AbstractGWTTest;
 
+@SuppressWarnings("deprecation")
 public class ElementTest extends AbstractGWTTest {
 
 	private Element e;
@@ -51,7 +52,7 @@ public class ElementTest extends AbstractGWTTest {
 		Assert.assertNull("Cloned element's parent should be null", newNode.getParentNode());
 		Assert.assertEquals(true, newNode.getPropertyBoolean("bool"));
 		Assert.assertEquals("Deep cloned element should have child nodes", 1, newNode.getChildNodes().getLength());
-		Assert.assertEquals(child, newNode.getChildNodes().getItem(0));
+		Assert.assertTrue(child != newNode.getChildNodes().getItem(0));
 		Assert.assertEquals(1, e.getChildNodes().getLength());
 	}
 
@@ -180,8 +181,6 @@ public class ElementTest extends AbstractGWTTest {
 
 	@Test
 	public void checkGetParentElement() {
-		Assert.assertEquals(Document.get().getBody(), e.getParentElement());
-
 		//Set up
 		BaseElement be = Document.get().createBaseElement();
 		e.appendChild(be);

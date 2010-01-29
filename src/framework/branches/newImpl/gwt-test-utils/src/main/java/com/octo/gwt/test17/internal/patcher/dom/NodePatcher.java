@@ -1,40 +1,29 @@
 package com.octo.gwt.test17.internal.patcher.dom;
 
-import java.util.Map;
-
-import javassist.CtClass;
-import javassist.CtConstructor;
+import java.util.Map.Entry;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeFactory;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Text;
-import com.octo.gwt.test17.ArrayUtils;
 import com.octo.gwt.test17.ElementUtils;
 import com.octo.gwt.test17.internal.overrides.OverrideNodeList;
-import com.octo.gwt.test17.ng.AutomaticPatcher;
+import com.octo.gwt.test17.ng.AutomaticSubclasser;
 import com.octo.gwt.test17.ng.PatchMethod;
+import com.octo.gwt.test17.ng.PropertyContainer;
+import com.octo.gwt.test17.ng.SubClassedHelper;
 
-public class NodePatcher extends AutomaticPatcher {
+public class NodePatcher extends AutomaticSubclasser {
 
-	private static final String NODE_LIST_FIELD = "ChildNodes";
+	public static final String NODE_LIST_FIELD = "ChildNodes";
 	private static final String PARENT_NODE_FIELD = "ParentNode";
-	private static final String OWNER_FIELD = "OwnerDocument";
 
-	@Override
-	public void initClass(CtClass c) throws Exception {
-		super.initClass(c);
-		
-		CtConstructor cons = findConstructor(c);
-
-		StringBuilder sb = new StringBuilder();
-		sb.append("{");
-		sb.append(PropertyHolder.callSet(NODE_LIST_FIELD, "new " + OverrideNodeList.class.getCanonicalName() + "()"));
-		sb.append(PropertyHolder.callSet(OWNER_FIELD, NodeFactory.class.getCanonicalName() + ".DOCUMENT"));
-		sb.append("}");
-		cons.setBody(sb.toString());
+	@PatchMethod
+	public static Document getOwnerDocument(Node node) {
+		return NodeFactory.getDocument();
 	}
 	
 	@PatchMethod
@@ -73,7 +62,9 @@ public class NodePatcher extends AutomaticPatcher {
 		// then, add to the new parent
 		OverrideNodeList<Node> list = getChildNodeList(parent);
 		list.getList().add(newChild);
-		PropertyHolder.get(newChild).put(PARENT_NODE_FIELD, parent);
+		
+		SubClassedHelper.setProperty(newChild, PARENT_NODE_FIELD, parent);
+		
 		return newChild;
 	}
 
@@ -203,15 +194,9 @@ public class NodePatcher extends AutomaticPatcher {
 
 	@PatchMethod
 	public static Node cloneNode(Node node, boolean deep) {
+		PropertyContainer propertyContainer = SubClassedHelper.getSubClassedObjectOrNull(node).getOverrideProperties();
 		node = ElementUtils.castToDomElement(node);
-		Map<String, Object> map = ArrayUtils.copyMap(PropertyHolder.get(node));
-
-		map.put(PARENT_NODE_FIELD, null);
-
-		if (!deep) {
-			map.put(NODE_LIST_FIELD, new OverrideNodeList<Node>());
-		}
-
+	
 		Node newNode;
 		if (node instanceof Element) {
 			try {
@@ -229,13 +214,58 @@ public class NodePatcher extends AutomaticPatcher {
 			throw new RuntimeException("Cannot create a Node of type [" + node.getClass().getCanonicalName() + "]");
 		}
 
-		PropertyHolder.set(newNode, map);
+		PropertyContainer propertyContainer2 = SubClassedHelper.getSubClassedObjectOrNull(newNode).getOverrideProperties();
+		
+		propertyContainer2.clear();
+		
+		fillNewPropertyContainer(propertyContainer2, propertyContainer);
+		
+		OverrideNodeList<Node> newChilds = new OverrideNodeList<Node>();
+		propertyContainer2.put(NODE_LIST_FIELD, newChilds);
+		
+		if (deep) {
+			OverrideNodeList<Node> childs = getChildNodeList(node);
+			for(Node child : childs.getList()) {
+				appendChild(newNode, cloneNode(child, true));
+			}
+		}
 		return newNode;
-
 	}
-
-	@SuppressWarnings("unchecked")
+	
+	private static void fillNewPropertyContainer(PropertyContainer n, PropertyContainer old) {
+		for(Entry<String, Object> entry : old.entrySet()) {
+			if (PARENT_NODE_FIELD.equals(entry.getKey())) {
+			}
+			else if (entry.getValue() instanceof String) {
+				n.put(entry.getKey(), new String((String) entry.getValue()));
+			}
+			else if (entry.getValue() instanceof Integer) {
+				n.put(entry.getKey(), new Integer((Integer) entry.getValue()));
+			}
+			else if (entry.getValue() instanceof Double) {
+				n.put(entry.getKey(), new Double((Double) entry.getValue()));
+			}
+			else if (entry.getValue() instanceof Boolean) {
+				n.put(entry.getKey(), new Boolean((Boolean) entry.getValue()));
+			}
+			else if (entry.getValue() instanceof Style) {
+				// FIXME cloner
+				n.put(entry.getKey(), entry.getValue());
+			}
+					else if (entry.getValue() instanceof OverrideNodeList<?>) {
+			}
+			else if (entry.getValue() instanceof PropertyContainer) {
+				PropertyContainer nn = new PropertyContainer();
+				fillNewPropertyContainer(nn, (PropertyContainer) entry.getValue());
+				n.put(entry.getKey(), nn);
+			}	
+			else {
+				throw new RuntimeException("Not managed type " + entry.getValue().getClass() + ", value " + entry.getKey());
+			}
+		}
+	}
+	
 	private static OverrideNodeList<Node> getChildNodeList(Node node) {
-		return (OverrideNodeList<Node>) PropertyHolder.get(node).get(NODE_LIST_FIELD);
+		return SubClassedHelper.getProperty(node, NODE_LIST_FIELD);
 	}
 }

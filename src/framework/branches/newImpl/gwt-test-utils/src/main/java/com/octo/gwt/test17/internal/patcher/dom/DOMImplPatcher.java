@@ -1,7 +1,5 @@
 package com.octo.gwt.test17.internal.patcher.dom;
 
-import java.util.Map;
-
 import com.google.gwt.dom.client.ButtonElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
@@ -18,10 +16,17 @@ import com.octo.gwt.test17.internal.overrides.OverrideEvent;
 import com.octo.gwt.test17.internal.overrides.OverrideNodeList;
 import com.octo.gwt.test17.ng.AutomaticPatcher;
 import com.octo.gwt.test17.ng.PatchMethod;
-import com.octo.gwt.test17.ng.SubClassedObject;
+import com.octo.gwt.test17.ng.PropertyContainer;
+import com.octo.gwt.test17.ng.SubClassedHelper;
 
 public class DOMImplPatcher extends AutomaticPatcher {
 
+	private static final String SRC = "Src";
+	private static final String SCROLL_LEFT = "ScrollLeft";
+	private static final String ABSOLUTE_TOP = "AbsoluteTop";
+	private static final String INNER_HTML = "InnerHTML";
+	private static final String ABSOLUTE_LEFT = "AbsoluteLeft";
+	private static final String INNER_TEXT = "InnerText";
 	private static final String NODE_LIST_FIELD = "ChildNodes";
 
 	@PatchMethod
@@ -42,7 +47,7 @@ public class DOMImplPatcher extends AutomaticPatcher {
 	@PatchMethod
 	public static ButtonElement createButtonElement(Object domImpl, Document doc, String type) {
 		ButtonElement e = (ButtonElement) doc.createElement("button");
-		SubClassedObject.Helper.setProperty(e, "Type", type);
+		SubClassedHelper.setProperty(e, "Type", type);
 		return e;
 	}
 	
@@ -52,43 +57,34 @@ public class DOMImplPatcher extends AutomaticPatcher {
 	}
 
 	@PatchMethod
-	@SuppressWarnings("unchecked")
 	public static String getAttribute(Object domImpl, Element elem, String name) {
-		elem = ElementUtils.castToDomElement(elem);
-		Map<String, String> attrs = (Map<String, String>) PropertyHolder.get(elem).get(ElementPatcher.PROPERTY_MAP_FIELD);
-		return attrs.get(name);
+		PropertyContainer propertyContainer = SubClassedHelper.getProperty(elem, ElementPatcher.PROPERTY_MAP_FIELD);
+		return (String) propertyContainer.get(name);
 	}
 
 	@PatchMethod
 	public static String getInnerHTML(Object domImpl, Element elem) {
-		elem = ElementUtils.castToDomElement(elem);
-		return (String) PropertyHolder.get(elem).get("InnerHTML");
+		return SubClassedHelper.getProperty(elem, INNER_HTML);
 	}
 	
 	@PatchMethod
 	public static String getInnerText(Object domImpl, Element elem) {
-		elem = ElementUtils.castToDomElement(elem);
-		return (String) PropertyHolder.get(elem).get("InnerText");
+		return SubClassedHelper.getProperty(elem, INNER_TEXT);
 	}
 
 	@PatchMethod
 	public static void setInnerText(Object domImpl, Element elem, String text) {
-		elem = ElementUtils.castToDomElement(elem);
-		PropertyHolder.get(elem).put("InnerText", text);
+		SubClassedHelper.setProperty(elem, INNER_TEXT, text);
 	}
 
 	@PatchMethod
 	public static int getAbsoluteLeft(Object domImpl, Element elem) {
-		elem = ElementUtils.castToDomElement(elem);
-		Integer absoluteLeft = (Integer) PropertyHolder.get(elem).get("AbsoluteLeft");
-		return (absoluteLeft != null) ? absoluteLeft : 0;
+		return SubClassedHelper.getPropertyInteger(elem, ABSOLUTE_LEFT);
 	}
 
 	@PatchMethod
 	public static int getAbsoluteTop(Object domImpl, Element elem) {
-		elem = ElementUtils.castToDomElement(elem);
-		Integer absoluteTop = (Integer) PropertyHolder.get(elem).get("AbsoluteTop");
-		return (absoluteTop != null) ? absoluteTop : 0;
+		return SubClassedHelper.getPropertyInteger(elem, ABSOLUTE_TOP);
 	}
 
 	@PatchMethod
@@ -143,15 +139,12 @@ public class DOMImplPatcher extends AutomaticPatcher {
 
 	@PatchMethod(args={Element.class, Integer.class})
 	public static void setScrollLeft(Object domImpl, Element elem, int left) {
-		elem = ElementUtils.castToDomElement(elem);
-		PropertyHolder.get(elem).put("ScrollLeft", left);
+		SubClassedHelper.setProperty(elem, SCROLL_LEFT, left);
 	}
 
 	@PatchMethod(args={Element.class})
 	public static int getScrollLeft(Object domImpl, Element elem) {
-		elem = ElementUtils.castToDomElement(elem);
-		Integer srcollLeft = (Integer) PropertyHolder.get(elem).get("ScrollLeft");
-		return (srcollLeft != null) ? srcollLeft : 0;
+		return SubClassedHelper.getPropertyInteger(elem, SCROLL_LEFT);
 	}
 
 	@PatchMethod
@@ -239,12 +232,12 @@ public class DOMImplPatcher extends AutomaticPatcher {
 
 	@PatchMethod
 	public static String imgGetSrc(Object domImpl, Element img) {
-		return (String) PropertyHolder.get(img).get("Src");
+		return SubClassedHelper.getProperty(img, SRC);
 	}
 
 	@PatchMethod
 	public static void imgSetSrc(Object domImpl, Element img, String src) {
-		PropertyHolder.get(img).put("Src", src);
+		SubClassedHelper.setProperty(img, SRC, src);
 	}
 
 	@PatchMethod
@@ -270,17 +263,16 @@ public class DOMImplPatcher extends AutomaticPatcher {
 		return list;
 	}
 
-	@SuppressWarnings("unchecked")
 	private static OverrideNodeList<Node> getChildNodeList(Object domImpl, Node node) {
-		return (OverrideNodeList<Node>) PropertyHolder.get(node).get(NODE_LIST_FIELD);
+		return SubClassedHelper.getProperty(node, NODE_LIST_FIELD);
 	}
 
 	public static InputElement createInputElement(Document doc, String type, String name) {
 		InputElement e = (InputElement) doc.createElement("input");
-		SubClassedObject.Helper.setProperty(e, "Type", type);
+		SubClassedHelper.setProperty(e, "Type", type);
 		
 		if (name != null) {
-			SubClassedObject.Helper.setProperty(e, "Name", name);
+			SubClassedHelper.setProperty(e, "Name", name);
 		}
 
 		return e;

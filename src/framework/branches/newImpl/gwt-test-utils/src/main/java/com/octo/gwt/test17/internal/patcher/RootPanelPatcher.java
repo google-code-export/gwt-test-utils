@@ -5,7 +5,7 @@ import com.octo.gwt.test17.ElementUtils;
 import com.octo.gwt.test17.ng.AutomaticPatcher;
 import com.octo.gwt.test17.ng.PatchMethod;
 
-public class RootPanelPatch extends AutomaticPatcher {
+public class RootPanelPatcher extends AutomaticPatcher {
 
 	@PatchMethod
 	public static com.google.gwt.user.client.Element getBodyElement() {

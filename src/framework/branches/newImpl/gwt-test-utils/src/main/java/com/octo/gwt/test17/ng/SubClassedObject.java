@@ -4,28 +4,4 @@ public interface SubClassedObject {
 
 	PropertyContainer getOverrideProperties();
 	
-	class Helper {
-
-		public static void setProperty(Object o, String propertyName, Object propertyValue) {
-			if (o instanceof SubClassedObject) {
-				SubClassedObject subClassedObject = (SubClassedObject) o;
-				subClassedObject.getOverrideProperties().put(propertyName, propertyValue);
-			}
-			else {
-				throw new RuntimeException("Not SubClassedObject for setProperty " + o.getClass());
-			}
-		}
-		
-		@SuppressWarnings("unchecked")
-		public static <T> T getProperty(Object o, String propertyName) {
-			if (o instanceof SubClassedObject) {
-				SubClassedObject subClassedObject = (SubClassedObject) o;
-				return (T) subClassedObject.getOverrideProperties().get(propertyName);
-			}
-			else {
-				throw new RuntimeException("Not SubClassedObject for getProperty " + o.getClass());
-			}
-		}
-		
-	}
 }

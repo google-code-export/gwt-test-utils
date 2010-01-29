@@ -1,134 +1,136 @@
 package com.google.gwt.dom.client;
 
+import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.regex.Pattern;
 
-import com.octo.gwt.test17.internal.overrides.OverrideHeadingElement;
-import com.octo.gwt.test17.internal.overrides.OverrideModElement;
-import com.octo.gwt.test17.internal.overrides.OverrideQuoteElement;
-import com.octo.gwt.test17.internal.overrides.OverrideTableCellElement;
-import com.octo.gwt.test17.internal.overrides.OverrideTableColElement;
-import com.octo.gwt.test17.internal.overrides.OverrideTableSectionElement;
-import com.octo.gwt.test17.internal.patcher.dom.PropertyHolder;
-import com.octo.gwt.test17.ng.AutomaticSubclasser;
+import com.octo.gwt.test17.ng.SubClassedHelper;
 
 public class NodeFactory {
 
-	private static Map<String, Class<? extends Element>> elementMap = new HashMap<String, Class<? extends Element>>();
-	private static final Pattern H_PATTERN = Pattern.compile("^h[123456]$");
+	private static Map<String, Class<?>> subclassedMap = new HashMap<String, Class<?>>();
+	private static Map<String, Class<?>> subclassedMapWithTag = new HashMap<String, Class<?>>();
 	
-	private static Map<String, Class<? extends Element>> subclassedMap = new HashMap<String, Class<? extends Element>>();
-
 	static {
 
 		subclassedMap.put("a", AnchorElement.class);
-		elementMap.put("area", AreaElement.class);
-		elementMap.put("base", BaseElement.class);
+		subclassedMap.put("area", AreaElement.class);
+		subclassedMap.put("base", BaseElement.class);
 		subclassedMap.put(BodyElement.TAG, BodyElement.class);
-		elementMap.put("br", BRElement.class);
+		subclassedMap.put("br", BRElement.class);
 		subclassedMap.put("button", ButtonElement.class);
 		subclassedMap.put("div", DivElement.class);
-		elementMap.put("dl", DListElement.class);
+		subclassedMap.put("dl", DListElement.class);
 		subclassedMap.put("fieldset", FieldSetElement.class);
 		subclassedMap.put("form", FormElement.class);
-		elementMap.put("frame", FrameElement.class);
-		elementMap.put("frameset", FrameSetElement.class);
-		elementMap.put("head", HeadElement.class);
-		elementMap.put("hr", HRElement.class);
+		subclassedMap.put("frame", FrameElement.class);
+		subclassedMap.put("frameset", FrameSetElement.class);
+		subclassedMap.put("head", HeadElement.class);
+		subclassedMap.put("hr", HRElement.class);
+		subclassedMapWithTag.put("h1", HeadingElement.class);
+		subclassedMapWithTag.put("h2", HeadingElement.class);
+		subclassedMapWithTag.put("h3", HeadingElement.class);
+		subclassedMapWithTag.put("h4", HeadingElement.class);
+		subclassedMapWithTag.put("h5", HeadingElement.class);
+		subclassedMapWithTag.put("h6", HeadingElement.class);
+		subclassedMap.put("hr", HRElement.class);
 		subclassedMap.put("iframe", IFrameElement.class);
 		subclassedMap.put("img", ImageElement.class);
+		subclassedMapWithTag.put("ins", ModElement.class);
+		subclassedMapWithTag.put("del", ModElement.class);
 		subclassedMap.put("input", InputElement.class);
 		subclassedMap.put("label", LabelElement.class);
 		subclassedMap.put("legend", LegendElement.class);
-		elementMap.put("li", LIElement.class);
-		elementMap.put("link", LinkElement.class);
-		elementMap.put("map", MapElement.class);
-		elementMap.put("meta", MetaElement.class);
-		elementMap.put("object", ObjectElement.class);
-		elementMap.put("ol", OListElement.class);
-		elementMap.put("optgroup", OptGroupElement.class);
+		subclassedMap.put("li", LIElement.class);
+		subclassedMap.put("link", LinkElement.class);
+		subclassedMap.put("map", MapElement.class);
+		subclassedMap.put("meta", MetaElement.class);
+		subclassedMap.put("object", ObjectElement.class);
+		subclassedMap.put("ol", OListElement.class);
+		subclassedMap.put("optgroup", OptGroupElement.class);
 		subclassedMap.put("option", OptionElement.class);
 		subclassedMap.put("options", OptionElement.class);
-		elementMap.put("p", ParagraphElement.class);
-		elementMap.put("param", ParamElement.class);
-		elementMap.put("pre", PreElement.class);
-		elementMap.put("q", QuoteElement.class);
-		elementMap.put("script", ScriptElement.class);
+		subclassedMap.put("p", ParagraphElement.class);
+		subclassedMap.put("param", ParamElement.class);
+		subclassedMap.put("pre", PreElement.class);
+		subclassedMapWithTag.put("q", QuoteElement.class);
+		subclassedMapWithTag.put("blockquote", QuoteElement.class);
+		subclassedMap.put("script", ScriptElement.class);
 		subclassedMap.put("select", SelectElement.class);
 		subclassedMap.put("span", SpanElement.class);
-		elementMap.put("style", StyleElement.class);
+		subclassedMap.put("style", StyleElement.class);
 		subclassedMap.put("caption", TableCaptionElement.class);
-		subclassedMap.put("td", TableCellElement.class);
-		subclassedMap.put("th", TableCellElement.class);
-		subclassedMap.put("col", TableColElement.class);
-		subclassedMap.put("colgroup", TableColElement.class);
+		subclassedMapWithTag.put("td", TableCellElement.class);
+		subclassedMapWithTag.put("th", TableCellElement.class);
+		subclassedMapWithTag.put("col", TableColElement.class);
+		subclassedMapWithTag.put("colgroup", TableColElement.class);
 		subclassedMap.put("table", TableElement.class);
 		subclassedMap.put("tr", TableRowElement.class);
-		subclassedMap.put("tbody", TableSectionElement.class);
-		subclassedMap.put("tfoot", TableSectionElement.class);
-		subclassedMap.put("thead", TableSectionElement.class);
+		subclassedMapWithTag.put("tbody", TableSectionElement.class);
+		subclassedMapWithTag.put("tfoot", TableSectionElement.class);
+		subclassedMapWithTag.put("thead", TableSectionElement.class);
 		subclassedMap.put("textarea", TextAreaElement.class);
-		elementMap.put("title", TitleElement.class);
-		elementMap.put("ul", UListElement.class);
+		subclassedMap.put("title", TitleElement.class);
+		subclassedMap.put("ul", UListElement.class);
 	}
 
-	public static final Document DOCUMENT = new Document();
+	public static Document DOCUMENT;
 
-	private NodeFactory() {
-
-	}
+	private NodeFactory() {}
 
 	public static Document getDocument() {
-		if (!PropertyHolder.get(DOCUMENT).containsKey("Body")) {
+		if (DOCUMENT == null) {
 			try {
-				PropertyHolder.get(DOCUMENT).put("Body", createElement("body"));
-			} catch (Exception e) {
-				throw new RuntimeException("Error while creating Document <body> element", e);
+				DOCUMENT = (Document) SubClassedHelper.getSubClass(Document.class).newInstance();
+			}
+			catch(Exception e) {
+				throw new RuntimeException("Unable to create Document", e);
 			}
 		}
 		return DOCUMENT;
-
 	}
 
 	public static Text createText() {
-		return new Text();
+		try {
+			return (Text) SubClassedHelper.getSubClass(Text.class).newInstance();
+		} catch (Exception e) {
+			throw new RuntimeException("Unable to create text " + e);
+		}
+	}
+	
+	public static Style createStyle() {
+		try {
+			return (Style) SubClassedHelper.getSubClass(Style.class).newInstance();
+		} catch (Exception e) {
+			throw new RuntimeException("Unable to create text " + e);
+		}
 	}
 
+
 	public static Node createNode() {
-		return new Node();
+		try {
+			return (Node) SubClassedHelper.getSubClass(Node.class).newInstance();
+		} catch (Exception e) {
+			throw new RuntimeException("Unable to create node " + e);
+		}
 	}
 
 	public static Element createElement(String tag) {
 		try {
-			Element elem;
+			Element elem = null;
 		
-			
 			Class<?> subClazz = subclassedMap.get(tag);
+			Class<?> subClazzWithTag = subclassedMapWithTag.get(tag);
 			
-			if (H_PATTERN.matcher(tag).matches()) {
-				elem = new OverrideHeadingElement(tag);
-			} else if (ModElement.TAG_INS.equals(tag) || ModElement.TAG_DEL.equals(tag)) {
-				elem = new OverrideModElement(tag);
-			} else if (QuoteElement.TAG_BLOCKQUOTE.equals(tag) || QuoteElement.TAG_Q.equals(tag)) {
-				elem = new OverrideQuoteElement(tag);
-			} else if (TableCellElement.TAG_TD.equals(tag) || TableCellElement.TAG_TH.equals(tag)) {
-				elem = new OverrideTableCellElement(tag);
-			} else if (TableColElement.TAG_COL.equals(tag) || TableColElement.TAG_COLGROUP.equals(tag)) {
-				elem = new OverrideTableColElement(tag);
-			} else if (TableSectionElement.TAG_TBODY.equals(tag) || TableSectionElement.TAG_TFOOT.equals(tag)
-					|| TableSectionElement.TAG_THEAD.equals(tag)) {
-				elem = new OverrideTableSectionElement(tag);
-			} else if (subClazz != null) {
-				elem = (Element) AutomaticSubclasser.map.get(subClazz).newInstance();
+			if (subClazz != null) {
+				elem = (Element) SubClassedHelper.getSubClass(subClazz).newInstance();
 			}
-			else {
-				Class<? extends Element> clazz = elementMap.get(tag);
-	
-				if (clazz == null)
-					throw new RuntimeException("Cannot create element for tag <" + tag + ">");
-	
-				elem = clazz.newInstance();
+			else if (subClazzWithTag != null) {
+				Constructor<?> constructor = SubClassedHelper.getSubClass(subClazzWithTag).getConstructor(String.class);
+				elem = (Element) constructor.newInstance(tag);
+			}
+			if (elem == null) {
+				throw new RuntimeException("Cannot create element for tag <" + tag + ">");
 			}
 	
 			// set the <body> element as default parent node

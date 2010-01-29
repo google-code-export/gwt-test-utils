@@ -6,6 +6,7 @@ import com.google.gwt.dom.client.InputElement;
 import com.octo.gwt.test17.ng.AutomaticElementSubclasser;
 import com.octo.gwt.test17.ng.PatchMethod;
 import com.octo.gwt.test17.ng.PatchType;
+import com.octo.gwt.test17.ng.SubClassedHelper;
 
 public class InputElementPatcher extends AutomaticElementSubclasser {
 
@@ -31,11 +32,7 @@ public class InputElementPatcher extends AutomaticElementSubclasser {
 	
 	@PatchMethod(value=PatchType.NEW_CODE_AS_STRING)
 	public static String useMap() {
-		try {
-			return "{ " + PropertyHolder.callGet("UseMap", CtClass.booleanType) + " }";
-		} catch (Exception e) {
-			throw new RuntimeException("Error while patching InputElement.useMap()", e);
-		}
+		return SubClassedHelper.getCodeGetProperty("this", "UserMap", CtClass.booleanType);
 	}
 	
 }

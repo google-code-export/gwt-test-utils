@@ -14,6 +14,7 @@ import com.octo.gwt.test17.PatchGWT;
 import com.octo.gwt.test17.internal.overrides.OverrideNodeList;
 import com.octo.gwt.test17.test.AbstractGWTTest;
 
+@SuppressWarnings("deprecation")
 public class NodeTest extends AbstractGWTTest {
 
 	private Node n;
@@ -38,7 +39,7 @@ public class NodeTest extends AbstractGWTTest {
 		Assert.assertTrue("AnchorElement is a DOM node", Node.is(Document.get().createAnchorElement()));
 	}
 
-	@Test
+@Test
 	public void checkAppendChild() {
 		BaseElement c0 = Document.get().createBaseElement();
 		ButtonElement c1 = Document.get().createButtonElement();
@@ -61,7 +62,7 @@ public class NodeTest extends AbstractGWTTest {
 		Assert.assertEquals("value", newNode.getNodeValue());
 		Assert.assertNull("Cloned node's parent should be null", newNode.getParentNode());
 		Assert.assertEquals("Deep cloned node should have child nodes", 1, newNode.getChildNodes().getLength());
-		Assert.assertEquals(child, newNode.getChildNodes().getItem(0));
+		Assert.assertTrue(child != newNode.getChildNodes().getItem(0));
 	}
 
 	@Test
