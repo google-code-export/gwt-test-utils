@@ -3,8 +3,8 @@ package com.octo.gwt.test17.internal.patcher;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.impl.FocusImpl;
-import com.octo.gwt.test17.ng.AutomaticPatcher;
-import com.octo.gwt.test17.ng.PatchMethod;
+import com.octo.gwt.test17.internal.patcher.tools.AutomaticPatcher;
+import com.octo.gwt.test17.internal.patcher.tools.PatchMethod;
 
 public class FocusImplOldPatcher extends AutomaticPatcher {
 

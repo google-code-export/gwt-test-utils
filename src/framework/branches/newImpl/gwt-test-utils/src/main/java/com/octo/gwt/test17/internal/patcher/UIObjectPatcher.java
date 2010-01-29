@@ -6,10 +6,10 @@ import com.google.gwt.user.client.ui.UIObject;
 import com.octo.gwt.test17.ElementUtils;
 import com.octo.gwt.test17.ReflectionUtils;
 import com.octo.gwt.test17.internal.patcher.dom.ElementPatcher;
-import com.octo.gwt.test17.ng.AutomaticPatcher;
-import com.octo.gwt.test17.ng.PatchMethod;
-import com.octo.gwt.test17.ng.PatchType;
-import com.octo.gwt.test17.ng.SubClassedHelper;
+import com.octo.gwt.test17.internal.patcher.tools.AutomaticPatcher;
+import com.octo.gwt.test17.internal.patcher.tools.PatchMethod;
+import com.octo.gwt.test17.internal.patcher.tools.PatchType;
+import com.octo.gwt.test17.internal.patcher.tools.SubClassedHelper;
 
 public class UIObjectPatcher extends AutomaticPatcher {
 

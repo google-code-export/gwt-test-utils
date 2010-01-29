@@ -5,8 +5,8 @@ import com.google.gwt.dom.client.TableRowElement;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.HTMLTable;
 import com.octo.gwt.test17.ElementUtils;
-import com.octo.gwt.test17.ng.AutomaticPatcher;
-import com.octo.gwt.test17.ng.PatchMethod;
+import com.octo.gwt.test17.internal.patcher.tools.AutomaticPatcher;
+import com.octo.gwt.test17.internal.patcher.tools.PatchMethod;
 
 public class HTMLTableCellFormatterPatcher extends AutomaticPatcher {
 

@@ -1,8 +1,8 @@
 package com.octo.gwt.test17.internal.patcher.dom;
 
 import com.google.gwt.dom.client.AnchorElement;
-import com.octo.gwt.test17.ng.AutomaticElementSubclasser;
-import com.octo.gwt.test17.ng.PatchMethod;
+import com.octo.gwt.test17.internal.patcher.tools.AutomaticElementSubclasser;
+import com.octo.gwt.test17.internal.patcher.tools.PatchMethod;
 
 public class AnchorElementPatcher extends AutomaticElementSubclasser {
 

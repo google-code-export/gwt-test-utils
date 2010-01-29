@@ -55,7 +55,7 @@ import com.google.gwt.dom.client.Text;
 import com.google.gwt.dom.client.TextAreaElement;
 import com.google.gwt.dom.client.TitleElement;
 import com.google.gwt.dom.client.UListElement;
-import com.octo.gwt.test17.ng.SubClassedHelper;
+import com.octo.gwt.test17.internal.patcher.tools.SubClassedHelper;
 
 public class NodeFactory {
 

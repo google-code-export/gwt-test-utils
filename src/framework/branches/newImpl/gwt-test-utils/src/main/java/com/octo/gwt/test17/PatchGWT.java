@@ -127,9 +127,9 @@ import com.octo.gwt.test17.internal.patcher.dom.InputElementPatcher;
 import com.octo.gwt.test17.internal.patcher.dom.NodeListPatcher;
 import com.octo.gwt.test17.internal.patcher.dom.NodePatcher;
 import com.octo.gwt.test17.internal.patcher.dom.StylePatcher;
-import com.octo.gwt.test17.ng.AutomaticElementSubclasser;
-import com.octo.gwt.test17.ng.AutomaticSubclasser;
-import com.octo.gwt.test17.ng.AutomaticTagSubclasser;
+import com.octo.gwt.test17.internal.patcher.tools.AutomaticElementSubclasser;
+import com.octo.gwt.test17.internal.patcher.tools.AutomaticSubclasser;
+import com.octo.gwt.test17.internal.patcher.tools.AutomaticTagSubclasser;
 
 public class PatchGWT {
 

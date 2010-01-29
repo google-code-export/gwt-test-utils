@@ -13,8 +13,8 @@ import java.util.Set;
 import com.google.gwt.i18n.client.impl.CurrencyData;
 import com.google.gwt.i18n.client.impl.CurrencyList;
 import com.octo.gwt.test17.PatchUtils;
-import com.octo.gwt.test17.ng.AutomaticPatcher;
-import com.octo.gwt.test17.ng.PatchMethod;
+import com.octo.gwt.test17.internal.patcher.tools.AutomaticPatcher;
+import com.octo.gwt.test17.internal.patcher.tools.PatchMethod;
 
 public class CurrencyListPatcher extends AutomaticPatcher {
 

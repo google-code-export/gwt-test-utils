@@ -6,8 +6,8 @@ import com.google.gwt.dom.client.InputElement;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Node;
 import com.octo.gwt.test17.ElementUtils;
-import com.octo.gwt.test17.ng.AutomaticPatcher;
-import com.octo.gwt.test17.ng.PatchMethod;
+import com.octo.gwt.test17.internal.patcher.tools.AutomaticPatcher;
+import com.octo.gwt.test17.internal.patcher.tools.PatchMethod;
 
 public class DOMImplSubClassPatcher extends AutomaticPatcher {
 

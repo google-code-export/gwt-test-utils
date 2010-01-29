@@ -13,10 +13,10 @@ import com.google.gwt.user.client.Event;
 import com.octo.gwt.test17.ElementUtils;
 import com.octo.gwt.test17.internal.overrides.OverrideEvent;
 import com.octo.gwt.test17.internal.overrides.OverrideNodeList;
-import com.octo.gwt.test17.ng.AutomaticPatcher;
-import com.octo.gwt.test17.ng.PatchMethod;
-import com.octo.gwt.test17.ng.PropertyContainer;
-import com.octo.gwt.test17.ng.SubClassedHelper;
+import com.octo.gwt.test17.internal.patcher.tools.AutomaticPatcher;
+import com.octo.gwt.test17.internal.patcher.tools.PatchMethod;
+import com.octo.gwt.test17.internal.patcher.tools.PropertyContainer;
+import com.octo.gwt.test17.internal.patcher.tools.SubClassedHelper;
 
 public class DOMImplPatcher extends AutomaticPatcher {
 

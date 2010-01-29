@@ -3,10 +3,10 @@ package com.octo.gwt.test17.internal.patcher.dom;
 import javassist.CtClass;
 
 import com.google.gwt.dom.client.InputElement;
-import com.octo.gwt.test17.ng.AutomaticElementSubclasser;
-import com.octo.gwt.test17.ng.PatchMethod;
-import com.octo.gwt.test17.ng.PatchType;
-import com.octo.gwt.test17.ng.SubClassedHelper;
+import com.octo.gwt.test17.internal.patcher.tools.AutomaticElementSubclasser;
+import com.octo.gwt.test17.internal.patcher.tools.PatchMethod;
+import com.octo.gwt.test17.internal.patcher.tools.PatchType;
+import com.octo.gwt.test17.internal.patcher.tools.SubClassedHelper;
 
 public class InputElementPatcher extends AutomaticElementSubclasser {
 

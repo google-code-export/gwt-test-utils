@@ -13,10 +13,10 @@ import com.google.gwt.dom.client.Style;
 import com.octo.gwt.test17.ReflectionUtils;
 import com.octo.gwt.test17.internal.overrides.OverrideNodeList;
 import com.octo.gwt.test17.internal.overrides.TagAware;
-import com.octo.gwt.test17.ng.AutomaticGetAndSetPatcher;
-import com.octo.gwt.test17.ng.PatchMethod;
-import com.octo.gwt.test17.ng.PropertyContainer;
-import com.octo.gwt.test17.ng.SubClassedHelper;
+import com.octo.gwt.test17.internal.patcher.tools.AutomaticGetAndSetPatcher;
+import com.octo.gwt.test17.internal.patcher.tools.PatchMethod;
+import com.octo.gwt.test17.internal.patcher.tools.PropertyContainer;
+import com.octo.gwt.test17.internal.patcher.tools.SubClassedHelper;
 
 public class ElementPatcher extends AutomaticGetAndSetPatcher {
 

@@ -1,4 +1,4 @@
-package com.octo.gwt.test17.ng;
+package com.octo.gwt.test17.internal.patcher.tools;
 
 public interface SubClassedObject {
 

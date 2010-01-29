@@ -3,8 +3,8 @@ package com.octo.gwt.test17.internal.patcher.dom;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
 import com.octo.gwt.test17.internal.overrides.OverrideNodeList;
-import com.octo.gwt.test17.ng.AutomaticPatcher;
-import com.octo.gwt.test17.ng.PatchMethod;
+import com.octo.gwt.test17.internal.patcher.tools.AutomaticPatcher;
+import com.octo.gwt.test17.internal.patcher.tools.PatchMethod;
 
 public class NodeListPatcher extends AutomaticPatcher {
 

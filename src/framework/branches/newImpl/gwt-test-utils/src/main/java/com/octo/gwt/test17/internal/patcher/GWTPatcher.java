@@ -35,8 +35,8 @@ import com.octo.gwt.test17.PatchUtils;
 import com.octo.gwt.test17.internal.overrides.OverrideImagePrototype;
 import com.octo.gwt.test17.internal.patcher.dom.DOMImplSubClassPatcher;
 import com.octo.gwt.test17.internal.patcher.dom.DOMImplUserSubClassPatcher;
-import com.octo.gwt.test17.ng.AutomaticPatcher;
-import com.octo.gwt.test17.ng.PatchMethod;
+import com.octo.gwt.test17.internal.patcher.tools.AutomaticPatcher;
+import com.octo.gwt.test17.internal.patcher.tools.PatchMethod;
 
 @SuppressWarnings("deprecation")
 public class GWTPatcher extends AutomaticPatcher {
@@ -117,15 +117,12 @@ public class GWTPatcher extends AutomaticPatcher {
 				}
 			};
 		}
-
 		if (classLiteral == OverrideDefaultImages.getDefaultImagesClass()) {
 			return OverrideDefaultImages.getInstance();
 		}
-
 		if (classLiteral == ClippedImageImpl.class) {
 			return new ClippedImageImpl();
 		}
-
 		if (ImageBundle.class.isAssignableFrom(classLiteral)) {
 			return generateImageWrapper(classLiteral);
 		}

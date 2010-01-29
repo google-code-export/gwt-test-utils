@@ -1,8 +1,8 @@
 package com.octo.gwt.test17.internal.patcher;
 
-import com.octo.gwt.test17.ng.AutomaticPatcher;
-import com.octo.gwt.test17.ng.PatchMethod;
-import com.octo.gwt.test17.ng.PatchType;
+import com.octo.gwt.test17.internal.patcher.tools.AutomaticPatcher;
+import com.octo.gwt.test17.internal.patcher.tools.PatchMethod;
+import com.octo.gwt.test17.internal.patcher.tools.PatchType;
 
 public class JavaScriptObjectPatcher extends AutomaticPatcher {
 	

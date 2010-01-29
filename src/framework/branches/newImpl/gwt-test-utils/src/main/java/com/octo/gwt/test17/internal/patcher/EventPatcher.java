@@ -5,8 +5,8 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.octo.gwt.test17.ElementUtils;
 import com.octo.gwt.test17.internal.overrides.OverrideEvent;
-import com.octo.gwt.test17.ng.AutomaticPatcher;
-import com.octo.gwt.test17.ng.PatchMethod;
+import com.octo.gwt.test17.internal.patcher.tools.AutomaticPatcher;
+import com.octo.gwt.test17.internal.patcher.tools.PatchMethod;
 
 public class EventPatcher extends AutomaticPatcher {
 

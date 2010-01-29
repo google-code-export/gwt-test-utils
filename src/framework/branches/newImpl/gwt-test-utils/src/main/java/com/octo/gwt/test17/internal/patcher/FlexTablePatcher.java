@@ -3,8 +3,8 @@ package com.octo.gwt.test17.internal.patcher;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.TableRowElement;
 import com.google.gwt.user.client.Element;
-import com.octo.gwt.test17.ng.AutomaticPatcher;
-import com.octo.gwt.test17.ng.PatchMethod;
+import com.octo.gwt.test17.internal.patcher.tools.AutomaticPatcher;
+import com.octo.gwt.test17.internal.patcher.tools.PatchMethod;
 
 public class FlexTablePatcher extends AutomaticPatcher {
 

@@ -3,9 +3,9 @@ package com.octo.gwt.test17.internal.patcher.dom;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.user.client.Element;
 import com.octo.gwt.test17.ElementUtils;
-import com.octo.gwt.test17.ng.AutomaticPatcher;
-import com.octo.gwt.test17.ng.PatchMethod;
-import com.octo.gwt.test17.ng.PatchType;
+import com.octo.gwt.test17.internal.patcher.tools.AutomaticPatcher;
+import com.octo.gwt.test17.internal.patcher.tools.PatchMethod;
+import com.octo.gwt.test17.internal.patcher.tools.PatchType;
 
 public class DOMPatcher extends AutomaticPatcher {
 

@@ -1,9 +1,9 @@
 package com.octo.gwt.test17.internal.patcher.dom;
 
 import com.google.gwt.dom.client.Style;
-import com.octo.gwt.test17.ng.AutomaticSubclasser;
-import com.octo.gwt.test17.ng.PatchMethod;
-import com.octo.gwt.test17.ng.SubClassedHelper;
+import com.octo.gwt.test17.internal.patcher.tools.AutomaticSubclasser;
+import com.octo.gwt.test17.internal.patcher.tools.PatchMethod;
+import com.octo.gwt.test17.internal.patcher.tools.SubClassedHelper;
 
 public class StylePatcher extends AutomaticSubclasser {
 
