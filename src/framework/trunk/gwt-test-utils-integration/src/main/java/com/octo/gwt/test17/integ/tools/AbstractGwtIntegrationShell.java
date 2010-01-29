@@ -216,10 +216,10 @@ public abstract class AbstractGwtIntegrationShell {
 		WidgetUtils.click(widget, csvRunner.getAssertionErrorMessagePrefix(), objectLocalization);
 	}
 
-	public void clickMenuItem(String menuBarLocalization, String menuItemIndex) {
-		MenuBar menuBar = getObject(MenuBar.class, menuBarLocalization);
+	public void clickMenuItem(String index, String objectLocalization) {
+		MenuBar menuBar = getObject(MenuBar.class, objectLocalization);
 		List<MenuItem> menuItems = ReflectionUtils.getPrivateFieldValue(menuBar, "items");
-		MenuItem itemToClick = menuItems.get(Integer.parseInt(menuItemIndex));
+		MenuItem itemToClick = menuItems.get(Integer.parseInt(index));
 		WidgetUtils.click(menuBar, itemToClick);
 	}
 	
@@ -288,7 +288,7 @@ public abstract class AbstractGwtIntegrationShell {
 		Assert.assertTrue(csvRunner.getAssertionErrorMessagePrefix() + "Checkbox checked", !checkBox.getValue());
 	}
 
-	public void assertInstanceOf(String objectLocalisation, String className) {
+	public void assertInstanceOf(String className, String objectLocalisation) {
 		try {
 			Class<?> clazz = Class.forName(className);
 			Object o = getObject(Object.class, objectLocalisation);
@@ -297,6 +297,11 @@ public abstract class AbstractGwtIntegrationShell {
 		} catch (ClassNotFoundException e) {
 			Assert.fail("Cannot assert instance of [" + className + "] because the class cannot be found");
 		}
+	}
+	
+	public void assertListBoxSelectedValueIs(String value, String objectLocalization) {
+		ListBox listBox = getObject(ListBox.class, objectLocalization);
+		Assert.assertEquals("Wrong listbox selected value", value, listBox.getItemText(listBox.getSelectedIndex()));
 	}
 
 	public void selectListBox(String value, String objectLocalization) {
@@ -341,10 +346,10 @@ public abstract class AbstractGwtIntegrationShell {
 		WidgetUtils.change(textBox);
 	}
 
-	public void fillListBox(String value, String objectLocalization) {
+	public void fillListBox(String index, String objectLocalization) {
 		ListBox listBox = getObject(ListBox.class, objectLocalization);
 		checkWidgetVisibleAndEnable(listBox, objectLocalization);
-		listBox.setSelectedIndex(Integer.parseInt(value));
+		listBox.setSelectedIndex(Integer.parseInt(index));
 		WidgetUtils.click(listBox);
 		WidgetUtils.change(listBox);
 	}
@@ -370,7 +375,6 @@ public abstract class AbstractGwtIntegrationShell {
 		} else {
 			Assert.fail("Regex \"" + regex + "\" has not been matched in ListBox values");
 		}
-		
 	}
 
 	public void fillSuggestBox(String value, String objectLocalization) {
@@ -518,7 +522,5 @@ public abstract class AbstractGwtIntegrationShell {
 			printGetter(o, clazz.getSuperclass(), os);
 		}
 	}
-
-	// MODE INTERACTIF
 
 }
