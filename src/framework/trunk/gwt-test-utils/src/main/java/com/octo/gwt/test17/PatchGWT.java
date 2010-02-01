@@ -52,6 +52,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.WidgetCollection;
 import com.google.gwt.user.client.ui.impl.FocusImpl;
 import com.google.gwt.user.client.ui.impl.FocusImplOld;
+import com.google.gwt.user.client.ui.impl.TextBoxImpl;
 import com.octo.gwt.test17.internal.PatchAnchorElement;
 import com.octo.gwt.test17.internal.PatchCheckBox;
 import com.octo.gwt.test17.internal.PatchComplexPanel;
@@ -76,6 +77,7 @@ import com.octo.gwt.test17.internal.PatchNode;
 import com.octo.gwt.test17.internal.PatchNodeList;
 import com.octo.gwt.test17.internal.PatchTextArea;
 import com.octo.gwt.test17.internal.PatchTextBox;
+import com.octo.gwt.test17.internal.PatchTextBoxImpl;
 import com.octo.gwt.test17.internal.PatchTimer;
 import com.octo.gwt.test17.internal.PatchUIObject;
 import com.octo.gwt.test17.internal.PatchURL;
@@ -447,6 +449,11 @@ public class PatchGWT {
 
 		PatchUtils.applyPatches(ComplexPanel.class, new Patch[] { new PatchMethod("getChildren", staticCall(PatchComplexPanel.class, "getChildren",
 				"this")), });
+		
+		PatchUtils.applyPatches(TextBoxImpl.class, new Patch[] {
+			new PatchMethod("getCursorPos", staticCall(PatchTextBoxImpl.class, "getCursorPos", "this, $1")),
+			new PatchMethod("setSelectionRange", staticCall(PatchTextBoxImpl.class, "setSelectionRange", "this, $1, $2")),
+		});
 	}
 
 	private static String staticCall(Class<?> clazz, String methodName, String args) {
