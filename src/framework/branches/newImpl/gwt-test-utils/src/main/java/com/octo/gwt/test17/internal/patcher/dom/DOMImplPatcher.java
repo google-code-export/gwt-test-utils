@@ -32,24 +32,24 @@ public class DOMImplPatcher extends AutomaticPatcher {
 	public static Element createElement(Object domImpl, Document doc, String tag) {
 		return NodeFactory.createElement(tag);
 	}
-	
+
 	@PatchMethod
 	public static int getBodyOffsetLeft(Object domImpl, Document doc) {
 		return 0;
 	}
-	
+
 	@PatchMethod
 	public static int getBodyOffsetTop(Object domImpl, Document doc) {
 		return 0;
 	}
-	
+
 	@PatchMethod
 	public static ButtonElement createButtonElement(Object domImpl, Document doc, String type) {
 		ButtonElement e = (ButtonElement) doc.createElement("button");
 		SubClassedHelper.setProperty(e, "Type", type);
 		return e;
 	}
-	
+
 	@PatchMethod
 	public static InputElement createInputElement(Object domImpl, Document doc, String type) {
 		return createInputElement(doc, type, null);
@@ -65,7 +65,7 @@ public class DOMImplPatcher extends AutomaticPatcher {
 	public static String getInnerHTML(Object domImpl, Element elem) {
 		return SubClassedHelper.getProperty(elem, INNER_HTML);
 	}
-	
+
 	@PatchMethod
 	public static String getInnerText(Object domImpl, Element elem) {
 		return SubClassedHelper.getProperty(elem, INNER_TEXT);
@@ -136,12 +136,12 @@ public class DOMImplPatcher extends AutomaticPatcher {
 		return null;
 	}
 
-	@PatchMethod(args={Element.class, Integer.class})
+	@PatchMethod(args = { Element.class, Integer.class })
 	public static void setScrollLeft(Object domImpl, Element elem, int left) {
 		SubClassedHelper.setProperty(elem, SCROLL_LEFT, left);
 	}
 
-	@PatchMethod(args={Element.class})
+	@PatchMethod(args = { Element.class })
 	public static int getScrollLeft(Object domImpl, Element elem) {
 		return SubClassedHelper.getPropertyInteger(elem, SCROLL_LEFT);
 	}
@@ -262,6 +262,18 @@ public class DOMImplPatcher extends AutomaticPatcher {
 		return list;
 	}
 
+	@PatchMethod
+	public static void selectClear(Object domImpl, SelectElement select) {
+		OverrideNodeList<Node> childNodes = (OverrideNodeList<Node>) select.getChildNodes();
+		childNodes.getList().clear();
+	}
+
+	@PatchMethod
+	public static void selectRemoveOption(Object domImpl, SelectElement select, int index) {
+		OverrideNodeList<Node> childNodes = (OverrideNodeList<Node>) select.getChildNodes();
+		childNodes.getList().remove(index);
+	}
+
 	private static OverrideNodeList<Node> getChildNodeList(Object domImpl, Node node) {
 		return SubClassedHelper.getProperty(node, NODE_LIST_FIELD);
 	}
@@ -269,7 +281,7 @@ public class DOMImplPatcher extends AutomaticPatcher {
 	public static InputElement createInputElement(Document doc, String type, String name) {
 		InputElement e = (InputElement) doc.createElement("input");
 		SubClassedHelper.setProperty(e, "Type", type);
-		
+
 		if (name != null) {
 			SubClassedHelper.setProperty(e, "Name", name);
 		}

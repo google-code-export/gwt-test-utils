@@ -81,6 +81,7 @@ import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTMLTable;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.StackPanel;
 import com.google.gwt.user.client.ui.TextArea;
@@ -90,6 +91,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.WidgetCollection;
 import com.google.gwt.user.client.ui.impl.FocusImpl;
 import com.google.gwt.user.client.ui.impl.FocusImplOld;
+import com.google.gwt.user.client.ui.impl.TextBoxImpl;
 import com.octo.gwt.test17.internal.patcher.CheckBoxPatcher;
 import com.octo.gwt.test17.internal.patcher.CurrencyDataPatcher;
 import com.octo.gwt.test17.internal.patcher.CurrencyListPatcher;
@@ -112,9 +114,11 @@ import com.octo.gwt.test17.internal.patcher.ImagePatcher;
 import com.octo.gwt.test17.internal.patcher.JavaScriptObjectPatcher;
 import com.octo.gwt.test17.internal.patcher.ListBoxPatcher;
 import com.octo.gwt.test17.internal.patcher.NumberFormatPatcher;
+import com.octo.gwt.test17.internal.patcher.PopupPanelPatcher;
 import com.octo.gwt.test17.internal.patcher.RootPanelPatcher;
 import com.octo.gwt.test17.internal.patcher.StackPanelPatcher;
 import com.octo.gwt.test17.internal.patcher.TextAreaPatcher;
+import com.octo.gwt.test17.internal.patcher.TextBoxImplPatcher;
 import com.octo.gwt.test17.internal.patcher.TextBoxPatcher;
 import com.octo.gwt.test17.internal.patcher.TimerPatcher;
 import com.octo.gwt.test17.internal.patcher.UIObjectPatcher;
@@ -128,6 +132,7 @@ import com.octo.gwt.test17.internal.patcher.dom.ElementPatcher;
 import com.octo.gwt.test17.internal.patcher.dom.InputElementPatcher;
 import com.octo.gwt.test17.internal.patcher.dom.NodeListPatcher;
 import com.octo.gwt.test17.internal.patcher.dom.NodePatcher;
+import com.octo.gwt.test17.internal.patcher.dom.SelectElementPatcher;
 import com.octo.gwt.test17.internal.patcher.dom.StylePatcher;
 import com.octo.gwt.test17.internal.patcher.tools.AutomaticElementSubclasser;
 import com.octo.gwt.test17.internal.patcher.tools.AutomaticSubclasser;
@@ -146,7 +151,7 @@ public class PatchGWT {
 	 * List of already patched custom classes
 	 */
 	private static List<String> alreadyPatched = new ArrayList<String>();
-	
+
 	public static String BOOTSTRAP_CLASS = null;
 
 	public static void patch(Class<?> clazz, IPatcher patcher) throws Exception {
@@ -229,7 +234,7 @@ public class PatchGWT {
 
 		PatchUtils.initRedefineMethod();
 		PatchUtils.initLoadPropertiesMethod();
-		
+
 		PatchUtils.patch(GWT.class, new GWTPatcher());
 		PatchUtils.patch(JavaScriptObject.class, new JavaScriptObjectPatcher());
 
@@ -253,10 +258,12 @@ public class PatchGWT {
 		PatchUtils.patch(Image.class, new ImagePatcher());
 		PatchUtils.patch(ListBox.class, new ListBoxPatcher());
 		PatchUtils.patch(NumberFormat.class, new NumberFormatPatcher());
+		PatchUtils.patch(PopupPanel.class, new PopupPanelPatcher());
 		PatchUtils.patch(RootPanel.class, new RootPanelPatcher());
 		PatchUtils.patch(StackPanel.class, new StackPanelPatcher());
 		PatchUtils.patch(TextArea.class, new TextAreaPatcher());
 		PatchUtils.patch(TextBox.class, new TextBoxPatcher());
+		PatchUtils.patch(TextBoxImpl.class, new TextBoxImplPatcher());
 		PatchUtils.patch(Timer.class, new TimerPatcher());
 		PatchUtils.patch(UIObject.class, new UIObjectPatcher());
 		PatchUtils.patch(URL.class, new URLPatcher());
@@ -303,7 +310,7 @@ public class PatchGWT {
 		PatchUtils.patch(QuoteElement.class, new AutomaticTagSubclasser());
 		PatchUtils.patch(ScriptElement.class, new AutomaticElementSubclasser());
 		PatchUtils.patch(StyleElement.class, new AutomaticElementSubclasser());
-		PatchUtils.patch(SelectElement.class, new AutomaticElementSubclasser());
+		PatchUtils.patch(SelectElement.class, new SelectElementPatcher());
 		PatchUtils.patch(SpanElement.class, new AutomaticElementSubclasser());
 		PatchUtils.patch(Style.class, new StylePatcher());
 		PatchUtils.patch(TableCaptionElement.class, new AutomaticElementSubclasser());
@@ -316,7 +323,7 @@ public class PatchGWT {
 		PatchUtils.patch(Text.class, new AutomaticSubclasser());
 		PatchUtils.patch(TitleElement.class, new AutomaticElementSubclasser());
 		PatchUtils.patch(UListElement.class, new AutomaticElementSubclasser());
-		
+
 		hasBeenPatched = true;
 	}
 

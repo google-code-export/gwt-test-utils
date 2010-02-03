@@ -45,4 +45,17 @@ public class TextBoxTest extends AbstractGWTTest {
 		Assert.assertEquals(10, t.getMaxLength());
 	}
 
+	@Test
+	public void checkGetCursorPos() {
+		// Set up
+		TextBox t = new TextBox();
+		t.setText("myText");
+		ReflectionUtils.setPrivateField(t, "attached", true);
+
+		// Test
+		t.setCursorPos(2);
+
+		Assert.assertEquals(2, t.getCursorPos());
+	}
+
 }

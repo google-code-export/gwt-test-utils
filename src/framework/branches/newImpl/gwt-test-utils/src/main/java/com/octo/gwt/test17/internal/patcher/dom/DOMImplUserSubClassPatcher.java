@@ -53,7 +53,16 @@ public class DOMImplUserSubClassPatcher extends AutomaticPatcher {
 
 	@PatchMethod
 	public static void sinkEvents(DOMImpl domImpl, Element elem, int eventBits) {
-		
+
 	}
-	
+
+	@PatchMethod
+	public static void initEventSystem(DOMImpl domImpl) {
+	}
+
+	@PatchMethod
+	public static int getChildCount(Object domImpl, Element elem) {
+		return elem.getChildCount();
+	}
+
 }

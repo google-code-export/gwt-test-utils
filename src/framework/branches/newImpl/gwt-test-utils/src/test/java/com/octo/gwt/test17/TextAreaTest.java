@@ -45,4 +45,30 @@ public class TextAreaTest extends AbstractGWTTest {
 		Assert.assertEquals(10, t.getVisibleLines());
 	}
 
+	@Test
+	public void checkGetCursorPos() {
+		// Set up
+		TextArea t = new TextArea();
+		t.setText("myText");
+		ReflectionUtils.setPrivateField(t, "attached", true);
+
+		// Test
+		t.setCursorPos(2);
+
+		Assert.assertEquals(2, t.getCursorPos());
+	}
+
+	@Test
+	public void checkGetSelectionLength() {
+		// Set up
+		TextArea t = new TextArea();
+		t.setText("myText");
+		ReflectionUtils.setPrivateField(t, "attached", true);
+
+		// Test
+		t.setSelectionRange(1, 3);
+
+		Assert.assertEquals(3, t.getSelectionLength());
+	}
+
 }

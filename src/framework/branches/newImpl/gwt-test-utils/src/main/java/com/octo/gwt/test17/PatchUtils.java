@@ -17,6 +17,7 @@ import javassist.CtConstructor;
 import javassist.CtMethod;
 
 import com.google.gwt.i18n.client.Constants.DefaultStringValue;
+import com.octo.gwt.test17.internal.patcher.tools.AutomaticPatcher;
 
 public class PatchUtils {
 
@@ -75,12 +76,6 @@ public class PatchUtils {
 			e.printStackTrace();
 			throw new RuntimeException("Unable to compile code for class " + clazz.getCanonicalName(), e);
 		}
-	}
-
-	public static boolean areAssertionEnabled() {
-		boolean enabled = false;
-		assert enabled = true;
-		return enabled;
 	}
 
 	public static void initRedefineMethod() throws Exception {
@@ -206,7 +201,7 @@ public class PatchUtils {
 		replaceClass(clazz, c.toBytecode());
 	}
 
-	protected static void patch(CtClass c, IPatcher patcher) throws Exception {
+	private static void patch(CtClass c, IPatcher patcher) throws Exception {
 		if (c == null) {
 			throw new IllegalArgumentException("the class to patch cannot be null");
 		}
@@ -219,15 +214,18 @@ public class PatchUtils {
 			if (Modifier.isAbstract(m.getModifiers())) {
 				// don't patch now
 				continue;
-			} 
-			else if (patcher != null) {
+			} else if (patcher != null) {
 				String newBody = patcher.getNewBody(m);
 				if (newBody != null) {
-					PatchUtils.replaceImplementation(m, newBody);
+					if (newBody.startsWith(AutomaticPatcher.INSERT_BEFORE)) {
+						PatchUtils.insertBefore(m, newBody.substring(AutomaticPatcher.INSERT_BEFORE.length()));
+					} else {
+						PatchUtils.replaceImplementation(m, newBody);
+					}
 				}
 			}
 		}
-		
+
 		if (patcher != null) {
 			patcher.finalizeClass();
 		}
@@ -246,7 +244,7 @@ public class PatchUtils {
 		return fieldName;
 	}
 
-	public static void replaceImplementation(CtMethod m, String src) throws Exception {
+	private static void replaceImplementation(CtMethod m, String src) throws Exception {
 		removeNativeModifier(m);
 
 		if (src == null || src.trim().length() == 0) {
@@ -270,39 +268,44 @@ public class PatchUtils {
 			}
 			try {
 				m.setBody(src);
-			}
-			catch (CannotCompileException e) {
+			} catch (CannotCompileException e) {
 				throw new RuntimeException("Unable to compile body " + src, e);
 			}
 		}
+	}
+
+	private static void insertBefore(CtMethod m, String newBody) throws Exception {
+		removeNativeModifier(m);
+		m.insertBefore(newBody);
+
 	}
 
 	//	public static void replaceImplementation(CtMethod m, Class<?> classWithCode, String methodName, String args) throws Exception {
 	//		replaceImplementation(m, staticCall(classWithCode, methodName, args));
 	//	}
 
-	public static boolean matches(CtClass[] ctClassArgs, Class<?>[] argsClasses) {
-		if (argsClasses == null) {
-			if (ctClassArgs.length > 0)
-				return false;
-			else
-				return true;
-		}
-
-		if (ctClassArgs.length != argsClasses.length) {
-			return false;
-		} else {
-			int i = 0;
-			for (Class<?> argClass : argsClasses) {
-				if (!argClass.getName().equals(ctClassArgs[i].getName())) {
-					return false;
-				}
-				i++;
-			}
-
-			return true;
-		}
-	}
+	//	public static boolean matches(CtClass[] ctClassArgs, Class<?>[] argsClasses) {
+	//		if (argsClasses == null) {
+	//			if (ctClassArgs.length > 0)
+	//				return false;
+	//			else
+	//				return true;
+	//		}
+	//
+	//		if (ctClassArgs.length != argsClasses.length) {
+	//			return false;
+	//		} else {
+	//			int i = 0;
+	//			for (Class<?> argClass : argsClasses) {
+	//				if (!argClass.getName().equals(ctClassArgs[i].getName())) {
+	//					return false;
+	//				}
+	//				i++;
+	//			}
+	//
+	//			return true;
+	//		}
+	//	}
 
 	private static void removeNativeModifier(CtMethod m) throws Exception {
 		if (Modifier.isNative(m.getModifiers())) {
@@ -310,10 +313,10 @@ public class PatchUtils {
 		}
 	}
 
-	public static String callMethod(Class<?> clazz, String staticMethodName, String args) {
-		if (args == null) {
-			args = "";
-		}
-		return clazz.getCanonicalName() + "." + staticMethodName + "(" + args + ")";
-	}
+	//		public static String callMethod(Class<?> clazz, String staticMethodName, String args) {
+	//			if (args == null) {
+	//				args = "";
+	//			}
+	//			return clazz.getCanonicalName() + "." + staticMethodName + "(" + args + ")";
+	//		}
 }

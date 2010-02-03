@@ -97,4 +97,19 @@ public class MenuBarTest extends AbstractGWTTest {
 		Assert.assertEquals(true, called);
 	}
 
+	@Test
+	public void checkComplexConstructor() {
+		MenuBar bar = new MenuBar();
+		MenuBar subMenuBar = new MenuBar();
+		MenuItem item = new MenuItem("item", false, subMenuBar);
+		bar.addItem(item);
+		item.setCommand(cmd);
+
+		Assert.assertEquals(false, called);
+
+		click(bar, item);
+
+		Assert.assertEquals(true, called);
+	}
+
 }

@@ -28,6 +28,7 @@ import com.google.gwt.user.client.ui.impl.FormPanelImpl;
 import com.google.gwt.user.client.ui.impl.HyperlinkImpl;
 import com.google.gwt.user.client.ui.impl.PopupImpl;
 import com.google.gwt.user.client.ui.impl.TextBoxImpl;
+import com.google.gwt.user.datepicker.client.DateBox;
 import com.octo.gwt.test17.GwtCreateHandler;
 import com.octo.gwt.test17.IGWTLogHandler;
 import com.octo.gwt.test17.PatchConstants;
@@ -44,12 +45,12 @@ public class GWTPatcher extends AutomaticPatcher {
 	public static GwtCreateHandler gwtCreateHandler = null;
 	public static IGWTLogHandler gwtLogHandler = null;
 	public static Map<Class<?>, Object> createClass = new HashMap<Class<?>, Object>();
-	
+
 	@PatchMethod
 	public static String getHostPageBaseURL() {
 		return "getHostPageBaseURL/getModuleName";
 	}
-	
+
 	@PatchMethod
 	public static String getModuleName() {
 		return "getModuleName";
@@ -105,6 +106,9 @@ public class GWTPatcher extends AutomaticPatcher {
 		}
 		if (classLiteral == CurrencyList.class) {
 			return new CurrencyList();
+		}
+		if (classLiteral == DateBox.DefaultFormat.class) {
+			return new DateBox.DefaultFormat();
 		}
 		if (Constants.class.isAssignableFrom(classLiteral)) {
 			return generateConstantWrapper(classLiteral);

@@ -65,6 +65,31 @@ public class ListBoxTest extends AbstractGWTTest {
 		Assert.assertEquals("item 1", listBox.getItemText(listBox.getSelectedIndex()));
 	}
 
+	@Test
+	public void checkClear() {
+		// Set Up
+		ListBox listBox = getListBox();
+		Assert.assertEquals(2, listBox.getVisibleItemCount());
+
+		// Test
+		listBox.clear();
+
+		// Assert
+		Assert.assertEquals(0, listBox.getItemCount());
+	}
+
+	@Test
+	public void checkRemoveItem() {
+		// Set Up
+		ListBox listBox = getListBox();
+		Assert.assertEquals(2, listBox.getVisibleItemCount());
+
+		listBox.removeItem(0);
+
+		Assert.assertEquals(1, listBox.getVisibleItemCount());
+		Assert.assertEquals("item 1", listBox.getItemText(0));
+	}
+
 	private ListBox getListBox() {
 		ListBox listBox = new ListBox(false);
 		listBox.setVisibleItemCount(2);

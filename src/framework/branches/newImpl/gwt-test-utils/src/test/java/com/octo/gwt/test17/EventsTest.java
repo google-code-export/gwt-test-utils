@@ -3,10 +3,13 @@ package com.octo.gwt.test17;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.DomEvent;
 import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
@@ -30,6 +33,8 @@ import com.google.gwt.event.dom.client.MouseWheelEvent;
 import com.google.gwt.event.dom.client.MouseWheelHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.Event.NativePreviewEvent;
+import com.google.gwt.user.client.Event.NativePreviewHandler;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ComplexPanel;
@@ -39,6 +44,7 @@ import com.octo.gwt.test17.test.AbstractGWTTest;
 public class EventsTest extends AbstractGWTTest {
 
 	private boolean tested;
+	private int counter;
 
 	@Test
 	public void checkClickEvent() {
@@ -261,17 +267,17 @@ public class EventsTest extends AbstractGWTTest {
 
 		Assert.assertTrue("onMouseWheel event was not triggered", tested);
 	}
-	
+
 	@Test
 	public void checkMouseOverEvent() {
 		tested = false;
 		Button b = new Button();
 		b.addMouseOverHandler(new MouseOverHandler() {
-			
+
 			public void onMouseOver(MouseOverEvent event) {
-				tested = !tested;	
+				tested = !tested;
 			}
-			
+
 		});
 
 		//simule the event
@@ -279,17 +285,17 @@ public class EventsTest extends AbstractGWTTest {
 
 		Assert.assertTrue("onMouseOver event was not triggered", tested);
 	}
-	
+
 	@Test
 	public void checkMouseOutEvent() {
 		tested = false;
 		Button b = new Button();
 		b.addMouseOutHandler(new MouseOutHandler() {
-			
+
 			public void onMouseOut(MouseOutEvent event) {
 				tested = !tested;
 			}
-			
+
 		});
 
 		//simule the event
@@ -298,4 +304,21 @@ public class EventsTest extends AbstractGWTTest {
 		Assert.assertTrue("onMouseOut event was not triggered", tested);
 	}
 
+	//@Test
+	public void checkAddNativePreviewHandler() {
+		counter = 0;
+
+		Event.addNativePreviewHandler(new NativePreviewHandler() {
+
+			public void onPreviewNativeEvent(NativePreviewEvent event) {
+				counter++;
+
+			}
+		});
+
+		NativeEvent event = Document.get().createBlurEvent();
+		DomEvent.fireNativeEvent(event, new Button());
+
+		Assert.assertEquals(1, counter);
+	}
 }
