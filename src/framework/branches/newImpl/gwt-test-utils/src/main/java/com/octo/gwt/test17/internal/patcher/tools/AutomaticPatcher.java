@@ -1,5 +1,6 @@
 package com.octo.gwt.test17.internal.patcher.tools;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -18,6 +19,7 @@ import com.octo.gwt.test17.ReflectionUtils;
 public class AutomaticPatcher implements IPatcher {
 
 	public static final String INSERT_BEFORE = "INSERT_BEFORE";
+	public static final String INSERT_AFTER = "INSERT_AFTER";
 
 	private Map<Method, PatchMethod> annotatedMethods;
 
@@ -27,21 +29,25 @@ public class AutomaticPatcher implements IPatcher {
 
 	public void initClass(CtClass c) throws Exception {
 		this.c = c;
-		this.annotatedMethods = ReflectionUtils.getAnnotatedMethod(this.getClass(), PatchMethod.class);
+		this.annotatedMethods = ReflectionUtils.getAnnotatedMethod(this
+				.getClass(), PatchMethod.class);
 		this.processedMethods = new ArrayList<Method>();
 	}
 
-	private Entry<Method, PatchMethod> findAnnotatedMethod(CtMethod m) throws Exception {
+	private Entry<Method, PatchMethod> findAnnotatedMethod(CtMethod m)
+			throws Exception {
 		for (Entry<Method, PatchMethod> entry : annotatedMethods.entrySet()) {
 			String methodName = entry.getKey().getName();
 			if (entry.getValue().methodName().length() > 0) {
 				methodName = entry.getValue().methodName();
 			}
 			if (m.getName().equals(methodName)) {
-				if (entry.getValue().args().length == 1 && entry.getValue().args()[0] == PatchMethod.class) {
+				if (entry.getValue().args().length == 1
+						&& entry.getValue().args()[0] == PatchMethod.class) {
 					return entry;
 				} else {
-					if (hasSameSignature(entry.getValue().args(), m.getParameterTypes())) {
+					if (hasSameSignature(entry.getValue().args(), m
+							.getParameterTypes())) {
 						return entry;
 					}
 				}
@@ -50,7 +56,8 @@ public class AutomaticPatcher implements IPatcher {
 		return null;
 	}
 
-	private boolean hasSameSignature(Class<?>[] classesAsked, CtClass[] classesFound) throws Exception {
+	private boolean hasSameSignature(Class<?>[] classesAsked,
+			CtClass[] classesFound) throws Exception {
 		if (classesAsked.length != classesFound.length) {
 			return false;
 		}
@@ -62,7 +69,8 @@ public class AutomaticPatcher implements IPatcher {
 				} else if (classesFound[i] == CtClass.booleanType) {
 					clazz = Boolean.class;
 				} else {
-					throw new RuntimeException("Not managed type " + classesFound[i]);
+					throw new RuntimeException("Not managed type "
+							+ classesFound[i]);
 				}
 			} else {
 				clazz = Class.forName(classesFound[i].getName());
@@ -80,33 +88,27 @@ public class AutomaticPatcher implements IPatcher {
 		if (e != null) {
 			Method annotatedMethod = e.getKey();
 			if (!Modifier.isStatic(annotatedMethod.getModifiers())) {
-				throw new RuntimeException("Method " + annotatedMethod + " have to be static");
+				throw new RuntimeException("Method " + annotatedMethod
+						+ " have to be static");
 			}
+
 			switch (e.getValue().value()) {
 			case INSERT_CODE_BEFORE:
-				newBody = INSERT_BEFORE;
+				newBody = INSERT_BEFORE + treatMethod(annotatedMethod);
+				break;
+			case INSERT_CODE_AFTER:
+				newBody = INSERT_AFTER + treatMethod(annotatedMethod);
+				break;
 			case NEW_CODE_AS_STRING:
-				processedMethods.add(annotatedMethod);
-				List<Object> params = new ArrayList<Object>();
-				for (Class<?> clazz : annotatedMethod.getParameterTypes()) {
-					if (clazz == CtClass.class) {
-						params.add(c);
-					} else {
-						throw new RuntimeException("Not managed param " + clazz + " for method " + annotatedMethod);
-					}
-				}
-				if (annotatedMethod.getReturnType() != String.class) {
-					throw new RuntimeException("Wrong return type " + annotatedMethod.getReturnType() + " for method " + annotatedMethod);
-				}
-				String bodyPart = (String) annotatedMethod.invoke(null, params.toArray());
-				newBody = (newBody != null) ? newBody + bodyPart : bodyPart;
+				newBody = treatMethod(annotatedMethod);
 				break;
 			case STATIC_CALL:
 				processedMethods.add(annotatedMethod);
 				StringBuffer buffer = new StringBuffer();
 				buffer.append("{");
 				buffer.append("return ");
-				buffer.append(this.getClass().getCanonicalName() + "." + annotatedMethod.getName());
+				buffer.append(this.getClass().getCanonicalName() + "."
+						+ annotatedMethod.getName());
 				buffer.append("(");
 				boolean append = false;
 				if (!Modifier.isStatic(m.getModifiers())) {
@@ -123,11 +125,33 @@ public class AutomaticPatcher implements IPatcher {
 				}
 				buffer.append(");");
 				buffer.append("}");
+
 				newBody = buffer.toString();
 				break;
 			}
 		}
+
 		return newBody;
+	}
+
+	private String treatMethod(Method annotatedMethod)
+			throws IllegalAccessException, InvocationTargetException {
+		processedMethods.add(annotatedMethod);
+		List<Object> params = new ArrayList<Object>();
+		for (Class<?> clazz : annotatedMethod.getParameterTypes()) {
+			if (clazz == CtClass.class) {
+				params.add(c);
+			} else {
+				throw new RuntimeException("Not managed param " + clazz
+						+ " for method " + annotatedMethod);
+			}
+		}
+		if (annotatedMethod.getReturnType() != String.class) {
+			throw new RuntimeException("Wrong return type "
+					+ annotatedMethod.getReturnType() + " for method "
+					+ annotatedMethod);
+		}
+		return (String) annotatedMethod.invoke(null, params.toArray());
 	}
 
 	public void finalizeClass() throws Exception {
@@ -139,17 +163,20 @@ public class AutomaticPatcher implements IPatcher {
 
 	}
 
-	protected CtConstructor findConstructor(CtClass ctClass, Class<?>... argsClasses) throws NotFoundException {
+	protected CtConstructor findConstructor(CtClass ctClass,
+			Class<?>... argsClasses) throws NotFoundException {
 		List<CtConstructor> l = new ArrayList<CtConstructor>();
 
 		for (CtConstructor c : ctClass.getDeclaredConstructors()) {
-			if (argsClasses == null || argsClasses.length == c.getParameterTypes().length) {
+			if (argsClasses == null
+					|| argsClasses.length == c.getParameterTypes().length) {
 				l.add(c);
 
 				if (argsClasses != null) {
 					int i = 0;
 					for (Class<?> argClass : argsClasses) {
-						if (!argClass.getName().equals(c.getParameterTypes()[i].getName())) {
+						if (!argClass.getName().equals(
+								c.getParameterTypes()[i].getName())) {
 							l.remove(c);
 							continue;
 						}
@@ -163,9 +190,13 @@ public class AutomaticPatcher implements IPatcher {
 			return l.get(0);
 		}
 		if (l.size() == 0) {
-			throw new RuntimeException("Unable to find a constructor with the specifed parameter types in class " + ctClass.getName());
+			throw new RuntimeException(
+					"Unable to find a constructor with the specifed parameter types in class "
+							+ ctClass.getName());
 		}
-		throw new RuntimeException("Multiple constructor in class " + ctClass.getName() + ", you have to set parameter types discriminators");
+		throw new RuntimeException("Multiple constructor in class "
+				+ ctClass.getName()
+				+ ", you have to set parameter types discriminators");
 
 	}
 

@@ -72,9 +72,11 @@ public class PatchUtils {
 		try {
 			redefine.invoke(null, clazz, newByteCode);
 		} catch (Exception e) {
-			System.err.println("Unable to replace code in class " + clazz.getCanonicalName());
+			System.err.println("Unable to replace code in class "
+					+ clazz.getCanonicalName());
 			e.printStackTrace();
-			throw new RuntimeException("Unable to compile code for class " + clazz.getCanonicalName(), e);
+			throw new RuntimeException("Unable to compile code for class "
+					+ clazz.getCanonicalName(), e);
 		}
 	}
 
@@ -83,9 +85,11 @@ public class PatchUtils {
 		if (c == null) {
 			throw new RuntimeException("No bootstrap class found");
 		}
-		PatchUtils.redefine = c.getMethod(REDEFINE_METHOD, Class.class, byte[].class);
+		PatchUtils.redefine = c.getMethod(REDEFINE_METHOD, Class.class,
+				byte[].class);
 		if (PatchUtils.redefine == null) {
-			throw new RuntimeException("Method " + REDEFINE_METHOD + " not found in bootstrap class");
+			throw new RuntimeException("Method " + REDEFINE_METHOD
+					+ " not found in bootstrap class");
 		}
 	}
 
@@ -94,23 +98,28 @@ public class PatchUtils {
 		if (c == null) {
 			throw new RuntimeException("No bootstrap class found");
 		}
-		PatchUtils.loadProperties = c.getMethod(LOAD_PROPERTIES, InputStream.class, String.class);
+		PatchUtils.loadProperties = c.getMethod(LOAD_PROPERTIES,
+				InputStream.class, String.class);
 		if (PatchUtils.loadProperties == null) {
-			throw new RuntimeException("Method " + LOAD_PROPERTIES + " not found in bootstrap class");
+			throw new RuntimeException("Method " + LOAD_PROPERTIES
+					+ " not found in bootstrap class");
 		}
 	}
 
 	public static Properties getProperties(String path) {
 		String propertiesNameFile = "/" + path + ".properties";
-		InputStream inputStream = path.getClass().getResourceAsStream(propertiesNameFile);
+		InputStream inputStream = path.getClass().getResourceAsStream(
+				propertiesNameFile);
 		if (inputStream == null) {
 			return null;
 		}
 		try {
-			Properties properties = (Properties) loadProperties.invoke(null, inputStream, "UTF-8");
+			Properties properties = (Properties) loadProperties.invoke(null,
+					inputStream, "UTF-8");
 			for (Entry<Object, Object> entry : properties.entrySet()) {
 				for (SequenceReplacement strangeCharacterMapping : sequenceReplacementList) {
-					entry.setValue(strangeCharacterMapping.treat((String) entry.getValue()));
+					entry.setValue(strangeCharacterMapping.treat((String) entry
+							.getValue()));
 				}
 			}
 			return properties;
@@ -119,26 +128,35 @@ public class PatchUtils {
 		}
 	}
 
-	public static Properties getLocalizedProperties(String prefix) throws IOException {
+	public static Properties getLocalizedProperties(String prefix)
+			throws IOException {
 		Locale locale = PatchGWT.getLocale();
 		if (locale == null) {
-			throw new RuntimeException("No locale specified, please call PactchGWT.setLocale(...)");
+			throw new RuntimeException(
+					"No locale specified, please call PactchGWT.setLocale(...)");
 		}
 		String localeLanguage = PatchGWT.getLocale().getLanguage();
 		return getProperties(prefix + "_" + localeLanguage);
 	}
 
-	public static Object extractFromPropertiesFile(Class<?> clazz, Method method) throws IOException {
+	public static Object extractFromPropertiesFile(Class<?> clazz, Method method)
+			throws IOException {
 		String line = null;
-		Properties properties = getLocalizedProperties(clazz.getCanonicalName().replaceAll("\\.", "/"));
+		Properties properties = getLocalizedProperties(clazz.getCanonicalName()
+				.replaceAll("\\.", "/"));
 		if (properties != null) {
 			line = properties.getProperty(method.getName());
 		}
 		if (line == null) {
-			DefaultStringValue v = method.getAnnotation(DefaultStringValue.class);
+			DefaultStringValue v = method
+					.getAnnotation(DefaultStringValue.class);
 			if (v == null) {
-				throw new UnsupportedOperationException("No matching property \"" + method.getName() + "\" for i18n class ["
-						+ clazz.getCanonicalName() + "]. Please use the DefaultStringValue annotation");
+				throw new UnsupportedOperationException(
+						"No matching property \""
+								+ method.getName()
+								+ "\" for i18n class ["
+								+ clazz.getCanonicalName()
+								+ "]. Please use the DefaultStringValue annotation");
 			}
 
 			String result = v.value();
@@ -167,8 +185,11 @@ public class PatchUtils {
 
 			for (CtMethod m : superClazz.getMethods()) {
 				if (Modifier.isAbstract(m.getModifiers())) {
-					CtMethod mm = new CtMethod(m.getReturnType(), m.getName(), m.getParameterTypes(), c);
-					mm.setBody("{ throw new UnsupportedOperationException(\"" + m.getName() + " on generated sub class of " + c.getName() + "\"); }");
+					CtMethod mm = new CtMethod(m.getReturnType(), m.getName(),
+							m.getParameterTypes(), c);
+					mm.setBody("{ throw new UnsupportedOperationException(\""
+							+ m.getName() + " on generated sub class of "
+							+ c.getName() + "\"); }");
 					c.setModifiers(m.getModifiers() - Modifier.ABSTRACT);
 					c.addMethod(mm);
 				}
@@ -177,7 +198,8 @@ public class PatchUtils {
 			return (T) c.toClass().newInstance();
 
 		} catch (Exception e) {
-			throw new RuntimeException("Unable to compile subclass of " + className, e);
+			throw new RuntimeException("Unable to compile subclass of "
+					+ className, e);
 		}
 	}
 
@@ -193,7 +215,8 @@ public class PatchUtils {
 		String className = clazz.getCanonicalName();
 		if (clazz.isMemberClass()) {
 			int k = className.lastIndexOf(".");
-			className = className.substring(0, k) + "$" + className.substring(k + 1);
+			className = className.substring(0, k) + "$"
+					+ className.substring(k + 1);
 		}
 
 		CtClass c = cp.get(className);
@@ -203,7 +226,8 @@ public class PatchUtils {
 
 	private static void patch(CtClass c, IPatcher patcher) throws Exception {
 		if (c == null) {
-			throw new IllegalArgumentException("the class to patch cannot be null");
+			throw new IllegalArgumentException(
+					"the class to patch cannot be null");
 		}
 
 		if (patcher != null) {
@@ -218,7 +242,14 @@ public class PatchUtils {
 				String newBody = patcher.getNewBody(m);
 				if (newBody != null) {
 					if (newBody.startsWith(AutomaticPatcher.INSERT_BEFORE)) {
-						PatchUtils.insertBefore(m, newBody.substring(AutomaticPatcher.INSERT_BEFORE.length()));
+						PatchUtils.insertBefore(m, newBody
+								.substring(AutomaticPatcher.INSERT_BEFORE
+										.length()));
+					} else if (newBody
+							.startsWith(AutomaticPatcher.INSERT_AFTER)) {
+						PatchUtils.insertAfter(m, newBody
+								.substring(AutomaticPatcher.INSERT_AFTER
+										.length()));
 					} else {
 						PatchUtils.replaceImplementation(m, newBody);
 					}
@@ -235,16 +266,19 @@ public class PatchUtils {
 		String fieldName = null;
 		if (m.getName().startsWith("get") && m.getParameterTypes().length == 0) {
 			fieldName = m.getName().substring(3);
-		} else if (m.getName().startsWith("is") && m.getParameterTypes().length == 0) {
+		} else if (m.getName().startsWith("is")
+				&& m.getParameterTypes().length == 0) {
 			fieldName = m.getName().substring(2);
-		} else if (m.getName().startsWith("set") && m.getParameterTypes().length == 1) {
+		} else if (m.getName().startsWith("set")
+				&& m.getParameterTypes().length == 1) {
 			fieldName = m.getName().substring(3);
 		}
 
 		return fieldName;
 	}
 
-	private static void replaceImplementation(CtMethod m, String src) throws Exception {
+	private static void replaceImplementation(CtMethod m, String src)
+			throws Exception {
 		removeNativeModifier(m);
 
 		if (src == null || src.trim().length() == 0) {
@@ -252,7 +286,8 @@ public class PatchUtils {
 		} else {
 			src = src.trim();
 			if (!src.startsWith("{")) {
-				if (!m.getReturnType().equals(CtClass.voidType) && !src.startsWith("return")) {
+				if (!m.getReturnType().equals(CtClass.voidType)
+						&& !src.startsWith("return")) {
 					src = "{ return ($r)($w) " + src;
 				} else {
 					src = "{ " + src;
@@ -274,38 +309,46 @@ public class PatchUtils {
 		}
 	}
 
-	private static void insertBefore(CtMethod m, String newBody) throws Exception {
+	private static void insertBefore(CtMethod m, String newBody)
+			throws Exception {
 		removeNativeModifier(m);
 		m.insertBefore(newBody);
-
 	}
 
-	//	public static void replaceImplementation(CtMethod m, Class<?> classWithCode, String methodName, String args) throws Exception {
-	//		replaceImplementation(m, staticCall(classWithCode, methodName, args));
-	//	}
+	private static void insertAfter(CtMethod m, String newBody)
+			throws Exception {
+		removeNativeModifier(m);
+		m.insertAfter(newBody);
+	}
 
-	//	public static boolean matches(CtClass[] ctClassArgs, Class<?>[] argsClasses) {
-	//		if (argsClasses == null) {
-	//			if (ctClassArgs.length > 0)
-	//				return false;
-	//			else
-	//				return true;
-	//		}
+	// public static void replaceImplementation(CtMethod m, Class<?>
+	// classWithCode, String methodName, String args) throws Exception {
+	// replaceImplementation(m, staticCall(classWithCode, methodName, args));
+	// }
+
+	// public static boolean matches(CtClass[] ctClassArgs, Class<?>[]
+	// argsClasses) {
+	// if (argsClasses == null) {
+	// if (ctClassArgs.length > 0)
+	// return false;
+	// else
+	// return true;
+	// }
 	//
-	//		if (ctClassArgs.length != argsClasses.length) {
-	//			return false;
-	//		} else {
-	//			int i = 0;
-	//			for (Class<?> argClass : argsClasses) {
-	//				if (!argClass.getName().equals(ctClassArgs[i].getName())) {
-	//					return false;
-	//				}
-	//				i++;
-	//			}
+	// if (ctClassArgs.length != argsClasses.length) {
+	// return false;
+	// } else {
+	// int i = 0;
+	// for (Class<?> argClass : argsClasses) {
+	// if (!argClass.getName().equals(ctClassArgs[i].getName())) {
+	// return false;
+	// }
+	// i++;
+	// }
 	//
-	//			return true;
-	//		}
-	//	}
+	// return true;
+	// }
+	// }
 
 	private static void removeNativeModifier(CtMethod m) throws Exception {
 		if (Modifier.isNative(m.getModifiers())) {
@@ -313,10 +356,12 @@ public class PatchUtils {
 		}
 	}
 
-	//		public static String callMethod(Class<?> clazz, String staticMethodName, String args) {
-	//			if (args == null) {
-	//				args = "";
-	//			}
-	//			return clazz.getCanonicalName() + "." + staticMethodName + "(" + args + ")";
-	//		}
+	// public static String callMethod(Class<?> clazz, String staticMethodName,
+	// String args) {
+	// if (args == null) {
+	// args = "";
+	// }
+	// return clazz.getCanonicalName() + "." + staticMethodName + "(" + args +
+	// ")";
+	// }
 }

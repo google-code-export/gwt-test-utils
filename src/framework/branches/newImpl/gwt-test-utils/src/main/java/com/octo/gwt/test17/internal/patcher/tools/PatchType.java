@@ -7,4 +7,6 @@ public enum PatchType {
 	STATIC_CALL,
 
 	INSERT_CODE_BEFORE,
+
+	INSERT_CODE_AFTER;
 }

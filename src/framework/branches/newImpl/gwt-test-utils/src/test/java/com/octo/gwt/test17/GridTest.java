@@ -32,7 +32,7 @@ public class GridTest extends AbstractGWTTest {
 		Assert.assertEquals("title", g.getTitle());
 	}
 
-	//@Test
+	@Test
 	public void checkTableListner() {
 		clicked = false;
 		Grid g = new Grid(1, 1);
@@ -40,7 +40,8 @@ public class GridTest extends AbstractGWTTest {
 		g.setWidget(0, 0, b);
 		g.addTableListener(new TableListener() {
 
-			public void onCellClicked(SourcesTableEvents sender, int row, int cell) {
+			public void onCellClicked(SourcesTableEvents sender, int row,
+					int cell) {
 				clicked = !clicked;
 			}
 
@@ -62,7 +63,8 @@ public class GridTest extends AbstractGWTTest {
 
 			public void onClick(ClickEvent event) {
 				clicked = !clicked;
-				Assert.assertEquals(b, ((Grid) event.getSource()).getWidget(0, 0));
+				Assert.assertEquals(b, ((Grid) event.getSource()).getWidget(0,
+						0));
 
 			}
 		});
@@ -115,7 +117,8 @@ public class GridTest extends AbstractGWTTest {
 		Button b = new Button("Does nothing, but could");
 		g.setWidget(0, 0, b);
 
-		Assert.assertTrue("The button has not been removed from grid", g.remove(b));
+		Assert.assertTrue("The button has not been removed from grid", g
+				.remove(b));
 	}
 
 	@Test
@@ -142,11 +145,11 @@ public class GridTest extends AbstractGWTTest {
 
 			}
 		});
-		//add the button
+		// add the button
 		g.setWidget(0, 0, b);
 
 		Assert.assertEquals(false, clicked);
-		//simule the click
+		// simule the click
 		click(g.getWidget(0, 0));
 
 		Assert.assertEquals(true, clicked);
@@ -166,11 +169,11 @@ public class GridTest extends AbstractGWTTest {
 
 			}
 		});
-		//add the button
+		// add the button
 		g.setWidget(0, 0, b);
 
 		Assert.assertEquals(false, clicked);
-		//simule the click
+		// simule the click
 		click(g.getWidget(0, 0));
 
 		Assert.assertEquals(true, clicked);

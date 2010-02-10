@@ -58,7 +58,7 @@ public class EventsTest extends AbstractGWTTest {
 
 		});
 
-		//simule the event
+		// simule the event
 		click(b);
 
 		Assert.assertTrue("onClick event was not triggered", tested);
@@ -103,7 +103,7 @@ public class EventsTest extends AbstractGWTTest {
 
 		});
 
-		//simule the event
+		// simule the event
 		blur(b);
 
 		Assert.assertTrue("onBlur event was not triggered", tested);
@@ -121,7 +121,7 @@ public class EventsTest extends AbstractGWTTest {
 
 		});
 
-		//simule the event
+		// simule the event
 		focus(b);
 
 		Assert.assertTrue("onFocus event was not triggered", tested);
@@ -208,7 +208,7 @@ public class EventsTest extends AbstractGWTTest {
 
 		});
 
-		//simule the event
+		// simule the event
 		mouseDown(b);
 
 		Assert.assertTrue("onMouseDown event was not triggered", tested);
@@ -226,7 +226,7 @@ public class EventsTest extends AbstractGWTTest {
 
 		});
 
-		//simule the event
+		// simule the event
 		mouseUp(b);
 
 		Assert.assertTrue("onMouseUp event was not triggered", tested);
@@ -244,7 +244,7 @@ public class EventsTest extends AbstractGWTTest {
 
 		});
 
-		//simule the event
+		// simule the event
 		mouseMove(b);
 
 		Assert.assertTrue("onMouseMove event was not triggered", tested);
@@ -262,7 +262,7 @@ public class EventsTest extends AbstractGWTTest {
 
 		});
 
-		//simule the event
+		// simule the event
 		mouseWheel(b);
 
 		Assert.assertTrue("onMouseWheel event was not triggered", tested);
@@ -280,7 +280,7 @@ public class EventsTest extends AbstractGWTTest {
 
 		});
 
-		//simule the event
+		// simule the event
 		mouseOver(b);
 
 		Assert.assertTrue("onMouseOver event was not triggered", tested);
@@ -298,13 +298,14 @@ public class EventsTest extends AbstractGWTTest {
 
 		});
 
-		//simule the event
+		// simule the event
 		mouseOut(b);
 
 		Assert.assertTrue("onMouseOut event was not triggered", tested);
 	}
 
-	//@Test
+	// FIXME : pass this test correctly
+	// @Test
 	public void checkAddNativePreviewHandler() {
 		counter = 0;
 
