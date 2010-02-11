@@ -35,7 +35,7 @@ public class PatchCurrencyList {
 		try {
 			Properties currencyData = PatchUtils.getLocalizedProperties("com/google/gwt/i18n/client/impl/cldr/CurrencyData");
 			Properties currencyExtra = PatchUtils.getProperties("com/google/gwt/i18n/client/constants/CurrencyExtra");
-			Properties numberConstants = PatchUtils.getLocalizedProperties("com/google/gwt/i18n/client/constants/NumberConstants");
+			Properties numberConstants = PatchUtils.getLocalizedProperties("com/google/gwt/i18n/client/constants/NumberConstantsImpl");
 			Set<Object> keySet = currencyData.keySet();
 			String[] currencies = new String[keySet.size()];
 			keySet.toArray(currencies);

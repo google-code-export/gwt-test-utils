@@ -67,6 +67,15 @@ public class UserElement extends Element {
 		this.overrideInnerText = overrideInnerText;
 	}
 
+	public String getOverrideClassName() {
+		String className = propsList.get("className");
+		return (className == null)? "" : className;
+	}
+
+	public void setOverrideClassName(String overrideClassName) {
+		propsList.put("className", overrideClassName);
+	}
+
 	public com.google.gwt.dom.client.Element getOther() {
 		return other;
 	}

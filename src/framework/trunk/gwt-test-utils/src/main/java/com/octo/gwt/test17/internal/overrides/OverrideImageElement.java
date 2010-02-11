@@ -26,12 +26,12 @@ public class OverrideImageElement extends ImageElement implements UserElementWra
 
 	public int getOverrideHeight() {
 		OverrideStyle s = wrappedElement.getOverrideStyle();
-		return getDimension(s.getOverrideProperty("height"));
+		return getDimension(s.getProperty("height"));
 	}
 
 	public int getOverrideWidth() {
 		OverrideStyle s = wrappedElement.getOverrideStyle();
-		return getDimension(s.getOverrideProperty("width"));
+		return getDimension(s.getProperty("width"));
 	}
 
 	public UserElement getWrappedElement() {

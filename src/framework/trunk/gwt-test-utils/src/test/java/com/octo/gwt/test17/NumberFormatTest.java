@@ -28,4 +28,29 @@ public class NumberFormatTest extends AbstractGWTTest {
 		Assert.assertEquals("3.142", NumberFormat.getDecimalFormat().format(3.1416));
 	}
 
+	@Test
+	public void checkNumberFormatWithSpecificPattern() {
+		// Set Up
+		PatchGWT.setLocale(Locale.FRENCH);
+		NumberFormat numberFormat = NumberFormat.getFormat("00000");
+
+		// Test
+		String numberString = numberFormat.format(123);
+
+		// Assert
+		Assert.assertEquals("00123", numberString);
+	}
+	
+	@Test
+	public void checkNumberFormatWithSpecificPatternWithDouble() {
+		// Set Up
+		PatchGWT.setLocale(Locale.FRENCH);
+		NumberFormat numberFormat = NumberFormat.getFormat("0000000000");
+
+		// Test
+		String numberString = numberFormat.format(42147482);
+
+		// Assert
+		Assert.assertEquals("0042147482", numberString);
+	}
 }

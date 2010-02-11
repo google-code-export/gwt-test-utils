@@ -5,17 +5,23 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.Hashtable;
 
+import com.google.gwt.dom.client.Node;
 import com.google.gwt.i18n.client.Constants;
 import com.google.gwt.i18n.client.impl.CldrImpl;
 import com.google.gwt.i18n.client.impl.CurrencyList;
 import com.google.gwt.i18n.client.impl.LocaleInfoImpl;
+import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.resources.client.impl.ImageResourcePrototype;
 import com.google.gwt.user.client.impl.DOMImpl;
 import com.google.gwt.user.client.impl.HistoryImpl;
 import com.google.gwt.user.client.impl.WindowImpl;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.ImageBundle;
+import com.google.gwt.user.client.ui.MenuBar;
+import com.google.gwt.user.client.ui.OverrideDefaultImages;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.UIObject.DebugIdImpl;
+import com.google.gwt.user.client.ui.impl.ClippedImageImpl;
 import com.google.gwt.user.client.ui.impl.FocusImpl;
 import com.google.gwt.user.client.ui.impl.FocusImplOld;
 import com.google.gwt.user.client.ui.impl.FormPanelImpl;
@@ -29,6 +35,7 @@ import com.octo.gwt.test17.PatchConstants;
 import com.octo.gwt.test17.PatchUtils;
 import com.octo.gwt.test17.PatchUtils.BodyGetter;
 import com.octo.gwt.test17.internal.dom.UserDomImpl;
+import com.octo.gwt.test17.internal.dom.UserElement;
 import com.octo.gwt.test17.internal.overrides.OverrideFormPanelImpl;
 import com.octo.gwt.test17.internal.overrides.OverrideImagePrototype;
 import com.octo.gwt.test17.internal.overrides.OverrideInputElement;
@@ -66,6 +73,10 @@ public class PatchMainGWT {
 					if (methodName.equals("eventGetTarget")) {
 						return "return null;";
 					}
+					
+					if (methodName.equals("isOrHasChild")) {
+						return "return " + PatchDOMImpl.class.getName() + ".isOrHasChild($1, $2);";
+					};
 
 					return null;
 				}
@@ -123,6 +134,23 @@ public class PatchMainGWT {
 		}
 		if (ImageBundle.class.isAssignableFrom(classLiteral)) {
 			return generateImageWrapper(classLiteral);
+		}
+		
+		if (classLiteral == OverrideDefaultImages.getDefaultImagesClass()) {
+			return OverrideDefaultImages.getInstance();
+		}
+		
+		if (classLiteral == MenuBar.Resources.class) {
+			return new MenuBar.Resources() {
+
+				public ImageResource menuBarSubMenuIcon() {
+					return new ImageResourcePrototype(null, null, 0, 0, 0, 0, false);
+				}
+			};
+		}
+		
+		if (classLiteral == ClippedImageImpl.class) {
+			return new ClippedImageImpl();
 		}
 
 		Object o = createClass.get(classLiteral);

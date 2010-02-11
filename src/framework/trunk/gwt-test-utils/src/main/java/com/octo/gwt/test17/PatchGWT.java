@@ -34,7 +34,6 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.impl.DOMImpl;
 import com.google.gwt.user.client.impl.ElementMapperImpl;
 import com.google.gwt.user.client.impl.HistoryImpl;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.FlexTable;
@@ -75,6 +74,7 @@ import com.octo.gwt.test17.internal.PatchListBox;
 import com.octo.gwt.test17.internal.PatchMainGWT;
 import com.octo.gwt.test17.internal.PatchNode;
 import com.octo.gwt.test17.internal.PatchNodeList;
+import com.octo.gwt.test17.internal.PatchNumberFormat;
 import com.octo.gwt.test17.internal.PatchTextArea;
 import com.octo.gwt.test17.internal.PatchTextBox;
 import com.octo.gwt.test17.internal.PatchTextBoxImpl;
@@ -234,6 +234,7 @@ public class PatchGWT {
 
 		PatchUtils.applyPatches(getClass(PatchConstants.CLIENT_DOM_IMPL_CLASS_NAME), new Patch[] {
 				new PatchMethod("createElement", staticCall(PatchDOMImpl.class, "createElement", "$2")),
+				new PatchMethod("createButtonElement", staticCall(PatchDOMImpl.class, "createButtonElement", "$1, $2")),
 				new PatchMethod("createInputElement", "new " + OverrideInputElement.class.getCanonicalName() + "($1)"),
 				new PatchMethod("eventGetType", staticCall(PatchDOMImpl.class, "eventGetType", "$1")),
 				new PatchMethod("getParentElement", castAndCall(UserElement.class, "getOverrideParent")),
@@ -248,10 +249,10 @@ public class PatchGWT {
 				new PatchMethod("getBodyOffsetLeft", "0"), new PatchMethod("getBodyOffsetTop", "0"),
 				new PatchMethod("eventGetKeyCode", castAndCall(OverrideEvent.class, "getOverrideKeyCode")), });
 
-		PatchUtils.applyPatches(Button.class, new Patch[] { new PatchMethod("adjustType", ""),
-		//			new Patch("click", "onBrowserEvent(new " + OverrideEvent.class.getCanonicalName() + "(" + Event.class.getCanonicalName()
-				//					+ ".ONCLICK));").setArgsLen(0) 
-				});
+//		PatchUtils.applyPatches(Button.class, new Patch[] { new PatchMethod("adjustType", ""),
+//		//			new Patch("click", "onBrowserEvent(new " + OverrideEvent.class.getCanonicalName() + "(" + Event.class.getCanonicalName()
+//				//					+ ".ONCLICK));").setArgsLen(0) 
+//				});
 
 		PatchUtils.applyPatches(com.google.gwt.dom.client.Element.class,
 				new Patch[] {
@@ -261,6 +262,8 @@ public class PatchGWT {
 						new PatchMethod("getAttribute", castThisAndCall(UserElement.class, "getOverrideAttribute", "$1")),
 						new PatchMethod("setInnerHTML", castThisAndCall(UserElement.class, "setOverrideInnerHtml", "$1")),
 						new PatchMethod("getInnerHTML", castThisAndCall(UserElement.class, "getOverrideInnerHtml")),
+						new PatchMethod("setClassName", castThisAndCall(UserElement.class, "setOverrideClassName", "$1")),
+						new PatchMethod("getClassName", castThisAndCall(UserElement.class, "getOverrideClassName")),
 						new PatchMethod("setInnerText", castThisAndCall(UserElement.class, "setOverrideInnerText", "$1")),
 						new PatchMethod("getInnerText", castThisAndCall(UserElement.class, "getOverrideInnerText")),
 						new PatchMethod("getStyle", castThisAndCall(UserElement.class, "getOverrideStyle")),
@@ -274,7 +277,7 @@ public class PatchGWT {
 						new PatchMethod("getPropertyBoolean", "Boolean.parseBoolean("
 								+ castThisAndCall(UserElement.class, "getOverrideProperty", "$1") + ")"),
 						new PatchMethod("getPropertyString", castThisAndCall(UserElement.class, "getOverrideProperty", "$1")),
-						new PatchMethod("isOrHasChild", castThisAndCall(UserElement.class, "isOrHasChild", "$1")),
+						//new PatchMethod("isOrHasChild", castThisAndCall(UserElement.class, "isOrHasChild", "$1")),
 						new PatchMethod("getFirstChildElement", staticCall(PatchElement.class, "getFirstChildElement", "this")),
 						new PatchMethod("getTagName", staticCall(PatchElement.class, "getTagName", "this")), });
 
@@ -295,9 +298,10 @@ public class PatchGWT {
 				new PatchMethod("is", staticCall(PatchNode.class, "is", "$1")), });
 
 		PatchUtils.applyPatches(Style.class, new Patch[] {
-				new PatchMethod("getProperty", castThisAndCall(OverrideStyle.class, "getOverrideProperty", "$1")),
-				new PatchMethod("setProperty", castThisAndCall(OverrideStyle.class, "setOverrideProperty", "$1, $2")),
-				new PatchMethod("setPropertyPx", castThisAndCall(OverrideStyle.class, "setOverridePropertyPx", "$1, $2")), });
+				new PatchMethod("getPropertyImpl", castThisAndCall(OverrideStyle.class, "getOverridePropertyImpl", "$1")),
+				new PatchMethod("setPropertyImpl", castThisAndCall(OverrideStyle.class, "setOverridePropertyImpl", "$1, $2")),
+				//new PatchMethod("setPropertyPx", castThisAndCall(OverrideStyle.class, "setOverridePropertyPx", "$1, $2")), });
+		 });
 
 		PatchUtils.applyPatches(DOM.class, new Patch[] { new PatchMethod("createUniqueId", staticCall(PatchDOM.class, "createUniqueId", "")), });
 
@@ -453,6 +457,10 @@ public class PatchGWT {
 		PatchUtils.applyPatches(TextBoxImpl.class, new Patch[] {
 			new PatchMethod("getCursorPos", staticCall(PatchTextBoxImpl.class, "getCursorPos", "this, $1")),
 			new PatchMethod("setSelectionRange", staticCall(PatchTextBoxImpl.class, "setSelectionRange", "this, $1, $2")),
+		});
+		
+		PatchUtils.applyPatches(NumberFormat.class, new Patch[] {
+			new PatchMethod("toFixed", staticCall(PatchNumberFormat.class, "toFixed", "$1, $2")),
 		});
 	}
 

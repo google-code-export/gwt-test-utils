@@ -27,7 +27,7 @@ public class OverrideStyle extends Style {
 		this.parent = parent;
 	}
 
-	public void setOverrideProperty(String propName, String propValue) {
+	public void setOverridePropertyImpl(String propName, String propValue) {
 		stringPropList.put(propName, propValue);
 		if (propName.equals("styleName") && propValue.equals("gwt-DialogBox")) {
 			stringPropList.put("visible", Boolean.toString(false));
@@ -37,11 +37,7 @@ public class OverrideStyle extends Style {
 		}
 	}
 
-	public void setOverridePropertyPx(String propName, int propValue) {
-		setOverrideProperty(propName, propValue + "px");
-	}
-
-	public String getOverrideProperty(String propName) {
+	public String getOverridePropertyImpl(String propName) {
 		return stringPropList.get(propName);
 	}
 

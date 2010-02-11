@@ -13,7 +13,7 @@ public class PatchUIObject extends UIObject {
 	public static String getPropertyOnElement(Object o, String propName) {
 		UserElement e = UserElement.overrideCast(o);
 		OverrideStyle s = OverrideStyle.overrideCast(e.getStyle());
-		String result = s.getOverrideProperty(propName);
+		String result = s.getProperty(propName);
 		return result != null ? result : "";
 	}
 
@@ -56,7 +56,7 @@ public class PatchUIObject extends UIObject {
 	public static void setPropertyOnElement(Object o, String propName, String propValue) {
 		UserElement e = UserElement.overrideCast(o);
 		OverrideStyle s = OverrideStyle.overrideCast(e.getStyle());
-		s.setOverrideProperty(propName, propValue);
+		s.setProperty(propName, propValue);
 	}
 
 	public static void setPropertyOnElement(Object o, String propName, boolean propValue) {
