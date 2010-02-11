@@ -29,12 +29,6 @@ public class OverrideStyle extends Style {
 
 	public void setOverridePropertyImpl(String propName, String propValue) {
 		stringPropList.put(propName, propValue);
-		if (propName.equals("styleName") && propValue.equals("gwt-DialogBox")) {
-			stringPropList.put("visible", Boolean.toString(false));
-		}
-		if (propName.equals("overflow")) {
-			stringPropList.put("visible", Boolean.toString(propValue.equals("visible")));
-		}
 	}
 
 	public String getOverridePropertyImpl(String propName) {
