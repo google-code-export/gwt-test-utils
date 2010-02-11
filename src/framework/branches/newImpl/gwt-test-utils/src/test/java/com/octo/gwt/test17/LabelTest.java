@@ -35,6 +35,8 @@ public class LabelTest extends AbstractGWTTest {
 	@Test
 	public void checkDirection() {
 		Label label = new Label();
+
+		Assert.assertEquals(Direction.DEFAULT, label.getDirection());
 		label.setDirection(Direction.RTL);
 
 		Assert.assertEquals(Direction.RTL, label.getDirection());
@@ -43,6 +45,8 @@ public class LabelTest extends AbstractGWTTest {
 	@Test
 	public void checkWordWrap() {
 		Label label = new Label();
+		Assert.assertFalse(label.getWordWrap());
+
 		label.setWordWrap(true);
 
 		Assert.assertEquals(true, label.getWordWrap());
