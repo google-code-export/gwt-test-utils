@@ -5,9 +5,9 @@
 	<name>GWT 1.7 Tests Utils For Integration Test</name>
 
 	<parent>
-		<groupId>com.octo.gwt.test17</groupId>
+		<groupId>com.octo.gwt2.test</groupId>
 		<artifactId>gwt-test-utils-parent</artifactId>
-		<version>0.9-SNAPSHOT</version>
+		<version>0.1-SNAPSHOT</version>
 	</parent>
 	
 	<properties>
