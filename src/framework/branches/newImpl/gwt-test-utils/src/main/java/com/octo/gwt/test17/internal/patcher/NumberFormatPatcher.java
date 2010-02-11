@@ -9,7 +9,9 @@ public class NumberFormatPatcher extends AutomaticPatcher {
 
 	@PatchMethod
 	public static String toFixed(double d, int digits) {
-		return String.valueOf(new BigDecimal(d).setScale(digits, BigDecimal.ROUND_DOWN).doubleValue());
+		return String.valueOf(
+				new BigDecimal(d).setScale(digits, BigDecimal.ROUND_DOWN)
+						.doubleValue()).toLowerCase();
 	}
 
 }

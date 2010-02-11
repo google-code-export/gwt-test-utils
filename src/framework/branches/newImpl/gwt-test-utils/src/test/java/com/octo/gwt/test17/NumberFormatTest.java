@@ -36,13 +36,26 @@ public class NumberFormatTest extends AbstractGWTTest {
 	public void checkNumberFormatWithSpecificPattern() {
 		// Set Up
 		PatchGWT.setLocale(Locale.FRENCH);
-		NumberFormat numberFormat = NumberFormat.getFormat("000");
+		NumberFormat numberFormat = NumberFormat.getFormat("0000000000");
 
 		// Test
-		String numberString = numberFormat.format(42);
+		String numberString = numberFormat.format(1234);
 
 		// Assert
-		Assert.assertEquals("042", numberString);
+		Assert.assertEquals("0000001234", numberString);
+	}
+
+	@Test
+	public void checkNumberFormatWithSpecificPatternWithDouble() {
+		// Set Up
+		PatchGWT.setLocale(Locale.FRENCH);
+		NumberFormat numberFormat = NumberFormat.getFormat("0000000000");
+
+		// Test
+		String numberString = numberFormat.format(42147482);
+
+		// Assert
+		Assert.assertEquals("0042147482", numberString);
 	}
 
 }
