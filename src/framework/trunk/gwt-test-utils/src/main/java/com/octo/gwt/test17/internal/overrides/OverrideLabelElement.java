@@ -10,11 +10,11 @@ public class OverrideLabelElement extends LabelElement implements UserElementWra
 	public OverrideLabelElement(UserElement element) {
 		wrappedElement = element;
 	}
-	
+
 	public UserElement getWrappedElement() {
 		return wrappedElement;
 	}
-	
+
 	public String getOverrideHtmlFor() {
 		return this.wrappedElement.getOverrideAttribute("htmlFor");
 	}
@@ -22,7 +22,7 @@ public class OverrideLabelElement extends LabelElement implements UserElementWra
 	public void setOverrideHtmlFor(String overrideHtmlFor) {
 		this.wrappedElement.setOverrideAttribute("htmlFor", overrideHtmlFor);
 	}
-	
+
 	public static OverrideLabelElement overrideCast(Object o) {
 		if (o instanceof OverrideLabelElement) {
 			OverrideLabelElement e = (OverrideLabelElement) o;

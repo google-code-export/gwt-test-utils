@@ -144,21 +144,21 @@ public class PatchDOMImpl {
 
 		throw new RuntimeException("Unable to convert DOM Event \"" + type + "\" to an integer");
 	}
-	
-	 public static ButtonElement createButtonElement(Document doc, String type) {
-		 ButtonElement result = (ButtonElement) createElement("button");
-		 return result;
-	 }
-	 
-	 public static boolean isOrHasChild(Node parent, Node child) {
-			if (parent == child) {
-				return true;
-			}
-			UserElement parentElem = UserElement.overrideCast(parent);
-			UserElement childElem = UserElement.overrideCast(child);
-			
-			return parentElem.getOverrideList().contains(childElem);
+
+	public static ButtonElement createButtonElement(Document doc, String type) {
+		ButtonElement result = (ButtonElement) createElement("button");
+		return result;
+	}
+
+	public static boolean isOrHasChild(Node parent, Node child) {
+		if (parent == child) {
+			return true;
 		}
+		UserElement parentElem = UserElement.overrideCast(parent);
+		UserElement childElem = UserElement.overrideCast(child);
+
+		return parentElem.getOverrideList().contains(childElem);
+	}
 
 	public static Element createElement(String tag) {
 		if ("option".equals(tag)) {

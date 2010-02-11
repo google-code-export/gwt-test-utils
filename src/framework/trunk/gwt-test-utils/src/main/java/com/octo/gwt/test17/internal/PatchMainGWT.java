@@ -5,7 +5,6 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.Hashtable;
 
-import com.google.gwt.dom.client.Node;
 import com.google.gwt.i18n.client.Constants;
 import com.google.gwt.i18n.client.impl.CldrImpl;
 import com.google.gwt.i18n.client.impl.CurrencyList;
@@ -35,15 +34,15 @@ import com.octo.gwt.test17.PatchConstants;
 import com.octo.gwt.test17.PatchUtils;
 import com.octo.gwt.test17.PatchUtils.BodyGetter;
 import com.octo.gwt.test17.internal.dom.UserDomImpl;
-import com.octo.gwt.test17.internal.dom.UserElement;
 import com.octo.gwt.test17.internal.overrides.OverrideFormPanelImpl;
 import com.octo.gwt.test17.internal.overrides.OverrideImagePrototype;
 import com.octo.gwt.test17.internal.overrides.OverrideInputElement;
 
+@SuppressWarnings("deprecation")
 public class PatchMainGWT {
 
 	public static GwtCreateHandler gwtCreateHandler = null;
-	
+
 	public static IGWTLogHandler gwtLogHandler = null;
 
 	public static Hashtable<Class<?>, Object> createClass = new Hashtable<Class<?>, Object>();
@@ -73,10 +72,11 @@ public class PatchMainGWT {
 					if (methodName.equals("eventGetTarget")) {
 						return "return null;";
 					}
-					
+
 					if (methodName.equals("isOrHasChild")) {
 						return "return " + PatchDOMImpl.class.getName() + ".isOrHasChild($1, $2);";
-					};
+					}
+					;
 
 					return null;
 				}
@@ -107,11 +107,11 @@ public class PatchMainGWT {
 		if (classLiteral == FormPanelImpl.class) {
 			return new OverrideFormPanelImpl();
 		}
-		
+
 		if (classLiteral == DateBox.DefaultFormat.class) {
 			return new DateBox.DefaultFormat();
 		}
-		
+
 		if (classLiteral == HistoryImpl.class) {
 			return PatchUtils.generateInstance(HistoryImpl.class.getCanonicalName(), new BodyGetter() {
 				public String getBody(String methodName) {
@@ -135,11 +135,11 @@ public class PatchMainGWT {
 		if (ImageBundle.class.isAssignableFrom(classLiteral)) {
 			return generateImageWrapper(classLiteral);
 		}
-		
+
 		if (classLiteral == OverrideDefaultImages.getDefaultImagesClass()) {
 			return OverrideDefaultImages.getInstance();
 		}
-		
+
 		if (classLiteral == MenuBar.Resources.class) {
 			return new MenuBar.Resources() {
 
@@ -148,7 +148,7 @@ public class PatchMainGWT {
 				}
 			};
 		}
-		
+
 		if (classLiteral == ClippedImageImpl.class) {
 			return new ClippedImageImpl();
 		}
@@ -197,7 +197,7 @@ public class PatchMainGWT {
 		}
 
 	}
-	
+
 	public static void log(String message, Throwable t) {
 		if (gwtLogHandler != null) {
 			gwtLogHandler.log(message, t);

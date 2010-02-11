@@ -249,11 +249,6 @@ public class PatchGWT {
 				new PatchMethod("getBodyOffsetLeft", "0"), new PatchMethod("getBodyOffsetTop", "0"),
 				new PatchMethod("eventGetKeyCode", castAndCall(OverrideEvent.class, "getOverrideKeyCode")), });
 
-//		PatchUtils.applyPatches(Button.class, new Patch[] { new PatchMethod("adjustType", ""),
-//		//			new Patch("click", "onBrowserEvent(new " + OverrideEvent.class.getCanonicalName() + "(" + Event.class.getCanonicalName()
-//				//					+ ".ONCLICK));").setArgsLen(0) 
-//				});
-
 		PatchUtils.applyPatches(com.google.gwt.dom.client.Element.class,
 				new Patch[] {
 						new PatchMethod("setId", castThisAndCall(UserElement.class, "setOverrideId", "$1")),
@@ -300,8 +295,8 @@ public class PatchGWT {
 		PatchUtils.applyPatches(Style.class, new Patch[] {
 				new PatchMethod("getPropertyImpl", castThisAndCall(OverrideStyle.class, "getOverridePropertyImpl", "$1")),
 				new PatchMethod("setPropertyImpl", castThisAndCall(OverrideStyle.class, "setOverridePropertyImpl", "$1, $2")),
-				//new PatchMethod("setPropertyPx", castThisAndCall(OverrideStyle.class, "setOverridePropertyPx", "$1, $2")), });
-		 });
+		//new PatchMethod("setPropertyPx", castThisAndCall(OverrideStyle.class, "setOverridePropertyPx", "$1, $2")), });
+				});
 
 		PatchUtils.applyPatches(DOM.class, new Patch[] { new PatchMethod("createUniqueId", staticCall(PatchDOM.class, "createUniqueId", "")), });
 
@@ -453,15 +448,13 @@ public class PatchGWT {
 
 		PatchUtils.applyPatches(ComplexPanel.class, new Patch[] { new PatchMethod("getChildren", staticCall(PatchComplexPanel.class, "getChildren",
 				"this")), });
-		
+
 		PatchUtils.applyPatches(TextBoxImpl.class, new Patch[] {
-			new PatchMethod("getCursorPos", staticCall(PatchTextBoxImpl.class, "getCursorPos", "this, $1")),
-			new PatchMethod("setSelectionRange", staticCall(PatchTextBoxImpl.class, "setSelectionRange", "this, $1, $2")),
-		});
-		
-		PatchUtils.applyPatches(NumberFormat.class, new Patch[] {
-			new PatchMethod("toFixed", staticCall(PatchNumberFormat.class, "toFixed", "$1, $2")),
-		});
+				new PatchMethod("getCursorPos", staticCall(PatchTextBoxImpl.class, "getCursorPos", "this, $1")),
+				new PatchMethod("setSelectionRange", staticCall(PatchTextBoxImpl.class, "setSelectionRange", "this, $1, $2")), });
+
+		PatchUtils.applyPatches(NumberFormat.class,
+				new Patch[] { new PatchMethod("toFixed", staticCall(PatchNumberFormat.class, "toFixed", "$1, $2")), });
 	}
 
 	private static String staticCall(Class<?> clazz, String methodName, String args) {

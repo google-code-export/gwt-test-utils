@@ -120,7 +120,7 @@ public class WidgetUtils {
 	public static void mouseWheel(Widget target) {
 		target.onBrowserEvent(new OverrideEvent(Event.ONMOUSEWHEEL));
 	}
-	
+
 	public static void mouseOver(Widget target) {
 		target.onBrowserEvent(new OverrideEvent(Event.ONMOUSEOVER));
 	}
@@ -128,7 +128,7 @@ public class WidgetUtils {
 	public static void mouseOut(Widget target) {
 		target.onBrowserEvent(new OverrideEvent(Event.ONMOUSEOUT));
 	}
-	
+
 	private static void checkIsClickable(Widget widget, String errorPrefix, String widgetName) {
 		String action = "click";
 		checkWidgetVisible(widget, errorPrefix, widgetName, action);

@@ -69,7 +69,7 @@ public class UserElement extends Element {
 
 	public String getOverrideClassName() {
 		String className = propsList.get("className");
-		return (className == null)? "" : className;
+		return (className == null) ? "" : className;
 	}
 
 	public void setOverrideClassName(String overrideClassName) {
