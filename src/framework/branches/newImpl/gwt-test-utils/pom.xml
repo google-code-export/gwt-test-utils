@@ -8,7 +8,7 @@
 	<parent>
 		<groupId>com.octo.gwt2.test</groupId>
 		<artifactId>gwt-test-utils-parent</artifactId>
-		<version>1.0-SNAPSHOT</version>
+		<version>0.2-SNAPSHOT</version>
 	</parent>
 
 	<properties>
