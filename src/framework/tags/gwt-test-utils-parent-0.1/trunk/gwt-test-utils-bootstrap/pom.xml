@@ -1,0 +1,39 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>gwt-test-utils-bootstrap</artifactId>
+	<packaging>jar</packaging>
+	<name>GWT Tests Utils Bootstrap</name>
+
+	<parent>
+		<groupId>com.octo.gwt.test</groupId>
+		<artifactId>gwt-test-utils-parent</artifactId>
+		<version>0.1</version>
+	</parent>
+	
+	<build>
+		<finalName>bootstrap</finalName>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<archive>
+						<manifestEntries>
+							<Can-Redefine-Classes>true</Can-Redefine-Classes>
+							<Agent-Class>com.octo.gwt.test.bootstrap.Startup</Agent-Class>
+							<Premain-Class>com.octo.gwt.test.bootstrap.Startup</Premain-Class>
+						</manifestEntries>
+					</archive>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>
