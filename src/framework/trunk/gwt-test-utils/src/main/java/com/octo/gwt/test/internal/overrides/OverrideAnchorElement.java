@@ -11,14 +11,6 @@ public class OverrideAnchorElement extends AnchorElement implements UserElementW
 		wrappedElement = element;
 	}
 
-	public int getOverrideTabIndex() {
-		return Integer.valueOf(this.wrappedElement.getOverrideAttribute("tabIndex"));
-	}
-
-	public void setOverrideTabIndex(int overrideTabIndex) {
-		this.wrappedElement.setOverrideAttribute("tabIndex", String.valueOf(overrideTabIndex));
-	}
-
 	public String getOverrideHref() {
 		return this.wrappedElement.getOverrideAttribute("href");
 	}

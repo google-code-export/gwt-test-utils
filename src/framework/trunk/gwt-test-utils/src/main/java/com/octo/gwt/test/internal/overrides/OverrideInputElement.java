@@ -41,14 +41,6 @@ public class OverrideInputElement extends InputElement implements UserElementWra
 		wrappedElement.setOverrideAttribute("name", overrideName);
 	}
 
-	public int getOverrideTabIndex() {
-		return Integer.valueOf(this.wrappedElement.getOverrideAttribute("tabIndex"));
-	}
-
-	public void setOverrideTabIndex(int overrideTabIndex) {
-		this.wrappedElement.setOverrideAttribute("tabIndex", String.valueOf(overrideTabIndex));
-	}
-
 	public boolean isOverrideDefaultChecked() {
 		String dc = wrappedElement.getAttribute("defaultChecked");
 		return dc == null ? false : Boolean.valueOf(dc);

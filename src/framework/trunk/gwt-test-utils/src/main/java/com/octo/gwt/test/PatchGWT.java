@@ -20,9 +20,10 @@ import com.google.gwt.dom.client.SelectElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.TextAreaElement;
 import com.google.gwt.http.client.URL;
+import com.google.gwt.i18n.client.CurrencyData;
+import com.google.gwt.i18n.client.CurrencyList;
 import com.google.gwt.i18n.client.NumberFormat;
-import com.google.gwt.i18n.client.impl.CurrencyData;
-import com.google.gwt.i18n.client.impl.CurrencyList;
+import com.google.gwt.i18n.client.impl.CurrencyDataImpl;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.DeferredCommand;
@@ -50,7 +51,7 @@ import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.WidgetCollection;
 import com.google.gwt.user.client.ui.impl.FocusImpl;
-import com.google.gwt.user.client.ui.impl.FocusImplOld;
+import com.google.gwt.user.client.ui.impl.FocusImplStandard;
 import com.google.gwt.user.client.ui.impl.TextBoxImpl;
 import com.octo.gwt.test.internal.PatchAnchorElement;
 import com.octo.gwt.test.internal.PatchCheckBox;
@@ -192,7 +193,7 @@ public class PatchGWT {
 		hasBeenPatched = true;
 
 		PatchUtils.applyPatches(GWT.class,
-				new Patch[] { new PatchMethod("log", staticCall(PatchMainGWT.class, "log", "$1, $2")),
+				new Patch[] { new PatchMethod("log", staticCall(PatchMainGWT.class, "log", "$1, $2")).setArgClasses(new Class[] { String.class, Throwable.class }),
 						new PatchMethod("create", staticCall(PatchMainGWT.class, "create", "$1")),
 						new PatchMethod("getHostPageBaseURL", "\"getHostPageBaseURL/getModuleName\""),
 						new PatchMethod("getModuleName", "\"getModuleName\""), });
@@ -213,14 +214,15 @@ public class PatchGWT {
 
 		PatchUtils.applyPatches(Widget.class, new Patch[] { new PatchMethod("onAttach", "") });
 
-		PatchUtils.applyPatches(FocusImplOld.class, new Patch[] {
-				new PatchMethod("setTabIndex", cast(UserElement.class, "$1") + ".setOverrideTabIndex($2)"),
-				new PatchMethod("createBlurHandler", "null"),
+		PatchUtils.applyPatches(FocusImplStandard.class, new Patch[] {
+				//new PatchMethod("setTabIndex", cast(UserElement.class, "$1") + ".setOverrideTabIndex($2)"),
+				//new PatchMethod("createBlurHandler", "null"),
 				new PatchMethod("createFocusHandler", "null"),
-				new PatchMethod("createMouseHandler", "null"),
+				//new PatchMethod("createMouseHandler", "null"),
 				new PatchMethod("createFocusable",
 						staticCall(PatchUIObject.class, "cast", staticCall(PatchDOMImpl.class, "createElement", "\"div\""))),
-				new PatchMethod("focus", ""), });
+				//new PatchMethod("focus", ""),
+						});
 
 		PatchUtils.applyPatches(FocusImpl.class, new Patch[] {
 				new PatchMethod("setTabIndex", cast(UserElement.class, "$1") + ".setOverrideTabIndex($2)"),
@@ -276,7 +278,11 @@ public class PatchGWT {
 						new PatchMethod("getPropertyString", castThisAndCall(UserElement.class, "getOverrideProperty", "$1")),
 						//new PatchMethod("isOrHasChild", castThisAndCall(UserElement.class, "isOrHasChild", "$1")),
 						new PatchMethod("getFirstChildElement", staticCall(PatchElement.class, "getFirstChildElement", "this")),
-						new PatchMethod("getTagName", staticCall(PatchElement.class, "getTagName", "this")), });
+						new PatchMethod("getTagName", staticCall(PatchElement.class, "getTagName", "this")), 
+						new PatchMethod("setTabIndex", castThisAndCall(UserElement.class, "setOverrideTabIndex", "$1")),
+						new PatchMethod("getTabIndex", castThisAndCall(UserElement.class, "getOverrideTabIndex")),
+						new PatchMethod("focus", ""),
+		});
 
 		PatchUtils.applyPatches(DOMImpl.class, new Patch[] { new PatchMethod("getEventsSunk", "return 1;"),
 				new PatchMethod("eventGetTypeInt", staticCall(PatchDOMImpl.class, "eventGetTypeInt", "$1"), new Class[] { String.class }),
@@ -364,9 +370,11 @@ public class PatchGWT {
 
 		PatchUtils.applyPatches(Grid.class, new Patch[] { new PatchMethod("addRows", staticCall(PatchGrid.class, "addRows", "$1, $2, $3")) });
 
-		PatchUtils.applyPatches(InputElement.class, new Patch[] { new PatchMethod("focus", ""),
+		PatchUtils.applyPatches(InputElement.class, new Patch[] { 
+			// new PatchMethod("focus", ""),
 				new PatchMethod("as", staticCall(PatchInputElement.class, "as", "$1")),
-				new PatchMethod("setTabIndex", castThisAndCall(OverrideInputElement.class, "setOverrideTabIndex", "$1")),
+				//new PatchMethod("setTabIndex", castThisAndCall(OverrideInputElement.class, "setOverrideTabIndex", "$1")),
+				//new PatchMethod("getTabIndex", castThisAndCall(OverrideInputElement.class, "getOverrideTabIndex")),
 				new PatchMethod("isDefaultChecked", castThisAndCall(OverrideInputElement.class, "isOverrideDefaultChecked")),
 				new PatchMethod("setDefaultChecked", castThisAndCall(OverrideInputElement.class, "setOverrideDefaultChecked", "$1")),
 				new PatchMethod("setChecked", castThisAndCall(OverrideInputElement.class, "setOverrideChecked", "$1")),
@@ -378,14 +386,12 @@ public class PatchGWT {
 				new PatchMethod("getName", castThisAndCall(OverrideInputElement.class, "getOverrideName")),
 				new PatchMethod("setValue", castThisAndCall(OverrideInputElement.class, "setOverrideValue", "$1")),
 				new PatchMethod("getValue", castThisAndCall(OverrideInputElement.class, "getOverrideValue")),
-				new PatchMethod("setTabIndex", castThisAndCall(OverrideInputElement.class, "setOverrideTabIndex", "$1")),
-				new PatchMethod("getTabIndex", castThisAndCall(OverrideInputElement.class, "getOverrideTabIndex")),
 				new PatchMethod("setAccessKey", castThisAndCall(OverrideInputElement.class, "setOverrideAccessKey", "$1")),
 				new PatchMethod("getAccessKey", castThisAndCall(OverrideInputElement.class, "getOverrideAccessKey")), });
 
 		PatchUtils.applyPatches(AnchorElement.class, new Patch[] { new PatchMethod("as", staticCall(PatchAnchorElement.class, "as", "$1")),
-				new PatchMethod("setTabIndex", castThisAndCall(OverrideAnchorElement.class, "setOverrideTabIndex", "$1")),
-				new PatchMethod("getTabIndex", castThisAndCall(OverrideAnchorElement.class, "getOverrideTabIndex")),
+//				new PatchMethod("setTabIndex", castThisAndCall(OverrideAnchorElement.class, "setOverrideTabIndex", "$1")),
+//				new PatchMethod("getTabIndex", castThisAndCall(OverrideAnchorElement.class, "getOverrideTabIndex")),
 				new PatchMethod("setName", castThisAndCall(OverrideAnchorElement.class, "setOverrideName", "$1")),
 				new PatchMethod("getName", castThisAndCall(OverrideAnchorElement.class, "getOverrideName")),
 				new PatchMethod("setTarget", castThisAndCall(OverrideAnchorElement.class, "setOverrideTarget", "$1")),
@@ -393,7 +399,9 @@ public class PatchGWT {
 				new PatchMethod("setHref", castThisAndCall(OverrideAnchorElement.class, "setOverrideHref", "$1")),
 				new PatchMethod("getHref", castThisAndCall(OverrideAnchorElement.class, "getOverrideHref")),
 				new PatchMethod("setAccessKey", castThisAndCall(OverrideAnchorElement.class, "setOverrideAccessKey", "$1")),
-				new PatchMethod("focus", ""), new PatchMethod("blur", ""), });
+//				new PatchMethod("focus", ""), 
+//				new PatchMethod("blur", ""), 
+				});
 
 		PatchUtils.applyPatches(LabelElement.class, new Patch[] { new PatchMethod("as", staticCall(PatchLabelElement.class, "as", "$1")),
 				new PatchMethod("setHtmlFor", castThisAndCall(OverrideLabelElement.class, "setOverrideHtmlFor", "$1")),
@@ -418,10 +426,11 @@ public class PatchGWT {
 		PatchUtils
 				.applyPatches(CurrencyList.class, new Patch[] { new PatchMethod("getDefault", staticCall(PatchCurrencyList.class, "getDefault")), });
 
-		PatchUtils.applyPatches(CurrencyData.class, new Patch[] {
+		PatchUtils.applyPatches(CurrencyDataImpl.class, new Patch[] {
 				new PatchMethod("getCurrencyCode", staticCall(PatchCurrencyList.class, "getCurrencyCode", "this")),
 				new PatchMethod("getCurrencySymbol", staticCall(PatchCurrencyList.class, "getCurrencySymbol", "this")),
-				new PatchMethod("getFlagsAndPrecision", staticCall(PatchCurrencyList.class, "getFlagsAndPrecision", "this")), });
+				new PatchMethod("getFlagsAndPrecision", staticCall(PatchCurrencyList.class, "getFlagsAndPrecision", "this")),
+				});
 
 		PatchUtils.applyPatches(TextBox.class, new Patch[] { new PatchMethod("getInputElement", staticCall(PatchTextBox.class, "getInputElement",
 				"this")), });

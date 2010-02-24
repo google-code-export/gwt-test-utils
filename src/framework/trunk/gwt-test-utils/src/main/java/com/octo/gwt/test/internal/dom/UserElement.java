@@ -8,6 +8,7 @@ import java.util.List;
 import com.google.gwt.user.client.Element;
 import com.octo.gwt.test.internal.overrides.OverrideInputElement;
 import com.octo.gwt.test.internal.overrides.OverrideStyle;
+import com.octo.gwt.test.internal.overrides.UserElementWrapper;
 
 public class UserElement extends Element {
 
@@ -113,6 +114,11 @@ public class UserElement extends Element {
 	}
 
 	public static UserElement overrideCast(Object o) {
+		
+		if (o instanceof UserElementWrapper) {
+			return ((UserElementWrapper) o).getWrappedElement();
+		}
+		
 		if (o instanceof UserElement) {
 			UserElement e = (UserElement) o;
 			return e;
