@@ -4,7 +4,6 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.google.gwt.user.client.ui.ListBox;
-import com.octo.gwt.test.AbstractGWTTest;
 
 public class ListBoxTest extends AbstractGWTTest {
 
@@ -13,6 +12,13 @@ public class ListBoxTest extends AbstractGWTTest {
 		ListBox listBox = new ListBox(false);
 		listBox.setName("name");
 		Assert.assertEquals("name", listBox.getName());
+	}
+	
+	@Test
+	public void checkSelectedIndex() {
+		ListBox listBox = new ListBox();
+		listBox.setSelectedIndex(-1);
+		Assert.assertEquals(-1, listBox.getSelectedIndex());
 	}
 
 	@SuppressWarnings("deprecation")

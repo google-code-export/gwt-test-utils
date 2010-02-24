@@ -28,7 +28,7 @@ public class OverrideSelectElement extends SelectElement {
 			}
 			i++;
 		}
-		return 0;
+		return -1;
 	}
 
 	public void setOverrideSelectedIndex(int index) {
