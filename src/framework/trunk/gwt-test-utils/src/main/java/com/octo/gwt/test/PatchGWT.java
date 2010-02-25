@@ -20,7 +20,6 @@ import com.google.gwt.dom.client.SelectElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.TextAreaElement;
 import com.google.gwt.http.client.URL;
-import com.google.gwt.i18n.client.CurrencyData;
 import com.google.gwt.i18n.client.CurrencyList;
 import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.i18n.client.impl.CurrencyDataImpl;
