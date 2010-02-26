@@ -280,6 +280,9 @@ public class PatchGWT {
 						new PatchMethod("getTagName", staticCall(PatchElement.class, "getTagName", "this")), 
 						new PatchMethod("setTabIndex", castThisAndCall(UserElement.class, "setOverrideTabIndex", "$1")),
 						new PatchMethod("getTabIndex", castThisAndCall(UserElement.class, "getOverrideTabIndex")),
+						new PatchMethod("getScrollWidth", "return 0;"),
+						new PatchMethod("getScrollHeight", "return 0;"),
+						new PatchMethod("getInnerText", castThisAndCall(UserElement.class, "getOverrideInnerText")),
 						new PatchMethod("focus", ""),
 		});
 
