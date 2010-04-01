@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class ReflectionUtils {
+public class GwtTestReflectionUtils {
 
 	@SuppressWarnings("unchecked")
 	public static <T> T getAnnotation(Class<?> clazz, Class<T> annotationClass) {

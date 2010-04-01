@@ -11,16 +11,6 @@ import com.octo.gwt.test.internal.patcher.tools.SubClassedHelper;
 public class InputElementPatcher extends AutomaticElementSubclasser {
 
 	@PatchMethod
-	public static void focus(InputElement inputElement) {
-		
-	}
-	
-	@PatchMethod
-	public static void blur(InputElement inputElement) {
-		
-	}
-	
-	@PatchMethod
 	public static void click(InputElement inputElement) {
 		
 	}

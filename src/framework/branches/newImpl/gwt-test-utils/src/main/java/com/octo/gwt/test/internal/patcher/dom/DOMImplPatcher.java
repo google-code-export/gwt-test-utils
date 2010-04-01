@@ -266,6 +266,7 @@ public class DOMImplPatcher extends AutomaticPatcher {
 	public static void selectClear(Object domImpl, SelectElement select) {
 		OverrideNodeList<Node> childNodes = (OverrideNodeList<Node>) select.getChildNodes();
 		childNodes.getList().clear();
+		select.setSelectedIndex(-1);
 	}
 
 	@PatchMethod

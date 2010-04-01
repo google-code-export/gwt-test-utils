@@ -62,9 +62,9 @@ import com.google.gwt.dom.client.TextAreaElement;
 import com.google.gwt.dom.client.TitleElement;
 import com.google.gwt.dom.client.UListElement;
 import com.google.gwt.http.client.URL;
+import com.google.gwt.i18n.client.CurrencyList;
 import com.google.gwt.i18n.client.NumberFormat;
-import com.google.gwt.i18n.client.impl.CurrencyData;
-import com.google.gwt.i18n.client.impl.CurrencyList;
+import com.google.gwt.i18n.client.impl.CurrencyDataImpl;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Event;
@@ -90,18 +90,17 @@ import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.WidgetCollection;
 import com.google.gwt.user.client.ui.impl.FocusImpl;
-import com.google.gwt.user.client.ui.impl.FocusImplOld;
+import com.google.gwt.user.client.ui.impl.FocusImplStandard;
 import com.google.gwt.user.client.ui.impl.TextBoxImpl;
 import com.octo.gwt.test.internal.patcher.CheckBoxPatcher;
-import com.octo.gwt.test.internal.patcher.CurrencyDataPatcher;
+import com.octo.gwt.test.internal.patcher.CurrencyDataImplPatcher;
 import com.octo.gwt.test.internal.patcher.CurrencyListPatcher;
 import com.octo.gwt.test.internal.patcher.DeferredCommandPatcher;
-import com.octo.gwt.test.internal.patcher.DocumentPatcher;
 import com.octo.gwt.test.internal.patcher.DurationPatcher;
 import com.octo.gwt.test.internal.patcher.EventPatcher;
 import com.octo.gwt.test.internal.patcher.FlexTablePatcher;
-import com.octo.gwt.test.internal.patcher.FocusImplOldPatcher;
 import com.octo.gwt.test.internal.patcher.FocusImplPatcher;
+import com.octo.gwt.test.internal.patcher.FocusImplStandardPatcher;
 import com.octo.gwt.test.internal.patcher.FramePatcher;
 import com.octo.gwt.test.internal.patcher.GWTPatcher;
 import com.octo.gwt.test.internal.patcher.GridPatcher;
@@ -123,13 +122,14 @@ import com.octo.gwt.test.internal.patcher.TextBoxPatcher;
 import com.octo.gwt.test.internal.patcher.TimerPatcher;
 import com.octo.gwt.test.internal.patcher.UIObjectPatcher;
 import com.octo.gwt.test.internal.patcher.URLPatcher;
-import com.octo.gwt.test.internal.patcher.dom.AnchorElementPatcher;
 import com.octo.gwt.test.internal.patcher.dom.DOMImplPatcher;
 import com.octo.gwt.test.internal.patcher.dom.DOMImplUserPatcher;
 import com.octo.gwt.test.internal.patcher.dom.DOMPatcher;
+import com.octo.gwt.test.internal.patcher.dom.DocumentPatcher;
 import com.octo.gwt.test.internal.patcher.dom.ElementMapperImplPatcher;
 import com.octo.gwt.test.internal.patcher.dom.ElementPatcher;
 import com.octo.gwt.test.internal.patcher.dom.InputElementPatcher;
+import com.octo.gwt.test.internal.patcher.dom.NodeFactory;
 import com.octo.gwt.test.internal.patcher.dom.NodeListPatcher;
 import com.octo.gwt.test.internal.patcher.dom.NodePatcher;
 import com.octo.gwt.test.internal.patcher.dom.SelectElementPatcher;
@@ -138,7 +138,7 @@ import com.octo.gwt.test.internal.patcher.tools.AutomaticElementSubclasser;
 import com.octo.gwt.test.internal.patcher.tools.AutomaticSubclasser;
 import com.octo.gwt.test.internal.patcher.tools.AutomaticTagSubclasser;
 import com.octo.gwt.test.utils.PatchUtils;
-import com.octo.gwt.test.utils.ReflectionUtils;
+import com.octo.gwt.test.utils.GwtTestReflectionUtils;
 
 public class PatchGWT {
 
@@ -173,41 +173,43 @@ public class PatchGWT {
 		assert enabled = true;
 		return enabled;
 	}
-
+	
+	
 	public static void reset() throws Exception {
 		LOCALE = null;
-		HistoryImplPatcher.clear();
+		NodeFactory.clearDom();
 		CurrencyListPatcher.reset();
 		PatchUtils.clearSequenceReplacement();
+		HistoryImplPatcher.clear();
 		GWTPatcher.createClass.clear();
 		GWTPatcher.gwtCreateHandler = null;
 		GWTPatcher.gwtLogHandler = null;
 
-		WidgetCollection widgetCollection = ReflectionUtils.getPrivateFieldValue(RootPanel.get(), "children");
-		Widget[] array = ReflectionUtils.getPrivateFieldValue(widgetCollection, "array");
+		WidgetCollection widgetCollection = GwtTestReflectionUtils.getPrivateFieldValue(RootPanel.get(), "children");
+		Widget[] array = GwtTestReflectionUtils.getPrivateFieldValue(widgetCollection, "array");
 		for (int i = 0; i < array.length; i++) {
 			array[i] = null;
 		}
-		ReflectionUtils.setPrivateField(widgetCollection, "size", 0);
+		GwtTestReflectionUtils.setPrivateField(widgetCollection, "size", 0);
 
-		ReflectionUtils.getStaticAndCallClear(Timer.class, "timers");
-		ReflectionUtils.getStaticAndCallClear(RootPanel.class, "rootPanels");
-		ReflectionUtils.getStaticAndCallClear(RootPanel.class, "widgetsToDetach");
+		GwtTestReflectionUtils.getStaticAndCallClear(Timer.class, "timers");
+		GwtTestReflectionUtils.getStaticAndCallClear(RootPanel.class, "rootPanels");
+		GwtTestReflectionUtils.getStaticAndCallClear(RootPanel.class, "widgetsToDetach");
 
-		Object commandExecutor = ReflectionUtils.getStaticFieldValue(Class.forName("com.google.gwt.user.client.DeferredCommand"), "commandExecutor");
-		ReflectionUtils.callClear(ReflectionUtils.getPrivateFieldValue(commandExecutor, "commands"));
+		Object commandExecutor = GwtTestReflectionUtils.getStaticFieldValue(Class.forName("com.google.gwt.user.client.DeferredCommand"), "commandExecutor");
+		GwtTestReflectionUtils.callClear(GwtTestReflectionUtils.getPrivateFieldValue(commandExecutor, "commands"));
 
-		HistoryImpl historyImpl = ReflectionUtils.getStaticFieldValue(History.class, "impl");
-		ReflectionUtils.callClear(ReflectionUtils.getPrivateFieldValue(ReflectionUtils.getPrivateFieldValue(ReflectionUtils.getPrivateFieldValue(
+		HistoryImpl historyImpl = GwtTestReflectionUtils.getStaticFieldValue(History.class, "impl");
+		GwtTestReflectionUtils.callClear(GwtTestReflectionUtils.getPrivateFieldValue(GwtTestReflectionUtils.getPrivateFieldValue(GwtTestReflectionUtils.getPrivateFieldValue(
 				historyImpl, "handlers"), "registry"), "map"));
 
-		ReflectionUtils.setStaticField(NumberFormat.class, "cachedDecimalFormat", null);
-		ReflectionUtils.setStaticField(NumberFormat.class, "cachedScientificFormat", null);
-		ReflectionUtils.setStaticField(NumberFormat.class, "cachedPercentFormat", null);
-		ReflectionUtils.setStaticField(NumberFormat.class, "cachedCurrencyFormat", null);
+		GwtTestReflectionUtils.setStaticField(NumberFormat.class, "cachedDecimalFormat", null);
+		GwtTestReflectionUtils.setStaticField(NumberFormat.class, "cachedScientificFormat", null);
+		GwtTestReflectionUtils.setStaticField(NumberFormat.class, "cachedPercentFormat", null);
+		GwtTestReflectionUtils.setStaticField(NumberFormat.class, "cachedCurrencyFormat", null);
 
-		ReflectionUtils.setStaticField(Window.class, "handlers", null);
-		ReflectionUtils.setStaticField(Event.class, "handlers", null);
+		GwtTestReflectionUtils.setStaticField(Window.class, "handlers", null);
+		GwtTestReflectionUtils.setStaticField(Event.class, "handlers", null);
 	}
 
 	public static void addCreateClass(Class<?> classLiteral, Object object) {
@@ -241,7 +243,7 @@ public class PatchGWT {
 		PatchUtils.patch(JavaScriptObject.class, new JavaScriptObjectPatcher());
 
 		PatchUtils.patch(CheckBox.class, new CheckBoxPatcher());
-		PatchUtils.patch(CurrencyData.class, new CurrencyDataPatcher());
+		PatchUtils.patch(CurrencyDataImpl.class, new CurrencyDataImplPatcher());
 		PatchUtils.patch(CurrencyList.class, new CurrencyListPatcher());
 		PatchUtils.patch(DeferredCommand.class, new DeferredCommandPatcher());
 		PatchUtils.patch(Document.class, new DocumentPatcher());
@@ -249,7 +251,7 @@ public class PatchGWT {
 		PatchUtils.patch(Event.class, new EventPatcher());
 		PatchUtils.patch(FlexTable.class, new FlexTablePatcher());
 		PatchUtils.patch(FocusImpl.class, new FocusImplPatcher());
-		PatchUtils.patch(FocusImplOld.class, new FocusImplOldPatcher());
+		PatchUtils.patch(FocusImplStandard.class, new FocusImplStandardPatcher());
 		PatchUtils.patch(Frame.class, new FramePatcher());
 		PatchUtils.patch(Grid.class, new GridPatcher());
 		PatchUtils.patch(History.class, new HistoryPatcher());
@@ -270,7 +272,7 @@ public class PatchGWT {
 		PatchUtils.patch(UIObject.class, new UIObjectPatcher());
 		PatchUtils.patch(URL.class, new URLPatcher());
 
-		PatchUtils.patch(AnchorElement.class, new AnchorElementPatcher());
+		PatchUtils.patch(AnchorElement.class, new AutomaticElementSubclasser());
 		PatchUtils.patch(AreaElement.class, new AutomaticElementSubclasser());
 		PatchUtils.patch(BaseElement.class, new AutomaticElementSubclasser());
 		PatchUtils.patch(BodyElement.class, new AutomaticElementSubclasser());

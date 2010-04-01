@@ -14,6 +14,16 @@ public class ListBoxTest extends AbstractGWTTest {
 		listBox.setName("name");
 		Assert.assertEquals("name", listBox.getName());
 	}
+	
+	@Test
+	public void checkSelectedIndex() {
+		ListBox listBox = getListBox();
+		Assert.assertEquals(-1, listBox.getSelectedIndex());
+		
+
+		listBox.setSelectedIndex(1);
+		Assert.assertEquals(1, listBox.getSelectedIndex());
+	}
 
 	@SuppressWarnings("deprecation")
 	@Test
@@ -70,11 +80,13 @@ public class ListBoxTest extends AbstractGWTTest {
 		// Set Up
 		ListBox listBox = getListBox();
 		Assert.assertEquals(2, listBox.getVisibleItemCount());
+		listBox.setSelectedIndex(1);
 
 		// Test
 		listBox.clear();
 
 		// Assert
+		Assert.assertEquals(-1, listBox.getSelectedIndex());
 		Assert.assertEquals(0, listBox.getItemCount());
 	}
 

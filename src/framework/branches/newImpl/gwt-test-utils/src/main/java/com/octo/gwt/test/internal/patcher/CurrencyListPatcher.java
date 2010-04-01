@@ -10,8 +10,9 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
-import com.google.gwt.i18n.client.impl.CurrencyData;
-import com.google.gwt.i18n.client.impl.CurrencyList;
+import com.google.gwt.i18n.client.CurrencyData;
+import com.google.gwt.i18n.client.CurrencyList;
+import com.google.gwt.i18n.client.impl.CurrencyDataImpl;
 import com.octo.gwt.test.internal.patcher.tools.AutomaticPatcher;
 import com.octo.gwt.test.internal.patcher.tools.PatchMethod;
 import com.octo.gwt.test.utils.PatchUtils;
@@ -23,7 +24,7 @@ public class CurrencyListPatcher extends AutomaticPatcher {
 
 	private static CurrencyData create() {
 		try {
-			Constructor<CurrencyData> constructor = CurrencyData.class.getDeclaredConstructor();
+			Constructor<CurrencyDataImpl> constructor = CurrencyDataImpl.class.getDeclaredConstructor();
 			constructor.setAccessible(true);
 			return constructor.newInstance();
 		} catch (Exception e) {
@@ -86,14 +87,14 @@ public class CurrencyListPatcher extends AutomaticPatcher {
 					portableSymbol = extraSplit[0];
 					if (extraSplit.length > 1) {
 						if (extraSplit[1].contains("SymPrefix")) {
-							currencyFlags |= CurrencyData.POS_FIXED_FLAG;
+							currencyFlags |= CurrencyDataImpl.POS_FIXED_FLAG;
 						} else if (extraSplit[1].contains("SymSuffix")) {
-							currencyFlags |= CurrencyData.POS_FIXED_FLAG | CurrencyData.POS_SUFFIX_FLAG;
+							currencyFlags |= CurrencyDataImpl.POS_FIXED_FLAG | CurrencyDataImpl.POS_SUFFIX_FLAG;
 						}
 						if (extraSplit[1].contains("ForceSpace")) {
-							currencyFlags |= CurrencyData.SPACING_FIXED_FLAG | CurrencyData.SPACE_FORCED_FLAG;
+							currencyFlags |= CurrencyDataImpl.SPACING_FIXED_FLAG | CurrencyDataImpl.SPACE_FORCED_FLAG;
 						} else if (extraSplit[1].contains("ForceNoSpace")) {
-							currencyFlags |= CurrencyData.SPACING_FIXED_FLAG;
+							currencyFlags |= CurrencyDataImpl.SPACING_FIXED_FLAG;
 						}
 					}
 					// If a non-empty override is supplied, use it for the currency symbol.

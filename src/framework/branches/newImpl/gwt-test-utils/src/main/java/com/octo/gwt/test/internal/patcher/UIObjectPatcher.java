@@ -9,7 +9,7 @@ import com.octo.gwt.test.internal.patcher.tools.AutomaticPatcher;
 import com.octo.gwt.test.internal.patcher.tools.PatchMethod;
 import com.octo.gwt.test.internal.patcher.tools.PatchType;
 import com.octo.gwt.test.internal.patcher.tools.SubClassedHelper;
-import com.octo.gwt.test.utils.ReflectionUtils;
+import com.octo.gwt.test.utils.GwtTestReflectionUtils;
 
 public class UIObjectPatcher extends AutomaticPatcher {
 
@@ -77,13 +77,13 @@ public class UIObjectPatcher extends AutomaticPatcher {
 	@PatchMethod
 	public static void replaceElement(UIObject uiObject, Element elem) {
 		elem = ElementUtils.castToUserElement(elem);
-		com.google.gwt.user.client.Element element = ReflectionUtils.getPrivateFieldValue(uiObject, "element");
+		com.google.gwt.user.client.Element element = GwtTestReflectionUtils.getPrivateFieldValue(uiObject, "element");
 		if (element != null) {
 			// replace this.element in its parent with elem.
 			replaceNode(uiObject, element, elem);
 		}
 
-		ReflectionUtils.setPrivateField(uiObject, "element", elem);
+		GwtTestReflectionUtils.setPrivateField(uiObject, "element", elem);
 	}
 
 	@PatchMethod

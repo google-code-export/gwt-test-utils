@@ -10,7 +10,7 @@ import org.apache.log4j.Logger;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.StatusCodeException;
-import com.octo.gwt.test.utils.ReflectionUtils;
+import com.octo.gwt.test.utils.GwtTestReflectionUtils;
 
 public class GwtRpcInvocationHandler implements InvocationHandler {
 
@@ -57,10 +57,10 @@ public class GwtRpcInvocationHandler implements InvocationHandler {
 			// Serialize objects
 			Object[] serializedArgs = new Object[subArgs.length];
 			for (int i = 0; i < subArgs.length; i++) {
-				serializedArgs[i] = ReflectionUtils.serializeUnserialize(subArgs[i]);
+				serializedArgs[i] = GwtTestReflectionUtils.serializeUnserialize(subArgs[i]);
 			}
 			Object returnValue = m.invoke(target, serializedArgs);
-			Object o = ReflectionUtils.serializeUnserialize(returnValue);
+			Object o = GwtTestReflectionUtils.serializeUnserialize(returnValue);
 			IDeserializationCallback deserializationCallback = callbacks.get(method);
 			if (deserializationCallback != null) {
 				o = deserializationCallback.callaback(o);

@@ -14,8 +14,8 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Widget;
 import com.octo.gwt.test.utils.ArrayUtils;
-import com.octo.gwt.test.utils.ReflectionUtils;
-import com.octo.gwt.test.utils.ReflectionUtils.MethodCallback;
+import com.octo.gwt.test.utils.GwtTestReflectionUtils;
+import com.octo.gwt.test.utils.GwtTestReflectionUtils.MethodCallback;
 
 public abstract class AbstractGWTEasyMockTest extends AbstractGWTTest {
 
@@ -26,7 +26,7 @@ public abstract class AbstractGWTEasyMockTest extends AbstractGWTTest {
 	protected Hashtable<Class<?>, Object> mockedObject = new Hashtable<Class<?>, Object>();
 
 	public AbstractGWTEasyMockTest() {
-		annotatedFieldToInject = ReflectionUtils.getAnnotatedField(this,
+		annotatedFieldToInject = GwtTestReflectionUtils.getAnnotatedField(this,
 				Mock.class);
 		for (Field f : annotatedFieldToInject) {
 			mockList.add(f.getType());
@@ -147,7 +147,7 @@ public abstract class AbstractGWTEasyMockTest extends AbstractGWTTest {
 	}
 
 	protected <T> T createMockAndKeepOneMethod(Class<T> clazz, String methodName) {
-		return createMockAndKeepMethods(clazz, true, ReflectionUtils
+		return createMockAndKeepMethods(clazz, true, GwtTestReflectionUtils
 				.findMethod(clazz, methodName, null));
 	}
 
@@ -155,7 +155,7 @@ public abstract class AbstractGWTEasyMockTest extends AbstractGWTTest {
 	protected <T> T createMockAndKeepMethods(Class<T> clazz,
 			final boolean keepSetters, final Method... list) {
 		final List<Method> l = new ArrayList<Method>();
-		ReflectionUtils.doWithMethods(clazz, new MethodCallback() {
+		GwtTestReflectionUtils.doWithMethods(clazz, new MethodCallback() {
 
 			public void doWith(Method method) throws IllegalArgumentException,
 					IllegalAccessException {

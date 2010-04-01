@@ -1,12 +1,12 @@
 package com.octo.gwt.test.internal.patcher.tools;
 
-import com.octo.gwt.test.internal.overrides.TagAware;
-
 import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtConstructor;
 import javassist.CtField;
 import javassist.CtMethod;
+
+import com.octo.gwt.test.utils.TagAware;
 
 public class AutomaticTagSubclasser extends AutomaticElementSubclasser {
 

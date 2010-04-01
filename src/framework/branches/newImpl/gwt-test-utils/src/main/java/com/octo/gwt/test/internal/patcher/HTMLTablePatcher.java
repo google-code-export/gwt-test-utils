@@ -9,13 +9,13 @@ import com.octo.gwt.test.ElementWrapper;
 import com.octo.gwt.test.internal.overrides.OverrideNodeList;
 import com.octo.gwt.test.internal.patcher.tools.AutomaticPatcher;
 import com.octo.gwt.test.internal.patcher.tools.PatchMethod;
-import com.octo.gwt.test.utils.ReflectionUtils;
+import com.octo.gwt.test.utils.GwtTestReflectionUtils;
 
 public class HTMLTablePatcher extends AutomaticPatcher {
 
 	@PatchMethod
 	public static Element getEventTargetCell(HTMLTable table, Event event) {
-		Object bodyElem = ReflectionUtils.getPrivateFieldValue(table,
+		Object bodyElem = GwtTestReflectionUtils.getPrivateFieldValue(table,
 				"bodyElem");
 
 		if (bodyElem instanceof ElementWrapper) {

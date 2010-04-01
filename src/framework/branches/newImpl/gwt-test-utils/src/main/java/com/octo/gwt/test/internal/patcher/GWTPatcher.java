@@ -7,8 +7,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.google.gwt.i18n.client.Constants;
+import com.google.gwt.i18n.client.CurrencyList;
 import com.google.gwt.i18n.client.impl.CldrImpl;
-import com.google.gwt.i18n.client.impl.CurrencyList;
 import com.google.gwt.i18n.client.impl.LocaleInfoImpl;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.resources.client.impl.ImageResourcePrototype;
@@ -23,7 +23,7 @@ import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.UIObject.DebugIdImpl;
 import com.google.gwt.user.client.ui.impl.ClippedImageImpl;
 import com.google.gwt.user.client.ui.impl.FocusImpl;
-import com.google.gwt.user.client.ui.impl.FocusImplOld;
+import com.google.gwt.user.client.ui.impl.FocusImplStandard;
 import com.google.gwt.user.client.ui.impl.FormPanelImpl;
 import com.google.gwt.user.client.ui.impl.HyperlinkImpl;
 import com.google.gwt.user.client.ui.impl.PopupImpl;
@@ -56,7 +56,7 @@ public class GWTPatcher extends AutomaticPatcher {
 		return "getModuleName";
 	}
 
-	@PatchMethod
+	@PatchMethod(args= { String.class, Throwable.class })
 	public static void log(String message, Throwable t) {
 		if (gwtLogHandler != null) {
 			gwtLogHandler.log(message, t);
@@ -69,7 +69,7 @@ public class GWTPatcher extends AutomaticPatcher {
 			return new UIObject.DebugIdImpl();
 		}
 		if (classLiteral == FocusImpl.class) {
-			return new FocusImplOld();
+			return new FocusImplStandard();
 		}
 		if (classLiteral == WindowImpl.class) {
 			return new WindowImpl();
@@ -117,7 +117,7 @@ public class GWTPatcher extends AutomaticPatcher {
 			return new MenuBar.Resources() {
 
 				public ImageResource menuBarSubMenuIcon() {
-					return new ImageResourcePrototype(null, null, 0, 0, 0, 0, false);
+					return new ImageResourcePrototype(null, null, 0, 0, 0, 0, false, false);
 				}
 			};
 		}

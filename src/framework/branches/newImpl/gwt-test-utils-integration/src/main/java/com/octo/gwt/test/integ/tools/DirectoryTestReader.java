@@ -17,7 +17,7 @@ import javassist.CtMethod;
 import com.octo.gwt.test.integ.CsvDirectory;
 import com.octo.gwt.test.integ.CsvMacros;
 import com.octo.gwt.test.integ.csvrunner.CsvReader;
-import com.octo.gwt.test.utils.ReflectionUtils;
+import com.octo.gwt.test.utils.GwtTestReflectionUtils;
 
 public class DirectoryTestReader {
 
@@ -36,13 +36,13 @@ public class DirectoryTestReader {
 	private List<Method> testMethods;
 
 	public DirectoryTestReader(Class<?> clazz) {
-		CsvDirectory csvDirectoryAnnotation = ReflectionUtils.getAnnotation(clazz, CsvDirectory.class);
+		CsvDirectory csvDirectoryAnnotation = GwtTestReflectionUtils.getAnnotation(clazz, CsvDirectory.class);
 		if (csvDirectoryAnnotation == null) {
 			throw new RuntimeException("Missing annotation \'@CsvDirectory\' on class [" + clazz.getCanonicalName() + "]");
 		}
 		csvDirectory = csvDirectoryAnnotation.value();
 		csvShortName = csvDirectory.substring(csvDirectory.lastIndexOf('/') + 1);
-		CsvMacros csvMacrosAnnotation = ReflectionUtils.getAnnotation(clazz, CsvMacros.class);
+		CsvMacros csvMacrosAnnotation = GwtTestReflectionUtils.getAnnotation(clazz, CsvMacros.class);
 		if (csvMacrosAnnotation == null) {
 			throw new RuntimeException("Missing annotation \'@CsvMacros\' on class [" + clazz.getCanonicalName() + "]");
 		}

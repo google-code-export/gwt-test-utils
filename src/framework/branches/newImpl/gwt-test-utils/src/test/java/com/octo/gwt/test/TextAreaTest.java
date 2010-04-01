@@ -5,7 +5,7 @@ import org.junit.Test;
 
 import com.google.gwt.user.client.ui.TextArea;
 import com.octo.gwt.test.AbstractGWTTest;
-import com.octo.gwt.test.utils.ReflectionUtils;
+import com.octo.gwt.test.utils.GwtTestReflectionUtils;
 
 public class TextAreaTest extends AbstractGWTTest {
 
@@ -51,7 +51,7 @@ public class TextAreaTest extends AbstractGWTTest {
 		// Set up
 		TextArea t = new TextArea();
 		t.setText("myText");
-		ReflectionUtils.setPrivateField(t, "attached", true);
+		GwtTestReflectionUtils.setPrivateField(t, "attached", true);
 
 		// Test
 		t.setCursorPos(2);
@@ -64,7 +64,7 @@ public class TextAreaTest extends AbstractGWTTest {
 		// Set up
 		TextArea t = new TextArea();
 		t.setText("myText");
-		ReflectionUtils.setPrivateField(t, "attached", true);
+		GwtTestReflectionUtils.setPrivateField(t, "attached", true);
 
 		// Test
 		t.setSelectionRange(1, 3);

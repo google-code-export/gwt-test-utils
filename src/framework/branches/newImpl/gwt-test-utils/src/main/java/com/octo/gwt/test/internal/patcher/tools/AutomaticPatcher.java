@@ -14,7 +14,7 @@ import javassist.CtMethod;
 import javassist.NotFoundException;
 
 import com.octo.gwt.test.IPatcher;
-import com.octo.gwt.test.utils.ReflectionUtils;
+import com.octo.gwt.test.utils.GwtTestReflectionUtils;
 
 public class AutomaticPatcher implements IPatcher {
 
@@ -29,7 +29,7 @@ public class AutomaticPatcher implements IPatcher {
 
 	public void initClass(CtClass c) throws Exception {
 		this.c = c;
-		this.annotatedMethods = ReflectionUtils.getAnnotatedMethod(this
+		this.annotatedMethods = GwtTestReflectionUtils.getAnnotatedMethod(this
 				.getClass(), PatchMethod.class);
 		this.processedMethods = new ArrayList<Method>();
 	}
@@ -157,7 +157,7 @@ public class AutomaticPatcher implements IPatcher {
 	public void finalizeClass() throws Exception {
 		for (Method m : annotatedMethods.keySet()) {
 			if (!processedMethods.contains(m)) {
-				throw new RuntimeException("Not processed anotation " + m);
+				throw new RuntimeException("@PatchMethod not used : " + m);
 			}
 		}
 

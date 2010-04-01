@@ -11,12 +11,12 @@ import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Style;
 import com.octo.gwt.test.internal.overrides.OverrideNodeList;
-import com.octo.gwt.test.internal.overrides.TagAware;
 import com.octo.gwt.test.internal.patcher.tools.AutomaticGetAndSetPatcher;
 import com.octo.gwt.test.internal.patcher.tools.PatchMethod;
 import com.octo.gwt.test.internal.patcher.tools.PropertyContainer;
 import com.octo.gwt.test.internal.patcher.tools.SubClassedHelper;
-import com.octo.gwt.test.utils.ReflectionUtils;
+import com.octo.gwt.test.utils.GwtTestReflectionUtils;
+import com.octo.gwt.test.utils.TagAware;
 
 public class ElementPatcher extends AutomaticGetAndSetPatcher {
 
@@ -47,8 +47,19 @@ public class ElementPatcher extends AutomaticGetAndSetPatcher {
 		if (element instanceof TagAware) {
 			return ((TagAware) element).getTag();
 		}
-		return ReflectionUtils.getStaticFieldValue(element.getClass(), "TAG");
+		return GwtTestReflectionUtils.getStaticFieldValue(element.getClass(), "TAG");
 	}
+	
+	@PatchMethod
+	public static void blur(Element element) {
+		
+	}
+	
+	@PatchMethod
+	public static void focus(Element element) {
+		
+	}
+	
 
 	@PatchMethod
 	public static Style getStyle(Element element) {

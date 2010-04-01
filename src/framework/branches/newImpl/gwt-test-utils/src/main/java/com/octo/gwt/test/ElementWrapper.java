@@ -1,7 +1,7 @@
 package com.octo.gwt.test;
 
 import com.google.gwt.user.client.Element;
-import com.octo.gwt.test.internal.overrides.TagAware;
+import com.octo.gwt.test.utils.TagAware;
 
 public class ElementWrapper extends Element implements TagAware {
 

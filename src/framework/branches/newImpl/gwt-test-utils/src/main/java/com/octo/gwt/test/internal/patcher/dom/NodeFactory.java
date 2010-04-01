@@ -61,7 +61,7 @@ public class NodeFactory {
 
 	private static Map<String, Class<?>> subclassedMap = new HashMap<String, Class<?>>();
 	private static Map<String, Class<?>> subclassedMapWithTag = new HashMap<String, Class<?>>();
-	
+
 	static {
 
 		subclassedMap.put("a", AnchorElement.class);
@@ -129,6 +129,13 @@ public class NodeFactory {
 
 	private NodeFactory() {}
 
+	public static void clearDom() {
+		if (DOCUMENT != null) {
+			SubClassedHelper.getSubClassedObjectOrNull(DOCUMENT).getOverrideProperties().clear();
+			SubClassedHelper.setProperty(DOCUMENT, DocumentPatcher.BODY_PROPERTY, createElement("body"));		
+		}
+	}
+
 	public static Document getDocument() {
 		if (DOCUMENT == null) {
 			try {
@@ -148,7 +155,7 @@ public class NodeFactory {
 			throw new RuntimeException("Unable to create text " + e);
 		}
 	}
-	
+
 	public static Style createStyle() {
 		try {
 			return (Style) SubClassedHelper.getSubClass(Style.class).newInstance();
@@ -169,10 +176,10 @@ public class NodeFactory {
 	public static Element createElement(String tag) {
 		try {
 			Element elem = null;
-		
+
 			Class<?> subClazz = subclassedMap.get(tag);
 			Class<?> subClazzWithTag = subclassedMapWithTag.get(tag);
-			
+
 			if (subClazz != null) {
 				elem = (Element) SubClassedHelper.getSubClass(subClazz).newInstance();
 			}
@@ -183,12 +190,12 @@ public class NodeFactory {
 			if (elem == null) {
 				throw new RuntimeException("Cannot create element for tag <" + tag + ">");
 			}
-	
+
 			// set the <body> element as default parent node
 			if (!"body".equals(elem.getTagName())) {
 				Document.get().getBody().appendChild(elem);
 			}
-	
+
 			return elem;
 		}
 		catch(Exception e) {

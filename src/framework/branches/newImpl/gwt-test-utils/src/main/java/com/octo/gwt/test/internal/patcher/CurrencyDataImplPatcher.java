@@ -1,10 +1,10 @@
 package com.octo.gwt.test.internal.patcher;
 
-import com.google.gwt.i18n.client.impl.CurrencyData;
+import com.google.gwt.i18n.client.CurrencyData;
 import com.octo.gwt.test.internal.patcher.tools.AutomaticPatcher;
 import com.octo.gwt.test.internal.patcher.tools.PatchMethod;
 
-public class CurrencyDataPatcher extends AutomaticPatcher {
+public class CurrencyDataImplPatcher extends AutomaticPatcher {
 
 	@PatchMethod
 	public static String getCurrencyCode(CurrencyData currencyData) {

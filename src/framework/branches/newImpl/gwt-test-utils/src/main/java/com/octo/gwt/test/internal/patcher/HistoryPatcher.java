@@ -4,7 +4,7 @@ import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.impl.HistoryImpl;
 import com.octo.gwt.test.internal.patcher.tools.AutomaticPatcher;
 import com.octo.gwt.test.internal.patcher.tools.PatchMethod;
-import com.octo.gwt.test.utils.ReflectionUtils;
+import com.octo.gwt.test.utils.GwtTestReflectionUtils;
 
 public class HistoryPatcher extends AutomaticPatcher {
 
@@ -12,7 +12,7 @@ public class HistoryPatcher extends AutomaticPatcher {
 	public static void back() {
 		HistoryImplPatcher.stack.pop();
 		String token = HistoryImplPatcher.stack.pop();
-		HistoryImpl impl = ReflectionUtils.getStaticFieldValue(History.class, "impl");
+		HistoryImpl impl = GwtTestReflectionUtils.getStaticFieldValue(History.class, "impl");
 		impl.fireHistoryChangedImpl(token);
 	}
 

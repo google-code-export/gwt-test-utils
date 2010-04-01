@@ -6,14 +6,14 @@ import com.google.gwt.user.client.ui.WidgetCollection;
 import com.octo.gwt.test.ElementUtils;
 import com.octo.gwt.test.internal.patcher.tools.AutomaticPatcher;
 import com.octo.gwt.test.internal.patcher.tools.PatchMethod;
-import com.octo.gwt.test.utils.ReflectionUtils;
+import com.octo.gwt.test.utils.GwtTestReflectionUtils;
 
 public class StackPanelPatcher extends AutomaticPatcher {
 
 	@PatchMethod
 	public static int findDividerIndex(StackPanel panel, Element child) {
 		child = ElementUtils.castToDomElement(child);
-		WidgetCollection children = ReflectionUtils.getPrivateFieldValue(panel, "children");
+		WidgetCollection children = GwtTestReflectionUtils.getPrivateFieldValue(panel, "children");
 
 		for (int i = 0; i < children.size(); i++) {
 			Element wElem = ElementUtils.castToDomElement(children.get(i).getElement());

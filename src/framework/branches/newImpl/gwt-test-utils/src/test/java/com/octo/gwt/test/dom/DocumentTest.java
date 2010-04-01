@@ -152,4 +152,20 @@ public class DocumentTest extends AbstractGWTTest {
 		Assert.assertEquals("button", e.getTagName());
 		Assert.assertEquals("reset", e.getType());
 	}
+	
+	@Test
+	public void checkSetScrollLeft() {
+		Assert.assertEquals(0, d.getScrollLeft());
+		d.setScrollLeft(3);
+		
+		Assert.assertEquals(3, d.getScrollLeft());
+	}
+	
+	@Test
+	public void checkSetScrollTop() {
+		Assert.assertEquals(0, d.getScrollTop());
+		d.setScrollTop(3);
+		
+		Assert.assertEquals(3, d.getScrollTop());
+	}
 }

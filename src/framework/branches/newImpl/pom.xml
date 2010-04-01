@@ -4,11 +4,11 @@
 	<groupId>com.octo.gwt.test</groupId>
 	<artifactId>gwt-test-utils-parent</artifactId>
 	<packaging>pom</packaging>
-	<version>0.2-SNAPSHOT</version>
+	<version>0.20-SNAPSHOT</version>
 	<name>GWT Tests Utils Parent</name>
 
 	<properties>
-		<gwt.version>2.0.0</gwt.version>
+		<gwt.version>2.0.3</gwt.version>
 	</properties>
 
 	<scm>
@@ -18,11 +18,11 @@
 	<distributionManagement>
 		<repository>
 			<id>forge.octo.com</id>
-			<url>http://forge.octo.com/archiva/repository/3rd-party/</url>
+      <url>http://forge.octo.com/nexus/content/repositories/releases/</url>
 		</repository>
 		<snapshotRepository>
 			<id>forge.octo.com</id>
-			<url>http://forge.octo.com/archiva/repository/3rd-party/</url>
+      <url>http://forge.octo.com/nexus/content/repositories/snapshots/</url>
 		</snapshotRepository>
 	</distributionManagement>
 

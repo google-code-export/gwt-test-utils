@@ -1,4 +1,4 @@
-package com.octo.gwt.test.internal.overrides;
+package com.octo.gwt.test.utils;
 
 public interface TagAware {
 

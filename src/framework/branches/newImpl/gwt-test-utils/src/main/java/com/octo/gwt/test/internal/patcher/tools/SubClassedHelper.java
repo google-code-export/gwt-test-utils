@@ -3,9 +3,9 @@ package com.octo.gwt.test.internal.patcher.tools;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.octo.gwt.test.ElementWrapper;
-
 import javassist.CtClass;
+
+import com.octo.gwt.test.ElementWrapper;
 
 public class SubClassedHelper {
 	
