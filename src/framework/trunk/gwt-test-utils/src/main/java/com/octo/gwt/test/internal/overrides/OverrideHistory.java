@@ -4,7 +4,7 @@ import java.util.Stack;
 
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.impl.HistoryImpl;
-import com.octo.gwt.test.utils.ReflectionUtils;
+import com.octo.gwt.test.utils.GwtTestReflectionUtils;
 
 public class OverrideHistory extends HistoryImpl {
 
@@ -28,7 +28,7 @@ public class OverrideHistory extends HistoryImpl {
 	public static void back() {
 		stack.pop();
 		String token = stack.pop();
-		HistoryImpl impl = ReflectionUtils.getStaticFieldValue(History.class, "impl");
+		HistoryImpl impl = GwtTestReflectionUtils.getStaticFieldValue(History.class, "impl");
 		impl.fireHistoryChangedImpl(token);
 	}
 

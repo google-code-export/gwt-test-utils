@@ -13,7 +13,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class ReflectionUtils {
+import junit.framework.Assert;
+
+public class GwtTestReflectionUtils {
 
 	@SuppressWarnings("unchecked")
 	public static <T> T getAnnotation(Class<?> clazz, Class<T> annotationClass) {
@@ -202,8 +204,21 @@ public class ReflectionUtils {
 			e.printStackTrace();
 			throw new RuntimeException(e.getMessage() + " Unable to set field, class " + fieldName + ", fieldClass " + target.getClass());
 		}
-
 	}
+	
+
+	@SuppressWarnings("unchecked")
+	public static <T> T getPrivateField(Object target, String fieldName) {
+		Field field = getUniqueFieldByName(target.getClass(), fieldName);
+		try {
+			return (T) field.get(target);
+		} catch (Exception e) {
+			e.printStackTrace();
+			Assert.fail(e.getMessage() + " Unable to find field, class " + fieldName + ", fieldClass " + target.getClass());
+		}
+		return null;
+	}
+
 
 	public static void setStaticField(Class<?> clazz, String fieldName, Object value) {
 		Field field = getUniqueFieldByName(clazz, fieldName);

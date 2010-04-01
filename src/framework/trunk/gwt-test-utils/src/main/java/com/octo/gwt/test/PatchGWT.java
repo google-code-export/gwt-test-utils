@@ -94,7 +94,7 @@ import com.octo.gwt.test.internal.overrides.OverrideSelectElement;
 import com.octo.gwt.test.internal.overrides.OverrideStyle;
 import com.octo.gwt.test.internal.overrides.OverrideTextAreaElement;
 import com.octo.gwt.test.utils.PatchUtils;
-import com.octo.gwt.test.utils.ReflectionUtils;
+import com.octo.gwt.test.utils.GwtTestReflectionUtils;
 
 public class PatchGWT {
 
@@ -129,31 +129,31 @@ public class PatchGWT {
 		PatchMainGWT.gwtCreateHandler = null;
 		PatchMainGWT.gwtLogHandler = null;
 
-		WidgetCollection widgetCollection = ReflectionUtils.getPrivateFieldValue(RootPanel.get(), "children");
-		Widget[] array = ReflectionUtils.getPrivateFieldValue(widgetCollection, "array");
+		WidgetCollection widgetCollection = GwtTestReflectionUtils.getPrivateFieldValue(RootPanel.get(), "children");
+		Widget[] array = GwtTestReflectionUtils.getPrivateFieldValue(widgetCollection, "array");
 		for (int i = 0; i < array.length; i++) {
 			array[i] = null;
 		}
-		ReflectionUtils.setPrivateField(widgetCollection, "size", 0);
+		GwtTestReflectionUtils.setPrivateField(widgetCollection, "size", 0);
 
-		ReflectionUtils.getStaticAndCallClear(Timer.class, "timers");
-		ReflectionUtils.getStaticAndCallClear(RootPanel.class, "rootPanels");
-		ReflectionUtils.getStaticAndCallClear(RootPanel.class, "widgetsToDetach");
+		GwtTestReflectionUtils.getStaticAndCallClear(Timer.class, "timers");
+		GwtTestReflectionUtils.getStaticAndCallClear(RootPanel.class, "rootPanels");
+		GwtTestReflectionUtils.getStaticAndCallClear(RootPanel.class, "widgetsToDetach");
 
-		Object commandExecutor = ReflectionUtils.getStaticFieldValue(Class.forName("com.google.gwt.user.client.DeferredCommand"), "commandExecutor");
-		ReflectionUtils.callClear(ReflectionUtils.getPrivateFieldValue(commandExecutor, "commands"));
+		Object commandExecutor = GwtTestReflectionUtils.getStaticFieldValue(Class.forName("com.google.gwt.user.client.DeferredCommand"), "commandExecutor");
+		GwtTestReflectionUtils.callClear(GwtTestReflectionUtils.getPrivateFieldValue(commandExecutor, "commands"));
 
-		HistoryImpl historyImpl = ReflectionUtils.getStaticFieldValue(History.class, "impl");
-		ReflectionUtils.callClear(ReflectionUtils.getPrivateFieldValue(ReflectionUtils.getPrivateFieldValue(ReflectionUtils.getPrivateFieldValue(
+		HistoryImpl historyImpl = GwtTestReflectionUtils.getStaticFieldValue(History.class, "impl");
+		GwtTestReflectionUtils.callClear(GwtTestReflectionUtils.getPrivateFieldValue(GwtTestReflectionUtils.getPrivateFieldValue(GwtTestReflectionUtils.getPrivateFieldValue(
 				historyImpl, "handlers"), "registry"), "map"));
 
-		ReflectionUtils.setStaticField(NumberFormat.class, "cachedDecimalFormat", null);
-		ReflectionUtils.setStaticField(NumberFormat.class, "cachedScientificFormat", null);
-		ReflectionUtils.setStaticField(NumberFormat.class, "cachedPercentFormat", null);
-		ReflectionUtils.setStaticField(NumberFormat.class, "cachedCurrencyFormat", null);
+		GwtTestReflectionUtils.setStaticField(NumberFormat.class, "cachedDecimalFormat", null);
+		GwtTestReflectionUtils.setStaticField(NumberFormat.class, "cachedScientificFormat", null);
+		GwtTestReflectionUtils.setStaticField(NumberFormat.class, "cachedPercentFormat", null);
+		GwtTestReflectionUtils.setStaticField(NumberFormat.class, "cachedCurrencyFormat", null);
 
-		ReflectionUtils.setStaticField(Window.class, "handlers", null);
-		ReflectionUtils.setStaticField(Event.class, "handlers", null);
+		GwtTestReflectionUtils.setStaticField(Window.class, "handlers", null);
+		GwtTestReflectionUtils.setStaticField(Event.class, "handlers", null);
 
 		PatchTimer.clear();
 	}

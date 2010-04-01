@@ -31,7 +31,7 @@ import com.octo.gwt.test.PatchGWT;
 import com.octo.gwt.test.integ.csvrunner.CsvRunner;
 import com.octo.gwt.test.integ.csvrunner.Node;
 import com.octo.gwt.test.utils.ArrayUtils;
-import com.octo.gwt.test.utils.ReflectionUtils;
+import com.octo.gwt.test.utils.GwtTestReflectionUtils;
 import com.octo.gwt.test.utils.WidgetUtils;
 
 public abstract class AbstractGwtIntegrationShell {
@@ -236,7 +236,7 @@ public abstract class AbstractGwtIntegrationShell {
 
 	public void clickMenuItem(String index, String objectLocalization) {
 		MenuBar menuBar = getObject(MenuBar.class, objectLocalization);
-		List<MenuItem> menuItems = ReflectionUtils.getPrivateFieldValue(menuBar, "items");
+		List<MenuItem> menuItems = GwtTestReflectionUtils.getPrivateFieldValue(menuBar, "items");
 		MenuItem itemToClick = menuItems.get(Integer.parseInt(index));
 		WidgetUtils.click(menuBar, itemToClick);
 	}

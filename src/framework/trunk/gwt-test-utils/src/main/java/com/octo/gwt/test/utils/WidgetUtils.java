@@ -36,7 +36,7 @@ public class WidgetUtils {
 	}
 
 	public static List<MenuItem> getMenuItems(MenuBar menuBar) {
-		return ReflectionUtils.getPrivateFieldValue(menuBar, "items");
+		return GwtTestReflectionUtils.getPrivateFieldValue(menuBar, "items");
 	}
 
 	public static boolean hasStyle(UIObject object, String styleName) {
@@ -76,7 +76,7 @@ public class WidgetUtils {
 	}
 
 	public static void click(MenuBar parent, int clickedItemIndex) {
-		List<MenuItem> menuItems = ReflectionUtils.getPrivateFieldValue(parent, "items");
+		List<MenuItem> menuItems = GwtTestReflectionUtils.getPrivateFieldValue(parent, "items");
 		MenuItem itemToClick = menuItems.get(clickedItemIndex);
 		click(parent, itemToClick);
 	}

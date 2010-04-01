@@ -5,7 +5,7 @@ import org.junit.Test;
 
 import com.google.gwt.user.client.ui.TextBox;
 import com.octo.gwt.test.AbstractGWTTest;
-import com.octo.gwt.test.utils.ReflectionUtils;
+import com.octo.gwt.test.utils.GwtTestReflectionUtils;
 
 public class TextBoxTest extends AbstractGWTTest {
 
@@ -51,7 +51,7 @@ public class TextBoxTest extends AbstractGWTTest {
 		// Set up
 		TextBox t = new TextBox();
 		t.setText("myText");
-		ReflectionUtils.setPrivateField(t, "attached", true);
+		GwtTestReflectionUtils.setPrivateField(t, "attached", true);
 		
 		// Test
 		t.setCursorPos(2);
