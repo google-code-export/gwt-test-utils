@@ -160,6 +160,24 @@ public abstract class AbstractGwtIntegrationShell {
 			Assert.assertEquals(csvRunner.getAssertionErrorMessagePrefix() + "Wrong number", Long.parseLong(value), l.intValue());
 		}
 	}
+	
+	public void assertTrue(String objectLocalization) {
+		Boolean b = getObject(Boolean.class, objectLocalization, false);
+		if (b == null) {
+			Assert.fail(csvRunner.getAssertionErrorMessagePrefix() + "null Boolean");
+		} else {
+			Assert.assertTrue(csvRunner.getAssertionErrorMessagePrefix() + "TRUE expected", b.booleanValue());
+		}
+	}
+	
+	public void assertFalse(String objectLocalization) {
+		Boolean b = getObject(Boolean.class, objectLocalization, false);
+		if (b == null) {
+			Assert.fail(csvRunner.getAssertionErrorMessagePrefix() + "null Boolean");
+		} else {
+			Assert.assertFalse(csvRunner.getAssertionErrorMessagePrefix() + "FALSE expected", b.booleanValue());
+		}
+	}
 
 	/**
 	 * 
