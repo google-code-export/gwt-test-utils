@@ -26,7 +26,7 @@ public abstract class AbstractGWTEasyMockTest extends AbstractGWTTest {
 	protected Hashtable<Class<?>, Object> mockedObject = new Hashtable<Class<?>, Object>();
 
 	public AbstractGWTEasyMockTest() {
-		annotatedFieldToInject = GwtTestReflectionUtils.getAnnotatedField(this, Mock.class);
+		annotatedFieldToInject = GwtTestReflectionUtils.getAnnotatedField(this.getClass(), Mock.class);
 		for (Field f : annotatedFieldToInject) {
 			mockList.add(f.getType());
 		}

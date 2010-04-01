@@ -134,7 +134,7 @@ public class PatchGWT {
 		for (int i = 0; i < array.length; i++) {
 			array[i] = null;
 		}
-		GwtTestReflectionUtils.setPrivateField(widgetCollection, "size", 0);
+		GwtTestReflectionUtils.setPrivateFieldValue(widgetCollection, "size", 0);
 
 		GwtTestReflectionUtils.getStaticAndCallClear(Timer.class, "timers");
 		GwtTestReflectionUtils.getStaticAndCallClear(RootPanel.class, "rootPanels");

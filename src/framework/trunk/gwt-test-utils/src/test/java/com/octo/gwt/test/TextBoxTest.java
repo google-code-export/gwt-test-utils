@@ -51,7 +51,7 @@ public class TextBoxTest extends AbstractGWTTest {
 		// Set up
 		TextBox t = new TextBox();
 		t.setText("myText");
-		GwtTestReflectionUtils.setPrivateField(t, "attached", true);
+		GwtTestReflectionUtils.setPrivateFieldValue(t, "attached", true);
 		
 		// Test
 		t.setCursorPos(2);

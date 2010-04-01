@@ -13,7 +13,7 @@ public class PatchComplexPanel {
 
 		if (!(col instanceof OverrideWidgetCollection)) {
 			col = new OverrideWidgetCollection(panel);
-			GwtTestReflectionUtils.setPrivateField(panel, "children", col);
+			GwtTestReflectionUtils.setPrivateFieldValue(panel, "children", col);
 		}
 
 		return col;
