@@ -13,17 +13,29 @@ import java.util.Set;
 
 public class GwtTestReflectionUtils {
 
+	private static DoubleMap<Class<?>, Class<?>, Object> cacheAnnotation = new DoubleMap<Class<?>, Class<?>, Object>();
+	
 	@SuppressWarnings("unchecked")
 	public static <T> T getAnnotation(Class<?> clazz, Class<T> annotationClass) {
+		
+		Object o = cacheAnnotation.get(clazz, annotationClass);
+		if (o != null) {
+			return (T) o;
+		}
+		
+		T result = null;
 		for (Annotation a : clazz.getDeclaredAnnotations()) {
 			if (a.annotationType() == annotationClass) {
-				return (T) a;
+				result = (T) a;
 			}
 		}
-		if (clazz.getSuperclass() != null) {
-			return getAnnotation(clazz.getSuperclass(), annotationClass);
+		if (result == null && clazz.getSuperclass() != null) {
+			result = getAnnotation(clazz.getSuperclass(), annotationClass);
 		}
-		return null;
+		
+		cacheAnnotation.put(clazz, annotationClass, result);
+		
+		return result;
 	}
 
 	public static Method findMethod(Class<?> clazz, String name, Class<?>[] paramTypes) {
@@ -54,14 +66,27 @@ public class GwtTestReflectionUtils {
 		}
 	}
 
+	private static DoubleMap<Class<?>, Class<?>, Set<Field>> cacheAnnotatedField = new DoubleMap<Class<?>, Class<?>, Set<Field>>();
+	
 	public static Set<Field> getAnnotatedField(Class<?> clazz, Class<?> annotationClass) {
-		Set<Field> l = new HashSet<Field>();
+		Set<Field> l = cacheAnnotatedField.get(clazz, annotationClass);
+		if (l != null) {
+			return l;
+		}
+		l = new HashSet<Field>();
 		recurseGetAnnotatedField(l, clazz, annotationClass);
+		cacheAnnotatedField.put(clazz, annotationClass, l);
 		return l;
 	}
 
+	private static DoubleMap<Class<?>, String, Set<Field>> cacheField = new DoubleMap<Class<?>, String, Set<Field>>();
+	
 	public static Set<Field> findFieldByName(Class<?> clazz, String fieldName) {
-		Set<Field> set = new HashSet<Field>();
+		Set<Field> set = cacheField.get(clazz, fieldName);
+		if (set != null) {
+			return set;
+		}
+		set = new HashSet<Field>();;
 		for (Field f : clazz.getFields()) {
 			if (f.getName().equals(fieldName)) {
 				set.add(f);
@@ -80,7 +105,13 @@ public class GwtTestReflectionUtils {
 		return set;
 	}
 
+	private static DoubleMap<Class<?>, String, Field> cacheUniqueField = new DoubleMap<Class<?>, String, Field>();
+	
 	private static Field getUniqueFieldByName(Class<?> clazz, String fieldName) {
+		Field f = cacheUniqueField.get(clazz, fieldName);
+		if (f != null) {
+			return f;
+		}
 		Set<Field> set = findFieldByName(clazz, fieldName);
 		if (set.size() == 0) {
 			throw new RuntimeException("Unable to find field, class " + clazz + ", fieldName " + fieldName);
@@ -90,6 +121,7 @@ public class GwtTestReflectionUtils {
 		}
 		Field field = set.iterator().next();
 		field.setAccessible(true);
+		cacheUniqueField.put(clazz, fieldName, field);
 		return field;
 	}
 
@@ -113,7 +145,6 @@ public class GwtTestReflectionUtils {
 			throw new RuntimeException(e.getMessage() + " Unable to set field, class " + fieldName + ", fieldClass " + target.getClass());
 		}
 	}
-
 
 	@SuppressWarnings("unchecked")
 	public static <T> T getStaticFieldValue(Class<?> clazz, String fieldName) {
