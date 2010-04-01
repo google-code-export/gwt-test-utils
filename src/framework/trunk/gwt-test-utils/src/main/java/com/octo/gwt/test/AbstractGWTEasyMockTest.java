@@ -5,6 +5,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Set;
 
 import org.easymock.IAnswer;
 import org.easymock.classextension.EasyMock;
@@ -21,7 +22,7 @@ public abstract class AbstractGWTEasyMockTest extends AbstractGWTTest {
 
 	private List<Class<?>> mockList = new ArrayList<Class<?>>();
 
-	private List<Field> annotatedFieldToInject;
+	private Set<Field> annotatedFieldToInject;
 
 	protected Hashtable<Class<?>, Object> mockedObject = new Hashtable<Class<?>, Object>();
 

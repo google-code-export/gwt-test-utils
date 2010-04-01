@@ -7,9 +7,9 @@ import java.io.ObjectOutputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class GwtTestReflectionUtils {
 
@@ -41,54 +41,54 @@ public class GwtTestReflectionUtils {
 		return null;
 	}
 
-	private static void recurseGetAnnotatedField(List<Field> list, Class<?> target, Class<?> annotationClass) {
+	private static void recurseGetAnnotatedField(Set<Field> set, Class<?> target, Class<?> annotationClass) {
 		for (Field f : target.getDeclaredFields()) {
 			for (Annotation a : f.getDeclaredAnnotations()) {
 				if (a.annotationType() == annotationClass) {
-					list.add(f);
+					set.add(f);
 				}
 			}
 		}
 		if (target.getSuperclass() != null) {
-			recurseGetAnnotatedField(list, target.getSuperclass(), annotationClass);
+			recurseGetAnnotatedField(set, target.getSuperclass(), annotationClass);
 		}
 	}
 
-	public static List<Field> getAnnotatedField(Class<?> clazz, Class<?> annotationClass) {
-		List<Field> l = new ArrayList<Field>();
+	public static Set<Field> getAnnotatedField(Class<?> clazz, Class<?> annotationClass) {
+		Set<Field> l = new HashSet<Field>();
 		recurseGetAnnotatedField(l, clazz, annotationClass);
 		return l;
 	}
 
-	public static List<Field> findFieldByName(Class<?> clazz, String fieldName) {
-		List<Field> list = new ArrayList<Field>();
+	public static Set<Field> findFieldByName(Class<?> clazz, String fieldName) {
+		Set<Field> set = new HashSet<Field>();
 		for (Field f : clazz.getFields()) {
 			if (f.getName().equals(fieldName)) {
-				list.add(f);
+				set.add(f);
 			}
 		}
 		for (Field f : clazz.getDeclaredFields()) {
 			if (f.getName().equals(fieldName)) {
-				list.add(f);
+				set.add(f);
 			}
 		}
 		Class<?> superClazz = clazz.getSuperclass();
 		if (superClazz != null) {
-			list.addAll(findFieldByName(superClazz, fieldName));
+			set.addAll(findFieldByName(superClazz, fieldName));
 		}
 
-		return list;
+		return set;
 	}
 
 	private static Field getUniqueFieldByName(Class<?> clazz, String fieldName) {
-		List<Field> list = findFieldByName(clazz, fieldName);
-		if (list.size() == 0) {
+		Set<Field> set = findFieldByName(clazz, fieldName);
+		if (set.size() == 0) {
 			throw new RuntimeException("Unable to find field, class " + clazz + ", fieldName " + fieldName);
 		}
-		if (list.size() > 1) {
+		if (set.size() > 1) {
 			throw new RuntimeException("Unable to choose field, " + clazz + ", fieldName " + fieldName);
 		}
-		Field field = list.iterator().next();
+		Field field = set.iterator().next();
 		field.setAccessible(true);
 		return field;
 	}
