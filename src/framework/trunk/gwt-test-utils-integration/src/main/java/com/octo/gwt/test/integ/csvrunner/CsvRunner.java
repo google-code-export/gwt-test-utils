@@ -99,14 +99,21 @@ public class CsvRunner {
 			List<Object> argList = new ArrayList<Object>();
 			for (Class<?> clazz : m.getParameterTypes()) {
 				if (filterArgs.size() == 0) {
-					Assert.fail(getAssertionErrorMessagePrefix() + "Too few args for " + methodName);
+					if (clazz.isArray()) {
+						argList.add(new String[]{});
+					}
+					else {
+						Assert.fail(getAssertionErrorMessagePrefix() + "Too few args for " + methodName);
+					}
 				}
-				if (clazz.isArray()) {
-					argList.add(filterArgs.toArray(new String[] {}));
-					filterArgs.clear();
-				} else {
-					argList.add(filterArgs.get(0));
-					filterArgs.remove(0);
+				else {
+					if (clazz.isArray()) {
+						argList.add(filterArgs.toArray(new String[] {}));
+						filterArgs.clear();
+					} else {
+						argList.add(filterArgs.get(0));
+						filterArgs.remove(0);
+					}
 				}
 			}
 			if (filterArgs.size() != 0) {

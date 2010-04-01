@@ -7,6 +7,7 @@ import java.io.PrintStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.After;
@@ -72,13 +73,21 @@ public abstract class AbstractGwtIntegrationShell {
 		}
 	}
 
-	public void runMacro(String macroName) throws Exception {
+	public void runMacro(String macroName, String ... params) throws Exception {
 		List<List<String>> macro = macroReader.getMacro(macroName);
 		Assert.assertNotNull(csvRunner.getAssertionErrorMessagePrefix() + "Not existing macro " + macroName, macro);
 		int i = 0;
 		for (List<String> line : macro) {
+			List<String> l = new ArrayList<String>();
+			for(String s : line) {
+				String replaced = s;
+				for(int z = 0; z < params.length; z ++) {
+					replaced = replaced.replaceAll("\\{" + z  + "\\}", params[z]);
+				}
+				l.add(replaced);
+			}
 			csvRunner.setExtendedLineInfo(macroName + " line " + (i + 1));
-			csvRunner.executeRow(line, this);
+			csvRunner.executeRow(l, this);
 			i++;
 		}
 		csvRunner.setExtendedLineInfo(null);
