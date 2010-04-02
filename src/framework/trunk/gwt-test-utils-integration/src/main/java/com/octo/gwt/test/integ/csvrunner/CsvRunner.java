@@ -12,6 +12,8 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.junit.Assert;
 
+import com.octo.gwt.test.utils.DoubleMap;
+
 public class CsvRunner {
 
 	private static final Logger logger = Logger.getLogger(CsvRunner.class);
@@ -91,7 +93,7 @@ public class CsvRunner {
 			List<String> filterArgs = new ArrayList<String>(args);
 			removeEmptyElements(filterArgs);
 			transformArgs(filterArgs);
-			Method m = getMethod(fixture, fixture.getClass(), methodName);
+			Method m = getMethod(fixture.getClass(), methodName);
 			if (m == null) {
 				Assert.fail(getAssertionErrorMessagePrefix() + "Method ' " + methodName + " ' not found in object " + fixture);
 			}
@@ -142,24 +144,33 @@ public class CsvRunner {
 		}
 	}
 
-	private Method getMethod(Object fixture, Class<?> clazz, String methodName) {
+	private static DoubleMap<Class<?>, String, Method> cacheMethod = new DoubleMap<Class<?>, String, Method>();
+	
+	private Method getMethod(Class<?> clazz, String methodName) {
+		Method res = cacheMethod.get(clazz, methodName);
+		if (res != null) {
+			return res;
+		}
 		for (Method m : clazz.getDeclaredMethods()) {
 			if (methodName.equalsIgnoreCase(m.getName())) {
 				m.setAccessible(true);
+				cacheMethod.put(clazz, methodName, m);
 				return m;
 			}
 		}
 		for (Method m : clazz.getMethods()) {
 			if (methodName.equalsIgnoreCase(m.getName())) {
 				m.setAccessible(true);
+				cacheMethod.put(clazz, methodName, m);
 				return m;
 			}
 		}
 		Class<?> superClazz = clazz.getSuperclass();
 		if (superClazz != null) {
-			return getMethod(fixture, superClazz, methodName);
+			res = getMethod(superClazz, methodName);
 		}
-		return null;
+		cacheMethod.put(clazz, methodName, res);
+		return res;
 	}
 
 	private Field getField(Object fixture, Class<?> clazz, String fieldName) {
@@ -201,10 +212,10 @@ public class CsvRunner {
 			if (!ok) {
 				Method m = null;
 				if (m == null) {
-					m = getMethod(current, current.getClass(), currentName);
+					m = getMethod(current.getClass(), currentName);
 				}
 				if (m == null) {
-					m = getMethod(current, current.getClass(), "get" + currentName);
+					m = getMethod(current.getClass(), "get" + currentName);
 				}
 				if (m != null) {
 					try {
@@ -301,7 +312,7 @@ public class CsvRunner {
 		if (m.getParameterTypes().length != 1 && m.getParameterTypes()[0] != int.class) {
 			Assert.fail("Unable to navigate " + current.getClass().getCanonicalName() + " with method " + m.getName());
 		}
-		Method countM = getMethod(current, current.getClass(), m.getName() + "Count");
+		Method countM = getMethod(current.getClass(), m.getName() + "Count");
 		if (countM == null) {
 			Assert.fail("Count method not found in " + current.getClass().getCanonicalName() + " method " + m.getName());
 		}
