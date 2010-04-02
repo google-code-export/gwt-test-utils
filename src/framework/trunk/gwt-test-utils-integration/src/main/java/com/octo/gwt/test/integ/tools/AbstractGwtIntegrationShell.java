@@ -151,7 +151,7 @@ public abstract class AbstractGwtIntegrationShell {
 	 * @param objectLocalization
 	 */
 	public void assertExact(String value, String objectLocalization) {
-		String s = getObject(String.class, objectLocalization);
+		String s = getObject(String.class, objectLocalization, false);
 		Assert.assertEquals(csvRunner.getAssertionErrorMessagePrefix() + "Wrong string", value, s);
 	}
 	
