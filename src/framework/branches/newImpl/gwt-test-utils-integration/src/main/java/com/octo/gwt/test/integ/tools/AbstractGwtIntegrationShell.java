@@ -7,6 +7,7 @@ import java.io.PrintStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.After;
@@ -72,13 +73,27 @@ public abstract class AbstractGwtIntegrationShell {
 		}
 	}
 
-	public void runMacro(String macroName) throws Exception {
+	public void runMacro(String macroName, String ... params) throws Exception {
 		List<List<String>> macro = macroReader.getMacro(macroName);
 		Assert.assertNotNull(csvRunner.getAssertionErrorMessagePrefix() + "Not existing macro " + macroName, macro);
 		int i = 0;
 		for (List<String> line : macro) {
+			List<String> l = new ArrayList<String>();
+			for(String s : line) {
+				String replaced = s;
+				for(int z = 0; z < params.length; z ++) {
+					String param = params[z];
+					if (param == null)
+						param = "*null*";
+					else if ("".equals(param))
+						param = "*empty*";
+					
+					replaced = replaced.replaceAll("\\{" + z  + "\\}", param);
+				}
+				l.add(replaced);
+			}
 			csvRunner.setExtendedLineInfo(macroName + " line " + (i + 1));
-			csvRunner.executeRow(line, this);
+			csvRunner.executeRow(l, this);
 			i++;
 		}
 		csvRunner.setExtendedLineInfo(null);
@@ -142,7 +157,7 @@ public abstract class AbstractGwtIntegrationShell {
 	 * @param objectLocalization
 	 */
 	public void assertExact(String value, String objectLocalization) {
-		String s = getObject(String.class, objectLocalization);
+		String s = getObject(String.class, objectLocalization, false);
 		Assert.assertEquals(csvRunner.getAssertionErrorMessagePrefix() + "Wrong string", value, s);
 	}
 	
@@ -161,10 +176,6 @@ public abstract class AbstractGwtIntegrationShell {
 		}
 	}
 	
-	/**
-	 * 
-	 * @param objectLocalization
-	 */
 	public void assertTrue(String objectLocalization) {
 		Boolean b = getObject(Boolean.class, objectLocalization, false);
 		if (b == null) {
@@ -174,10 +185,6 @@ public abstract class AbstractGwtIntegrationShell {
 		}
 	}
 	
-	/**
-	 * 
-	 * @param objectLocalization
-	 */
 	public void assertFalse(String objectLocalization) {
 		Boolean b = getObject(Boolean.class, objectLocalization, false);
 		if (b == null) {
