@@ -83,7 +83,7 @@ public class UIObjectPatcher extends AutomaticPatcher {
 			replaceNode(uiObject, element, elem);
 		}
 
-		GwtTestReflectionUtils.setPrivateField(uiObject, "element", elem);
+		GwtTestReflectionUtils.setPrivateFieldValue(uiObject, "element", elem);
 	}
 
 	@PatchMethod

@@ -7,45 +7,41 @@ import java.io.ObjectOutputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 public class GwtTestReflectionUtils {
 
+	private static DoubleMap<Class<?>, Class<?>, Object> cacheAnnotation = new DoubleMap<Class<?>, Class<?>, Object>();
+	private static DoubleMap<Class<?>, Class<?>, Set<Field>> cacheAnnotatedField = new DoubleMap<Class<?>, Class<?>, Set<Field>>();
+	private static DoubleMap<Class<?>, Class<?>, Map<Method, ?>> cacheAnnotatedMethod = new DoubleMap<Class<?>, Class<?>, Map<Method,?>>();
+	
 	@SuppressWarnings("unchecked")
 	public static <T> T getAnnotation(Class<?> clazz, Class<T> annotationClass) {
+		
+		Object o = cacheAnnotation.get(clazz, annotationClass);
+		if (o != null) {
+			return (T) o;
+		}
+		
+		T result = null;
 		for (Annotation a : clazz.getDeclaredAnnotations()) {
 			if (a.annotationType() == annotationClass) {
-				return (T) a;
+				result = (T) a;
 			}
 		}
-		if (clazz.getSuperclass() != null) {
-			return getAnnotation(clazz.getSuperclass(), annotationClass);
+		if (result == null && clazz.getSuperclass() != null) {
+			result = getAnnotation(clazz.getSuperclass(), annotationClass);
 		}
-		return null;
+		
+		cacheAnnotation.put(clazz, annotationClass, result);
+		
+		return result;
 	}
 
-	/**
-	 * Attempt to find a {@link Method} on the supplied class with the supplied
-	 * name and parameter types. Searches all superclasses up to
-	 * <code>Object</code>.
-	 * <p>
-	 * Returns <code>null</code> if no {@link Method} can be found.
-	 * 
-	 * @param clazz
-	 *            the class to introspect
-	 * @param name
-	 *            the name of the method
-	 * @param paramTypes
-	 *            the parameter types of the method (may be <code>null</code> to
-	 *            indicate any signature)
-	 * @return the Method object, or <code>null</code> if none found
-	 */
 	public static Method findMethod(Class<?> clazz, String name, Class<?>[] paramTypes) {
 		Class<?> searchType = clazz;
 		while (!Object.class.equals(searchType) && searchType != null) {
@@ -60,54 +56,7 @@ public class GwtTestReflectionUtils {
 		}
 		return null;
 	}
-
-	/**
-	 * Perform the given callback operation on all matching methods of the given
-	 * class and superclasses.
-	 * <p>
-	 * The same named method occurring on subclass and superclass will appear
-	 * twice, unless excluded by a {@link MethodFilter}.
-	 * 
-	 * @param targetClass
-	 *            class to start looking at
-	 * @param mc
-	 *            the callback to invoke for each method
-	 * @see #doWithMethods(Class, MethodCallback, MethodFilter)
-	 */
-	public static void doWithMethods(Class<?> targetClass, MethodCallback mc) throws IllegalArgumentException {
-		// Keep backing up the inheritance hierarchy.
-		do {
-			Method[] methods = targetClass.getDeclaredMethods();
-			for (int i = 0; i < methods.length; i++) {
-				try {
-					mc.doWith(methods[i]);
-				} catch (IllegalAccessException ex) {
-					throw new IllegalStateException("Shouldn't be illegal to access method '" + methods[i].getName() + "': " + ex);
-				}
-			}
-			targetClass = targetClass.getSuperclass();
-		} while (targetClass != null);
-	}
-
-	private static void recurseGetAnnotatedField(List<Field> list, Class<?> target, Class<?> annotationClass) {
-		for (Field f : target.getDeclaredFields()) {
-			for (Annotation a : f.getDeclaredAnnotations()) {
-				if (a.annotationType() == annotationClass) {
-					list.add(f);
-				}
-			}
-		}
-		if (target.getSuperclass() != null) {
-			recurseGetAnnotatedField(list, target.getSuperclass(), annotationClass);
-		}
-	}
-
-	public static List<Field> getAnnotatedField(Object target, Class<?> annotationClass) {
-		List<Field> l = new ArrayList<Field>();
-		recurseGetAnnotatedField(l, target.getClass(), annotationClass);
-		return l;
-	}
-
+	
 	@SuppressWarnings("unchecked")
 	private static <T extends Annotation> void recurseGetAnnotatedMethod(Map<Method, T> map, Class<?> target, Class<?> annotationClass) {
 		for (Method m : target.getDeclaredMethods()) {
@@ -122,14 +71,50 @@ public class GwtTestReflectionUtils {
 		}
 	}
 
+	private static void recurseGetAnnotatedField(Set<Field> set, Class<?> target, Class<?> annotationClass) {
+		for (Field f : target.getDeclaredFields()) {
+			for (Annotation a : f.getDeclaredAnnotations()) {
+				if (a.annotationType() == annotationClass) {
+					set.add(f);
+				}
+			}
+		}
+		if (target.getSuperclass() != null) {
+			recurseGetAnnotatedField(set, target.getSuperclass(), annotationClass);
+		}
+	}
+
+	public static Set<Field> getAnnotatedField(Class<?> clazz, Class<?> annotationClass) {
+		Set<Field> l = cacheAnnotatedField.get(clazz, annotationClass);
+		if (l != null) {
+			return l;
+		}
+		l = new HashSet<Field>();
+		recurseGetAnnotatedField(l, clazz, annotationClass);
+		cacheAnnotatedField.put(clazz, annotationClass, l);
+		return l;
+	}
+	
+	@SuppressWarnings("unchecked")
 	public static <T extends Annotation> Map<Method, T> getAnnotatedMethod(Class<?> target, Class<T> annotationClass) {
-		Map<Method, T> map = new HashMap<Method, T>();
+		Map<Method, T> map = (Map<Method, T>) cacheAnnotatedMethod.get(target, annotationClass);
+		if (map != null) {
+			return map;
+		}
+		map = new HashMap<Method, T>();
 		recurseGetAnnotatedMethod(map, target, annotationClass);
+		cacheAnnotatedMethod.put(target, annotationClass, map);
 		return map;
 	}
 
+	private static DoubleMap<Class<?>, String, Set<Field>> cacheField = new DoubleMap<Class<?>, String, Set<Field>>();
+	
 	public static Set<Field> findFieldByName(Class<?> clazz, String fieldName) {
-		Set<Field> set = new HashSet<Field>();
+		Set<Field> set = cacheField.get(clazz, fieldName);
+		if (set != null) {
+			return set;
+		}
+		set = new HashSet<Field>();;
 		for (Field f : clazz.getFields()) {
 			if (f.getName().equals(fieldName)) {
 				set.add(f);
@@ -148,7 +133,13 @@ public class GwtTestReflectionUtils {
 		return set;
 	}
 
+	private static DoubleMap<Class<?>, String, Field> cacheUniqueField = new DoubleMap<Class<?>, String, Field>();
+	
 	private static Field getUniqueFieldByName(Class<?> clazz, String fieldName) {
+		Field f = cacheUniqueField.get(clazz, fieldName);
+		if (f != null) {
+			return f;
+		}
 		Set<Field> set = findFieldByName(clazz, fieldName);
 		if (set.size() == 0) {
 			throw new RuntimeException("Unable to find field, class " + clazz + ", fieldName " + fieldName);
@@ -158,6 +149,7 @@ public class GwtTestReflectionUtils {
 		}
 		Field field = set.iterator().next();
 		field.setAccessible(true);
+		cacheUniqueField.put(clazz, fieldName, field);
 		return field;
 	}
 
@@ -171,6 +163,16 @@ public class GwtTestReflectionUtils {
 			throw new RuntimeException(e.getMessage() + " Unable to get field, class " + fieldName + ", fieldClass " + target.getClass());
 		}
 	}
+	
+	public static void setPrivateFieldValue(Object target, String fieldName, Object value) {
+		Field field = getUniqueFieldByName(target.getClass(), fieldName);
+		try {
+			field.set(target, value);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException(e.getMessage() + " Unable to set field, class " + fieldName + ", fieldClass " + target.getClass());
+		}
+	}
 
 	@SuppressWarnings("unchecked")
 	public static <T> T getStaticFieldValue(Class<?> clazz, String fieldName) {
@@ -180,6 +182,16 @@ public class GwtTestReflectionUtils {
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new RuntimeException(e.getMessage() + " Unable to get static field, class " + fieldName + ", fieldClass " + clazz);
+		}
+	}
+	
+	public static void setStaticField(Class<?> clazz, String fieldName, Object value) {
+		Field field = getUniqueFieldByName(clazz, fieldName);
+		try {
+			field.set(null, value);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException(e.getMessage() + " Unable to set field, class " + fieldName + ", fieldClass " + clazz);
 		}
 	}
 
@@ -216,27 +228,6 @@ public class GwtTestReflectionUtils {
 		}
 	}
 
-	public static void setPrivateField(Object target, String fieldName, Object value) {
-		Field field = getUniqueFieldByName(target.getClass(), fieldName);
-		try {
-			field.set(target, value);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new RuntimeException(e.getMessage() + " Unable to set field, class " + fieldName + ", fieldClass " + target.getClass());
-		}
-
-	}
-
-	public static void setStaticField(Class<?> clazz, String fieldName, Object value) {
-		Field field = getUniqueFieldByName(clazz, fieldName);
-		try {
-			field.set(null, value);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new RuntimeException(e.getMessage() + " Unable to set field, class " + fieldName + ", fieldClass " + clazz);
-		}
-	}
-
 	/**
 	 * Action to take on each method.
 	 */
@@ -249,6 +240,21 @@ public class GwtTestReflectionUtils {
 		 *            the method to operate on
 		 */
 		void doWith(Method method) throws IllegalArgumentException, IllegalAccessException;
+	}
+
+	public static void doWithMethods(Class<?> targetClass, MethodCallback mc) throws IllegalArgumentException {
+		// Keep backing up the inheritance hierarchy.
+		do {
+			Method[] methods = targetClass.getDeclaredMethods();
+			for (int i = 0; i < methods.length; i++) {
+				try {
+					mc.doWith(methods[i]);
+				} catch (IllegalAccessException ex) {
+					throw new IllegalStateException("Shouldn't be illegal to access method '" + methods[i].getName() + "': " + ex);
+				}
+			}
+			targetClass = targetClass.getSuperclass();
+		} while (targetClass != null);
 	}
 
 }
