@@ -82,7 +82,13 @@ public abstract class AbstractGwtIntegrationShell {
 			for(String s : line) {
 				String replaced = s;
 				for(int z = 0; z < params.length; z ++) {
-					replaced = replaced.replaceAll("\\{" + z  + "\\}", params[z]);
+					String param = params[z];
+					if (param == null)
+						param = "*null*";
+					else if ("".equals(param))
+						param = "*empty*";
+					
+					replaced = replaced.replaceAll("\\{" + z  + "\\}", param);
 				}
 				l.add(replaced);
 			}
