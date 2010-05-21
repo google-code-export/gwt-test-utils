@@ -12,6 +12,7 @@ import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 import com.octo.gwt.test.internal.overrides.OverrideEvent;
@@ -23,6 +24,24 @@ import com.octo.gwt.test.internal.overrides.OverrideEvent;
  * 
  */
 public class WidgetUtils {
+	
+	/**
+	 * Check if the current widget and its possible parents are visible.
+	 * @param widget The widget to check.
+	 * @return True if the widget and its possible parents are visible, false otherwise.
+	 */
+	public static boolean isWidgetVisible(Widget widget) {
+		//FIXME : remove this hack which is required for octo main GWT project...
+		if (widget instanceof RootPanel) {
+			return true;
+		} else if (! widget.isVisible()) {
+			return false;
+		} else if (widget.getParent() != null) {
+			return isWidgetVisible(widget.getParent());
+		}
+		
+		return true;
+	}
 
 	public static int getIndexInListBox(ListBox listBox, String regex) {
 		int selectedIndex = -1;
@@ -141,19 +160,8 @@ public class WidgetUtils {
 	}
 
 	private static void checkWidgetVisible(Widget widget, String errorPrefix, String widgetName, String action) {
-
-		String failureMessage = (errorPrefix != null) ? errorPrefix : "";
-
-		failureMessage += "Widget " + ((widgetName != null) ? "[" + widgetName + "]" : "");
-
-		failureMessage += " and its possible parents have to be enabled to apply the browser \"" + action + "\" event";
-
-		if (!widget.isVisible()) {
-			Assert.fail(createFailureMessage(errorPrefix, widgetName, action, "visible"));
-		}
-		if (widget.getParent() != null) {
-			checkWidgetVisible(widget.getParent(), errorPrefix, widgetName, action);
-		}
+		String errorMessage = createFailureMessage(errorPrefix, widgetName, action, "visible");
+		Assert.assertTrue(errorMessage, isWidgetVisible(widget));
 	}
 
 	private static String createFailureMessage(String errorPrefix, String widgetName, String action, String attribut) {

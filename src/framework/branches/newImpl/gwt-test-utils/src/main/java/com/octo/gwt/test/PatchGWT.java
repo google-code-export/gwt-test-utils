@@ -65,12 +65,14 @@ import com.google.gwt.http.client.URL;
 import com.google.gwt.i18n.client.CurrencyList;
 import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.i18n.client.impl.CurrencyDataImpl;
+import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.Window.Location;
 import com.google.gwt.user.client.impl.DOMImpl;
 import com.google.gwt.user.client.impl.ElementMapperImpl;
 import com.google.gwt.user.client.impl.HistoryImpl;
@@ -93,6 +95,7 @@ import com.google.gwt.user.client.ui.impl.FocusImpl;
 import com.google.gwt.user.client.ui.impl.FocusImplStandard;
 import com.google.gwt.user.client.ui.impl.TextBoxImpl;
 import com.octo.gwt.test.internal.patcher.CheckBoxPatcher;
+import com.octo.gwt.test.internal.patcher.CookiesPatcher;
 import com.octo.gwt.test.internal.patcher.CurrencyDataImplPatcher;
 import com.octo.gwt.test.internal.patcher.CurrencyListPatcher;
 import com.octo.gwt.test.internal.patcher.DeferredCommandPatcher;
@@ -112,6 +115,7 @@ import com.octo.gwt.test.internal.patcher.HistoryPatcher;
 import com.octo.gwt.test.internal.patcher.ImagePatcher;
 import com.octo.gwt.test.internal.patcher.JavaScriptObjectPatcher;
 import com.octo.gwt.test.internal.patcher.ListBoxPatcher;
+import com.octo.gwt.test.internal.patcher.LocationPatcher;
 import com.octo.gwt.test.internal.patcher.NumberFormatPatcher;
 import com.octo.gwt.test.internal.patcher.PopupPanelPatcher;
 import com.octo.gwt.test.internal.patcher.RootPanelPatcher;
@@ -137,8 +141,8 @@ import com.octo.gwt.test.internal.patcher.dom.StylePatcher;
 import com.octo.gwt.test.internal.patcher.tools.AutomaticElementSubclasser;
 import com.octo.gwt.test.internal.patcher.tools.AutomaticSubclasser;
 import com.octo.gwt.test.internal.patcher.tools.AutomaticTagSubclasser;
-import com.octo.gwt.test.utils.PatchUtils;
 import com.octo.gwt.test.utils.GwtTestReflectionUtils;
+import com.octo.gwt.test.utils.PatchUtils;
 
 public class PatchGWT {
 
@@ -243,6 +247,7 @@ public class PatchGWT {
 		PatchUtils.patch(JavaScriptObject.class, new JavaScriptObjectPatcher());
 
 		PatchUtils.patch(CheckBox.class, new CheckBoxPatcher());
+		PatchUtils.patch(Cookies.class, new CookiesPatcher());
 		PatchUtils.patch(CurrencyDataImpl.class, new CurrencyDataImplPatcher());
 		PatchUtils.patch(CurrencyList.class, new CurrencyListPatcher());
 		PatchUtils.patch(DeferredCommand.class, new DeferredCommandPatcher());
@@ -261,6 +266,7 @@ public class PatchGWT {
 		PatchUtils.patch(HTMLTable.RowFormatter.class, new HTMLTableRowFormatterPatcher());
 		PatchUtils.patch(Image.class, new ImagePatcher());
 		PatchUtils.patch(ListBox.class, new ListBoxPatcher());
+		PatchUtils.patch(Location.class, new LocationPatcher());
 		PatchUtils.patch(NumberFormat.class, new NumberFormatPatcher());
 		PatchUtils.patch(PopupPanel.class, new PopupPanelPatcher());
 		PatchUtils.patch(RootPanel.class, new RootPanelPatcher());

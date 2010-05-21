@@ -51,6 +51,14 @@ public class ElementPatcher extends AutomaticGetAndSetPatcher {
 	}
 	
 	@PatchMethod
+	public static Element getOffsetParent(Element element) {
+		if (element == null)
+			return null;
+		
+		return element.getParentElement();
+	}
+	
+	@PatchMethod
 	public static void blur(Element element) {
 		
 	}

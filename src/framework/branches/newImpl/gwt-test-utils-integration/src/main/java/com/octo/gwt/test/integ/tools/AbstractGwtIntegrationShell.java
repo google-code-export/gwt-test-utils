@@ -442,9 +442,7 @@ public abstract class AbstractGwtIntegrationShell {
 	}
 
 	protected void checkWidgetVisibleAndEnable(FocusWidget widget, String objectLocalization) {
-		if (!widget.isEnabled()) {
-			Assert.fail(csvRunner.getAssertionErrorMessagePrefix() + "Widget have to be enabled : " + objectLocalization);
-		}
+		Assert.assertTrue(csvRunner.getAssertionErrorMessagePrefix() + "Widget have to be enabled : " + objectLocalization, widget.isEnabled());
 		checkWidgetVisible(widget, objectLocalization);
 	}
 
@@ -453,13 +451,8 @@ public abstract class AbstractGwtIntegrationShell {
 	}
 
 	protected void checkWidgetVisible(Widget widget, String objectLocalization) {
-		if (!widget.isVisible()) {
-			Assert.fail(csvRunner.getAssertionErrorMessagePrefix() + "Widget have to be visible : " + objectLocalization + ", "
-					+ widget.getClass().getCanonicalName());
-		}
-		if (widget.getParent() != null) {
-			checkWidgetVisible(widget.getParent(), objectLocalization);
-		}
+			Assert.assertTrue(csvRunner.getAssertionErrorMessagePrefix() + "Widget have to be visible : " + objectLocalization + ", "
+					+ widget.getClass().getCanonicalName(), WidgetUtils.isWidgetVisible(widget));
 	}
 
 	// MODE INTERACTIF

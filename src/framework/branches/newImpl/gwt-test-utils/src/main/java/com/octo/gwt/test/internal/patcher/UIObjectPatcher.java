@@ -42,7 +42,7 @@ public class UIObjectPatcher extends AutomaticPatcher {
 
 	@PatchMethod(args={Element.class, Boolean.class})
 	public static void setVisible(Element elem, boolean visible) {
-		String display = (visible) ? "" : "none";
+		String display = visible? "" : "none";
 		elem.getStyle().setProperty("display", display);
 	}
 

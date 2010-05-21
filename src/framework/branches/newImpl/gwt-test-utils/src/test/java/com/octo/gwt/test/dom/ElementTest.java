@@ -277,5 +277,16 @@ public class ElementTest extends AbstractGWTTest {
 		// Assert
 		Assert.assertNull("Removed attribute should return null", e.getAttribute("test"));
 	}
+	
+	@Test
+	public void checkGetOffset() {
+		Element parent = Document.get().createElement("a");
+		parent.appendChild(e);
+		Assert.assertEquals(0, e.getOffsetHeight());
+		Assert.assertEquals(0, e.getOffsetLeft());
+		Assert.assertEquals(0, e.getOffsetTop());
+		Assert.assertEquals(0, e.getOffsetWidth());
+		Assert.assertEquals(parent, e.getOffsetParent());
+	}
 
 }

@@ -35,6 +35,12 @@ public class GWTTest extends AbstractGWTTest {
 	}
 
 	@Test
+	public void checkGetModuleBaseURL() {
+		Assert.assertEquals("getModuleBaseURL/getModuleName", GWT.getModuleBaseURL());
+	}
+	
+
+	@Test
 	public void checkGetModuleName() {
 		Assert.assertEquals("getModuleName", GWT.getModuleName());
 	}

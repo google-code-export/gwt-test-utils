@@ -10,6 +10,7 @@ import com.google.gwt.i18n.client.Constants;
 import com.google.gwt.i18n.client.CurrencyList;
 import com.google.gwt.i18n.client.impl.CldrImpl;
 import com.google.gwt.i18n.client.impl.LocaleInfoImpl;
+import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.resources.client.impl.ImageResourcePrototype;
 import com.google.gwt.user.client.impl.DOMImpl;
@@ -49,6 +50,11 @@ public class GWTPatcher extends AutomaticPatcher {
 	@PatchMethod
 	public static String getHostPageBaseURL() {
 		return "getHostPageBaseURL/getModuleName";
+	}
+	
+	@PatchMethod
+	public static String getModuleBaseURL() {
+		return "getModuleBaseURL/getModuleName";
 	}
 
 	@PatchMethod
@@ -129,6 +135,10 @@ public class GWTPatcher extends AutomaticPatcher {
 		}
 		if (ImageBundle.class.isAssignableFrom(classLiteral)) {
 			return generateImageWrapper(classLiteral);
+		}
+		
+		if (classLiteral.isAssignableFrom(ClientBundle.class) {
+			
 		}
 
 		Object o = createClass.get(classLiteral);
