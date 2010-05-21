@@ -137,7 +137,7 @@ public class GWTPatcher extends AutomaticPatcher {
 			return generateImageWrapper(classLiteral);
 		}
 		
-		if (classLiteral.isAssignableFrom(ClientBundle.class) {
+		if (classLiteral.isAssignableFrom(ClientBundle.class)) {
 			
 		}
 
