@@ -416,7 +416,7 @@ public abstract class AbstractGwtIntegrationShell {
 		suggestBox.setText(value);
 		WidgetUtils.keyUp(suggestBox, KeyCodes.KEY_ENTER);
 	}
-
+	
 	public void isVisible(String objectLocalization) {
 		Widget widget = getObject(Widget.class, objectLocalization);
 		checkWidgetVisible(widget, objectLocalization);

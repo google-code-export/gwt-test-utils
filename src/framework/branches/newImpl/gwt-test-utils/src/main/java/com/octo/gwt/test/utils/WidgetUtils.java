@@ -12,6 +12,7 @@ import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
+import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
@@ -24,22 +25,31 @@ import com.octo.gwt.test.internal.overrides.OverrideEvent;
  * 
  */
 public class WidgetUtils {
-	
+
 	/**
 	 * Check if the current widget and its possible parents are visible.
-	 * @param widget The widget to check.
-	 * @return True if the widget and its possible parents are visible, false otherwise.
+	 * NOTE : if the current widget is a Popup, it is the isShowing() flag which would be evaluate.
+	 * @param widget
+	 *            The widget to check.
+	 * @return True if the widget and its possible parents are visible, false
+	 *         otherwise.
 	 */
 	public static boolean isWidgetVisible(Widget widget) {
-		//FIXME : remove this hack which is required for octo main GWT project...
+		// FIXME : remove this hack which is required for octo main GWT
+		// project...
 		if (widget instanceof RootPanel) {
 			return true;
-		} else if (! widget.isVisible()) {
+		} else if (widget instanceof PopupPanel) {
+			PopupPanel popup = (PopupPanel) widget;
+			if (popup.isShowing()) {
+				return true;
+			}
+		} else if (!widget.isVisible()) {
 			return false;
 		} else if (widget.getParent() != null) {
 			return isWidgetVisible(widget.getParent());
 		}
-		
+
 		return true;
 	}
 
@@ -47,7 +57,8 @@ public class WidgetUtils {
 		int selectedIndex = -1;
 
 		for (int i = 0; i < listBox.getItemCount() && selectedIndex == -1; i++) {
-			if (listBox.getItemText(i) != null && listBox.getItemText(i).matches(regex))
+			if (listBox.getItemText(i) != null
+					&& listBox.getItemText(i).matches(regex))
 				selectedIndex = i;
 		}
 
@@ -80,7 +91,8 @@ public class WidgetUtils {
 		target.onBrowserEvent(new OverrideEvent(Event.ONCLICK));
 	}
 
-	public static void click(Widget target, String errorPrefix, String widgetName) {
+	public static void click(Widget target, String errorPrefix,
+			String widgetName) {
 		if (target instanceof CheckBox) {
 			CheckBox checkBox = (CheckBox) target;
 			checkBox.setValue(!checkBox.getValue());
@@ -91,21 +103,25 @@ public class WidgetUtils {
 	}
 
 	public static void click(MenuBar parent, MenuItem clickedItem) {
-		parent.onBrowserEvent(new OverrideEvent(Event.ONCLICK, clickedItem.getElement()));
+		parent.onBrowserEvent(new OverrideEvent(Event.ONCLICK, clickedItem
+				.getElement()));
 	}
 
 	public static void click(MenuBar parent, int clickedItemIndex) {
-		List<MenuItem> menuItems = GwtTestReflectionUtils.getPrivateFieldValue(parent, "items");
+		List<MenuItem> menuItems = GwtTestReflectionUtils.getPrivateFieldValue(
+				parent, "items");
 		MenuItem itemToClick = menuItems.get(clickedItemIndex);
 		click(parent, itemToClick);
 	}
 
 	public static void click(Grid grid, int row, int column) {
-		grid.onBrowserEvent(new OverrideEvent(Event.ONCLICK, grid.getWidget(row, column).getElement()));
+		grid.onBrowserEvent(new OverrideEvent(Event.ONCLICK, grid.getWidget(
+				row, column).getElement()));
 	}
 
 	public static void click(ComplexPanel panel, int index) {
-		panel.onBrowserEvent(new OverrideEvent(Event.ONCLICK, panel.getWidget(index).getElement()));
+		panel.onBrowserEvent(new OverrideEvent(Event.ONCLICK, panel.getWidget(
+				index).getElement()));
 	}
 
 	public static void focus(Widget target) {
@@ -113,15 +129,18 @@ public class WidgetUtils {
 	}
 
 	public static void keyDown(Widget target, int keyCode) {
-		target.onBrowserEvent(new OverrideEvent(Event.ONKEYDOWN).setOverrideKeyCode(keyCode));
+		target.onBrowserEvent(new OverrideEvent(Event.ONKEYDOWN)
+				.setOverrideKeyCode(keyCode));
 	}
 
 	public static void keyPress(Widget target, int keyCode) {
-		target.onBrowserEvent(new OverrideEvent(Event.ONKEYPRESS).setOverrideKeyCode(keyCode));
+		target.onBrowserEvent(new OverrideEvent(Event.ONKEYPRESS)
+				.setOverrideKeyCode(keyCode));
 	}
 
 	public static void keyUp(Widget target, int keyCode) {
-		target.onBrowserEvent(new OverrideEvent(Event.ONKEYUP).setOverrideKeyCode(keyCode));
+		target.onBrowserEvent(new OverrideEvent(Event.ONKEYUP)
+				.setOverrideKeyCode(keyCode));
 	}
 
 	public static void mouseMove(Widget target) {
@@ -139,7 +158,7 @@ public class WidgetUtils {
 	public static void mouseWheel(Widget target) {
 		target.onBrowserEvent(new OverrideEvent(Event.ONMOUSEWHEEL));
 	}
-	
+
 	public static void mouseOver(Widget target) {
 		target.onBrowserEvent(new OverrideEvent(Event.ONMOUSEOVER));
 	}
@@ -147,24 +166,29 @@ public class WidgetUtils {
 	public static void mouseOut(Widget target) {
 		target.onBrowserEvent(new OverrideEvent(Event.ONMOUSEOUT));
 	}
-	
-	private static void checkIsClickable(Widget widget, String errorPrefix, String widgetName) {
+
+	private static void checkIsClickable(Widget widget, String errorPrefix,
+			String widgetName) {
 		String action = "click";
 		checkWidgetVisible(widget, errorPrefix, widgetName, action);
 
 		if (widget instanceof FocusWidget) {
 			if (!((FocusWidget) widget).isEnabled()) {
-				Assert.fail(createFailureMessage(errorPrefix, widgetName, action, "enabled"));
+				Assert.fail(createFailureMessage(errorPrefix, widgetName,
+						action, "enabled"));
 			}
 		}
 	}
 
-	private static void checkWidgetVisible(Widget widget, String errorPrefix, String widgetName, String action) {
-		String errorMessage = createFailureMessage(errorPrefix, widgetName, action, "visible");
+	private static void checkWidgetVisible(Widget widget, String errorPrefix,
+			String widgetName, String action) {
+		String errorMessage = createFailureMessage(errorPrefix, widgetName,
+				action, "visible");
 		Assert.assertTrue(errorMessage, isWidgetVisible(widget));
 	}
 
-	private static String createFailureMessage(String errorPrefix, String widgetName, String action, String attribut) {
+	private static String createFailureMessage(String errorPrefix,
+			String widgetName, String action, String attribut) {
 		StringBuilder sb = new StringBuilder();
 
 		if (errorPrefix != null)

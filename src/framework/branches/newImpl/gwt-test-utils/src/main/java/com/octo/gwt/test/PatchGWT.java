@@ -188,6 +188,7 @@ public class PatchGWT {
 		GWTPatcher.createClass.clear();
 		GWTPatcher.gwtCreateHandler = null;
 		GWTPatcher.gwtLogHandler = null;
+		TimerPatcher.clear();
 
 		WidgetCollection widgetCollection = GwtTestReflectionUtils.getPrivateFieldValue(RootPanel.get(), "children");
 		Widget[] array = GwtTestReflectionUtils.getPrivateFieldValue(widgetCollection, "array");
