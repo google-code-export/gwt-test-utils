@@ -1,5 +1,7 @@
 package com.octo.gwt.test.internal.patcher;
 
+import com.google.gwt.core.client.JavaScriptObject;
+import com.octo.gwt.test.internal.overrides.OverrideJsArrayString;
 import com.octo.gwt.test.internal.patcher.tools.AutomaticPatcher;
 import com.octo.gwt.test.internal.patcher.tools.PatchMethod;
 import com.octo.gwt.test.internal.patcher.tools.PatchType;
@@ -10,4 +12,10 @@ public class JavaScriptObjectPatcher extends AutomaticPatcher {
 	public static String javascriptObjectHashCode() {
 		return "return super.hashCode();";
 	}
+	
+	@PatchMethod
+	public static JavaScriptObject createArray() {
+		return new OverrideJsArrayString();
+	}
+	
 }
