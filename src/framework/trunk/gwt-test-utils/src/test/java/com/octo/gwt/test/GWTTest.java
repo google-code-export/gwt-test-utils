@@ -6,27 +6,31 @@ import java.util.Date;
 import java.util.Locale;
 
 import org.junit.Assert;
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.RunAsyncCallback;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
-import com.octo.gwt.test.AbstractGWTTest;
-import com.octo.gwt.test.PatchGWT;
+import com.google.gwt.user.client.ui.Button;
 
 public class GWTTest extends AbstractGWTTest {
 
-	private static String sToday;
-	
+	private String sToday;
+	private boolean success;
+
 	@Override
 	public String getModuleConfigurationFile() {
 		return "test-config.gwt.xml";
 	}
 
-	@BeforeClass
-	public static void initToday() throws Exception {
-		PatchGWT.setLocale(new Locale("fr"));
+	@Before
+	public void setupGWTTest() {
+		PatchGWT.setLocale(new Locale("FR"));
 		sToday = DateTimeFormat.getFormat("EEE dd MMM").format(new Date(1259103600000l));
+		success = false;
 	}
 
 	@Test
@@ -38,7 +42,7 @@ public class GWTTest extends AbstractGWTTest {
 	public void checkGetHostPageBase() {
 		Assert.assertEquals("http://localhost:8888/", GWT.getHostPageBaseURL());
 	}
-	
+
 	@Test
 	public void checkGetModuleName() {
 		Assert.assertEquals("gwt_test_utils_module", GWT.getModuleName());
@@ -49,4 +53,33 @@ public class GWTTest extends AbstractGWTTest {
 		Assert.assertEquals("http://localhost:8888/gwt_test_utils_module/", GWT.getModuleBaseURL());
 	}
 
+	@Test
+	public void checkRunAsync() {
+		// Setup
+		Button b = new Button();
+		b.addClickHandler(new ClickHandler() {
+
+			public void onClick(ClickEvent event) {
+				GWT.runAsync(new RunAsyncCallback() {
+
+					public void onSuccess() {
+						success = true;
+					}
+
+					public void onFailure(Throwable reason) {
+						Assert.fail("GWT.runAsync() has called \"onFailure\" callback");
+
+					}
+				});
+
+			}
+		});
+
+		// Test
+		click(b);
+
+		// Assert
+		Assert.assertTrue(success);
+
+	}
 }
