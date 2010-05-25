@@ -4,7 +4,6 @@ import java.io.File;
 import java.lang.reflect.Method;
 
 import com.google.gwt.resources.client.ClientBundle;
-import com.octo.gwt.test.internal.patcher.tools.TextResourceReader;
 
 public class TextResourceCallback extends AbstractClientBundleCallback {
 	
