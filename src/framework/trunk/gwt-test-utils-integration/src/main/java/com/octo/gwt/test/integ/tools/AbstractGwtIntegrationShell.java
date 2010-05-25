@@ -28,6 +28,7 @@ import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.octo.gwt.test.GwtCreateHandler;
+import com.octo.gwt.test.GwtTestClass;
 import com.octo.gwt.test.PatchGWT;
 import com.octo.gwt.test.integ.csvrunner.CsvRunner;
 import com.octo.gwt.test.integ.csvrunner.Node;
@@ -35,13 +36,16 @@ import com.octo.gwt.test.utils.ArrayUtils;
 import com.octo.gwt.test.utils.GwtTestReflectionUtils;
 import com.octo.gwt.test.utils.WidgetUtils;
 
-public abstract class AbstractGwtIntegrationShell {
-
-	private DirectoryTestReader reader;
+public abstract class AbstractGwtIntegrationShell implements GwtTestClass {
 
 	protected CsvRunner csvRunner;
-
+	
+	private DirectoryTestReader reader;
 	private MacroReader macroReader;
+	
+	public String getModuleConfigurationFile() {
+		return null;
+	}
 
 	@Before
 	public void setUpAbstractGwtIntegrationShell() throws Exception {
@@ -56,7 +60,7 @@ public abstract class AbstractGwtIntegrationShell {
 
 	protected void initPatchGwt() throws Exception {
 		//initialisation du framework de mock GWT
-		PatchGWT.init();
+		PatchGWT.init(this);
 	}
 
 	protected void resetPatchGwt() throws Exception {

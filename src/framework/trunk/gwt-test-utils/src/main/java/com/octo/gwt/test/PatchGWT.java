@@ -9,6 +9,7 @@ import java.util.Properties;
 import com.google.gwt.core.client.Duration;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.impl.Impl;
 import com.google.gwt.dom.client.AnchorElement;
 import com.google.gwt.dom.client.AreaElement;
 import com.google.gwt.dom.client.BRElement;
@@ -113,6 +114,7 @@ import com.octo.gwt.test.internal.patcher.HTMLTableRowFormatterPatcher;
 import com.octo.gwt.test.internal.patcher.HistoryImplPatcher;
 import com.octo.gwt.test.internal.patcher.HistoryPatcher;
 import com.octo.gwt.test.internal.patcher.ImagePatcher;
+import com.octo.gwt.test.internal.patcher.ImplPatcher;
 import com.octo.gwt.test.internal.patcher.JavaScriptObjectPatcher;
 import com.octo.gwt.test.internal.patcher.ListBoxPatcher;
 import com.octo.gwt.test.internal.patcher.LocationPatcher;
@@ -150,6 +152,8 @@ public class PatchGWT {
 	 * Indicate if gwt has been patch
 	 */
 	private static boolean hasBeenPatched = false;
+	
+	private static String currentTestedModuleFile;
 
 	private static Locale LOCALE = null;
 
@@ -225,7 +229,8 @@ public class PatchGWT {
 		GWTPatcher.gwtCreateHandler = gwtCreateHandler;
 	}
 
-	public static void init() throws Exception {
+	public static void init(GwtTestClass gwtTest) throws Exception {
+		currentTestedModuleFile = gwtTest.getModuleConfigurationFile();
 		if (hasBeenPatched) {
 			return;
 		}
@@ -266,6 +271,7 @@ public class PatchGWT {
 		PatchUtils.patch(HTMLTable.CellFormatter.class, new HTMLTableCellFormatterPatcher());
 		PatchUtils.patch(HTMLTable.RowFormatter.class, new HTMLTableRowFormatterPatcher());
 		PatchUtils.patch(Image.class, new ImagePatcher());
+		PatchUtils.patch(Impl.class, new ImplPatcher());
 		PatchUtils.patch(ListBox.class, new ListBoxPatcher());
 		PatchUtils.patch(Location.class, new LocationPatcher());
 		PatchUtils.patch(NumberFormat.class, new NumberFormatPatcher());
@@ -336,6 +342,10 @@ public class PatchGWT {
 		PatchUtils.patch(UListElement.class, new AutomaticElementSubclasser());
 
 		hasBeenPatched = true;
+	}
+	
+	public static String getCurrentTestedModuleFile() {
+		return currentTestedModuleFile;
 	}
 
 	public static Locale getLocale() {

@@ -20,8 +20,6 @@ public abstract class MyGwtShell extends AbstractGwtIntegrationShell {
 
 	@Before
 	public void setUp() throws Exception {
-		PatchGWT.init();
-		PatchGWT.reset();
 		PatchGWT.setGwtCreateHandler(new GwtCreateHandlerImpl() {
 
 			@Override

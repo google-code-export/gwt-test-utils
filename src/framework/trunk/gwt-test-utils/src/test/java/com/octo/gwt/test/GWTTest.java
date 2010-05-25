@@ -17,6 +17,11 @@ import com.octo.gwt.test.PatchGWT;
 public class GWTTest extends AbstractGWTTest {
 
 	private static String sToday;
+	
+	@Override
+	public String getModuleConfigurationFile() {
+		return "test-config.gwt.xml";
+	}
 
 	@BeforeClass
 	public static void initToday() throws Exception {
@@ -31,18 +36,17 @@ public class GWTTest extends AbstractGWTTest {
 
 	@Test
 	public void checkGetHostPageBase() {
-		Assert.assertEquals("getHostPageBaseURL/getModuleName", GWT.getHostPageBaseURL());
+		Assert.assertEquals("http://localhost:8888/", GWT.getHostPageBaseURL());
+	}
+	
+	@Test
+	public void checkGetModuleName() {
+		Assert.assertEquals("gwt_test_utils_module", GWT.getModuleName());
 	}
 
 	@Test
 	public void checkGetModuleBaseURL() {
-		Assert.assertEquals("getModuleBaseURL/getModuleName", GWT.getModuleBaseURL());
-	}
-	
-
-	@Test
-	public void checkGetModuleName() {
-		Assert.assertEquals("getModuleName", GWT.getModuleName());
+		Assert.assertEquals("http://localhost:8888/gwt_test_utils_module/", GWT.getModuleBaseURL());
 	}
 
 }
