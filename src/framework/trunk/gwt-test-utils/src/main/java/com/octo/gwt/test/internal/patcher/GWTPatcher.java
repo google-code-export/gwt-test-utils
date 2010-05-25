@@ -1,38 +1,18 @@
 package com.octo.gwt.test.internal.patcher;
 
-import java.io.File;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-
-import javassist.ClassPool;
-import javassist.CtClass;
-import javassist.CtMethod;
-import javassist.NotFoundException;
-import javassist.bytecode.AnnotationsAttribute;
-import javassist.bytecode.MethodInfo;
-import javassist.bytecode.annotation.Annotation;
-import javassist.bytecode.annotation.ArrayMemberValue;
-import javassist.bytecode.annotation.MemberValue;
-import javassist.bytecode.annotation.StringMemberValue;
 
 import com.google.gwt.i18n.client.Constants;
 import com.google.gwt.i18n.client.CurrencyList;
 import com.google.gwt.i18n.client.impl.CldrImpl;
 import com.google.gwt.i18n.client.impl.LocaleInfoImpl;
 import com.google.gwt.resources.client.ClientBundle;
-import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.resources.client.TextResource;
-import com.google.gwt.resources.client.ClientBundle.Source;
 import com.google.gwt.resources.client.impl.ImageResourcePrototype;
-import com.google.gwt.resources.ext.DefaultExtensions;
 import com.google.gwt.user.client.impl.DOMImpl;
 import com.google.gwt.user.client.impl.HistoryImpl;
 import com.google.gwt.user.client.impl.WindowImpl;
@@ -58,7 +38,7 @@ import com.octo.gwt.test.internal.patcher.dom.DOMImplSubClassPatcher;
 import com.octo.gwt.test.internal.patcher.dom.DOMImplUserSubClassPatcher;
 import com.octo.gwt.test.internal.patcher.tools.AutomaticPatcher;
 import com.octo.gwt.test.internal.patcher.tools.PatchMethod;
-import com.octo.gwt.test.internal.patcher.tools.TextResourceReader;
+import com.octo.gwt.test.internal.patcher.tools.resources.ClientBundleProxyFactory;
 import com.octo.gwt.test.utils.PatchUtils;
 
 @SuppressWarnings("deprecation")
@@ -67,8 +47,6 @@ public class GWTPatcher extends AutomaticPatcher {
 	public static GwtCreateHandler gwtCreateHandler = null;
 	public static IGWTLogHandler gwtLogHandler = null;
 	public static Map<Class<?>, Object> createClass = new HashMap<Class<?>, Object>();
-
-	private static final Map<String, ClientBundleMethodsRegistry> registries = new HashMap<String, ClientBundleMethodsRegistry>();
 
 	@PatchMethod(args = { String.class, Throwable.class })
 	public static void log(String message, Throwable t) {
@@ -147,7 +125,7 @@ public class GWTPatcher extends AutomaticPatcher {
 		}
 
 		if (ClientBundle.class.isAssignableFrom(classLiteral)) {
-			return generateClientBundleWrapper((Class<? extends ClientBundle>) classLiteral);
+			return ClientBundleProxyFactory.getFactory((Class<? extends ClientBundle>) classLiteral).createProxy();
 		}
 
 		Object o = createClass.get(classLiteral);
@@ -194,161 +172,4 @@ public class GWTPatcher extends AutomaticPatcher {
 		}
 
 	}
-
-	private static Object generateClientBundleWrapper(final Class<? extends ClientBundle> clazz) {
-		final ClientBundleMethodsRegistry registry;
-
-		if (registries.containsKey(clazz.getCanonicalName())) {
-			registry = registries.get(clazz.getCanonicalName());
-		} else {
-			try {
-				registry = new ClientBundleMethodsRegistry(clazz);
-				registries.put(clazz.getCanonicalName(), registry);
-			} catch (Exception e) {
-				if (e instanceof RuntimeException) {
-					throw (RuntimeException) e;
-				} else {
-					throw new RuntimeException("Error while getting resources informations of class [" + clazz.getCanonicalName() + "]", e);
-				}
-			}
-		}
-
-		InvocationHandler ih = new InvocationHandler() {
-
-			public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-				File resourceFile = registry.getResourceFile(method);
-				if (method.getReturnType() == TextResource.class) {
-					return generateTextResourceWrapper(method.getReturnType(), resourceFile, method.getName());
-				} else if (CssResource.class.isAssignableFrom(method.getReturnType())) {
-					return generateCssResourceWrapper(method.getReturnType(), resourceFile, method.getName());
-				}
-				throw new RuntimeException("Not managed return type for ClientBundle : " + method.getReturnType().getSimpleName());
-			}
-
-		};
-		return Proxy.newProxyInstance(clazz.getClassLoader(), new Class<?>[] { clazz }, ih);
-
-	}
-
-	private static Object generateTextResourceWrapper(Class<?> clazz, final File resourceFile, final String clientBundleFunctionName) {
-		InvocationHandler ih = new InvocationHandler() {
-
-			public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-				if (method.getName().equals("getText")) {
-					return TextResourceReader.readFile(resourceFile);
-				} else if (method.getName().equals("getName")) {
-					return clientBundleFunctionName;
-				}
-				throw new RuntimeException("Not managed method \"" + method.getName() + "\" for generated TextResources proxy");
-			}
-		};
-		return Proxy.newProxyInstance(clazz.getClassLoader(), new Class<?>[] { clazz }, ih);
-	}
-	
-	private static Object generateCssResourceWrapper(Class<?> clazz, final File resourceFile, final String clientBundleFunctionName) {
-		InvocationHandler ih = new InvocationHandler() {
-
-			public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-				if (method.getName().equals("getText")) {
-					return TextResourceReader.readFile(resourceFile);
-				} else if (method.getName().equals("getName")) {
-					return clientBundleFunctionName;
-				}
-				throw new RuntimeException("Not managed method \"" + method.getName() + "\" for generated TextResources proxy");
-			}
-		};
-		return Proxy.newProxyInstance(clazz.getClassLoader(), new Class<?>[] { clazz }, ih);
-	}
-
-	private static class ClientBundleMethodsRegistry {
-
-		private CtClass ctClass;
-		private Map<String, File> resourceFiles = new HashMap<String, File>();
-
-		public File getResourceFile(Method method) throws Exception {
-			File file = resourceFiles.get(method.getName());
-			if (file == null) {
-				file = computeResourceFile(method);
-				resourceFiles.put(method.getName(), file);
-			}
-
-			return file;
-		}
-
-		private File computeResourceFile(Method method) throws NotFoundException, URISyntaxException {
-			List<String> filesSimpleNames = new ArrayList<String>();
-			boolean computeExtensions = false;
-			CtMethod m = ctClass.getDeclaredMethod(method.getName());
-			MethodInfo minfo = m.getMethodInfo();
-			AnnotationsAttribute attr = (AnnotationsAttribute) minfo.getAttribute(AnnotationsAttribute.invisibleTag);
-			if (attr != null) {
-				Annotation an = attr.getAnnotation(Source.class.getName());
-				if (an != null) {
-					MemberValue[] mvArray = ((ArrayMemberValue) an.getMemberValue("value")).getValue();
-					if (mvArray != null) {
-						for (MemberValue mv : mvArray) {
-							StringMemberValue smv = (StringMemberValue) mv;
-							filesSimpleNames.add(smv.getValue());
-						}
-					}
-				}
-			}
-			
-			if (filesSimpleNames.isEmpty()) {
-				// no @Source annotation detected
-				filesSimpleNames.add(method.getName());
-				computeExtensions = true;
-			}
-
-				List<File> existingFiles = new ArrayList<File>();
-
-				for (String fileSimpleName : filesSimpleNames) {
-					String baseDir = ctClass.getPackageName().replaceAll("\\.", "/") + "/";
-					String fileName = baseDir + fileSimpleName;
-
-					if (computeExtensions) {
-						String[] extensions = getResourceDefaultExtensions(method.getReturnType(), method);
-
-						for (String extension : extensions) {
-							String possibleFile = fileName + extension;
-							URL url = GWTPatcher.class.getClassLoader().getResource(possibleFile);
-							if (url != null) {
-								existingFiles.add(new File(url.toURI()));
-							}
-						}
-					} else {
-						URL url = GWTPatcher.class.getClassLoader().getResource(fileName);
-						if (url != null) {
-							existingFiles.add(new File(url.toURI()));
-						}
-					}
-				}
-
-				if (existingFiles.isEmpty()) {
-					throw new RuntimeException("No resource file found for method " + ctClass.getSimpleName() + "." + method.getName() + "()");
-				} else if (existingFiles.size() > 1) {
-					throw new RuntimeException("Too many resource files found for method " + ctClass.getSimpleName() + "." + method.getName() + "()");
-				}
-
-				return existingFiles.get(0);
-
-		}
-
-		public ClientBundleMethodsRegistry(Class<? extends ClientBundle> clazz) throws Exception {
-			ctClass = ClassPool.getDefault().get(clazz.getName());
-		}
-
-		private String[] getResourceDefaultExtensions(Class<?> clazz, Method method) {
-			DefaultExtensions annotation = method.getReturnType().getAnnotation(DefaultExtensions.class);
-			if (annotation == null) {
-				throw new RuntimeException(method.getReturnType().getSimpleName()
-						+ " does not define a default extension for resource file. You should use a correct @" + Source.class.getSimpleName()
-						+ " annotation on " + clazz.getSimpleName() + "." + method.getName() + "() method");
-			} else {
-				return annotation.value();
-			}
-		}
-
-	}
-
 }
