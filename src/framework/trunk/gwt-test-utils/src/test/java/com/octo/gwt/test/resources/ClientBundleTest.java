@@ -1,10 +1,11 @@
-package com.octo.gwt.test;
+package com.octo.gwt.test.resources;
 
 import junit.framework.Assert;
 
 import org.junit.Test;
 
 import com.google.gwt.resources.client.TextResource;
+import com.octo.gwt.test.AbstractGWTTest;
 
 public class ClientBundleTest extends AbstractGWTTest {
 	

@@ -1,4 +1,4 @@
-package com.octo.gwt.test;
+package com.octo.gwt.test.resources;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ClientBundle;

@@ -27,6 +27,7 @@ import com.google.gwt.i18n.client.CurrencyList;
 import com.google.gwt.i18n.client.impl.CldrImpl;
 import com.google.gwt.i18n.client.impl.LocaleInfoImpl;
 import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.resources.client.TextResource;
 import com.google.gwt.resources.client.ClientBundle.Source;
@@ -218,6 +219,8 @@ public class GWTPatcher extends AutomaticPatcher {
 				File resourceFile = registry.getResourceFile(method);
 				if (method.getReturnType() == TextResource.class) {
 					return generateTextResourceWrapper(method.getReturnType(), resourceFile, method.getName());
+				} else if (CssResource.class.isAssignableFrom(method.getReturnType())) {
+					return generateCssResourceWrapper(method.getReturnType(), resourceFile, method.getName());
 				}
 				throw new RuntimeException("Not managed return type for ClientBundle : " + method.getReturnType().getSimpleName());
 			}
@@ -227,12 +230,27 @@ public class GWTPatcher extends AutomaticPatcher {
 
 	}
 
-	private static Object generateTextResourceWrapper(Class<?> clazz, final File file, final String clientBundleFunctionName) {
+	private static Object generateTextResourceWrapper(Class<?> clazz, final File resourceFile, final String clientBundleFunctionName) {
 		InvocationHandler ih = new InvocationHandler() {
 
 			public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 				if (method.getName().equals("getText")) {
-					return TextResourceReader.readFile(file);
+					return TextResourceReader.readFile(resourceFile);
+				} else if (method.getName().equals("getName")) {
+					return clientBundleFunctionName;
+				}
+				throw new RuntimeException("Not managed method \"" + method.getName() + "\" for generated TextResources proxy");
+			}
+		};
+		return Proxy.newProxyInstance(clazz.getClassLoader(), new Class<?>[] { clazz }, ih);
+	}
+	
+	private static Object generateCssResourceWrapper(Class<?> clazz, final File resourceFile, final String clientBundleFunctionName) {
+		InvocationHandler ih = new InvocationHandler() {
+
+			public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+				if (method.getName().equals("getText")) {
+					return TextResourceReader.readFile(resourceFile);
 				} else if (method.getName().equals("getName")) {
 					return clientBundleFunctionName;
 				}
