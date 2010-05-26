@@ -33,7 +33,7 @@ import com.octo.gwt.test.internal.patcher.GWTPatcher;
 public class ClientBundleProxyFactory {
 
 	private static Map<String, ClientBundleProxyFactory> factoryMap = new HashMap<String, ClientBundleProxyFactory>();
-	
+
 	private ClientBundleMethodsRegistry methodRegistry;
 	private Class<? extends ClientBundle> proxiedClass;
 
@@ -83,11 +83,10 @@ public class ClientBundleProxyFactory {
 						return result;
 					}
 				}
-				throw new RuntimeException("Not managed method \"" + method.getName() + "\" for generated "
-						+ clazz.getSimpleName() + " proxy");
+				throw new RuntimeException("Not managed method \"" + method.getName() + "\" for generated " + clazz.getSimpleName() + " proxy");
 			}
 		};
-		
+
 		return Proxy.newProxyInstance(clazz.getClassLoader(), new Class<?>[] { clazz }, ih);
 	}
 
@@ -143,7 +142,7 @@ public class ClientBundleProxyFactory {
 
 			for (String fileSimpleName : filesSimpleNames) {
 				String baseDir = ctClass.getPackageName().replaceAll("\\.", "/") + "/";
-				String fileName = baseDir + fileSimpleName;
+				String fileName = (fileSimpleName.startsWith(baseDir)) ? fileSimpleName : baseDir + fileSimpleName;
 
 				if (computeExtensions) {
 					String[] extensions = getResourceDefaultExtensions(method.getReturnType(), method);
