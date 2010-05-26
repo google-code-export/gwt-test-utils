@@ -28,7 +28,7 @@ public class CssResourceReader {
 			Set<String> styles = new HashSet<String>();
 
 			Pattern constantPattern = Pattern.compile("^\\s*@def (\\S+)\\s+(\\S+)\\s*$");
-			Pattern styleCompletePattern = Pattern.compile("^\\s*\\.*(\\S*)\\s*\\{.*$");
+			Pattern styleCompletePattern = Pattern.compile("^\\s*\\.*([^\\s:>+~-]*)[^\\{]*\\{.*$");
 
 			BufferedReader reader = null;
 
