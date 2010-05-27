@@ -33,7 +33,7 @@ public class CookiesPatcher extends AutomaticPatcher {
 		return false;
 	}
 	
-	@PatchMethod(args={String.class})
+	@PatchMethod
 	public static void removeCookieNative(String name) {
 		Map<String, String> cachedCookies = getCookiesMap();
 		cachedCookies.remove(name);

@@ -29,25 +29,23 @@ public class AutomaticPatcher implements IPatcher {
 
 	public void initClass(CtClass c) throws Exception {
 		this.c = c;
-		this.annotatedMethods = GwtTestReflectionUtils.getAnnotatedMethod(this
-				.getClass(), PatchMethod.class);
+		this.annotatedMethods = GwtTestReflectionUtils.getAnnotatedMethod(this.getClass(), PatchMethod.class);
 		this.processedMethods = new ArrayList<Method>();
 	}
 
-	private Entry<Method, PatchMethod> findAnnotatedMethod(CtMethod m)
-			throws Exception {
+	private Entry<Method, PatchMethod> findAnnotatedMethod(CtMethod m) throws Exception {
 		for (Entry<Method, PatchMethod> entry : annotatedMethods.entrySet()) {
 			String methodName = entry.getKey().getName();
 			if (entry.getValue().methodName().length() > 0) {
 				methodName = entry.getValue().methodName();
 			}
 			if (m.getName().equals(methodName)) {
-				if (entry.getValue().args().length == 1
-						&& entry.getValue().args()[0] == PatchMethod.class) {
+				if (entry.getValue().args().length == 1 && entry.getValue().args()[0] == PatchMethod.class
+				// Either this is a new method or it has to have a compatible signature
+						&& (entry.getValue().value() != PatchType.STATIC_CALL || hasCompatibleSignature(m, entry.getKey()))) {
 					return entry;
 				} else {
-					if (hasSameSignature(entry.getValue().args(), m
-							.getParameterTypes())) {
+					if (hasSameSignature(m, entry.getValue().args(), m.getParameterTypes())) {
 						return entry;
 					}
 				}
@@ -56,24 +54,91 @@ public class AutomaticPatcher implements IPatcher {
 		return null;
 	}
 
-	private boolean hasSameSignature(Class<?>[] classesAsked,
-			CtClass[] classesFound) throws Exception {
+	private boolean hasCompatibleSignature(CtMethod methodFound, Method methodAsked) throws Exception {
+		CtClass[] classesFound = methodFound.getParameterTypes();
+		Class<?>[] classesAsked = methodAsked.getParameterTypes();
+
+		boolean compat = hasSameSignature(methodFound, classesAsked, classesFound);
+
+		// account for the case where the method is non static in the original class
+		// and we need to pass the object into the static patching method
+		if (!compat && classesAsked.length >= 1 && inheritsFrom(classesAsked[0], methodFound.getDeclaringClass())) {
+			Class<?>[] classesWithoutThis = new Class[classesAsked.length - 1];
+			for (int i = 1; i < classesAsked.length; i++) {
+				classesWithoutThis[i - 1] = classesAsked[i];
+			}
+
+			compat = hasSameSignature(methodFound, classesWithoutThis, classesFound);
+		}
+
+		return compat;
+	}
+
+	/**
+	 * Checks to see if the checkCls inherits in some way from the superClass.
+	 * i.e. does checkCls implement or extend superClass.
+	 * 
+	 * @param checkCls
+	 * @param superClass
+	 * @return
+	 * @throws NotFoundException
+	 */
+	private boolean inheritsFrom(Class<?> checkCls, CtClass superClass) throws NotFoundException {
+		List<CtClass> checked = new ArrayList<CtClass>();
+
+		return inheritsFrom(checkCls, superClass, checked);
+	}
+
+	private boolean inheritsFrom(Class<?> checkCls, CtClass superClass, List<CtClass> checked) throws NotFoundException {
+		if (checked.contains(superClass)) {
+			return false;
+		}
+
+		checked.add(superClass);
+		boolean inherits = checkCls.getName().equals(superClass.getName());
+
+		if (!inherits) {
+			for (CtClass intf : superClass.getInterfaces()) {
+				inherits = inheritsFrom(checkCls, intf);
+			}
+		}
+
+		if (!inherits && superClass.getSuperclass() != null) {
+			inherits = inheritsFrom(checkCls, superClass.getSuperclass(), checked);
+		}
+
+		return inherits;
+	}
+
+	private boolean hasSameSignature(CtMethod m, Class<?>[] classesAsked, CtClass[] classesFound) throws Exception {
 		if (classesAsked.length != classesFound.length) {
 			return false;
 		}
 		for (int i = 0; i < classesAsked.length; i++) {
 			Class<?> clazz = null;
-			if (classesFound[i].isPrimitive()) {
-				if (classesFound[i] == CtClass.intType) {
-					clazz = Integer.class;
-				} else if (classesFound[i] == CtClass.booleanType) {
-					clazz = Boolean.class;
+			CtClass foundClass = classesFound[i];
+			if (foundClass.isPrimitive()) {
+				if (foundClass == CtClass.intType) {
+					clazz = int.class;
+				} else if (foundClass == CtClass.booleanType) {
+					clazz = boolean.class;
+				} else if (foundClass == CtClass.shortType) {
+					clazz = short.class;
+				} else if (foundClass == CtClass.doubleType) {
+					clazz = double.class;
+				} else if (foundClass == CtClass.floatType) {
+					clazz = float.class;
+				} else if (foundClass == CtClass.charType) {
+					clazz = char.class;
+				} else if (foundClass == CtClass.byteType) {
+					clazz = byte.class;
 				} else {
-					throw new RuntimeException("Not managed type "
-							+ classesFound[i]);
+					throw new RuntimeException("Not managed type " + foundClass + " for method " + m);
 				}
+			} else if (foundClass.isArray()) {
+				clazz = Class.forName("[L" + foundClass.getComponentType().getName() + ";");
 			} else {
-				clazz = Class.forName(classesFound[i].getName());
+				clazz = Class.forName(foundClass.getName());
 			}
 			if (clazz != classesAsked[i]) {
 				return false;
@@ -88,8 +153,7 @@ public class AutomaticPatcher implements IPatcher {
 		if (e != null) {
 			Method annotatedMethod = e.getKey();
 			if (!Modifier.isStatic(annotatedMethod.getModifiers())) {
-				throw new RuntimeException("Method " + annotatedMethod
-						+ " have to be static");
+				throw new RuntimeException("Method " + annotatedMethod + " have to be static");
 			}
 
 			switch (e.getValue().value()) {
@@ -107,8 +171,7 @@ public class AutomaticPatcher implements IPatcher {
 				StringBuffer buffer = new StringBuffer();
 				buffer.append("{");
 				buffer.append("return ");
-				buffer.append(this.getClass().getCanonicalName() + "."
-						+ annotatedMethod.getName());
+				buffer.append(this.getClass().getCanonicalName() + "." + annotatedMethod.getName());
 				buffer.append("(");
 				boolean append = false;
 				if (!Modifier.isStatic(m.getModifiers())) {
@@ -134,22 +197,18 @@ public class AutomaticPatcher implements IPatcher {
 		return newBody;
 	}
 
-	private String treatMethod(Method annotatedMethod)
-			throws IllegalAccessException, InvocationTargetException {
+	private String treatMethod(Method annotatedMethod) throws IllegalAccessException, InvocationTargetException {
 		processedMethods.add(annotatedMethod);
 		List<Object> params = new ArrayList<Object>();
 		for (Class<?> clazz : annotatedMethod.getParameterTypes()) {
 			if (clazz == CtClass.class) {
 				params.add(c);
 			} else {
-				throw new RuntimeException("Not managed param " + clazz
-						+ " for method " + annotatedMethod);
+				throw new RuntimeException("Not managed param " + clazz + " for method " + annotatedMethod);
 			}
 		}
 		if (annotatedMethod.getReturnType() != String.class) {
-			throw new RuntimeException("Wrong return type "
-					+ annotatedMethod.getReturnType() + " for method "
-					+ annotatedMethod);
+			throw new RuntimeException("Wrong return type " + annotatedMethod.getReturnType() + " for method " + annotatedMethod);
 		}
 		return (String) annotatedMethod.invoke(null, params.toArray());
 	}
@@ -163,20 +222,17 @@ public class AutomaticPatcher implements IPatcher {
 
 	}
 
-	protected CtConstructor findConstructor(CtClass ctClass,
-			Class<?>... argsClasses) throws NotFoundException {
+	protected CtConstructor findConstructor(CtClass ctClass, Class<?>... argsClasses) throws NotFoundException {
 		List<CtConstructor> l = new ArrayList<CtConstructor>();
 
 		for (CtConstructor c : ctClass.getDeclaredConstructors()) {
-			if (argsClasses == null
-					|| argsClasses.length == c.getParameterTypes().length) {
+			if (argsClasses == null || argsClasses.length == c.getParameterTypes().length) {
 				l.add(c);
 
 				if (argsClasses != null) {
 					int i = 0;
 					for (Class<?> argClass : argsClasses) {
-						if (!argClass.getName().equals(
-								c.getParameterTypes()[i].getName())) {
+						if (!argClass.getName().equals(c.getParameterTypes()[i].getName())) {
 							l.remove(c);
 							continue;
 						}
@@ -190,13 +246,9 @@ public class AutomaticPatcher implements IPatcher {
 			return l.get(0);
 		}
 		if (l.size() == 0) {
-			throw new RuntimeException(
-					"Unable to find a constructor with the specifed parameter types in class "
-							+ ctClass.getName());
+			throw new RuntimeException("Unable to find a constructor with the specifed parameter types in class " + ctClass.getName());
 		}
-		throw new RuntimeException("Multiple constructor in class "
-				+ ctClass.getName()
-				+ ", you have to set parameter types discriminators");
+		throw new RuntimeException("Multiple constructor in class " + ctClass.getName() + ", you have to set parameter types discriminators");
 
 	}
 

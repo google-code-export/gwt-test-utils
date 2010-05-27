@@ -167,13 +167,13 @@ public class DOMPatcher extends AutomaticPatcher {
 		return ElementUtils.castToUserElement(elem.getFirstChildElement());
 	}
 
-	@PatchMethod(args = {})
+	@PatchMethod
 	public static Element createSelect() {
 		com.google.gwt.dom.client.Element element = Document.get().createSelectElement();
 		return ElementUtils.castToUserElement(element);
 	}
 
-	@PatchMethod(args = { Boolean.class })
+	@PatchMethod
 	public static Element createSelect(boolean multiple) {
 		com.google.gwt.dom.client.Element element = Document.get().createSelectElement(multiple);
 		return ElementUtils.castToUserElement(element);

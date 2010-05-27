@@ -7,12 +7,12 @@ import com.octo.gwt.test.internal.patcher.tools.PatchMethod;
 
 public class DeferredCommandPatcher extends AutomaticPatcher {
 
-	@PatchMethod(args={Command.class})
+	@PatchMethod
 	public static void addCommand(Command command) {
 		command.execute();
 	}
 
-	@PatchMethod(args={IncrementalCommand.class})
+	@PatchMethod
 	public static void addCommand(IncrementalCommand command) {
 		command.execute();
 	}

@@ -46,14 +46,14 @@ public class HTMLTablePatcher extends AutomaticPatcher {
 		return null;
 	}
 
-	@PatchMethod(args = { Element.class })
+	@PatchMethod
 	public static int getDOMRowCount(HTMLTable table, Element element) {
 		OverrideNodeList<Node> nodeList = (OverrideNodeList<Node>) element
 				.getChildNodes();
 		return nodeList.getLength();
 	}
 
-	@PatchMethod(args = { Element.class, Integer.class })
+	@PatchMethod
 	public static int getDOMCellCount(HTMLTable table, Element element, int row) {
 		return element.getChildNodes().getItem(row).getChildNodes().getLength();
 	}

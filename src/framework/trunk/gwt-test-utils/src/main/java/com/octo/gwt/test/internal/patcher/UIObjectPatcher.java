@@ -33,14 +33,14 @@ public class UIObjectPatcher extends AutomaticPatcher {
 		return Double.parseDouble(buffer.toString());
 	}
 
-	@PatchMethod(args={Element.class})
+	@PatchMethod
 	public static boolean isVisible(Element elem) {
 		String display = elem.getStyle().getProperty("display");
 
 		return !(display != null && display.equals("none"));
 	}
 
-	@PatchMethod(args={Element.class, Boolean.class})
+	@PatchMethod
 	public static void setVisible(Element elem, boolean visible) {
 		String display = visible? "" : "none";
 		elem.getStyle().setProperty("display", display);
@@ -96,12 +96,12 @@ public class UIObjectPatcher extends AutomaticPatcher {
 		}
 	}
 
-	@PatchMethod(args={Element.class})
+	@PatchMethod
 	public static String getStyleName(Element elem) {
 		return SubClassedHelper.getProperty(elem, ElementPatcher.CLASSNAME_FIELD);
 	}
 
-	@PatchMethod(args={Element.class, String.class})
+	@PatchMethod
 	public static void setStyleName(Element elem, String styleName) {
 		SubClassedHelper.setProperty(elem, ElementPatcher.CLASSNAME_FIELD, styleName);
 	}

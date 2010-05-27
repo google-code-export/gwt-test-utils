@@ -136,12 +136,12 @@ public class DOMImplPatcher extends AutomaticPatcher {
 		return null;
 	}
 
-	@PatchMethod(args = { Element.class, Integer.class })
+	@PatchMethod
 	public static void setScrollLeft(Object domImpl, Element elem, int left) {
 		SubClassedHelper.setProperty(elem, SCROLL_LEFT, left);
 	}
 
-	@PatchMethod(args = { Element.class })
+	@PatchMethod
 	public static int getScrollLeft(Object domImpl, Element elem) {
 		return SubClassedHelper.getPropertyInteger(elem, SCROLL_LEFT);
 	}

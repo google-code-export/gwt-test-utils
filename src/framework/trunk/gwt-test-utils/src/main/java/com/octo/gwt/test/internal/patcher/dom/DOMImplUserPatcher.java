@@ -19,7 +19,7 @@ public class DOMImplUserPatcher extends AutomaticPatcher {
 		return 1;
 	}
 
-	@PatchMethod(args = { String.class })
+	@PatchMethod
 	public static int eventGetTypeInt(DOMImpl domImpl, String type) {
 		return EventUtils.getEventTypeInt(type);
 	}

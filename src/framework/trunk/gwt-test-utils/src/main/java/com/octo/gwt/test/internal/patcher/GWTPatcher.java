@@ -47,8 +47,8 @@ public class GWTPatcher extends AutomaticPatcher {
 	public static GwtCreateHandler gwtCreateHandler = null;
 	public static IGWTLogHandler gwtLogHandler = null;
 	public static Map<Class<?>, Object> createClass = new HashMap<Class<?>, Object>();
-
-	@PatchMethod(args = { String.class, Throwable.class })
+    
+	@PatchMethod
 	public static void log(String message, Throwable t) {
 		if (gwtLogHandler != null) {
 			gwtLogHandler.log(message, t);

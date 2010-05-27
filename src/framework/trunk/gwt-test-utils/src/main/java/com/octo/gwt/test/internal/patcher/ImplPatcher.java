@@ -17,6 +17,11 @@ import com.octo.gwt.test.internal.patcher.tools.PatchMethod;
 public class ImplPatcher extends AutomaticPatcher {
 
 	@PatchMethod
+	public static int getHashCode(Object o) {
+		return o.hashCode();
+	}
+	
+	@PatchMethod
 	public static String getHostPageBaseURL() {
 		return "http://localhost:8888/";
 	}
