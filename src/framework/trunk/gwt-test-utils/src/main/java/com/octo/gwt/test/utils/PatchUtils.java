@@ -323,47 +323,10 @@ public class PatchUtils {
 		m.insertAfter(newBody);
 	}
 
-	// public static void replaceImplementation(CtMethod m, Class<?>
-	// classWithCode, String methodName, String args) throws Exception {
-	// replaceImplementation(m, staticCall(classWithCode, methodName, args));
-	// }
-
-	// public static boolean matches(CtClass[] ctClassArgs, Class<?>[]
-	// argsClasses) {
-	// if (argsClasses == null) {
-	// if (ctClassArgs.length > 0)
-	// return false;
-	// else
-	// return true;
-	// }
-	//
-	// if (ctClassArgs.length != argsClasses.length) {
-	// return false;
-	// } else {
-	// int i = 0;
-	// for (Class<?> argClass : argsClasses) {
-	// if (!argClass.getName().equals(ctClassArgs[i].getName())) {
-	// return false;
-	// }
-	// i++;
-	// }
-	//
-	// return true;
-	// }
-	// }
-
 	private static void removeNativeModifier(CtMethod m) throws Exception {
 		if (Modifier.isNative(m.getModifiers())) {
 			m.setModifiers(m.getModifiers() - Modifier.NATIVE);
 		}
 	}
 
-	// public static String callMethod(Class<?> clazz, String staticMethodName,
-	// String args) {
-	// if (args == null) {
-	// args = "";
-	// }
-	// return clazz.getCanonicalName() + "." + staticMethodName + "(" + args +
-	// ")";
-	// }
 }
