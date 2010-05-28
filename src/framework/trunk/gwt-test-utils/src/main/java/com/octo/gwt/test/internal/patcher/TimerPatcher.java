@@ -53,7 +53,7 @@ public class TimerPatcher extends AutomaticPatcher {
 
 	}
 
-	public static void clear() {
+	public static void reset() {
 		CACHE.clear();
 	}
 

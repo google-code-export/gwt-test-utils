@@ -129,7 +129,7 @@ public class NodeFactory {
 
 	private NodeFactory() {}
 
-	public static void clearDom() {
+	public static void reset() {
 		if (DOCUMENT != null) {
 			SubClassedHelper.getSubClassedObjectOrNull(DOCUMENT).getOverrideProperties().clear();
 			SubClassedHelper.setProperty(DOCUMENT, DocumentPatcher.BODY_PROPERTY, createElement("body"));		

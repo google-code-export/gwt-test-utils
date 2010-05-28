@@ -10,9 +10,9 @@ import com.google.gwt.dom.client.ButtonElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Node;
 import com.octo.gwt.test.AbstractGWTTest;
-import com.octo.gwt.test.PatchGWT;
 import com.octo.gwt.test.internal.overrides.OverrideNodeList;
 import com.octo.gwt.test.internal.patcher.dom.NodeFactory;
+import com.octo.gwt.test.utils.PatchUtils;
 
 @SuppressWarnings("deprecation")
 public class NodeTest extends AbstractGWTTest {
@@ -27,7 +27,7 @@ public class NodeTest extends AbstractGWTTest {
 	@Test
 	public void checkAs() {
 		Assert.assertEquals(n, Node.as(n));
-		if (!PatchGWT.areAssertionEnabled()) {
+		if (!PatchUtils.areAssertionEnabled()) {
 			Assert.assertNull(Node.as(null));
 		}
 	}

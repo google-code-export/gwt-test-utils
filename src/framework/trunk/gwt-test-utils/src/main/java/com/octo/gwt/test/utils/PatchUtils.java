@@ -2,6 +2,8 @@ package com.octo.gwt.test.utils;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -42,8 +44,6 @@ public class PatchUtils {
 
 	private static final String REDEFINE_METHOD = "redefineClass";
 
-	private static final String LOAD_PROPERTIES = "loadProperties";
-
 	private static final List<SequenceReplacement> sequenceReplacementList = new ArrayList<SequenceReplacement>();
 
 	/**
@@ -82,6 +82,11 @@ public class PatchUtils {
 		}
 	}
 
+
+	public static void initLoadPropertiesMethod() {
+		loadProperties = GwtTestReflectionUtils.findMethod(Properties.class, "load", new Class[]{Reader.class});
+	}
+	
 	public static void initRedefineMethod() throws Exception {
 		Class<?> c = Class.forName(PatchGWT.BOOTSTRAP_CLASS);
 		if (c == null) {
@@ -95,19 +100,6 @@ public class PatchUtils {
 		}
 	}
 
-	public static void initLoadPropertiesMethod() throws Exception {
-		Class<?> c = Class.forName(PatchGWT.BOOTSTRAP_CLASS);
-		if (c == null) {
-			throw new RuntimeException("No bootstrap class found");
-		}
-		PatchUtils.loadProperties = c.getMethod(LOAD_PROPERTIES,
-				InputStream.class, String.class);
-		if (PatchUtils.loadProperties == null) {
-			throw new RuntimeException("Method " + LOAD_PROPERTIES
-					+ " not found in bootstrap class");
-		}
-	}
-
 	public static Properties getProperties(String path) {
 		String propertiesNameFile = "/" + path + ".properties";
 		InputStream inputStream = path.getClass().getResourceAsStream(
@@ -116,8 +108,9 @@ public class PatchUtils {
 			return null;
 		}
 		try {
-			Properties properties = (Properties) loadProperties.invoke(null,
-					inputStream, "UTF-8");
+			Properties properties = new Properties();
+			InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
+			loadProperties.invoke(properties, inputStreamReader);
 			for (Entry<Object, Object> entry : properties.entrySet()) {
 				for (SequenceReplacement strangeCharacterMapping : sequenceReplacementList) {
 					entry.setValue(strangeCharacterMapping.treat((String) entry
@@ -205,7 +198,7 @@ public class PatchUtils {
 		}
 	}
 
-	public static void clearSequenceReplacement() {
+	public static void reset() {
 		sequenceReplacementList.clear();
 	}
 
@@ -327,6 +320,12 @@ public class PatchUtils {
 		if (Modifier.isNative(m.getModifiers())) {
 			m.setModifiers(m.getModifiers() - Modifier.NATIVE);
 		}
+	}
+	
+	public static boolean areAssertionEnabled() {
+		boolean enabled = false;
+		assert enabled = true;
+		return enabled;
 	}
 
 }

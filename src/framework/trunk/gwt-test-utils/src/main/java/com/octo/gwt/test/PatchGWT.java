@@ -157,7 +157,7 @@ public class PatchGWT {
 	
 	private static String currentTestedModuleFile;
 
-	private static Locale LOCALE = null;
+	private static Locale locale = null;
 
 	/**
 	 * List of already patched custom classes
@@ -174,27 +174,14 @@ public class PatchGWT {
 		PatchUtils.patch(clazz, patcher);
 	}
 
-	public static void setGwtCreateHandler(GwtCreateHandler gwtCreateHandler) {
-		GWTPatcher.gwtCreateHandler = gwtCreateHandler;
-	}
-
-	public static boolean areAssertionEnabled() {
-		boolean enabled = false;
-		assert enabled = true;
-		return enabled;
-	}
-	
-	
 	public static void reset() throws Exception {
-		LOCALE = null;
-		NodeFactory.clearDom();
+		locale = null;
+		NodeFactory.reset();
 		CurrencyListPatcher.reset();
-		PatchUtils.clearSequenceReplacement();
-		HistoryImplPatcher.clear();
-		GWTPatcher.createClass.clear();
-		GWTPatcher.gwtCreateHandler = null;
-		GWTPatcher.gwtLogHandler = null;
-		TimerPatcher.clear();
+		PatchUtils.reset();
+		HistoryImplPatcher.reset();
+		GWTPatcher.reset();
+		TimerPatcher.reset();
 
 		WidgetCollection widgetCollection = GwtTestReflectionUtils.getPrivateFieldValue(RootPanel.get(), "children");
 		Widget[] array = GwtTestReflectionUtils.getPrivateFieldValue(widgetCollection, "array");
@@ -221,14 +208,6 @@ public class PatchGWT {
 
 		GwtTestReflectionUtils.setStaticField(Window.class, "handlers", null);
 		GwtTestReflectionUtils.setStaticField(Event.class, "handlers", null);
-	}
-
-	public static void addCreateClass(Class<?> classLiteral, Object object) {
-		GWTPatcher.createClass.put(classLiteral, object);
-	}
-
-	public static void addGwtCreateHandler(GwtCreateHandler gwtCreateHandler) {
-		GWTPatcher.gwtCreateHandler = gwtCreateHandler;
 	}
 
 	public static void init(GwtTestClass gwtTest) throws Exception {
@@ -352,15 +331,23 @@ public class PatchGWT {
 	}
 
 	public static Locale getLocale() {
-		return LOCALE;
+		return locale;
 	}
 
 	public static void setLocale(Locale locale) {
-		LOCALE = locale;
+		PatchGWT.locale = locale;
 	}
 
-	public static void setLogHandler(IGWTLogHandler gwtLogHandler) {
+	public static void addCreateClass(Class<?> classLiteral, Object object) {
+		GWTPatcher.classes.put(classLiteral, object);
+	}
+
+	public static void setLogHandler(GwtLogHandler gwtLogHandler) {
 		GWTPatcher.gwtLogHandler = gwtLogHandler;
 	}
 
+	public static void setGwtCreateHandler(GwtCreateHandler gwtCreateHandler) {
+		GWTPatcher.gwtCreateHandler = gwtCreateHandler;
+	}
+	
 }

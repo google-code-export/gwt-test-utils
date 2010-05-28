@@ -33,7 +33,7 @@ public class HistoryImplPatcher extends AutomaticPatcher {
 		return top;
 	}
 
-	public static void clear() {
+	public static void reset() {
 		stack.clear();
 	}
 

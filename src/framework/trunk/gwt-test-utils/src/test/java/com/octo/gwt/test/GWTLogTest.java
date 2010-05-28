@@ -5,7 +5,7 @@ import org.junit.Test;
 
 import com.google.gwt.core.client.GWT;
 import com.octo.gwt.test.AbstractGWTTest;
-import com.octo.gwt.test.IGWTLogHandler;
+import com.octo.gwt.test.GwtLogHandler;
 import com.octo.gwt.test.PatchGWT;
 
 public class GWTLogTest extends AbstractGWTTest {
@@ -19,7 +19,7 @@ public class GWTLogTest extends AbstractGWTTest {
 		message = null;
 		t = null;
 		GWT.log("toto", new Exception("e1"));
-		PatchGWT.setLogHandler(new IGWTLogHandler() {
+		PatchGWT.setLogHandler(new GwtLogHandler() {
 			
 			public void log(String message, Throwable t) {
 				GWTLogTest.this.message = message;
