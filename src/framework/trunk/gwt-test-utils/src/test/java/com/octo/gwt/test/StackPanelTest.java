@@ -7,9 +7,9 @@ import org.junit.Test;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.StackPanel;
-import com.octo.gwt.test.AbstractGWTTest;
+import com.octo.gwt.test.AbstractGwtTest;
 
-public class StackPanelTest extends AbstractGWTTest {
+public class StackPanelTest extends AbstractGwtTest {
 
 	private int index = -1;
 

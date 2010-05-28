@@ -3,7 +3,7 @@ package com.octo.gwt.test.integ.tools.integ;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 
-import com.octo.gwt.test.PatchGWT;
+import com.octo.gwt.test.PatchGwtConfig;
 import com.octo.gwt.test.integ.csvrunner.CsvRunner;
 import com.octo.gwt.test.integ.csvrunner.Node;
 import com.octo.gwt.test.integ.handler.GwtCreateHandlerImpl;
@@ -20,7 +20,7 @@ public abstract class MyGwtShell extends AbstractGwtIntegrationShell {
 
 	@Before
 	public void setUp() throws Exception {
-		PatchGWT.setGwtCreateHandler(new GwtCreateHandlerImpl() {
+		PatchGwtConfig.setGwtCreateHandler(new GwtCreateHandlerImpl() {
 
 			@Override
 			public Object findService(Class<?> remoteServiceClazz) {

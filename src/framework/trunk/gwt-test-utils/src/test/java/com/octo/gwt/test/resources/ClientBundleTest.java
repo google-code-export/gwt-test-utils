@@ -5,9 +5,9 @@ import junit.framework.Assert;
 import org.junit.Test;
 
 import com.google.gwt.resources.client.TextResource;
-import com.octo.gwt.test.AbstractGWTTest;
+import com.octo.gwt.test.AbstractGwtTest;
 
-public class ClientBundleTest extends AbstractGWTTest {
+public class ClientBundleTest extends AbstractGwtTest {
 	
 	@Test
 	public void checkTextResourceTxt() {

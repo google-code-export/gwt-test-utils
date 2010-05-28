@@ -5,9 +5,9 @@ import org.junit.Test;
 
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.SimplePanel;
-import com.octo.gwt.test.AbstractGWTTest;
+import com.octo.gwt.test.AbstractGwtTest;
 
-public class SimplePanelTest extends AbstractGWTTest {
+public class SimplePanelTest extends AbstractGwtTest {
 
 	@Test
 	public void checkTitle() {

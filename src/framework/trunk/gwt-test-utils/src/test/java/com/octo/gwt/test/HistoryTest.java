@@ -6,12 +6,12 @@ import org.junit.Test;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.HistoryListener;
-import com.octo.gwt.test.AbstractGWTEasyMockTest;
+import com.octo.gwt.test.AbstractGwtEasyMockTest;
 import com.octo.gwt.test.Mock;
 import com.octo.gwt.test.ValueChangeEventMatcher;
 
 @SuppressWarnings("deprecation")
-public class HistoryTest extends AbstractGWTEasyMockTest {
+public class HistoryTest extends AbstractGwtEasyMockTest {
 
 	@Mock
 	private HistoryListener listener;

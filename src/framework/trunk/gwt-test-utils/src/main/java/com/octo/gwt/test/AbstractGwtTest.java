@@ -6,7 +6,7 @@ import org.junit.Before;
 import com.octo.gwt.test.utils.WidgetUtils;
 
 
-public abstract class AbstractGWTTest extends WidgetUtils implements GwtTestClass {
+public abstract class AbstractGwtTest extends WidgetUtils implements GwtTestClass {
 
 	public String getModuleConfigurationFile() {
 		return null;
@@ -15,7 +15,7 @@ public abstract class AbstractGWTTest extends WidgetUtils implements GwtTestClas
 	@Before
 	public void setUpAbstractGwtTest() throws Exception {
 		initPatchGwt();
-		PatchGWT.setGwtCreateHandler(getGwtCreateHandler());
+		PatchGwtConfig.setGwtCreateHandler(getGwtCreateHandler());
 	}
 
 	@After
@@ -31,7 +31,7 @@ public abstract class AbstractGWTTest extends WidgetUtils implements GwtTestClas
 
 	protected void resetPatchGwt() throws Exception {
 		// reinit GWT
-		PatchGWT.reset();
+		PatchGwtReset.reset();
 	}
 
 	protected GwtCreateHandler getGwtCreateHandler() {

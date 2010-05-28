@@ -7,9 +7,9 @@ import org.junit.Test;
 
 import com.google.gwt.dom.client.BodyElement;
 import com.google.gwt.dom.client.Document;
-import com.octo.gwt.test.AbstractGWTTest;
+import com.octo.gwt.test.AbstractGwtTest;
 
-public class BodyElementTest extends AbstractGWTTest {
+public class BodyElementTest extends AbstractGwtTest {
 
 	private BodyElement b;
 

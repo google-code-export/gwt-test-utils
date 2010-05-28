@@ -6,15 +6,13 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.google.gwt.i18n.client.NumberFormat;
-import com.octo.gwt.test.AbstractGWTTest;
-import com.octo.gwt.test.PatchGWT;
 import com.octo.gwt.test.utils.PatchUtils;
 
-public class NumberFormatTest extends AbstractGWTTest {
+public class NumberFormatTest extends AbstractGwtTest {
 
 	@Test
 	public void checkNumberFormatFr() throws Exception {
-		PatchGWT.setLocale(Locale.FRENCH);
+		PatchGwtConfig.setLocale(Locale.FRENCH);
 
 		PatchUtils.replaceSequenceInProperties("\\u00A0", " ");
 
@@ -26,7 +24,7 @@ public class NumberFormatTest extends AbstractGWTTest {
 
 	@Test
 	public void checkNumberFormatUs() {
-		PatchGWT.setLocale(Locale.US);
+		PatchGwtConfig.setLocale(Locale.US);
 
 		Assert.assertEquals("$10.00", NumberFormat.getCurrencyFormat().format(
 				10));
@@ -37,7 +35,7 @@ public class NumberFormatTest extends AbstractGWTTest {
 	@Test
 	public void checkNumberFormatWithSpecificPattern() {
 		// Set Up
-		PatchGWT.setLocale(Locale.FRENCH);
+		PatchGwtConfig.setLocale(Locale.FRENCH);
 		NumberFormat numberFormat = NumberFormat.getFormat("0000000000");
 
 		// Test
@@ -50,7 +48,7 @@ public class NumberFormatTest extends AbstractGWTTest {
 	@Test
 	public void checkNumberFormatWithSpecificPatternWithDouble() {
 		// Set Up
-		PatchGWT.setLocale(Locale.FRENCH);
+		PatchGwtConfig.setLocale(Locale.FRENCH);
 		NumberFormat numberFormat = NumberFormat.getFormat("0000000000");
 
 		// Test

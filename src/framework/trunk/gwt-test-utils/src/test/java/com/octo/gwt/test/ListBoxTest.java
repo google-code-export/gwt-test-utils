@@ -4,9 +4,9 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.google.gwt.user.client.ui.ListBox;
-import com.octo.gwt.test.AbstractGWTTest;
+import com.octo.gwt.test.AbstractGwtTest;
 
-public class ListBoxTest extends AbstractGWTTest {
+public class ListBoxTest extends AbstractGwtTest {
 
 	@Test
 	public void checkName() {

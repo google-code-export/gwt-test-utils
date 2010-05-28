@@ -16,7 +16,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.ui.Button;
 
-public class GWTTest extends AbstractGWTTest {
+public class GwtTest extends AbstractGwtTest {
 
 	private String sToday;
 	private boolean success;
@@ -28,7 +28,7 @@ public class GWTTest extends AbstractGWTTest {
 
 	@Before
 	public void setupGWTTest() {
-		PatchGWT.setLocale(new Locale("FR"));
+		PatchGwtConfig.setLocale(new Locale("FR"));
 		sToday = DateTimeFormat.getFormat("EEE dd MMM").format(new Date(1259103600000l));
 		success = false;
 	}

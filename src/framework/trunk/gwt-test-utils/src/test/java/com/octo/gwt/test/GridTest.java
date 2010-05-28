@@ -11,10 +11,10 @@ import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.SourcesTableEvents;
 import com.google.gwt.user.client.ui.TableListener;
 import com.google.gwt.user.client.ui.Widget;
-import com.octo.gwt.test.AbstractGWTTest;
+import com.octo.gwt.test.AbstractGwtTest;
 
 @SuppressWarnings("deprecation")
-public class GridTest extends AbstractGWTTest {
+public class GridTest extends AbstractGwtTest {
 
 	private boolean clicked = false;
 

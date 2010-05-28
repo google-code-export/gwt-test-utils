@@ -10,10 +10,10 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Widget;
-import com.octo.gwt.test.AbstractGWTTest;
+import com.octo.gwt.test.AbstractGwtTest;
 
 @SuppressWarnings("deprecation")
-public class ButtonTest extends AbstractGWTTest {
+public class ButtonTest extends AbstractGwtTest {
 
 	@Test
 	public void checkWrap() {

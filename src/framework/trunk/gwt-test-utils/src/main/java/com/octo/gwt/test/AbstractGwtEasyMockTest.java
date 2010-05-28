@@ -19,7 +19,7 @@ import com.octo.gwt.test.utils.GwtTestReflectionUtils;
 import com.octo.gwt.test.utils.PatchUtils;
 import com.octo.gwt.test.utils.GwtTestReflectionUtils.MethodCallback;
 
-public abstract class AbstractGWTEasyMockTest extends AbstractGWTTest {
+public abstract class AbstractGwtEasyMockTest extends AbstractGwtTest {
 
 	private List<Class<?>> mockList = new ArrayList<Class<?>>();
 
@@ -27,7 +27,7 @@ public abstract class AbstractGWTEasyMockTest extends AbstractGWTTest {
 
 	protected Hashtable<Class<?>, Object> mockedObject = new Hashtable<Class<?>, Object>();
 
-	public AbstractGWTEasyMockTest() {
+	public AbstractGwtEasyMockTest() {
 		annotatedFieldToInject = GwtTestReflectionUtils.getAnnotatedField(this.getClass(),
 				Mock.class);
 		for (Field f : annotatedFieldToInject) {
@@ -37,7 +37,7 @@ public abstract class AbstractGWTEasyMockTest extends AbstractGWTTest {
 
 	protected void addMockedObject(Class<?> createClass, Class<?> mockClass,
 			Object mock) {
-		PatchGWT.addCreateClass(createClass, mock);
+		PatchGwtConfig.addCreateClass(createClass, mock);
 		mockedObject.put(mockClass, mock);
 	}
 

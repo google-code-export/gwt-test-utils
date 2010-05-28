@@ -4,9 +4,9 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.google.gwt.user.client.ui.Image;
-import com.octo.gwt.test.AbstractGWTTest;
+import com.octo.gwt.test.AbstractGwtTest;
 
-public class ImageTest extends AbstractGWTTest {
+public class ImageTest extends AbstractGwtTest {
 
 	@Test
 	public void checkURL() {

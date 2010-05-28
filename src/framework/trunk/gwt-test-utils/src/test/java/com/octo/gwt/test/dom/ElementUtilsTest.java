@@ -6,10 +6,10 @@ import org.junit.Test;
 import com.google.gwt.dom.client.AnchorElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.user.client.Element;
-import com.octo.gwt.test.AbstractGWTTest;
+import com.octo.gwt.test.AbstractGwtTest;
 import com.octo.gwt.test.ElementUtils;
 
-public class ElementUtilsTest extends AbstractGWTTest {
+public class ElementUtilsTest extends AbstractGwtTest {
 
 	@Test
 	public void checkCast() throws Exception {

@@ -63,6 +63,8 @@ public class PatchUtils {
 	 */
 	public static Method loadProperties;
 
+	public static Locale locale;
+
 	/**
 	 * Replace class bytecode by another one
 	 * 
@@ -125,12 +127,11 @@ public class PatchUtils {
 
 	public static Properties getLocalizedProperties(String prefix)
 			throws IOException {
-		Locale locale = PatchGWT.getLocale();
 		if (locale == null) {
 			throw new RuntimeException(
 					"No locale specified, please call PactchGWT.setLocale(...)");
 		}
-		String localeLanguage = PatchGWT.getLocale().getLanguage();
+		String localeLanguage = locale.getLanguage();
 		return getProperties(prefix + "_" + localeLanguage);
 	}
 
@@ -200,6 +201,7 @@ public class PatchUtils {
 
 	public static void reset() {
 		sequenceReplacementList.clear();
+		locale = null;
 	}
 
 	public static void replaceSequenceInProperties(String regex, String to) {

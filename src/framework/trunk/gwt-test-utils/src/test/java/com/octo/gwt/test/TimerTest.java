@@ -5,9 +5,9 @@ import junit.framework.Assert;
 import org.junit.Test;
 
 import com.google.gwt.user.client.Timer;
-import com.octo.gwt.test.AbstractGWTTest;
+import com.octo.gwt.test.AbstractGwtTest;
 
-public class TimerTest extends AbstractGWTTest {
+public class TimerTest extends AbstractGwtTest {
 
 	boolean bool;
 	int i;

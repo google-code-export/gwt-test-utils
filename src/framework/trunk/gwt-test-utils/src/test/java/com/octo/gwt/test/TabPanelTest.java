@@ -8,9 +8,9 @@ import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.TabPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.octo.gwt.test.AbstractGWTTest;
+import com.octo.gwt.test.AbstractGwtTest;
 
-public class TabPanelTest extends AbstractGWTTest {
+public class TabPanelTest extends AbstractGwtTest {
 
 	int selectedTabIndex = -1;
 

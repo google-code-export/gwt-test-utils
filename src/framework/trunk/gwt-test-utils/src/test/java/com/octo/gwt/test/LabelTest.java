@@ -5,9 +5,9 @@ import org.junit.Test;
 
 import com.google.gwt.i18n.client.HasDirection.Direction;
 import com.google.gwt.user.client.ui.Label;
-import com.octo.gwt.test.AbstractGWTTest;
+import com.octo.gwt.test.AbstractGwtTest;
 
-public class LabelTest extends AbstractGWTTest {
+public class LabelTest extends AbstractGwtTest {
 
 	@Test
 	public void checkText() {

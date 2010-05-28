@@ -4,9 +4,9 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.google.gwt.user.client.ui.PasswordTextBox;
-import com.octo.gwt.test.AbstractGWTTest;
+import com.octo.gwt.test.AbstractGwtTest;
 
-public class PasswordTextBoxTest extends AbstractGWTTest {
+public class PasswordTextBoxTest extends AbstractGwtTest {
 
 	@Test
 	public void checkName() {

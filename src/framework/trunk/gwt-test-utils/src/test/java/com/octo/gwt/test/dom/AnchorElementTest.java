@@ -7,9 +7,9 @@ import org.junit.Test;
 
 import com.google.gwt.dom.client.AnchorElement;
 import com.google.gwt.dom.client.Document;
-import com.octo.gwt.test.AbstractGWTTest;
+import com.octo.gwt.test.AbstractGwtTest;
 
-public class AnchorElementTest extends AbstractGWTTest {
+public class AnchorElementTest extends AbstractGwtTest {
 
 	private AnchorElement a;
 

@@ -9,13 +9,13 @@ import com.google.gwt.dom.client.BaseElement;
 import com.google.gwt.dom.client.ButtonElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Node;
-import com.octo.gwt.test.AbstractGWTTest;
+import com.octo.gwt.test.AbstractGwtTest;
 import com.octo.gwt.test.internal.overrides.OverrideNodeList;
 import com.octo.gwt.test.internal.patcher.dom.NodeFactory;
 import com.octo.gwt.test.utils.PatchUtils;
 
 @SuppressWarnings("deprecation")
-public class NodeTest extends AbstractGWTTest {
+public class NodeTest extends AbstractGwtTest {
 
 	private Node n;
 

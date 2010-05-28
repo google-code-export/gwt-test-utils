@@ -4,7 +4,7 @@ import org.junit.Test;
 
 import com.google.gwt.dom.client.StyleInjector;
 
-public class StyleInjectorTest extends AbstractGWTTest {
+public class StyleInjectorTest extends AbstractGwtTest {
 	
 	@Test
 	public void checkInject() {

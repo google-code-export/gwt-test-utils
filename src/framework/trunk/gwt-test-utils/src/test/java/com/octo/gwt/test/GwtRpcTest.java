@@ -6,10 +6,10 @@ import org.junit.Test;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.octo.gwt.test.AbstractGWTEasyMockTest;
+import com.octo.gwt.test.AbstractGwtEasyMockTest;
 import com.octo.gwt.test.Mock;
 
-public class GwtRpcTest extends AbstractGWTEasyMockTest {
+public class GwtRpcTest extends AbstractGwtEasyMockTest {
 
 	static class MyGwtClass {
 

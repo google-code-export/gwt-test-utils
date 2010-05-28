@@ -3,7 +3,6 @@ package com.octo.gwt.test;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Properties;
 
 import com.google.gwt.core.client.Duration;
@@ -73,7 +72,6 @@ import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.Location;
 import com.google.gwt.user.client.impl.DOMImpl;
 import com.google.gwt.user.client.impl.ElementMapperImpl;
@@ -91,8 +89,6 @@ import com.google.gwt.user.client.ui.StackPanel;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.UIObject;
-import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.user.client.ui.WidgetCollection;
 import com.google.gwt.user.client.ui.impl.FocusImpl;
 import com.google.gwt.user.client.ui.impl.FocusImplStandard;
 import com.google.gwt.user.client.ui.impl.TextBoxImpl;
@@ -137,7 +133,6 @@ import com.octo.gwt.test.internal.patcher.dom.DocumentPatcher;
 import com.octo.gwt.test.internal.patcher.dom.ElementMapperImplPatcher;
 import com.octo.gwt.test.internal.patcher.dom.ElementPatcher;
 import com.octo.gwt.test.internal.patcher.dom.InputElementPatcher;
-import com.octo.gwt.test.internal.patcher.dom.NodeFactory;
 import com.octo.gwt.test.internal.patcher.dom.NodeListPatcher;
 import com.octo.gwt.test.internal.patcher.dom.NodePatcher;
 import com.octo.gwt.test.internal.patcher.dom.SelectElementPatcher;
@@ -145,7 +140,6 @@ import com.octo.gwt.test.internal.patcher.dom.StylePatcher;
 import com.octo.gwt.test.internal.patcher.tools.AutomaticElementSubclasser;
 import com.octo.gwt.test.internal.patcher.tools.AutomaticSubclasser;
 import com.octo.gwt.test.internal.patcher.tools.AutomaticTagSubclasser;
-import com.octo.gwt.test.utils.GwtTestReflectionUtils;
 import com.octo.gwt.test.utils.PatchUtils;
 
 public class PatchGWT {
@@ -156,8 +150,6 @@ public class PatchGWT {
 	private static boolean hasBeenPatched = false;
 	
 	private static String currentTestedModuleFile;
-
-	private static Locale locale = null;
 
 	/**
 	 * List of already patched custom classes
@@ -172,42 +164,6 @@ public class PatchGWT {
 		}
 		alreadyPatched.add(clazz.getCanonicalName());
 		PatchUtils.patch(clazz, patcher);
-	}
-
-	public static void reset() throws Exception {
-		locale = null;
-		NodeFactory.reset();
-		CurrencyListPatcher.reset();
-		PatchUtils.reset();
-		HistoryImplPatcher.reset();
-		GWTPatcher.reset();
-		TimerPatcher.reset();
-
-		WidgetCollection widgetCollection = GwtTestReflectionUtils.getPrivateFieldValue(RootPanel.get(), "children");
-		Widget[] array = GwtTestReflectionUtils.getPrivateFieldValue(widgetCollection, "array");
-		for (int i = 0; i < array.length; i++) {
-			array[i] = null;
-		}
-		GwtTestReflectionUtils.setPrivateFieldValue(widgetCollection, "size", 0);
-
-		GwtTestReflectionUtils.getStaticAndCallClear(Timer.class, "timers");
-		GwtTestReflectionUtils.getStaticAndCallClear(RootPanel.class, "rootPanels");
-		GwtTestReflectionUtils.getStaticAndCallClear(RootPanel.class, "widgetsToDetach");
-
-		Object commandExecutor = GwtTestReflectionUtils.getStaticFieldValue(Class.forName("com.google.gwt.user.client.DeferredCommand"), "commandExecutor");
-		GwtTestReflectionUtils.callClear(GwtTestReflectionUtils.getPrivateFieldValue(commandExecutor, "commands"));
-
-		HistoryImpl historyImpl = GwtTestReflectionUtils.getStaticFieldValue(History.class, "impl");
-		GwtTestReflectionUtils.callClear(GwtTestReflectionUtils.getPrivateFieldValue(GwtTestReflectionUtils.getPrivateFieldValue(GwtTestReflectionUtils.getPrivateFieldValue(
-				historyImpl, "handlers"), "registry"), "map"));
-
-		GwtTestReflectionUtils.setStaticField(NumberFormat.class, "cachedDecimalFormat", null);
-		GwtTestReflectionUtils.setStaticField(NumberFormat.class, "cachedScientificFormat", null);
-		GwtTestReflectionUtils.setStaticField(NumberFormat.class, "cachedPercentFormat", null);
-		GwtTestReflectionUtils.setStaticField(NumberFormat.class, "cachedCurrencyFormat", null);
-
-		GwtTestReflectionUtils.setStaticField(Window.class, "handlers", null);
-		GwtTestReflectionUtils.setStaticField(Event.class, "handlers", null);
 	}
 
 	public static void init(GwtTestClass gwtTest) throws Exception {
@@ -328,26 +284,6 @@ public class PatchGWT {
 	
 	public static String getCurrentTestedModuleFile() {
 		return currentTestedModuleFile;
-	}
-
-	public static Locale getLocale() {
-		return locale;
-	}
-
-	public static void setLocale(Locale locale) {
-		PatchGWT.locale = locale;
-	}
-
-	public static void addCreateClass(Class<?> classLiteral, Object object) {
-		GWTPatcher.classes.put(classLiteral, object);
-	}
-
-	public static void setLogHandler(GwtLogHandler gwtLogHandler) {
-		GWTPatcher.gwtLogHandler = gwtLogHandler;
-	}
-
-	public static void setGwtCreateHandler(GwtCreateHandler gwtCreateHandler) {
-		GWTPatcher.gwtCreateHandler = gwtCreateHandler;
 	}
 	
 }

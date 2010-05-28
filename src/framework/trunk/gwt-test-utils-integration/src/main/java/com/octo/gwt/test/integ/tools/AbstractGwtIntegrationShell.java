@@ -30,6 +30,8 @@ import com.google.gwt.user.client.ui.Widget;
 import com.octo.gwt.test.GwtCreateHandler;
 import com.octo.gwt.test.GwtTestClass;
 import com.octo.gwt.test.PatchGWT;
+import com.octo.gwt.test.PatchGwtConfig;
+import com.octo.gwt.test.PatchGwtReset;
 import com.octo.gwt.test.integ.csvrunner.CsvRunner;
 import com.octo.gwt.test.integ.csvrunner.Node;
 import com.octo.gwt.test.utils.ArrayUtils;
@@ -50,7 +52,7 @@ public abstract class AbstractGwtIntegrationShell implements GwtTestClass {
 	@Before
 	public void setUpAbstractGwtIntegrationShell() throws Exception {
 		initPatchGwt();
-		PatchGWT.setGwtCreateHandler(getGwtCreateHandler());
+		PatchGwtConfig.setGwtCreateHandler(getGwtCreateHandler());
 	}
 
 	@After
@@ -65,7 +67,7 @@ public abstract class AbstractGwtIntegrationShell implements GwtTestClass {
 
 	protected void resetPatchGwt() throws Exception {
 		// reinit GWT
-		PatchGWT.reset();
+		PatchGwtReset.reset();
 	}
 
 	public void setReader(DirectoryTestReader reader) {

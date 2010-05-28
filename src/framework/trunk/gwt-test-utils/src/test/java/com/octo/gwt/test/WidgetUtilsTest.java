@@ -11,10 +11,10 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.SimplePanel;
-import com.octo.gwt.test.AbstractGWTTest;
+import com.octo.gwt.test.AbstractGwtTest;
 import com.octo.gwt.test.utils.WidgetUtils;
 
-public class WidgetUtilsTest extends AbstractGWTTest {
+public class WidgetUtilsTest extends AbstractGwtTest {
 
 	@Test
 	public void checkListBoxIndex() {

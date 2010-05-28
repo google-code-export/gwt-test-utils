@@ -11,11 +11,11 @@ import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
-import com.octo.gwt.test.AbstractGWTTest;
+import com.octo.gwt.test.AbstractGwtTest;
 import com.octo.gwt.test.internal.patcher.dom.NodeFactory;
 
 @SuppressWarnings("deprecation")
-public class ElementTest extends AbstractGWTTest {
+public class ElementTest extends AbstractGwtTest {
 
 	private Element e;
 

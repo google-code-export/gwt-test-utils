@@ -4,9 +4,9 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.google.gwt.core.client.Duration;
-import com.octo.gwt.test.AbstractGWTTest;
+import com.octo.gwt.test.AbstractGwtTest;
 
-public class DurationTest extends AbstractGWTTest {
+public class DurationTest extends AbstractGwtTest {
 
 	@Test
 	public void checkCurrentTimeMillis() {

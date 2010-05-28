@@ -4,10 +4,10 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.google.gwt.user.client.ui.Button;
-import com.octo.gwt.test.AbstractGWTTest;
+import com.octo.gwt.test.AbstractGwtTest;
 import com.octo.gwt.test.utils.WidgetUtils;
 
-public class StyleTest extends AbstractGWTTest {
+public class StyleTest extends AbstractGwtTest {
 
 	@Test
 	public void checkStyles() {

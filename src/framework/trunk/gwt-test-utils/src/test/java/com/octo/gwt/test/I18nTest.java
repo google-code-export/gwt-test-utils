@@ -6,14 +6,12 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.google.gwt.core.client.GWT;
-import com.octo.gwt.test.AbstractGWTTest;
-import com.octo.gwt.test.PatchGWT;
 
-public class I18nTest extends AbstractGWTTest {
+public class I18nTest extends AbstractGwtTest {
 
 	@Test
 	public void checkI18n() {
-		PatchGWT.setLocale(Locale.FRENCH);
+		PatchGwtConfig.setLocale(Locale.FRENCH);
 
 		I18nConstants constants = GWT.create(I18nConstants.class);
 
