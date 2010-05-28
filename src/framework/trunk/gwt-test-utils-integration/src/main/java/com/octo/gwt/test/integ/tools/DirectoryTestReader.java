@@ -14,6 +14,7 @@ import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtMethod;
 
+import com.octo.gwt.test.PatchGwtClassPool;
 import com.octo.gwt.test.integ.CsvDirectory;
 import com.octo.gwt.test.integ.CsvMacros;
 import com.octo.gwt.test.integ.csvrunner.CsvReader;
@@ -74,7 +75,7 @@ public class DirectoryTestReader {
 				}
 			}
 
-			ClassPool cp = ClassPool.getDefault();
+			ClassPool cp = PatchGwtClassPool.get();
 			CtClass newClazz = cp.makeClass(clazz.getCanonicalName() + ".generated" + System.currentTimeMillis());
 			newClazz.setSuperclass(cp.get(clazz.getCanonicalName()));
 			List<String> methodList = new ArrayList<String>();

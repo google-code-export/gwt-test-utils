@@ -11,7 +11,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtMethod;
 import javassist.NotFoundException;
@@ -27,6 +26,7 @@ import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.TextResource;
 import com.google.gwt.resources.client.ClientBundle.Source;
 import com.google.gwt.resources.ext.DefaultExtensions;
+import com.octo.gwt.test.PatchGwtClassPool;
 import com.octo.gwt.test.internal.patcher.GwtPatcher;
 
 @SuppressWarnings("unchecked")
@@ -97,7 +97,7 @@ public class ClientBundleProxyFactory {
 
 		public ClientBundleMethodsRegistry(Class<? extends ClientBundle> clazz) {
 			try {
-				ctClass = ClassPool.getDefault().get(clazz.getName());
+				ctClass = PatchGwtClassPool.get().get(clazz.getName());
 			} catch (NotFoundException e) {
 				throw new RuntimeException("Unable to find class [" + clazz.getName() + "]", e);
 			}

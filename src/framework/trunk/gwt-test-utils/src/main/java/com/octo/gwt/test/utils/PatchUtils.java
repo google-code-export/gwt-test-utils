@@ -13,7 +13,6 @@ import java.util.Properties;
 import java.util.Map.Entry;
 
 import javassist.CannotCompileException;
-import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtConstructor;
 import javassist.CtMethod;
@@ -21,6 +20,7 @@ import javassist.CtMethod;
 import com.google.gwt.i18n.client.Constants.DefaultStringValue;
 import com.octo.gwt.test.IPatcher;
 import com.octo.gwt.test.PatchGWT;
+import com.octo.gwt.test.PatchGwtClassPool;
 import com.octo.gwt.test.internal.patcher.tools.AutomaticPatcher;
 
 public class PatchUtils {
@@ -45,11 +45,6 @@ public class PatchUtils {
 	private static final String REDEFINE_METHOD = "redefineClass";
 
 	private static final List<SequenceReplacement> sequenceReplacementList = new ArrayList<SequenceReplacement>();
-
-	/**
-	 * Classpool pour javassist
-	 */
-	private static ClassPool cp = ClassPool.getDefault();
 
 	/**
 	 * Method used to change bytecode of a class. Method is located in
@@ -171,8 +166,8 @@ public class PatchUtils {
 	@SuppressWarnings("unchecked")
 	public static <T> T generateInstance(String className, IPatcher patcher) {
 		try {
-			CtClass c = cp.makeClass(className + "SubClass");
-			CtClass superClazz = cp.get(className);
+			CtClass c = PatchGwtClassPool.get().makeClass(className + "SubClass");
+			CtClass superClazz = PatchGwtClassPool.get().get(className);
 
 			c.setSuperclass(superClazz);
 			CtConstructor constructor = new CtConstructor(new CtClass[] {}, c);
@@ -216,7 +211,7 @@ public class PatchUtils {
 					+ className.substring(k + 1);
 		}
 
-		CtClass c = cp.get(className);
+		CtClass c = PatchGwtClassPool.get().get(className);
 		patch(c, patcher);
 		replaceClass(clazz, c.toBytecode());
 	}
