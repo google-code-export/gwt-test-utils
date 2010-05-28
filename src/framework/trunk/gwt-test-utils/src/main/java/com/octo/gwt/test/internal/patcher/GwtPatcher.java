@@ -42,7 +42,7 @@ import com.octo.gwt.test.internal.patcher.tools.resources.ClientBundleProxyFacto
 import com.octo.gwt.test.utils.PatchUtils;
 
 @SuppressWarnings("deprecation")
-public class GWTPatcher extends AutomaticPatcher {
+public class GwtPatcher extends AutomaticPatcher {
 
 	public static GwtCreateHandler gwtCreateHandler = null;
 	public static GwtLogHandler gwtLogHandler = null;

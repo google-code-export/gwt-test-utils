@@ -103,7 +103,7 @@ import com.octo.gwt.test.internal.patcher.FlexTablePatcher;
 import com.octo.gwt.test.internal.patcher.FocusImplPatcher;
 import com.octo.gwt.test.internal.patcher.FocusImplStandardPatcher;
 import com.octo.gwt.test.internal.patcher.FramePatcher;
-import com.octo.gwt.test.internal.patcher.GWTPatcher;
+import com.octo.gwt.test.internal.patcher.GwtPatcher;
 import com.octo.gwt.test.internal.patcher.GridPatcher;
 import com.octo.gwt.test.internal.patcher.HTMLTableCellFormatterPatcher;
 import com.octo.gwt.test.internal.patcher.HTMLTablePatcher;
@@ -186,7 +186,7 @@ public class PatchGWT {
 		PatchUtils.initRedefineMethod();
 		PatchUtils.initLoadPropertiesMethod();
 
-		PatchUtils.patch(GWT.class, new GWTPatcher());
+		PatchUtils.patch(GWT.class, new GwtPatcher());
 		PatchUtils.patch(JavaScriptObject.class, new JavaScriptObjectPatcher());
 
 		PatchUtils.patch(CheckBox.class, new CheckBoxPatcher());

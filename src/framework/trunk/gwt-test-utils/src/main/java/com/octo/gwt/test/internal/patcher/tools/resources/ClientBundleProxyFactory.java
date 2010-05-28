@@ -27,7 +27,7 @@ import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.TextResource;
 import com.google.gwt.resources.client.ClientBundle.Source;
 import com.google.gwt.resources.ext.DefaultExtensions;
-import com.octo.gwt.test.internal.patcher.GWTPatcher;
+import com.octo.gwt.test.internal.patcher.GwtPatcher;
 
 @SuppressWarnings("unchecked")
 public class ClientBundleProxyFactory {
@@ -149,13 +149,13 @@ public class ClientBundleProxyFactory {
 
 					for (String extension : extensions) {
 						String possibleFile = fileName + extension;
-						URL url = GWTPatcher.class.getClassLoader().getResource(possibleFile);
+						URL url = GwtPatcher.class.getClassLoader().getResource(possibleFile);
 						if (url != null) {
 							existingFiles.add(new File(url.toURI()));
 						}
 					}
 				} else {
-					URL url = GWTPatcher.class.getClassLoader().getResource(fileName);
+					URL url = GwtPatcher.class.getClassLoader().getResource(fileName);
 					if (url != null) {
 						existingFiles.add(new File(url.toURI()));
 					}

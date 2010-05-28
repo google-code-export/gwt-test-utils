@@ -2,7 +2,7 @@ package com.octo.gwt.test;
 
 import java.util.Locale;
 
-import com.octo.gwt.test.internal.patcher.GWTPatcher;
+import com.octo.gwt.test.internal.patcher.GwtPatcher;
 import com.octo.gwt.test.utils.PatchUtils;
 
 public class PatchGwtConfig {
@@ -12,15 +12,15 @@ public class PatchGwtConfig {
 	}
 
 	public static void addCreateClass(Class<?> classLiteral, Object object) {
-		GWTPatcher.classes.put(classLiteral, object);
+		GwtPatcher.classes.put(classLiteral, object);
 	}
 
 	public static void setLogHandler(GwtLogHandler gwtLogHandler) {
-		GWTPatcher.gwtLogHandler = gwtLogHandler;
+		GwtPatcher.gwtLogHandler = gwtLogHandler;
 	}
 
 	public static void setGwtCreateHandler(GwtCreateHandler gwtCreateHandler) {
-		GWTPatcher.gwtCreateHandler = gwtCreateHandler;
+		GwtPatcher.gwtCreateHandler = gwtCreateHandler;
 	}
 
 }
