@@ -22,7 +22,7 @@ public class GwtTest extends AbstractGwtTest {
 	private boolean success;
 
 	@Override
-	public String getModuleConfigurationFile() {
+	public String getCurrentTestedModuleFile() {
 		return "test-config.gwt.xml";
 	}
 

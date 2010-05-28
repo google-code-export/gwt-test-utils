@@ -6,9 +6,9 @@ import org.junit.Before;
 import com.octo.gwt.test.utils.WidgetUtils;
 
 
-public abstract class AbstractGwtTest extends WidgetUtils implements GwtTestClass {
+public abstract class AbstractGwtTest extends WidgetUtils {
 
-	public String getModuleConfigurationFile() {
+	public String getCurrentTestedModuleFile() {
 		return null;
 	}
 	
@@ -25,7 +25,8 @@ public abstract class AbstractGwtTest extends WidgetUtils implements GwtTestClas
 
 	protected void initPatchGwt() throws Exception {
 		//initialisation du framework de mock GWT
-		PatchGWT.init(this);
+		PatchGWT.init();
+		PatchGwtConfig.setCurrentTestedModuleFile(getCurrentTestedModuleFile());
 
 	}
 

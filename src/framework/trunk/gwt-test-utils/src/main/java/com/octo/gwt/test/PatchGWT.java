@@ -149,8 +149,6 @@ public class PatchGWT {
 	 */
 	private static boolean hasBeenPatched = false;
 	
-	private static String currentTestedModuleFile;
-
 	/**
 	 * List of already patched custom classes
 	 */
@@ -166,8 +164,7 @@ public class PatchGWT {
 		PatchUtils.patch(clazz, patcher);
 	}
 
-	public static void init(GwtTestClass gwtTest) throws Exception {
-		currentTestedModuleFile = gwtTest.getModuleConfigurationFile();
+	public static void init() throws Exception {
 		if (hasBeenPatched) {
 			return;
 		}
@@ -280,10 +277,6 @@ public class PatchGWT {
 		PatchUtils.patch(UListElement.class, new AutomaticElementSubclasser());
 
 		hasBeenPatched = true;
-	}
-	
-	public static String getCurrentTestedModuleFile() {
-		return currentTestedModuleFile;
 	}
 	
 }

@@ -10,11 +10,12 @@ import javax.xml.xpath.XPathFactory;
 import org.w3c.dom.Document;
 
 import com.octo.gwt.test.AbstractGwtTest;
-import com.octo.gwt.test.PatchGWT;
 import com.octo.gwt.test.internal.patcher.tools.AutomaticPatcher;
 import com.octo.gwt.test.internal.patcher.tools.PatchMethod;
 
 public class ImplPatcher extends AutomaticPatcher {
+
+	public static String currentTestedModuleFile;
 
 	@PatchMethod
 	public static int getHashCode(Object o) {
@@ -45,7 +46,7 @@ public class ImplPatcher extends AutomaticPatcher {
 	}
 
 	private static InputStream getModuleConfigurationFile() {
-		String fileName = PatchGWT.getCurrentTestedModuleFile();
+		String fileName = currentTestedModuleFile;
 		if (fileName == null) {
 			throw new IllegalArgumentException("GWT module configuration file (.gwt.xml) to be used is not set. You should ovveride "
 					+ AbstractGwtTest.class.getSimpleName() + ".getModuleConfigurationFile() method");
@@ -56,6 +57,10 @@ public class ImplPatcher extends AutomaticPatcher {
 	@PatchMethod
 	public static String getModuleBaseURL() {
 		return getHostPageBaseURL() + getModuleName() + "/";
+	}
+	
+	public static void reset() {
+		currentTestedModuleFile = null;
 	}
 
 }

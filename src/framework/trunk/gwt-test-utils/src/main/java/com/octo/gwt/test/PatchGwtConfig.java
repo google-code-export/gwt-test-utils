@@ -3,6 +3,7 @@ package com.octo.gwt.test;
 import java.util.Locale;
 
 import com.octo.gwt.test.internal.patcher.GwtPatcher;
+import com.octo.gwt.test.internal.patcher.ImplPatcher;
 import com.octo.gwt.test.utils.PatchUtils;
 
 public class PatchGwtConfig {
@@ -21,6 +22,10 @@ public class PatchGwtConfig {
 
 	public static void setGwtCreateHandler(GwtCreateHandler gwtCreateHandler) {
 		GwtPatcher.gwtCreateHandler = gwtCreateHandler;
+	}
+	
+	public static void setCurrentTestedModuleFile(String currentTestedModuleFile) {
+		ImplPatcher.currentTestedModuleFile = currentTestedModuleFile;
 	}
 
 }
