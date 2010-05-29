@@ -19,11 +19,10 @@ import javassist.CtMethod;
 
 import com.google.gwt.i18n.client.Constants.DefaultStringValue;
 import com.octo.gwt.test.IPatcher;
-import com.octo.gwt.test.PatchGWT;
 import com.octo.gwt.test.PatchGwtClassPool;
 import com.octo.gwt.test.internal.patcher.tools.AutomaticPatcher;
 
-public class PatchUtils {
+public class PatchGwtUtils {
 
 	static class SequenceReplacement {
 
@@ -42,15 +41,7 @@ public class PatchUtils {
 
 	}
 
-	private static final String REDEFINE_METHOD = "redefineClass";
-
 	private static final List<SequenceReplacement> sequenceReplacementList = new ArrayList<SequenceReplacement>();
-
-	/**
-	 * Method used to change bytecode of a class. Method is located in
-	 * bootstrap.jar
-	 */
-	public static Method redefine;
 
 	/**
 	 * Method used to load properties file with charset. Method is located in
@@ -60,41 +51,8 @@ public class PatchUtils {
 
 	public static Locale locale;
 
-	/**
-	 * Replace class bytecode by another one
-	 * 
-	 * @param redefine
-	 * @param clazz
-	 * @param newByteCode
-	 */
-	private static void replaceClass(Class<?> clazz, byte[] newByteCode) {
-		try {
-			redefine.invoke(null, clazz, newByteCode);
-		} catch (Exception e) {
-			System.err.println("Unable to replace code in class "
-					+ clazz.getCanonicalName());
-			e.printStackTrace();
-			throw new RuntimeException("Unable to compile code for class "
-					+ clazz.getCanonicalName(), e);
-		}
-	}
-
-
 	public static void initLoadPropertiesMethod() {
 		loadProperties = GwtTestReflectionUtils.findMethod(Properties.class, "load", new Class[]{Reader.class});
-	}
-	
-	public static void initRedefineMethod() throws Exception {
-		Class<?> c = Class.forName(PatchGWT.BOOTSTRAP_CLASS);
-		if (c == null) {
-			throw new RuntimeException("No bootstrap class found");
-		}
-		PatchUtils.redefine = c.getMethod(REDEFINE_METHOD, Class.class,
-				byte[].class);
-		if (PatchUtils.redefine == null) {
-			throw new RuntimeException("Method " + REDEFINE_METHOD
-					+ " not found in bootstrap class");
-		}
 	}
 
 	public static Properties getProperties(String path) {
@@ -203,20 +161,7 @@ public class PatchUtils {
 		sequenceReplacementList.add(new SequenceReplacement(regex, to));
 	}
 
-	public static void patch(Class<?> clazz, IPatcher patcher) throws Exception {
-		String className = clazz.getCanonicalName();
-		if (clazz.isMemberClass()) {
-			int k = className.lastIndexOf(".");
-			className = className.substring(0, k) + "$"
-					+ className.substring(k + 1);
-		}
-
-		CtClass c = PatchGwtClassPool.get().get(className);
-		patch(c, patcher);
-		replaceClass(clazz, c.toBytecode());
-	}
-
-	private static void patch(CtClass c, IPatcher patcher) throws Exception {
+	public static void patch(CtClass c, IPatcher patcher) throws Exception {
 		if (c == null) {
 			throw new IllegalArgumentException(
 					"the class to patch cannot be null");
@@ -234,16 +179,16 @@ public class PatchUtils {
 				String newBody = patcher.getNewBody(m);
 				if (newBody != null) {
 					if (newBody.startsWith(AutomaticPatcher.INSERT_BEFORE)) {
-						PatchUtils.insertBefore(m, newBody
+						PatchGwtUtils.insertBefore(m, newBody
 								.substring(AutomaticPatcher.INSERT_BEFORE
 										.length()));
 					} else if (newBody
 							.startsWith(AutomaticPatcher.INSERT_AFTER)) {
-						PatchUtils.insertAfter(m, newBody
+						PatchGwtUtils.insertAfter(m, newBody
 								.substring(AutomaticPatcher.INSERT_AFTER
 										.length()));
 					} else {
-						PatchUtils.replaceImplementation(m, newBody);
+						PatchGwtUtils.replaceImplementation(m, newBody);
 					}
 				}
 			}

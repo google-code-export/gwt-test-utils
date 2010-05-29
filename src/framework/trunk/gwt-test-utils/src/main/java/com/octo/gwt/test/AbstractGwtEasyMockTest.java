@@ -16,7 +16,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Widget;
 import com.octo.gwt.test.utils.ArrayUtils;
 import com.octo.gwt.test.utils.GwtTestReflectionUtils;
-import com.octo.gwt.test.utils.PatchUtils;
+import com.octo.gwt.test.utils.PatchGwtUtils;
 import com.octo.gwt.test.utils.GwtTestReflectionUtils.MethodCallback;
 
 public abstract class AbstractGwtEasyMockTest extends AbstractGwtTest {
@@ -142,7 +142,7 @@ public abstract class AbstractGwtEasyMockTest extends AbstractGwtTest {
 		m.invoke(w, EasyMock.eq(parent));
 		EasyMock.expectLastCall();
 
-		if (PatchUtils.areAssertionEnabled()) {
+		if (PatchGwtUtils.areAssertionEnabled()) {
 			w.getParent();
 			EasyMock.expectLastCall().andReturn(null);
 		}

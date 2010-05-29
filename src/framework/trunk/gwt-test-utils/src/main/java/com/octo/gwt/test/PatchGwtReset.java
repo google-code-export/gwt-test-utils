@@ -15,7 +15,7 @@ import com.octo.gwt.test.internal.patcher.ImplPatcher;
 import com.octo.gwt.test.internal.patcher.TimerPatcher;
 import com.octo.gwt.test.internal.patcher.dom.NodeFactory;
 import com.octo.gwt.test.utils.GwtTestReflectionUtils;
-import com.octo.gwt.test.utils.PatchUtils;
+import com.octo.gwt.test.utils.PatchGwtUtils;
 
 
 public class PatchGwtReset {
@@ -23,7 +23,7 @@ public class PatchGwtReset {
 	public static void reset() throws Exception {
 		NodeFactory.reset();
 		CurrencyListPatcher.reset();
-		PatchUtils.reset();
+		PatchGwtUtils.reset();
 		HistoryImplPatcher.reset();
 		GwtPatcher.reset();
 		TimerPatcher.reset();

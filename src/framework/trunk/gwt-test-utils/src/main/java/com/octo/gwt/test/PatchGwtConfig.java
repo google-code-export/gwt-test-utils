@@ -4,12 +4,12 @@ import java.util.Locale;
 
 import com.octo.gwt.test.internal.patcher.GwtPatcher;
 import com.octo.gwt.test.internal.patcher.ImplPatcher;
-import com.octo.gwt.test.utils.PatchUtils;
+import com.octo.gwt.test.utils.PatchGwtUtils;
 
 public class PatchGwtConfig {
 
 	public static void setLocale(Locale locale) {
-		PatchUtils.locale = locale;
+		PatchGwtUtils.locale = locale;
 	}
 
 	public static void addCreateClass(Class<?> classLiteral, Object object) {

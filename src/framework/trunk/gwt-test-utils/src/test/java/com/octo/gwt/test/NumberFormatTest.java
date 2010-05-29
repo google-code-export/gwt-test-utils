@@ -6,7 +6,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.google.gwt.i18n.client.NumberFormat;
-import com.octo.gwt.test.utils.PatchUtils;
+import com.octo.gwt.test.utils.PatchGwtUtils;
 
 public class NumberFormatTest extends AbstractGwtTest {
 
@@ -14,7 +14,7 @@ public class NumberFormatTest extends AbstractGwtTest {
 	public void checkNumberFormatFr() throws Exception {
 		PatchGwtConfig.setLocale(Locale.FRENCH);
 
-		PatchUtils.replaceSequenceInProperties("\\u00A0", " ");
+		PatchGwtUtils.replaceSequenceInProperties("\\u00A0", " ");
 
 		Assert.assertEquals("10,00 €", NumberFormat.getCurrencyFormat().format(
 				10));

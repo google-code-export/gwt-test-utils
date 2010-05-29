@@ -39,7 +39,7 @@ import com.octo.gwt.test.internal.patcher.dom.DOMImplUserSubClassPatcher;
 import com.octo.gwt.test.internal.patcher.tools.AutomaticPatcher;
 import com.octo.gwt.test.internal.patcher.tools.PatchMethod;
 import com.octo.gwt.test.internal.patcher.tools.resources.ClientBundleProxyFactory;
-import com.octo.gwt.test.utils.PatchUtils;
+import com.octo.gwt.test.utils.PatchGwtUtils;
 
 @SuppressWarnings("deprecation")
 public class GwtPatcher extends AutomaticPatcher {
@@ -74,10 +74,10 @@ public class GwtPatcher extends AutomaticPatcher {
 			return new WindowImpl();
 		}
 		if (classLiteral.getCanonicalName().equals(PatchConstants.CLIENT_DOM_IMPL_CLASS_NAME)) {
-			return PatchUtils.generateInstance(PatchConstants.CLIENT_DOM_IMPL_CLASS_NAME, new DOMImplSubClassPatcher());
+			return PatchGwtUtils.generateInstance(PatchConstants.CLIENT_DOM_IMPL_CLASS_NAME, new DOMImplSubClassPatcher());
 		}
 		if (classLiteral == DOMImpl.class) {
-			return PatchUtils.generateInstance(DOMImpl.class.getCanonicalName(), new DOMImplUserSubClassPatcher());
+			return PatchGwtUtils.generateInstance(DOMImpl.class.getCanonicalName(), new DOMImplUserSubClassPatcher());
 		}
 		if (classLiteral == HistoryImpl.class) {
 			return new HistoryImpl();
@@ -174,7 +174,7 @@ public class GwtPatcher extends AutomaticPatcher {
 		}
 
 		public Object invoke(Object arg0, Method method, Object[] params) throws Throwable {
-			return PatchUtils.extractFromPropertiesFile(wrappedClass, method);
+			return PatchGwtUtils.extractFromPropertiesFile(wrappedClass, method);
 		}
 
 	}

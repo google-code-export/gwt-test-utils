@@ -1,9 +1,7 @@
 package com.octo.gwt.test;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 import com.google.gwt.core.client.Duration;
 import com.google.gwt.core.client.GWT;
@@ -103,8 +101,8 @@ import com.octo.gwt.test.internal.patcher.FlexTablePatcher;
 import com.octo.gwt.test.internal.patcher.FocusImplPatcher;
 import com.octo.gwt.test.internal.patcher.FocusImplStandardPatcher;
 import com.octo.gwt.test.internal.patcher.FramePatcher;
-import com.octo.gwt.test.internal.patcher.GwtPatcher;
 import com.octo.gwt.test.internal.patcher.GridPatcher;
+import com.octo.gwt.test.internal.patcher.GwtPatcher;
 import com.octo.gwt.test.internal.patcher.HTMLTableCellFormatterPatcher;
 import com.octo.gwt.test.internal.patcher.HTMLTablePatcher;
 import com.octo.gwt.test.internal.patcher.HTMLTableRowFormatterPatcher;
@@ -140,7 +138,8 @@ import com.octo.gwt.test.internal.patcher.dom.StylePatcher;
 import com.octo.gwt.test.internal.patcher.tools.AutomaticElementSubclasser;
 import com.octo.gwt.test.internal.patcher.tools.AutomaticSubclasser;
 import com.octo.gwt.test.internal.patcher.tools.AutomaticTagSubclasser;
-import com.octo.gwt.test.utils.PatchUtils;
+import com.octo.gwt.test.utils.PatchGwtUtils;
+import com.octo.gwt.test.utils.PatchGwtWithJavaAgent;
 
 public class PatchGWT {
 
@@ -154,14 +153,12 @@ public class PatchGWT {
 	 */
 	private static List<String> alreadyPatched = new ArrayList<String>();
 
-	public static String BOOTSTRAP_CLASS = null;
-
 	public static void patch(Class<?> clazz, IPatcher patcher) throws Exception {
 		if (alreadyPatched.contains(clazz.getCanonicalName())) {
 			return;
 		}
 		alreadyPatched.add(clazz.getCanonicalName());
-		PatchUtils.patch(clazz, patcher);
+		PatchGwtWithJavaAgent.patch(clazz, patcher);
 	}
 
 	public static void init() throws Exception {
@@ -169,112 +166,102 @@ public class PatchGWT {
 			return;
 		}
 
-		Properties properties = new Properties();
-		InputStream inputStream = properties.getClass().getResourceAsStream("/META-INF/gwt-test-utils-bootstrap.properties");
-		properties.load(inputStream);
-		BOOTSTRAP_CLASS = properties.getProperty("className");
-		try {
-			Class.forName(BOOTSTRAP_CLASS);
-		} catch (ClassNotFoundException e) {
-			throw new RuntimeException("Unable to load " + BOOTSTRAP_CLASS + " class, you probably forgot to "
-					+ "add the JVM parameter: -javaagent:target/bootstrap.jar");
-		}
+		PatchGwtWithJavaAgent.init();
+		
+		PatchGwtUtils.initLoadPropertiesMethod();
 
-		PatchUtils.initRedefineMethod();
-		PatchUtils.initLoadPropertiesMethod();
+		PatchGwtWithJavaAgent.patch(GWT.class, new GwtPatcher());
+		PatchGwtWithJavaAgent.patch(JavaScriptObject.class, new JavaScriptObjectPatcher());
 
-		PatchUtils.patch(GWT.class, new GwtPatcher());
-		PatchUtils.patch(JavaScriptObject.class, new JavaScriptObjectPatcher());
+		PatchGwtWithJavaAgent.patch(CheckBox.class, new CheckBoxPatcher());
+		PatchGwtWithJavaAgent.patch(Cookies.class, new CookiesPatcher());
+		PatchGwtWithJavaAgent.patch(CurrencyDataImpl.class, new CurrencyDataImplPatcher());
+		PatchGwtWithJavaAgent.patch(CurrencyList.class, new CurrencyListPatcher());
+		PatchGwtWithJavaAgent.patch(DeferredCommand.class, new DeferredCommandPatcher());
+		PatchGwtWithJavaAgent.patch(Document.class, new DocumentPatcher());
+		PatchGwtWithJavaAgent.patch(Duration.class, new DurationPatcher());
+		PatchGwtWithJavaAgent.patch(Event.class, new EventPatcher());
+		PatchGwtWithJavaAgent.patch(FlexTable.class, new FlexTablePatcher());
+		PatchGwtWithJavaAgent.patch(FocusImpl.class, new FocusImplPatcher());
+		PatchGwtWithJavaAgent.patch(FocusImplStandard.class, new FocusImplStandardPatcher());
+		PatchGwtWithJavaAgent.patch(Frame.class, new FramePatcher());
+		PatchGwtWithJavaAgent.patch(Grid.class, new GridPatcher());
+		PatchGwtWithJavaAgent.patch(History.class, new HistoryPatcher());
+		PatchGwtWithJavaAgent.patch(HistoryImpl.class, new HistoryImplPatcher());
+		PatchGwtWithJavaAgent.patch(HTMLTable.class, new HTMLTablePatcher());
+		PatchGwtWithJavaAgent.patch(HTMLTable.CellFormatter.class, new HTMLTableCellFormatterPatcher());
+		PatchGwtWithJavaAgent.patch(HTMLTable.RowFormatter.class, new HTMLTableRowFormatterPatcher());
+		PatchGwtWithJavaAgent.patch(Image.class, new ImagePatcher());
+		PatchGwtWithJavaAgent.patch(Impl.class, new ImplPatcher());
+		PatchGwtWithJavaAgent.patch(ListBox.class, new ListBoxPatcher());
+		PatchGwtWithJavaAgent.patch(Location.class, new LocationPatcher());
+		PatchGwtWithJavaAgent.patch(NumberFormat.class, new NumberFormatPatcher());
+		PatchGwtWithJavaAgent.patch(PopupPanel.class, new PopupPanelPatcher());
+		PatchGwtWithJavaAgent.patch(RootPanel.class, new RootPanelPatcher());
+		PatchGwtWithJavaAgent.patch(StackPanel.class, new StackPanelPatcher());
+		PatchGwtWithJavaAgent.patch(StyleInjector.class, new StyleInjectorPatcher());
+		PatchGwtWithJavaAgent.patch(TextArea.class, new TextAreaPatcher());
+		PatchGwtWithJavaAgent.patch(TextBox.class, new TextBoxPatcher());
+		PatchGwtWithJavaAgent.patch(TextBoxImpl.class, new TextBoxImplPatcher());
+		PatchGwtWithJavaAgent.patch(Timer.class, new TimerPatcher());
+		PatchGwtWithJavaAgent.patch(UIObject.class, new UIObjectPatcher());
+		PatchGwtWithJavaAgent.patch(URL.class, new URLPatcher());
 
-		PatchUtils.patch(CheckBox.class, new CheckBoxPatcher());
-		PatchUtils.patch(Cookies.class, new CookiesPatcher());
-		PatchUtils.patch(CurrencyDataImpl.class, new CurrencyDataImplPatcher());
-		PatchUtils.patch(CurrencyList.class, new CurrencyListPatcher());
-		PatchUtils.patch(DeferredCommand.class, new DeferredCommandPatcher());
-		PatchUtils.patch(Document.class, new DocumentPatcher());
-		PatchUtils.patch(Duration.class, new DurationPatcher());
-		PatchUtils.patch(Event.class, new EventPatcher());
-		PatchUtils.patch(FlexTable.class, new FlexTablePatcher());
-		PatchUtils.patch(FocusImpl.class, new FocusImplPatcher());
-		PatchUtils.patch(FocusImplStandard.class, new FocusImplStandardPatcher());
-		PatchUtils.patch(Frame.class, new FramePatcher());
-		PatchUtils.patch(Grid.class, new GridPatcher());
-		PatchUtils.patch(History.class, new HistoryPatcher());
-		PatchUtils.patch(HistoryImpl.class, new HistoryImplPatcher());
-		PatchUtils.patch(HTMLTable.class, new HTMLTablePatcher());
-		PatchUtils.patch(HTMLTable.CellFormatter.class, new HTMLTableCellFormatterPatcher());
-		PatchUtils.patch(HTMLTable.RowFormatter.class, new HTMLTableRowFormatterPatcher());
-		PatchUtils.patch(Image.class, new ImagePatcher());
-		PatchUtils.patch(Impl.class, new ImplPatcher());
-		PatchUtils.patch(ListBox.class, new ListBoxPatcher());
-		PatchUtils.patch(Location.class, new LocationPatcher());
-		PatchUtils.patch(NumberFormat.class, new NumberFormatPatcher());
-		PatchUtils.patch(PopupPanel.class, new PopupPanelPatcher());
-		PatchUtils.patch(RootPanel.class, new RootPanelPatcher());
-		PatchUtils.patch(StackPanel.class, new StackPanelPatcher());
-		PatchUtils.patch(StyleInjector.class, new StyleInjectorPatcher());
-		PatchUtils.patch(TextArea.class, new TextAreaPatcher());
-		PatchUtils.patch(TextBox.class, new TextBoxPatcher());
-		PatchUtils.patch(TextBoxImpl.class, new TextBoxImplPatcher());
-		PatchUtils.patch(Timer.class, new TimerPatcher());
-		PatchUtils.patch(UIObject.class, new UIObjectPatcher());
-		PatchUtils.patch(URL.class, new URLPatcher());
-
-		PatchUtils.patch(AnchorElement.class, new AutomaticElementSubclasser());
-		PatchUtils.patch(AreaElement.class, new AutomaticElementSubclasser());
-		PatchUtils.patch(BaseElement.class, new AutomaticElementSubclasser());
-		PatchUtils.patch(BodyElement.class, new AutomaticElementSubclasser());
-		PatchUtils.patch(BRElement.class, new AutomaticElementSubclasser());
-		PatchUtils.patch(ButtonElement.class, new AutomaticElementSubclasser());
-		PatchUtils.patch(DivElement.class, new AutomaticElementSubclasser());
-		PatchUtils.patch(DListElement.class, new AutomaticElementSubclasser());
-		PatchUtils.patch(Class.forName(PatchConstants.CLIENT_DOM_IMPL_CLASS_NAME), new DOMImplPatcher());
-		PatchUtils.patch(DOMImpl.class, new DOMImplUserPatcher());
-		PatchUtils.patch(DOM.class, new DOMPatcher());
-		PatchUtils.patch(Element.class, new ElementPatcher());
-		PatchUtils.patch(ElementMapperImpl.class, new ElementMapperImplPatcher());
-		PatchUtils.patch(FieldSetElement.class, new AutomaticElementSubclasser());
-		PatchUtils.patch(FrameElement.class, new AutomaticElementSubclasser());
-		PatchUtils.patch(FrameSetElement.class, new AutomaticElementSubclasser());
-		PatchUtils.patch(FormElement.class, new AutomaticElementSubclasser());
-		PatchUtils.patch(HeadElement.class, new AutomaticElementSubclasser());
-		PatchUtils.patch(HRElement.class, new AutomaticElementSubclasser());
-		PatchUtils.patch(HeadingElement.class, new AutomaticTagSubclasser());
-		PatchUtils.patch(IFrameElement.class, new AutomaticElementSubclasser());
-		PatchUtils.patch(ImageElement.class, new AutomaticElementSubclasser());
-		PatchUtils.patch(InputElement.class, new InputElementPatcher());
-		PatchUtils.patch(LIElement.class, new AutomaticElementSubclasser());
-		PatchUtils.patch(LabelElement.class, new AutomaticElementSubclasser());
-		PatchUtils.patch(LegendElement.class, new AutomaticElementSubclasser());
-		PatchUtils.patch(LinkElement.class, new AutomaticElementSubclasser());
-		PatchUtils.patch(NodeList.class, new NodeListPatcher());
-		PatchUtils.patch(Node.class, new NodePatcher());
-		PatchUtils.patch(MapElement.class, new AutomaticElementSubclasser());
-		PatchUtils.patch(MetaElement.class, new AutomaticElementSubclasser());
-		PatchUtils.patch(ModElement.class, new AutomaticTagSubclasser());
-		PatchUtils.patch(ObjectElement.class, new AutomaticElementSubclasser());
-		PatchUtils.patch(OptionElement.class, new AutomaticElementSubclasser());
-		PatchUtils.patch(OListElement.class, new AutomaticElementSubclasser());
-		PatchUtils.patch(OptGroupElement.class, new AutomaticElementSubclasser());
-		PatchUtils.patch(ParagraphElement.class, new AutomaticElementSubclasser());
-		PatchUtils.patch(ParamElement.class, new AutomaticElementSubclasser());
-		PatchUtils.patch(PreElement.class, new AutomaticElementSubclasser());
-		PatchUtils.patch(QuoteElement.class, new AutomaticTagSubclasser());
-		PatchUtils.patch(ScriptElement.class, new AutomaticElementSubclasser());
-		PatchUtils.patch(StyleElement.class, new AutomaticElementSubclasser());
-		PatchUtils.patch(SelectElement.class, new SelectElementPatcher());
-		PatchUtils.patch(SpanElement.class, new AutomaticElementSubclasser());
-		PatchUtils.patch(Style.class, new StylePatcher());
-		PatchUtils.patch(TableCaptionElement.class, new AutomaticElementSubclasser());
-		PatchUtils.patch(TableCellElement.class, new AutomaticTagSubclasser());
-		PatchUtils.patch(TableColElement.class, new AutomaticTagSubclasser());
-		PatchUtils.patch(TableElement.class, new AutomaticElementSubclasser());
-		PatchUtils.patch(TableRowElement.class, new AutomaticElementSubclasser());
-		PatchUtils.patch(TableSectionElement.class, new AutomaticTagSubclasser());
-		PatchUtils.patch(TextAreaElement.class, new AutomaticElementSubclasser());
-		PatchUtils.patch(Text.class, new AutomaticSubclasser());
-		PatchUtils.patch(TitleElement.class, new AutomaticElementSubclasser());
-		PatchUtils.patch(UListElement.class, new AutomaticElementSubclasser());
+		PatchGwtWithJavaAgent.patch(AnchorElement.class, new AutomaticElementSubclasser());
+		PatchGwtWithJavaAgent.patch(AreaElement.class, new AutomaticElementSubclasser());
+		PatchGwtWithJavaAgent.patch(BaseElement.class, new AutomaticElementSubclasser());
+		PatchGwtWithJavaAgent.patch(BodyElement.class, new AutomaticElementSubclasser());
+		PatchGwtWithJavaAgent.patch(BRElement.class, new AutomaticElementSubclasser());
+		PatchGwtWithJavaAgent.patch(ButtonElement.class, new AutomaticElementSubclasser());
+		PatchGwtWithJavaAgent.patch(DivElement.class, new AutomaticElementSubclasser());
+		PatchGwtWithJavaAgent.patch(DListElement.class, new AutomaticElementSubclasser());
+		PatchGwtWithJavaAgent.patch(Class.forName(PatchConstants.CLIENT_DOM_IMPL_CLASS_NAME), new DOMImplPatcher());
+		PatchGwtWithJavaAgent.patch(DOMImpl.class, new DOMImplUserPatcher());
+		PatchGwtWithJavaAgent.patch(DOM.class, new DOMPatcher());
+		PatchGwtWithJavaAgent.patch(Element.class, new ElementPatcher());
+		PatchGwtWithJavaAgent.patch(ElementMapperImpl.class, new ElementMapperImplPatcher());
+		PatchGwtWithJavaAgent.patch(FieldSetElement.class, new AutomaticElementSubclasser());
+		PatchGwtWithJavaAgent.patch(FrameElement.class, new AutomaticElementSubclasser());
+		PatchGwtWithJavaAgent.patch(FrameSetElement.class, new AutomaticElementSubclasser());
+		PatchGwtWithJavaAgent.patch(FormElement.class, new AutomaticElementSubclasser());
+		PatchGwtWithJavaAgent.patch(HeadElement.class, new AutomaticElementSubclasser());
+		PatchGwtWithJavaAgent.patch(HRElement.class, new AutomaticElementSubclasser());
+		PatchGwtWithJavaAgent.patch(HeadingElement.class, new AutomaticTagSubclasser());
+		PatchGwtWithJavaAgent.patch(IFrameElement.class, new AutomaticElementSubclasser());
+		PatchGwtWithJavaAgent.patch(ImageElement.class, new AutomaticElementSubclasser());
+		PatchGwtWithJavaAgent.patch(InputElement.class, new InputElementPatcher());
+		PatchGwtWithJavaAgent.patch(LIElement.class, new AutomaticElementSubclasser());
+		PatchGwtWithJavaAgent.patch(LabelElement.class, new AutomaticElementSubclasser());
+		PatchGwtWithJavaAgent.patch(LegendElement.class, new AutomaticElementSubclasser());
+		PatchGwtWithJavaAgent.patch(LinkElement.class, new AutomaticElementSubclasser());
+		PatchGwtWithJavaAgent.patch(NodeList.class, new NodeListPatcher());
+		PatchGwtWithJavaAgent.patch(Node.class, new NodePatcher());
+		PatchGwtWithJavaAgent.patch(MapElement.class, new AutomaticElementSubclasser());
+		PatchGwtWithJavaAgent.patch(MetaElement.class, new AutomaticElementSubclasser());
+		PatchGwtWithJavaAgent.patch(ModElement.class, new AutomaticTagSubclasser());
+		PatchGwtWithJavaAgent.patch(ObjectElement.class, new AutomaticElementSubclasser());
+		PatchGwtWithJavaAgent.patch(OptionElement.class, new AutomaticElementSubclasser());
+		PatchGwtWithJavaAgent.patch(OListElement.class, new AutomaticElementSubclasser());
+		PatchGwtWithJavaAgent.patch(OptGroupElement.class, new AutomaticElementSubclasser());
+		PatchGwtWithJavaAgent.patch(ParagraphElement.class, new AutomaticElementSubclasser());
+		PatchGwtWithJavaAgent.patch(ParamElement.class, new AutomaticElementSubclasser());
+		PatchGwtWithJavaAgent.patch(PreElement.class, new AutomaticElementSubclasser());
+		PatchGwtWithJavaAgent.patch(QuoteElement.class, new AutomaticTagSubclasser());
+		PatchGwtWithJavaAgent.patch(ScriptElement.class, new AutomaticElementSubclasser());
+		PatchGwtWithJavaAgent.patch(StyleElement.class, new AutomaticElementSubclasser());
+		PatchGwtWithJavaAgent.patch(SelectElement.class, new SelectElementPatcher());
+		PatchGwtWithJavaAgent.patch(SpanElement.class, new AutomaticElementSubclasser());
+		PatchGwtWithJavaAgent.patch(Style.class, new StylePatcher());
+		PatchGwtWithJavaAgent.patch(TableCaptionElement.class, new AutomaticElementSubclasser());
+		PatchGwtWithJavaAgent.patch(TableCellElement.class, new AutomaticTagSubclasser());
+		PatchGwtWithJavaAgent.patch(TableColElement.class, new AutomaticTagSubclasser());
+		PatchGwtWithJavaAgent.patch(TableElement.class, new AutomaticElementSubclasser());
+		PatchGwtWithJavaAgent.patch(TableRowElement.class, new AutomaticElementSubclasser());
+		PatchGwtWithJavaAgent.patch(TableSectionElement.class, new AutomaticTagSubclasser());
+		PatchGwtWithJavaAgent.patch(TextAreaElement.class, new AutomaticElementSubclasser());
+		PatchGwtWithJavaAgent.patch(Text.class, new AutomaticSubclasser());
+		PatchGwtWithJavaAgent.patch(TitleElement.class, new AutomaticElementSubclasser());
+		PatchGwtWithJavaAgent.patch(UListElement.class, new AutomaticElementSubclasser());
 
 		hasBeenPatched = true;
 	}
