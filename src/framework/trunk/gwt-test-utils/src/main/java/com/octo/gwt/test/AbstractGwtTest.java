@@ -16,6 +16,7 @@ public abstract class AbstractGwtTest extends WidgetUtils {
 	public void setUpAbstractGwtTest() throws Exception {
 		initPatchGwt();
 		PatchGwtConfig.setGwtCreateHandler(getGwtCreateHandler());
+		PatchGwtConfig.setCurrentTestedModuleFile(getCurrentTestedModuleFile());
 	}
 
 	@After
@@ -26,8 +27,6 @@ public abstract class AbstractGwtTest extends WidgetUtils {
 	protected void initPatchGwt() throws Exception {
 		//initialisation du framework de mock GWT
 		PatchGWT.init();
-		PatchGwtConfig.setCurrentTestedModuleFile(getCurrentTestedModuleFile());
-
 	}
 
 	protected void resetPatchGwt() throws Exception {

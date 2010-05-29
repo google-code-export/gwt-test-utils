@@ -52,6 +52,7 @@ public abstract class AbstractGwtIntegrationShell {
 	public void setUpAbstractGwtIntegrationShell() throws Exception {
 		initPatchGwt();
 		PatchGwtConfig.setGwtCreateHandler(getGwtCreateHandler());
+		PatchGwtConfig.setCurrentTestedModuleFile(getCurrentTestedModuleFile());
 	}
 
 	@After
@@ -62,7 +63,6 @@ public abstract class AbstractGwtIntegrationShell {
 	protected void initPatchGwt() throws Exception {
 		//initialisation du framework de mock GWT
 		PatchGWT.init();
-		PatchGwtConfig.setCurrentTestedModuleFile(getCurrentTestedModuleFile());
 	}
 
 	protected void resetPatchGwt() throws Exception {
