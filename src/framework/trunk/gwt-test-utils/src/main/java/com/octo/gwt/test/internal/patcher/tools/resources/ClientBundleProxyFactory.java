@@ -117,7 +117,7 @@ public class ClientBundleProxyFactory {
 			List<String> filesSimpleNames = new ArrayList<String>();
 			boolean computeExtensions = false;
 			CtMethod m = ctClass.getDeclaredMethod(method.getName());
-			MethodInfo minfo = m.getMethodInfo();
+			MethodInfo minfo = m.getMethodInfo2();
 			AnnotationsAttribute attr = (AnnotationsAttribute) minfo.getAttribute(AnnotationsAttribute.invisibleTag);
 			if (attr != null) {
 				Annotation an = attr.getAnnotation(Source.class.getName());
