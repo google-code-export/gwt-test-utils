@@ -5,6 +5,7 @@ import java.util.Locale;
 import com.octo.gwt.test.internal.patcher.GwtPatcher;
 import com.octo.gwt.test.internal.patcher.ImplPatcher;
 import com.octo.gwt.test.utils.PatchGwtUtils;
+import com.octo.gwt.test.utils.PatchGwtUtils.SequenceReplacement;
 
 public class PatchGwtConfig {
 
@@ -26,6 +27,10 @@ public class PatchGwtConfig {
 	
 	public static void setCurrentTestedModuleFile(String currentTestedModuleFile) {
 		ImplPatcher.currentTestedModuleFile = currentTestedModuleFile;
+	}
+
+	public static void replaceSequenceInProperties(String regex, String to) {
+		PatchGwtUtils.sequenceReplacementList.add(new SequenceReplacement(regex, to));
 	}
 
 }

@@ -24,7 +24,7 @@ import com.octo.gwt.test.internal.patcher.tools.AutomaticPatcher;
 
 public class PatchGwtUtils {
 
-	static class SequenceReplacement {
+	public static class SequenceReplacement {
 
 		private String regex;
 
@@ -41,7 +41,7 @@ public class PatchGwtUtils {
 
 	}
 
-	private static final List<SequenceReplacement> sequenceReplacementList = new ArrayList<SequenceReplacement>();
+	public static final List<SequenceReplacement> sequenceReplacementList = new ArrayList<SequenceReplacement>();
 
 	/**
 	 * Method used to load properties file with charset. Method is located in
@@ -82,7 +82,7 @@ public class PatchGwtUtils {
 			throws IOException {
 		if (locale == null) {
 			throw new RuntimeException(
-					"No locale specified, please call PactchGWT.setLocale(...)");
+					"No locale specified, please call PatchGwtConfig.setLocale(...)");
 		}
 		String localeLanguage = locale.getLanguage();
 		return getProperties(prefix + "_" + localeLanguage);
@@ -155,10 +155,6 @@ public class PatchGwtUtils {
 	public static void reset() {
 		sequenceReplacementList.clear();
 		locale = null;
-	}
-
-	public static void replaceSequenceInProperties(String regex, String to) {
-		sequenceReplacementList.add(new SequenceReplacement(regex, to));
 	}
 
 	public static void patch(CtClass c, IPatcher patcher) throws Exception {
