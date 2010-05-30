@@ -215,7 +215,7 @@ public class PatchGWT {
 		PatchGwtWithJavaAgent.patch(ButtonElement.class, new AutomaticElementSubclasser());
 		PatchGwtWithJavaAgent.patch(DivElement.class, new AutomaticElementSubclasser());
 		PatchGwtWithJavaAgent.patch(DListElement.class, new AutomaticElementSubclasser());
-		PatchGwtWithJavaAgent.patch(Class.forName(PatchConstants.CLIENT_DOM_IMPL_CLASS_NAME), new DOMImplPatcher());
+		PatchGwtWithJavaAgent.patch(Class.forName("com.google.gwt.dom.client.DOMImpl"), new DOMImplPatcher());
 		PatchGwtWithJavaAgent.patch(DOMImpl.class, new DOMImplUserPatcher());
 		PatchGwtWithJavaAgent.patch(DOM.class, new DOMPatcher());
 		PatchGwtWithJavaAgent.patch(Element.class, new ElementPatcher());

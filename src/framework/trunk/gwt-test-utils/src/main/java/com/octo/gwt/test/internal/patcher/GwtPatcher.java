@@ -32,7 +32,6 @@ import com.google.gwt.user.client.ui.impl.TextBoxImpl;
 import com.google.gwt.user.datepicker.client.DateBox;
 import com.octo.gwt.test.GwtCreateHandler;
 import com.octo.gwt.test.GwtLogHandler;
-import com.octo.gwt.test.PatchConstants;
 import com.octo.gwt.test.internal.overrides.OverrideImagePrototype;
 import com.octo.gwt.test.internal.patcher.dom.DOMImplSubClassPatcher;
 import com.octo.gwt.test.internal.patcher.dom.DOMImplUserSubClassPatcher;
@@ -73,8 +72,8 @@ public class GwtPatcher extends AutomaticPatcher {
 		if (classLiteral == WindowImpl.class) {
 			return new WindowImpl();
 		}
-		if (classLiteral.getCanonicalName().equals(PatchConstants.CLIENT_DOM_IMPL_CLASS_NAME)) {
-			return PatchGwtUtils.generateInstance(PatchConstants.CLIENT_DOM_IMPL_CLASS_NAME, new DOMImplSubClassPatcher());
+		if (classLiteral.getCanonicalName().equals("com.google.gwt.dom.client.DOMImpl")) {
+			return PatchGwtUtils.generateInstance("com.google.gwt.dom.client.DOMImpl", new DOMImplSubClassPatcher());
 		}
 		if (classLiteral == DOMImpl.class) {
 			return PatchGwtUtils.generateInstance(DOMImpl.class.getCanonicalName(), new DOMImplUserSubClassPatcher());

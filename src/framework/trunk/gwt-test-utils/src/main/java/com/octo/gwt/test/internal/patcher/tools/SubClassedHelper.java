@@ -104,19 +104,19 @@ public class SubClassedHelper {
 		return "(" + returnType.getName() + ") " + SubClassedHelper.class.getCanonicalName() + ".getProperty(" + object + ", \"" + fieldName +"\")";
 	}
 
-	private static Map<Class<?>, Class<?>> compiledMap = new HashMap<Class<?>, Class<?>>();
+	private static Map<String, Class<?>> compiledMap = new HashMap<String, Class<?>>();
 	
-	public static Class<?> getSubClass(Class<?> clazz) {
-		Class<?> subClazz = compiledMap.get(clazz);
+	public static Class<?> getSubClass(String className) {
+		Class<?> subClazz = compiledMap.get(className);
 		if (subClazz != null) {
 			return subClazz;
 		}
 		try {
 			ClassPool pool = PatchGwtClassPool.get();
-			String className = clazz.getCanonicalName() + AutomaticSubclasser.SUB_CLASSED;
-			CtClass ctClass = pool.get(className);
+			String subClassName = className + AutomaticSubclasser.SUB_CLASSED;
+			CtClass ctClass = pool.get(subClassName);
 			subClazz = ctClass.toClass();
-			compiledMap.put(clazz, subClazz);
+			compiledMap.put(className, subClazz);
 			return subClazz;
 		}
 		catch(NotFoundException e) {

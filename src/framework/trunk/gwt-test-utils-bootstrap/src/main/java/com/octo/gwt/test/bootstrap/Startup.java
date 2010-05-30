@@ -6,6 +6,7 @@ import java.lang.instrument.Instrumentation;
 import java.lang.instrument.UnmodifiableClassException;
 
 public final class Startup {
+	
 	public static Instrumentation instrumentation;
 
 	public static void premain(String agentArgs, Instrumentation inst) throws IOException {
