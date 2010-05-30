@@ -8,15 +8,29 @@ import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
 
-import com.octo.gwt.test.integ.tools.AbstractGwtIntegrationShell;
+import com.octo.gwt.test.GwtTestClassLoader;
+import com.octo.gwt.test.integ.CsvDirectory;
+import com.octo.gwt.test.integ.CsvMacros;
 import com.octo.gwt.test.integ.tools.DirectoryTestReader;
+import com.octo.gwt.test.utils.GwtTestReflectionUtils;
 
 public class StandardJUnit4CsvRunner extends BlockJUnit4ClassRunner {
 
+	static {
+		GwtTestClassLoader.getInstance().delegateLoadingOf(CsvDirectory.class.getCanonicalName());
+		GwtTestClassLoader.getInstance().delegateLoadingOf(CsvMacros.class.getCanonicalName());
+		GwtTestClassLoader.getInstance().delegateLoadingOf(DirectoryTestReader.class.getCanonicalName());
+	}
+	
 	private DirectoryTestReader reader;
 
-	public StandardJUnit4CsvRunner(Class<?> clazz) throws InitializationError {
-		super(clazz);
+	public StandardJUnit4CsvRunner(Class<?> clazz) throws InitializationError, ClassNotFoundException {
+		super(init(clazz));
+	}
+
+	private static Class<?> init(Class<?> clazz) throws ClassNotFoundException {
+		Thread.currentThread().setContextClassLoader(GwtTestClassLoader.getInstance());
+		return GwtTestClassLoader.getInstance().loadClass(clazz.getCanonicalName());
 	}
 
 	@Override
@@ -34,10 +48,9 @@ public class StandardJUnit4CsvRunner extends BlockJUnit4ClassRunner {
 	@Override
 	protected Object createTest() throws Exception {
 		Object testInstance = reader.createObject();
-		AbstractGwtIntegrationShell shell = (AbstractGwtIntegrationShell) testInstance;
-		shell.setReader(reader);
-		shell.setReader(reader);
-		return shell;
+		Method m = GwtTestReflectionUtils.findMethod(testInstance.getClass(), "setReader", null);
+		m.invoke(testInstance, reader);
+		return testInstance;
 	}
 
 }

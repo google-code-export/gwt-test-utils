@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>com.octo.gwt.test</groupId>
 		<artifactId>gwt-test-utils-parent</artifactId>
-		<version>0.13-SNAPSHOT</version>
+		<version>0.13-noBootstrap-SNAPSHOT</version>
 	</parent>
 	
 	<properties>
@@ -48,33 +48,7 @@
 				<artifactId>maven-surefire-plugin</artifactId>
 				<configuration>
 					<jvm>${java6_home}/bin/java</jvm>
-					<argLine>-javaagent:target/bootstrap.jar</argLine>
 				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-dependency-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>copy</id>
-						<phase>generate-resources</phase>
-						<goals>
-							<goal>copy</goal>
-						</goals>
-						<configuration>
-							<artifactItems>
-								<artifactItem>
-									<groupId>${project.groupId}</groupId>
-									<artifactId>gwt-test-utils-bootstrap</artifactId>
-									<version>${project.version}</version>
-									<overWrite>true</overWrite>
-									<destFileName>bootstrap.jar</destFileName>
-									<outputDirectory>${project.build.directory}</outputDirectory>
-								</artifactItem>
-							</artifactItems>
-						</configuration>
-					</execution>
-				</executions>
 			</plugin>
 		</plugins>
 	</build>

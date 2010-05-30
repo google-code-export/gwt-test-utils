@@ -8,7 +8,6 @@ public interface MyClientBundle extends ClientBundle {
 	
 	public static final MyClientBundle INSTANCE = GWT.create(MyClientBundle.class);
 	
-	
 	@Source("testCssResource.css")
 	public TestCssResource testCssResource();
 	

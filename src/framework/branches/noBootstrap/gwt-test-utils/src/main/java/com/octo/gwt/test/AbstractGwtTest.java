@@ -2,10 +2,11 @@ package com.octo.gwt.test;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.runner.RunWith;
 
 import com.octo.gwt.test.utils.WidgetUtils;
 
-
+@RunWith(GwtTestRunner.class)
 public abstract class AbstractGwtTest extends WidgetUtils {
 
 	public String getCurrentTestedModuleFile() {
@@ -14,7 +15,6 @@ public abstract class AbstractGwtTest extends WidgetUtils {
 	
 	@Before
 	public void setUpAbstractGwtTest() throws Exception {
-		initPatchGwt();
 		PatchGwtConfig.setGwtCreateHandler(getGwtCreateHandler());
 		PatchGwtConfig.setCurrentTestedModuleFile(getCurrentTestedModuleFile());
 	}
@@ -22,11 +22,6 @@ public abstract class AbstractGwtTest extends WidgetUtils {
 	@After
 	public void tearDownAbstractGwtTest() throws Exception {
 		resetPatchGwt();
-	}
-
-	protected void initPatchGwt() throws Exception {
-		//initialisation du framework de mock GWT
-		PatchGWT.init();
 	}
 
 	protected void resetPatchGwt() throws Exception {

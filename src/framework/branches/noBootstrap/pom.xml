@@ -4,7 +4,7 @@
 	<groupId>com.octo.gwt.test</groupId>
 	<artifactId>gwt-test-utils-parent</artifactId>
 	<packaging>pom</packaging>
-	<version>0.13-SNAPSHOT</version>
+	<version>0.13-noBootstrap-SNAPSHOT</version>
 	<name>GWT Tests Utils Parent</name>
 
 	<properties>
@@ -28,7 +28,6 @@
 
 	<modules>
 		<module>gwt-test-utils</module>
-		<module>gwt-test-utils-bootstrap</module>
 		<module>gwt-test-utils-integration</module>
 	</modules>
 

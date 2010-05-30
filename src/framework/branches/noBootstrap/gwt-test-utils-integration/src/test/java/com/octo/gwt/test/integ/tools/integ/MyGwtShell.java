@@ -7,14 +7,11 @@ import com.octo.gwt.test.PatchGwtConfig;
 import com.octo.gwt.test.integ.csvrunner.CsvRunner;
 import com.octo.gwt.test.integ.csvrunner.Node;
 import com.octo.gwt.test.integ.handler.GwtCreateHandlerImpl;
-import com.octo.gwt.test.integ.junit.StandardJUnit4CsvRunner;
 import com.octo.gwt.test.integ.tools.AbstractGwtIntegrationShell;
 import com.octo.gwt.test.integ.tools.PrefixProcessor;
 
-@RunWith(StandardJUnit4CsvRunner.class)
+@RunWith(LocalRunner.class)
 public abstract class MyGwtShell extends AbstractGwtIntegrationShell {
-
-	public static String appender = "";
 
 	private MyBeautifulApp app;
 
@@ -47,7 +44,7 @@ public abstract class MyGwtShell extends AbstractGwtIntegrationShell {
 	}
 
 	public void append(String s) {
-		appender += s;
+		MyStringStore.appender += s;
 	}
 
 	@Override

@@ -12,7 +12,7 @@ import com.octo.gwt.test.ElementWrapper;
 import com.octo.gwt.test.PatchGwtClassPool;
 
 public class SubClassedHelper {
-	
+		
 	public static void setProperty(Object o, String propertyName, Object propertyValue) {
 		setProperty(o, propertyName, propertyValue, false);
 	}

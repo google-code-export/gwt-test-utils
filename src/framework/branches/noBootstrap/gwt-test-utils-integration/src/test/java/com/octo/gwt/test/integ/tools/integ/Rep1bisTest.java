@@ -13,7 +13,7 @@ public class Rep1bisTest {
 
 	@Test
 	public void runTest1() {
-		MyGwtShell.appender = "";
+		MyStringStore.appender = "";
 		JUnitCore core = new JUnitCore();
 		Result r = core.run(new FilterRequest(new ClassRequest(Rep1Test.class), new Filter() {
 
@@ -29,6 +29,6 @@ public class Rep1bisTest {
 		}));
 		Assert.assertEquals(1, r.getRunCount());
 		//Assert.assertEquals(0, r.getFailureCount());
-		Assert.assertEquals("macro_End of 1st test", MyGwtShell.appender);
+		Assert.assertEquals("macro_End of 1st test", MyStringStore.appender);
 	}
 }
