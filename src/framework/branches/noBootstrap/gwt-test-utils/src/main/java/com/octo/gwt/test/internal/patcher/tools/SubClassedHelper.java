@@ -9,6 +9,7 @@ import javassist.CtClass;
 import javassist.NotFoundException;
 
 import com.octo.gwt.test.ElementWrapper;
+import com.octo.gwt.test.GwtTestClassLoader;
 import com.octo.gwt.test.PatchGwtClassPool;
 
 public class SubClassedHelper {
@@ -115,7 +116,7 @@ public class SubClassedHelper {
 			ClassPool pool = PatchGwtClassPool.get();
 			String subClassName = className + AutomaticSubclasser.SUB_CLASSED;
 			CtClass ctClass = pool.get(subClassName);
-			subClazz = ctClass.toClass();
+			subClazz = ctClass.toClass(GwtTestClassLoader.getInstance(), null);
 			compiledMap.put(className, subClazz);
 			return subClazz;
 		}

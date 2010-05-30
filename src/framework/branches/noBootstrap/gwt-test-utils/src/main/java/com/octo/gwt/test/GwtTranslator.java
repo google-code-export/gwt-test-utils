@@ -148,7 +148,7 @@ import com.octo.gwt.test.utils.PatchGwtUtils;
 
 public class GwtTranslator implements Translator {
 
-	public static boolean debug = false;
+	public static boolean debug = "true".equals(System.getProperty(GwtTranslator.class.getCanonicalName() + ".debug"));
 	
 	private void log(String log) {
 		if (debug) {

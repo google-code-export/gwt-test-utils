@@ -86,7 +86,7 @@ public class PatchGwtUtils {
 			throws IOException {
 		if (locale == null) {
 			throw new RuntimeException(
-					"No locale specified, please call PactchGWT.setLocale(...)");
+					"No locale specified, please call PatchGwtConfig.setLocale(...)");
 		}
 		String localeLanguage = locale.getLanguage();
 		return getProperties(prefix + "_" + localeLanguage);
