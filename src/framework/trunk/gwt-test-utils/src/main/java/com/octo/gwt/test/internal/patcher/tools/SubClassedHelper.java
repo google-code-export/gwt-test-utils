@@ -3,13 +3,15 @@ package com.octo.gwt.test.internal.patcher.tools;
 import java.util.HashMap;
 import java.util.Map;
 
+import javassist.CannotCompileException;
+import javassist.ClassPool;
 import javassist.CtClass;
+import javassist.NotFoundException;
 
 import com.octo.gwt.test.ElementWrapper;
+import com.octo.gwt.test.PatchGwtClassPool;
 
 public class SubClassedHelper {
-	
-	private static Map<Class<?>, Class<?>> map = new HashMap<Class<?>, Class<?>>();
 	
 	public static void setProperty(Object o, String propertyName, Object propertyValue) {
 		setProperty(o, propertyName, propertyValue, false);
@@ -102,12 +104,27 @@ public class SubClassedHelper {
 		return "(" + returnType.getName() + ") " + SubClassedHelper.class.getCanonicalName() + ".getProperty(" + object + ", \"" + fieldName +"\")";
 	}
 
-	public static void register(Class<?> clazz, Class<?> subClazz) {
-		map.put(clazz, subClazz);
-	}
+	private static Map<Class<?>, Class<?>> compiledMap = new HashMap<Class<?>, Class<?>>();
 	
 	public static Class<?> getSubClass(Class<?> clazz) {
-		return map.get(clazz);
+		Class<?> subClazz = compiledMap.get(clazz);
+		if (subClazz != null) {
+			return subClazz;
+		}
+		try {
+			ClassPool pool = PatchGwtClassPool.get();
+			String className = clazz.getCanonicalName() + AutomaticSubclasser.SUB_CLASSED;
+			CtClass ctClass = pool.get(className);
+			subClazz = ctClass.toClass();
+			compiledMap.put(clazz, subClazz);
+			return subClazz;
+		}
+		catch(NotFoundException e) {
+			return null;
+		}
+		catch(CannotCompileException e) {
+			throw new RuntimeException(e);
+		}
 	}
 	
 }

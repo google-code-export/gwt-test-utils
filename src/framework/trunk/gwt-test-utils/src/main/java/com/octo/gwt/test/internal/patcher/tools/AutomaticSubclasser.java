@@ -10,6 +10,7 @@ import javassist.CtMethod;
 
 public class AutomaticSubclasser extends AutomaticGetAndSetPatcher {
 
+	public static final String SUB_CLASSED = "SubClassed";
 	private static final String PROPERTIES = "__PROPERTIES__";
 
 	public void createConstructor(ClassPool cp, CtClass subClazz, CtClass c) throws Exception {
@@ -25,7 +26,7 @@ public class AutomaticSubclasser extends AutomaticGetAndSetPatcher {
 	public void initClass(CtClass c) throws Exception {
 		super.initClass(c);
 		ClassPool cp = c.getClassPool();
-		CtClass subClazz = cp.makeClass(c.getName() + "SubClassed");
+		CtClass subClazz = cp.makeClass(c.getName() + SUB_CLASSED);
 		subClazz.setSuperclass(c);
 		subClazz.addInterface(cp.get(SubClassedObject.class.getCanonicalName()));
 
@@ -45,10 +46,6 @@ public class AutomaticSubclasser extends AutomaticGetAndSetPatcher {
 		subClazz.addMethod(getProperties);
 		
 		createConstructor(cp, subClazz, c);
-
-		Class<?> compiledSubClazz = subClazz.toClass();
-
-		SubClassedHelper.register(Class.forName(c.getName()), compiledSubClazz);
 	}
 
 }

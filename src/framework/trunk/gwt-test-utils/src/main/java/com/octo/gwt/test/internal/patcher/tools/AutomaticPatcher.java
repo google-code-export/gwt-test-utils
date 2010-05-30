@@ -115,32 +115,8 @@ public class AutomaticPatcher implements IPatcher {
 			return false;
 		}
 		for (int i = 0; i < classesAsked.length; i++) {
-			Class<?> clazz = null;
-			CtClass foundClass = classesFound[i];
-			if (foundClass.isPrimitive()) {
-				if (foundClass == CtClass.intType) {
-					clazz = int.class;
-				} else if (foundClass == CtClass.booleanType) {
-					clazz = boolean.class;
-				} else if (foundClass == CtClass.shortType) {
-					clazz = short.class;
-				} else if (foundClass == CtClass.doubleType) {
-					clazz = double.class;
-				} else if (foundClass == CtClass.floatType) {
-					clazz = float.class;
-				} else if (foundClass == CtClass.charType) {
-					clazz = char.class;
-				} else if (foundClass == CtClass.byteType) {
-					clazz = byte.class;
-				} else {
-					throw new RuntimeException("Not managed type " + foundClass + " for method " + m);
-				}
-			} else if (foundClass.isArray()) {
-				clazz = Class.forName("[L" + foundClass.getComponentType().getName() + ";");
-			} else {
-				clazz = Class.forName(foundClass.getName());
-			}
-			if (clazz != classesAsked[i]) {
+			CtClass classFound = classesFound[i];
+			if (!classFound.getName().equals(classesAsked[i].getCanonicalName())) {
 				return false;
 			}
 		}
