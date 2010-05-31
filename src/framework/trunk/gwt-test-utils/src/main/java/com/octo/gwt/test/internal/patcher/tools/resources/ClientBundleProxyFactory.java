@@ -24,6 +24,7 @@ import javassist.bytecode.annotation.StringMemberValue;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.DataResource;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.resources.client.TextResource;
 import com.google.gwt.resources.client.ClientBundle.Source;
 import com.google.gwt.resources.ext.DefaultExtensions;
@@ -67,6 +68,9 @@ public class ClientBundleProxyFactory {
 				} else if (DataResource.class.isAssignableFrom(method.getReturnType())) {
 					Class<? extends ClientBundle> clazz = (Class<ClientBundle>) method.getReturnType();
 					return generateInvocationHandler(new DataResourceCallback(clazz, resourceFile, proxiedClass), method.getName());
+				} else if (ImageResource.class.isAssignableFrom(method.getReturnType())) {
+					Class<? extends ClientBundle> clazz = (Class<ClientBundle>) method.getReturnType();
+					return generateInvocationHandler(new ImageResourceCallback(clazz, resourceFile, proxiedClass), method.getName());
 				}
 				throw new RuntimeException("Not managed return type for ClientBundle : " + method.getReturnType().getSimpleName());
 			}
