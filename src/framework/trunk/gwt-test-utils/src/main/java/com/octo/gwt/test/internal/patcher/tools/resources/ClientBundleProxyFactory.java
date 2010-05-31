@@ -23,6 +23,7 @@ import javassist.bytecode.annotation.StringMemberValue;
 
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
+import com.google.gwt.resources.client.DataResource;
 import com.google.gwt.resources.client.TextResource;
 import com.google.gwt.resources.client.ClientBundle.Source;
 import com.google.gwt.resources.ext.DefaultExtensions;
@@ -57,12 +58,15 @@ public class ClientBundleProxyFactory {
 
 			public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 				File resourceFile = methodRegistry.getResourceFile(method);
-				if (method.getReturnType() == TextResource.class) {
+				if (TextResource.class.isAssignableFrom(method.getReturnType())) {
 					Class<? extends ClientBundle> clazz = (Class<ClientBundle>) method.getReturnType();
 					return generateInvocationHandler(new TextResourceCallback(clazz, resourceFile), method.getName());
 				} else if (CssResource.class.isAssignableFrom(method.getReturnType())) {
 					Class<? extends ClientBundle> clazz = (Class<ClientBundle>) method.getReturnType();
 					return generateInvocationHandler(new CssResourceCallback(clazz, resourceFile), method.getName());
+				} else if (DataResource.class.isAssignableFrom(method.getReturnType())) {
+					Class<? extends ClientBundle> clazz = (Class<ClientBundle>) method.getReturnType();
+					return generateInvocationHandler(new DataResourceCallback(clazz, resourceFile, proxiedClass), method.getName());
 				}
 				throw new RuntimeException("Not managed return type for ClientBundle : " + method.getReturnType().getSimpleName());
 			}
@@ -145,7 +149,7 @@ public class ClientBundleProxyFactory {
 				String fileName = (fileSimpleName.startsWith(baseDir)) ? fileSimpleName : baseDir + fileSimpleName;
 
 				if (computeExtensions) {
-					String[] extensions = getResourceDefaultExtensions(method.getReturnType(), method);
+					String[] extensions = getResourceDefaultExtensions(method);
 
 					for (String extension : extensions) {
 						String possibleFile = fileName + extension;
@@ -172,12 +176,12 @@ public class ClientBundleProxyFactory {
 
 		}
 
-		private String[] getResourceDefaultExtensions(Class<?> clazz, Method method) {
+		private String[] getResourceDefaultExtensions(Method method) {
 			DefaultExtensions annotation = method.getReturnType().getAnnotation(DefaultExtensions.class);
 			if (annotation == null) {
 				throw new RuntimeException(method.getReturnType().getSimpleName()
 						+ " does not define a default extension for resource file. You should use a correct @" + Source.class.getSimpleName()
-						+ " annotation on " + clazz.getSimpleName() + "." + method.getName() + "() method");
+						+ " annotation on " + method.getDeclaringClass().getSimpleName() + "." + method.getName() + "() method");
 			} else {
 				return annotation.value();
 			}

@@ -17,11 +17,13 @@ public class ImplPatcher extends AutomaticPatcher {
 
 	public static String currentTestedModuleFile;
 
+	private static String currentModuleName;
+
 	@PatchMethod
 	public static int getHashCode(Object o) {
 		return o.hashCode();
 	}
-	
+
 	@PatchMethod
 	public static String getHostPageBaseURL() {
 		return "http://localhost:8888/";
@@ -29,20 +31,23 @@ public class ImplPatcher extends AutomaticPatcher {
 
 	@PatchMethod
 	public static String getModuleName() {
-		try {
-			DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-			Document document = builder.parse(getModuleConfigurationFile());
+		if (currentModuleName == null) {
+			try {
+				DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+				Document document = builder.parse(getModuleConfigurationFile());
 
-			XPath xpath = XPathFactory.newInstance().newXPath();
-			String expression = "/module/@rename-to";
-			return xpath.evaluate(expression, document);
-		} catch (Exception e) {
-			if (e instanceof RuntimeException) {
-				throw (RuntimeException) e;
-			} else {
-				throw new RuntimeException(e);
+				XPath xpath = XPathFactory.newInstance().newXPath();
+				String expression = "/module/@rename-to";
+				currentModuleName = xpath.evaluate(expression, document);
+			} catch (Exception e) {
+				if (e instanceof RuntimeException) {
+					throw (RuntimeException) e;
+				} else {
+					throw new RuntimeException(e);
+				}
 			}
 		}
+		return currentModuleName;
 	}
 
 	private static InputStream getModuleConfigurationFile() {
@@ -58,9 +63,10 @@ public class ImplPatcher extends AutomaticPatcher {
 	public static String getModuleBaseURL() {
 		return getHostPageBaseURL() + getModuleName() + "/";
 	}
-	
+
 	public static void reset() {
 		currentTestedModuleFile = null;
+		currentModuleName = null;
 	}
 
 }

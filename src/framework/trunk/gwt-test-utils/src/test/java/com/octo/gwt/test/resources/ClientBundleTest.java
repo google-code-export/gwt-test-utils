@@ -4,10 +4,16 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
+import com.google.gwt.resources.client.DataResource;
 import com.google.gwt.resources.client.TextResource;
 import com.octo.gwt.test.AbstractGwtTest;
 
 public class ClientBundleTest extends AbstractGwtTest {
+	
+	@Override
+	public String getCurrentTestedModuleFile() {
+		return "test-config.gwt.xml";
+	}
 	
 	@Test
 	public void checkTextResourceTxt() {
@@ -53,6 +59,20 @@ public class ClientBundleTest extends AbstractGwtTest {
 		Assert.assertEquals("testCssResource", name);
 		Assert.assertEquals("testStyle", testStyle);
 		Assert.assertEquals("constant-value", constantValue);
+	}
+	
+	@Test
+	public void checkDataResource() {
+		// Setup
+		DataResource testDataResource = MyClientBundle.INSTANCE.testDataResource();
+	
+		// Test
+		String name = testDataResource.getName();
+		String url = testDataResource.getUrl();
+		
+		// Assert
+		Assert.assertEquals("testDataResource", name);
+		Assert.assertEquals("http://localhost:8888/gwt_test_utils_module/com/octo/gwt/test/resources/textResourceXml.xml", url);
 	}
 
 }
