@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtConstructor;
 import javassist.CtMethod;
@@ -28,7 +27,7 @@ public class AutomaticPatcher implements IPatcher {
 
 	private CtClass c;
 
-	public void initClass(CtClass c, ClassPool cp) throws Exception {
+	public void initClass(CtClass c) throws Exception {
 		this.c = c;
 		this.annotatedMethods = GwtTestReflectionUtils.getAnnotatedMethod(this.getClass(), PatchMethod.class);
 		this.processedMethods = new ArrayList<Method>();
@@ -116,32 +115,32 @@ public class AutomaticPatcher implements IPatcher {
 			return false;
 		}
 		for (int i = 0; i < classesAsked.length; i++) {
-			Class<?> clazz = null;
 			CtClass foundClass = classesFound[i];
+			String name;
 			if (foundClass.isPrimitive()) {
 				if (foundClass == CtClass.intType) {
-					clazz = int.class;
+					name = int.class.getName();
 				} else if (foundClass == CtClass.booleanType) {
-					clazz = boolean.class;
+				    name = boolean.class.getName();
 				} else if (foundClass == CtClass.shortType) {
-					clazz = short.class;
+				    name = short.class.getName();
 				} else if (foundClass == CtClass.doubleType) {
-					clazz = double.class;
+				    name = double.class.getName();
 				} else if (foundClass == CtClass.floatType) {
-					clazz = float.class;
+				    name = float.class.getName();
 				} else if (foundClass == CtClass.charType) {
-					clazz = char.class;
+				    name = char.class.getName();
 				} else if (foundClass == CtClass.byteType) {
-					clazz = byte.class;
+				    name = byte.class.getName();
 				} else {
 					throw new RuntimeException("Not managed type " + foundClass + " for method " + m);
 				}
 			} else if (foundClass.isArray()) {
-				clazz = Class.forName("[L" + foundClass.getComponentType().getName() + ";", false, Thread.currentThread().getContextClassLoader());
+			    name = "[L" + foundClass.getComponentType().getName() + ";";
 			} else {
-				clazz = Class.forName(foundClass.getName(), false, Thread.currentThread().getContextClassLoader());
+			    name = foundClass.getName();
 			}
-			if (clazz != classesAsked[i]) {
+			if (!name.equals(classesAsked[i].getName())) {
 				return false;
 			}
 		}
@@ -214,9 +213,13 @@ public class AutomaticPatcher implements IPatcher {
 		return (String) annotatedMethod.invoke(null, params.toArray());
 	}
 
-	public void finalizeClass(CtClass c, ClassPool cp) throws Exception {
+	public void finalizeClass(CtClass c) throws Exception {
 		for (Method m : annotatedMethods.keySet()) {
 			if (!processedMethods.contains(m)) {
+			    for (CtMethod cm : c.getMethods()) {
+			        System.out.println(cm.getLongName());
+			    }
+			    System.out.println("Unused methods: " + (c.getMethods().length - processedMethods.size()));
 				throw new RuntimeException("@PatchMethod not used : " + m);
 			}
 		}

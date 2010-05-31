@@ -1,6 +1,5 @@
 package com.octo.gwt.test.internal.patcher.dom;
 
-import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtConstructor;
 
@@ -17,8 +16,8 @@ public class SelectElementPatcher extends AutomaticGetAndSetPatcher {
 	private static final String SELECTED_INDEX_FIELD = "SelectedIndex";
 	
 	@Override
-	public void initClass(CtClass c,  ClassPool cp) throws Exception {
-		super.initClass(c, cp);
+	public void initClass(CtClass c) throws Exception {
+		super.initClass(c);
 		CtConstructor cons = findConstructor(c);
 		
 		cons.insertAfter(PropertyContainerAwareHelper.getCodeSetProperty("this", SELECTED_INDEX_FIELD, "-1") + ";");

@@ -6,6 +6,7 @@ import javassist.NotFoundException;
 import javassist.Translator;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.impl.Impl;
 import com.google.gwt.dom.client.AnchorElement;
 import com.google.gwt.dom.client.AreaElement;
 import com.google.gwt.dom.client.BRElement;
@@ -64,6 +65,7 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.impl.DOMImpl;
 import com.google.gwt.user.client.impl.ElementMapperImpl;
 import com.octo.gwt.test.internal.patcher.GWTPatcher;
+import com.octo.gwt.test.internal.patcher.ImplPatcher;
 import com.octo.gwt.test.internal.patcher.dom.DOMImplPatcher;
 import com.octo.gwt.test.internal.patcher.dom.DOMImplUserPatcher;
 import com.octo.gwt.test.internal.patcher.dom.DocumentPatcher;
@@ -101,76 +103,82 @@ public class GwtTestTranslator implements Translator {
 		}
 	}
 
-	public void processPatches(ClassPool cp) throws Exception {
-		PatchGwt.setClassPool(cp);
-		PatchGwt.patch(GWT.class, new GWTPatcher());
+	public static void processPatches(ClassPool cp) throws Exception {
+		PatchGwt.addPatcher(GWT.class, new GWTPatcher());
+		PatchGwt.addPatcher(Impl.class, new ImplPatcher());
 		
 		// all DOM stuff
+
+        PatchGwt.addPatcher(Node.class, new NodePatcher());
+        PatchGwt.addPatcher(Element.class, new ElementPatcher());
+        PatchGwt.addPatcher(com.google.gwt.user.client.Element.class,  new AutomaticPatcher());
+		PatchGwt.addPatcher(NativeEvent.class, new AutomaticGetAndSetPatcher());
+		PatchGwt.addPatcher(Event.class,  new AutomaticPatcher());
+		PatchGwt.addPatcher(EventTarget.class, new AutomaticPatcher());
+		PatchGwt.addPatcher(AnchorElement.class, new AutomaticGetAndSetPatcher());
+		PatchGwt.addPatcher(AreaElement.class, new AutomaticGetAndSetPatcher());
+		PatchGwt.addPatcher(BaseElement.class, new AutomaticGetAndSetPatcher());
+		PatchGwt.addPatcher(BodyElement.class, new AutomaticGetAndSetPatcher());
+		PatchGwt.addPatcher(BRElement.class, new AutomaticGetAndSetPatcher());
+		PatchGwt.addPatcher(ButtonElement.class, new AutomaticGetAndSetPatcher());
+		PatchGwt.addPatcher(DivElement.class, new AutomaticGetAndSetPatcher());
+		PatchGwt.addPatcher(DListElement.class, new AutomaticGetAndSetPatcher());
+		PatchGwt.addPatcher(DOMImpl.class, new DOMImplUserPatcher());
+		PatchGwt.addPatcher(ElementMapperImpl.class, new ElementMapperImplPatcher());
+		PatchGwt.addPatcher(FieldSetElement.class, new AutomaticGetAndSetPatcher());
+		PatchGwt.addPatcher(FrameElement.class, new AutomaticGetAndSetPatcher());
+		PatchGwt.addPatcher(FrameSetElement.class, new AutomaticGetAndSetPatcher());
+		PatchGwt.addPatcher(FormElement.class, new AutomaticGetAndSetPatcher());
+		PatchGwt.addPatcher(HeadElement.class, new AutomaticGetAndSetPatcher());
+		PatchGwt.addPatcher(HRElement.class, new AutomaticGetAndSetPatcher());
+		PatchGwt.addPatcher(HeadingElement.class, new AutomaticGetAndSetPatcher());
+		PatchGwt.addPatcher(IFrameElement.class, new AutomaticGetAndSetPatcher());
+		PatchGwt.addPatcher(ImageElement.class, new AutomaticGetAndSetPatcher());
+		PatchGwt.addPatcher(InputElement.class, new InputElementPatcher());
+		PatchGwt.addPatcher(LIElement.class, new AutomaticGetAndSetPatcher());
+		PatchGwt.addPatcher(LabelElement.class, new AutomaticGetAndSetPatcher());
+		PatchGwt.addPatcher(LegendElement.class, new AutomaticGetAndSetPatcher());
+		PatchGwt.addPatcher(LinkElement.class, new AutomaticGetAndSetPatcher());
+		PatchGwt.addPatcher(NodeList.class, new NodeListPatcher());
+		PatchGwt.addPatcher(MapElement.class, new AutomaticGetAndSetPatcher());
+		PatchGwt.addPatcher(MetaElement.class, new AutomaticGetAndSetPatcher());
+		PatchGwt.addPatcher(ModElement.class, new AutomaticGetAndSetPatcher());
+		PatchGwt.addPatcher(ObjectElement.class, new AutomaticGetAndSetPatcher());
+		PatchGwt.addPatcher(OptionElement.class, new AutomaticGetAndSetPatcher());
+		PatchGwt.addPatcher(OListElement.class, new AutomaticGetAndSetPatcher());
+		PatchGwt.addPatcher(OptGroupElement.class, new AutomaticGetAndSetPatcher());
+		PatchGwt.addPatcher(ParagraphElement.class, new AutomaticGetAndSetPatcher());
+		PatchGwt.addPatcher(ParamElement.class, new AutomaticGetAndSetPatcher());
+		PatchGwt.addPatcher(PreElement.class, new AutomaticGetAndSetPatcher());
+		PatchGwt.addPatcher(QuoteElement.class, new AutomaticGetAndSetPatcher());
+		PatchGwt.addPatcher(ScriptElement.class, new AutomaticGetAndSetPatcher());
+		PatchGwt.addPatcher(StyleElement.class, new AutomaticGetAndSetPatcher());
+		PatchGwt.addPatcher(SelectElement.class, new SelectElementPatcher());
+		PatchGwt.addPatcher(SpanElement.class, new AutomaticGetAndSetPatcher());
+		PatchGwt.addPatcher(Style.class, new StylePatcher());
+		PatchGwt.addPatcher(TableCaptionElement.class, new AutomaticGetAndSetPatcher());
+		PatchGwt.addPatcher(TableCellElement.class, new AutomaticGetAndSetPatcher());
+		PatchGwt.addPatcher(TableColElement.class, new AutomaticGetAndSetPatcher());
+		PatchGwt.addPatcher(TableElement.class, new AutomaticGetAndSetPatcher());
+		PatchGwt.addPatcher(TableRowElement.class, new AutomaticGetAndSetPatcher());
+		PatchGwt.addPatcher(TableSectionElement.class, new AutomaticGetAndSetPatcher());
+		PatchGwt.addPatcher(TextAreaElement.class, new AutomaticGetAndSetPatcher());
+		PatchGwt.addPatcher(Text.class, new AutomaticGetAndSetPatcher());
+		PatchGwt.addPatcher(TitleElement.class, new AutomaticGetAndSetPatcher());
+		PatchGwt.addPatcher(UListElement.class, new AutomaticGetAndSetPatcher());
 		
-		PatchGwt.patch(NativeEvent.class, new AutomaticGetAndSetPatcher());
-		PatchGwt.patch(Event.class,  new AutomaticPatcher());
-		PatchGwt.patch(EventTarget.class, new AutomaticPatcher());
-		PatchGwt.patch(AnchorElement.class, new AutomaticGetAndSetPatcher());
-		PatchGwt.patch(AreaElement.class, new AutomaticGetAndSetPatcher());
-		PatchGwt.patch(BaseElement.class, new AutomaticGetAndSetPatcher());
-		PatchGwt.patch(BodyElement.class, new AutomaticGetAndSetPatcher());
-		PatchGwt.patch(BRElement.class, new AutomaticGetAndSetPatcher());
-		PatchGwt.patch(ButtonElement.class, new AutomaticGetAndSetPatcher());
-		PatchGwt.patch(DivElement.class, new AutomaticGetAndSetPatcher());
-		PatchGwt.patch(DListElement.class, new AutomaticGetAndSetPatcher());
-		PatchGwt.patch(DOMImpl.class, new DOMImplUserPatcher());
-		PatchGwt.patch(Element.class, new ElementPatcher());
-		PatchGwt.patch(ElementMapperImpl.class, new ElementMapperImplPatcher());
-		PatchGwt.patch(FieldSetElement.class, new AutomaticGetAndSetPatcher());
-		PatchGwt.patch(FrameElement.class, new AutomaticGetAndSetPatcher());
-		PatchGwt.patch(FrameSetElement.class, new AutomaticGetAndSetPatcher());
-		PatchGwt.patch(FormElement.class, new AutomaticGetAndSetPatcher());
-		PatchGwt.patch(HeadElement.class, new AutomaticGetAndSetPatcher());
-		PatchGwt.patch(HRElement.class, new AutomaticGetAndSetPatcher());
-		PatchGwt.patch(HeadingElement.class, new AutomaticGetAndSetPatcher());
-		PatchGwt.patch(IFrameElement.class, new AutomaticGetAndSetPatcher());
-		PatchGwt.patch(ImageElement.class, new AutomaticGetAndSetPatcher());
-		PatchGwt.patch(InputElement.class, new InputElementPatcher());
-		PatchGwt.patch(LIElement.class, new AutomaticGetAndSetPatcher());
-		PatchGwt.patch(LabelElement.class, new AutomaticGetAndSetPatcher());
-		PatchGwt.patch(LegendElement.class, new AutomaticGetAndSetPatcher());
-		PatchGwt.patch(LinkElement.class, new AutomaticGetAndSetPatcher());
-		PatchGwt.patch(NodeList.class, new NodeListPatcher());
-		PatchGwt.patch(Node.class, new NodePatcher());
-		PatchGwt.patch(MapElement.class, new AutomaticGetAndSetPatcher());
-		PatchGwt.patch(MetaElement.class, new AutomaticGetAndSetPatcher());
-		PatchGwt.patch(ModElement.class, new AutomaticGetAndSetPatcher());
-		PatchGwt.patch(ObjectElement.class, new AutomaticGetAndSetPatcher());
-		PatchGwt.patch(OptionElement.class, new AutomaticGetAndSetPatcher());
-		PatchGwt.patch(OListElement.class, new AutomaticGetAndSetPatcher());
-		PatchGwt.patch(OptGroupElement.class, new AutomaticGetAndSetPatcher());
-		PatchGwt.patch(ParagraphElement.class, new AutomaticGetAndSetPatcher());
-		PatchGwt.patch(ParamElement.class, new AutomaticGetAndSetPatcher());
-		PatchGwt.patch(PreElement.class, new AutomaticGetAndSetPatcher());
-		PatchGwt.patch(QuoteElement.class, new AutomaticGetAndSetPatcher());
-		PatchGwt.patch(ScriptElement.class, new AutomaticGetAndSetPatcher());
-		PatchGwt.patch(StyleElement.class, new AutomaticGetAndSetPatcher());
-		PatchGwt.patch(SelectElement.class, new SelectElementPatcher());
-		PatchGwt.patch(SpanElement.class, new AutomaticGetAndSetPatcher());
-		PatchGwt.patch(Style.class, new StylePatcher());
-		PatchGwt.patch(TableCaptionElement.class, new AutomaticGetAndSetPatcher());
-		PatchGwt.patch(TableCellElement.class, new AutomaticGetAndSetPatcher());
-		PatchGwt.patch(TableColElement.class, new AutomaticGetAndSetPatcher());
-		PatchGwt.patch(TableElement.class, new AutomaticGetAndSetPatcher());
-		PatchGwt.patch(TableRowElement.class, new AutomaticGetAndSetPatcher());
-		PatchGwt.patch(TableSectionElement.class, new AutomaticGetAndSetPatcher());
-		PatchGwt.patch(TextAreaElement.class, new AutomaticGetAndSetPatcher());
-		PatchGwt.patch(Text.class, new AutomaticGetAndSetPatcher());
-		PatchGwt.patch(TitleElement.class, new AutomaticGetAndSetPatcher());
-		PatchGwt.patch(UListElement.class, new AutomaticGetAndSetPatcher());
 		
-		
-		PatchGwt.patch(PatchConstants.CLIENT_DOM_IMPL_CLASS_NAME, new DOMImplPatcher());
+		PatchGwt.addPatcher(PatchConstants.CLIENT_DOM_IMPL_CLASS_NAME, new DOMImplPatcher());
 	
-		PatchGwt.patch(Document.class, new DocumentPatcher());
+		PatchGwt.addPatcher(Document.class, new DocumentPatcher());
+		
+		PatchGwt.patch();
 	}
 
 	public void onLoad(ClassPool cp, String className) throws NotFoundException, CannotCompileException {
 		System.out.println("onLoad : " + className);
+		if ("com.google.gwt.dom.client.Node".equals(className)) {
+		    System.out.println("Gotcha");
+		}
 	}
 }

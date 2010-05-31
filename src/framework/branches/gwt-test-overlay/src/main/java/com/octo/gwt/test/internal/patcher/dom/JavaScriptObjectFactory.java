@@ -124,7 +124,7 @@ public class JavaScriptObjectFactory {
 	private JavaScriptObjectFactory() {
 	}
 
-	public static void clearDom() {
+	public static void reset() {
 		if (DOCUMENT != null) {
 			PropertyContainerAwareHelper.getPropertyContainer(DOCUMENT).clear();
 			PropertyContainerAwareHelper.setProperty(DOCUMENT, DocumentPatcher.BODY_PROPERTY, createElement("body"));

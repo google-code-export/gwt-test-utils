@@ -1,27 +1,24 @@
 package com.octo.gwt.test;
 
-import java.io.InputStream;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 
-import javassist.CannotCompileException;
 import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.NotFoundException;
 
 import com.google.gwt.core.client.JavaScriptObject;
-import com.octo.gwt.test.internal.patcher.GWTPatcher;
 import com.octo.gwt.test.internal.patcher.dom.JavaScriptObjectPatcher;
-import com.octo.gwt.test.utils.PatchUtils;
+import com.octo.gwt.test.utils.PatchGwtUtils;
 
 public class PatchGwt {
 	
 	private static Locale LOCALE = null;
 	
 	private static Set<CtClass> overlaySet = new HashSet<CtClass>();
-	
-	private static ClassPool classPool;
 	
 	/**
 	 * The new "super JavaScriptObject$ class", which implements all transformed overlay interface
@@ -33,13 +30,10 @@ public class PatchGwt {
 	 */
 	private static CtClass jsInterface;
 
+	private static Map<String, IPatcher> patchers = new LinkedHashMap<String, IPatcher>();
+	
 	public static Locale getLocale() {
 		return LOCALE;
-	}
-	
-	public static void setClassPool(ClassPool classPool) {
-		PatchGwt.classPool = classPool;
-		GWTPatcher.classPool = classPool;
 	}
 
 	public static void setLocale(Locale locale) {
@@ -52,32 +46,41 @@ public class PatchGwt {
 		return enabled;
 	}
 	
-	public static void patch(String className, IPatcher patcher) throws Exception {
-		// get the original class
-		InputStream is = classPool.getClassLoader().getResourceAsStream(className.replace('.', '/') + ".class");
-		CtClass originClass = null;
-		try {
-			originClass = classPool.makeClass(is);
-		} catch (Exception e) {
-			throw new CannotCompileException(e);
-		}
-
-		// treat overlay type just like GWT HostedMode does
-		if (isOverlay(originClass, overlaySet)) {
-			CtClass newClass = classPool.getAndRename(className, className + "$");
-			CtClass overlayInterface = classPool.makeInterface(className);
-			jsClass$.addInterface(overlayInterface);
-			overlaySet.add(overlayInterface);
-			newClass.setSuperclass(jsClass$);
-			PatchUtils.patch(classPool, newClass, patcher);
-		} else {
-			PatchUtils.patch(classPool, originClass, patcher);
-		}
+	public static void addPatcher(String className, IPatcher patcher) {
+	    patchers.put(className, patcher);
 	}
-	public static void patch(Class<?> clazz, IPatcher patcher) throws Exception {
-		if (classPool == null) {
-			throw new CannotCompileException("You have to setup a valid ClassPool throught PatchGwt.setClassPool(..)");
-		}
+	
+	public static void patch() throws Exception  {
+		ClassPool cp = PatchGwtClassPool.get();
+		
+	    // first, patch all the methods 
+        for (Map.Entry<String, IPatcher> e : patchers.entrySet()) {
+            String className = e.getKey();
+            IPatcher patcher = e.getValue();
+
+            CtClass cls = cp.get(className);
+            
+            PatchGwtUtils.patch(cls, patcher);
+        }
+        
+        // second, rename all the classes with the fancy overlay mechanism
+        for (String className : patchers.keySet()) {
+            CtClass originClass = cp.get(className);
+
+            // treat overlay type just like GWT HostedMode does
+            if (isOverlay(originClass, overlaySet)) {
+                CtClass newClass = cp.get(className);
+                newClass.setName(className + "$");
+                CtClass overlayInterface = cp.makeInterface(className);
+                jsClass$.addInterface(overlayInterface);
+                newClass.addInterface(overlayInterface);
+                overlaySet.add(overlayInterface);
+                newClass.setSuperclass(jsClass$);
+            }
+        }
+	}
+	
+	public static void addPatcher(Class<?> clazz, IPatcher patcher) throws Exception {
 		if (jsClass$ == null) {
 			initAndPatchJavaScriptObjectClass();
 		}
@@ -89,16 +92,19 @@ public class PatchGwt {
 			className = className.substring(0, i) + "$" + className.substring(i + 1);
 		}
 		
-		patch(className, patcher);	
+		addPatcher(className, patcher);	
 	}
 
 	private static void initAndPatchJavaScriptObjectClass() throws NotFoundException, Exception {
+		ClassPool cp = PatchGwtClassPool.get();
+		
 		String jsClassName = JavaScriptObject.class.getCanonicalName();
-		overlaySet.add(classPool.get(jsClassName));
-		jsClass$ = classPool.getAndRename(jsClassName, jsClassName + "$");
-		jsInterface = classPool.makeInterface(jsClassName);
+		overlaySet.add(cp.get(jsClassName));
+		jsClass$ = cp.getAndRename(jsClassName, jsClassName + "$");
+		jsInterface = cp.makeInterface(jsClassName);
 		jsClass$.addInterface(jsInterface);
-		PatchUtils.patch(classPool, jsClass$, new JavaScriptObjectPatcher());
+		
+		PatchGwtUtils.patch(jsClass$, new JavaScriptObjectPatcher());
 	}
 	
 	private static boolean isOverlay(CtClass c, Set<CtClass> overlaySet) throws NotFoundException {

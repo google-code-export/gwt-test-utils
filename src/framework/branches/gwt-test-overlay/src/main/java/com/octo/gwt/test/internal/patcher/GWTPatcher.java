@@ -6,8 +6,6 @@ import java.lang.reflect.Proxy;
 import java.util.HashMap;
 import java.util.Map;
 
-import javassist.ClassPool;
-
 import com.google.gwt.i18n.client.Constants;
 import com.google.gwt.i18n.client.CurrencyList;
 import com.google.gwt.i18n.client.impl.CldrImpl;
@@ -33,36 +31,29 @@ import com.google.gwt.user.client.ui.impl.PopupImpl;
 import com.google.gwt.user.client.ui.impl.TextBoxImpl;
 import com.google.gwt.user.datepicker.client.DateBox;
 import com.octo.gwt.test.GwtCreateHandler;
-import com.octo.gwt.test.IGWTLogHandler;
-import com.octo.gwt.test.PatchConstants;
+import com.octo.gwt.test.GwtLogHandler;
 import com.octo.gwt.test.internal.overrides.OverrideImagePrototype;
 import com.octo.gwt.test.internal.patcher.dom.DOMImplSubClassPatcher;
 import com.octo.gwt.test.internal.patcher.dom.DOMImplUserSubClassPatcher;
 import com.octo.gwt.test.internal.patcher.tools.AutomaticPatcher;
 import com.octo.gwt.test.internal.patcher.tools.PatchMethod;
 import com.octo.gwt.test.internal.patcher.tools.resources.ClientBundleProxyFactory;
-import com.octo.gwt.test.utils.PatchUtils;
+import com.octo.gwt.test.utils.PatchGwtUtils;
 
 @SuppressWarnings("deprecation")
 public class GWTPatcher extends AutomaticPatcher {
-	
+
 	public static GwtCreateHandler gwtCreateHandler = null;
-	public static IGWTLogHandler gwtLogHandler = null;
-	public static Map<Class<?>, Object> createClass = new HashMap<Class<?>, Object>();
+	public static GwtLogHandler gwtLogHandler = null;
+	public static Map<Class<?>, Object> classes = new HashMap<Class<?>, Object>();
+    
+	public static void reset() {
+		classes.clear();
+		gwtCreateHandler = null;
+		gwtLogHandler = null;
+	}
 	
-	public static ClassPool classPool;
-
 	@PatchMethod
-	public static String getHostPageBaseURL() {
-		return "getHostPageBaseURL/getModuleName";
-	}
-
-	@PatchMethod
-	public static String getModuleName() {
-		return "getModuleName";
-	}
-
-	@PatchMethod(args= { String.class, Throwable.class })
 	public static void log(String message, Throwable t) {
 		if (gwtLogHandler != null) {
 			gwtLogHandler.log(message, t);
@@ -81,11 +72,11 @@ public class GWTPatcher extends AutomaticPatcher {
 		if (classLiteral == WindowImpl.class) {
 			return new WindowImpl();
 		}
-		if (classLiteral.getCanonicalName().equals(PatchConstants.CLIENT_DOM_IMPL_CLASS_NAME)) {
-			return PatchUtils.generateInstance(classPool, PatchConstants.CLIENT_DOM_IMPL_CLASS_NAME, new DOMImplSubClassPatcher());
+		if (classLiteral.getCanonicalName().equals("com.google.gwt.dom.client.DOMImpl")) {
+			return PatchGwtUtils.generateInstance("com.google.gwt.dom.client.DOMImpl", new DOMImplSubClassPatcher());
 		}
 		if (classLiteral == DOMImpl.class) {
-			return PatchUtils.generateInstance(classPool, DOMImpl.class.getCanonicalName(), new DOMImplUserSubClassPatcher());
+			return PatchGwtUtils.generateInstance(DOMImpl.class.getCanonicalName(), new DOMImplUserSubClassPatcher());
 		}
 		if (classLiteral == HistoryImpl.class) {
 			return new HistoryImpl();
@@ -142,7 +133,7 @@ public class GWTPatcher extends AutomaticPatcher {
 			return ClientBundleProxyFactory.getFactory((Class<? extends ClientBundle>) classLiteral).createProxy();
 		}
 
-		Object o = createClass.get(classLiteral);
+		Object o = classes.get(classLiteral);
 
 		if (o == null && gwtCreateHandler != null) {
 			o = gwtCreateHandler.create(classLiteral);
@@ -166,7 +157,7 @@ public class GWTPatcher extends AutomaticPatcher {
 				if (method.getReturnType() == AbstractImagePrototype.class) {
 					return new OverrideImagePrototype();
 				}
-				throw new RuntimeException("Not managed return type for image bundle : " + method.getReturnType());
+				throw new RuntimeException("Not managed return type for image bundle : " + method.getReturnType().getSimpleName());
 			}
 
 		};
@@ -181,11 +172,10 @@ public class GWTPatcher extends AutomaticPatcher {
 			this.wrappedClass = wrappedClass;
 		}
 
-		public Object invoke(Object arg0, Method arg1, Object[] arg2) throws Throwable {
-			//return PatchUtils.extractFromPropertiesFile(wrappedClass, arg1);
-			throw new Exception("Patch this !");
+		public Object invoke(Object arg0, Method method, Object[] params) throws Throwable {
+			return PatchGwtUtils.extractFromPropertiesFile(wrappedClass, method);
 		}
 
 	}
-
+	
 }

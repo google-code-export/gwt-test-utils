@@ -3,7 +3,6 @@ package com.octo.gwt.test.internal.patcher.dom;
 import java.util.ArrayList;
 import java.util.List;
 
-import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtConstructor;
 
@@ -28,11 +27,11 @@ public class ElementPatcher extends AutomaticGetAndSetPatcher {
 	public static final String ACCESSKEY_FIELD = "AccessKey";
 
 	@Override
-	public void initClass(CtClass c, ClassPool cp) throws Exception {
-		super.initClass(c, cp);
+	public void initClass(CtClass c) throws Exception {
+		super.initClass(c);
 		CtConstructor cons = findConstructor(c);
 		
-		cons.insertAfter(PropertyContainerAwareHelper.getCodeSetProperty("this", STYLE_FIELD, JavaScriptObjectFactory.class.getCanonicalName() + ".createJavaScriptObject(" + Style.class.getCanonicalName() + ")") + ";");
+		cons.insertAfter(PropertyContainerAwareHelper.getCodeSetProperty("this", STYLE_FIELD, JavaScriptObjectFactory.class.getCanonicalName() + ".createJavaScriptObject(" + Style.class.getCanonicalName() + ".class)") + ";");
 		cons.insertAfter(PropertyContainerAwareHelper.getCodeSetProperty("this", PROPERTY_MAP_FIELD, "new " + PropertyContainer.class.getCanonicalName() + "()") + ";");
 		cons.insertAfter(PropertyContainerAwareHelper.getCodeSetProperty("this", ATTRIBUTE_MAP_FIELD, "new " + PropertyContainer.class.getCanonicalName() + "()") + ";");
 		cons.insertAfter(PropertyContainerAwareHelper.getCodeSetProperty("this", ATTRIBUTE_MAP_FIELD, "new " + PropertyContainer.class.getCanonicalName() + "()") + ";");

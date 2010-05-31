@@ -4,7 +4,7 @@ import java.lang.reflect.Modifier;
 
 import javassist.CtMethod;
 
-import com.octo.gwt.test.utils.PatchUtils;
+import com.octo.gwt.test.utils.PatchGwtUtils;
 
 public class AutomaticGetAndSetPatcher extends AutomaticPatcher {
 
@@ -14,7 +14,7 @@ public class AutomaticGetAndSetPatcher extends AutomaticPatcher {
 			return superNewBody;
 		}
 		if (Modifier.isNative(m.getModifiers())) {
-			String fieldName = PatchUtils.getPropertyName(m);
+			String fieldName = PatchGwtUtils.getPropertyName(m);
 			// manage case when current method is a getter or setter
 			if (fieldName != null) {
 				if (m.getName().startsWith("set")) {
