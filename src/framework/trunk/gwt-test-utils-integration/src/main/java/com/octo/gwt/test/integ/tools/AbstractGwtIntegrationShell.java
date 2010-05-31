@@ -9,6 +9,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -28,6 +29,7 @@ import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.octo.gwt.test.GwtCreateHandler;
+import com.octo.gwt.test.GwtLogHandler;
 import com.octo.gwt.test.PatchGWT;
 import com.octo.gwt.test.PatchGwtConfig;
 import com.octo.gwt.test.PatchGwtReset;
@@ -45,14 +47,32 @@ public abstract class AbstractGwtIntegrationShell {
 	private MacroReader macroReader;
 	
 	public String getCurrentTestedModuleFile() {
+		//this method can be overrided
+		return null;
+	}
+	
+	protected GwtCreateHandler getGwtCreateHandler() {
+		//this method can be overrided
+		return null;
+	}
+	
+	protected Locale getLocale(){
+		//this method can be overrided
+		return null;
+	}
+	
+	protected GwtLogHandler getLogHandler() {
+		//this method can be overrided
 		return null;
 	}
 
 	@Before
 	public void setUpAbstractGwtIntegrationShell() throws Exception {
+		PatchGwtConfig.setLocale(getLocale());
 		initPatchGwt();
 		PatchGwtConfig.setGwtCreateHandler(getGwtCreateHandler());
 		PatchGwtConfig.setCurrentTestedModuleFile(getCurrentTestedModuleFile());
+		PatchGwtConfig.setLogHandler(getLogHandler());
 	}
 
 	@After
@@ -119,11 +139,6 @@ public abstract class AbstractGwtIntegrationShell {
 
 			};
 		}
-		return null;
-	}
-
-	protected GwtCreateHandler getGwtCreateHandler() {
-		//this method can be overrided
 		return null;
 	}
 

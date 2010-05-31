@@ -1,5 +1,7 @@
 package com.octo.gwt.test;
 
+import java.util.Locale;
+
 import org.junit.After;
 import org.junit.Before;
 
@@ -7,16 +9,14 @@ import com.octo.gwt.test.utils.WidgetUtils;
 
 
 public abstract class AbstractGwtTest extends WidgetUtils {
-
-	public String getCurrentTestedModuleFile() {
-		return null;
-	}
 	
 	@Before
 	public void setUpAbstractGwtTest() throws Exception {
-		initPatchGwt();
+		PatchGwtConfig.setLocale(getLocale());
 		PatchGwtConfig.setGwtCreateHandler(getGwtCreateHandler());
 		PatchGwtConfig.setCurrentTestedModuleFile(getCurrentTestedModuleFile());
+		PatchGwtConfig.setLogHandler(getLogHandler());
+		initPatchGwt();
 	}
 
 	@After
@@ -38,5 +38,22 @@ public abstract class AbstractGwtTest extends WidgetUtils {
 		//this method can be overrided
 		return null;
 	}
+	
+	protected String getCurrentTestedModuleFile() {
+		//this method can be overrided
+		return null;
+	}
+	
+	protected GwtLogHandler getLogHandler() {
+		//this method can be overrided
+		return null;
+	}
+	
+	protected Locale getLocale() {
+		//this method can be overrided
+		return null;
+	}
+	
+	
 
 }
