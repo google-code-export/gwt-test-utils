@@ -8,18 +8,24 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javassist.CannotCompileException;
+import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtConstructor;
+import javassist.CtField;
 import javassist.CtMethod;
 import javassist.NotFoundException;
 
 import com.octo.gwt.test.IPatcher;
+import com.octo.gwt.test.PatchGwtClassPool;
 import com.octo.gwt.test.utils.GwtTestReflectionUtils;
 
 public class AutomaticPatcher implements IPatcher {
 
 	public static final String INSERT_BEFORE = "INSERT_BEFORE";
 	public static final String INSERT_AFTER = "INSERT_AFTER";
+
+	private static final String PROPERTIES = "__PROPERTIES__";
 
 	private Map<Method, PatchMethod> annotatedMethods;
 
@@ -31,6 +37,35 @@ public class AutomaticPatcher implements IPatcher {
 		this.c = c;
 		this.annotatedMethods = GwtTestReflectionUtils.getAnnotatedMethod(this.getClass(), PatchMethod.class);
 		this.processedMethods = new ArrayList<Method>();
+
+		ClassPool cp = PatchGwtClassPool.get();
+		makeDefaultConstructorPublic(c);
+		makeClassPropertyContainerAware(c, cp);
+	}
+
+	private void makeDefaultConstructorPublic(CtClass c) throws NotFoundException {
+		CtConstructor defaultConstructor = findConstructor(c);
+		if (defaultConstructor != null)
+			defaultConstructor.setModifiers(Modifier.PUBLIC);
+	}
+
+	private void makeClassPropertyContainerAware(CtClass c, ClassPool cp) throws NotFoundException, CannotCompileException {
+		c.addInterface(cp.get(PropertyContainerAware.class.getCanonicalName()));
+
+		CtField field = new CtField(cp.get(PropertyContainer.class.getCanonicalName()), PROPERTIES, c);
+		field.setModifiers(Modifier.PUBLIC);
+		c.addField(field);
+
+		CtMethod getProperties = new CtMethod(cp.get(PropertyContainer.class.getCanonicalName()), "getPropertyContainer", new CtClass[] {}, c);
+		StringBuffer stringBuffer = new StringBuffer();
+		stringBuffer.append("{");
+		stringBuffer.append("if (" + PROPERTIES + " == null) {");
+		stringBuffer.append(PROPERTIES + " = new " + PropertyContainer.class.getCanonicalName() + "();");
+		stringBuffer.append("}");
+		stringBuffer.append("return " + PROPERTIES + ";");
+		stringBuffer.append("}");
+		getProperties.setBody(stringBuffer.toString());
+		c.addMethod(getProperties);
 	}
 
 	private Entry<Method, PatchMethod> findAnnotatedMethod(CtMethod m) throws Exception {
@@ -121,24 +156,24 @@ public class AutomaticPatcher implements IPatcher {
 				if (foundClass == CtClass.intType) {
 					name = int.class.getName();
 				} else if (foundClass == CtClass.booleanType) {
-				    name = boolean.class.getName();
+					name = boolean.class.getName();
 				} else if (foundClass == CtClass.shortType) {
-				    name = short.class.getName();
+					name = short.class.getName();
 				} else if (foundClass == CtClass.doubleType) {
-				    name = double.class.getName();
+					name = double.class.getName();
 				} else if (foundClass == CtClass.floatType) {
-				    name = float.class.getName();
+					name = float.class.getName();
 				} else if (foundClass == CtClass.charType) {
-				    name = char.class.getName();
+					name = char.class.getName();
 				} else if (foundClass == CtClass.byteType) {
-				    name = byte.class.getName();
+					name = byte.class.getName();
 				} else {
 					throw new RuntimeException("Not managed type " + foundClass + " for method " + m);
 				}
 			} else if (foundClass.isArray()) {
-			    name = "[L" + foundClass.getComponentType().getName() + ";";
+				name = "[L" + foundClass.getComponentType().getName() + ";";
 			} else {
-			    name = foundClass.getName();
+				name = foundClass.getName();
 			}
 			if (!name.equals(classesAsked[i].getName())) {
 				return false;
@@ -216,10 +251,10 @@ public class AutomaticPatcher implements IPatcher {
 	public void finalizeClass(CtClass c) throws Exception {
 		for (Method m : annotatedMethods.keySet()) {
 			if (!processedMethods.contains(m)) {
-			    for (CtMethod cm : c.getMethods()) {
-			        System.out.println(cm.getLongName());
-			    }
-			    System.out.println("Unused methods: " + (c.getMethods().length - processedMethods.size()));
+				for (CtMethod cm : c.getMethods()) {
+					System.out.println(cm.getLongName());
+				}
+				System.out.println("Unused methods: " + (c.getMethods().length - processedMethods.size()));
 				throw new RuntimeException("@PatchMethod not used : " + m);
 			}
 		}
@@ -248,12 +283,11 @@ public class AutomaticPatcher implements IPatcher {
 
 		if (l.size() == 1) {
 			return l.get(0);
+		} else if (l.size() > 0) {
+			throw new RuntimeException("Multiple constructor in class " + ctClass.getName() + ", you have to set parameter types discriminators");
 		}
-		if (l.size() == 0) {
-			throw new RuntimeException("Unable to find a constructor with the specifed parameter types in class " + ctClass.getName());
-		}
-		throw new RuntimeException("Multiple constructor in class " + ctClass.getName() + ", you have to set parameter types discriminators");
 
+		return null;
 	}
 
 }

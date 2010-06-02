@@ -31,6 +31,7 @@ import com.google.gwt.dom.client.LinkElement;
 import com.google.gwt.dom.client.MapElement;
 import com.google.gwt.dom.client.MetaElement;
 import com.google.gwt.dom.client.ModElement;
+import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.OListElement;
 import com.google.gwt.dom.client.ObjectElement;
 import com.google.gwt.dom.client.OptGroupElement;
@@ -49,12 +50,16 @@ import com.google.gwt.dom.client.TableColElement;
 import com.google.gwt.dom.client.TableElement;
 import com.google.gwt.dom.client.TableRowElement;
 import com.google.gwt.dom.client.TableSectionElement;
+import com.google.gwt.dom.client.Text;
 import com.google.gwt.dom.client.TextAreaElement;
 import com.google.gwt.dom.client.TitleElement;
 import com.google.gwt.dom.client.UListElement;
+import com.octo.gwt.test.internal.patcher.tools.PropertyContainer;
 import com.octo.gwt.test.internal.patcher.tools.PropertyContainerAwareHelper;
 
 public class JavaScriptObjectFactory {
+
+	public static final String BODY_ELEMENT = "Body";
 	
 	private static Document DOCUMENT;
 	private static Map<String, Class<? extends Element>> map = new HashMap<String, Class<? extends Element>>();
@@ -126,8 +131,12 @@ public class JavaScriptObjectFactory {
 
 	public static void reset() {
 		if (DOCUMENT != null) {
-			PropertyContainerAwareHelper.getPropertyContainer(DOCUMENT).clear();
-			PropertyContainerAwareHelper.setProperty(DOCUMENT, DocumentPatcher.BODY_PROPERTY, createElement("body"));
+			PropertyContainer bodyPc = PropertyContainerAwareHelper.getPropertyContainer(DOCUMENT.getBody());
+			bodyPc.clear();
+			
+			PropertyContainer documentPc = PropertyContainerAwareHelper.getPropertyContainer(DOCUMENT);
+			documentPc.clear();
+			DOCUMENT = null;
 		}
 	}
 
@@ -135,6 +144,7 @@ public class JavaScriptObjectFactory {
 		if (DOCUMENT == null) {
 			try {
 				DOCUMENT = Document.class.newInstance();
+				PropertyContainerAwareHelper.setProperty(DOCUMENT, "DocumentElement", createHTMLElement());
 			} catch (Exception e) {
 				throw new RuntimeException("Unable to create Document", e);
 			}
@@ -156,28 +166,42 @@ public class JavaScriptObjectFactory {
 		if (tag == null) {
 			throw new IllegalArgumentException("Cannot create element with null tag");
 		}
-
 		try {
-			Element elem = null;
-
-			Class<? extends Element> clazz = map.get(tag);
-
-			if (clazz != null) {
-				elem = createJavaScriptObject(clazz);
-				PropertyContainerAwareHelper.setProperty(elem, "TagName", tag);
-			} else {
+			Class<? extends Element> clazz = map.get(tag.toLowerCase());
+			if (clazz == null) {
 				throw new IllegalArgumentException("Cannot create element for tag <" + tag + ">");
 			}
-
+			Element elem = createJavaScriptObject(clazz);
+			PropertyContainerAwareHelper.setProperty(elem, "TagName", tag);
 			// set the <body> element as default parent node
 			if (!"body".equals(tag)) {
 				Document.get().getBody().appendChild(elem);
 			}
 
 			return elem;
+
 		} catch (Exception e) {
 			throw new RuntimeException("Cannot create element for tag <" + tag + ">", e);
 		}
+	}
 
+	public static Text createTextNode(String data) {
+		Text text = createJavaScriptObject(Text.class);
+		text.setData(data);
+		PropertyContainerAwareHelper.setProperty(text, "NodeType", Node.TEXT_NODE);
+
+		return text;
+	}
+	
+	private static Element createHTMLElement() {
+		Element e = JavaScriptObjectFactory.createJavaScriptObject(Element.class);
+		PropertyContainerAwareHelper.setProperty(e, "NodeName", "HTML");
+		PropertyContainerAwareHelper.setProperty(e, "TagName", "HTML");
+		PropertyContainerAwareHelper.setProperty(e, "NodeType", Node.DOCUMENT_NODE);
+		
+		BodyElement body = createElement("body").cast();
+		PropertyContainerAwareHelper.setProperty(e, BODY_ELEMENT, body);
+		
+		return e;
 	}
 }

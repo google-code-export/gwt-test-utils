@@ -11,7 +11,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtMethod;
 import javassist.NotFoundException;
@@ -24,9 +23,12 @@ import javassist.bytecode.annotation.StringMemberValue;
 
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
+import com.google.gwt.resources.client.DataResource;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.resources.client.TextResource;
 import com.google.gwt.resources.client.ClientBundle.Source;
 import com.google.gwt.resources.ext.DefaultExtensions;
+import com.octo.gwt.test.PatchGwtClassPool;
 import com.octo.gwt.test.internal.patcher.GWTPatcher;
 
 @SuppressWarnings("unchecked")
@@ -57,12 +59,18 @@ public class ClientBundleProxyFactory {
 
 			public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 				File resourceFile = methodRegistry.getResourceFile(method);
-				if (method.getReturnType() == TextResource.class) {
+				if (TextResource.class.isAssignableFrom(method.getReturnType())) {
 					Class<? extends ClientBundle> clazz = (Class<ClientBundle>) method.getReturnType();
 					return generateInvocationHandler(new TextResourceCallback(clazz, resourceFile), method.getName());
 				} else if (CssResource.class.isAssignableFrom(method.getReturnType())) {
 					Class<? extends ClientBundle> clazz = (Class<ClientBundle>) method.getReturnType();
 					return generateInvocationHandler(new CssResourceCallback(clazz, resourceFile), method.getName());
+				} else if (DataResource.class.isAssignableFrom(method.getReturnType())) {
+					Class<? extends ClientBundle> clazz = (Class<ClientBundle>) method.getReturnType();
+					return generateInvocationHandler(new DataResourceCallback(clazz, resourceFile, proxiedClass), method.getName());
+				} else if (ImageResource.class.isAssignableFrom(method.getReturnType())) {
+					Class<? extends ClientBundle> clazz = (Class<ClientBundle>) method.getReturnType();
+					return generateInvocationHandler(new ImageResourceCallback(clazz, resourceFile, proxiedClass), method.getName());
 				}
 				throw new RuntimeException("Not managed return type for ClientBundle : " + method.getReturnType().getSimpleName());
 			}
@@ -97,7 +105,7 @@ public class ClientBundleProxyFactory {
 
 		public ClientBundleMethodsRegistry(Class<? extends ClientBundle> clazz) {
 			try {
-				ctClass = ClassPool.getDefault().get(clazz.getName());
+				ctClass = PatchGwtClassPool.get().get(clazz.getName());
 			} catch (NotFoundException e) {
 				throw new RuntimeException("Unable to find class [" + clazz.getName() + "]", e);
 			}
@@ -117,7 +125,7 @@ public class ClientBundleProxyFactory {
 			List<String> filesSimpleNames = new ArrayList<String>();
 			boolean computeExtensions = false;
 			CtMethod m = ctClass.getDeclaredMethod(method.getName());
-			MethodInfo minfo = m.getMethodInfo();
+			MethodInfo minfo = m.getMethodInfo2();
 			AnnotationsAttribute attr = (AnnotationsAttribute) minfo.getAttribute(AnnotationsAttribute.invisibleTag);
 			if (attr != null) {
 				Annotation an = attr.getAnnotation(Source.class.getName());
@@ -145,7 +153,7 @@ public class ClientBundleProxyFactory {
 				String fileName = (fileSimpleName.startsWith(baseDir)) ? fileSimpleName : baseDir + fileSimpleName;
 
 				if (computeExtensions) {
-					String[] extensions = getResourceDefaultExtensions(method.getReturnType(), method);
+					String[] extensions = getResourceDefaultExtensions(method);
 
 					for (String extension : extensions) {
 						String possibleFile = fileName + extension;
@@ -172,12 +180,12 @@ public class ClientBundleProxyFactory {
 
 		}
 
-		private String[] getResourceDefaultExtensions(Class<?> clazz, Method method) {
+		private String[] getResourceDefaultExtensions(Method method) {
 			DefaultExtensions annotation = method.getReturnType().getAnnotation(DefaultExtensions.class);
 			if (annotation == null) {
 				throw new RuntimeException(method.getReturnType().getSimpleName()
 						+ " does not define a default extension for resource file. You should use a correct @" + Source.class.getSimpleName()
-						+ " annotation on " + clazz.getSimpleName() + "." + method.getName() + "() method");
+						+ " annotation on " + method.getDeclaringClass().getSimpleName() + "." + method.getName() + "() method");
 			} else {
 				return annotation.value();
 			}

@@ -29,6 +29,7 @@ public class PropertyContainerAwareHelper {
 			throw new IllegalArgumentException("Object to get a " + PropertyContainer.class.getSimpleName() + " instance should not be null");
 		}
 		
+		// every Patched Object 
 		if (o instanceof PropertyContainerAware) {
 			return ((PropertyContainerAware) o).getPropertyContainer();
 		} else {
