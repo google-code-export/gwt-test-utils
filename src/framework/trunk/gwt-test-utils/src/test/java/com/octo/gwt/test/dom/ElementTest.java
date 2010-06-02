@@ -170,9 +170,9 @@ public class ElementTest extends AbstractGwtTest {
 		ButtonElement be0 = Document.get().createButtonElement();
 		ButtonElement be1 = Document.get().createButtonElement();
 		e.appendChild(be0);
-		e.appendChild(NodeFactory.createText());
+		e.appendChild(NodeFactory.createTextNode("test1"));
 		e.appendChild(be1);
-		e.appendChild(NodeFactory.createText());
+		e.appendChild(NodeFactory.createTextNode("test2"));
 
 		// Test & Assert
 		Assert.assertEquals(be1, be0.getNextSiblingElement());

@@ -11,14 +11,14 @@ import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Style;
 import com.octo.gwt.test.internal.overrides.OverrideNodeList;
-import com.octo.gwt.test.internal.patcher.tools.AutomaticGetAndSetPatcher;
+import com.octo.gwt.test.internal.patcher.tools.AutomaticElementSubclasser;
 import com.octo.gwt.test.internal.patcher.tools.PatchMethod;
 import com.octo.gwt.test.internal.patcher.tools.PropertyContainer;
 import com.octo.gwt.test.internal.patcher.tools.SubClassedHelper;
 import com.octo.gwt.test.utils.GwtTestReflectionUtils;
 import com.octo.gwt.test.utils.TagAware;
 
-public class ElementPatcher extends AutomaticGetAndSetPatcher {
+public class ElementPatcher extends AutomaticElementSubclasser {
 
 	public static final String PROPERTY_MAP_FIELD = "propertyMap";
 	public static final String ATTRIBUTE_MAP_FIELD = "attributeMap";

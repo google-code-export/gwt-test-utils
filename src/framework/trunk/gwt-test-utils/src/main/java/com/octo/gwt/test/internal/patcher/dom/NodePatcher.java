@@ -217,7 +217,7 @@ public class NodePatcher extends AutomaticSubclasser {
 		} else if (node instanceof Document) {
 			newNode = NodeFactory.getDocument();
 		} else if (node instanceof Text) {
-			newNode = NodeFactory.createText();
+			newNode = NodeFactory.createTextNode(((Text) node).getData());
 		} else if (node instanceof Node) {
 			newNode = NodeFactory.createNode();
 		} else {

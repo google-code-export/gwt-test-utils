@@ -55,9 +55,12 @@ import com.google.gwt.dom.client.Text;
 import com.google.gwt.dom.client.TextAreaElement;
 import com.google.gwt.dom.client.TitleElement;
 import com.google.gwt.dom.client.UListElement;
+import com.octo.gwt.test.internal.patcher.tools.PropertyContainer;
 import com.octo.gwt.test.internal.patcher.tools.SubClassedHelper;
 
 public class NodeFactory {
+
+	public static final String BODY_ELEMENT = "Body";
 
 	private static Map<String, String> subclassedMap = new HashMap<String, String>();
 	private static Map<String, String> subclassedMapWithTag = new HashMap<String, String>();
@@ -126,12 +129,17 @@ public class NodeFactory {
 
 	public static Document DOCUMENT;
 
-	private NodeFactory() {}
+	private NodeFactory() {
+	}
 
 	public static void reset() {
 		if (DOCUMENT != null) {
-			SubClassedHelper.getSubClassedObjectOrNull(DOCUMENT).getOverrideProperties().clear();
-			SubClassedHelper.setProperty(DOCUMENT, DocumentPatcher.BODY_PROPERTY, createElement("body"));		
+			PropertyContainer bodyPc = SubClassedHelper.getSubClassedObjectOrNull(DOCUMENT.getBody()).getOverrideProperties();
+			bodyPc.clear();
+
+			PropertyContainer documentPc = SubClassedHelper.getSubClassedObjectOrNull(DOCUMENT).getOverrideProperties();
+			documentPc.clear();
+			DOCUMENT = null;
 		}
 	}
 
@@ -139,20 +147,12 @@ public class NodeFactory {
 		if (DOCUMENT == null) {
 			try {
 				DOCUMENT = (Document) SubClassedHelper.getSubClass(Document.class.getCanonicalName()).newInstance();
-			}
-			catch(Exception e) {
+				SubClassedHelper.setProperty(DOCUMENT, "DocumentElement", createHTMLElement());
+			} catch (Exception e) {
 				throw new RuntimeException("Unable to create Document", e);
 			}
 		}
 		return DOCUMENT;
-	}
-
-	public static Text createText() {
-		try {
-			return (Text) SubClassedHelper.getSubClass(Text.class.getCanonicalName()).newInstance();
-		} catch (Exception e) {
-			throw new RuntimeException("Unable to create text " + e);
-		}
 	}
 
 	public static Style createStyle() {
@@ -163,12 +163,38 @@ public class NodeFactory {
 		}
 	}
 
-
 	public static Node createNode() {
 		try {
 			return (Node) SubClassedHelper.getSubClass(Node.class.getCanonicalName()).newInstance();
 		} catch (Exception e) {
 			throw new RuntimeException("Unable to create node " + e);
+		}
+	}
+
+	public static Text createTextNode(String data) {
+		try {
+			Text text = (Text) SubClassedHelper.getSubClass(Text.class.getCanonicalName()).newInstance();
+			text.setData(data);
+			SubClassedHelper.setProperty(text, "NodeType", Node.TEXT_NODE);
+
+			return text;
+		} catch (Exception e) {
+			throw new RuntimeException("Unable to create text " + e);
+		}
+	}
+
+	private static Element createHTMLElement() {
+		try {
+			Element e = (Element) SubClassedHelper.getSubClass(Element.class.getCanonicalName()).newInstance();
+			SubClassedHelper.setProperty(e, "NodeName", "HTML");
+			SubClassedHelper.setProperty(e, "TagName", "HTML");
+			SubClassedHelper.setProperty(e, "NodeType", Node.DOCUMENT_NODE);
+
+			SubClassedHelper.setProperty(e, BODY_ELEMENT, createElement("body"));
+
+			return e;
+		} catch (Exception e) {
+			throw new RuntimeException("Unable to create HTML element " + e);
 		}
 	}
 
@@ -181,8 +207,7 @@ public class NodeFactory {
 
 			if (subClassName != null) {
 				elem = (Element) SubClassedHelper.getSubClass(subClassName).newInstance();
-			}
-			else if (subClassNameWithTag != null) {
+			} else if (subClassNameWithTag != null) {
 				Constructor<?> constructor = SubClassedHelper.getSubClass(subClassNameWithTag).getConstructor(String.class);
 				elem = (Element) constructor.newInstance(tag);
 			}
@@ -196,8 +221,7 @@ public class NodeFactory {
 			}
 
 			return elem;
-		}
-		catch(Exception e) {
+		} catch (Exception e) {
 			throw new RuntimeException("Cannot create element for tag <" + tag + ">", e);
 		}
 

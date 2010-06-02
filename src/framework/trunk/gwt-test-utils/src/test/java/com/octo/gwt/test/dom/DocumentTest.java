@@ -6,7 +6,10 @@ import org.junit.Test;
 
 import com.google.gwt.dom.client.ButtonElement;
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.InputElement;
+import com.google.gwt.dom.client.Node;
+import com.google.gwt.dom.client.Text;
 import com.octo.gwt.test.AbstractGwtTest;
 
 public class DocumentTest extends AbstractGwtTest {
@@ -167,5 +170,35 @@ public class DocumentTest extends AbstractGwtTest {
 		d.setScrollTop(3);
 		
 		Assert.assertEquals(3, d.getScrollTop());
+	}
+	
+	public void checkGetDocumentElement() {
+		// Test
+		Element e = d.getDocumentElement();
+		
+		Assert.assertEquals("HTML", e.getTagName());
+		Assert.assertEquals("HTML", e.getNodeName());
+		Assert.assertEquals(Node.DOCUMENT_NODE, e.getNodeType());
+	}
+	
+	@Test
+	public void checkCreateTextNode() {
+		// Test
+		String data = "myData";
+		Text text = d.createTextNode(data);
+
+		// Assert
+		Assert.assertEquals(Node.TEXT_NODE, text.getNodeType());
+		Assert.assertEquals(data, text.getData());
+	}
+	
+	@Test
+	public void checkGetDomain() {
+		Assert.assertNull(d.getDomain());
+	}
+	
+	@Test
+	public void checkGetReferrer() {
+		Assert.assertEquals("", d.getReferrer());
 	}
 }

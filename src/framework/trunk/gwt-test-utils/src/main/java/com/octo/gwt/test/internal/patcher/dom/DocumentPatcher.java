@@ -1,9 +1,9 @@
 package com.octo.gwt.test.internal.patcher.dom;
 
-import javassist.CtClass;
-import javassist.CtConstructor;
-
+import com.google.gwt.dom.client.BodyElement;
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Text;
 import com.octo.gwt.test.internal.patcher.tools.AutomaticSubclasser;
 import com.octo.gwt.test.internal.patcher.tools.PatchMethod;
 import com.octo.gwt.test.internal.patcher.tools.SubClassedHelper;
@@ -14,14 +14,6 @@ public class DocumentPatcher extends AutomaticSubclasser {
 	
 	public static final String BODY_PROPERTY = "Body";
 
-	@Override
-	public void initClass(CtClass c) throws Exception {
-		super.initClass(c);
-		CtConstructor cons = findConstructor(c);
-		
-		cons.insertAfter(SubClassedHelper.getCodeSetProperty("this", BODY_PROPERTY, NodeFactory.class.getCanonicalName() + ".createElement(\"body\")", false) + ";");
-	}
-
 	@PatchMethod
 	public static String getCompatMode(Document document) {
 		return "toto";
@@ -30,6 +22,27 @@ public class DocumentPatcher extends AutomaticSubclasser {
 	@PatchMethod
 	public static Document get() {
 		return NodeFactory.getDocument();
+	}
+
+	@PatchMethod
+	public static Text createTextNode(Document document, String data) {
+		return NodeFactory.createTextNode(data);
+	}
+	
+	@PatchMethod
+	public static  BodyElement getBody(Document document) {
+		Element e = document.getDocumentElement();
+		return SubClassedHelper.getProperty(e, NodeFactory.BODY_ELEMENT);
+	}
+	
+	@PatchMethod
+	public static String getDomain(Document document) {
+		return null;
+	}
+	
+	@PatchMethod
+	public static String getReferrer(Document document) {
+		return "";
 	}
 
 	@PatchMethod
