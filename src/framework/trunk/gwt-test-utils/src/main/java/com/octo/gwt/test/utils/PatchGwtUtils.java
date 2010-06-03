@@ -7,8 +7,10 @@ import java.io.Reader;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Map.Entry;
 
@@ -23,6 +25,8 @@ import com.octo.gwt.test.PatchGwtClassPool;
 import com.octo.gwt.test.internal.patcher.tools.AutomaticPatcher;
 
 public class PatchGwtUtils {
+	
+	private static Map<String, Properties> cachedProperties = new HashMap<String, Properties>();
 
 	public static class SequenceReplacement {
 
@@ -56,6 +60,11 @@ public class PatchGwtUtils {
 	}
 
 	public static Properties getProperties(String path) {
+		Properties properties = cachedProperties.get(path);
+		
+		if (properties != null) {
+			return properties;
+		}
 		String propertiesNameFile = "/" + path + ".properties";
 		InputStream inputStream = path.getClass().getResourceAsStream(
 				propertiesNameFile);
@@ -63,7 +72,7 @@ public class PatchGwtUtils {
 			return null;
 		}
 		try {
-			Properties properties = new Properties();
+			properties = new Properties();
 			InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
 			loadProperties.invoke(properties, inputStreamReader);
 			for (Entry<Object, Object> entry : properties.entrySet()) {
@@ -72,6 +81,7 @@ public class PatchGwtUtils {
 							.getValue()));
 				}
 			}
+			cachedProperties.put(path, properties);
 			return properties;
 		} catch (Exception e) {
 			throw new RuntimeException("Unable to load property file" + path, e);
@@ -155,6 +165,7 @@ public class PatchGwtUtils {
 	public static void reset() {
 		sequenceReplacementList.clear();
 		locale = null;
+		cachedProperties.clear();
 	}
 
 	public static void patch(CtClass c, IPatcher patcher) throws Exception {
