@@ -4,12 +4,13 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
-import java.util.Map;
 
 import org.apache.log4j.Logger;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.StatusCodeException;
+import com.octo.gwt.test.GwtTestClassLoader;
+import com.octo.gwt.test.utils.DeserializationContext;
 import com.octo.gwt.test.utils.GwtTestReflectionUtils;
 
 public class GwtRpcInvocationHandler implements InvocationHandler {
@@ -20,15 +21,14 @@ public class GwtRpcInvocationHandler implements InvocationHandler {
 
 	private HashMap<Method, Method> methodTable;
 
-	private Map<Method, IDeserializationCallback> callbacks;
+	private DeserializationContext backToGwtCallbacks;
+
+	private DeserializationContext fromGwtCallbacks;
 
 	private IGwtRpcExceptionHandler exceptionHandler;
 
-	public GwtRpcInvocationHandler(Class<?> asyncClazz, Object target, Map<Method, IDeserializationCallback> callbacks,
-			IGwtRpcExceptionHandler exceptionHandler) {
+	public GwtRpcInvocationHandler(Class<?> asyncClazz, Object target) {
 		this.target = target;
-		this.callbacks = callbacks;
-		this.exceptionHandler = exceptionHandler;
 		this.methodTable = new HashMap<Method, Method>();
 		for (Method m : asyncClazz.getMethods()) {
 			for (Method m2 : target.getClass().getMethods()) {
@@ -38,6 +38,18 @@ public class GwtRpcInvocationHandler implements InvocationHandler {
 				}
 			}
 		}
+	}
+	
+	public void setBackToGwtCallbacks(DeserializationContext backToGwtCallbacks) {
+		this.backToGwtCallbacks = backToGwtCallbacks;
+	}
+
+	public void setFromGwtCallbacks(DeserializationContext fromGwtCallbacks) {
+		this.fromGwtCallbacks = fromGwtCallbacks;
+	}
+
+	public void setExceptionHandler(IGwtRpcExceptionHandler exceptionHandler) {
+		this.exceptionHandler = exceptionHandler;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -57,14 +69,10 @@ public class GwtRpcInvocationHandler implements InvocationHandler {
 			// Serialize objects
 			Object[] serializedArgs = new Object[subArgs.length];
 			for (int i = 0; i < subArgs.length; i++) {
-				serializedArgs[i] = GwtTestReflectionUtils.serializeUnserialize(subArgs[i]);
+				serializedArgs[i] = GwtTestReflectionUtils.serializeUnserialize(subArgs[i], GwtTestClassLoader.getInstance().getParent(), fromGwtCallbacks);
 			}
 			Object returnValue = m.invoke(target, serializedArgs);
-			Object o = GwtTestReflectionUtils.serializeUnserialize(returnValue);
-			IDeserializationCallback deserializationCallback = callbacks.get(method);
-			if (deserializationCallback != null) {
-				o = deserializationCallback.callaback(o);
-			}
+			Object o = GwtTestReflectionUtils.serializeUnserialize(returnValue, GwtTestClassLoader.getInstance(), backToGwtCallbacks);
 			logger.debug("Result of " + m.getName() + " : " + o);
 			callback.onSuccess(o);
 		} catch (InvocationTargetException e) {

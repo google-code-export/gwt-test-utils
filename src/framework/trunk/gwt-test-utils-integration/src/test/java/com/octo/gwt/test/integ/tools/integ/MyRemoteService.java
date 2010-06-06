@@ -6,4 +6,8 @@ public interface MyRemoteService extends RemoteService {
 
 	String myMethod(String param1);
 
+	MyCustomObject myMethod2(MyCustomObject object);
+	
+	void myMethod3();
+	
 }

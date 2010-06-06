@@ -9,9 +9,6 @@ import java.util.Map;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.octo.gwt.test.integ.csvrunner.CsvRunner;
-import com.octo.gwt.test.integ.csvrunner.Node;
-
 public class CsvRunnerTest {
 
 	private CsvRunner runner = new CsvRunner();

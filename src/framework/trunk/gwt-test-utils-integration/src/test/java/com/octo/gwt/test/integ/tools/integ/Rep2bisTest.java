@@ -13,7 +13,7 @@ public class Rep2bisTest {
 
 	@Test
 	public void runTest1() {
-		MyGwtShell.appender = "";
+		MyStringStore.appender = "";
 		JUnitCore core = new JUnitCore();
 		Result r = core.run(new FilterRequest(new ClassRequest(Rep2Test.class), new Filter() {
 
@@ -29,6 +29,6 @@ public class Rep2bisTest {
 		}));
 		Assert.assertEquals(1, r.getRunCount());
 		Assert.assertEquals(0, r.getFailureCount());
-		Assert.assertEquals("macro_totomacro_titimacro_toto_tatamacro_t0_t1_t2macro_t0_t1_t2_t3macro_t0_t1_t2_t3_t4End of 1st test", MyGwtShell.appender);
+		Assert.assertEquals("macro_totomacro_titimacro_toto_tatamacro_t0_t1_t2macro_t0_t1_t2_t3macro_t0_t1_t2_t3_t4End of 1st test", MyStringStore.appender);
 	}
 }

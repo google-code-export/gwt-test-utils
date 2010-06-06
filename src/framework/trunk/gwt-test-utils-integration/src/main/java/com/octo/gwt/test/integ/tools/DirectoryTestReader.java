@@ -14,6 +14,7 @@ import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtMethod;
 
+import com.octo.gwt.test.GwtTestClassLoader;
 import com.octo.gwt.test.PatchGwtClassPool;
 import com.octo.gwt.test.integ.CsvDirectory;
 import com.octo.gwt.test.integ.CsvMacros;
@@ -86,7 +87,7 @@ public class DirectoryTestReader {
 				m.setBody("launchTest(\"" + entry.getKey() + "\");");
 				newClazz.addMethod(m);
 			}
-			generatedClazz = newClazz.toClass();
+			generatedClazz = newClazz.toClass(GwtTestClassLoader.getInstance(), null);
 			for (String methodName : methodList) {
 				Method m = generatedClazz.getMethod(methodName);
 				testMethods.add(m);

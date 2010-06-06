@@ -30,7 +30,6 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.octo.gwt.test.GwtCreateHandler;
 import com.octo.gwt.test.GwtLogHandler;
-import com.octo.gwt.test.PatchGWT;
 import com.octo.gwt.test.PatchGwtConfig;
 import com.octo.gwt.test.PatchGwtReset;
 import com.octo.gwt.test.integ.csvrunner.CsvRunner;
@@ -69,7 +68,6 @@ public abstract class AbstractGwtIntegrationShell {
 	@Before
 	public void setUpAbstractGwtIntegrationShell() throws Exception {
 		PatchGwtConfig.setLocale(getLocale());
-		initPatchGwt();
 		PatchGwtConfig.setGwtCreateHandler(getGwtCreateHandler());
 		PatchGwtConfig.setCurrentTestedModuleFile(getCurrentTestedModuleFile());
 		PatchGwtConfig.setLogHandler(getLogHandler());
@@ -78,11 +76,6 @@ public abstract class AbstractGwtIntegrationShell {
 	@After
 	public void tearDownAbstractGwtIntegrationShell() throws Exception {
 		resetPatchGwt();
-	}
-
-	protected void initPatchGwt() throws Exception {
-		//initialisation du framework de mock GWT
-		PatchGWT.init();
 	}
 
 	protected void resetPatchGwt() throws Exception {

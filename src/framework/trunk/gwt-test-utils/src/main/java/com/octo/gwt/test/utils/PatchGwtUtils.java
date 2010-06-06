@@ -20,6 +20,7 @@ import javassist.CtConstructor;
 import javassist.CtMethod;
 
 import com.google.gwt.i18n.client.Constants.DefaultStringValue;
+import com.octo.gwt.test.GwtTestClassLoader;
 import com.octo.gwt.test.IPatcher;
 import com.octo.gwt.test.PatchGwtClassPool;
 import com.octo.gwt.test.internal.patcher.tools.AutomaticPatcher;
@@ -64,6 +65,9 @@ public class PatchGwtUtils {
 		
 		if (properties != null) {
 			return properties;
+		}
+		if (loadProperties == null) {
+			initLoadPropertiesMethod();
 		}
 		String propertiesNameFile = "/" + path + ".properties";
 		InputStream inputStream = path.getClass().getResourceAsStream(
@@ -154,7 +158,7 @@ public class PatchGwtUtils {
 				}
 			}
 			patch(c, patcher);
-			return (T) c.toClass().newInstance();
+			return (T) c.toClass(GwtTestClassLoader.getInstance(), null).newInstance();
 
 		} catch (Exception e) {
 			throw new RuntimeException("Unable to compile subclass of "

@@ -2,8 +2,11 @@ package com.octo.gwt.test.utils;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.ObjectStreamClass;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -211,8 +214,47 @@ public class GwtTestReflectionUtils {
 		callClear(getStaticFieldValue(clazz, fieldName));
 	}
 
+	static class CustomObjectInputStream extends ObjectInputStream {
+
+		private ClassLoader classLoader;
+		
+		private DeserializationContext callbacks;
+		
+		public CustomObjectInputStream(InputStream in, ClassLoader classLoader, DeserializationContext callbacks) throws IOException {
+			super(in);
+			enableResolveObject(true);
+			this.classLoader = classLoader;
+			this.callbacks = callbacks;
+		}
+		
+		@Override
+		protected Class<?> resolveClass(ObjectStreamClass desc)
+				throws IOException, ClassNotFoundException {
+			return classLoader == null ? super.resolveClass(desc) : Class.forName(desc.getName(), true, classLoader);
+		}
+
+		@Override
+		protected Object resolveObject(Object obj) throws IOException {
+			if (callbacks == null) {
+				return super.resolveObject(obj);
+			}
+			try {
+				return callbacks.resolve(obj);
+			}
+			catch(Exception e) {
+				throw new RuntimeException(e);
+			}
+		}
+			
+	}
+
 	@SuppressWarnings("unchecked")
 	public static <T> T serializeUnserialize(Object o) {
+		return (T) serializeUnserialize(o, null, null);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static <T> T serializeUnserialize(Object o, ClassLoader classLoader, DeserializationContext callbacks) {
 		if (o == null) {
 			return null;
 		}
@@ -221,7 +263,7 @@ public class GwtTestReflectionUtils {
 			ObjectOutputStream oos = new ObjectOutputStream(bos);
 			oos.writeObject(o);
 			ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
-			ObjectInputStream ois = new ObjectInputStream(bis);
+			ObjectInputStream ois = new CustomObjectInputStream(bis, classLoader, callbacks);
 			return (T) ois.readObject();
 		} catch (Exception e) {
 			throw new RuntimeException("Unable to serialize / unserialize object " + o.getClass().getCanonicalName(), e);

@@ -4,10 +4,11 @@ import java.util.Locale;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.runner.RunWith;
 
 import com.octo.gwt.test.utils.WidgetUtils;
 
-
+@RunWith(GwtTestRunner.class)
 public abstract class AbstractGwtTest extends WidgetUtils {
 	
 	@Before
@@ -16,17 +17,11 @@ public abstract class AbstractGwtTest extends WidgetUtils {
 		PatchGwtConfig.setGwtCreateHandler(getGwtCreateHandler());
 		PatchGwtConfig.setCurrentTestedModuleFile(getCurrentTestedModuleFile());
 		PatchGwtConfig.setLogHandler(getLogHandler());
-		initPatchGwt();
 	}
 
 	@After
 	public void tearDownAbstractGwtTest() throws Exception {
 		resetPatchGwt();
-	}
-
-	protected void initPatchGwt() throws Exception {
-		//initialisation du framework de mock GWT
-		PatchGWT.init();
 	}
 
 	protected void resetPatchGwt() throws Exception {

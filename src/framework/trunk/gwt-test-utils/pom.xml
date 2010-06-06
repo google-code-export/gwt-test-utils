@@ -16,12 +16,6 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>gwt-test-utils-bootstrap</artifactId>
-			<version>${project.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
 			<groupId>com.google.gwt</groupId>
 			<artifactId>gwt-user</artifactId>
 			<version>${gwt.version}</version>
@@ -50,33 +44,7 @@
 				<artifactId>maven-surefire-plugin</artifactId>
 				<configuration>
 					<jvm>${java6_home}/bin/java</jvm>
-					<argLine>-javaagent:target/bootstrap.jar</argLine>
 				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-dependency-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>copy</id>
-						<phase>generate-resources</phase>
-						<goals>
-							<goal>copy</goal>
-						</goals>
-						<configuration>
-							<artifactItems>
-								<artifactItem>
-									<groupId>${project.groupId}</groupId>
-									<artifactId>gwt-test-utils-bootstrap</artifactId>
-									<version>${project.version}</version>
-									<overWrite>true</overWrite>
-									<destFileName>bootstrap.jar</destFileName>
-									<outputDirectory>${project.build.directory}</outputDirectory>
-								</artifactItem>
-							</artifactItems>
-						</configuration>
-					</execution>
-				</executions>
 			</plugin>
 		</plugins>
 	</build>

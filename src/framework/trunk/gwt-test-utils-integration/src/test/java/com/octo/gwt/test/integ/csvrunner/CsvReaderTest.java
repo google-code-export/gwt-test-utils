@@ -6,8 +6,6 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.octo.gwt.test.integ.csvrunner.CsvReader;
-
 public class CsvReaderTest {
 
 	@Test

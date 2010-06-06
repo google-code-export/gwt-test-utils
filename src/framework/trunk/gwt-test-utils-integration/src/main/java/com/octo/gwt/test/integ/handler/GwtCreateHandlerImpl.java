@@ -1,34 +1,39 @@
 package com.octo.gwt.test.integ.handler;
 
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.apache.log4j.Logger;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.octo.gwt.test.GwtCreateHandler;
+import com.octo.gwt.test.utils.DeserializationContext;
+import com.octo.gwt.test.utils.ISerializeCallback;
 
 public abstract class GwtCreateHandlerImpl implements GwtCreateHandler {
 
 	private static final Logger logger = Logger.getLogger(GwtCreateHandlerImpl.class);
 
-	private Map<Method, IDeserializationCallback> callbacks;
+	private DeserializationContext backToGwtCallbacks;
+
+	private DeserializationContext fromGwtCallbacks;
 
 	private IGwtRpcExceptionHandler exceptionHandler;
 
 	public GwtCreateHandlerImpl() {
-		this(new DefaultGwtRpcExceptionHandler());
+		this.exceptionHandler = new DefaultGwtRpcExceptionHandler();
+		this.backToGwtCallbacks = new DeserializationContext();
+		this.fromGwtCallbacks = new DeserializationContext();
 	}
 
-	public GwtCreateHandlerImpl(IGwtRpcExceptionHandler exceptionHandler) {
-		this(exceptionHandler, new HashMap<Method, IDeserializationCallback>());
+	public void addBackToGwtCallbacks(Class<?> clazz, ISerializeCallback callback) {
+		this.backToGwtCallbacks.put(clazz, callback);
 	}
 
-	public GwtCreateHandlerImpl(IGwtRpcExceptionHandler exceptionHandler, Map<Method, IDeserializationCallback> callbacks) {
-		this.callbacks = callbacks;
+	public void addFromGwtCallbacks(Class<?> clazz, ISerializeCallback callback) {
+		this.fromGwtCallbacks.put(clazz, callback);
+	}
+
+	public void setExceptionHandler(IGwtRpcExceptionHandler exceptionHandler) {
 		this.exceptionHandler = exceptionHandler;
 	}
 
@@ -53,7 +58,10 @@ public abstract class GwtCreateHandlerImpl implements GwtCreateHandler {
 					logger.error("Service not found " + classLiteral.getCanonicalName());
 					throw new RuntimeException("Service not found " + classLiteral.getCanonicalName());
 				}
-				InvocationHandler handler = new GwtRpcInvocationHandler(asyncClazz, service, callbacks, exceptionHandler);
+				GwtRpcInvocationHandler handler = new GwtRpcInvocationHandler(asyncClazz, service);
+				handler.setExceptionHandler(exceptionHandler);
+				handler.setBackToGwtCallbacks(backToGwtCallbacks);
+				handler.setFromGwtCallbacks(fromGwtCallbacks);
 				return Proxy.newProxyInstance(getClass().getClassLoader(), new Class[] { asyncClazz }, handler);
 			}
 			logger.debug("Creating class " + classLiteral.getCanonicalName());
