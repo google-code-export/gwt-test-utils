@@ -8,6 +8,10 @@
 
 	<properties>
 		<gwt.version>2.0.3</gwt.version>
+		<javassist.version>3.8.0.GA</javassist.version>
+		<easymock.version>2.3</easymock.version>
+		<log4j.version>1.2.14</log4j.version>
+		<antlr.runtime.version>3.0.1</antlr.runtime.version>
 	</properties>
 
 	<scm>
