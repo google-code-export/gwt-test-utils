@@ -115,7 +115,7 @@ public abstract class AbstractGwtIntegrationShell {
 		return null;
 	}
 
-	protected GwtCreateHandler getGwtCreateHandler() {
+	protected GwtCreateHandler getGwtCreateHandler() throws Exception {
 		//this method can be overrided
 		return null;
 	}

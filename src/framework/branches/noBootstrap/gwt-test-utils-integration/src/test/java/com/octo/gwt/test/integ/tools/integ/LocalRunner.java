@@ -9,6 +9,8 @@ public class LocalRunner extends StandardJUnit4CsvRunner {
 
 	static {
 		GwtTestClassLoader.getInstance().delegateLoadingOf(MyStringStore.class.getCanonicalName());
+		GwtTestClassLoader.getInstance().delegateLoadingOf(MyService.class.getCanonicalName());
+		GwtTestClassLoader.getInstance().delegateLoadingOf("org.apache.log4j.");
 	}
 	
 	public LocalRunner(Class<?> clazz) throws InitializationError, ClassNotFoundException {
