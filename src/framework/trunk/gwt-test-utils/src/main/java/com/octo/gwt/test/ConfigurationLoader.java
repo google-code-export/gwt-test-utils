@@ -106,8 +106,9 @@ public class ConfigurationLoader {
 	}
 
 	private void loadClassesFromJarFile(String path, String s, List<String> classList) throws Exception {
-		String jarName = path.substring(0, path.indexOf("!"));
 		String prefix = path.substring(path.indexOf("!") + 2);
+		String jarName = path.substring(0, path.indexOf("!"));
+		jarName = URLDecoder.decode(jarName, "UTF-8");
 		logger.info("Load classes from jar " + jarName);
 		JarFile jar = new JarFile(jarName);
 		Enumeration<JarEntry> entries = jar.entries();
