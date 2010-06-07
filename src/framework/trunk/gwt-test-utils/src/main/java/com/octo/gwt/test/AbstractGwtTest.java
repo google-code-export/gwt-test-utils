@@ -29,7 +29,7 @@ public abstract class AbstractGwtTest extends WidgetUtils {
 		PatchGwtReset.reset();
 	}
 
-	protected GwtCreateHandler getGwtCreateHandler() {
+	protected GwtCreateHandler getGwtCreateHandler() throws Exception {
 		//this method can be overrided
 		return null;
 	}
