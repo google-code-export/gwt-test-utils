@@ -15,10 +15,14 @@ import java.util.Map.Entry;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+import org.apache.log4j.Logger;
+
 import com.octo.gwt.test.internal.patcher.tools.PatchClass;
 
 public class ConfigurationLoader {
 
+	private static final Logger logger = Logger.getLogger(ConfigurationLoader.class);
+	
 	private static final String CONFIG_FILENAME = "META-INF/gwt-test-utils.properties";
 
 	private ClassLoader classLoader;
@@ -40,11 +44,13 @@ public class ConfigurationLoader {
 		Enumeration<URL> l = classLoader.getResources(CONFIG_FILENAME);
 		while (l.hasMoreElements()) {
 			URL url = l.nextElement();
+			logger.info("Load config file " + url.toString());
 			Properties p = new Properties();
 			InputStream inputStream = url.openStream();
 			p.load(inputStream);
 			inputStream.close();
 			process(p);
+			logger.info("File loaded and processed " + url.toString());
 		}
 	}
 
@@ -53,10 +59,13 @@ public class ConfigurationLoader {
 			String key = (String) entry.getKey();
 			String value = (String) entry.getValue();
 			if ("scan-package".equals(value)) {
+				logger.debug("Scan package " + key);
 				scanList.add(key);
 			} else if ("delegate".equals(value)) {
+				logger.debug("Delegate " + key);
 				delegateList.add(key);
 			} else if ("notDelegate".equals(value)) {
+				logger.debug("Not delegate " + key);
 				notDelegateList.add(key);
 			} else {
 				throw new RuntimeException("Wrong gwt-test-utils.properties : unknown value " + value);
@@ -76,6 +85,7 @@ public class ConfigurationLoader {
 		List<String> classList = new ArrayList<String>();
 		for (String s : scanList) {
 			String path = s.replaceAll("\\.", "/");
+			logger.info("Scan package " + s);
 			Enumeration<URL> l = classLoader.getResources(path);
 			while (l.hasMoreElements()) {
 				URL url = l.nextElement();
@@ -95,6 +105,7 @@ public class ConfigurationLoader {
 	private void loadClassesFromJarFile(String path, String s, List<String> classList) throws Exception {
 		String jarName = path.substring(0, path.indexOf("!"));
 		String prefix = path.substring(path.indexOf("!") + 2);
+		logger.info("Load classes from jar " + jarName);
 		JarFile jar = new JarFile(jarName);
 		Enumeration<JarEntry> entries = jar.entries();
 		while (entries.hasMoreElements()) {
@@ -106,9 +117,11 @@ public class ConfigurationLoader {
 				classList.add(className);
 			}
 		}
+		logger.info("Classes loaded from jar " + jarName);
 	}
 
 	private void loadClassesFromDirectory(File directoryToScan, String current, List<String> classList) {
+		logger.info("Scan directory " + directoryToScan);
 		for (File f : directoryToScan.listFiles()) {
 			if (f.isDirectory()) {
 				if (!".".equals(f.getName()) && !"..".equals(f.getName())) {
@@ -120,6 +133,7 @@ public class ConfigurationLoader {
 				}
 			}
 		}
+		logger.info("Directory scanned " + directoryToScan);
 	}
 
 	public Map<String, IPatcher> fillPatchList(List<String> classList) throws Exception {
@@ -134,15 +148,19 @@ public class ConfigurationLoader {
 						String targetName = c.isMemberClass() ? c.getDeclaringClass().getCanonicalName() + "$" + c.getSimpleName() : c
 								.getCanonicalName();
 						if (map.get(targetName) != null) {
+							logger.error("Two patches for same class " + targetName);
 							throw new RuntimeException("Two patches for same class " + targetName);
 						}
 						map.put(targetName, patcher);
+						logger.info("Add patch for class " + targetName + " : " + clazz.getCanonicalName());
 					}
 					for (String s : patchClass.classes()) {
 						if (map.get(s) != null) {
+							logger.error("Two patches for same class " + s);
 							throw new RuntimeException("Two patches for same class " + s);
 						}
 						map.put(s, patcher);
+						logger.info("Add patch for class " + s + " : " + clazz.getCanonicalName());
 					}
 				}
 			}

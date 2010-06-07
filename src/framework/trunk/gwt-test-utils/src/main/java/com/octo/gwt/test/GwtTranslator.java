@@ -3,6 +3,8 @@ package com.octo.gwt.test;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
 import javassist.CannotCompileException;
 import javassist.ClassPool;
 import javassist.CtClass;
@@ -13,25 +15,19 @@ import com.octo.gwt.test.utils.PatchGwtUtils;
 
 public class GwtTranslator implements Translator {
 
-	public static boolean debug = "true".equals(System.getProperty(GwtTranslator.class.getCanonicalName() + ".debug"));
-
-	private void log(String log) {
-		if (debug) {
-			System.err.println(log);
-		}
-	}
+	public static final Logger logger = Logger.getLogger(GwtTranslator.class); 
 
 	public void onLoad(ClassPool pool, String className) throws NotFoundException, CannotCompileException {
 		try {
 			IPatcher patcher = map.get(className);
 			if (patcher != null) {
-				log("Load class " + className + ", use patcher " + patcher.getClass().getCanonicalName());
+				logger.debug("Load class " + className + ", use patcher " + patcher.getClass().getCanonicalName());
 				CtClass clazz = pool.get(className);
-				log("Patch class " + className);
+				logger.debug("Patch class " + className);
 				PatchGwtUtils.patch(clazz, patcher);
-				log("Class loaded & patched " + className);
+				logger.info("Class loaded & patched " + className);
 			} else {
-				log("Load class " + className + ", no patch");
+				logger.debug("Load class " + className + ", no patch");
 			}
 		} catch (Exception e) {
 			throw new CannotCompileException(e);
