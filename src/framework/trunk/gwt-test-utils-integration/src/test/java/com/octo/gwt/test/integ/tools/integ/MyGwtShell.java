@@ -1,7 +1,5 @@
 package com.octo.gwt.test.integ.tools.integ;
 
-import java.lang.reflect.InvocationTargetException;
-
 import junit.framework.Assert;
 
 import org.junit.Before;
@@ -95,10 +93,10 @@ public abstract class MyGwtShell extends AbstractGwtIntegrationShell {
 		handlerImpl.setExceptionHandler(new DefaultGwtRpcExceptionHandler() {
 	
 			@Override
-			public void handle(InvocationTargetException invocationTargetException, AsyncCallback<?> callback) {
-				Assert.assertEquals(NullPointerException.class, invocationTargetException.getCause().getClass());
+			public void handle(Throwable t, AsyncCallback<?> callback) {
+				Assert.assertEquals(NullPointerException.class, t.getClass());
 				MyStringStore.appender = "toto";
-				super.handle(invocationTargetException, callback);
+				super.handle(t, callback);
 			}
 	
 		});

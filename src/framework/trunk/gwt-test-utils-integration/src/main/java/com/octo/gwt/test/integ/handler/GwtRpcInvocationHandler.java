@@ -77,7 +77,7 @@ public class GwtRpcInvocationHandler implements InvocationHandler {
 			callback.onSuccess(o);
 		} catch (InvocationTargetException e) {
 			logger.info("Exception when invoking service throw to handler " + e.getMessage());
-			exceptionHandler.handle(e, callback);
+			exceptionHandler.handle(e.getCause(), callback);
 			return null;
 		} catch (IllegalAccessException e) {
 			logger.error("Invokation exception : " + e.toString(), e);
