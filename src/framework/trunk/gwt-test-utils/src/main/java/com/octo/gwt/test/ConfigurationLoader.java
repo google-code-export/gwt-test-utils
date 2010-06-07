@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.lang.annotation.Annotation;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -91,7 +92,9 @@ public class ConfigurationLoader {
 				URL url = l.nextElement();
 				String u = url.toExternalForm();
 				if (u.startsWith("file:")) {
-					loadClassesFromDirectory(new File(u.substring("file:".length())), s, classList);
+					String directoryName = u.substring("file:".length());
+					directoryName = URLDecoder.decode(directoryName, "UTF-8");
+					loadClassesFromDirectory(new File(directoryName), s, classList);
 				} else if (u.startsWith("jar:file:")) {
 					loadClassesFromJarFile(u.substring("jar:file:".length()), s, classList);
 				} else {
