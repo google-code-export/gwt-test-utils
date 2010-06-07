@@ -25,7 +25,7 @@ public class AutomaticSubclasser extends AutomaticGetAndSetPatcher {
 		constructor.setBody(cons.toString());
 		subClazz.addConstructor(constructor);
 	}
-	
+
 	public void initClass(CtClass c) throws Exception {
 		super.initClass(c);
 		ClassPool cp = c.getClassPool();
@@ -36,7 +36,7 @@ public class AutomaticSubclasser extends AutomaticGetAndSetPatcher {
 		CtField field = new CtField(cp.get(PropertyContainer.class.getCanonicalName()), PROPERTIES, subClazz);
 		field.setModifiers(Modifier.PUBLIC);
 		subClazz.addField(field);
-		
+
 		CtMethod getProperties = new CtMethod(cp.get(PropertyContainer.class.getCanonicalName()), "getOverrideProperties", new CtClass[] {}, subClazz);
 		StringBuffer stringBuffer = new StringBuffer();
 		stringBuffer.append("{");
@@ -47,7 +47,7 @@ public class AutomaticSubclasser extends AutomaticGetAndSetPatcher {
 		stringBuffer.append("}");
 		getProperties.setBody(stringBuffer.toString());
 		subClazz.addMethod(getProperties);
-		
+
 		createConstructor(cp, subClazz, c);
 	}
 

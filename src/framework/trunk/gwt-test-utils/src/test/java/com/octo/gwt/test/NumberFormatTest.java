@@ -15,20 +15,16 @@ public class NumberFormatTest extends AbstractGwtTest {
 
 		PatchGwtConfig.replaceSequenceInProperties("\\u00A0", " ");
 
-		Assert.assertEquals("10,00 €", NumberFormat.getCurrencyFormat().format(
-				10));
-		Assert.assertEquals("3,142", NumberFormat.getDecimalFormat().format(
-				3.1416));
+		Assert.assertEquals("10,00 €", NumberFormat.getCurrencyFormat().format(10));
+		Assert.assertEquals("3,142", NumberFormat.getDecimalFormat().format(3.1416));
 	}
 
 	@Test
 	public void checkNumberFormatUs() {
 		PatchGwtConfig.setLocale(Locale.US);
 
-		Assert.assertEquals("$10.00", NumberFormat.getCurrencyFormat().format(
-				10));
-		Assert.assertEquals("3.142", NumberFormat.getDecimalFormat().format(
-				3.1416));
+		Assert.assertEquals("$10.00", NumberFormat.getCurrencyFormat().format(10));
+		Assert.assertEquals("3.142", NumberFormat.getDecimalFormat().format(3.1416));
 	}
 
 	@Test

@@ -49,13 +49,13 @@ public class GwtPatcher extends AutomaticPatcher {
 	public static GwtCreateHandler gwtCreateHandler = null;
 	public static GwtLogHandler gwtLogHandler = null;
 	public static Map<Class<?>, Object> classes = new HashMap<Class<?>, Object>();
-    
+
 	public static void reset() {
 		classes.clear();
 		gwtCreateHandler = null;
 		gwtLogHandler = null;
 	}
-	
+
 	@PatchMethod
 	public static void log(String message, Throwable t) {
 		if (gwtLogHandler != null) {
@@ -180,5 +180,5 @@ public class GwtPatcher extends AutomaticPatcher {
 		}
 
 	}
-	
+
 }

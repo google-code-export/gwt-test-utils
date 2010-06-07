@@ -8,5 +8,5 @@ public class GwtTestRunner extends BlockJUnit4ClassRunner {
 	public GwtTestRunner(Class<?> clazz) throws InitializationError, ClassNotFoundException {
 		super(GwtTestClassLoader.getInstance().loadClass(clazz.getCanonicalName()));
 	}
-	
+
 }

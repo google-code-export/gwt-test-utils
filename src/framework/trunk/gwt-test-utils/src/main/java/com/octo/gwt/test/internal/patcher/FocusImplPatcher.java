@@ -15,12 +15,12 @@ public class FocusImplPatcher extends AutomaticPatcher {
 
 	@PatchMethod
 	public static void blur(FocusImpl focusImpl, Element element) {
-		
+
 	}
-	
+
 	@PatchMethod
 	public static void focus(FocusImpl focusImpl, Element element) {
-		
+
 	}
 
 	@PatchMethod
@@ -33,7 +33,7 @@ public class FocusImplPatcher extends AutomaticPatcher {
 	public static int getTabIndex(FocusImpl focusImpl, Element elem) {
 		return SubClassedHelper.getPropertyInteger(elem, "TabIndex");
 	}
-	
+
 	@PatchMethod
 	public static void setTabIndex(FocusImpl focusImpl, Element elem, int index) {
 		SubClassedHelper.setProperty(elem, "TabIndex", index);

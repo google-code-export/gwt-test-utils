@@ -39,7 +39,7 @@ public class NodeTest extends AbstractGwtTest {
 		Assert.assertTrue("AnchorElement is a DOM node", Node.is(Document.get().createAnchorElement()));
 	}
 
-@Test
+	@Test
 	public void checkAppendChild() {
 		BaseElement c0 = Document.get().createBaseElement();
 		ButtonElement c1 = Document.get().createButtonElement();

@@ -14,13 +14,13 @@ import com.octo.gwt.test.utils.PatchGwtUtils;
 public class GwtTranslator implements Translator {
 
 	public static boolean debug = "true".equals(System.getProperty(GwtTranslator.class.getCanonicalName() + ".debug"));
-	
+
 	private void log(String log) {
 		if (debug) {
 			System.err.println(log);
 		}
 	}
-	
+
 	public void onLoad(ClassPool pool, String className) throws NotFoundException, CannotCompileException {
 		try {
 			IPatcher patcher = map.get(className);
@@ -30,8 +30,7 @@ public class GwtTranslator implements Translator {
 				log("Patch class " + className);
 				PatchGwtUtils.patch(clazz, patcher);
 				log("Class loaded & patched " + className);
-			}
-			else {
+			} else {
 				log("Load class " + className + ", no patch");
 			}
 		} catch (Exception e) {
@@ -41,9 +40,9 @@ public class GwtTranslator implements Translator {
 
 	public void start(ClassPool pool) throws NotFoundException, CannotCompileException {
 	}
-	
+
 	private Map<String, IPatcher> map = new HashMap<String, IPatcher>();
-	
+
 	public GwtTranslator(Map<String, IPatcher> map) {
 		this.map = map;
 	}

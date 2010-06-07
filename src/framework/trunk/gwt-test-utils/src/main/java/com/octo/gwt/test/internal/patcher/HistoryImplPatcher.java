@@ -13,7 +13,7 @@ public class HistoryImplPatcher extends AutomaticPatcher {
 	static Stack<String> stack = new Stack<String>();
 
 	private static String top = null;
-	
+
 	@PatchMethod
 	public static boolean init(HistoryImpl historyImpl) {
 		return true;
@@ -21,9 +21,9 @@ public class HistoryImplPatcher extends AutomaticPatcher {
 
 	@PatchMethod
 	public static void nativeUpdate(HistoryImpl historyImpl, String s) {
-		
+
 	}
-	
+
 	@PatchMethod
 	public static void setToken(String token) {
 		stack.push(token);

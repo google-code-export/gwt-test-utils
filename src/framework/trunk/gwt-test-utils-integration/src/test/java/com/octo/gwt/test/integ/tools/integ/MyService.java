@@ -19,5 +19,5 @@ public class MyService implements MyRemoteService {
 	public void myMethod3() {
 		throw new NullPointerException();
 	}
-	
+
 }

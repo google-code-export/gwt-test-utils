@@ -18,8 +18,7 @@ public class StylePatcher extends AutomaticSubclasser {
 	}
 
 	@PatchMethod
-	public static void setPropertyImpl(Style style, String propertyName,
-			String propertyValue) {
+	public static void setPropertyImpl(Style style, String propertyName, String propertyValue) {
 		SubClassedHelper.setProperty(style, propertyName, propertyValue);
 	}
 
@@ -28,9 +27,7 @@ public class StylePatcher extends AutomaticSubclasser {
 		super.initClass(c);
 		CtConstructor cons = findConstructor(c);
 
-		cons.insertAfter(SubClassedHelper.getCodeSetProperty("this",
-				"whiteSpace", "\"nowrap\"", false)
-				+ ";");
+		cons.insertAfter(SubClassedHelper.getCodeSetProperty("this", "whiteSpace", "\"nowrap\"", false) + ";");
 	}
 
 }

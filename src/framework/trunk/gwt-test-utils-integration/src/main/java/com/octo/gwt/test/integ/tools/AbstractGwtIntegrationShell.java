@@ -41,25 +41,25 @@ import com.octo.gwt.test.utils.WidgetUtils;
 public abstract class AbstractGwtIntegrationShell {
 
 	protected CsvRunner csvRunner;
-	
+
 	private DirectoryTestReader reader;
 	private MacroReader macroReader;
-	
+
 	public String getCurrentTestedModuleFile() {
 		//this method can be overrided
 		return null;
 	}
-	
+
 	protected GwtCreateHandler getGwtCreateHandler() throws Exception {
 		//this method can be overrided
 		return null;
 	}
-	
-	protected Locale getLocale(){
+
+	protected Locale getLocale() {
 		//this method can be overrided
 		return null;
 	}
-	
+
 	protected GwtLogHandler getLogHandler() {
 		//this method can be overrided
 		return null;
@@ -92,22 +92,22 @@ public abstract class AbstractGwtIntegrationShell {
 		}
 	}
 
-	public void runMacro(String macroName, String ... params) throws Exception {
+	public void runMacro(String macroName, String... params) throws Exception {
 		List<List<String>> macro = macroReader.getMacro(macroName);
 		Assert.assertNotNull(csvRunner.getAssertionErrorMessagePrefix() + "Not existing macro " + macroName, macro);
 		int i = 0;
 		for (List<String> line : macro) {
 			List<String> l = new ArrayList<String>();
-			for(String s : line) {
+			for (String s : line) {
 				String replaced = s;
-				for(int z = 0; z < params.length; z ++) {
+				for (int z = 0; z < params.length; z++) {
 					String param = params[z];
 					if (param == null)
 						param = "*null*";
 					else if ("".equals(param))
 						param = "*empty*";
-					
-					replaced = replaced.replaceAll("\\{" + z  + "\\}", param);
+
+					replaced = replaced.replaceAll("\\{" + z + "\\}", param);
 				}
 				l.add(replaced);
 			}
@@ -155,11 +155,11 @@ public abstract class AbstractGwtIntegrationShell {
 		if (!failOnError) {
 			return null;
 		}
-		
+
 		if (o == null) {
 			Assert.fail(csvRunner.getAssertionErrorMessagePrefix() + "Targeted object [" + objectLocalization + "] is null");
 		}
-		
+
 		Assert.fail(csvRunner.getAssertionErrorMessagePrefix() + "Wrong object type, not a " + clazz.getCanonicalName() + " : "
 				+ o.getClass().getCanonicalName());
 		return null;
@@ -174,7 +174,7 @@ public abstract class AbstractGwtIntegrationShell {
 		String s = getObject(String.class, objectLocalization, false);
 		Assert.assertEquals(csvRunner.getAssertionErrorMessagePrefix() + "Wrong string", value, s);
 	}
-	
+
 	/**
 	 * 
 	 * @param value
@@ -189,7 +189,7 @@ public abstract class AbstractGwtIntegrationShell {
 			Assert.assertEquals(csvRunner.getAssertionErrorMessagePrefix() + "Wrong number", Long.parseLong(value), l.intValue());
 		}
 	}
-	
+
 	public void assertTrue(String objectLocalization) {
 		Boolean b = getObject(Boolean.class, objectLocalization, false);
 		if (b == null) {
@@ -198,7 +198,7 @@ public abstract class AbstractGwtIntegrationShell {
 			Assert.assertTrue(csvRunner.getAssertionErrorMessagePrefix() + "TRUE expected", b.booleanValue());
 		}
 	}
-	
+
 	public void assertFalse(String objectLocalization) {
 		Boolean b = getObject(Boolean.class, objectLocalization, false);
 		if (b == null) {
@@ -269,7 +269,7 @@ public abstract class AbstractGwtIntegrationShell {
 		MenuItem itemToClick = menuItems.get(Integer.parseInt(index));
 		WidgetUtils.click(menuBar, itemToClick);
 	}
-	
+
 	public void clickOnTableRow(String rowIndex, String objectLocalization) {
 		Grid grid = getObject(Grid.class, objectLocalization);
 		checkWidgetVisible(grid, objectLocalization);
@@ -300,12 +300,12 @@ public abstract class AbstractGwtIntegrationShell {
 		Widget widget = getObject(Widget.class, objectLocalization);
 		WidgetUtils.mouseWheel(widget);
 	}
-	
+
 	public void mouseOut(String objectLocalization) {
 		Widget widget = getObject(Widget.class, objectLocalization);
 		WidgetUtils.mouseOut(widget);
 	}
-	
+
 	public void mouseOver(String objectLocalization) {
 		Widget widget = getObject(Widget.class, objectLocalization);
 		WidgetUtils.mouseOver(widget);
@@ -345,7 +345,7 @@ public abstract class AbstractGwtIntegrationShell {
 			Assert.fail("Cannot assert instance of [" + className + "] because the class cannot be found");
 		}
 	}
-	
+
 	public void assertListBoxSelectedValueIs(String value, String objectLocalization) {
 		ListBox listBox = getObject(ListBox.class, objectLocalization);
 		Assert.assertEquals("Wrong listbox selected value", value, listBox.getItemText(listBox.getSelectedIndex()));
@@ -408,13 +408,13 @@ public abstract class AbstractGwtIntegrationShell {
 		WidgetUtils.click(listBox);
 		WidgetUtils.change(listBox);
 	}
-	
+
 	public void selectInListBoxByText(String regex, String objectLocalization) {
 		ListBox listBox = getObject(ListBox.class, objectLocalization);
 		checkWidgetVisibleAndEnable(listBox, objectLocalization);
-		
+
 		int selectedIndex = WidgetUtils.getIndexInListBox(listBox, regex);
-		
+
 		if (selectedIndex != -1) {
 			listBox.setSelectedIndex(selectedIndex);
 			WidgetUtils.click(listBox);
@@ -430,7 +430,7 @@ public abstract class AbstractGwtIntegrationShell {
 		suggestBox.setText(value);
 		WidgetUtils.keyUp(suggestBox, KeyCodes.KEY_ENTER);
 	}
-	
+
 	public void isVisible(String objectLocalization) {
 		Widget widget = getObject(Widget.class, objectLocalization);
 		checkWidgetVisible(widget, objectLocalization);
@@ -465,8 +465,8 @@ public abstract class AbstractGwtIntegrationShell {
 	}
 
 	protected void checkWidgetVisible(Widget widget, String objectLocalization) {
-			Assert.assertTrue(csvRunner.getAssertionErrorMessagePrefix() + "Widget have to be visible : " + objectLocalization + ", "
-					+ widget.getClass().getCanonicalName(), WidgetUtils.isWidgetVisible(widget));
+		Assert.assertTrue(csvRunner.getAssertionErrorMessagePrefix() + "Widget have to be visible : " + objectLocalization + ", "
+				+ widget.getClass().getCanonicalName(), WidgetUtils.isWidgetVisible(widget));
 	}
 
 	// MODE INTERACTIF

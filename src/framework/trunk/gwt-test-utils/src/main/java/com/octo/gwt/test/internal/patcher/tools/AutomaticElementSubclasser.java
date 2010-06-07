@@ -42,46 +42,12 @@ import com.google.gwt.dom.client.TitleElement;
 import com.google.gwt.dom.client.UListElement;
 import com.octo.gwt.test.ElementWrapper;
 
-@PatchClass({
-	AnchorElement.class,
-	AreaElement.class,
-	BaseElement.class,
-	BodyElement.class,
-	BRElement.class,
-	ButtonElement.class,
-	DivElement.class,
-	DListElement.class,
-	FieldSetElement.class,
-	FrameElement.class,
-	FrameSetElement.class,
-	FormElement.class,
-	HeadElement.class,
-	HRElement.class,
-	IFrameElement.class,
-	ImageElement.class,
-	LIElement.class,
-	LabelElement.class,
-	LegendElement.class,
-	LinkElement.class,
-	MapElement.class,
-	MetaElement.class,
-	ObjectElement.class,
-	OptionElement.class,
-	OListElement.class,
-	OptGroupElement.class,
-	ParagraphElement.class,
-	ParamElement.class,
-	PreElement.class,
-	ScriptElement.class,
-	StyleElement.class,
-	SpanElement.class,
-	TableCaptionElement.class,
-	TableElement.class,
-	TableRowElement.class,
-	TextAreaElement.class,
-	TitleElement.class,
-	UListElement.class
-})
+@PatchClass( { AnchorElement.class, AreaElement.class, BaseElement.class, BodyElement.class, BRElement.class, ButtonElement.class, DivElement.class,
+		DListElement.class, FieldSetElement.class, FrameElement.class, FrameSetElement.class, FormElement.class, HeadElement.class, HRElement.class,
+		IFrameElement.class, ImageElement.class, LIElement.class, LabelElement.class, LegendElement.class, LinkElement.class, MapElement.class,
+		MetaElement.class, ObjectElement.class, OptionElement.class, OListElement.class, OptGroupElement.class, ParagraphElement.class,
+		ParamElement.class, PreElement.class, ScriptElement.class, StyleElement.class, SpanElement.class, TableCaptionElement.class,
+		TableElement.class, TableRowElement.class, TextAreaElement.class, TitleElement.class, UListElement.class })
 public class AutomaticElementSubclasser extends AutomaticSubclasser {
 
 	@PatchMethod(PatchType.NEW_CODE_AS_STRING)
@@ -99,5 +65,5 @@ public class AutomaticElementSubclasser extends AutomaticSubclasser {
 
 		return sb.toString();
 	}
-	
+
 }

@@ -15,7 +15,6 @@ public class PatchGwtWithJavaAgent {
 
 	private static String BOOTSTRAP_CLASS = null;
 
-
 	/**
 	 * Method used to change bytecode of a class. Method is located in
 	 * bootstrap.jar
@@ -33,24 +32,20 @@ public class PatchGwtWithJavaAgent {
 		try {
 			redefine.invoke(null, clazz, newByteCode);
 		} catch (Exception e) {
-			System.err.println("Unable to replace code in class "
-					+ clazz.getCanonicalName());
+			System.err.println("Unable to replace code in class " + clazz.getCanonicalName());
 			e.printStackTrace();
-			throw new RuntimeException("Unable to compile code for class "
-					+ clazz.getCanonicalName(), e);
+			throw new RuntimeException("Unable to compile code for class " + clazz.getCanonicalName(), e);
 		}
 	}
-	
+
 	private static void initRedefineMethod() throws Exception {
 		Class<?> c = Class.forName(BOOTSTRAP_CLASS);
 		if (c == null) {
 			throw new RuntimeException("No bootstrap class found");
 		}
-		redefine = c.getMethod(REDEFINE_METHOD, Class.class,
-				byte[].class);
+		redefine = c.getMethod(REDEFINE_METHOD, Class.class, byte[].class);
 		if (redefine == null) {
-			throw new RuntimeException("Method " + REDEFINE_METHOD
-					+ " not found in bootstrap class");
+			throw new RuntimeException("Method " + REDEFINE_METHOD + " not found in bootstrap class");
 		}
 	}
 
@@ -67,13 +62,12 @@ public class PatchGwtWithJavaAgent {
 		}
 		initRedefineMethod();
 	}
-	
+
 	public static void patch(Class<?> clazz, IPatcher patcher) throws Exception {
 		String className = clazz.getCanonicalName();
 		if (clazz.isMemberClass()) {
 			int k = className.lastIndexOf(".");
-			className = className.substring(0, k) + "$"
-					+ className.substring(k + 1);
+			className = className.substring(0, k) + "$" + className.substring(k + 1);
 		}
 
 		CtClass c = PatchGwtClassPool.get().get(className);

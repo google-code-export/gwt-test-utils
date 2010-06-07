@@ -1,4 +1,5 @@
 package com.octo.gwt.test;
+
 import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.History;
@@ -16,7 +17,6 @@ import com.octo.gwt.test.internal.patcher.TimerPatcher;
 import com.octo.gwt.test.internal.patcher.dom.NodeFactory;
 import com.octo.gwt.test.utils.GwtTestReflectionUtils;
 import com.octo.gwt.test.utils.PatchGwtUtils;
-
 
 public class PatchGwtReset {
 
@@ -40,12 +40,13 @@ public class PatchGwtReset {
 		GwtTestReflectionUtils.getStaticAndCallClear(RootPanel.class, "rootPanels");
 		GwtTestReflectionUtils.getStaticAndCallClear(RootPanel.class, "widgetsToDetach");
 
-		Object commandExecutor = GwtTestReflectionUtils.getStaticFieldValue(Class.forName("com.google.gwt.user.client.DeferredCommand"), "commandExecutor");
+		Object commandExecutor = GwtTestReflectionUtils.getStaticFieldValue(Class.forName("com.google.gwt.user.client.DeferredCommand"),
+				"commandExecutor");
 		GwtTestReflectionUtils.callClear(GwtTestReflectionUtils.getPrivateFieldValue(commandExecutor, "commands"));
 
 		HistoryImpl historyImpl = GwtTestReflectionUtils.getStaticFieldValue(History.class, "impl");
-		GwtTestReflectionUtils.callClear(GwtTestReflectionUtils.getPrivateFieldValue(GwtTestReflectionUtils.getPrivateFieldValue(GwtTestReflectionUtils.getPrivateFieldValue(
-				historyImpl, "handlers"), "registry"), "map"));
+		GwtTestReflectionUtils.callClear(GwtTestReflectionUtils.getPrivateFieldValue(GwtTestReflectionUtils.getPrivateFieldValue(
+				GwtTestReflectionUtils.getPrivateFieldValue(historyImpl, "handlers"), "registry"), "map"));
 
 		GwtTestReflectionUtils.setStaticField(NumberFormat.class, "cachedDecimalFormat", null);
 		GwtTestReflectionUtils.setStaticField(NumberFormat.class, "cachedScientificFormat", null);
@@ -56,5 +57,4 @@ public class PatchGwtReset {
 		GwtTestReflectionUtils.setStaticField(Event.class, "handlers", null);
 	}
 
-	
 }

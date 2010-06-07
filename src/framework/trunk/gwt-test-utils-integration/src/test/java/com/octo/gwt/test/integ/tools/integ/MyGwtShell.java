@@ -22,7 +22,7 @@ import com.octo.gwt.test.utils.ISerializeCallback;
 public abstract class MyGwtShell extends AbstractGwtIntegrationShell {
 
 	private MyBeautifulApp app;
-	
+
 	private GwtCreateHandlerImpl handlerImpl;
 
 	@Before
@@ -39,19 +39,20 @@ public abstract class MyGwtShell extends AbstractGwtIntegrationShell {
 
 		};
 		handlerImpl.addBackToGwtCallbacks(MyCustomObject.class, new ISerializeCallback() {
-			
+
 			public Object callback(Object object) throws Exception {
 				GwtTestReflectionUtils.setPrivateFieldValue(object, "myField", "titi");
 				return object;
 			}
 		});
-		handlerImpl.addFromGwtCallbacks(Class.forName(MyCustomObject.class.getCanonicalName(), true, GwtTestClassLoader.getInstance().getParent()), new ISerializeCallback() {
-			
-			public Object callback(Object object) throws Exception {
-				GwtTestReflectionUtils.setPrivateFieldValue(object, "myField", "toto");
-				return object;
-			}
-		});
+		handlerImpl.addFromGwtCallbacks(Class.forName(MyCustomObject.class.getCanonicalName(), true, GwtTestClassLoader.getInstance().getParent()),
+				new ISerializeCallback() {
+
+					public Object callback(Object object) throws Exception {
+						GwtTestReflectionUtils.setPrivateFieldValue(object, "myField", "toto");
+						return object;
+					}
+				});
 		PatchGwtConfig.setGwtCreateHandler(handlerImpl);
 		MyStringStore.appender = "";
 	}
@@ -87,18 +88,18 @@ public abstract class MyGwtShell extends AbstractGwtIntegrationShell {
 		}
 		return super.findPrefixProcessor(prefix);
 	}
-	
+
 	public void enableNewExceptionHandler() {
-	
+
 		handlerImpl.setExceptionHandler(new DefaultGwtRpcExceptionHandler() {
-	
+
 			@Override
 			public void handle(Throwable t, AsyncCallback<?> callback) {
 				Assert.assertEquals(NullPointerException.class, t.getClass());
 				MyStringStore.appender = "toto";
 				super.handle(t, callback);
 			}
-	
+
 		});
 	}
 

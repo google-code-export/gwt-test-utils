@@ -6,7 +6,6 @@ import org.junit.Test;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.RadioButton;
-import com.octo.gwt.test.AbstractGwtTest;
 
 public class RadioButtonTest extends AbstractGwtTest {
 

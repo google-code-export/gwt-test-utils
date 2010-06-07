@@ -6,7 +6,6 @@ import org.junit.Test;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.octo.gwt.test.AbstractGwtTest;
 
 public class ComplexPanelTest extends AbstractGwtTest {
 

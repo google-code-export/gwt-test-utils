@@ -277,7 +277,7 @@ public class ElementTest extends AbstractGwtTest {
 		// Assert
 		Assert.assertNull("Removed attribute should return null", e.getAttribute("test"));
 	}
-	
+
 	@Test
 	public void checkGetOffset() {
 		Element parent = Document.get().createElement("a");

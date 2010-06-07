@@ -19,7 +19,7 @@ public class ImagePatcher extends AutomaticPatcher {
 	public static ImageElement getImageElement(Image image) {
 		return ElementUtils.castToDomElement(image.getElement());
 	}
-	
+
 	@PatchMethod
 	public static int getWidth(Image image) {
 		return getDim(image, "width");

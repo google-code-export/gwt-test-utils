@@ -28,15 +28,13 @@ public abstract class AbstractGwtEasyMockTest extends AbstractGwtTest {
 	protected Hashtable<Class<?>, Object> mockedObject = new Hashtable<Class<?>, Object>();
 
 	public AbstractGwtEasyMockTest() {
-		annotatedFieldToInject = GwtTestReflectionUtils.getAnnotatedField(this.getClass(),
-				Mock.class);
+		annotatedFieldToInject = GwtTestReflectionUtils.getAnnotatedField(this.getClass(), Mock.class);
 		for (Field f : annotatedFieldToInject) {
 			mockList.add(f.getType());
 		}
 	}
 
-	protected void addMockedObject(Class<?> createClass, Class<?> mockClass,
-			Object mock) {
+	protected void addMockedObject(Class<?> createClass, Class<?> mockClass, Object mock) {
 		PatchGwtConfig.addCreateClass(createClass, mock);
 		mockedObject.put(mockClass, mock);
 	}
@@ -45,11 +43,7 @@ public abstract class AbstractGwtEasyMockTest extends AbstractGwtTest {
 	public void setUpEasyMock() throws Exception {
 		for (Class<?> clazz : mockList) {
 			if (clazz.getName().endsWith("Async")) {
-				Class<?> clazz2 = Class.forName(clazz.getCanonicalName()
-						.substring(
-								0,
-								clazz.getCanonicalName().length()
-										- "Async".length()));
+				Class<?> clazz2 = Class.forName(clazz.getCanonicalName().substring(0, clazz.getCanonicalName().length() - "Async".length()));
 				Object mock = EasyMock.createMock(clazz);
 				addMockedObject(clazz2, clazz, mock);
 			} else {
@@ -100,8 +94,7 @@ public abstract class AbstractGwtEasyMockTest extends AbstractGwtTest {
 
 	}
 
-	public static void expectServiceAndCallbackOnFailure(
-			final Throwable exception) {
+	public static void expectServiceAndCallbackOnFailure(final Throwable exception) {
 		IAnswer<Object> answer = new FailureAnswer<Object>(exception);
 		EasyMock.expectLastCall().andAnswer(answer);
 	}
@@ -149,21 +142,17 @@ public abstract class AbstractGwtEasyMockTest extends AbstractGwtTest {
 	}
 
 	protected <T> T createMockAndKeepOneMethod(Class<T> clazz, String methodName) {
-		return createMockAndKeepMethods(clazz, true, GwtTestReflectionUtils
-				.findMethod(clazz, methodName, null));
+		return createMockAndKeepMethods(clazz, true, GwtTestReflectionUtils.findMethod(clazz, methodName, null));
 	}
 
 	@SuppressWarnings("unchecked")
-	protected <T> T createMockAndKeepMethods(Class<T> clazz,
-			final boolean keepSetters, final Method... list) {
+	protected <T> T createMockAndKeepMethods(Class<T> clazz, final boolean keepSetters, final Method... list) {
 		final List<Method> l = new ArrayList<Method>();
 		GwtTestReflectionUtils.doWithMethods(clazz, new MethodCallback() {
 
-			public void doWith(Method method) throws IllegalArgumentException,
-					IllegalAccessException {
+			public void doWith(Method method) throws IllegalArgumentException, IllegalAccessException {
 				if (!ArrayUtils.contains(list, method)) {
-					if (!keepSetters || !method.getName().startsWith("set")
-							|| method.getReturnType() != void.class) {
+					if (!keepSetters || !method.getName().startsWith("set") || method.getReturnType() != void.class) {
 						l.add(method);
 					}
 				}

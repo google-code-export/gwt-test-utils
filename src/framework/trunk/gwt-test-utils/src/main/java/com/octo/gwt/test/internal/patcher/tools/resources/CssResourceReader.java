@@ -71,11 +71,11 @@ public class CssResourceReader {
 		private Map<String, String> constants;
 		private Set<String> styles;
 
-		private CssParsingResult(Map<String, String> constants,Set<String> styles) {
+		private CssParsingResult(Map<String, String> constants, Set<String> styles) {
 			this.constants = constants;
 			this.styles = styles;
 		}
-		
+
 		public Map<String, String> getConstants() {
 			return constants;
 		}

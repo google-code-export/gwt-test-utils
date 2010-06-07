@@ -32,11 +32,18 @@ public class ElementPatcher extends AutomaticElementSubclasser {
 	public void initClass(CtClass c) throws Exception {
 		super.initClass(c);
 		CtConstructor cons = findConstructor(c);
-		
-		cons.insertAfter(SubClassedHelper.getCodeSetProperty("this", STYLE_FIELD, NodeFactory.class.getCanonicalName() + ".createStyle()", true) + ";");
-		cons.insertAfter(SubClassedHelper.getCodeSetProperty("this", PROPERTY_MAP_FIELD, "new " + PropertyContainer.class.getCanonicalName() + "()", true) + ";");
-		cons.insertAfter(SubClassedHelper.getCodeSetProperty("this", ATTRIBUTE_MAP_FIELD, "new " + PropertyContainer.class.getCanonicalName() + "()", true) + ";");
-		cons.insertAfter(SubClassedHelper.getCodeSetProperty("this", ATTRIBUTE_MAP_FIELD, "new " + PropertyContainer.class.getCanonicalName() + "()", true) + ";");
+
+		cons.insertAfter(SubClassedHelper.getCodeSetProperty("this", STYLE_FIELD, NodeFactory.class.getCanonicalName() + ".createStyle()", true)
+				+ ";");
+		cons.insertAfter(SubClassedHelper.getCodeSetProperty("this", PROPERTY_MAP_FIELD, "new " + PropertyContainer.class.getCanonicalName() + "()",
+				true)
+				+ ";");
+		cons.insertAfter(SubClassedHelper.getCodeSetProperty("this", ATTRIBUTE_MAP_FIELD, "new " + PropertyContainer.class.getCanonicalName() + "()",
+				true)
+				+ ";");
+		cons.insertAfter(SubClassedHelper.getCodeSetProperty("this", ATTRIBUTE_MAP_FIELD, "new " + PropertyContainer.class.getCanonicalName() + "()",
+				true)
+				+ ";");
 		cons.insertAfter(SubClassedHelper.getCodeSetProperty("this", CLASSNAME_FIELD, "\"\"", true) + ";");
 		cons.insertAfter(SubClassedHelper.getCodeSetProperty("this", ACCESSKEY_FIELD, "\"\"", true) + ";");
 	}
@@ -51,25 +58,24 @@ public class ElementPatcher extends AutomaticElementSubclasser {
 		}
 		return GwtTestReflectionUtils.getStaticFieldValue(element.getClass(), "TAG");
 	}
-	
+
 	@PatchMethod
 	public static Element getOffsetParent(Element element) {
 		if (element == null)
 			return null;
-		
+
 		return element.getParentElement();
 	}
-	
+
 	@PatchMethod
 	public static void blur(Element element) {
-		
+
 	}
-	
+
 	@PatchMethod
 	public static void focus(Element element) {
-		
+
 	}
-	
 
 	@PatchMethod
 	public static Style getStyle(Element element) {
@@ -137,7 +143,7 @@ public class ElementPatcher extends AutomaticElementSubclasser {
 		PropertyContainer propertyContainer = SubClassedHelper.getProperty(element, PROPERTY_MAP_FIELD);
 		propertyContainer.put(propertyName, value);
 	}
-	
+
 	@PatchMethod
 	public static void setPropertyInt(Element element, String propertyName, int value) {
 		PropertyContainer propertyContainer = SubClassedHelper.getProperty(element, PROPERTY_MAP_FIELD);
@@ -149,7 +155,7 @@ public class ElementPatcher extends AutomaticElementSubclasser {
 		PropertyContainer propertyContainer = SubClassedHelper.getProperty(element, PROPERTY_MAP_FIELD);
 		propertyContainer.put(propertyName, value);
 	}
-	
+
 	@PatchMethod
 	public static void setPropertyDouble(Element element, String propertyName, double value) {
 		PropertyContainer propertyContainer = SubClassedHelper.getProperty(element, PROPERTY_MAP_FIELD);

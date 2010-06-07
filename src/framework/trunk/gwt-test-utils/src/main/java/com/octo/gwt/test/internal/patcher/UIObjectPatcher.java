@@ -15,18 +15,18 @@ import com.octo.gwt.test.utils.GwtTestReflectionUtils;
 @PatchClass(UIObject.class)
 public class UIObjectPatcher extends AutomaticPatcher {
 
-	@PatchMethod(value=PatchType.NEW_CODE_AS_STRING, args={Element.class})
+	@PatchMethod(value = PatchType.NEW_CODE_AS_STRING, args = { Element.class })
 	public static String setElement() {
 		return "setElement(" + ElementUtils.class.getCanonicalName() + ".castToUserElement($1))";
 	}
-	
+
 	@PatchMethod
 	public static double extractLengthValue(UIObject uiObject, String s) {
 		if ("auto".equals(s) || "inherit".equals(s) || "".equals(s)) {
 			return 0;
 		}
 		StringBuffer buffer = new StringBuffer();
-		for(int i = 0; i < s.length(); i++) {
+		for (int i = 0; i < s.length(); i++) {
 			char c = s.charAt(i);
 			if (c >= '0' && c <= '9') {
 				buffer.append(c);
@@ -44,7 +44,7 @@ public class UIObjectPatcher extends AutomaticPatcher {
 
 	@PatchMethod
 	public static void setVisible(Element elem, boolean visible) {
-		String display = visible? "" : "none";
+		String display = visible ? "" : "none";
 		elem.getStyle().setProperty("display", display);
 	}
 

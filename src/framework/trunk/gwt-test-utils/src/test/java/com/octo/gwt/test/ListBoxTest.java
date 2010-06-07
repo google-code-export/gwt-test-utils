@@ -4,7 +4,6 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.google.gwt.user.client.ui.ListBox;
-import com.octo.gwt.test.AbstractGwtTest;
 
 public class ListBoxTest extends AbstractGwtTest {
 
@@ -14,12 +13,11 @@ public class ListBoxTest extends AbstractGwtTest {
 		listBox.setName("name");
 		Assert.assertEquals("name", listBox.getName());
 	}
-	
+
 	@Test
 	public void checkSelectedIndex() {
 		ListBox listBox = getListBox();
 		Assert.assertEquals(-1, listBox.getSelectedIndex());
-		
 
 		listBox.setSelectedIndex(1);
 		Assert.assertEquals(1, listBox.getSelectedIndex());

@@ -84,7 +84,7 @@ public class ClientBundleTest extends AbstractGwtTest {
 		// Test
 		String name = testImageResource.getName();
 		String url = testImageResource.getURL();
-		int heigh  = testImageResource.getHeight();
+		int heigh = testImageResource.getHeight();
 		int left = testImageResource.getLeft();
 		int width = testImageResource.getWidth();
 

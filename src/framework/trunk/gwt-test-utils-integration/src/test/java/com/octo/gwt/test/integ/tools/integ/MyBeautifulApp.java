@@ -23,7 +23,7 @@ public class MyBeautifulApp implements EntryPoint {
 	private Button b3;
 
 	private Button b4;
-	
+
 	private Button b5;
 
 	private Label l;
@@ -101,9 +101,9 @@ public class MyBeautifulApp implements EntryPoint {
 
 		b4 = new Button();
 		panel.add(b4);
-		
+
 		b4.addClickHandler(new ClickHandler() {
-			
+
 			public void onClick(ClickEvent arg0) {
 				MyRemoteServiceAsync remoteServiceAsync = GWT.create(MyRemoteService.class);
 				remoteServiceAsync.myMethod2(new MyCustomObject(), new AsyncCallback<MyCustomObject>() {
@@ -118,14 +118,14 @@ public class MyBeautifulApp implements EntryPoint {
 
 				});
 			}
-			
+
 		});
-		
+
 		b5 = new Button();
 		panel.add(b5);
-		
+
 		b5.addClickHandler(new ClickHandler() {
-			
+
 			public void onClick(ClickEvent arg0) {
 				MyRemoteServiceAsync remoteServiceAsync = GWT.create(MyRemoteService.class);
 				remoteServiceAsync.myMethod3(new AsyncCallback<Void>() {
@@ -140,9 +140,9 @@ public class MyBeautifulApp implements EntryPoint {
 
 				});
 			}
-			
+
 		});
-		
+
 		t.addChangeHandler(new ChangeHandler() {
 
 			public void onChange(ChangeEvent event) {

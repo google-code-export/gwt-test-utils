@@ -4,7 +4,6 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.google.gwt.user.client.ui.Button;
-import com.octo.gwt.test.AbstractGwtTest;
 import com.octo.gwt.test.utils.WidgetUtils;
 
 public class StyleTest extends AbstractGwtTest {

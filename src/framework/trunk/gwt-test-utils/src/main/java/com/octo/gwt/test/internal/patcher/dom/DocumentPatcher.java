@@ -13,14 +13,14 @@ import com.octo.gwt.test.internal.patcher.tools.SubClassedHelper;
 public class DocumentPatcher extends AutomaticSubclasser {
 
 	private static int ID = 0;
-	
+
 	public static final String BODY_PROPERTY = "Body";
 
 	@PatchMethod
 	public static String getCompatMode(Document document) {
 		return "toto";
 	}
-	
+
 	@PatchMethod
 	public static Document get() {
 		return NodeFactory.getDocument();
@@ -30,18 +30,18 @@ public class DocumentPatcher extends AutomaticSubclasser {
 	public static Text createTextNode(Document document, String data) {
 		return NodeFactory.createTextNode(data);
 	}
-	
+
 	@PatchMethod
-	public static  BodyElement getBody(Document document) {
+	public static BodyElement getBody(Document document) {
 		Element e = document.getDocumentElement();
 		return SubClassedHelper.getProperty(e, NodeFactory.BODY_ELEMENT);
 	}
-	
+
 	@PatchMethod
 	public static String getDomain(Document document) {
 		return null;
 	}
-	
+
 	@PatchMethod
 	public static String getReferrer(Document document) {
 		return "";

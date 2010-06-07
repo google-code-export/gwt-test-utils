@@ -4,7 +4,6 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.google.gwt.user.client.ui.PopupPanel;
-import com.octo.gwt.test.AbstractGwtTest;
 
 public class PopupPanelTest extends AbstractGwtTest {
 
@@ -22,16 +21,14 @@ public class PopupPanelTest extends AbstractGwtTest {
 		// Setup
 		PopupPanel popup = new PopupPanel();
 		Assert.assertFalse(popup.isVisible());
-		Assert.assertEquals("hidden", popup.getElement().getStyle()
-				.getProperty("visibility"));
+		Assert.assertEquals("hidden", popup.getElement().getStyle().getProperty("visibility"));
 
 		// Test
 		popup.setVisible(true);
 
 		// Assert
 		Assert.assertTrue(popup.isVisible());
-		Assert.assertEquals("visible", popup.getElement().getStyle()
-				.getProperty("visibility"));
+		Assert.assertEquals("visible", popup.getElement().getStyle().getProperty("visibility"));
 	}
 
 	@Test

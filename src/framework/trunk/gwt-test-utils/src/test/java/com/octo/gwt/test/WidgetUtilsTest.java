@@ -11,7 +11,6 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.SimplePanel;
-import com.octo.gwt.test.AbstractGwtTest;
 import com.octo.gwt.test.utils.WidgetUtils;
 
 public class WidgetUtilsTest extends AbstractGwtTest {
@@ -53,19 +52,19 @@ public class WidgetUtilsTest extends AbstractGwtTest {
 		Assert.assertEquals(item0, items.get(0));
 		Assert.assertEquals(item1, items.get(1));
 	}
-	
+
 	@Test
 	public void checkNewWidgetIsVisible() {
 		// Setup
 		Button b = new Button();
-		
+
 		// Test
 		Boolean isVisible = WidgetUtils.isWidgetVisible(b);
-		
+
 		// Assert
 		Assert.assertTrue(isVisible);
 	}
-	
+
 	@Test
 	public void checkNewWidgetIsNotVisibleWhenParentIsNotVisible() {
 		// Setup
@@ -73,10 +72,10 @@ public class WidgetUtilsTest extends AbstractGwtTest {
 		sp.setVisible(false);
 		Button b = new Button();
 		sp.add(b);
-		
+
 		// Test
 		Boolean isVisible = WidgetUtils.isWidgetVisible(b);
-		
+
 		// Assert
 		Assert.assertFalse(isVisible);
 	}

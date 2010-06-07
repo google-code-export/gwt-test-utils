@@ -13,15 +13,15 @@ public class CurrencyDataImplPatcher extends AutomaticPatcher {
 	public static String getCurrencyCode(CurrencyData currencyData) {
 		return CurrencyListPatcher.getCurrencyCode(currencyData);
 	}
-	
+
 	@PatchMethod
 	public static String getCurrencySymbol(CurrencyData currencyData) {
 		return CurrencyListPatcher.getCurrencySymbol(currencyData);
 	}
-	
+
 	@PatchMethod
 	public static int getFlagsAndPrecision(CurrencyData currencyData) {
 		return CurrencyListPatcher.getFlagsAndPrecision(currencyData);
 	}
-	
+
 }

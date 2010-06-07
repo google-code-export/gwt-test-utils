@@ -26,7 +26,7 @@ import com.octo.gwt.test.PatchGwtClassPool;
 import com.octo.gwt.test.internal.patcher.tools.AutomaticPatcher;
 
 public class PatchGwtUtils {
-	
+
 	private static Map<String, Properties> cachedProperties = new HashMap<String, Properties>();
 
 	public static class SequenceReplacement {
@@ -57,12 +57,12 @@ public class PatchGwtUtils {
 	public static Locale locale;
 
 	public static void initLoadPropertiesMethod() {
-		loadProperties = GwtTestReflectionUtils.findMethod(Properties.class, "load", new Class[]{Reader.class});
+		loadProperties = GwtTestReflectionUtils.findMethod(Properties.class, "load", new Class[] { Reader.class });
 	}
 
 	public static Properties getProperties(String path) {
 		Properties properties = cachedProperties.get(path);
-		
+
 		if (properties != null) {
 			return properties;
 		}
@@ -70,8 +70,7 @@ public class PatchGwtUtils {
 			initLoadPropertiesMethod();
 		}
 		String propertiesNameFile = "/" + path + ".properties";
-		InputStream inputStream = path.getClass().getResourceAsStream(
-				propertiesNameFile);
+		InputStream inputStream = path.getClass().getResourceAsStream(propertiesNameFile);
 		if (inputStream == null) {
 			return null;
 		}
@@ -81,8 +80,7 @@ public class PatchGwtUtils {
 			loadProperties.invoke(properties, inputStreamReader);
 			for (Entry<Object, Object> entry : properties.entrySet()) {
 				for (SequenceReplacement strangeCharacterMapping : sequenceReplacementList) {
-					entry.setValue(strangeCharacterMapping.treat((String) entry
-							.getValue()));
+					entry.setValue(strangeCharacterMapping.treat((String) entry.getValue()));
 				}
 			}
 			cachedProperties.put(path, properties);
@@ -92,34 +90,25 @@ public class PatchGwtUtils {
 		}
 	}
 
-	public static Properties getLocalizedProperties(String prefix)
-			throws IOException {
+	public static Properties getLocalizedProperties(String prefix) throws IOException {
 		if (locale == null) {
-			throw new RuntimeException(
-					"No locale specified, please call PatchGwtConfig.setLocale(...)");
+			throw new RuntimeException("No locale specified, please call PatchGwtConfig.setLocale(...)");
 		}
 		String localeLanguage = locale.getLanguage();
 		return getProperties(prefix + "_" + localeLanguage);
 	}
 
-	public static Object extractFromPropertiesFile(Class<?> clazz, Method method)
-			throws IOException {
+	public static Object extractFromPropertiesFile(Class<?> clazz, Method method) throws IOException {
 		String line = null;
-		Properties properties = getLocalizedProperties(clazz.getCanonicalName()
-				.replaceAll("\\.", "/"));
+		Properties properties = getLocalizedProperties(clazz.getCanonicalName().replaceAll("\\.", "/"));
 		if (properties != null) {
 			line = properties.getProperty(method.getName());
 		}
 		if (line == null) {
-			DefaultStringValue v = method
-					.getAnnotation(DefaultStringValue.class);
+			DefaultStringValue v = method.getAnnotation(DefaultStringValue.class);
 			if (v == null) {
-				throw new UnsupportedOperationException(
-						"No matching property \""
-								+ method.getName()
-								+ "\" for i18n class ["
-								+ clazz.getCanonicalName()
-								+ "]. Please use the DefaultStringValue annotation");
+				throw new UnsupportedOperationException("No matching property \"" + method.getName() + "\" for i18n class ["
+						+ clazz.getCanonicalName() + "]. Please use the DefaultStringValue annotation");
 			}
 
 			String result = v.value();
@@ -148,11 +137,8 @@ public class PatchGwtUtils {
 
 			for (CtMethod m : superClazz.getMethods()) {
 				if (Modifier.isAbstract(m.getModifiers())) {
-					CtMethod mm = new CtMethod(m.getReturnType(), m.getName(),
-							m.getParameterTypes(), c);
-					mm.setBody("{ throw new UnsupportedOperationException(\""
-							+ m.getName() + " on generated sub class of "
-							+ c.getName() + "\"); }");
+					CtMethod mm = new CtMethod(m.getReturnType(), m.getName(), m.getParameterTypes(), c);
+					mm.setBody("{ throw new UnsupportedOperationException(\"" + m.getName() + " on generated sub class of " + c.getName() + "\"); }");
 					c.setModifiers(m.getModifiers() - Modifier.ABSTRACT);
 					c.addMethod(mm);
 				}
@@ -161,8 +147,7 @@ public class PatchGwtUtils {
 			return (T) c.toClass(GwtTestClassLoader.getInstance(), null).newInstance();
 
 		} catch (Exception e) {
-			throw new RuntimeException("Unable to compile subclass of "
-					+ className, e);
+			throw new RuntimeException("Unable to compile subclass of " + className, e);
 		}
 	}
 
@@ -174,8 +159,7 @@ public class PatchGwtUtils {
 
 	public static void patch(CtClass c, IPatcher patcher) throws Exception {
 		if (c == null) {
-			throw new IllegalArgumentException(
-					"the class to patch cannot be null");
+			throw new IllegalArgumentException("the class to patch cannot be null");
 		}
 		if (patcher != null) {
 			patcher.initClass(c);
@@ -189,14 +173,9 @@ public class PatchGwtUtils {
 				String newBody = patcher.getNewBody(m);
 				if (newBody != null) {
 					if (newBody.startsWith(AutomaticPatcher.INSERT_BEFORE)) {
-						PatchGwtUtils.insertBefore(m, newBody
-								.substring(AutomaticPatcher.INSERT_BEFORE
-										.length()));
-					} else if (newBody
-							.startsWith(AutomaticPatcher.INSERT_AFTER)) {
-						PatchGwtUtils.insertAfter(m, newBody
-								.substring(AutomaticPatcher.INSERT_AFTER
-										.length()));
+						PatchGwtUtils.insertBefore(m, newBody.substring(AutomaticPatcher.INSERT_BEFORE.length()));
+					} else if (newBody.startsWith(AutomaticPatcher.INSERT_AFTER)) {
+						PatchGwtUtils.insertAfter(m, newBody.substring(AutomaticPatcher.INSERT_AFTER.length()));
 					} else {
 						PatchGwtUtils.replaceImplementation(m, newBody);
 					}
@@ -213,19 +192,16 @@ public class PatchGwtUtils {
 		String fieldName = null;
 		if (m.getName().startsWith("get") && m.getParameterTypes().length == 0) {
 			fieldName = m.getName().substring(3);
-		} else if (m.getName().startsWith("is")
-				&& m.getParameterTypes().length == 0) {
+		} else if (m.getName().startsWith("is") && m.getParameterTypes().length == 0) {
 			fieldName = m.getName().substring(2);
-		} else if (m.getName().startsWith("set")
-				&& m.getParameterTypes().length == 1) {
+		} else if (m.getName().startsWith("set") && m.getParameterTypes().length == 1) {
 			fieldName = m.getName().substring(3);
 		}
 
 		return fieldName;
 	}
 
-	private static void replaceImplementation(CtMethod m, String src)
-			throws Exception {
+	private static void replaceImplementation(CtMethod m, String src) throws Exception {
 		removeNativeModifier(m);
 
 		if (src == null || src.trim().length() == 0) {
@@ -233,8 +209,7 @@ public class PatchGwtUtils {
 		} else {
 			src = src.trim();
 			if (!src.startsWith("{")) {
-				if (!m.getReturnType().equals(CtClass.voidType)
-						&& !src.startsWith("return")) {
+				if (!m.getReturnType().equals(CtClass.voidType) && !src.startsWith("return")) {
 					src = "{ return ($r)($w) " + src;
 				} else {
 					src = "{ " + src;
@@ -256,14 +231,12 @@ public class PatchGwtUtils {
 		}
 	}
 
-	private static void insertBefore(CtMethod m, String newBody)
-			throws Exception {
+	private static void insertBefore(CtMethod m, String newBody) throws Exception {
 		removeNativeModifier(m);
 		m.insertBefore(newBody);
 	}
 
-	private static void insertAfter(CtMethod m, String newBody)
-			throws Exception {
+	private static void insertAfter(CtMethod m, String newBody) throws Exception {
 		removeNativeModifier(m);
 		m.insertAfter(newBody);
 	}
@@ -273,7 +246,7 @@ public class PatchGwtUtils {
 			m.setModifiers(m.getModifiers() - Modifier.NATIVE);
 		}
 	}
-	
+
 	public static boolean areAssertionEnabled() {
 		boolean enabled = false;
 		assert enabled = true;

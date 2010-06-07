@@ -17,8 +17,7 @@ public class HTMLTablePatcher extends AutomaticPatcher {
 
 	@PatchMethod
 	public static Element getEventTargetCell(HTMLTable table, Event event) {
-		Object bodyElem = GwtTestReflectionUtils.getPrivateFieldValue(table,
-				"bodyElem");
+		Object bodyElem = GwtTestReflectionUtils.getPrivateFieldValue(table, "bodyElem");
 
 		if (bodyElem instanceof ElementWrapper) {
 			bodyElem = ((ElementWrapper) bodyElem).getWrappedElement();
@@ -50,8 +49,7 @@ public class HTMLTablePatcher extends AutomaticPatcher {
 
 	@PatchMethod
 	public static int getDOMRowCount(HTMLTable table, Element element) {
-		OverrideNodeList<Node> nodeList = (OverrideNodeList<Node>) element
-				.getChildNodes();
+		OverrideNodeList<Node> nodeList = (OverrideNodeList<Node>) element.getChildNodes();
 		return nodeList.getLength();
 	}
 

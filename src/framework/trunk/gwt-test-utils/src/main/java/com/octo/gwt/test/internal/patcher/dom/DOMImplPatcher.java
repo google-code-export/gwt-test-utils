@@ -19,7 +19,7 @@ import com.octo.gwt.test.internal.patcher.tools.PatchMethod;
 import com.octo.gwt.test.internal.patcher.tools.PropertyContainer;
 import com.octo.gwt.test.internal.patcher.tools.SubClassedHelper;
 
-@PatchClass(classes = {"com.google.gwt.dom.client.DOMImpl"})
+@PatchClass(classes = { "com.google.gwt.dom.client.DOMImpl" })
 public class DOMImplPatcher extends AutomaticPatcher {
 
 	private static final String SRC = "Src";

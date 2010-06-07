@@ -16,7 +16,7 @@ public class EventPatcher extends AutomaticPatcher {
 	public static final Element getTarget(Event event) {
 		return ((OverrideEvent) event).getOverrideTargetElement();
 	}
-	
+
 	@PatchMethod
 	public static final Element getRelatedTarget(Event event) {
 		return getTarget(event);
@@ -31,5 +31,5 @@ public class EventPatcher extends AutomaticPatcher {
 	public static void sinkEvents(Element elem, int eventBits) {
 		DOM.sinkEvents(ElementUtils.castToUserElement(elem), eventBits);
 	}
-	
+
 }

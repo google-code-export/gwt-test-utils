@@ -8,10 +8,10 @@ import com.octo.gwt.test.internal.patcher.tools.PatchMethod;
 
 @PatchClass(JavaScriptObject.class)
 public class JavaScriptObjectPatcher extends AutomaticPatcher {
-	
+
 	@PatchMethod
 	public static JavaScriptObject createArray() {
 		return new OverrideJsArrayString();
 	}
-	
+
 }

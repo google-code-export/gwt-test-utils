@@ -22,37 +22,37 @@ public class GwtTestClassLoader extends Loader {
 	}
 
 	private GwtTranslator translator;
-	
+
 	private GwtTestClassLoader() throws Exception {
 		super(PatchGwtClassPool.get());
-		
+
 		init();
-		
+
 		ConfigurationLoader configurationLoader = new ConfigurationLoader(getParent());
 		configurationLoader.readFiles();
-		
-		for(String s : configurationLoader.getDelegateList()) {
+
+		for (String s : configurationLoader.getDelegateList()) {
 			delegateLoadingOf(s);
 		}
-		for(String s : configurationLoader.getNotDelegateList()) {
+		for (String s : configurationLoader.getNotDelegateList()) {
 			notDelegateLoadingOf(s);
 		}
-		
+
 		List<String> classList = configurationLoader.findScannedClasses();
-		
+
 		Map<String, IPatcher> map = configurationLoader.fillPatchList(classList);
-		
+
 		translator = new GwtTranslator(map);
-		
+
 		addTranslator(PatchGwtClassPool.get(), translator);
 	}
 
 	private List<String> delegate;
 	private List<String> delegatePackage;
-	
+
 	private List<String> notDelegate;
 	private List<String> notDelegatePackage;
-	
+
 	private void init() {
 		if (delegate == null) {
 			delegate = new ArrayList<String>();
@@ -67,7 +67,7 @@ public class GwtTestClassLoader extends Loader {
 			notDelegatePackage = new ArrayList<String>();
 		}
 	}
-	
+
 	@Override
 	public void delegateLoadingOf(String classname) {
 		init();
@@ -77,7 +77,7 @@ public class GwtTestClassLoader extends Loader {
 			delegate.add(classname);
 		}
 	}
-	
+
 	public void notDelegateLoadingOf(String classname) {
 		init();
 		if (classname.endsWith(".")) {
@@ -113,5 +113,5 @@ public class GwtTestClassLoader extends Loader {
 		}
 		return false;
 	}
-	
+
 }

@@ -17,10 +17,10 @@ public class PopupPanelPatcher extends AutomaticPatcher {
 	public void initClass(CtClass c) throws Exception {
 		super.initClass(c);
 		CtConstructor cons = findConstructor(c);
-		
+
 		cons.insertAfter("getElement().getStyle().setProperty(\"visibility\", \"hidden\");");
 	}
-	
+
 	@PatchMethod
 	public static Element getStyleElement(PopupPanel panel) {
 		return ElementUtils.castToUserElement(panel.getElement());

@@ -8,7 +8,7 @@ public interface IPatcher {
 	public void initClass(CtClass c) throws Exception;
 
 	public String getNewBody(CtMethod m) throws Exception;
-	
+
 	public void finalizeClass() throws Exception;
-	
+
 }

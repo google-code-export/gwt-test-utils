@@ -14,17 +14,17 @@ public class InputElementPatcher extends AutomaticElementSubclasser {
 
 	@PatchMethod
 	public static void click(InputElement inputElement) {
-		
+
 	}
-	
+
 	@PatchMethod
 	public static void select(InputElement inputElement) {
-		
+
 	}
-	
-	@PatchMethod(value=PatchType.NEW_CODE_AS_STRING)
+
+	@PatchMethod(value = PatchType.NEW_CODE_AS_STRING)
 	public static String useMap() {
 		return SubClassedHelper.getCodeGetProperty("this", "UserMap", CtClass.booleanType);
 	}
-	
+
 }

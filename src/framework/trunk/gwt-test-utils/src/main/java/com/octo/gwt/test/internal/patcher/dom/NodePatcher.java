@@ -29,15 +29,17 @@ public class NodePatcher extends AutomaticSubclasser {
 	public void initClass(CtClass c) throws Exception {
 		super.initClass(c);
 		CtConstructor cons = findConstructor(c);
-		
-		cons.insertAfter(SubClassedHelper.getCodeSetProperty("this", NodePatcher.NODE_LIST_FIELD, "new " + OverrideNodeList.class.getCanonicalName() + "()", true) + ";");
+
+		cons.insertAfter(SubClassedHelper.getCodeSetProperty("this", NodePatcher.NODE_LIST_FIELD, "new " + OverrideNodeList.class.getCanonicalName()
+				+ "()", true)
+				+ ";");
 	}
 
 	@PatchMethod
 	public static Document getOwnerDocument(Node node) {
 		return NodeFactory.getDocument();
 	}
-	
+
 	@PatchMethod
 	public static boolean is(JavaScriptObject object) {
 		if (object == null || !(object instanceof Node)) {
@@ -74,9 +76,9 @@ public class NodePatcher extends AutomaticSubclasser {
 		// then, add to the new parent
 		OverrideNodeList<Node> list = getChildNodeList(parent);
 		list.getList().add(newChild);
-		
+
 		SubClassedHelper.setProperty(newChild, PARENT_NODE_FIELD, parent);
-		
+
 		return newChild;
 	}
 
@@ -208,7 +210,7 @@ public class NodePatcher extends AutomaticSubclasser {
 	public static Node cloneNode(Node node, boolean deep) {
 		PropertyContainer propertyContainer = SubClassedHelper.getSubClassedObjectOrNull(node).getOverrideProperties();
 		node = ElementUtils.castToDomElement(node);
-	
+
 		Node newNode;
 		if (node instanceof Element) {
 			try {
@@ -227,61 +229,53 @@ public class NodePatcher extends AutomaticSubclasser {
 		}
 
 		PropertyContainer propertyContainer2 = SubClassedHelper.getSubClassedObjectOrNull(newNode).getOverrideProperties();
-		
+
 		propertyContainer2.clear();
-		
+
 		fillNewPropertyContainer(propertyContainer2, propertyContainer);
-		
+
 		OverrideNodeList<Node> newChilds = new OverrideNodeList<Node>();
 		propertyContainer2.put(NODE_LIST_FIELD, newChilds);
-		
+
 		if (deep) {
 			OverrideNodeList<Node> childs = getChildNodeList(node);
-			for(Node child : childs.getList()) {
+			for (Node child : childs.getList()) {
 				appendChild(newNode, cloneNode(child, true));
 			}
 		}
 		return newNode;
 	}
-	
+
 	private static void fillNewPropertyContainer(PropertyContainer n, PropertyContainer old) {
-		for(Entry<String, Object> entry : old.entrySet()) {
+		for (Entry<String, Object> entry : old.entrySet()) {
 			if (PARENT_NODE_FIELD.equals(entry.getKey())) {
-			}
-			else if (entry.getValue() instanceof String) {
+			} else if (entry.getValue() instanceof String) {
 				n.put(entry.getKey(), new String((String) entry.getValue()));
-			}
-			else if (entry.getValue() instanceof Integer) {
+			} else if (entry.getValue() instanceof Integer) {
 				n.put(entry.getKey(), new Integer((Integer) entry.getValue()));
-			}
-			else if (entry.getValue() instanceof Double) {
+			} else if (entry.getValue() instanceof Double) {
 				n.put(entry.getKey(), new Double((Double) entry.getValue()));
-			}
-			else if (entry.getValue() instanceof Boolean) {
+			} else if (entry.getValue() instanceof Boolean) {
 				n.put(entry.getKey(), new Boolean((Boolean) entry.getValue()));
-			}
-			else if (entry.getValue() instanceof Style) {
+			} else if (entry.getValue() instanceof Style) {
 				Style newStyle = NodeFactory.createStyle();
 				PropertyContainer o = SubClassedHelper.getSubClassedObjectOrNull(entry.getValue()).getOverrideProperties();
 				PropertyContainer nn = SubClassedHelper.getSubClassedObjectOrNull(newStyle).getOverrideProperties();
 				nn.clear();
-				
+
 				fillNewPropertyContainer(nn, o);
 				n.put(entry.getKey(), newStyle);
-			}
-			else if (entry.getValue() instanceof OverrideNodeList<?>) {
-			}
-			else if (entry.getValue() instanceof PropertyContainer) {
+			} else if (entry.getValue() instanceof OverrideNodeList<?>) {
+			} else if (entry.getValue() instanceof PropertyContainer) {
 				PropertyContainer nn = new PropertyContainer();
 				fillNewPropertyContainer(nn, (PropertyContainer) entry.getValue());
 				n.put(entry.getKey(), nn);
-			}	
-			else {
+			} else {
 				throw new RuntimeException("Not managed type " + entry.getValue().getClass() + ", value " + entry.getKey());
 			}
 		}
 	}
-	
+
 	private static OverrideNodeList<Node> getChildNodeList(Node node) {
 		return SubClassedHelper.getProperty(node, NODE_LIST_FIELD);
 	}

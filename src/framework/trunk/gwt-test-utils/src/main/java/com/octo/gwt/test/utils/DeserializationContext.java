@@ -7,17 +7,17 @@ import java.util.Map.Entry;
 public class DeserializationContext extends HashMap<Class<?>, ISerializeCallback> {
 
 	private static final long serialVersionUID = -2332437262166773402L;
-	
+
 	private Map<Class<?>, ISerializeCallback> cache = new HashMap<Class<?>, ISerializeCallback>();
-	
+
 	private static final ISerializeCallback defaultSerializeCallback = new ISerializeCallback() {
-		
+
 		public Object callback(Object object) throws Exception {
 			return object;
 		}
-		
+
 	};
-	
+
 	public Object resolve(Object object) throws Exception {
 		Class<?> targetClazz = object.getClass();
 		ISerializeCallback callback = cache.get(targetClazz);

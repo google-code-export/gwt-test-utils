@@ -7,5 +7,5 @@ public class MyCustomObject implements Serializable {
 	private static final long serialVersionUID = -4047482702956475369L;
 
 	public String myField;
-	
+
 }

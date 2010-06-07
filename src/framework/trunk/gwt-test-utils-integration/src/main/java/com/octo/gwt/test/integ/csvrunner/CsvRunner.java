@@ -102,13 +102,11 @@ public class CsvRunner {
 			for (Class<?> clazz : m.getParameterTypes()) {
 				if (filterArgs.size() == 0) {
 					if (clazz.isArray()) {
-						argList.add(new String[]{});
-					}
-					else {
+						argList.add(new String[] {});
+					} else {
 						Assert.fail(getAssertionErrorMessagePrefix() + "Too few args for " + methodName);
 					}
-				}
-				else {
+				} else {
 					if (clazz.isArray()) {
 						argList.add(filterArgs.toArray(new String[] {}));
 						filterArgs.clear();
@@ -145,7 +143,7 @@ public class CsvRunner {
 	}
 
 	private static DoubleMap<Class<?>, String, Method> cacheMethod = new DoubleMap<Class<?>, String, Method>();
-	
+
 	private Method getMethod(Class<?> clazz, String methodName) {
 		Method res = cacheMethod.get(clazz, methodName);
 		if (res != null) {

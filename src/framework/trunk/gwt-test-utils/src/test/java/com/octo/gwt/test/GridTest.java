@@ -11,7 +11,6 @@ import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.SourcesTableEvents;
 import com.google.gwt.user.client.ui.TableListener;
 import com.google.gwt.user.client.ui.Widget;
-import com.octo.gwt.test.AbstractGwtTest;
 
 @SuppressWarnings("deprecation")
 public class GridTest extends AbstractGwtTest {
@@ -40,8 +39,7 @@ public class GridTest extends AbstractGwtTest {
 		g.setWidget(0, 0, b);
 		g.addTableListener(new TableListener() {
 
-			public void onCellClicked(SourcesTableEvents sender, int row,
-					int cell) {
+			public void onCellClicked(SourcesTableEvents sender, int row, int cell) {
 				clicked = !clicked;
 			}
 
@@ -63,8 +61,7 @@ public class GridTest extends AbstractGwtTest {
 
 			public void onClick(ClickEvent event) {
 				clicked = !clicked;
-				Assert.assertEquals(b, ((Grid) event.getSource()).getWidget(0,
-						0));
+				Assert.assertEquals(b, ((Grid) event.getSource()).getWidget(0, 0));
 
 			}
 		});
@@ -117,8 +114,7 @@ public class GridTest extends AbstractGwtTest {
 		Button b = new Button("Does nothing, but could");
 		g.setWidget(0, 0, b);
 
-		Assert.assertTrue("The button has not been removed from grid", g
-				.remove(b));
+		Assert.assertTrue("The button has not been removed from grid", g.remove(b));
 	}
 
 	@Test

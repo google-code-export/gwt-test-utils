@@ -39,7 +39,7 @@ public class GwtRpcInvocationHandler implements InvocationHandler {
 			}
 		}
 	}
-	
+
 	public void setBackToGwtCallbacks(DeserializationContext backToGwtCallbacks) {
 		this.backToGwtCallbacks = backToGwtCallbacks;
 	}
@@ -69,7 +69,8 @@ public class GwtRpcInvocationHandler implements InvocationHandler {
 			// Serialize objects
 			Object[] serializedArgs = new Object[subArgs.length];
 			for (int i = 0; i < subArgs.length; i++) {
-				serializedArgs[i] = GwtTestReflectionUtils.serializeUnserialize(subArgs[i], GwtTestClassLoader.getInstance().getParent(), fromGwtCallbacks);
+				serializedArgs[i] = GwtTestReflectionUtils.serializeUnserialize(subArgs[i], GwtTestClassLoader.getInstance().getParent(),
+						fromGwtCallbacks);
 			}
 			Object returnValue = m.invoke(target, serializedArgs);
 			Object o = GwtTestReflectionUtils.serializeUnserialize(returnValue, GwtTestClassLoader.getInstance(), backToGwtCallbacks);

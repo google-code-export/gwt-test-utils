@@ -39,7 +39,6 @@ import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.StackPanel;
-import com.octo.gwt.test.AbstractGwtTest;
 
 public class EventsTest extends AbstractGwtTest {
 

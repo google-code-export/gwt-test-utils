@@ -14,14 +14,14 @@ import com.octo.gwt.test.internal.patcher.tools.SubClassedHelper;
 
 @PatchClass(SelectElement.class)
 public class SelectElementPatcher extends AutomaticElementSubclasser {
-	
+
 	private static final String SELECTED_INDEX_FIELD = "SelectedIndex";
-	
+
 	@Override
 	public void initClass(CtClass c) throws Exception {
 		super.initClass(c);
 		CtConstructor cons = findConstructor(c);
-		
+
 		cons.insertAfter(SubClassedHelper.getCodeSetProperty("this", SELECTED_INDEX_FIELD, "-1", false) + ";");
 	}
 

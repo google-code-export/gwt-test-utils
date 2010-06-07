@@ -6,7 +6,6 @@ import org.junit.Test;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Hyperlink;
-import com.octo.gwt.test.AbstractGwtTest;
 
 public class HyperlinkTest extends AbstractGwtTest {
 

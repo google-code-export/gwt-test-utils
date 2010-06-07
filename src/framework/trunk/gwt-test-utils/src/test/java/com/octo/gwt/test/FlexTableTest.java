@@ -9,7 +9,6 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.Widget;
-import com.octo.gwt.test.AbstractGwtTest;
 
 @SuppressWarnings("deprecation")
 public class FlexTableTest extends AbstractGwtTest {

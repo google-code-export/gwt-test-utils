@@ -16,9 +16,9 @@ public class TimerPatcher extends AutomaticPatcher {
 
 	@PatchMethod
 	public static void clearTimeout(int id) {
-		
+
 	}
-	
+
 	@PatchMethod
 	public static void schedule(Timer timer, int delayMillis) throws Exception {
 		if (delayMillis <= 0) {

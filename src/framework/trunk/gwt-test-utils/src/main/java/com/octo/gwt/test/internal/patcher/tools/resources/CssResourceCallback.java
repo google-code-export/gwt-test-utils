@@ -7,8 +7,8 @@ import com.google.gwt.resources.client.ClientBundle;
 import com.octo.gwt.test.internal.patcher.tools.resources.CssResourceReader.CssParsingResult;
 
 public class CssResourceCallback extends AbstractClientBundleCallback {
-	
-	protected CssResourceCallback(Class<? extends ClientBundle> wrappedClass,  File resourceFile) {
+
+	protected CssResourceCallback(Class<? extends ClientBundle> wrappedClass, File resourceFile) {
 		super(wrappedClass, resourceFile);
 	}
 
@@ -26,9 +26,9 @@ public class CssResourceCallback extends AbstractClientBundleCallback {
 				}
 			}
 		}
-		
+
 		return null;
-		
+
 	}
 
 }

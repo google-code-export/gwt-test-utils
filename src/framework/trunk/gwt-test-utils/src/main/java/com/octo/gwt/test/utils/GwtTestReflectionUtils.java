@@ -20,16 +20,16 @@ public class GwtTestReflectionUtils {
 
 	private static DoubleMap<Class<?>, Class<?>, Object> cacheAnnotation = new DoubleMap<Class<?>, Class<?>, Object>();
 	private static DoubleMap<Class<?>, Class<?>, Set<Field>> cacheAnnotatedField = new DoubleMap<Class<?>, Class<?>, Set<Field>>();
-	private static DoubleMap<Class<?>, Class<?>, Map<Method, ?>> cacheAnnotatedMethod = new DoubleMap<Class<?>, Class<?>, Map<Method,?>>();
-	
+	private static DoubleMap<Class<?>, Class<?>, Map<Method, ?>> cacheAnnotatedMethod = new DoubleMap<Class<?>, Class<?>, Map<Method, ?>>();
+
 	@SuppressWarnings("unchecked")
 	public static <T> T getAnnotation(Class<?> clazz, Class<T> annotationClass) {
-		
+
 		Object o = cacheAnnotation.get(clazz, annotationClass);
 		if (o != null) {
 			return (T) o;
 		}
-		
+
 		T result = null;
 		for (Annotation a : clazz.getDeclaredAnnotations()) {
 			if (a.annotationType() == annotationClass) {
@@ -39,9 +39,9 @@ public class GwtTestReflectionUtils {
 		if (result == null && clazz.getSuperclass() != null) {
 			result = getAnnotation(clazz.getSuperclass(), annotationClass);
 		}
-		
+
 		cacheAnnotation.put(clazz, annotationClass, result);
-		
+
 		return result;
 	}
 
@@ -59,7 +59,7 @@ public class GwtTestReflectionUtils {
 		}
 		return null;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	private static <T extends Annotation> void recurseGetAnnotatedMethod(Map<Method, T> map, Class<?> target, Class<?> annotationClass) {
 		for (Method m : target.getDeclaredMethods()) {
@@ -97,7 +97,7 @@ public class GwtTestReflectionUtils {
 		cacheAnnotatedField.put(clazz, annotationClass, l);
 		return l;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public static <T extends Annotation> Map<Method, T> getAnnotatedMethod(Class<?> target, Class<T> annotationClass) {
 		Map<Method, T> map = (Map<Method, T>) cacheAnnotatedMethod.get(target, annotationClass);
@@ -111,13 +111,14 @@ public class GwtTestReflectionUtils {
 	}
 
 	private static DoubleMap<Class<?>, String, Set<Field>> cacheField = new DoubleMap<Class<?>, String, Set<Field>>();
-	
+
 	public static Set<Field> findFieldByName(Class<?> clazz, String fieldName) {
 		Set<Field> set = cacheField.get(clazz, fieldName);
 		if (set != null) {
 			return set;
 		}
-		set = new HashSet<Field>();;
+		set = new HashSet<Field>();
+		;
 		for (Field f : clazz.getFields()) {
 			if (f.getName().equals(fieldName)) {
 				set.add(f);
@@ -137,7 +138,7 @@ public class GwtTestReflectionUtils {
 	}
 
 	private static DoubleMap<Class<?>, String, Field> cacheUniqueField = new DoubleMap<Class<?>, String, Field>();
-	
+
 	private static Field getUniqueFieldByName(Class<?> clazz, String fieldName) {
 		Field f = cacheUniqueField.get(clazz, fieldName);
 		if (f != null) {
@@ -166,7 +167,7 @@ public class GwtTestReflectionUtils {
 			throw new RuntimeException(e.getMessage() + " Unable to get field, class " + fieldName + ", fieldClass " + target.getClass());
 		}
 	}
-	
+
 	public static void setPrivateFieldValue(Object target, String fieldName, Object value) {
 		Field field = getUniqueFieldByName(target.getClass(), fieldName);
 		try {
@@ -187,7 +188,7 @@ public class GwtTestReflectionUtils {
 			throw new RuntimeException(e.getMessage() + " Unable to get static field, class " + fieldName + ", fieldClass " + clazz);
 		}
 	}
-	
+
 	public static void setStaticField(Class<?> clazz, String fieldName, Object value) {
 		Field field = getUniqueFieldByName(clazz, fieldName);
 		try {
@@ -217,19 +218,18 @@ public class GwtTestReflectionUtils {
 	static class CustomObjectInputStream extends ObjectInputStream {
 
 		private ClassLoader classLoader;
-		
+
 		private DeserializationContext callbacks;
-		
+
 		public CustomObjectInputStream(InputStream in, ClassLoader classLoader, DeserializationContext callbacks) throws IOException {
 			super(in);
 			enableResolveObject(true);
 			this.classLoader = classLoader;
 			this.callbacks = callbacks;
 		}
-		
+
 		@Override
-		protected Class<?> resolveClass(ObjectStreamClass desc)
-				throws IOException, ClassNotFoundException {
+		protected Class<?> resolveClass(ObjectStreamClass desc) throws IOException, ClassNotFoundException {
 			return classLoader == null ? super.resolveClass(desc) : Class.forName(desc.getName(), true, classLoader);
 		}
 
@@ -240,19 +240,18 @@ public class GwtTestReflectionUtils {
 			}
 			try {
 				return callbacks.resolve(obj);
-			}
-			catch(Exception e) {
+			} catch (Exception e) {
 				throw new RuntimeException(e);
 			}
 		}
-			
+
 	}
 
 	@SuppressWarnings("unchecked")
 	public static <T> T serializeUnserialize(Object o) {
 		return (T) serializeUnserialize(o, null, null);
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public static <T> T serializeUnserialize(Object o, ClassLoader classLoader, DeserializationContext callbacks) {
 		if (o == null) {

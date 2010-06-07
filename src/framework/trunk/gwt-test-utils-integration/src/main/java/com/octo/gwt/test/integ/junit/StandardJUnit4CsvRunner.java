@@ -19,7 +19,7 @@ public class StandardJUnit4CsvRunner extends BlockJUnit4ClassRunner {
 	public StandardJUnit4CsvRunner(Class<?> clazz) throws InitializationError, ClassNotFoundException {
 		super(GwtTestClassLoader.getInstance().loadClass(clazz.getCanonicalName()));
 	}
-	
+
 	@Override
 	protected List<FrameworkMethod> computeTestMethods() {
 		if (reader == null) {

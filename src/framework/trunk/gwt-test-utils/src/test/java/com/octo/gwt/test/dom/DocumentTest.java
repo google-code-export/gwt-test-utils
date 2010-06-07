@@ -118,7 +118,7 @@ public class DocumentTest extends AbstractGwtTest {
 		Assert.assertEquals("button", e.getTagName());
 		Assert.assertEquals("button", e.getType());
 	}
-	
+
 	@Test
 	public void checkIsCompat() {
 		// Test
@@ -127,7 +127,7 @@ public class DocumentTest extends AbstractGwtTest {
 		// Assert
 		Assert.assertEquals(false, result);
 	}
-	
+
 	@Test
 	public void checkBodyLeft() {
 		// Test
@@ -136,7 +136,7 @@ public class DocumentTest extends AbstractGwtTest {
 		// Assert
 		Assert.assertEquals(0, result);
 	}
-	
+
 	@Test
 	public void checkBodyTop() {
 		// Test
@@ -155,32 +155,32 @@ public class DocumentTest extends AbstractGwtTest {
 		Assert.assertEquals("button", e.getTagName());
 		Assert.assertEquals("reset", e.getType());
 	}
-	
+
 	@Test
 	public void checkSetScrollLeft() {
 		Assert.assertEquals(0, d.getScrollLeft());
 		d.setScrollLeft(3);
-		
+
 		Assert.assertEquals(3, d.getScrollLeft());
 	}
-	
+
 	@Test
 	public void checkSetScrollTop() {
 		Assert.assertEquals(0, d.getScrollTop());
 		d.setScrollTop(3);
-		
+
 		Assert.assertEquals(3, d.getScrollTop());
 	}
-	
+
 	public void checkGetDocumentElement() {
 		// Test
 		Element e = d.getDocumentElement();
-		
+
 		Assert.assertEquals("HTML", e.getTagName());
 		Assert.assertEquals("HTML", e.getNodeName());
 		Assert.assertEquals(Node.DOCUMENT_NODE, e.getNodeType());
 	}
-	
+
 	@Test
 	public void checkCreateTextNode() {
 		// Test
@@ -191,12 +191,12 @@ public class DocumentTest extends AbstractGwtTest {
 		Assert.assertEquals(Node.TEXT_NODE, text.getNodeType());
 		Assert.assertEquals(data, text.getData());
 	}
-	
+
 	@Test
 	public void checkGetDomain() {
 		Assert.assertNull(d.getDomain());
 	}
-	
+
 	@Test
 	public void checkGetReferrer() {
 		Assert.assertEquals("", d.getReferrer());

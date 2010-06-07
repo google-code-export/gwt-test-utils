@@ -4,7 +4,6 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.google.gwt.http.client.URL;
-import com.octo.gwt.test.AbstractGwtTest;
 
 public class URLTest extends AbstractGwtTest {
 

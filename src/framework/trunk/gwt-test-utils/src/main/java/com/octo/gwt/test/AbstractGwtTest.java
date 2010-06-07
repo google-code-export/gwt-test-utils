@@ -10,7 +10,7 @@ import com.octo.gwt.test.utils.WidgetUtils;
 
 @RunWith(GwtTestRunner.class)
 public abstract class AbstractGwtTest extends WidgetUtils {
-	
+
 	@Before
 	public void setUpAbstractGwtTest() throws Exception {
 		PatchGwtConfig.setLocale(getLocale());
@@ -33,22 +33,20 @@ public abstract class AbstractGwtTest extends WidgetUtils {
 		//this method can be overrided
 		return null;
 	}
-	
+
 	protected String getCurrentTestedModuleFile() {
 		//this method can be overrided
 		return null;
 	}
-	
+
 	protected GwtLogHandler getLogHandler() {
 		//this method can be overrided
 		return null;
 	}
-	
+
 	protected Locale getLocale() {
 		//this method can be overrided
 		return null;
 	}
-	
-	
 
 }

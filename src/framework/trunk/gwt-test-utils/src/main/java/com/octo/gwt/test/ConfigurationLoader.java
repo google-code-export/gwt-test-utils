@@ -59,9 +59,7 @@ public class ConfigurationLoader {
 			} else if ("notDelegate".equals(value)) {
 				notDelegateList.add(key);
 			} else {
-				throw new RuntimeException(
-						"Wrong gwt-test-utils.properties : unknown value "
-								+ value);
+				throw new RuntimeException("Wrong gwt-test-utils.properties : unknown value " + value);
 			}
 		}
 	}
@@ -83,14 +81,11 @@ public class ConfigurationLoader {
 				URL url = l.nextElement();
 				String u = url.toExternalForm();
 				if (u.startsWith("file:")) {
-					loadClassesFromDirectory(new File(u.substring("file:"
-							.length())), s, classList);
+					loadClassesFromDirectory(new File(u.substring("file:".length())), s, classList);
 				} else if (u.startsWith("jar:file:")) {
-					loadClassesFromJarFile(u.substring("jar:file:".length()),
-							s, classList);
+					loadClassesFromJarFile(u.substring("jar:file:".length()), s, classList);
 				} else {
-					throw new RuntimeException("Not managed class container "
-							+ u);
+					throw new RuntimeException("Not managed class container " + u);
 				}
 			}
 		}
@@ -113,27 +108,21 @@ public class ConfigurationLoader {
 		}
 	}
 
-	private void loadClassesFromDirectory(File directoryToScan, String current,
-			List<String> classList) {
+	private void loadClassesFromDirectory(File directoryToScan, String current, List<String> classList) {
 		for (File f : directoryToScan.listFiles()) {
 			if (f.isDirectory()) {
 				if (!".".equals(f.getName()) && !"..".equals(f.getName())) {
-					loadClassesFromDirectory(f, current + "." + f.getName(),
-							classList);
+					loadClassesFromDirectory(f, current + "." + f.getName(), classList);
 				}
 			} else {
 				if (f.getName().endsWith(".class")) {
-					classList.add(current
-							+ "."
-							+ f.getName().substring(0,
-									f.getName().length() - ".class".length()));
+					classList.add(current + "." + f.getName().substring(0, f.getName().length() - ".class".length()));
 				}
 			}
 		}
 	}
 
-	public Map<String, IPatcher> fillPatchList(List<String> classList)
-			throws Exception {
+	public Map<String, IPatcher> fillPatchList(List<String> classList) throws Exception {
 		Map<String, IPatcher> map = new HashMap<String, IPatcher>();
 		for (String className : classList) {
 			Class<?> clazz = Class.forName(className, true, classLoader);
@@ -142,20 +131,16 @@ public class ConfigurationLoader {
 					PatchClass patchClass = (PatchClass) a;
 					IPatcher patcher = (IPatcher) clazz.newInstance();
 					for (Class<?> c : patchClass.value()) {
-						String targetName = c.isMemberClass() ? c
-								.getDeclaringClass().getCanonicalName()
-								+ "$" + c.getSimpleName() : c
+						String targetName = c.isMemberClass() ? c.getDeclaringClass().getCanonicalName() + "$" + c.getSimpleName() : c
 								.getCanonicalName();
 						if (map.get(targetName) != null) {
-							throw new RuntimeException(
-									"Two patches for same class " + targetName);
+							throw new RuntimeException("Two patches for same class " + targetName);
 						}
 						map.put(targetName, patcher);
 					}
 					for (String s : patchClass.classes()) {
 						if (map.get(s) != null) {
-							throw new RuntimeException(
-									"Two patches for same class " + s);
+							throw new RuntimeException("Two patches for same class " + s);
 						}
 						map.put(s, patcher);
 					}

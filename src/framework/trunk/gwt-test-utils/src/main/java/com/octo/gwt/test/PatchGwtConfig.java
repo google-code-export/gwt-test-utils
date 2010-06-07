@@ -24,7 +24,7 @@ public class PatchGwtConfig {
 	public static void setGwtCreateHandler(GwtCreateHandler gwtCreateHandler) {
 		GwtPatcher.gwtCreateHandler = gwtCreateHandler;
 	}
-	
+
 	public static void setCurrentTestedModuleFile(String currentTestedModuleFile) {
 		ImplPatcher.currentTestedModuleFile = currentTestedModuleFile;
 	}

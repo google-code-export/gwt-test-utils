@@ -4,7 +4,6 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.google.gwt.user.client.ui.DisclosurePanel;
-import com.octo.gwt.test.AbstractGwtTest;
 
 public class DisclosurePanelTest extends AbstractGwtTest {
 
