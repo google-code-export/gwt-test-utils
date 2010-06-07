@@ -4,8 +4,10 @@ import com.google.gwt.dom.client.SelectElement;
 import com.google.gwt.user.client.ui.ListBox;
 import com.octo.gwt.test.ElementUtils;
 import com.octo.gwt.test.internal.patcher.tools.AutomaticSubclasser;
+import com.octo.gwt.test.internal.patcher.tools.PatchClass;
 import com.octo.gwt.test.internal.patcher.tools.PatchMethod;
 
+@PatchClass(ListBox.class)
 public class ListBoxPatcher extends AutomaticSubclasser {
 
 	@PatchMethod

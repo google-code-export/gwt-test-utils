@@ -14,10 +14,12 @@ import com.octo.gwt.test.ElementUtils;
 import com.octo.gwt.test.internal.overrides.OverrideEvent;
 import com.octo.gwt.test.internal.overrides.OverrideNodeList;
 import com.octo.gwt.test.internal.patcher.tools.AutomaticPatcher;
+import com.octo.gwt.test.internal.patcher.tools.PatchClass;
 import com.octo.gwt.test.internal.patcher.tools.PatchMethod;
 import com.octo.gwt.test.internal.patcher.tools.PropertyContainer;
 import com.octo.gwt.test.internal.patcher.tools.SubClassedHelper;
 
+@PatchClass(classes = {"com.google.gwt.dom.client.DOMImpl"})
 public class DOMImplPatcher extends AutomaticPatcher {
 
 	private static final String SRC = "Src";

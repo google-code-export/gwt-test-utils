@@ -4,8 +4,10 @@ import java.util.Stack;
 
 import com.google.gwt.user.client.impl.HistoryImpl;
 import com.octo.gwt.test.internal.patcher.tools.AutomaticPatcher;
+import com.octo.gwt.test.internal.patcher.tools.PatchClass;
 import com.octo.gwt.test.internal.patcher.tools.PatchMethod;
 
+@PatchClass(HistoryImpl.class)
 public class HistoryImplPatcher extends AutomaticPatcher {
 
 	static Stack<String> stack = new Stack<String>();

@@ -5,8 +5,10 @@ import java.util.Map;
 
 import com.google.gwt.user.client.Timer;
 import com.octo.gwt.test.internal.patcher.tools.AutomaticPatcher;
+import com.octo.gwt.test.internal.patcher.tools.PatchClass;
 import com.octo.gwt.test.internal.patcher.tools.PatchMethod;
 
+@PatchClass(Timer.class)
 public class TimerPatcher extends AutomaticPatcher {
 
 	public static int DEFAULT_REPEAT_TIME = 5;

@@ -14,12 +14,13 @@ import com.octo.gwt.test.integ.csvrunner.CsvRunner;
 import com.octo.gwt.test.integ.csvrunner.Node;
 import com.octo.gwt.test.integ.handler.DefaultGwtRpcExceptionHandler;
 import com.octo.gwt.test.integ.handler.GwtCreateHandlerImpl;
+import com.octo.gwt.test.integ.junit.StandardJUnit4CsvRunner;
 import com.octo.gwt.test.integ.tools.AbstractGwtIntegrationShell;
 import com.octo.gwt.test.integ.tools.PrefixProcessor;
 import com.octo.gwt.test.utils.GwtTestReflectionUtils;
 import com.octo.gwt.test.utils.ISerializeCallback;
 
-@RunWith(LocalRunner.class)
+@RunWith(StandardJUnit4CsvRunner.class)
 public abstract class MyGwtShell extends AbstractGwtIntegrationShell {
 
 	private MyBeautifulApp app;

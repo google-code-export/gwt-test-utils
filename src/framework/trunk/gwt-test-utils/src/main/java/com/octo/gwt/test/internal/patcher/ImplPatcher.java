@@ -9,10 +9,13 @@ import javax.xml.xpath.XPathFactory;
 
 import org.w3c.dom.Document;
 
+import com.google.gwt.core.client.impl.Impl;
 import com.octo.gwt.test.PatchGwtConfig;
 import com.octo.gwt.test.internal.patcher.tools.AutomaticPatcher;
+import com.octo.gwt.test.internal.patcher.tools.PatchClass;
 import com.octo.gwt.test.internal.patcher.tools.PatchMethod;
 
+@PatchClass(Impl.class)
 public class ImplPatcher extends AutomaticPatcher {
 
 	public static String currentTestedModuleFile;

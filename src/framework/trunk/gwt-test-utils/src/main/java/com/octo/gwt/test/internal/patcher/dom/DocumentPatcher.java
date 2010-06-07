@@ -5,9 +5,11 @@ import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Text;
 import com.octo.gwt.test.internal.patcher.tools.AutomaticSubclasser;
+import com.octo.gwt.test.internal.patcher.tools.PatchClass;
 import com.octo.gwt.test.internal.patcher.tools.PatchMethod;
 import com.octo.gwt.test.internal.patcher.tools.SubClassedHelper;
 
+@PatchClass(Document.class)
 public class DocumentPatcher extends AutomaticSubclasser {
 
 	private static int ID = 0;

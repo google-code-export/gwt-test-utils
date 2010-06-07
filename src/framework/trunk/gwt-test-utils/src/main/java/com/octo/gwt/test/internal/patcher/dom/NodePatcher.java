@@ -14,10 +14,12 @@ import com.google.gwt.dom.client.Text;
 import com.octo.gwt.test.ElementUtils;
 import com.octo.gwt.test.internal.overrides.OverrideNodeList;
 import com.octo.gwt.test.internal.patcher.tools.AutomaticSubclasser;
+import com.octo.gwt.test.internal.patcher.tools.PatchClass;
 import com.octo.gwt.test.internal.patcher.tools.PatchMethod;
 import com.octo.gwt.test.internal.patcher.tools.PropertyContainer;
 import com.octo.gwt.test.internal.patcher.tools.SubClassedHelper;
 
+@PatchClass(Node.class)
 public class NodePatcher extends AutomaticSubclasser {
 
 	public static final String NODE_LIST_FIELD = "ChildNodes";

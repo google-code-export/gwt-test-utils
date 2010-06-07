@@ -1,9 +1,12 @@
 package com.octo.gwt.test.internal.patcher.dom;
 
 import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.impl.ElementMapperImpl;
 import com.octo.gwt.test.internal.patcher.tools.AutomaticPatcher;
+import com.octo.gwt.test.internal.patcher.tools.PatchClass;
 import com.octo.gwt.test.internal.patcher.tools.PatchMethod;
 
+@PatchClass(ElementMapperImpl.class)
 public class ElementMapperImplPatcher extends AutomaticPatcher {
 
 	private static final String widgetId = "__widgetID";

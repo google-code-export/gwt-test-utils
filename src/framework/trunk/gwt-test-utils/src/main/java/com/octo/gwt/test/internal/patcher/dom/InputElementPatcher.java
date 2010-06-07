@@ -4,10 +4,12 @@ import javassist.CtClass;
 
 import com.google.gwt.dom.client.InputElement;
 import com.octo.gwt.test.internal.patcher.tools.AutomaticElementSubclasser;
+import com.octo.gwt.test.internal.patcher.tools.PatchClass;
 import com.octo.gwt.test.internal.patcher.tools.PatchMethod;
 import com.octo.gwt.test.internal.patcher.tools.PatchType;
 import com.octo.gwt.test.internal.patcher.tools.SubClassedHelper;
 
+@PatchClass(InputElement.class)
 public class InputElementPatcher extends AutomaticElementSubclasser {
 
 	@PatchMethod

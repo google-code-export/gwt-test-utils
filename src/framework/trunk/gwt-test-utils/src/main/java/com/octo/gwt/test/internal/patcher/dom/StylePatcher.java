@@ -5,9 +5,11 @@ import javassist.CtConstructor;
 
 import com.google.gwt.dom.client.Style;
 import com.octo.gwt.test.internal.patcher.tools.AutomaticSubclasser;
+import com.octo.gwt.test.internal.patcher.tools.PatchClass;
 import com.octo.gwt.test.internal.patcher.tools.PatchMethod;
 import com.octo.gwt.test.internal.patcher.tools.SubClassedHelper;
 
+@PatchClass(Style.class)
 public class StylePatcher extends AutomaticSubclasser {
 
 	@PatchMethod

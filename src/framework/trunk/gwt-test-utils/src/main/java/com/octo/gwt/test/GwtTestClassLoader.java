@@ -2,16 +2,15 @@ package com.octo.gwt.test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javassist.Loader;
-
-import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public class GwtTestClassLoader extends Loader {
 
 	private static GwtTestClassLoader _instance;
 
-	public static GwtTestClassLoader getInstance() {
+	public static ClassLoader getInstance() {
 		try {
 			if (_instance == null) {
 				_instance = new GwtTestClassLoader();
@@ -29,21 +28,21 @@ public class GwtTestClassLoader extends Loader {
 		
 		init();
 		
-		delegateLoadingOf("javassist.");
-		delegateLoadingOf("java.");
-		delegateLoadingOf("javax.");
-		delegateLoadingOf("sun.");
-		delegateLoadingOf("com.sun.");
-		delegateLoadingOf("org.w3c.");
-		delegateLoadingOf("org.xml.");
+		ConfigurationLoader configurationLoader = new ConfigurationLoader(getParent());
+		configurationLoader.readFiles();
 		
-		delegateLoadingOf("org.junit.");
-		delegateLoadingOf(AsyncCallback.class.getCanonicalName());
+		for(String s : configurationLoader.getDelegateList()) {
+			delegateLoadingOf(s);
+		}
+		for(String s : configurationLoader.getNotDelegateList()) {
+			notDelegateLoadingOf(s);
+		}
 		
-		delegateLoadingOf(GwtTestClassLoader.class.getCanonicalName());
-		delegateLoadingOf(Mock.class.getCanonicalName());
-	
-		translator = new GwtTranslator();
+		List<String> classList = configurationLoader.findScannedClasses();
+		
+		Map<String, IPatcher> map = configurationLoader.fillPatchList(classList);
+		
+		translator = new GwtTranslator(map);
 		
 		addTranslator(PatchGwtClassPool.get(), translator);
 	}
@@ -53,7 +52,7 @@ public class GwtTestClassLoader extends Loader {
 	
 	private List<String> notDelegate;
 	private List<String> notDelegatePackage;
-
+	
 	private void init() {
 		if (delegate == null) {
 			delegate = new ArrayList<String>();
@@ -113,10 +112,6 @@ public class GwtTestClassLoader extends Loader {
 			}
 		}
 		return false;
-	}
-
-	public void addPatch(String className, IPatcher patch) {
-		translator.addPatch(className, patch);
 	}
 	
 }

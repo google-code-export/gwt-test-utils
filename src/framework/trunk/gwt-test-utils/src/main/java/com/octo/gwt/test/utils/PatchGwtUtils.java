@@ -177,7 +177,6 @@ public class PatchGwtUtils {
 			throw new IllegalArgumentException(
 					"the class to patch cannot be null");
 		}
-
 		if (patcher != null) {
 			patcher.initClass(c);
 		}

@@ -8,6 +8,9 @@ import javassist.CtConstructor;
 import javassist.CtField;
 import javassist.CtMethod;
 
+import com.google.gwt.dom.client.Text;
+
+@PatchClass(Text.class)
 public class AutomaticSubclasser extends AutomaticGetAndSetPatcher {
 
 	public static final String SUB_CLASSED = "SubClassed";

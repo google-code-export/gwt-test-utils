@@ -5,9 +5,11 @@ import com.google.gwt.user.client.ui.StackPanel;
 import com.google.gwt.user.client.ui.WidgetCollection;
 import com.octo.gwt.test.ElementUtils;
 import com.octo.gwt.test.internal.patcher.tools.AutomaticPatcher;
+import com.octo.gwt.test.internal.patcher.tools.PatchClass;
 import com.octo.gwt.test.internal.patcher.tools.PatchMethod;
 import com.octo.gwt.test.utils.GwtTestReflectionUtils;
 
+@PatchClass(StackPanel.class)
 public class StackPanelPatcher extends AutomaticPatcher {
 
 	@PatchMethod

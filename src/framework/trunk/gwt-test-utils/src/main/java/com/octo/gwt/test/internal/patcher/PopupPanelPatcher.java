@@ -7,8 +7,10 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.octo.gwt.test.ElementUtils;
 import com.octo.gwt.test.internal.patcher.tools.AutomaticPatcher;
+import com.octo.gwt.test.internal.patcher.tools.PatchClass;
 import com.octo.gwt.test.internal.patcher.tools.PatchMethod;
 
+@PatchClass(PopupPanel.class)
 public class PopupPanelPatcher extends AutomaticPatcher {
 
 	@Override

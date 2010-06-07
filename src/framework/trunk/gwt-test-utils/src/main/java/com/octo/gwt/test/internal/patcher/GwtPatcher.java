@@ -6,6 +6,7 @@ import java.lang.reflect.Proxy;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.Constants;
 import com.google.gwt.i18n.client.CurrencyList;
 import com.google.gwt.i18n.client.impl.CldrImpl;
@@ -36,10 +37,12 @@ import com.octo.gwt.test.internal.overrides.OverrideImagePrototype;
 import com.octo.gwt.test.internal.patcher.dom.DOMImplSubClassPatcher;
 import com.octo.gwt.test.internal.patcher.dom.DOMImplUserSubClassPatcher;
 import com.octo.gwt.test.internal.patcher.tools.AutomaticPatcher;
+import com.octo.gwt.test.internal.patcher.tools.PatchClass;
 import com.octo.gwt.test.internal.patcher.tools.PatchMethod;
 import com.octo.gwt.test.internal.patcher.tools.resources.ClientBundleProxyFactory;
 import com.octo.gwt.test.utils.PatchGwtUtils;
 
+@PatchClass(GWT.class)
 @SuppressWarnings("deprecation")
 public class GwtPatcher extends AutomaticPatcher {
 

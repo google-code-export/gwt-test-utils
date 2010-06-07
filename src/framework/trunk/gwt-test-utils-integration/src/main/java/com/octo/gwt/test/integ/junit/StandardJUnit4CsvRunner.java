@@ -9,19 +9,11 @@ import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
 
 import com.octo.gwt.test.GwtTestClassLoader;
-import com.octo.gwt.test.integ.CsvDirectory;
-import com.octo.gwt.test.integ.CsvMacros;
 import com.octo.gwt.test.integ.tools.DirectoryTestReader;
 import com.octo.gwt.test.utils.GwtTestReflectionUtils;
 
 public class StandardJUnit4CsvRunner extends BlockJUnit4ClassRunner {
 
-	static {
-		GwtTestClassLoader.getInstance().delegateLoadingOf(CsvDirectory.class.getCanonicalName());
-		GwtTestClassLoader.getInstance().delegateLoadingOf(CsvMacros.class.getCanonicalName());
-		GwtTestClassLoader.getInstance().delegateLoadingOf(DirectoryTestReader.class.getCanonicalName());
-	}
-	
 	private DirectoryTestReader reader;
 
 	public StandardJUnit4CsvRunner(Class<?> clazz) throws InitializationError, ClassNotFoundException {

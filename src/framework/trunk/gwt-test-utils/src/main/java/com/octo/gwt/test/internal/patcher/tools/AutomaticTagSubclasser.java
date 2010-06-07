@@ -6,8 +6,22 @@ import javassist.CtConstructor;
 import javassist.CtField;
 import javassist.CtMethod;
 
+import com.google.gwt.dom.client.HeadingElement;
+import com.google.gwt.dom.client.QuoteElement;
+import com.google.gwt.dom.client.ModElement;
+import com.google.gwt.dom.client.TableCellElement;
+import com.google.gwt.dom.client.TableColElement;
+import com.google.gwt.dom.client.TableSectionElement;
 import com.octo.gwt.test.utils.TagAware;
 
+@PatchClass({
+	HeadingElement.class,
+	ModElement.class,
+	QuoteElement.class,
+	TableCellElement.class,
+	TableColElement.class,
+	TableSectionElement.class
+})
 public class AutomaticTagSubclasser extends AutomaticElementSubclasser {
 
 	private static final String OVERRIDE_TAG = "overrideTag";

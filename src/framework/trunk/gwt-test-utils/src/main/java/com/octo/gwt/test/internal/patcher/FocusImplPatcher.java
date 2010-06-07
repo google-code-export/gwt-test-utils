@@ -6,9 +6,11 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.impl.FocusImpl;
 import com.octo.gwt.test.ElementUtils;
 import com.octo.gwt.test.internal.patcher.tools.AutomaticPatcher;
+import com.octo.gwt.test.internal.patcher.tools.PatchClass;
 import com.octo.gwt.test.internal.patcher.tools.PatchMethod;
 import com.octo.gwt.test.internal.patcher.tools.SubClassedHelper;
 
+@PatchClass(FocusImpl.class)
 public class FocusImplPatcher extends AutomaticPatcher {
 
 	@PatchMethod

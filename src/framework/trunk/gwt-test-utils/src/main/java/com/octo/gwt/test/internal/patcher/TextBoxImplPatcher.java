@@ -3,9 +3,11 @@ package com.octo.gwt.test.internal.patcher;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.impl.TextBoxImpl;
 import com.octo.gwt.test.internal.patcher.tools.AutomaticPatcher;
+import com.octo.gwt.test.internal.patcher.tools.PatchClass;
 import com.octo.gwt.test.internal.patcher.tools.PatchMethod;
 import com.octo.gwt.test.internal.patcher.tools.SubClassedHelper;
 
+@PatchClass(TextBoxImpl.class)
 public class TextBoxImplPatcher extends AutomaticPatcher {
 
 	private static final String SELECTION_START = "SelectionStart";
