@@ -63,6 +63,16 @@ public class ClientBundleTest extends AbstractGwtTest {
 	}
 
 	@Test
+	public void checkCssResourceEnsureInjected() {
+		// Setup
+		TestCssResource testCssResource = MyClientBundle.INSTANCE.testCssResource();
+
+		// Tests & Assert
+		Assert.assertTrue(testCssResource.ensureInjected());
+		Assert.assertFalse(testCssResource.ensureInjected());
+	}
+
+	@Test
 	public void checkDataResource() {
 		// Setup
 		DataResource testDataResource = MyClientBundle.INSTANCE.testDataResource();
