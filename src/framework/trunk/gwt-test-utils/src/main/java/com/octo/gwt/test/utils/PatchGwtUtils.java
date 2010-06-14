@@ -3,7 +3,6 @@ package com.octo.gwt.test.utils;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.Reader;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -11,8 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Map.Entry;
+import java.util.Properties;
 
 import javassist.CannotCompileException;
 import javassist.CtClass;
@@ -48,26 +47,13 @@ public class PatchGwtUtils {
 
 	public static final List<SequenceReplacement> sequenceReplacementList = new ArrayList<SequenceReplacement>();
 
-	/**
-	 * Method used to load properties file with charset. Method is located in
-	 * bootstrap.jar
-	 */
-	public static Method loadProperties;
-
 	public static Locale locale;
-
-	public static void initLoadPropertiesMethod() {
-		loadProperties = GwtTestReflectionUtils.findMethod(Properties.class, "load", new Class[] { Reader.class });
-	}
 
 	public static Properties getProperties(String path) {
 		Properties properties = cachedProperties.get(path);
 
 		if (properties != null) {
 			return properties;
-		}
-		if (loadProperties == null) {
-			initLoadPropertiesMethod();
 		}
 		String propertiesNameFile = "/" + path + ".properties";
 		InputStream inputStream = path.getClass().getResourceAsStream(propertiesNameFile);
@@ -77,7 +63,7 @@ public class PatchGwtUtils {
 		try {
 			properties = new Properties();
 			InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
-			loadProperties.invoke(properties, inputStreamReader);
+			LoadPropertiesHelper.load(properties, inputStreamReader);
 			for (Entry<Object, Object> entry : properties.entrySet()) {
 				for (SequenceReplacement strangeCharacterMapping : sequenceReplacementList) {
 					entry.setValue(strangeCharacterMapping.treat((String) entry.getValue()));
