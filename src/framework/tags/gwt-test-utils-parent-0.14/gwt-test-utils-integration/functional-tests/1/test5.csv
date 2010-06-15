@@ -1,0 +1,6 @@
+start
+initApp
+enableNewExceptionHandler
+click;/app/b5
+assertExact;error;/app/l/text
+assertExact;toto;/appender/noop
