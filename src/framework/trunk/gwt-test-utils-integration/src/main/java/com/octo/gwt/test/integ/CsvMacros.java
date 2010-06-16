@@ -10,5 +10,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @Inherited
 public @interface CsvMacros {
-	String[] value();
+	String directory();
+
+	String pattern();
 }
