@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @Inherited
 public @interface CsvMacros {
-	String directory();
+	String value();
 
-	String pattern();
+	String pattern() default ".+\\..*";
 }

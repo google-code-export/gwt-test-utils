@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
@@ -26,45 +27,35 @@ import com.octo.gwt.test.utils.GwtTestReflectionUtils;
 
 public class DirectoryTestReader {
 
-	private String csvDirectory;
-
 	private Class<?> generatedClazz;
 
-	private HashMap<String, List<List<String>>> tests;
+	private Map<String, List<List<String>>> tests;
 
-	private HashMap<String, List<List<String>>> macroFiles;
+	private Map<String, List<List<String>>> macros;
 
 	private List<Method> testMethods;
 
 	public DirectoryTestReader(Class<?> clazz) {
 		try {
-			initCsvTests(clazz);
-			initCsvMacros(clazz);
-			initTestMethods(clazz);
+			CsvDirectory csvDirectoryAnnotation = getAnnotation(clazz, CsvDirectory.class);
+			CsvMacros csvMacrosAnnotation = getAnnotation(clazz, CsvMacros.class);
+
+			initCsvTests(csvDirectoryAnnotation);
+			initCsvMacros(csvMacrosAnnotation);
+			initTestMethods(clazz, csvDirectoryAnnotation);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 	}
 
-	private void initCsvTests(Class<?> clazz) throws FileNotFoundException, IOException {
-		CsvDirectory csvDirectoryAnnotation = GwtTestReflectionUtils.getAnnotation(clazz, CsvDirectory.class);
-		if (csvDirectoryAnnotation == null) {
-			throw new RuntimeException("Missing annotation \'@CsvDirectory\' on class [" + clazz.getCanonicalName() + "]");
-		}
-		csvDirectory = csvDirectoryAnnotation.value();
-
-		File directory = new File(this.csvDirectory);
-		if (!directory.exists()) {
-			throw new FileNotFoundException("Directory [" + this.csvDirectory + "] does not exist");
-		} else if (!directory.isDirectory()) {
-			throw new IOException("A directory was expected for path [" + csvDirectory + "] but a file has been found");
-		}
+	private void initCsvTests(CsvDirectory csvDirectory) throws FileNotFoundException, IOException {
+		File directory = getDirectory(csvDirectory.value());
 
 		testMethods = new ArrayList<Method>();
 
 		tests = new HashMap<String, List<List<String>>>();
 		for (File f : directory.listFiles()) {
-			if (f.getName().endsWith(".csv")) {
+			if (f.getName().endsWith(csvDirectory.extension())) {
 				String s = f.getName();
 				s = s.substring(0, s.length() - 4);
 				tests.put(s, CsvReader.readCsv(new FileReader(f)));
@@ -72,37 +63,27 @@ public class DirectoryTestReader {
 		}
 	}
 
-	private void initCsvMacros(Class<?> clazz) throws FileNotFoundException, IOException {
-		CsvMacros csvMacrosAnnotation = GwtTestReflectionUtils.getAnnotation(clazz, CsvMacros.class);
-		if (csvMacrosAnnotation == null) {
-			throw new RuntimeException("Missing annotation \'@CsvMacros\' on class [" + clazz.getCanonicalName() + "]");
-		}
+	private void initCsvMacros(CsvMacros csvMacros) throws FileNotFoundException, IOException {
+		Pattern macroNamePattern = (csvMacros.pattern() != null) ? Pattern.compile(csvMacros.pattern()) : null;
+		File macrosDirectory = getDirectory(csvMacros.value());
 
-		Pattern macroNamePattern = (csvMacrosAnnotation.pattern() != null) ? Pattern.compile(csvMacrosAnnotation.pattern()) : null;
-		File macrosDirectory = new File(csvMacrosAnnotation.directory());
-		if (!macrosDirectory.exists()) {
-			throw new FileNotFoundException("Directory [" + csvMacrosAnnotation.directory() + "] does not exist");
-		} else if (!macrosDirectory.isDirectory()) {
-			throw new IOException("A directory was expected for path [" + csvMacrosAnnotation.directory() + "] but a file has been found");
-		}
-
-		macroFiles = new HashMap<String, List<List<String>>>();
+		macros = new HashMap<String, List<List<String>>>();
 		for (File file : macrosDirectory.listFiles()) {
 			String fileName = file.getName();
 			if (macroNamePattern == null || macroNamePattern.matcher(file.getName()).matches()) {
 				FileReader reader = new FileReader(file);
 				List<List<String>> sheet = CsvReader.readCsv(reader);
-				macroFiles.put(fileName, sheet);
+				macros.put(fileName, sheet);
 			}
 		}
 	}
 
-	private void initTestMethods(Class<?> clazz) throws Exception {
+	private void initTestMethods(Class<?> clazz, CsvDirectory csvDirectory) throws Exception {
 		testMethods = new ArrayList<Method>();
-		String csvShortName = csvDirectory.substring(csvDirectory.lastIndexOf('/') + 1);
+		String csvShortName = csvDirectory.value().substring(csvDirectory.value().lastIndexOf('/') + 1);
 		ClassPool cp = PatchGwtClassPool.get();
 
-		CtClass newClazz = cp.makeClass(clazz.getCanonicalName() + ".generated" + System.currentTimeMillis());
+		CtClass newClazz = cp.makeClass(clazz.getCanonicalName() + ".generated" + System.nanoTime());
 		newClazz.setSuperclass(cp.get(clazz.getCanonicalName()));
 		List<String> methodList = new ArrayList<String>();
 		for (Entry<String, List<List<String>>> entry : tests.entrySet()) {
@@ -119,6 +100,26 @@ public class DirectoryTestReader {
 		}
 	}
 
+	private static <T> T getAnnotation(Class<?> clazz, Class<T> annotationClass) {
+		T annotation = GwtTestReflectionUtils.getAnnotation(clazz, annotationClass);
+		if (annotation == null) {
+			throw new RuntimeException("Missing annotation \'@" + annotationClass.getSimpleName() + "\' on class [" + clazz.getCanonicalName() + "]");
+		}
+
+		return annotation;
+	}
+
+	private static File getDirectory(String path) throws IOException {
+		File directory = new File(path);
+		if (!directory.exists()) {
+			throw new FileNotFoundException("Directory [" + path + "] does not exist");
+		} else if (!directory.isDirectory()) {
+			throw new IOException("A directory was expected for path [" + path + "] but a file has been found");
+		}
+
+		return directory;
+	}
+
 	public List<Method> getTestMethods() {
 		return testMethods;
 	}
@@ -128,7 +129,7 @@ public class DirectoryTestReader {
 	}
 
 	public Set<String> getMacroFileList() {
-		return Collections.unmodifiableSet(macroFiles.keySet());
+		return Collections.unmodifiableSet(macros.keySet());
 	}
 
 	public List<List<String>> getTest(String testName) {
@@ -136,7 +137,7 @@ public class DirectoryTestReader {
 	}
 
 	public List<List<String>> getMacroFile(String macroName) {
-		return macroFiles.get(macroName);
+		return macros.get(macroName);
 	}
 
 	public Object createObject() throws InstantiationException, IllegalAccessException {

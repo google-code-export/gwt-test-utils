@@ -5,7 +5,7 @@ import com.octo.gwt.test.integ.CsvMacros;
 import com.octo.gwt.test.integ.tools.integ.MyGwtShell;
 
 @CsvDirectory("functional-tests/2")
-@CsvMacros(directory = "functional-tests/macros", pattern = "macros.*\\.csv")
+@CsvMacros("functional-tests/macros")
 public class Rep2 extends MyGwtShell {
 
 }
