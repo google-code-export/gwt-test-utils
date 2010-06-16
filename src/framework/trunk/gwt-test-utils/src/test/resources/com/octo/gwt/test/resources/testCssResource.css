@@ -1,6 +1,16 @@
 @def testConstant constant-value
 
-.testStyle:HOVER {
+.testStyle{
 	margin-top: 2px;
+	color: green;
+}
+
+.testStyleWithHover:HOVER {
+	margin-top: 3px;
 	color: red;
+}
+
+label .testStyleOnSpecificElement {
+	margin-top: 5px;
+	color: black;
 }

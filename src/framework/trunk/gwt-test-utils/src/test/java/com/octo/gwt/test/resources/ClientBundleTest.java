@@ -54,11 +54,15 @@ public class ClientBundleTest extends AbstractGwtTest {
 		// Test
 		String name = testCssResource.getName();
 		String testStyle = testCssResource.testStyle();
+		String testStyleWithHover = testCssResource.testStyleWithHover();
+		String testStyleOnSpecificElement = testCssResource.testStyleOnSpecificElement();
 		String constantValue = testCssResource.testConstant();
 
 		// Assert
 		Assert.assertEquals("testCssResource", name);
 		Assert.assertEquals("testStyle", testStyle);
+		Assert.assertEquals("testStyleWithHover", testStyleWithHover);
+		Assert.assertEquals("testStyleOnSpecificElement", testStyleOnSpecificElement);
 		Assert.assertEquals("constant-value", constantValue);
 	}
 

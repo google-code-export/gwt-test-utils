@@ -4,9 +4,13 @@ import com.google.gwt.resources.client.CssResource;
 
 public interface TestCssResource extends CssResource {
 
+	public String testConstant();
+
 	public String testStyle();
 
-	public String testConstant();
+	public String testStyleWithHover();
+
+	public String testStyleOnSpecificElement();
 
 	public String notAvailableStyle();
 
