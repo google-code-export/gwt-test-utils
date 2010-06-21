@@ -36,6 +36,7 @@ import com.octo.gwt.test.integ.csvrunner.CsvRunner;
 import com.octo.gwt.test.integ.csvrunner.Node;
 import com.octo.gwt.test.utils.ArrayUtils;
 import com.octo.gwt.test.utils.GwtTestReflectionUtils;
+import com.octo.gwt.test.utils.GwtTestStringUtils;
 import com.octo.gwt.test.utils.WidgetUtils;
 
 public abstract class AbstractGwtIntegrationShell {
@@ -171,6 +172,7 @@ public abstract class AbstractGwtIntegrationShell {
 	 * @param objectLocalization
 	 */
 	public void assertExact(String value, String objectLocalization) {
+		value = GwtTestStringUtils.resolveBackSlash(value);
 		String s = getObject(String.class, objectLocalization, false);
 		Assert.assertEquals(csvRunner.getAssertionErrorMessagePrefix() + "Wrong string", value, s);
 	}
@@ -214,6 +216,7 @@ public abstract class AbstractGwtIntegrationShell {
 	 * @param objectLocalization
 	 */
 	public void assertContains(String value, String objectLocalization) {
+		value = GwtTestStringUtils.resolveBackSlash(value);
 		String s = getObject(String.class, objectLocalization);
 		Assert.assertTrue(csvRunner.getAssertionErrorMessagePrefix() + " not containing string " + value, s.contains(value));
 	}
