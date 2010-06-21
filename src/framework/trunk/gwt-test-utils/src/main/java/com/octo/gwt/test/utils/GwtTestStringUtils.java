@@ -3,6 +3,9 @@ package com.octo.gwt.test.utils;
 public class GwtTestStringUtils {
 
 	public static String resolveBackSlash(String input) {
+		if (input == null || "".equals(input.trim()))
+			return input;
+
 		StringBuffer b = new StringBuffer();
 		boolean backSlashSeen = false;
 		for (int i = 0; i < input.length(); ++i) {
