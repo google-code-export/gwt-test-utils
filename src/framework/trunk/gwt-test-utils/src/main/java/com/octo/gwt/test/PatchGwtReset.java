@@ -42,11 +42,11 @@ public class PatchGwtReset {
 
 		Object commandExecutor = GwtTestReflectionUtils.getStaticFieldValue(Class.forName("com.google.gwt.user.client.DeferredCommand"),
 				"commandExecutor");
-		GwtTestReflectionUtils.callClear(GwtTestReflectionUtils.getPrivateFieldValue(commandExecutor, "commands"));
+		GwtTestReflectionUtils.callPrivateMethod(GwtTestReflectionUtils.getPrivateFieldValue(commandExecutor, "commands"), "clear");
 
 		HistoryImpl historyImpl = GwtTestReflectionUtils.getStaticFieldValue(History.class, "impl");
-		GwtTestReflectionUtils.callClear(GwtTestReflectionUtils.getPrivateFieldValue(GwtTestReflectionUtils.getPrivateFieldValue(
-				GwtTestReflectionUtils.getPrivateFieldValue(historyImpl, "handlers"), "registry"), "map"));
+		GwtTestReflectionUtils.callPrivateMethod(GwtTestReflectionUtils.getPrivateFieldValue(GwtTestReflectionUtils.getPrivateFieldValue(
+				GwtTestReflectionUtils.getPrivateFieldValue(historyImpl, "handlers"), "registry"), "map"), "clear");
 
 		GwtTestReflectionUtils.setStaticField(NumberFormat.class, "cachedDecimalFormat", null);
 		GwtTestReflectionUtils.setStaticField(NumberFormat.class, "cachedScientificFormat", null);

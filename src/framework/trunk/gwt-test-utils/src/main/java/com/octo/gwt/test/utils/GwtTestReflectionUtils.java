@@ -199,20 +199,25 @@ public class GwtTestReflectionUtils {
 		}
 	}
 
-	public static void callClear(Object o) {
+	@SuppressWarnings("unchecked")
+	public static <T> T callPrivateMethod(Object target, String methodName, Object... args) {
+		Class<?>[] l = new Class[args.length];
+		for (int i = 0; i < args.length; i++) {
+			l[i] = args[i].getClass();
+		}
 		try {
-			if (o != null) {
-				Method m = o.getClass().getDeclaredMethod("clear");
-				m.invoke(o);
-			}
+			Method m = target.getClass().getDeclaredMethod(methodName, l);
+			m.setAccessible(true);
+			Object res = m.invoke(target, args);
+			return (T) res;
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new RuntimeException(e.getMessage() + " Unable to call clear method on class " + o.getClass());
+			throw new RuntimeException("Unable to call method \"" + target.getClass().getSimpleName() + "." + methodName + "\"", e);
 		}
 	}
 
 	public static void getStaticAndCallClear(Class<?> clazz, String fieldName) {
-		callClear(getStaticFieldValue(clazz, fieldName));
+		callPrivateMethod(getStaticFieldValue(clazz, fieldName), "clear");
 	}
 
 	static class CustomObjectInputStream extends ObjectInputStream {
