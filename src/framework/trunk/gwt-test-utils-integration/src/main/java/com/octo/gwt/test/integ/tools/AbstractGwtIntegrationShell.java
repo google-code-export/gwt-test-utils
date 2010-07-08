@@ -415,41 +415,14 @@ public abstract class AbstractGwtIntegrationShell {
 	@CsvMethod
 	public void assertListBoxSelectedValueIs(String value, String objectLocalization) {
 		ListBox listBox = getObject(ListBox.class, objectLocalization);
-		Assert.assertEquals("Wrong listbox selected value", value, listBox.getItemText(listBox.getSelectedIndex()));
-	}
-
-	@CsvMethod
-	public void selectListBox(String value, String objectLocalization) {
-		ListBox listBox = getObject(ListBox.class, objectLocalization);
-		checkWidgetVisibleAndEnable(listBox, objectLocalization);
-		listBox.setSelectedIndex(Integer.parseInt(value));
-		WidgetUtils.change(listBox);
-	}
-
-	@CsvMethod
-	public void selectSuggest(String index, String objectLocalization) {
-		SuggestBox suggestBox = getObject(SuggestBox.class, objectLocalization);
-		checkWidgetVisible(suggestBox, objectLocalization);
-		MenuItem item = getObject(MenuItem.class, objectLocalization + "/suggestionMenu/items[" + Integer.parseInt(index) + "]");
-		for (Method m : SuggestBox.class.getDeclaredMethods()) {
-			if ("setNewSelection".equals(m.getName())) {
-				try {
-					m.setAccessible(true);
-					m.invoke(suggestBox, item);
-					return;
-				} catch (Exception e) {
-					throw new RuntimeException(e);
-				}
-			}
-		}
-		throw new RuntimeException("Method not found setNewSelection");
+		Assert.assertEquals(csvRunner.getAssertionErrorMessagePrefix() + "Wrong ListBox selected value", value, listBox.getItemText(listBox
+				.getSelectedIndex()));
 	}
 
 	// TODO: delete "ONCHANGE" events
 	@CsvMethod
 	public void fillTextBox(String value, String objectLocalization) {
-		Widget widget = getObject(Widget.class, objectLocalization);
-		TextBox textBox = (TextBox) widget;
+		TextBox textBox = getObject(TextBox.class, objectLocalization);
 		checkWidgetVisibleAndEnable(textBox, objectLocalization);
 		textBox.setText(value);
 		WidgetUtils.keyUp(textBox, KeyCodes.KEY_ENTER);
@@ -465,16 +438,7 @@ public abstract class AbstractGwtIntegrationShell {
 	}
 
 	@CsvMethod
-	public void fillListBox(String index, String objectLocalization) {
-		ListBox listBox = getObject(ListBox.class, objectLocalization);
-		checkWidgetVisibleAndEnable(listBox, objectLocalization);
-		listBox.setSelectedIndex(Integer.parseInt(index));
-		WidgetUtils.click(listBox);
-		WidgetUtils.change(listBox);
-	}
-
-	@CsvMethod
-	public void selectInListBox(String index, String objectLocalization) {
+	public void selectInListBoxByIndex(String index, String objectLocalization) {
 		ListBox listBox = getObject(ListBox.class, objectLocalization);
 		checkWidgetVisibleAndEnable(listBox, objectLocalization);
 		listBox.setSelectedIndex(Integer.parseInt(index));
@@ -494,8 +458,27 @@ public abstract class AbstractGwtIntegrationShell {
 			WidgetUtils.click(listBox);
 			WidgetUtils.change(listBox);
 		} else {
-			Assert.fail("Regex \"" + regex + "\" has not been matched in ListBox values");
+			Assert.fail("Regex <" + regex + "> has not been matched in ListBox values");
 		}
+	}
+
+	@CsvMethod
+	public void selectSuggest(String index, String objectLocalization) {
+		SuggestBox suggestBox = getObject(SuggestBox.class, objectLocalization);
+		checkWidgetVisible(suggestBox, objectLocalization);
+		MenuItem item = getObject(MenuItem.class, objectLocalization + "/suggestionMenu/items[" + Integer.parseInt(index) + "]");
+		for (Method m : SuggestBox.class.getDeclaredMethods()) {
+			if ("setNewSelection".equals(m.getName())) {
+				try {
+					m.setAccessible(true);
+					m.invoke(suggestBox, item);
+					return;
+				} catch (Exception e) {
+					throw new RuntimeException(e);
+				}
+			}
+		}
+		throw new RuntimeException("Method not found setNewSelection");
 	}
 
 	@CsvMethod

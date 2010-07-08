@@ -1,4 +1,4 @@
-// $ANTLR 3.0.1 /me/workspace/gwt-test/git/gwt-test-utils-integration/src/main/resources/com/octo/gwt/test/integ/csvrunner/XPath.g 2009-09-30 16:22:04
+// $ANTLR 3.0.1 E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g 2010-07-08 15:37:10
 package com.octo.gwt.test.integ.csvrunner;
 
 import java.util.Stack;
@@ -61,7 +61,7 @@ public class XPathParser extends Parser {
 	};
 
 	// $ANTLR start expr
-	// /me/workspace/gwt-test/git/gwt-test-utils-integration/src/main/resources/com/octo/gwt/test/integ/csvrunner/XPath.g:21:1: expr : SLASH t= token ;
+	// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:21:1: expr : SLASH t= token ;
 	public final expr_return expr() throws RecognitionException {
 		expr_return retval = new expr_return();
 		retval.start = input.LT(1);
@@ -74,8 +74,8 @@ public class XPathParser extends Parser {
 		Object SLASH1_tree = null;
 
 		try {
-			// /me/workspace/gwt-test/git/gwt-test-utils-integration/src/main/resources/com/octo/gwt/test/integ/csvrunner/XPath.g:21:6: ( SLASH t= token )
-			// /me/workspace/gwt-test/git/gwt-test-utils-integration/src/main/resources/com/octo/gwt/test/integ/csvrunner/XPath.g:21:8: SLASH t= token
+			// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:21:6: ( SLASH t= token )
+			// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:21:8: SLASH t= token
 			{
 				root_0 = (Object) adaptor.nil();
 
@@ -114,7 +114,7 @@ public class XPathParser extends Parser {
 		Node currentNode;
 	}
 
-	protected Stack<Object> token_stack = new Stack<Object>();
+	protected Stack token_stack = new Stack();
 
 	public static class token_return extends ParserRuleReturnScope {
 		public Node result;
@@ -126,7 +126,7 @@ public class XPathParser extends Parser {
 	};
 
 	// $ANTLR start token
-	// /me/workspace/gwt-test/git/gwt-test-utils-integration/src/main/resources/com/octo/gwt/test/integ/csvrunner/XPath.g:25:1: token returns [Node result] : element ( SLASH t= token )? ;
+	// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:25:1: token returns [Node result] : element ( SLASH t= token )? ;
 	public final token_return token() throws RecognitionException {
 		token_stack.push(new token_scope());
 		token_return retval = new token_return();
@@ -144,8 +144,8 @@ public class XPathParser extends Parser {
 		((token_scope) token_stack.peek()).currentNode = new Node();
 
 		try {
-			// /me/workspace/gwt-test/git/gwt-test-utils-integration/src/main/resources/com/octo/gwt/test/integ/csvrunner/XPath.g:30:1: ( element ( SLASH t= token )? )
-			// /me/workspace/gwt-test/git/gwt-test-utils-integration/src/main/resources/com/octo/gwt/test/integ/csvrunner/XPath.g:30:3: element ( SLASH t= token )?
+			// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:30:1: ( element ( SLASH t= token )? )
+			// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:30:3: element ( SLASH t= token )?
 			{
 				root_0 = (Object) adaptor.nil();
 
@@ -154,7 +154,7 @@ public class XPathParser extends Parser {
 				_fsp--;
 
 				adaptor.addChild(root_0, element2.getTree());
-				// /me/workspace/gwt-test/git/gwt-test-utils-integration/src/main/resources/com/octo/gwt/test/integ/csvrunner/XPath.g:30:11: ( SLASH t= token )?
+				// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:30:11: ( SLASH t= token )?
 				int alt1 = 2;
 				int LA1_0 = input.LA(1);
 
@@ -163,7 +163,7 @@ public class XPathParser extends Parser {
 				}
 				switch (alt1) {
 				case 1:
-					// /me/workspace/gwt-test/git/gwt-test-utils-integration/src/main/resources/com/octo/gwt/test/integ/csvrunner/XPath.g:30:12: SLASH t= token
+					// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:30:12: SLASH t= token
 				{
 					SLASH3 = (Token) input.LT(1);
 					match(input, SLASH, FOLLOW_SLASH_in_token80);
@@ -214,7 +214,7 @@ public class XPathParser extends Parser {
 	};
 
 	// $ANTLR start element
-	// /me/workspace/gwt-test/git/gwt-test-utils-integration/src/main/resources/com/octo/gwt/test/integ/csvrunner/XPath.g:38:1: element : label= LABEL ( sub )? ;
+	// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:38:1: element : label= LABEL ( sub )? ;
 	public final element_return element() throws RecognitionException {
 		element_return retval = new element_return();
 		retval.start = input.LT(1);
@@ -227,8 +227,8 @@ public class XPathParser extends Parser {
 		Object label_tree = null;
 
 		try {
-			// /me/workspace/gwt-test/git/gwt-test-utils-integration/src/main/resources/com/octo/gwt/test/integ/csvrunner/XPath.g:38:9: (label= LABEL ( sub )? )
-			// /me/workspace/gwt-test/git/gwt-test-utils-integration/src/main/resources/com/octo/gwt/test/integ/csvrunner/XPath.g:38:11: label= LABEL ( sub )?
+			// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:38:9: (label= LABEL ( sub )? )
+			// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:38:11: label= LABEL ( sub )?
 			{
 				root_0 = (Object) adaptor.nil();
 
@@ -237,7 +237,7 @@ public class XPathParser extends Parser {
 				label_tree = (Object) adaptor.create(label);
 				adaptor.addChild(root_0, label_tree);
 
-				// /me/workspace/gwt-test/git/gwt-test-utils-integration/src/main/resources/com/octo/gwt/test/integ/csvrunner/XPath.g:38:23: ( sub )?
+				// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:38:23: ( sub )?
 				int alt2 = 2;
 				int LA2_0 = input.LA(1);
 
@@ -246,7 +246,7 @@ public class XPathParser extends Parser {
 				}
 				switch (alt2) {
 				case 1:
-					// /me/workspace/gwt-test/git/gwt-test-utils-integration/src/main/resources/com/octo/gwt/test/integ/csvrunner/XPath.g:38:23: sub
+					// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:38:23: sub
 				{
 					pushFollow(FOLLOW_sub_in_element101);
 					sub4 = sub();
@@ -288,7 +288,7 @@ public class XPathParser extends Parser {
 	};
 
 	// $ANTLR start sub
-	// /me/workspace/gwt-test/git/gwt-test-utils-integration/src/main/resources/com/octo/gwt/test/integ/csvrunner/XPath.g:42:1: sub : ( parenthesis | condition ) ;
+	// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:42:1: sub : ( parenthesis | condition ) ;
 	public final sub_return sub() throws RecognitionException {
 		sub_return retval = new sub_return();
 		retval.start = input.LT(1);
@@ -300,12 +300,12 @@ public class XPathParser extends Parser {
 		condition_return condition6 = null;
 
 		try {
-			// /me/workspace/gwt-test/git/gwt-test-utils-integration/src/main/resources/com/octo/gwt/test/integ/csvrunner/XPath.g:42:5: ( ( parenthesis | condition ) )
-			// /me/workspace/gwt-test/git/gwt-test-utils-integration/src/main/resources/com/octo/gwt/test/integ/csvrunner/XPath.g:42:7: ( parenthesis | condition )
+			// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:42:5: ( ( parenthesis | condition ) )
+			// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:42:7: ( parenthesis | condition )
 			{
 				root_0 = (Object) adaptor.nil();
 
-				// /me/workspace/gwt-test/git/gwt-test-utils-integration/src/main/resources/com/octo/gwt/test/integ/csvrunner/XPath.g:42:7: ( parenthesis | condition )
+				// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:42:7: ( parenthesis | condition )
 				int alt3 = 2;
 				int LA3_0 = input.LA(1);
 
@@ -320,7 +320,7 @@ public class XPathParser extends Parser {
 				}
 				switch (alt3) {
 				case 1:
-					// /me/workspace/gwt-test/git/gwt-test-utils-integration/src/main/resources/com/octo/gwt/test/integ/csvrunner/XPath.g:42:8: parenthesis
+					// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:42:8: parenthesis
 				{
 					pushFollow(FOLLOW_parenthesis_in_sub113);
 					parenthesis5 = parenthesis();
@@ -331,7 +331,7 @@ public class XPathParser extends Parser {
 				}
 					break;
 				case 2:
-					// /me/workspace/gwt-test/git/gwt-test-utils-integration/src/main/resources/com/octo/gwt/test/integ/csvrunner/XPath.g:42:22: condition
+					// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:42:22: condition
 				{
 					pushFollow(FOLLOW_condition_in_sub117);
 					condition6 = condition();
@@ -371,7 +371,7 @@ public class XPathParser extends Parser {
 	};
 
 	// $ANTLR start parenthesis
-	// /me/workspace/gwt-test/git/gwt-test-utils-integration/src/main/resources/com/octo/gwt/test/integ/csvrunner/XPath.g:44:1: parenthesis : IN params OUT ;
+	// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:44:1: parenthesis : IN params OUT ;
 	public final parenthesis_return parenthesis() throws RecognitionException {
 		parenthesis_return retval = new parenthesis_return();
 		retval.start = input.LT(1);
@@ -386,8 +386,8 @@ public class XPathParser extends Parser {
 		Object OUT9_tree = null;
 
 		try {
-			// /me/workspace/gwt-test/git/gwt-test-utils-integration/src/main/resources/com/octo/gwt/test/integ/csvrunner/XPath.g:44:13: ( IN params OUT )
-			// /me/workspace/gwt-test/git/gwt-test-utils-integration/src/main/resources/com/octo/gwt/test/integ/csvrunner/XPath.g:44:15: IN params OUT
+			// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:44:13: ( IN params OUT )
+			// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:44:15: IN params OUT
 			{
 				root_0 = (Object) adaptor.nil();
 
@@ -433,7 +433,7 @@ public class XPathParser extends Parser {
 	};
 
 	// $ANTLR start params
-	// /me/workspace/gwt-test/git/gwt-test-utils-integration/src/main/resources/com/octo/gwt/test/integ/csvrunner/XPath.g:46:1: params : v= value_expr ( VIRG params )? ;
+	// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:46:1: params : v= value_expr ( VIRG params )? ;
 	public final params_return params() throws RecognitionException {
 		params_return retval = new params_return();
 		retval.start = input.LT(1);
@@ -448,8 +448,8 @@ public class XPathParser extends Parser {
 		Object VIRG10_tree = null;
 
 		try {
-			// /me/workspace/gwt-test/git/gwt-test-utils-integration/src/main/resources/com/octo/gwt/test/integ/csvrunner/XPath.g:46:8: (v= value_expr ( VIRG params )? )
-			// /me/workspace/gwt-test/git/gwt-test-utils-integration/src/main/resources/com/octo/gwt/test/integ/csvrunner/XPath.g:46:10: v= value_expr ( VIRG params )?
+			// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:46:8: (v= value_expr ( VIRG params )? )
+			// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:46:10: v= value_expr ( VIRG params )?
 			{
 				root_0 = (Object) adaptor.nil();
 
@@ -458,7 +458,7 @@ public class XPathParser extends Parser {
 				_fsp--;
 
 				adaptor.addChild(root_0, v.getTree());
-				// /me/workspace/gwt-test/git/gwt-test-utils-integration/src/main/resources/com/octo/gwt/test/integ/csvrunner/XPath.g:46:23: ( VIRG params )?
+				// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:46:23: ( VIRG params )?
 				int alt4 = 2;
 				int LA4_0 = input.LA(1);
 
@@ -467,7 +467,7 @@ public class XPathParser extends Parser {
 				}
 				switch (alt4) {
 				case 1:
-					// /me/workspace/gwt-test/git/gwt-test-utils-integration/src/main/resources/com/octo/gwt/test/integ/csvrunner/XPath.g:46:24: VIRG params
+					// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:46:24: VIRG params
 				{
 					VIRG10 = (Token) input.LT(1);
 					match(input, VIRG, FOLLOW_VIRG_in_params143);
@@ -514,7 +514,7 @@ public class XPathParser extends Parser {
 	};
 
 	// $ANTLR start condition
-	// /me/workspace/gwt-test/git/gwt-test-utils-integration/src/main/resources/com/octo/gwt/test/integ/csvrunner/XPath.g:50:1: condition : IN_COND internal_condition OUT_COND ;
+	// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:50:1: condition : IN_COND internal_condition OUT_COND ;
 	public final condition_return condition() throws RecognitionException {
 		condition_return retval = new condition_return();
 		retval.start = input.LT(1);
@@ -529,8 +529,8 @@ public class XPathParser extends Parser {
 		Object OUT_COND14_tree = null;
 
 		try {
-			// /me/workspace/gwt-test/git/gwt-test-utils-integration/src/main/resources/com/octo/gwt/test/integ/csvrunner/XPath.g:50:11: ( IN_COND internal_condition OUT_COND )
-			// /me/workspace/gwt-test/git/gwt-test-utils-integration/src/main/resources/com/octo/gwt/test/integ/csvrunner/XPath.g:50:13: IN_COND internal_condition OUT_COND
+			// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:50:11: ( IN_COND internal_condition OUT_COND )
+			// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:50:13: IN_COND internal_condition OUT_COND
 			{
 				root_0 = (Object) adaptor.nil();
 
@@ -576,7 +576,7 @@ public class XPathParser extends Parser {
 	};
 
 	// $ANTLR start internal_condition
-	// /me/workspace/gwt-test/git/gwt-test-utils-integration/src/main/resources/com/octo/gwt/test/integ/csvrunner/XPath.g:52:1: internal_condition : ( simple_expr | eq_expr ) ;
+	// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:52:1: internal_condition : ( simple_expr | eq_expr ) ;
 	public final internal_condition_return internal_condition() throws RecognitionException {
 		internal_condition_return retval = new internal_condition_return();
 		retval.start = input.LT(1);
@@ -588,12 +588,12 @@ public class XPathParser extends Parser {
 		eq_expr_return eq_expr16 = null;
 
 		try {
-			// /me/workspace/gwt-test/git/gwt-test-utils-integration/src/main/resources/com/octo/gwt/test/integ/csvrunner/XPath.g:52:20: ( ( simple_expr | eq_expr ) )
-			// /me/workspace/gwt-test/git/gwt-test-utils-integration/src/main/resources/com/octo/gwt/test/integ/csvrunner/XPath.g:52:22: ( simple_expr | eq_expr )
+			// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:52:20: ( ( simple_expr | eq_expr ) )
+			// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:52:22: ( simple_expr | eq_expr )
 			{
 				root_0 = (Object) adaptor.nil();
 
-				// /me/workspace/gwt-test/git/gwt-test-utils-integration/src/main/resources/com/octo/gwt/test/integ/csvrunner/XPath.g:52:22: ( simple_expr | eq_expr )
+				// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:52:22: ( simple_expr | eq_expr )
 				int alt5 = 2;
 				int LA5_0 = input.LA(1);
 
@@ -618,7 +618,7 @@ public class XPathParser extends Parser {
 				}
 				switch (alt5) {
 				case 1:
-					// /me/workspace/gwt-test/git/gwt-test-utils-integration/src/main/resources/com/octo/gwt/test/integ/csvrunner/XPath.g:52:23: simple_expr
+					// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:52:23: simple_expr
 				{
 					pushFollow(FOLLOW_simple_expr_in_internal_condition171);
 					simple_expr15 = simple_expr();
@@ -629,7 +629,7 @@ public class XPathParser extends Parser {
 				}
 					break;
 				case 2:
-					// /me/workspace/gwt-test/git/gwt-test-utils-integration/src/main/resources/com/octo/gwt/test/integ/csvrunner/XPath.g:52:37: eq_expr
+					// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:52:37: eq_expr
 				{
 					pushFollow(FOLLOW_eq_expr_in_internal_condition175);
 					eq_expr16 = eq_expr();
@@ -669,7 +669,7 @@ public class XPathParser extends Parser {
 	};
 
 	// $ANTLR start simple_expr
-	// /me/workspace/gwt-test/git/gwt-test-utils-integration/src/main/resources/com/octo/gwt/test/integ/csvrunner/XPath.g:54:1: simple_expr : s= value_expr ;
+	// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:54:1: simple_expr : s= value_expr ;
 	public final simple_expr_return simple_expr() throws RecognitionException {
 		simple_expr_return retval = new simple_expr_return();
 		retval.start = input.LT(1);
@@ -679,8 +679,8 @@ public class XPathParser extends Parser {
 		value_expr_return s = null;
 
 		try {
-			// /me/workspace/gwt-test/git/gwt-test-utils-integration/src/main/resources/com/octo/gwt/test/integ/csvrunner/XPath.g:54:13: (s= value_expr )
-			// /me/workspace/gwt-test/git/gwt-test-utils-integration/src/main/resources/com/octo/gwt/test/integ/csvrunner/XPath.g:54:15: s= value_expr
+			// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:54:13: (s= value_expr )
+			// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:54:15: s= value_expr
 			{
 				root_0 = (Object) adaptor.nil();
 
@@ -719,7 +719,7 @@ public class XPathParser extends Parser {
 	};
 
 	// $ANTLR start value_expr
-	// /me/workspace/gwt-test/git/gwt-test-utils-integration/src/main/resources/com/octo/gwt/test/integ/csvrunner/XPath.g:58:1: value_expr : ( VALUE | LABEL ) ;
+	// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:58:1: value_expr : ( VALUE | LABEL ) ;
 	public final value_expr_return value_expr() throws RecognitionException {
 		value_expr_return retval = new value_expr_return();
 		retval.start = input.LT(1);
@@ -728,9 +728,11 @@ public class XPathParser extends Parser {
 
 		Token set17 = null;
 
+		Object set17_tree = null;
+
 		try {
-			// /me/workspace/gwt-test/git/gwt-test-utils-integration/src/main/resources/com/octo/gwt/test/integ/csvrunner/XPath.g:58:12: ( ( VALUE | LABEL ) )
-			// /me/workspace/gwt-test/git/gwt-test-utils-integration/src/main/resources/com/octo/gwt/test/integ/csvrunner/XPath.g:58:14: ( VALUE | LABEL )
+			// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:58:12: ( ( VALUE | LABEL ) )
+			// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:58:14: ( VALUE | LABEL )
 			{
 				root_0 = (Object) adaptor.nil();
 
@@ -772,7 +774,7 @@ public class XPathParser extends Parser {
 	};
 
 	// $ANTLR start value_expr_parenthesis
-	// /me/workspace/gwt-test/git/gwt-test-utils-integration/src/main/resources/com/octo/gwt/test/integ/csvrunner/XPath.g:60:1: value_expr_parenthesis : ( value_expr | IN | OUT ) ( ( value_expr | IN | OUT ) )* ;
+	// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:60:1: value_expr_parenthesis : ( value_expr | IN | OUT ) ( ( value_expr | IN | OUT ) )* ;
 	public final value_expr_parenthesis_return value_expr_parenthesis() throws RecognitionException {
 		value_expr_parenthesis_return retval = new value_expr_parenthesis_return();
 		retval.start = input.LT(1);
@@ -793,12 +795,12 @@ public class XPathParser extends Parser {
 		Object OUT23_tree = null;
 
 		try {
-			// /me/workspace/gwt-test/git/gwt-test-utils-integration/src/main/resources/com/octo/gwt/test/integ/csvrunner/XPath.g:60:24: ( ( value_expr | IN | OUT ) ( ( value_expr | IN | OUT ) )* )
-			// /me/workspace/gwt-test/git/gwt-test-utils-integration/src/main/resources/com/octo/gwt/test/integ/csvrunner/XPath.g:60:26: ( value_expr | IN | OUT ) ( ( value_expr | IN | OUT ) )*
+			// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:60:24: ( ( value_expr | IN | OUT ) ( ( value_expr | IN | OUT ) )* )
+			// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:60:26: ( value_expr | IN | OUT ) ( ( value_expr | IN | OUT ) )*
 			{
 				root_0 = (Object) adaptor.nil();
 
-				// /me/workspace/gwt-test/git/gwt-test-utils-integration/src/main/resources/com/octo/gwt/test/integ/csvrunner/XPath.g:60:26: ( value_expr | IN | OUT )
+				// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:60:26: ( value_expr | IN | OUT )
 				int alt6 = 3;
 				switch (input.LA(1)) {
 				case LABEL:
@@ -822,7 +824,7 @@ public class XPathParser extends Parser {
 
 				switch (alt6) {
 				case 1:
-					// /me/workspace/gwt-test/git/gwt-test-utils-integration/src/main/resources/com/octo/gwt/test/integ/csvrunner/XPath.g:60:27: value_expr
+					// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:60:27: value_expr
 				{
 					pushFollow(FOLLOW_value_expr_in_value_expr_parenthesis211);
 					value_expr18 = value_expr();
@@ -833,7 +835,7 @@ public class XPathParser extends Parser {
 				}
 					break;
 				case 2:
-					// /me/workspace/gwt-test/git/gwt-test-utils-integration/src/main/resources/com/octo/gwt/test/integ/csvrunner/XPath.g:60:40: IN
+					// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:60:40: IN
 				{
 					IN19 = (Token) input.LT(1);
 					match(input, IN, FOLLOW_IN_in_value_expr_parenthesis215);
@@ -843,7 +845,7 @@ public class XPathParser extends Parser {
 				}
 					break;
 				case 3:
-					// /me/workspace/gwt-test/git/gwt-test-utils-integration/src/main/resources/com/octo/gwt/test/integ/csvrunner/XPath.g:60:45: OUT
+					// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:60:45: OUT
 				{
 					OUT20 = (Token) input.LT(1);
 					match(input, OUT, FOLLOW_OUT_in_value_expr_parenthesis219);
@@ -855,7 +857,7 @@ public class XPathParser extends Parser {
 
 				}
 
-				// /me/workspace/gwt-test/git/gwt-test-utils-integration/src/main/resources/com/octo/gwt/test/integ/csvrunner/XPath.g:60:50: ( ( value_expr | IN | OUT ) )*
+				// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:60:50: ( ( value_expr | IN | OUT ) )*
 				loop8: do {
 					int alt8 = 2;
 					int LA8_0 = input.LA(1);
@@ -866,9 +868,9 @@ public class XPathParser extends Parser {
 
 					switch (alt8) {
 					case 1:
-						// /me/workspace/gwt-test/git/gwt-test-utils-integration/src/main/resources/com/octo/gwt/test/integ/csvrunner/XPath.g:60:51: ( value_expr | IN | OUT )
+						// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:60:51: ( value_expr | IN | OUT )
 					{
-						// /me/workspace/gwt-test/git/gwt-test-utils-integration/src/main/resources/com/octo/gwt/test/integ/csvrunner/XPath.g:60:51: ( value_expr | IN | OUT )
+						// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:60:51: ( value_expr | IN | OUT )
 						int alt7 = 3;
 						switch (input.LA(1)) {
 						case LABEL:
@@ -892,7 +894,7 @@ public class XPathParser extends Parser {
 
 						switch (alt7) {
 						case 1:
-							// /me/workspace/gwt-test/git/gwt-test-utils-integration/src/main/resources/com/octo/gwt/test/integ/csvrunner/XPath.g:60:52: value_expr
+							// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:60:52: value_expr
 						{
 							pushFollow(FOLLOW_value_expr_in_value_expr_parenthesis224);
 							value_expr21 = value_expr();
@@ -903,7 +905,7 @@ public class XPathParser extends Parser {
 						}
 							break;
 						case 2:
-							// /me/workspace/gwt-test/git/gwt-test-utils-integration/src/main/resources/com/octo/gwt/test/integ/csvrunner/XPath.g:60:65: IN
+							// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:60:65: IN
 						{
 							IN22 = (Token) input.LT(1);
 							match(input, IN, FOLLOW_IN_in_value_expr_parenthesis228);
@@ -913,7 +915,7 @@ public class XPathParser extends Parser {
 						}
 							break;
 						case 3:
-							// /me/workspace/gwt-test/git/gwt-test-utils-integration/src/main/resources/com/octo/gwt/test/integ/csvrunner/XPath.g:60:70: OUT
+							// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:60:70: OUT
 						{
 							OUT23 = (Token) input.LT(1);
 							match(input, OUT, FOLLOW_OUT_in_value_expr_parenthesis232);
@@ -960,7 +962,7 @@ public class XPathParser extends Parser {
 	};
 
 	// $ANTLR start eq_expr
-	// /me/workspace/gwt-test/git/gwt-test-utils-integration/src/main/resources/com/octo/gwt/test/integ/csvrunner/XPath.g:62:1: eq_expr : t= token EQ v= value_expr_parenthesis ;
+	// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:62:1: eq_expr : t= token EQ v= value_expr_parenthesis ;
 	public final eq_expr_return eq_expr() throws RecognitionException {
 		eq_expr_return retval = new eq_expr_return();
 		retval.start = input.LT(1);
@@ -975,8 +977,8 @@ public class XPathParser extends Parser {
 		Object EQ24_tree = null;
 
 		try {
-			// /me/workspace/gwt-test/git/gwt-test-utils-integration/src/main/resources/com/octo/gwt/test/integ/csvrunner/XPath.g:62:9: (t= token EQ v= value_expr_parenthesis )
-			// /me/workspace/gwt-test/git/gwt-test-utils-integration/src/main/resources/com/octo/gwt/test/integ/csvrunner/XPath.g:62:11: t= token EQ v= value_expr_parenthesis
+			// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:62:9: (t= token EQ v= value_expr_parenthesis )
+			// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:62:11: t= token EQ v= value_expr_parenthesis
 			{
 				root_0 = (Object) adaptor.nil();
 

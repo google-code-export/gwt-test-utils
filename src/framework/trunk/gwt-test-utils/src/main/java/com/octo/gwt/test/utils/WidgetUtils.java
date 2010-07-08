@@ -58,9 +58,13 @@ public class WidgetUtils {
 	public static int getIndexInListBox(ListBox listBox, String regex) {
 		int selectedIndex = -1;
 
-		for (int i = 0; i < listBox.getItemCount() && selectedIndex == -1; i++) {
-			if (listBox.getItemText(i) != null && listBox.getItemText(i).matches(regex))
+		int i = 0;
+		while (i < listBox.getItemCount() && selectedIndex == -1) {
+			if (regex.equals(listBox.getItemText(i))) {
 				selectedIndex = i;
+			} else {
+				i++;
+			}
 		}
 
 		return selectedIndex;
