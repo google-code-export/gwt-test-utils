@@ -9,6 +9,8 @@ import java.util.Map;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.octo.gwt.test.integ.CsvMethod;
+
 public class CsvRunnerTest {
 
 	private CsvRunner runner = new CsvRunner();
@@ -75,10 +77,12 @@ public class CsvRunnerTest {
 
 	class A {
 
+		@CsvMethod
 		public String getPublic() {
 			return "public";
 		}
 
+		@CsvMethod
 		public Object getMe() {
 			return this;
 		}
@@ -93,25 +97,30 @@ public class CsvRunnerTest {
 		@SuppressWarnings("unused")
 		private String zz = "zz";
 
+		@CsvMethod
 		void meth0() {
 			Assert.assertTrue(true);
 		}
 
+		@CsvMethod
 		void meth1(String p0) {
 			Assert.assertEquals("p0", p0);
 		}
 
+		@CsvMethod
 		void meth2(String p0, String p1) {
 			Assert.assertEquals("p0", p0);
 			Assert.assertEquals("p1", p1);
 		}
 
+		@CsvMethod
 		void meth3(String p0, String p1, String p2) {
 			Assert.assertEquals("p0", p0);
 			Assert.assertEquals("p1", p1);
 			Assert.assertEquals("p2", p2);
 		}
 
+		@CsvMethod
 		void methArray0(String[] p) {
 			Assert.assertEquals(3, p.length);
 			Assert.assertEquals("p0", p[0]);
@@ -120,6 +129,7 @@ public class CsvRunnerTest {
 
 		}
 
+		@CsvMethod
 		void methVar0(String... p) {
 			Assert.assertEquals(3, p.length);
 			Assert.assertEquals("p0", p[0]);
@@ -127,6 +137,7 @@ public class CsvRunnerTest {
 			Assert.assertEquals("p2", p[2]);
 		}
 
+		@CsvMethod
 		void methArray1(String a, String[] p) {
 			Assert.assertEquals("a", a);
 			Assert.assertEquals(3, p.length);
@@ -135,6 +146,7 @@ public class CsvRunnerTest {
 			Assert.assertEquals("p2", p[2]);
 		}
 
+		@CsvMethod
 		void methVar1(String a, String... p) {
 			Assert.assertEquals("a", a);
 			Assert.assertEquals(3, p.length);
@@ -143,22 +155,27 @@ public class CsvRunnerTest {
 			Assert.assertEquals("p2", p[2]);
 		}
 
+		@CsvMethod
 		void runException() {
 			throw new UnsupportedOperationException();
 		}
 
+		@CsvMethod
 		void runMyException() throws MyException {
 			throw new MyException();
 		}
 
+		@CsvMethod
 		String getWidget(String i) {
 			return i;
 		}
 
+		@CsvMethod
 		String getWidgetInt(int i) {
 			return Integer.toString(i);
 		}
 
+		@CsvMethod
 		Map<String, String> getMap() {
 			Map<String, String> map = new HashMap<String, String>();
 			map.put("a", "b");
@@ -212,11 +229,6 @@ public class CsvRunnerTest {
 	@Test
 	public void checkMethVar1() throws Exception {
 		runner.executeLine("methVar1", Arrays.asList("a", "p0", "p1", "p2"), o);
-	}
-
-	@Test
-	public void checkMethodsFromUpper() throws Exception {
-		runner.executeLine("toString", new ArrayList<String>(), o);
 	}
 
 	@Test(expected = AssertionError.class)

@@ -32,6 +32,7 @@ import com.octo.gwt.test.GwtCreateHandler;
 import com.octo.gwt.test.GwtLogHandler;
 import com.octo.gwt.test.PatchGwtConfig;
 import com.octo.gwt.test.PatchGwtReset;
+import com.octo.gwt.test.integ.CsvMethod;
 import com.octo.gwt.test.integ.csvrunner.CsvRunner;
 import com.octo.gwt.test.integ.csvrunner.Node;
 import com.octo.gwt.test.utils.ArrayUtils;
@@ -93,32 +94,6 @@ public abstract class AbstractGwtIntegrationShell {
 		}
 	}
 
-	public void runMacro(String macroName, String... params) throws Exception {
-		List<List<String>> macro = macroReader.getMacro(macroName);
-		Assert.assertNotNull(csvRunner.getAssertionErrorMessagePrefix() + "Not existing macro " + macroName, macro);
-		int i = 0;
-		for (List<String> line : macro) {
-			List<String> l = new ArrayList<String>();
-			for (String s : line) {
-				String replaced = s;
-				for (int z = 0; z < params.length; z++) {
-					String param = params[z];
-					if (param == null)
-						param = "*null*";
-					else if ("".equals(param))
-						param = "*empty*";
-
-					replaced = replaced.replaceAll("\\{" + z + "\\}", param);
-				}
-				l.add(replaced);
-			}
-			csvRunner.setExtendedLineInfo(macroName + " line " + (i + 1));
-			csvRunner.executeRow(l, this);
-			i++;
-		}
-		csvRunner.setExtendedLineInfo(null);
-	}
-
 	public void launchTest(String testName) throws Exception {
 		csvRunner.runSheet(reader.getTest(testName), this);
 	}
@@ -166,11 +141,39 @@ public abstract class AbstractGwtIntegrationShell {
 		return null;
 	}
 
+	@CsvMethod
+	public void runmacro(String macroName, String... params) throws Exception {
+		List<List<String>> macro = macroReader.getMacro(macroName);
+		Assert.assertNotNull(csvRunner.getAssertionErrorMessagePrefix() + "Not existing macro " + macroName, macro);
+		int i = 0;
+		for (List<String> line : macro) {
+			List<String> l = new ArrayList<String>();
+			for (String s : line) {
+				String replaced = s;
+				for (int z = 0; z < params.length; z++) {
+					String param = params[z];
+					if (param == null)
+						param = "*null*";
+					else if ("".equals(param))
+						param = "*empty*";
+
+					replaced = replaced.replaceAll("\\{" + z + "\\}", param);
+				}
+				l.add(replaced);
+			}
+			csvRunner.setExtendedLineInfo(macroName + " line " + (i + 1));
+			csvRunner.executeRow(l, this);
+			i++;
+		}
+		csvRunner.setExtendedLineInfo(null);
+	}
+
 	/**
 	 * 
 	 * @param value
 	 * @param objectLocalization
 	 */
+	@CsvMethod
 	public void assertExact(String value, String objectLocalization) {
 		value = GwtTestStringUtils.resolveBackSlash(value);
 		String s = getObject(String.class, objectLocalization, false);
@@ -182,6 +185,7 @@ public abstract class AbstractGwtIntegrationShell {
 	 * @param value
 	 * @param objectLocalization
 	 */
+	@CsvMethod
 	public void assertNumberExact(String value, String objectLocalization) {
 		Integer i = getObject(Integer.class, objectLocalization, false);
 		if (i != null) {
@@ -192,6 +196,7 @@ public abstract class AbstractGwtIntegrationShell {
 		}
 	}
 
+	@CsvMethod
 	public void assertTrue(String objectLocalization) {
 		Boolean b = getObject(Boolean.class, objectLocalization, false);
 		if (b == null) {
@@ -201,6 +206,7 @@ public abstract class AbstractGwtIntegrationShell {
 		}
 	}
 
+	@CsvMethod
 	public void assertFalse(String objectLocalization) {
 		Boolean b = getObject(Boolean.class, objectLocalization, false);
 		if (b == null) {
@@ -215,6 +221,7 @@ public abstract class AbstractGwtIntegrationShell {
 	 * @param value
 	 * @param objectLocalization
 	 */
+	@CsvMethod
 	public void assertContains(String value, String objectLocalization) {
 		value = GwtTestStringUtils.resolveBackSlash(value);
 		String s = getObject(String.class, objectLocalization);
@@ -227,6 +234,7 @@ public abstract class AbstractGwtIntegrationShell {
 	 * @param objectLocalization
 	 *            The targeted object localisation path.
 	 */
+	@CsvMethod
 	public void blur(String objectLocalization) {
 		Widget widget = getObject(Widget.class, objectLocalization);
 		WidgetUtils.blur(widget);
@@ -238,6 +246,7 @@ public abstract class AbstractGwtIntegrationShell {
 	 * @param objectLocalization
 	 *            The targeted object localisation path.
 	 */
+	@CsvMethod
 	public void change(String objectLocalization) {
 		Widget widget = getObject(Widget.class, objectLocalization);
 		WidgetUtils.change(widget);
@@ -249,23 +258,27 @@ public abstract class AbstractGwtIntegrationShell {
 	 * @param objectLocalization
 	 *            The targeted object localisation path.
 	 */
+	@CsvMethod
 	public void click(String objectLocalization) {
 		Widget widget = getObject(Widget.class, objectLocalization);
 		WidgetUtils.click(widget, csvRunner.getAssertionErrorMessagePrefix(), objectLocalization);
 	}
 
+	@CsvMethod
 	public void clickComplexPanel(String index, String objectLocalization) {
 		ComplexPanel widget = getObject(ComplexPanel.class, objectLocalization);
 		checkWidgetVisible(widget, objectLocalization);
 		WidgetUtils.click(widget, Integer.valueOf(index));
 	}
 
+	@CsvMethod
 	public void clickPanel(String objectLocalization) {
 		FocusPanel widget = getObject(FocusPanel.class, objectLocalization);
 		checkWidgetVisibleAndEnable(widget, objectLocalization);
 		WidgetUtils.click(widget, csvRunner.getAssertionErrorMessagePrefix(), objectLocalization);
 	}
 
+	@CsvMethod
 	public void clickMenuItem(String index, String objectLocalization) {
 		MenuBar menuBar = getObject(MenuBar.class, objectLocalization);
 		List<MenuItem> menuItems = GwtTestReflectionUtils.getPrivateFieldValue(menuBar, "items");
@@ -273,71 +286,85 @@ public abstract class AbstractGwtIntegrationShell {
 		WidgetUtils.click(menuBar, itemToClick);
 	}
 
+	@CsvMethod
 	public void clickOnTableRow(String rowIndex, String objectLocalization) {
 		Grid grid = getObject(Grid.class, objectLocalization);
 		checkWidgetVisible(grid, objectLocalization);
 		WidgetUtils.click(grid, Integer.parseInt(rowIndex), 0);
 	}
 
+	@CsvMethod
 	public void focus(String objectLocalization) {
 		Widget widget = getObject(Widget.class, objectLocalization);
 		WidgetUtils.focus(widget);
 	}
 
+	@CsvMethod
 	public void mouseDown(String objectLocalization) {
 		Widget widget = getObject(Widget.class, objectLocalization);
 		WidgetUtils.mouseDown(widget);
 	}
 
+	@CsvMethod
 	public void mouseMove(String objectLocalization) {
 		Widget widget = getObject(Widget.class, objectLocalization);
 		WidgetUtils.mouseMove(widget);
 	}
 
+	@CsvMethod
 	public void mouseUp(String objectLocalization) {
 		Widget widget = getObject(Widget.class, objectLocalization);
 		WidgetUtils.mouseUp(widget);
 	}
 
+	@CsvMethod
 	public void mouseWheel(String objectLocalization) {
 		Widget widget = getObject(Widget.class, objectLocalization);
 		WidgetUtils.mouseWheel(widget);
 	}
 
+	@CsvMethod
 	public void mouseOut(String objectLocalization) {
 		Widget widget = getObject(Widget.class, objectLocalization);
 		WidgetUtils.mouseOut(widget);
 	}
 
+	@CsvMethod
 	public void mouseOver(String objectLocalization) {
 		Widget widget = getObject(Widget.class, objectLocalization);
 		WidgetUtils.mouseOver(widget);
 	}
 
+	@CsvMethod
 	public void hasStyle(String style, String objectLocalization) {
 		Widget w = getObject(Widget.class, objectLocalization);
 		Assert.assertTrue(csvRunner.getAssertionErrorMessagePrefix() + "Style not found : " + style, w.getStyleName().contains(style));
 	}
 
+	@CsvMethod
 	public void assertNotExist(String objectLocalization) {
 		Object o = getObject(Object.class, objectLocalization, false);
 		Assert.assertNull(csvRunner.getAssertionErrorMessagePrefix() + "Object exist", o);
 	}
 
+	@CsvMethod
 	public void callMethod(String objectLocalization) {
 		getObject(Object.class, objectLocalization, false);
 	}
 
+	@CsvMethod
 	public void isChecked(String objectLocalization) {
 		CheckBox checkBox = getObject(CheckBox.class, objectLocalization);
 		Assert.assertTrue(csvRunner.getAssertionErrorMessagePrefix() + "Checkbox not checked", checkBox.getValue());
 	}
 
+	@CsvMethod
 	public void isNotChecked(String objectLocalization) {
 		CheckBox checkBox = getObject(CheckBox.class, objectLocalization);
 		Assert.assertTrue(csvRunner.getAssertionErrorMessagePrefix() + "Checkbox checked", !checkBox.getValue());
 	}
 
+	@CsvMethod
 	public void assertInstanceOf(String className, String objectLocalisation) {
 		try {
 			Class<?> clazz = Class.forName(className);
@@ -349,11 +376,13 @@ public abstract class AbstractGwtIntegrationShell {
 		}
 	}
 
+	@CsvMethod
 	public void assertListBoxSelectedValueIs(String value, String objectLocalization) {
 		ListBox listBox = getObject(ListBox.class, objectLocalization);
 		Assert.assertEquals("Wrong listbox selected value", value, listBox.getItemText(listBox.getSelectedIndex()));
 	}
 
+	@CsvMethod
 	public void selectListBox(String value, String objectLocalization) {
 		ListBox listBox = getObject(ListBox.class, objectLocalization);
 		checkWidgetVisibleAndEnable(listBox, objectLocalization);
@@ -361,6 +390,7 @@ public abstract class AbstractGwtIntegrationShell {
 		WidgetUtils.change(listBox);
 	}
 
+	@CsvMethod
 	public void selectSuggest(String index, String objectLocalization) {
 		SuggestBox suggestBox = getObject(SuggestBox.class, objectLocalization);
 		checkWidgetVisible(suggestBox, objectLocalization);
@@ -380,6 +410,7 @@ public abstract class AbstractGwtIntegrationShell {
 	}
 
 	// TODO: delete "ONCHANGE" events
+	@CsvMethod
 	public void fillTextBox(String value, String objectLocalization) {
 		Widget widget = getObject(Widget.class, objectLocalization);
 		TextBox textBox = (TextBox) widget;
@@ -389,6 +420,7 @@ public abstract class AbstractGwtIntegrationShell {
 		WidgetUtils.change(textBox);
 	}
 
+	@CsvMethod
 	public void fillInvisibleTextBox(String value, String objectLocalization) {
 		TextBox textBox = getObject(TextBox.class, objectLocalization);
 		textBox.setText(value);
@@ -396,6 +428,7 @@ public abstract class AbstractGwtIntegrationShell {
 		WidgetUtils.change(textBox);
 	}
 
+	@CsvMethod
 	public void fillListBox(String index, String objectLocalization) {
 		ListBox listBox = getObject(ListBox.class, objectLocalization);
 		checkWidgetVisibleAndEnable(listBox, objectLocalization);
@@ -404,6 +437,7 @@ public abstract class AbstractGwtIntegrationShell {
 		WidgetUtils.change(listBox);
 	}
 
+	@CsvMethod
 	public void selectInListBox(String index, String objectLocalization) {
 		ListBox listBox = getObject(ListBox.class, objectLocalization);
 		checkWidgetVisibleAndEnable(listBox, objectLocalization);
@@ -412,6 +446,7 @@ public abstract class AbstractGwtIntegrationShell {
 		WidgetUtils.change(listBox);
 	}
 
+	@CsvMethod
 	public void selectInListBoxByText(String regex, String objectLocalization) {
 		ListBox listBox = getObject(ListBox.class, objectLocalization);
 		checkWidgetVisibleAndEnable(listBox, objectLocalization);
@@ -427,6 +462,7 @@ public abstract class AbstractGwtIntegrationShell {
 		}
 	}
 
+	@CsvMethod
 	public void fillSuggestBox(String value, String objectLocalization) {
 		SuggestBox suggestBox = getObject(SuggestBox.class, objectLocalization);
 		checkWidgetVisible(suggestBox, objectLocalization);
@@ -434,21 +470,25 @@ public abstract class AbstractGwtIntegrationShell {
 		WidgetUtils.keyUp(suggestBox, KeyCodes.KEY_ENTER);
 	}
 
+	@CsvMethod
 	public void isVisible(String objectLocalization) {
 		Widget widget = getObject(Widget.class, objectLocalization);
 		checkWidgetVisible(widget, objectLocalization);
 	}
 
+	@CsvMethod
 	public void isNotVisible(String objectLocalization) {
 		Widget widget = getObject(Widget.class, objectLocalization);
 		Assert.assertFalse(csvRunner.getAssertionErrorMessagePrefix() + "Visible " + objectLocalization, widget.isVisible());
 	}
 
+	@CsvMethod
 	public void isEnabled(String objectLocalization) {
 		FocusWidget button = getFocusWidget(objectLocalization);
 		Assert.assertTrue(csvRunner.getAssertionErrorMessagePrefix() + "is not Enabled " + objectLocalization, button.isEnabled());
 	}
 
+	@CsvMethod
 	public void isNotEnabled(String objectLocalization) {
 		FocusWidget button = getFocusWidget(objectLocalization);
 		Assert.assertFalse(csvRunner.getAssertionErrorMessagePrefix() + "is Enabled " + objectLocalization, button.isEnabled());
@@ -484,6 +524,7 @@ public abstract class AbstractGwtIntegrationShell {
 		return o;
 	}
 
+	@CsvMethod
 	public void interactive() {
 		try {
 			PrintStream os = System.out;

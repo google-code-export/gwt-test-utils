@@ -5,14 +5,18 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
 import org.junit.Assert;
 
-import com.octo.gwt.test.utils.DoubleMap;
+import com.octo.gwt.test.integ.CsvMethod;
+import com.octo.gwt.test.integ.tools.AbstractGwtIntegrationShell;
+import com.octo.gwt.test.utils.GwtTestReflectionUtils;
 
 public class CsvRunner {
 
@@ -93,9 +97,10 @@ public class CsvRunner {
 			List<String> filterArgs = new ArrayList<String>(args);
 			removeEmptyElements(filterArgs);
 			transformArgs(filterArgs);
-			Method m = getMethod(fixture.getClass(), methodName);
+			Method m = getCsvMethod(fixture.getClass(), methodName);
 			if (m == null) {
-				Assert.fail(getAssertionErrorMessagePrefix() + "Method ' " + methodName + " ' not found in object " + fixture);
+				Assert.fail(getAssertionErrorMessagePrefix() + "@" + CsvMethod.class.getSimpleName() + " ' " + methodName + " ' not found in object "
+						+ fixture);
 			}
 			logger.debug(getProcessingMessagePrefix() + "Executing " + methodName + ", params " + Arrays.toString(filterArgs.toArray()));
 			List<Object> argList = new ArrayList<Object>();
@@ -142,33 +147,39 @@ public class CsvRunner {
 		}
 	}
 
-	private static DoubleMap<Class<?>, String, Method> cacheMethod = new DoubleMap<Class<?>, String, Method>();
+	private static Map<Class<?>, Map<String, Method>> csvMethodsCache = new HashMap<Class<?>, Map<String, Method>>();
 
-	private Method getMethod(Class<?> clazz, String methodName) {
-		Method res = cacheMethod.get(clazz, methodName);
+	private Method getCsvMethod(Class<?> clazz, String methodName) {
+		Map<String, Method> classCsvMethods = csvMethodsCache.get(clazz);
+
+		if (classCsvMethods == null) {
+			classCsvMethods = new HashMap<String, Method>();
+			csvMethodsCache.put(clazz, classCsvMethods);
+
+			Map<Method, CsvMethod> csvMethods = GwtTestReflectionUtils.getAnnotatedMethod(clazz, CsvMethod.class);
+			for (Map.Entry<Method, CsvMethod> entry : csvMethods.entrySet()) {
+				classCsvMethods.put(getMethodName(entry), entry.getKey());
+			}
+
+		}
+		Method res = classCsvMethods.get(methodName);
 		if (res != null) {
 			return res;
+		} else if (clazz == AbstractGwtIntegrationShell.class) {
+			return null;
+		} else {
+			Class<?> superClass = clazz.getSuperclass();
+			if (superClass != null)
+				return getCsvMethod(clazz.getSuperclass(), methodName);
+			else
+				return null;
 		}
-		for (Method m : clazz.getDeclaredMethods()) {
-			if (methodName.equalsIgnoreCase(m.getName())) {
-				m.setAccessible(true);
-				cacheMethod.put(clazz, methodName, m);
-				return m;
-			}
-		}
-		for (Method m : clazz.getMethods()) {
-			if (methodName.equalsIgnoreCase(m.getName())) {
-				m.setAccessible(true);
-				cacheMethod.put(clazz, methodName, m);
-				return m;
-			}
-		}
-		Class<?> superClazz = clazz.getSuperclass();
-		if (superClazz != null) {
-			res = getMethod(superClazz, methodName);
-		}
-		cacheMethod.put(clazz, methodName, res);
-		return res;
+	}
+
+	private String getMethodName(Entry<Method, CsvMethod> entry) {
+		String methodname = entry.getValue().methodName();
+
+		return (methodname.equals("")) ? entry.getKey().getName() : methodname;
 	}
 
 	private Field getField(Object fixture, Class<?> clazz, String fieldName) {
@@ -210,10 +221,10 @@ public class CsvRunner {
 			if (!ok) {
 				Method m = null;
 				if (m == null) {
-					m = getMethod(current.getClass(), currentName);
+					m = GwtTestReflectionUtils.getMethod(current.getClass(), currentName);
 				}
 				if (m == null) {
-					m = getMethod(current.getClass(), "get" + currentName);
+					m = GwtTestReflectionUtils.getMethod(current.getClass(), "get" + currentName);
 				}
 				if (m != null) {
 					try {
@@ -310,7 +321,7 @@ public class CsvRunner {
 		if (m.getParameterTypes().length != 1 && m.getParameterTypes()[0] != int.class) {
 			Assert.fail("Unable to navigate " + current.getClass().getCanonicalName() + " with method " + m.getName());
 		}
-		Method countM = getMethod(current.getClass(), m.getName() + "Count");
+		Method countM = GwtTestReflectionUtils.getMethod(current.getClass(), m.getName() + "Count");
 		if (countM == null) {
 			Assert.fail("Count method not found in " + current.getClass().getCanonicalName() + " method " + m.getName());
 		}

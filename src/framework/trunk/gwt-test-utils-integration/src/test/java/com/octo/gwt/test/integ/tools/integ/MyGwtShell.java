@@ -8,6 +8,7 @@ import org.junit.runner.RunWith;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.octo.gwt.test.GwtTestClassLoader;
 import com.octo.gwt.test.PatchGwtConfig;
+import com.octo.gwt.test.integ.CsvMethod;
 import com.octo.gwt.test.integ.csvrunner.CsvRunner;
 import com.octo.gwt.test.integ.csvrunner.Node;
 import com.octo.gwt.test.integ.handler.DefaultGwtRpcExceptionHandler;
@@ -57,11 +58,13 @@ public abstract class MyGwtShell extends AbstractGwtIntegrationShell {
 		MyStringStore.appender = "";
 	}
 
+	@CsvMethod
 	public void initApp() {
 		app = new MyBeautifulApp();
 		app.onModuleLoad();
 	}
 
+	@CsvMethod
 	public void append(String s) {
 		MyStringStore.appender += s;
 	}
@@ -89,6 +92,7 @@ public abstract class MyGwtShell extends AbstractGwtIntegrationShell {
 		return super.findPrefixProcessor(prefix);
 	}
 
+	@CsvMethod
 	public void enableNewExceptionHandler() {
 
 		handlerImpl.setExceptionHandler(new DefaultGwtRpcExceptionHandler() {

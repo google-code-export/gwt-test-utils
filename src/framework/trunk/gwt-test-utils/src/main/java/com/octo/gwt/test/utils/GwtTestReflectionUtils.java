@@ -21,6 +21,34 @@ public class GwtTestReflectionUtils {
 	private static DoubleMap<Class<?>, Class<?>, Object> cacheAnnotation = new DoubleMap<Class<?>, Class<?>, Object>();
 	private static DoubleMap<Class<?>, Class<?>, Set<Field>> cacheAnnotatedField = new DoubleMap<Class<?>, Class<?>, Set<Field>>();
 	private static DoubleMap<Class<?>, Class<?>, Map<Method, ?>> cacheAnnotatedMethod = new DoubleMap<Class<?>, Class<?>, Map<Method, ?>>();
+	private static DoubleMap<Class<?>, String, Method> cacheMethod = new DoubleMap<Class<?>, String, Method>();
+
+	public static Method getMethod(Class<?> clazz, String methodName) {
+		Method res = cacheMethod.get(clazz, methodName);
+		if (res != null) {
+			return res;
+		}
+		for (Method m : clazz.getDeclaredMethods()) {
+			if (methodName.equalsIgnoreCase(m.getName())) {
+				m.setAccessible(true);
+				cacheMethod.put(clazz, methodName, m);
+				return m;
+			}
+		}
+		for (Method m : clazz.getMethods()) {
+			if (methodName.equalsIgnoreCase(m.getName())) {
+				m.setAccessible(true);
+				cacheMethod.put(clazz, methodName, m);
+				return m;
+			}
+		}
+		Class<?> superClazz = clazz.getSuperclass();
+		if (superClazz != null) {
+			res = getMethod(superClazz, methodName);
+		}
+		cacheMethod.put(clazz, methodName, res);
+		return res;
+	}
 
 	@SuppressWarnings("unchecked")
 	public static <T> T getAnnotation(Class<?> clazz, Class<T> annotationClass) {
