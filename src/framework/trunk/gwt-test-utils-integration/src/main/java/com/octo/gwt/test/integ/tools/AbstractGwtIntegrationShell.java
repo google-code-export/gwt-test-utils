@@ -377,6 +377,42 @@ public abstract class AbstractGwtIntegrationShell {
 	}
 
 	@CsvMethod
+	public void assertBiggerThan(String value, String objectLocalization) {
+		Integer i = getObject(Integer.class, objectLocalization, false);
+		if (i != null) {
+			int currentValue = i.intValue();
+			int intValue = Integer.parseInt(value);
+			Assert.assertTrue(csvRunner.getAssertionErrorMessagePrefix() + "Current value <" + currentValue + "> is not bigger than <" + value + ">",
+					currentValue > intValue);
+		} else {
+			Long l = getObject(Long.class, objectLocalization);
+			long currentValue = l.longValue();
+			long longValue = Long.parseLong(value);
+			Assert.assertTrue(csvRunner.getAssertionErrorMessagePrefix() + "Current value <" + currentValue + "> is not bigger than <" + value + ">",
+					currentValue > longValue);
+		}
+	}
+
+	@CsvMethod
+	public void assertSmallerThan(String value, String objectLocalization) {
+		Integer i = getObject(Integer.class, objectLocalization, false);
+		if (i != null) {
+			int currentValue = i.intValue();
+			int intValue = Integer.parseInt(value);
+			Assert.assertTrue(
+					csvRunner.getAssertionErrorMessagePrefix() + "Current value <" + currentValue + "> is not smaller than <" + value + ">",
+					currentValue < intValue);
+		} else {
+			Long l = getObject(Long.class, objectLocalization);
+			long currentValue = l.longValue();
+			long longValue = Long.parseLong(value);
+			Assert.assertTrue(
+					csvRunner.getAssertionErrorMessagePrefix() + "Current value <" + currentValue + "> is not smaller than <" + value + ">",
+					currentValue < longValue);
+		}
+	}
+
+	@CsvMethod
 	public void assertListBoxSelectedValueIs(String value, String objectLocalization) {
 		ListBox listBox = getObject(ListBox.class, objectLocalization);
 		Assert.assertEquals("Wrong listbox selected value", value, listBox.getItemText(listBox.getSelectedIndex()));
