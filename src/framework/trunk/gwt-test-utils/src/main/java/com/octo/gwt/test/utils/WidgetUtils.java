@@ -1,6 +1,8 @@
 package com.octo.gwt.test.utils;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.junit.Assert;
 
@@ -58,9 +60,15 @@ public class WidgetUtils {
 	public static int getIndexInListBox(ListBox listBox, String regex) {
 		int selectedIndex = -1;
 
+		Pattern p = Pattern.compile(regex);
+
 		int i = 0;
+		String itemText;
+		Matcher m;
 		while (i < listBox.getItemCount() && selectedIndex == -1) {
-			if (regex.equals(listBox.getItemText(i))) {
+			itemText = listBox.getItemText(i);
+			m = p.matcher(itemText);
+			if (m.matches() || regex.equals(itemText)) {
 				selectedIndex = i;
 			} else {
 				i++;

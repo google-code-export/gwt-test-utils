@@ -438,27 +438,40 @@ public abstract class AbstractGwtIntegrationShell {
 	}
 
 	@CsvMethod
-	public void selectInListBoxByIndex(String index, String objectLocalization) {
+	public void selectInListBox(String value, String objectLocalization) {
 		ListBox listBox = getObject(ListBox.class, objectLocalization);
-		checkWidgetVisibleAndEnable(listBox, objectLocalization);
-		listBox.setSelectedIndex(Integer.parseInt(index));
-		WidgetUtils.click(listBox);
-		WidgetUtils.change(listBox);
+		selectInListBox(listBox, value, objectLocalization);
+	}
+
+	@CsvMethod
+	public void selectInListBoxByIndex(String index, String objectLocalization) {
+		selectInListBox(index, objectLocalization);
 	}
 
 	@CsvMethod
 	public void selectInListBoxByText(String regex, String objectLocalization) {
-		ListBox listBox = getObject(ListBox.class, objectLocalization);
+		selectInListBox(regex, objectLocalization);
+	}
+
+	protected void selectInListBox(ListBox listBox, String regex, String objectLocalization) {
 		checkWidgetVisibleAndEnable(listBox, objectLocalization);
 
-		int selectedIndex = WidgetUtils.getIndexInListBox(listBox, regex);
+		int selectedIndex;
+		String errorMessage;
+		if (regex.matches("^\\d*$")) {
+			selectedIndex = Integer.parseInt(regex);
+			errorMessage = "Cannot select negative index in ListBox <" + regex + ">";
+		} else {
+			selectedIndex = WidgetUtils.getIndexInListBox(listBox, regex);
+			errorMessage = "Regex <" + regex + "> has not been matched in ListBox values";
+		}
 
-		if (selectedIndex != -1) {
+		if (selectedIndex > -1) {
 			listBox.setSelectedIndex(selectedIndex);
 			WidgetUtils.click(listBox);
 			WidgetUtils.change(listBox);
 		} else {
-			Assert.fail("Regex <" + regex + "> has not been matched in ListBox values");
+			Assert.fail(csvRunner.getAssertionErrorMessagePrefix() + errorMessage);
 		}
 	}
 
