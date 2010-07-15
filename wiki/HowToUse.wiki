@@ -19,6 +19,8 @@ First, you have to setup the required dependency in the _pom.xml_ :
 </dependencies>   
 }}}
 
+<a href="http://blog.octo.com/gwt-tests-episode2/">here</a>
+
 If you want to run integration tests with _gwt-test-utils_ scenario writer feature, you would have to setup another dependency : 
 
 {{{
