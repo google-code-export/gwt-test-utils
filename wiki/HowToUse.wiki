@@ -74,4 +74,6 @@ To run your GWT unit tests without Maven, just add the gwt-test-utils-x.jar to t
 
 The needed jars are available through 
  <a href="http://www.octo.com">Octo Technology</a>.
+
+[http://forge.octo.com/nexus/content/repositories/releases/com/octo/gwt/test/ gwt-test-utils repository]
 <a href="http://forge.octo.com/nexus/content/repositories/releases/com/octo/gwt/test/">gwt-test-utils repository</a>, which is provided by Octo Technology.
