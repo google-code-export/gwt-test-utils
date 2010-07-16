@@ -114,7 +114,7 @@ public class XPathParser extends Parser {
 		Node currentNode;
 	}
 
-	protected Stack token_stack = new Stack();
+	protected Stack<token_scope> token_stack = new Stack<token_scope>();
 
 	public static class token_return extends ParserRuleReturnScope {
 		public Node result;
@@ -727,8 +727,6 @@ public class XPathParser extends Parser {
 		Object root_0 = null;
 
 		Token set17 = null;
-
-		Object set17_tree = null;
 
 		try {
 			// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:58:12: ( ( VALUE | LABEL ) )
