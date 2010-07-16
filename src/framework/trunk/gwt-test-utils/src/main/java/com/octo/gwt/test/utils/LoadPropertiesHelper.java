@@ -5,7 +5,6 @@ import java.io.InputStream;
 import java.io.Reader;
 import java.util.Properties;
 
-
 // Code copy paste from Properties class from JDK 1.6
 
 public class LoadPropertiesHelper {
@@ -32,9 +31,8 @@ public class LoadPropertiesHelper {
 	 * <code>'!'</code> as its first non-white space character; comment lines
 	 * are also ignored and do not encode key-element information. In addition
 	 * to line terminators, this format considers the characters space (
-	 * <code>' '</code>, <code>'&#92;u0020'</code>), tab (<code>'\t'</code>,
-	 * <code>'&#92;u0009'</code>), and form feed (<code>'\f'</code>,
-	 * <code>'&#92;u000C'</code>) to be white space.
+	 * <code>' '</code>, <code>'&#92;u0020'</code>), tab (<code>'\t'</code>, <code>'&#92;u0009'</code>), and form feed
+	 * (<code>'\f'</code>, <code>'&#92;u000C'</code>) to be white space.
 	 * 
 	 * <p>
 	 * If a logical line is spread across several natural lines, the backslash
@@ -138,11 +136,10 @@ public class LoadPropertiesHelper {
 	 * 
 	 * <li>The method does not treat a backslash character, <code>\</code>,
 	 * before a non-valid escape character as an error; the backslash is
-	 * silently dropped. For example, in a Java string the sequence
-	 * <code>"\z"</code> would cause a compile time error. In contrast, this
-	 * method silently drops the backslash. Therefore, this method treats the
-	 * two character sequence <code>"\b"</code> as equivalent to the single
-	 * character <code>'b'</code>.
+	 * silently dropped. For example, in a Java string the sequence <code>"\z"</code> would
+	 * cause a compile time error. In contrast, this method silently drops the
+	 * backslash. Therefore, this method treats the two character sequence
+	 * <code>"\b"</code> as equivalent to the single character <code>'b'</code>.
 	 * 
 	 * <li>Escapes are not necessary for single and double quotes; however, by
 	 * the rule above, single and double quote characters preceded by a
@@ -309,7 +306,6 @@ public class LoadPropertiesHelper {
 			valueStart = limit;
 			hasSep = false;
 
-			//System.out.println("line=<" + new String(lineBuf, 0, limit) + ">");
 			precedingBackslash = false;
 			while (keyLen < limit) {
 				c = lr.lineBuf[keyLen];

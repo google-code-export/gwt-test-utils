@@ -31,6 +31,63 @@ public class WidgetUtilsTest extends AbstractGwtTest {
 	}
 
 	@Test
+	public void checkAssertListBoxDataMatch() {
+		// Setup
+		ListBox lb = new ListBox();
+		lb.addItem("item0");
+		lb.addItem("item1");
+		lb.addItem("item2");
+
+		String[] content = new String[] { "item0", "item1", "item2" };
+
+		// Test & Assert
+		Assert.assertTrue(WidgetUtils.assertListBoxDataMatch(lb, content));
+	}
+
+	@Test
+	public void checkAssertListBoxDataDoNotMatchMissingElement() {
+		// Setup
+		ListBox lb = new ListBox();
+		lb.addItem("item0");
+		lb.addItem("item1");
+
+		String[] content = new String[] { "item0", "item1", "item2" };
+
+		// Test & Assert
+		Assert.assertFalse(WidgetUtils.assertListBoxDataMatch(lb, content));
+	}
+
+	@Test
+	public void checkAssertListBoxDataDoNotMatchDifferentElement() {
+		// Setup
+		ListBox lb = new ListBox();
+		lb.addItem("item0");
+		lb.addItem("item1");
+		lb.addItem("iTem2");
+
+		String[] content = new String[] { "item0", "item1", "item2" };
+
+		// Test & Assert
+		Assert.assertFalse(WidgetUtils.assertListBoxDataMatch(lb, content));
+	}
+
+	@Test
+	public void checkGetListBoxContentToString() {
+		// Setup
+		ListBox lb = new ListBox();
+		lb.addItem("item0");
+		lb.addItem("item1");
+		lb.addItem("item2");
+
+		String expected = "item0 | item1 | item2 |";
+
+		// Test
+		String actual = WidgetUtils.getListBoxContentToString(lb);
+
+		Assert.assertEquals(expected, actual);
+	}
+
+	@Test
 	public void checkMenuBarItems() {
 		// Setup
 		MenuBar bar = new MenuBar();

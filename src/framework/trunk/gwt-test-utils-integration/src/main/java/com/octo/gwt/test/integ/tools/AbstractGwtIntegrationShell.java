@@ -438,6 +438,16 @@ public abstract class AbstractGwtIntegrationShell {
 	}
 
 	@CsvMethod
+	public void assertListBoxDataEquals(String commaSeparatedContent, String objectLocalization) {
+		ListBox listBox = getObject(ListBox.class, objectLocalization);
+		String[] content = commaSeparatedContent.split("\\s*,\\s*");
+		if (!WidgetUtils.assertListBoxDataMatch(listBox, content)) {
+			String lbContent = WidgetUtils.getListBoxContentToString(listBox);
+			Assert.fail(csvRunner.getAssertionErrorMessagePrefix() + "Content is not equal to listBox content : " + lbContent);
+		}
+	}
+
+	@CsvMethod
 	public void selectInListBox(String value, String objectLocalization) {
 		ListBox listBox = getObject(ListBox.class, objectLocalization);
 		selectInListBox(listBox, value, objectLocalization);
@@ -471,6 +481,7 @@ public abstract class AbstractGwtIntegrationShell {
 			WidgetUtils.click(listBox);
 			WidgetUtils.change(listBox);
 		} else {
+			errorMessage += WidgetUtils.getListBoxContentToString(listBox);
 			Assert.fail(csvRunner.getAssertionErrorMessagePrefix() + errorMessage);
 		}
 	}

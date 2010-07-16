@@ -57,6 +57,28 @@ public class WidgetUtils {
 		return true;
 	}
 
+	public static boolean assertListBoxDataMatch(ListBox listBox, String[] content) {
+		int contentSize = content.length;
+		if (contentSize != listBox.getItemCount()) {
+			return false;
+		}
+		for (int i = 0; i < contentSize; i++) {
+			if (!content[i].equals(listBox.getItemText(i))) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	public static String getListBoxContentToString(ListBox listBox) {
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < listBox.getItemCount(); i++) {
+			sb.append(listBox.getItemText(i)).append(" | ");
+		}
+		return sb.substring(0, sb.length() - 1);
+	}
+
 	public static int getIndexInListBox(ListBox listBox, String regex) {
 		int selectedIndex = -1;
 
@@ -115,20 +137,24 @@ public class WidgetUtils {
 	}
 
 	public static void click(MenuBar parent, MenuItem clickedItem) {
+		checkIsClickable(parent, null, null);
 		parent.onBrowserEvent(new OverrideEvent(Event.ONCLICK, clickedItem.getElement()));
 	}
 
 	public static void click(MenuBar parent, int clickedItemIndex) {
-		List<MenuItem> menuItems = GwtTestReflectionUtils.getPrivateFieldValue(parent, "items");
+		checkIsClickable(parent, null, null);
+		List<MenuItem> menuItems = getMenuItems(parent);
 		MenuItem itemToClick = menuItems.get(clickedItemIndex);
 		click(parent, itemToClick);
 	}
 
 	public static void click(Grid grid, int row, int column) {
+		checkIsClickable(grid, null, null);
 		grid.onBrowserEvent(new OverrideEvent(Event.ONCLICK, grid.getWidget(row, column).getElement()));
 	}
 
 	public static void click(ComplexPanel panel, int index) {
+		checkIsClickable(panel, null, null);
 		panel.onBrowserEvent(new OverrideEvent(Event.ONCLICK, panel.getWidget(index).getElement()));
 	}
 
