@@ -49,7 +49,7 @@ When the button is clicked, the label display "_The button was clicked !_". This
 Now, we want to write a unit test to ensure clicking the button always will display "_The button was clicked !_" in the label :
 
 {{{
-public class SimpleCompositeTest extends AbstractGWTTest {
+public class SimpleCompositeTest extends AbstractGwtTest {
 
    // the tested composite
    private SimpleComposite composite;
@@ -63,13 +63,13 @@ public class SimpleCompositeTest extends AbstractGWTTest {
    @Test
    public void checkClick() {
       // With this helper method, we can get private Widget in the composite
-      Button button = ReflectionUtils.getPrivateFieldValue(composite, "button");
-      Label label = ReflectionUtils.getPrivateFieldValue(composite, "label");
+      Button button = GwtTestReflectionUtils.getPrivateFieldValue(composite, "button");
+      Label label = GwtTestReflectionUtils.getPrivateFieldValue(composite, "label");
 		
       // ensure label is empty
       Assert.assertEquals(null, label.getText());
 		
-      // simule the click event with AbstractGWTTest method
+      // simule the click event with AbstractGwtTest method
       click(button);
 		
       // assert the label has been filled
@@ -78,9 +78,9 @@ public class SimpleCompositeTest extends AbstractGWTTest {
 }
 }}}
 
-Note that the test class *must* extends {{{AbstractGWTTest}}}, which provide the mecanism to allow the instanciation of GWT component in the JVM.
+Note that the test class *must* extends {{{AbstractGwtTest}}}, which provide the mecanism to allow the instanciation of GWT component in the JVM.
 
-{{{AbstractGWTTest}}} also provide some helpfull method to simule User Event, such as click, double-click, blur, etc.
+{{{AbstractGwtTest}}} also provide some helpfull method to simule User Event, such as click, double-click, blur, etc.
 
 
 = Tests with a GWT RPC call =
@@ -177,7 +177,7 @@ Clicking the button will make a server call, to say hello to "OCTO". As a result
 Let's create unit tests to simule the two possibilities :
 
 {{{
-public class RPCCompositeTest extends AbstractGWTEasyMockTest {
+public class RPCCompositeTest extends AbstractGwtEasyMockTest {
 
    @Mock
    private RCPServiceAsync service;
@@ -193,8 +193,8 @@ public class RPCCompositeTest extends AbstractGWTEasyMockTest {
    @Test
    public void checkRPCCallSuccess() {
       //Setup
-      Button button = ReflectionUtils.getPrivateFieldValue(composite, "button");
-      Label label = ReflectionUtils.getPrivateFieldValue(composite, "label");
+      Button button = GwtTestReflectionUtils.getPrivateFieldValue(composite, "button");
+      Label label = GwtTestReflectionUtils.getPrivateFieldValue(composite, "label");
 
       service.sayHello(EasyMock.eq("OCTO"), EasyMock.isA(AsyncCallback.class));
 
@@ -215,8 +215,8 @@ public class RPCCompositeTest extends AbstractGWTEasyMockTest {
    @Test
    public void checkRPCCallFailure() {
       //Setup
-      Button button = ReflectionUtils.getPrivateFieldValue(composite, "button");
-      Label label = ReflectionUtils.getPrivateFieldValue(composite, "label");
+      Button button = GwtTestReflectionUtils.getPrivateFieldValue(composite, "button");
+      Label label = GwtTestReflectionUtils.getPrivateFieldValue(composite, "label");
 
       service.sayHello(EasyMock.eq("OCTO"), EasyMock.isA(AsyncCallback.class));
 
@@ -235,7 +235,7 @@ public class RPCCompositeTest extends AbstractGWTEasyMockTest {
 }
 }}}
 
-This time, we extended {{{AbstractGWTEasyMockTest}}}, a subclass of {{{AbstractGWTTest}}} which provide some helpfull methods to inject mock object and use them :
+This time, we extended {{{AbstractGwtEasyMockTest}}}, a subclass of {{{AbstractGwtTest}}} which provide some helpfull methods to inject mock object and use them :
 
 *{{{@Mock}}}* tell _gwt-test-utils_ to create a mock object
 
