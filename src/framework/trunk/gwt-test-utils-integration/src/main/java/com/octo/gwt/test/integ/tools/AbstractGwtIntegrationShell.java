@@ -522,7 +522,7 @@ public abstract class AbstractGwtIntegrationShell {
 	@CsvMethod
 	public void isNotVisible(String objectLocalization) {
 		Widget widget = getObject(Widget.class, objectLocalization);
-		Assert.assertFalse(csvRunner.getAssertionErrorMessagePrefix() + "Visible " + objectLocalization, widget.isVisible());
+		Assert.assertFalse(csvRunner.getAssertionErrorMessagePrefix() + "Visible " + objectLocalization, WidgetUtils.isWidgetVisible(widget));
 	}
 
 	@CsvMethod
