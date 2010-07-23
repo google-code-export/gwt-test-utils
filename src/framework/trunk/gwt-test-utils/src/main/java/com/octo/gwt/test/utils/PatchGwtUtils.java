@@ -3,7 +3,9 @@ package com.octo.gwt.test.utils;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
@@ -20,6 +22,25 @@ import com.octo.gwt.test.PatchGwtConfig;
 import com.octo.gwt.test.internal.patcher.tools.AutomaticPatcher;
 
 public class PatchGwtUtils {
+
+	public static class SequenceReplacement {
+
+		private String regex;
+
+		private String to;
+
+		public String treat(String s) {
+			return s.replaceAll(regex, to);
+		}
+
+		public SequenceReplacement(String regex, String to) {
+			this.regex = regex;
+			this.to = to;
+		}
+
+	}
+
+	public static final List<SequenceReplacement> sequenceReplacementList = new ArrayList<SequenceReplacement>();
 
 	private static Map<String, Properties> cachedProperties = new HashMap<String, Properties>();
 
@@ -83,6 +104,7 @@ public class PatchGwtUtils {
 
 	public static void reset() {
 		cachedProperties.clear();
+		sequenceReplacementList.clear();
 	}
 
 	public static void patch(CtClass c, IPatcher patcher) throws Exception {

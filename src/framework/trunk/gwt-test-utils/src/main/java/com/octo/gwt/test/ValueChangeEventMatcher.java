@@ -25,9 +25,8 @@ public class ValueChangeEventMatcher<T> implements IArgumentMatcher {
 		return false;
 	}
 
-	@SuppressWarnings("unchecked")
 	public static <X> ValueChangeEvent<X> eq(X expectedValue) {
-		EasyMock.reportMatcher(new ValueChangeEventMatcher(expectedValue));
+		EasyMock.reportMatcher(new ValueChangeEventMatcher<X>(expectedValue));
 		return null;
 	}
 

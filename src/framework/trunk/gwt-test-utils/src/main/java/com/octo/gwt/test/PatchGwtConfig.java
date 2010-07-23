@@ -4,8 +4,8 @@ import java.util.Locale;
 
 import com.octo.gwt.test.internal.patcher.GwtPatcher;
 import com.octo.gwt.test.internal.patcher.ImplPatcher;
-import com.octo.gwt.test.utils.LoadPropertiesHelper;
-import com.octo.gwt.test.utils.LoadPropertiesHelper.SequenceReplacement;
+import com.octo.gwt.test.utils.PatchGwtUtils;
+import com.octo.gwt.test.utils.PatchGwtUtils.SequenceReplacement;
 
 public class PatchGwtConfig {
 
@@ -36,7 +36,7 @@ public class PatchGwtConfig {
 	}
 
 	public static void replaceSequenceInProperties(String regex, String to) {
-		LoadPropertiesHelper.sequenceReplacementList.add(new SequenceReplacement(regex, to));
+		PatchGwtUtils.sequenceReplacementList.add(new SequenceReplacement(regex, to));
 	}
 
 	public static void reset() {

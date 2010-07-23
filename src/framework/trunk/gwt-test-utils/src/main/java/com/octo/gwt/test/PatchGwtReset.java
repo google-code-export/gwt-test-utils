@@ -16,7 +16,6 @@ import com.octo.gwt.test.internal.patcher.ImplPatcher;
 import com.octo.gwt.test.internal.patcher.TimerPatcher;
 import com.octo.gwt.test.internal.patcher.dom.NodeFactory;
 import com.octo.gwt.test.utils.GwtTestReflectionUtils;
-import com.octo.gwt.test.utils.LoadPropertiesHelper;
 import com.octo.gwt.test.utils.PatchGwtUtils;
 
 public class PatchGwtReset {
@@ -24,7 +23,6 @@ public class PatchGwtReset {
 	public static void reset() throws Exception {
 		NodeFactory.reset();
 		PatchGwtConfig.reset();
-		LoadPropertiesHelper.reset();
 		CurrencyListPatcher.reset();
 		PatchGwtUtils.reset();
 		HistoryImplPatcher.reset();
@@ -48,8 +46,10 @@ public class PatchGwtReset {
 		GwtTestReflectionUtils.callPrivateMethod(GwtTestReflectionUtils.getPrivateFieldValue(commandExecutor, "commands"), "clear");
 
 		HistoryImpl historyImpl = GwtTestReflectionUtils.getStaticFieldValue(History.class, "impl");
-		GwtTestReflectionUtils.callPrivateMethod(GwtTestReflectionUtils.getPrivateFieldValue(GwtTestReflectionUtils.getPrivateFieldValue(
-				GwtTestReflectionUtils.getPrivateFieldValue(historyImpl, "handlers"), "registry"), "map"), "clear");
+		GwtTestReflectionUtils
+				.callPrivateMethod(
+						GwtTestReflectionUtils.getPrivateFieldValue(GwtTestReflectionUtils.getPrivateFieldValue(
+								GwtTestReflectionUtils.getPrivateFieldValue(historyImpl, "handlers"), "registry"), "map"), "clear");
 
 		GwtTestReflectionUtils.setStaticField(NumberFormat.class, "cachedDecimalFormat", null);
 		GwtTestReflectionUtils.setStaticField(NumberFormat.class, "cachedScientificFormat", null);

@@ -3,8 +3,10 @@ package com.octo.gwt.test.internal.patcher.tools.i18n;
 import java.lang.reflect.Method;
 import java.util.Properties;
 
-import com.google.gwt.i18n.client.LocalizableResource;
 import com.google.gwt.i18n.client.Constants.DefaultStringValue;
+import com.google.gwt.i18n.client.LocalizableResource;
+import com.octo.gwt.test.utils.PatchGwtUtils;
+import com.octo.gwt.test.utils.PatchGwtUtils.SequenceReplacement;
 
 public class ConstantsInvocationHandler extends LocalizableResourcesInvocationHandler {
 
@@ -29,6 +31,11 @@ public class ConstantsInvocationHandler extends LocalizableResourcesInvocationHa
 
 			line = v.value();
 		}
+
+		for (SequenceReplacement sr : PatchGwtUtils.sequenceReplacementList) {
+			line = sr.treat(line);
+		}
+
 		if (method.getReturnType() == String.class) {
 			return line;
 		}
