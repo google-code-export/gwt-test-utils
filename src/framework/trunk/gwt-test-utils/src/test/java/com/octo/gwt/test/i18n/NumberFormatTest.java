@@ -1,4 +1,4 @@
-package com.octo.gwt.test;
+package com.octo.gwt.test.i18n;
 
 import java.util.Locale;
 
@@ -6,6 +6,9 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.google.gwt.i18n.client.NumberFormat;
+import com.octo.gwt.test.AbstractGwtTest;
+import com.octo.gwt.test.PatchGwtConfig;
+import com.octo.gwt.test.internal.patcher.CurrencyListPatcher;
 
 public class NumberFormatTest extends AbstractGwtTest {
 
@@ -22,6 +25,7 @@ public class NumberFormatTest extends AbstractGwtTest {
 	@Test
 	public void checkNumberFormatUs() {
 		PatchGwtConfig.setLocale(Locale.US);
+		CurrencyListPatcher.reset();
 
 		Assert.assertEquals("$10.00", NumberFormat.getCurrencyFormat().format(10));
 		Assert.assertEquals("3.142", NumberFormat.getDecimalFormat().format(3.1416));

@@ -7,8 +7,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.i18n.client.Constants;
 import com.google.gwt.i18n.client.CurrencyList;
+import com.google.gwt.i18n.client.LocalizableResource;
 import com.google.gwt.i18n.client.impl.CldrImpl;
 import com.google.gwt.i18n.client.impl.LocaleInfoImpl;
 import com.google.gwt.resources.client.ClientBundle;
@@ -39,6 +39,7 @@ import com.octo.gwt.test.internal.patcher.dom.DOMImplUserSubClassPatcher;
 import com.octo.gwt.test.internal.patcher.tools.AutomaticPatcher;
 import com.octo.gwt.test.internal.patcher.tools.PatchClass;
 import com.octo.gwt.test.internal.patcher.tools.PatchMethod;
+import com.octo.gwt.test.internal.patcher.tools.i18n.LocalizableResourceProxyFactory;
 import com.octo.gwt.test.internal.patcher.tools.resources.ClientBundleProxyFactory;
 import com.octo.gwt.test.utils.PatchGwtUtils;
 
@@ -111,9 +112,7 @@ public class GwtPatcher extends AutomaticPatcher {
 		if (classLiteral == DateBox.DefaultFormat.class) {
 			return new DateBox.DefaultFormat();
 		}
-		if (Constants.class.isAssignableFrom(classLiteral)) {
-			return generateConstantWrapper(classLiteral);
-		}
+
 		if (classLiteral == MenuBar.Resources.class) {
 			return new MenuBar.Resources() {
 
@@ -132,6 +131,10 @@ public class GwtPatcher extends AutomaticPatcher {
 			return generateImageWrapper(classLiteral);
 		}
 
+		if (LocalizableResource.class.isAssignableFrom(classLiteral)) {
+			return LocalizableResourceProxyFactory.getFactory((Class<? extends LocalizableResource>) classLiteral).createProxy();
+		}
+
 		if (ClientBundle.class.isAssignableFrom(classLiteral)) {
 			return ClientBundleProxyFactory.getFactory((Class<? extends ClientBundle>) classLiteral).createProxy();
 		}
@@ -148,11 +151,6 @@ public class GwtPatcher extends AutomaticPatcher {
 		return o;
 	}
 
-	private static Object generateConstantWrapper(Class<?> clazz) {
-		InvocationHandler ih = new ConstantInvocationHandler(clazz);
-		return Proxy.newProxyInstance(clazz.getClassLoader(), new Class<?>[] { clazz }, ih);
-	}
-
 	private static Object generateImageWrapper(Class<?> clazz) {
 		InvocationHandler ih = new InvocationHandler() {
 
@@ -165,20 +163,6 @@ public class GwtPatcher extends AutomaticPatcher {
 
 		};
 		return Proxy.newProxyInstance(clazz.getClassLoader(), new Class<?>[] { clazz }, ih);
-	}
-
-	private static class ConstantInvocationHandler implements InvocationHandler {
-
-		private Class<?> wrappedClass;
-
-		public ConstantInvocationHandler(Class<?> wrappedClass) {
-			this.wrappedClass = wrappedClass;
-		}
-
-		public Object invoke(Object arg0, Method method, Object[] params) throws Throwable {
-			return PatchGwtUtils.extractFromPropertiesFile(wrappedClass, method);
-		}
-
 	}
 
 }

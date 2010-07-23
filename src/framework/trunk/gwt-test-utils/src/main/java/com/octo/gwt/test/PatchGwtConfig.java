@@ -4,13 +4,19 @@ import java.util.Locale;
 
 import com.octo.gwt.test.internal.patcher.GwtPatcher;
 import com.octo.gwt.test.internal.patcher.ImplPatcher;
-import com.octo.gwt.test.utils.PatchGwtUtils;
-import com.octo.gwt.test.utils.PatchGwtUtils.SequenceReplacement;
+import com.octo.gwt.test.utils.LoadPropertiesHelper;
+import com.octo.gwt.test.utils.LoadPropertiesHelper.SequenceReplacement;
 
 public class PatchGwtConfig {
 
+	private static Locale locale;
+
 	public static void setLocale(Locale locale) {
-		PatchGwtUtils.locale = locale;
+		PatchGwtConfig.locale = locale;
+	}
+
+	public static Locale getLocale() {
+		return locale;
 	}
 
 	public static void addCreateClass(Class<?> classLiteral, Object object) {
@@ -30,7 +36,11 @@ public class PatchGwtConfig {
 	}
 
 	public static void replaceSequenceInProperties(String regex, String to) {
-		PatchGwtUtils.sequenceReplacementList.add(new SequenceReplacement(regex, to));
+		LoadPropertiesHelper.sequenceReplacementList.add(new SequenceReplacement(regex, to));
+	}
+
+	public static void reset() {
+		locale = null;
 	}
 
 }

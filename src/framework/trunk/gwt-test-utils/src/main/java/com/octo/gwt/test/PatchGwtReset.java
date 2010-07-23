@@ -16,12 +16,15 @@ import com.octo.gwt.test.internal.patcher.ImplPatcher;
 import com.octo.gwt.test.internal.patcher.TimerPatcher;
 import com.octo.gwt.test.internal.patcher.dom.NodeFactory;
 import com.octo.gwt.test.utils.GwtTestReflectionUtils;
+import com.octo.gwt.test.utils.LoadPropertiesHelper;
 import com.octo.gwt.test.utils.PatchGwtUtils;
 
 public class PatchGwtReset {
 
 	public static void reset() throws Exception {
 		NodeFactory.reset();
+		PatchGwtConfig.reset();
+		LoadPropertiesHelper.reset();
 		CurrencyListPatcher.reset();
 		PatchGwtUtils.reset();
 		HistoryImplPatcher.reset();

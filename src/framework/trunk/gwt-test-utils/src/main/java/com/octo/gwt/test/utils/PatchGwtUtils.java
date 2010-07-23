@@ -1,16 +1,11 @@
 package com.octo.gwt.test.utils;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Properties;
 
 import javassist.CannotCompileException;
@@ -18,36 +13,15 @@ import javassist.CtClass;
 import javassist.CtConstructor;
 import javassist.CtMethod;
 
-import com.google.gwt.i18n.client.Constants.DefaultStringValue;
 import com.octo.gwt.test.GwtTestClassLoader;
 import com.octo.gwt.test.IPatcher;
 import com.octo.gwt.test.PatchGwtClassPool;
+import com.octo.gwt.test.PatchGwtConfig;
 import com.octo.gwt.test.internal.patcher.tools.AutomaticPatcher;
 
 public class PatchGwtUtils {
 
 	private static Map<String, Properties> cachedProperties = new HashMap<String, Properties>();
-
-	public static class SequenceReplacement {
-
-		private String regex;
-
-		private String to;
-
-		public String treat(String s) {
-			return s.replaceAll(regex, to);
-		}
-
-		public SequenceReplacement(String regex, String to) {
-			this.regex = regex;
-			this.to = to;
-		}
-
-	}
-
-	public static final List<SequenceReplacement> sequenceReplacementList = new ArrayList<SequenceReplacement>();
-
-	public static Locale locale;
 
 	public static Properties getProperties(String path) {
 		Properties properties = cachedProperties.get(path);
@@ -64,50 +38,20 @@ public class PatchGwtUtils {
 			properties = new Properties();
 			InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
 			LoadPropertiesHelper.load(properties, inputStreamReader);
-			for (Entry<Object, Object> entry : properties.entrySet()) {
-				for (SequenceReplacement strangeCharacterMapping : sequenceReplacementList) {
-					entry.setValue(strangeCharacterMapping.treat((String) entry.getValue()));
-				}
-			}
 			cachedProperties.put(path, properties);
 			return properties;
 		} catch (Exception e) {
-			throw new RuntimeException("Unable to load property file" + path, e);
+			throw new RuntimeException("Unable to load property file [" + path + "]", e);
 		}
 	}
 
-	public static Properties getLocalizedProperties(String prefix) throws IOException {
+	public static Properties getLocalizedProperties(String prefix, Locale locale) {
 		if (locale == null) {
-			throw new RuntimeException("No locale specified, please call PatchGwtConfig.setLocale(...)");
+			throw new RuntimeException("Unable to determine a Locale to load file [" + prefix + "]. Please set one with "
+					+ PatchGwtConfig.class.getSimpleName() + "setLocale(...)");
 		}
 		String localeLanguage = locale.getLanguage();
 		return getProperties(prefix + "_" + localeLanguage);
-	}
-
-	public static Object extractFromPropertiesFile(Class<?> clazz, Method method) throws IOException {
-		String line = null;
-		Properties properties = getLocalizedProperties(clazz.getCanonicalName().replaceAll("\\.", "/"));
-		if (properties != null) {
-			line = properties.getProperty(method.getName());
-		}
-		if (line == null) {
-			DefaultStringValue v = method.getAnnotation(DefaultStringValue.class);
-			if (v == null) {
-				throw new UnsupportedOperationException("No matching property \"" + method.getName() + "\" for i18n class ["
-						+ clazz.getCanonicalName() + "]. Please use the DefaultStringValue annotation");
-			}
-
-			String result = v.value();
-			for (SequenceReplacement strangeCharacterMapping : sequenceReplacementList) {
-				result = strangeCharacterMapping.treat(result);
-			}
-			return result;
-		}
-		if (method.getReturnType() == String.class) {
-			return line;
-		}
-		String[] result = line.split(", ");
-		return result;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -138,8 +82,6 @@ public class PatchGwtUtils {
 	}
 
 	public static void reset() {
-		sequenceReplacementList.clear();
-		locale = null;
 		cachedProperties.clear();
 	}
 
