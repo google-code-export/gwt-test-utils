@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.google.gwt.i18n.client.Constants;
+import com.google.gwt.i18n.client.ConstantsWithLookup;
 import com.google.gwt.i18n.client.LocalizableResource;
 
 public class LocalizableResourceProxyFactory {
@@ -36,6 +37,9 @@ public class LocalizableResourceProxyFactory {
 
 	@SuppressWarnings("unchecked")
 	private InvocationHandler createInvocationHandler(Class<? extends LocalizableResource> clazz) {
+		if (ConstantsWithLookup.class.isAssignableFrom(clazz)) {
+			return new ConstantsWithLookupInvocationHandler((Class<? extends ConstantsWithLookup>) clazz);
+		}
 		if (Constants.class.isAssignableFrom(clazz)) {
 			return new ConstantsInvocationHandler((Class<? extends Constants>) clazz);
 		} else {

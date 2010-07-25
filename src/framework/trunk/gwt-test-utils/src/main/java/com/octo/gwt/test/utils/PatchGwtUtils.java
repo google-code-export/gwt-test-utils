@@ -18,7 +18,6 @@ import javassist.CtMethod;
 import com.octo.gwt.test.GwtTestClassLoader;
 import com.octo.gwt.test.IPatcher;
 import com.octo.gwt.test.PatchGwtClassPool;
-import com.octo.gwt.test.PatchGwtConfig;
 import com.octo.gwt.test.internal.patcher.tools.AutomaticPatcher;
 
 public class PatchGwtUtils {
@@ -67,12 +66,10 @@ public class PatchGwtUtils {
 	}
 
 	public static Properties getLocalizedProperties(String prefix, Locale locale) {
-		if (locale == null) {
-			throw new RuntimeException("Unable to determine a Locale to load file [" + prefix + "]. Please set one with "
-					+ PatchGwtConfig.class.getSimpleName() + "setLocale(...)");
+		if (locale != null) {
+			prefix += ("_" + locale.toString());
 		}
-		String localeLanguage = locale.getLanguage();
-		return getProperties(prefix + "_" + localeLanguage);
+		return getProperties(prefix);
 	}
 
 	@SuppressWarnings("unchecked")

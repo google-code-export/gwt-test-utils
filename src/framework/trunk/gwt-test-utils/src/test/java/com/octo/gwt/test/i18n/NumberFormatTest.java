@@ -24,7 +24,7 @@ public class NumberFormatTest extends AbstractGwtTest {
 
 	@Test
 	public void checkNumberFormatUs() {
-		PatchGwtConfig.setLocale(Locale.US);
+		PatchGwtConfig.setLocale(Locale.ENGLISH);
 		CurrencyListPatcher.reset();
 
 		Assert.assertEquals("$10.00", NumberFormat.getCurrencyFormat().format(10));

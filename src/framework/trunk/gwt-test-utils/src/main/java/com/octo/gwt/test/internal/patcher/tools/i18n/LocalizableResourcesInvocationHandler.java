@@ -2,9 +2,7 @@ package com.octo.gwt.test.internal.patcher.tools.i18n;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Properties;
 
 import com.google.gwt.i18n.client.LocalizableResource;
@@ -16,7 +14,6 @@ import com.octo.gwt.test.utils.PatchGwtUtils;
 public abstract class LocalizableResourcesInvocationHandler implements InvocationHandler {
 
 	private Class<? extends LocalizableResource> proxiedClass;
-	private Map<String, Properties> localizedProperties = new HashMap<String, Properties>();
 
 	public LocalizableResourcesInvocationHandler(Class<? extends LocalizableResource> proxiedClass) {
 		this.proxiedClass = proxiedClass;
@@ -24,18 +21,35 @@ public abstract class LocalizableResourcesInvocationHandler implements Invocatio
 
 	public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 		Locale locale = getResourceLocale(proxiedClass);
-		Properties prop = localizedProperties.get(locale.toString());
-		if (prop == null) {
-			prop = PatchGwtUtils.getLocalizedProperties(proxiedClass.getCanonicalName().replaceAll("\\.", "/"), locale);
-			localizedProperties.put(locale.toString(), prop);
+		Properties prop = PatchGwtUtils.getLocalizedProperties(proxiedClass.getCanonicalName().replaceAll("\\.", "/"), locale);
+
+		Object result = null;
+		if (prop != null) {
+			result = extractFromProperties(prop, method, args);
 		}
-		return extractFromProperties(proxiedClass, prop, method, args);
+
+		if (result != null) {
+			return result;
+		}
+
+		result = extractDefaultValue(method, args);
+
+		if (result != null) {
+			return result;
+		}
+
+		throw new RuntimeException("Unable to find a Locale specific resource file to bind with i18n interface '" + proxiedClass.getName()
+				+ "' and there is no @DefaultXXXValue annotation on '" + method.getName() + "' called method");
 	}
 
-	protected abstract Object extractFromProperties(Class<? extends LocalizableResource> clazz, Properties localizedProperties, Method method,
-			Object[] args) throws Throwable;
+	protected abstract Object extractFromProperties(Properties localizedProperties, Method method, Object[] args) throws Throwable;
+
+	protected abstract Object extractDefaultValue(Method method, Object[] args) throws Throwable;
 
 	private static Locale getResourceLocale(Class<?> clazz) {
+		if (PatchGwtConfig.getLocale() != null) {
+			return PatchGwtConfig.getLocale();
+		}
 		DefaultLocale annotation = GwtTestReflectionUtils.getAnnotation(clazz, DefaultLocale.class);
 		if (annotation != null) {
 			String[] localeCodes = annotation.value().split("_");
@@ -49,7 +63,7 @@ public abstract class LocalizableResourcesInvocationHandler implements Invocatio
 						+ DefaultLocale.class.getSimpleName() + "(" + annotation.value() + ")");
 			}
 		} else {
-			return PatchGwtConfig.getLocale();
+			return null;
 		}
 	}
 
