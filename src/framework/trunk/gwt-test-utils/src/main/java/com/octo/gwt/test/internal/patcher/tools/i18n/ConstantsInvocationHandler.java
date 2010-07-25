@@ -71,29 +71,28 @@ public class ConstantsInvocationHandler extends LocalizableResourcesInvocationHa
 
 	@Override
 	protected Object extractDefaultValue(Method method, Object[] args) throws Throwable {
-		Class<?> clazz = method.getDeclaringClass();
 		Class<?> returnType = method.getReturnType();
 		if (returnType == String.class) {
-			DefaultStringValue a = getCheckedAnnotation(clazz, method, DefaultStringValue.class);
+			DefaultStringValue a = getCheckedAnnotation(method, DefaultStringValue.class);
 			return treatLine(a.value());
 		} else if (returnType.isArray() && returnType.getComponentType() == String.class) {
-			DefaultStringArrayValue a = getCheckedAnnotation(clazz, method, DefaultStringArrayValue.class);
+			DefaultStringArrayValue a = getCheckedAnnotation(method, DefaultStringArrayValue.class);
 			String[] v = a.value();
 			for (int i = 0; i < v.length; i++) {
 				v[i] = treatLine(v[i]);
 			}
 			return v;
 		} else if (returnType == Map.class) {
-			DefaultStringMapValue a = getCheckedAnnotation(clazz, method, DefaultStringMapValue.class);
+			DefaultStringMapValue a = getCheckedAnnotation(method, DefaultStringMapValue.class);
 			String[] v = a.value();
 			Map<String, String> result = new HashMap<String, String>();
 			for (int i = 0; i < v.length; i++) {
 				String methodName = v[i];
-				Method correspondingKeyMethod = clazz.getMethod(methodName);
+				Method correspondingKeyMethod = getProxiedClass().getMethod(methodName);
 				if (correspondingKeyMethod == null) {
-					throw new RuntimeException("Cannot find method '" + methodName + "' in class [" + clazz.getName() + "]");
+					throw new RuntimeException("Cannot find method '" + methodName + "' in class [" + getProxiedClass().getName() + "]");
 				} else if (correspondingKeyMethod.getReturnType() != String.class) {
-					throw new RuntimeException("Method '" + clazz.getSimpleName() + "." + methodName + "()' should return a String");
+					throw new RuntimeException("Method '" + getProxiedClass().getSimpleName() + "." + methodName + "()' should return a String");
 				}
 
 				result.put(methodName, (String) extractDefaultValue(correspondingKeyMethod, null));
@@ -101,21 +100,21 @@ public class ConstantsInvocationHandler extends LocalizableResourcesInvocationHa
 
 			return result;
 		} else if (returnType == Integer.class || returnType == Integer.TYPE) {
-			DefaultIntValue a = getCheckedAnnotation(clazz, method, DefaultIntValue.class);
+			DefaultIntValue a = getCheckedAnnotation(method, DefaultIntValue.class);
 			return a.value();
 		} else if (returnType == Double.class || returnType == Double.TYPE) {
-			DefaultDoubleValue a = getCheckedAnnotation(clazz, method, DefaultDoubleValue.class);
+			DefaultDoubleValue a = getCheckedAnnotation(method, DefaultDoubleValue.class);
 			return a.value();
 		} else if (returnType == Float.class || returnType == Float.TYPE) {
-			DefaultFloatValue a = getCheckedAnnotation(clazz, method, DefaultFloatValue.class);
+			DefaultFloatValue a = getCheckedAnnotation(method, DefaultFloatValue.class);
 			return a.value();
 		} else if (returnType == Boolean.class || returnType == Boolean.TYPE) {
-			DefaultBooleanValue a = getCheckedAnnotation(clazz, method, DefaultBooleanValue.class);
+			DefaultBooleanValue a = getCheckedAnnotation(method, DefaultBooleanValue.class);
 			return a.value();
 		}
 
-		throw new RuntimeException("The return type (" + returnType.getSimpleName() + ") of i18n '" + clazz.getSimpleName() + "." + method.getName()
-				+ "()' is not managed");
+		throw new RuntimeException("The return type (" + returnType.getSimpleName() + ") of i18n '" + getProxiedClass().getSimpleName() + "."
+				+ method.getName() + "()' is not managed");
 
 	}
 
@@ -127,11 +126,12 @@ public class ConstantsInvocationHandler extends LocalizableResourcesInvocationHa
 		return line;
 	}
 
-	private <T extends Annotation> T getCheckedAnnotation(Class<?> clazz, Method method, Class<T> defaultAnnotation) {
+	private <T extends Annotation> T getCheckedAnnotation(Method method, Class<T> defaultAnnotation) {
 		T v = method.getAnnotation(defaultAnnotation);
 		if (v == null) {
-			throw new RuntimeException("No matching property \"" + method.getName() + "\" for Constants class [" + clazz.getCanonicalName()
-					+ "]. Please check the corresponding properties file or use @" + defaultAnnotation.getSimpleName());
+			throw new RuntimeException("No matching property \"" + method.getName() + "\" for Constants class ["
+					+ getProxiedClass().getCanonicalName() + "]. Please check the corresponding properties file or use @"
+					+ defaultAnnotation.getSimpleName());
 		}
 
 		return v;

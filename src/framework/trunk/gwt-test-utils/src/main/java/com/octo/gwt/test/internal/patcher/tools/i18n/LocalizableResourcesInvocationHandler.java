@@ -67,4 +67,8 @@ public abstract class LocalizableResourcesInvocationHandler implements Invocatio
 		}
 	}
 
+	public Class<? extends LocalizableResource> getProxiedClass() {
+		return proxiedClass;
+	}
+
 }
