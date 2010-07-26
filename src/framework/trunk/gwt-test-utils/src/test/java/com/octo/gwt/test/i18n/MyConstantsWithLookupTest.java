@@ -134,7 +134,7 @@ public class MyConstantsWithLookupTest extends AbstractGwtTest {
 		// Test 2 : no @DefaultStringValue
 		try {
 			constants.goodbye();
-			Assert.fail("i18n patching mecanism should throw an exception if no locale and no @DefaultStringValue is set");
+			Assert.fail("i18n patching mechanism should throw an exception if no locale and no @DefaultStringValue is set");
 		} catch (Exception e) {
 			// Assert 2
 			Assert.assertEquals(expectedErrorMessage, e.getMessage());

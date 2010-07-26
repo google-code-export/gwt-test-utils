@@ -9,9 +9,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 import java.util.Map.Entry;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -23,7 +25,7 @@ import com.octo.gwt.test.internal.patcher.tools.PatchClass;
 public class ConfigurationLoader {
 
 	private static final Logger logger = Logger.getLogger(ConfigurationLoader.class);
-	
+
 	private static final String CONFIG_FILENAME = "META-INF/gwt-test-utils.properties";
 
 	private ClassLoader classLoader;
@@ -32,13 +34,13 @@ public class ConfigurationLoader {
 
 	private List<String> notDelegateList;
 
-	private List<String> scanList;
+	private Set<String> scanPackageSet;
 
 	public ConfigurationLoader(ClassLoader classLoader) {
 		this.classLoader = classLoader;
 		this.delegateList = new ArrayList<String>();
 		this.notDelegateList = new ArrayList<String>();
-		this.scanList = new ArrayList<String>();
+		this.scanPackageSet = new HashSet<String>();
 	}
 
 	public void readFiles() throws Exception {
@@ -61,7 +63,9 @@ public class ConfigurationLoader {
 			String value = (String) entry.getValue();
 			if ("scan-package".equals(value)) {
 				logger.debug("Scan package " + key);
-				scanList.add(key);
+				if (!scanPackageSet.add(key)) {
+					throw new RuntimeException("scan-package mechanism is used to scan the same package twice : '" + key + "'");
+				}
 			} else if ("delegate".equals(value)) {
 				logger.debug("Delegate " + key);
 				delegateList.add(key);
@@ -84,7 +88,7 @@ public class ConfigurationLoader {
 
 	public List<String> findScannedClasses() throws Exception {
 		List<String> classList = new ArrayList<String>();
-		for (String s : scanList) {
+		for (String s : scanPackageSet) {
 			String path = s.replaceAll("\\.", "/");
 			logger.info("Scan package " + s);
 			Enumeration<URL> l = classLoader.getResources(path);
