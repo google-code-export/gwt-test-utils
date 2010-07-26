@@ -8,6 +8,7 @@ import java.util.Map;
 import com.google.gwt.i18n.client.Constants;
 import com.google.gwt.i18n.client.ConstantsWithLookup;
 import com.google.gwt.i18n.client.LocalizableResource;
+import com.google.gwt.i18n.client.Messages;
 
 public class LocalizableResourceProxyFactory {
 
@@ -42,9 +43,10 @@ public class LocalizableResourceProxyFactory {
 		}
 		if (Constants.class.isAssignableFrom(clazz)) {
 			return new ConstantsInvocationHandler((Class<? extends Constants>) clazz);
+		} else if (Messages.class.isAssignableFrom(clazz)) {
+			return new MessagesInvocationHandler((Class<? extends Messages>) clazz);
 		} else {
 			throw new RuntimeException("Not managed GWT i18n interface for testing : " + clazz.getSimpleName());
 		}
 	}
-
 }

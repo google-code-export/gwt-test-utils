@@ -3,6 +3,7 @@ package com.octo.gwt.test.internal.patcher.tools.i18n;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 
@@ -24,7 +25,7 @@ public class ConstantsInvocationHandler extends LocalizableResourcesInvocationHa
 	}
 
 	@Override
-	protected Object extractFromProperties(Properties properties, Method method, Object[] args) throws Throwable {
+	protected Object extractFromProperties(Properties properties, Method method, Object[] args, Locale locale) throws Throwable {
 		String line = properties.getProperty(method.getName());
 
 		if (line == null) {
@@ -70,7 +71,7 @@ public class ConstantsInvocationHandler extends LocalizableResourcesInvocationHa
 	}
 
 	@Override
-	protected Object extractDefaultValue(Method method, Object[] args) throws Throwable {
+	protected Object extractDefaultValue(Method method, Object[] args, Locale locale) throws Throwable {
 		Class<?> returnType = method.getReturnType();
 		if (returnType == String.class) {
 			DefaultStringValue a = getCheckedAnnotation(method, DefaultStringValue.class);
@@ -95,7 +96,7 @@ public class ConstantsInvocationHandler extends LocalizableResourcesInvocationHa
 					throw new RuntimeException("Method '" + getProxiedClass().getSimpleName() + "." + methodName + "()' should return a String");
 				}
 
-				result.put(methodName, (String) extractDefaultValue(correspondingKeyMethod, null));
+				result.put(methodName, (String) extractDefaultValue(correspondingKeyMethod, null, locale));
 			}
 
 			return result;

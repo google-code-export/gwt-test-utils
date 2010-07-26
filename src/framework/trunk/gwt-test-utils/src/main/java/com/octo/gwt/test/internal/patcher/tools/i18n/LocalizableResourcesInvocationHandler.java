@@ -25,14 +25,14 @@ public abstract class LocalizableResourcesInvocationHandler implements Invocatio
 
 		Object result = null;
 		if (prop != null) {
-			result = extractFromProperties(prop, method, args);
+			result = extractFromProperties(prop, method, args, locale);
 		}
 
 		if (result != null) {
 			return result;
 		}
 
-		result = extractDefaultValue(method, args);
+		result = extractDefaultValue(method, args, locale);
 
 		if (result != null) {
 			return result;
@@ -42,9 +42,9 @@ public abstract class LocalizableResourcesInvocationHandler implements Invocatio
 				+ "' and there is no @DefaultXXXValue annotation on '" + method.getName() + "' called method");
 	}
 
-	protected abstract Object extractFromProperties(Properties localizedProperties, Method method, Object[] args) throws Throwable;
+	protected abstract Object extractFromProperties(Properties localizedProperties, Method method, Object[] args, Locale locale) throws Throwable;
 
-	protected abstract Object extractDefaultValue(Method method, Object[] args) throws Throwable;
+	protected abstract Object extractDefaultValue(Method method, Object[] args, Locale locale) throws Throwable;
 
 	private static Locale getResourceLocale(Class<?> clazz) {
 		if (PatchGwtConfig.getLocale() != null) {
@@ -69,6 +69,14 @@ public abstract class LocalizableResourcesInvocationHandler implements Invocatio
 
 	public Class<? extends LocalizableResource> getProxiedClass() {
 		return proxiedClass;
+	}
+
+	protected String extractProperty(Properties properties, String key) {
+		String result = properties.getProperty(key);
+		if (result == null) {
+			result = properties.getProperty(key.replaceAll("_", "."));
+		}
+		return result;
 	}
 
 }

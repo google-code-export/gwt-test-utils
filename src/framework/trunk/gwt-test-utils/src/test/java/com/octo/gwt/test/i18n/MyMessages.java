@@ -1,17 +1,19 @@
 package com.octo.gwt.test.i18n;
 
-import com.google.gwt.i18n.client.Messages;
 import com.google.gwt.i18n.client.LocalizableResource.DefaultLocale;
+import com.google.gwt.i18n.client.Messages;
 
-@DefaultLocale("en_US")
+@DefaultLocale("en")
 public interface MyMessages extends Messages {
+
+	String a_message(String name, int number, boolean bool);
 
 	@Key("1234")
 	@DefaultMessage("This is a plain string.")
 	String oneTwoThreeFour();
 
 	@DefaultMessage("You have {0} widgets")
-	@PluralText( { "one", "You have one widget" })
+	@PluralText({ "one", "You have {0} widget" })
 	String widgetCount(@PluralCount int count);
 
 	@DefaultMessage("No reference to the argument")
