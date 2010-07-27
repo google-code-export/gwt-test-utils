@@ -109,11 +109,11 @@ The needed jars are available through [http://forge.octo.com/nexus/content/repos
 
 List of third-party jars requiered by _gwt-test-utils_ :
 
- * junit-4.7.jar (or higher)
- * gwt-user-2.0.3.jar (or higher)
- * gwt-servlet-2.0.3.jar (or higher)
- * javassist-3.8.0.GA.jar (or higher)
- * log4j-1.2.14.jar (or higher)
+ * junit-4.7.jar
+ * gwt-user-2.0.3.jar
+ * gwt-servlet-2.0.3.jar
+ * javassist-3.8.0.GA.jar
+ * log4j-1.2.14.jar
  * easymockclassextension-2.3.jar
  * easymock-2.3.jar
  * cglib-nodep-2.1_3.jar
