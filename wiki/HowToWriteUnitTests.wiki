@@ -2,7 +2,7 @@
 
 = Samples =
 
-A complete sample application is available through the <a href="http://code.google.com/p/gwt-test-utils/downloads/list">Downloads section</a>.
+A complete sample application is available through the [http://code.google.com/p/gwt-test-utils/downloads/list Downloads section].
 
 == Tests on a button ==
 
@@ -86,7 +86,7 @@ Note that the test class *must* extends {{{AbstractGwtTest}}}, which provide the
 = Tests with a GWT RPC call =
 
 Frequently, your presentation layer will make server call.
-In unit tests, you will need to mock the server calls. _gwt-test-utils_ provides an elegant way to do it with <a href="http://easymock.org/">{{{EasyMock}}}</a>.
+In unit tests, you will need to mock the server calls. _gwt-test-utils_ provides an elegant way to do it with [http://easymock.org/ EasyMock].
 
 First, the service exposed : 
 
@@ -242,3 +242,7 @@ This time, we extended {{{AbstractGwtEasyMockTest}}}, a subclass of {{{AbstractG
 *{{{expectServiceAndCallbackOnSuccess(Object result)}}}* tell easymock to make the mocked object return the "result" object as a sucess response to the call.
 
 *{{{expectServiceAndCallbackOnFailure(Throwable t)}}}* tell easymock to make the mocked object return the "t" exception as a failure response to the call.
+
+*{{{replay()}}}* will call {{{EasyMock.replay(..)}}} on a declared {{{@Mock}}} in the test class.
+
+*{{{verify()}}}* will call {{{EasyMock.verify(..)}}} on a declared {{{@Mock}}} in the test class.
