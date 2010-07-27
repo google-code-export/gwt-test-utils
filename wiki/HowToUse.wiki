@@ -2,7 +2,7 @@
 
 = With Maven =
 
-== Pom configuration ==
+== Pom release configuration ==
 
 First, you have to setup the required dependency in the _pom.xml_ :
 
@@ -45,6 +45,7 @@ In the two cases, you will also have to specify the gwt-test-utils Maven reposit
       <id>forge.octo.com</id>
       <url>http://forge.octo.com/nexus/content/repositories/releases/</url>
    </repository>
+   ...
 </repositories>
 }}}
 
@@ -60,10 +61,41 @@ Since gwt-test-utils is memory expensive (to test GWT in a simple JVM has a cost
          <argLine>-XX:MaxPermSize=128M -Xmx512M</argLine>
       </configuration>
    </plugin>
+   ...
 </plugins>
 }}}
 
-== Under eclipse, on a maven project ==
+== POM Snapshot configuration ==
+
+Sometimes, it could be helpfull to get the lastest snapshot. It's done with the following configuration :
+
+
+{{{
+<dependencies>
+   ...
+   <dependency>
+      <groupId>com.octo.gwt.test</groupId>
+      <artifactId>gwt-test-utils-integration</artifactId>
+      <version>0.18-SNAPSHOT</version>
+      <scope>test</scope>
+   </dependency>
+   ...
+</dependencies> 
+
+...
+
+<repositories>
+   ...
+   <repository>
+      <id>forge.octo.com</id>
+      <url>http://forge.octo.com/nexus/content/repositories/snapshots/</url>
+   </repository>
+   ...
+</repositories>
+}}}
+
+
+Under eclipse, on a maven project ==
 
 To run your unit tests directly inside eclipse in a maven project, you should use the POM configurations explained above (dependency, repository and plugin configuration).
 
