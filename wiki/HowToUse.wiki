@@ -105,7 +105,7 @@ Then, just open a new JUnit Run configuration, and specify in the "JVM Arguments
 
 To run your GWT unit tests without Maven, just add the gwt-test-utils-x.jar to the classpath :-)
 
-The needed jars are available through [http://forge.octo.com/nexus/content/repositories/releases/com/octo/gwt/test/ gwt-test-utils repository], which is provided by Octo Technology.
+The needed jars are available through [http://forge.octo.com/nexus/content/repositories/releases/com/octo/gwt/test/ gwt-test-utils releases repository] or through [http://forge.octo.com/nexus/content/repositories/snapshots/com/octo/gwt/test/ gwt-test-utils snapshots repository], which are provided by Octo Technology.
 
 List of third-party jars requiered by _gwt-test-utils_ :
 
