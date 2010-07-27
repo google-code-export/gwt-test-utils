@@ -56,6 +56,7 @@ public class ClientBundleTest extends AbstractGwtTest {
 		String testStyle = testCssResource.testStyle();
 		String testStyleWithHover = testCssResource.testStyleWithHover();
 		String testStyleOnSpecificElement = testCssResource.testStyleOnSpecificElement();
+		String testStyleOnSpecificStyle = testCssResource.testStyleOnSpecificStyle();
 		String constantValue = testCssResource.testConstant();
 
 		// Assert
@@ -63,6 +64,7 @@ public class ClientBundleTest extends AbstractGwtTest {
 		Assert.assertEquals("testStyle", testStyle);
 		Assert.assertEquals("testStyleWithHover", testStyleWithHover);
 		Assert.assertEquals("testStyleOnSpecificElement", testStyleOnSpecificElement);
+		Assert.assertEquals("testStyleOnSpecificStyle", testStyleOnSpecificStyle);
 		Assert.assertEquals("constant-value", constantValue);
 	}
 

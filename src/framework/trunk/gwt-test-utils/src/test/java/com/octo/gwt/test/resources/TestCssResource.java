@@ -12,6 +12,8 @@ public interface TestCssResource extends CssResource {
 
 	public String testStyleOnSpecificElement();
 
+	public String testStyleOnSpecificStyle();
+
 	public String notAvailableStyle();
 
 }
