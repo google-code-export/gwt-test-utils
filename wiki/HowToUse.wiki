@@ -65,7 +65,7 @@ Since gwt-test-utils is memory expensive (to test GWT in a simple JVM has a cost
 </plugins>
 }}}
 
-== POM Snapshot configuration ==
+== POM snapshot configuration ==
 
 Sometimes, it could be helpfull to get the lastest snapshot. It's done with the following configuration :
 
@@ -95,7 +95,7 @@ Sometimes, it could be helpfull to get the lastest snapshot. It's done with the 
 }}}
 
 
-Under eclipse, on a maven project ==
+== Under eclipse, on a maven project ==
 
 To run your unit tests directly inside eclipse in a maven project, you should use the POM configurations explained above (dependency, repository and plugin configuration).
 
@@ -106,3 +106,21 @@ Then, just open a new JUnit Run configuration, and specify in the "JVM Arguments
 To run your GWT unit tests without Maven, just add the gwt-test-utils-x.jar to the classpath :-)
 
 The needed jars are available through [http://forge.octo.com/nexus/content/repositories/releases/com/octo/gwt/test/ gwt-test-utils repository], which is provided by Octo Technology.
+
+List of third-party jars requiered by _gwt-test-utils_ :
+
+junit-4.7.jar (or higher)
+gwt-user-2.0.3.jar (or higher)
+gwt-servlet-2.0.3.jar (or higher)
+javassist-3.8.0.GA.jar (or higher)
+log4j-1.2.14.jar (or higher)
+easymockclassextension-2.3.jar
+easymock-2.3.jar
+cglib-nodep-2.1_3.jar
+
+List of third-party jars requiered by _gwt-test-utils-integration_ :
+
+Same dependencies as _gwt-test-utils_ plus :
+
+antlr-runtime-3.0.1.jar
+stringtemplate-3.1-b1.jar
