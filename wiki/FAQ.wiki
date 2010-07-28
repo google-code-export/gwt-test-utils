@@ -1,4 +1,4 @@
-#summary *F*requently *A*sked *Q*uestions
+#summary Frequently Asked Questions
 
 == I get a {{{ java.lang.RuntimeException: No mock registered for class}}} What do I miss ? == 
 
