@@ -22,7 +22,7 @@ A complete example of mocking GWT RCP call is available in demonstration project
 
 This exception will be thrown whenever you use a widget fonctionnality which call a native JSNI method the framework does not patch yet for the standard JVM.
 
-If the widget is custom (e.g. not in GWT standard API), you will have to [http://code.google.com/p/gwt-test-utils/wiki/HowToWriteCustomPatcher write your own Patcher class] to simulate your component behaviour in any standard JVM.
+If the widget is custom (e.g. not in GWT standard API), you will have to [http://code.google.com/p/gwt-test-utils/wiki/HowToWriteCustomPatchers write your own Patcher class] to simulate your component behaviour in any standard JVM.
 
 Otherwise, make sure you are using the lastest version of *gwt-test-utils*. If you are already up-to-date, please report an issue !
 
