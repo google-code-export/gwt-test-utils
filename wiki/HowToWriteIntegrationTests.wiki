@@ -1,4 +1,4 @@
-#summary This page explains how to write integration tests with gwt-test-utils
+#summary This page explains how to write integration tests with *gwt-test-utils*
 
 = Introduction =
 
@@ -11,7 +11,7 @@ It also enable to connect real server backends to do real integration tests.
 
 == Common configuration ==
 
-To write integration tests with *gwt-test-utils* CSV grammar, you will need to add the gwt-test-utils-integration JAR file in the test classpath, just like explained in the [http://code.google.com/p/gwt-test-utils/wiki/HowToUse How to use] page.
+To write integration tests with *gwt-test-utils* CSV grammar, you will need to add the *gwt-test-utils-integration* JAR file in the test classpath, just like explained in the [http://code.google.com/p/gwt-test-utils/wiki/HowToUse How to use] page.
 
 == A basic scenario ==
 
