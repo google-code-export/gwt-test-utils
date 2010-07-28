@@ -243,6 +243,6 @@ This time, we extended {{{AbstractGwtEasyMockTest}}}, a subclass of {{{AbstractG
 
 *{{{expectServiceAndCallbackOnFailure(Throwable t)}}}* tell easymock to make the mocked object return the "t" exception as a failure response to the call.
 
-*{{{replay()}}}* will call {{{EasyMock.replay(..)}}} on a declared {{{@Mock}}} in the test class.
+*{{{replay()}}}* will call {{{EasyMock.replay(..)}}} on each declared {{{@Mock}}} in the test class.
 
-*{{{verify()}}}* will call {{{EasyMock.verify(..)}}} on a declared {{{@Mock}}} in the test class.
+*{{{verify()}}}* will call {{{EasyMock.verify(..)}}} on each declared {{{@Mock}}} in the test class.
