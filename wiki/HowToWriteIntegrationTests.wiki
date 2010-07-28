@@ -299,7 +299,7 @@ assertExact;Hello OCTO !;/rpcComposite/label/text
 
 It could be interessting to regroup the "initApp" and the first assertion statements in one common file for the two test cases.
 
-This could be done in {{{initMacro.csv}}} : 
+This could be done in {{{macro-init.csv}}} : 
 
 {{{
 macro;InitialisationMacro
@@ -337,8 +337,8 @@ assertExact;Hello OCTO !;/rpcComposite/label/text
 Finally, there is one thing left to do : to specify _initMacro.csv_ as a Macro file for *gwt-test-utils* to parse it correctly. It can be done with the {{{@CsvMacros}}} annotation : 
 
 {{{
-@CsvDirectory("functional-tests")
-@CsvMacros("initMacro")
+@CsvDirectory(value = "functional-tests", extension = ".csv")
+@CsvMacros(value = "functional-tests", pattern = "^macro.*\\.csv$")
 @RunWith(StandardJUnit4CsvRunner.class)
 public class MyTestShell extends AbstractGwtIntegrationShell {
 
@@ -346,6 +346,5 @@ public class MyTestShell extends AbstractGwtIntegrationShell {
 }
 }}}
 
-{{{@CsvMacros}}} takes a string array as a param to specify a list of file to load as CSV macros.
-
-In this simple case, {{{MyTestShell}}} will search for a single file : _functional-tests/initMacros*.csv*_, which will be loaded as a macro.
+In this case, {{{MyTestShell}}} will load as a CSV macro any file in the project folder _functional-tests_ which name will matches the java regular expression {{{^macro.*\\.csv$}}}.
+The {{{pattern}}} parmeter is optional. If it's not set, any file in _functional-tests_ would have been loaded as a CSV macro.
