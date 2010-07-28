@@ -1,13 +1,20 @@
-#This page explains how to write custom patcher for non standard GWT widgets
+#summary This page explains how to write custom patcher for non standard GWT widgets
+
+TODO : write 
 
 = Introduction =
 
-Add your content here.
+
+TODO : explain how gwt-test-utils enable GWT code execution in a standard JVM (no more hostedmode, jetty, gwt plugin for browser..)
+
+ 
+= The Patcher mecanism =
+
+TODO : present the Patcher API provided by gwt-test-utils, and the custom classloader which is used
 
 
-= Details =
+= gwt-test-utils configuration for patchers =
 
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+TODO : explain who gwt-test-utils scan the classpath to search for Patcher
+
+= Example : writing a custom Patcher =
