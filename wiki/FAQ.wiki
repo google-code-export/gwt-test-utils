@@ -10,7 +10,7 @@ In your test class, you have to declare a mock for this service :
 private MyServiceAsync myService;
 }}}
 
-_gwt-test-utils_ will mock your {{{MyService}}} instance with [http://easymock.org/ EasyMock].
+*gwt-test-utils* will mock your {{{MyService}}} instance with [http://easymock.org/ EasyMock].
 
 Note the you *have to* use the annotation on the asynchronous version of the service interface.
 
@@ -24,7 +24,7 @@ This exception will be thrown whenever you use a widget fonctionnality which cal
 
 If the widget is custom (e.g. not in GWT standard API), you will have to [http://code.google.com/p/gwt-test-utils/wiki/HowToWriteCustomPatcher write your own Patcher class] to simulate your component behaviour in any standard JVM.
 
-Otherwise, make sure you are using the lastest version of _gwt-test-utils_. If you are already up-to-date, please report an issue !
+Otherwise, make sure you are using the lastest version of *gwt-test-utils*. If you are already up-to-date, please report an issue !
 
 == How to simule browser event on widget ? ==
 
