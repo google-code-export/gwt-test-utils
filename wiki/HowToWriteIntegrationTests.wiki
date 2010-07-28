@@ -3,6 +3,7 @@
 = Introduction =
 
 Coding complex user senario can be boring and... complex, depending on the used Web technology. 
+
 That's why _gwt-test-utils_ comes with features to make it easy for GWT : it provides a CSV human-readable grammar to simule user browser actions and to validate results.
 It also enable to connect real server backends to do real integration tests.
 
@@ -10,7 +11,7 @@ It also enable to connect real server backends to do real integration tests.
 
 == Common configuration ==
 
-To write integration tests with _gwt-test-utils_ CSV grammar, you will need to add the gwt-test-utils-integration JAR file in the test classpath, just like explained in the [http://code.google.com/p/gwt-test-utils/wiki/HowToUse How to use page].
+To write integration tests with _gwt-test-utils_ CSV grammar, you will need to add the gwt-test-utils-integration JAR file in the test classpath, just like explained in the [http://code.google.com/p/gwt-test-utils/wiki/HowToUse How to use] page.
 
 == A basic scenario ==
 
