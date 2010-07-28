@@ -71,7 +71,7 @@ public class SimpleComposite extends Composite {
 }
 }}}
 
-The UI comportement is straightforward : moving the mouse on the logo image will display the message _"mouse moved on picture"_ in the label.
+The UI comportement is straightforward : moving the mouse on the logo image will display the message _"mouse moved on picture !"_ in the label.
 
 To run tests, we need a Run class which can told were to find CSV files to run and how to start the GWT UI without the GWT Hosted Mode.
 {{{AbstractGwtIntegrationShell}}} is the base class to do it :
