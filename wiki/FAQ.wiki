@@ -1,3 +1,5 @@
+#summary *F*requently *A*sked *Q*uestions
+
 == I get a {{{ java.lang.RuntimeException: No mock registered for class}}} What do I miss ? == 
 
 It simply means that you forget to declare the class to be mocked.
