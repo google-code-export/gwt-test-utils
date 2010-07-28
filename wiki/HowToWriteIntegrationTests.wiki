@@ -2,33 +2,18 @@
 
 = Introduction =
 
-Coding complex UI use cases can be boring and... complex, depending on the used UI technology. That's why _gwt-test-utils_ comes with features to do it in a easy way : it provides a CSV human-readable grammar to simule user browser actions and to validate results.
+Coding complex User senario can be boring and... complex, depending on the used Web technology. That's why _gwt-test-utils_ comes with features to do it in a easy way for GWT : it provides a CSV human-readable grammar to simule user browser actions and to validate results.
 It also enable to connect real server backends to do real integration tests.
 
 = Samples = 
 
 == Common configuration ==
 
-To write integration tests with _gwt-test-utils_ CSV grammar, you will need to use the corresponding dependency just like explained in the <a href="http://code.google.com/p/gwt-test-utils/wiki/HowToUse">How to use page</a>.
-
-So, just add the gwt-test-utils-integration JAR file in your classpath or add the maven dependency : 
-
-{{{
-<dependencies>
-   ...
-   <dependency>
-      <groupId>com.octo.gwt.test17</groupId>
-      <artifactId>gwt-test-utils-integration</artifactId>
-         <version>0.2</version>
-         <scope>test</scope>
-   </dependency>
-   ...
-</dependencies>   
-}}}
+To write integration tests with _gwt-test-utils_ CSV grammar, you will need to add the gwt-test-utils-integration JAR file in the test classpath, just like explained in the [http://code.google.com/p/gwt-test-utils/wiki/HowToUse How to use page].
 
 == A basic scenario ==
 
-But first, let's write a combinaison of browser actions on a simple UI, with no server call. Let's code a simple GWT UI.
+First, let's write a combinaison of browser actions on a simple UI, with no server call. Let's code a simple GWT UI.
 
 The main {{{EntryPoint}}} : 
 
@@ -90,12 +75,13 @@ To run tests, we need a Run class which can told were to find CSV files to run a
 {{{AbstractGwtIntegrationShell}}} is the base class to do it :
 
 {{{
-@CsvDirectory("functionnal-tests")
+@CsvDirectory("functional-tests")
 @RunWith(StandardJUnit4CsvRunner.class)
 public class MyTestShell extends AbstractGwtIntegrationShell {
 
    private MyApp myApp;
 
+   @CsvMethod
    public void initApp() {
       myApp = new MyApp();
       myApp.onModuleLoad();
@@ -125,11 +111,11 @@ public class MyTestShell extends AbstractGwtIntegrationShell {
 }
 }}}
 
-The {{{@CsvDirectory}}} class annotation tells _gwt-test-utils_ where to find CSV files. In this case, all files with the extension _*.csv*_ in the project folder _functional-test_ will be loaded.
+The {{{@CsvDirectory}}} class annotation tells _gwt-test-utils_ where to find CSV files. In this case, all files with the extension _*.csv*_ in the project folder _functional-tests_ will be loaded.
 
-We also write a simple "initApp" method which instanciate the application.
+We also write a simple {{{initApp}}} method which instanciate the application. This method is annoted with a markup annotation : {{{@CsvMethod}}}, which tells the framework {{{initApp}}} can be used directly in CSV tests.
 
-Finally, we overrided the {{{AbstractGwtIntegrationShell.findPrefixProcessor(String prefix)}}} to add bring cool way to access the UI components.
+Finally, we overrided the {{{AbstractGwtIntegrationShell.findPrefixProcessor(String prefix)}}} to provide a cool way to access the UI components.
 
 
 Now, we can write the corresponding CSV senario and assertions which will use {{{MyTestShell}}} functionalities : 
@@ -145,7 +131,7 @@ assertExact;mouse moved on picture !;/myApp/c1/label/text
 }}}
 
 First, we had to start the script with the instruction {{{start}}}.
-Than, we called the {{{MyTestShell.initApp()}}} method to instanciate the GWT application.
+Than, we called the {{{@CsvMethod MyTestShell.initApp()}}} method to instanciate the GWT application.
 
 Since the application is initialized, we can do some actions. So, let's explain the line {{{assertNull;/simpleComposite/label/text}}} : 
 
@@ -175,7 +161,7 @@ Those 3 lines do exactly the same thing with 3 different prefix processors :
  * *myApp* refers to the custom {{{EntryPoint}}} instance we initialize though the {{{MyTestShell.initApp()}}} method.
 
 
-By the way, this scenario could have been written simply with the GWT API just like we did to write <a href="http://code.google.com/p/gwt-test-utils/wiki/HowToWriteUnitTests">UI unit tests</a>.
+By the way, this scenario could have been written simply with the GWT API just like we did to write [http://code.google.com/p/gwt-test-utils/wiki/HowToWriteUnitTests UI unit tests]. But it would have been a lot more verbose (by using reflection tools explicitly, etc).
 
 Now that you know how to do it with the CSV grammar and understand its basics, let's write a more complex scenario.
 
