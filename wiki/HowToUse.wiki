@@ -19,7 +19,7 @@ First, you have to setup the required dependency in the _pom.xml_ :
 </dependencies>   
 }}}
 
-If you want to run integration tests with _gwt-test-utils_ scenario writer feature, you would have to setup another dependency : 
+If you want to run integration tests with *gwt-test-utils* scenario writer feature, you would have to setup another dependency : 
 
 {{{
 <dependencies>
@@ -34,9 +34,9 @@ If you want to run integration tests with _gwt-test-utils_ scenario writer featu
 </dependencies>   
 }}}
 
-Note that {{{gwt-test-utils-integration}}} module directly depends on {{{gwt-test-utils}}}, so you don't need to declare the first dependency in your {{{pom.xml}}}.
+Note that *gwt-test-utils-integration* module directly depends on *gwt-test-utils*, so you don't need to declare the first dependency in your {{{pom.xml}}}.
 
-In the two cases, you will also have to specify the gwt-test-utils Maven repository :
+In the two cases, you will also have to specify the *gwt-test-utils* Maven repository :
 
 {{{
 <repositories>
@@ -49,7 +49,7 @@ In the two cases, you will also have to specify the gwt-test-utils Maven reposit
 </repositories>
 }}}
 
-Since gwt-test-utils is memory expensive (to test GWT in a simple JVM has a cost ;-)), you  should increase the memory available for your tests, as shown in this example :
+Since *gwt-test-utils* is memory expensive (to test GWT in a simple JVM has a cost ;-)), you  should increase the memory available for your tests, as shown in this example :
 
 {{{
 <plugins>
@@ -103,9 +103,9 @@ Then, just open a new JUnit Run configuration, and specify in the "JVM Arguments
 
 = Without Maven =
 
-To run your GWT unit tests without Maven, just add the gwt-test-utils-x.jar to the classpath :-)
+To run your GWT unit tests without Maven, just add the *gwt-test-utils-x.jar* to the classpath :-)
 
-The _gwt-test-utils_ jars are available through [http://forge.octo.com/nexus/content/repositories/releases/com/octo/gwt/test/ gwt-test-utils releases repository] or through [http://forge.octo.com/nexus/content/repositories/snapshots/com/octo/gwt/test/ gwt-test-utils snapshots repository], which are provided by Octo Technology.
+*gwt-test-utils* jars are available through [http://forge.octo.com/nexus/content/repositories/releases/com/octo/gwt/test/ gwt-test-utils releases repository] or through [http://forge.octo.com/nexus/content/repositories/snapshots/com/octo/gwt/test/ gwt-test-utils snapshots repository], which are provided by Octo Technology.
 
 List of third-party jars requiered by *gwt-test-utils* :
 
@@ -120,7 +120,7 @@ List of third-party jars requiered by *gwt-test-utils* :
 
 List of third-party jars requiered by *gwt-test-utils-integration* :
 
-Same dependencies as _gwt-test-utils_ plus :
+Same dependencies as *gwt-test-utils* plus :
 
  * antlr-runtime-3.0.1.jar
  * stringtemplate-3.1-b1.jar
