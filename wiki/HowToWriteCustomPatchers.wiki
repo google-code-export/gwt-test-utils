@@ -17,3 +17,5 @@ TODO : present the Patcher API provided by gwt-test-utils, and the custom classl
 TODO : explain who gwt-test-utils scan the classpath to search for Patcher
 
 = Example : writing a custom Patcher =
+
+TODO : all
