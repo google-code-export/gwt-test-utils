@@ -1,4 +1,4 @@
-#summary This page explains how to write integration tests with *gwt-test-utils*
+#summary This page explains how to write integration tests with gwt-test-utils
 
 = Introduction =
 
