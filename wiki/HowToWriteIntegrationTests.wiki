@@ -144,10 +144,9 @@ Object localization strings used to retrived objects in the UI use a _XPath-like
 It assumes this object have an inner property called "label" which have a method "getText" with *no argument*.
 So this line just assert the label of the text of our {{{SimpleComposite}}} is null when the application just has been initialized. 
 
+Then, we can simule the browser event on the image : {{{mouseMove;/simpleComposite/img}}}.
 
-Then, we can simule the browser event on the image : {{{mouseMove;/root/widget(0)/img}}}.
-
-{{{AbstractGwtIntegrationShell}}} provides a lot of function to launch events on a widget : "click", "dblClick", "blur", "change", "mouseDown", "mouseUp" and so on.
+In addition to assertion method, {{{AbstractGwtIntegrationShell}}} provides a lot {{{@CsvMethod}}} to launch events on a widget : "click", "blur", "change", "mouseDown", "mouseUp" and so on.
 
 Finally, we have to assert that the label is correctly filled : 
 
@@ -169,7 +168,7 @@ Now that you know how to do it with the CSV grammar and understand its basics, l
 
 == Scenario with server calls ==
 
-First, we have to enhance your GWT application with a new Composite in which we will make server calls. To do so, we will simply reuse the {{{RCPComposite}}} and {{{RCPService}}} classes we developped for <a href="http://code.google.com/p/gwt-test-utils/wiki/HowToWriteUnitTests#Tests_with_a_GWT_RPC_call">How to write unit tests</a> page.
+First, we have to enhance your GWT application to make some server calls. To do so, we will simply reuse the {{{RCPComposite}}} and {{{RCPService}}} classes we developped for [http://code.google.com/p/gwt-test-utils/wiki/HowToWriteUnitTests#Tests_with_a_GWT_RPC_call How to write unit tests] page.
 
 {{{
 public class MyApp implements EntryPoint {
@@ -190,7 +189,7 @@ public class MyApp implements EntryPoint {
 We also have to modify the test class to provide some glue to connect the GWT UI with a real server backend.
 
 {{{
-@CsvDirectory("functional-tests")
+@CsvDirectory(value = "functional-tests", extension = ".csv")
 @RunWith(StandardJUnit4CsvRunner.class)
 public class MyTestShell extends AbstractGwtIntegrationShell {
 
@@ -249,7 +248,8 @@ public class MyTestShell extends AbstractGwtIntegrationShell {
 
 First, we added a new {{{PrefixProcessor}}} for string "rpcComposite".
 
-Than, we had to override the {{{AbstractGwtIntegrationShell.findService(Class clazz)}}} which return {{{null}}} by default.
+Than, we had to override the {{{AbstractGwtIntegrationShell.getGwtCreateHandler()}}}, which return {{{null}}} by default.
+We used the out-of-the-box {{{GwtCreateHandlerImpl}}} implementation which handle RPC service creation and RPC calls exception. The only thing to do is to implement the abstract function {{{GwtCreateHandlerImpl.findService(Class<?> remoteServiceClazz)}}}.
 In our case, to ask for a {{{RCPService}}} service will return an instance of its simple implementation {{{RCPServiceImpl}}}.
 
 Now, we can test the composite with a CSV test : 
@@ -264,11 +264,9 @@ assertExact;Hello OCTO !;/rpcComposite/label/text
 
 We just passed a full GWT integration test in a standard JVM, with a real service implementation.
 
-Of course, this {{{getGwtCreateHandler()}}} implementation is quite basic. That's why *gwt-test-utils* comes with another module to integrate the <a href="http://www.springsource.org/">Spring Framework</a> for server backends which are using it.
+Of course, this {{{getGwtCreateHandler()}}} implementation is quite basic. 
+But you could easily write your {{{findService}}} implementation which will get your service from a [http://www.springsource.org/ Spring] context, or any server backend you could imagine ;-)
 
-== Scenario with server calls using Spring ==
-
-//TODO : code et document Spring integration...
 
 == Using CSV macros ==
 
