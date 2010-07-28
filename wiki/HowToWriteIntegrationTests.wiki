@@ -2,7 +2,8 @@
 
 = Introduction =
 
-Coding complex User senario can be boring and... complex, depending on the used Web technology. That's why _gwt-test-utils_ comes with features to do it in a easy way for GWT : it provides a CSV human-readable grammar to simule user browser actions and to validate results.
+Coding complex user senario can be boring and... complex, depending on the used Web technology. 
+That's why _gwt-test-utils_ comes with features to make it easy for GWT : it provides a CSV human-readable grammar to simule user browser actions and to validate results.
 It also enable to connect real server backends to do real integration tests.
 
 = Samples = 
