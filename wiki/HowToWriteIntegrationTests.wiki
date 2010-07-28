@@ -77,7 +77,7 @@ To run tests, we need a Run class which can told were to find CSV files to run a
 {{{AbstractGwtIntegrationShell}}} is the base class to do it :
 
 {{{
-@CsvDirectory("functional-tests")
+@CsvDirectory(value = "functional-tests", extension = ".csv")
 @RunWith(StandardJUnit4CsvRunner.class)
 public class MyTestShell extends AbstractGwtIntegrationShell {
 
@@ -113,7 +113,7 @@ public class MyTestShell extends AbstractGwtIntegrationShell {
 }
 }}}
 
-The {{{@CsvDirectory}}} class annotation tells *gwt-test-utils* where to find CSV files. In this case, all files with the extension _*.csv*_ in the project folder _functional-tests_ will be loaded.
+The {{{@CsvDirectory}}} class annotation tells *gwt-test-utils* where to find CSV files. In this case, all files with the extension _*.csv*_ in the project folder _functional-tests_ will be loaded. The _extension_ property is optional and equals "*.csv*" by default.
 
 We also write a simple {{{initApp}}} method which instanciate the application. This method is annoted with a markup annotation : {{{@CsvMethod}}}, which tells the framework {{{initApp}}} can be used directly in CSV tests.
 
