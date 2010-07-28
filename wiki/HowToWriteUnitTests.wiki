@@ -1,4 +1,4 @@
-#summary This page explains how to write unit tests for GWT with gwt-test-utils
+#summary This page explains how to write unit tests for GWT with *gwt-test-utils*
 
 = Samples =
 
@@ -86,7 +86,7 @@ Note that the test class *must* extends {{{AbstractGwtTest}}}, which provide the
 = Tests with a GWT RPC call =
 
 Frequently, your presentation layer will make server call.
-In unit tests, you will need to mock the server calls. _gwt-test-utils_ provides an elegant way to do it with [http://easymock.org/ EasyMock].
+In unit tests, you will need to mock the server calls. *gwt-test-utils* provides an elegant way to do it with [http://easymock.org/ EasyMock].
 
 First, the service exposed : 
 
@@ -237,7 +237,7 @@ public class RPCCompositeTest extends AbstractGwtEasyMockTest {
 
 This time, we extended {{{AbstractGwtEasyMockTest}}}, a subclass of {{{AbstractGwtTest}}} which provide some helpfull methods to inject mock object and use them :
 
-*{{{@Mock}}}* tell _gwt-test-utils_ to create a mock object
+*{{{@Mock}}}* tell *gwt-test-utils* to create a mock object
 
 *{{{expectServiceAndCallbackOnSuccess(Object result)}}}* tell easymock to make the mocked object return the "result" object as a sucess response to the call.
 
