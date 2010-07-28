@@ -4,20 +4,20 @@
 
 Coding complex user senario can be boring and... complex, depending on the used Web technology. 
 
-That's why _gwt-test-utils_ comes with features to make it easy for GWT : it provides a CSV human-readable grammar to simule user browser actions and to validate results.
+That's why *gwt-test-utils* comes with features to make it easy for GWT : it provides a CSV human-readable grammar to simule user browser actions and to validate results.
 It also enable to connect real server backends to do real integration tests.
 
 = Samples = 
 
 == Common configuration ==
 
-To write integration tests with _gwt-test-utils_ CSV grammar, you will need to add the gwt-test-utils-integration JAR file in the test classpath, just like explained in the [http://code.google.com/p/gwt-test-utils/wiki/HowToUse How to use] page.
+To write integration tests with *gwt-test-utils* CSV grammar, you will need to add the gwt-test-utils-integration JAR file in the test classpath, just like explained in the [http://code.google.com/p/gwt-test-utils/wiki/HowToUse How to use] page.
 
 == A basic scenario ==
 
-First, let's write a combinaison of browser actions on a simple UI, with no server call. Let's code a simple GWT UI.
+First, let's write a combinaison of browser actions on a simple UI, with no server call.
 
-The main {{{EntryPoint}}} : 
+The main {{{EntryPoint}}} for our simple GWT module : 
 
 {{{
 public class MyApp implements EntryPoint {
@@ -113,7 +113,7 @@ public class MyTestShell extends AbstractGwtIntegrationShell {
 }
 }}}
 
-The {{{@CsvDirectory}}} class annotation tells _gwt-test-utils_ where to find CSV files. In this case, all files with the extension _*.csv*_ in the project folder _functional-tests_ will be loaded.
+The {{{@CsvDirectory}}} class annotation tells *gwt-test-utils* where to find CSV files. In this case, all files with the extension _*.csv*_ in the project folder _functional-tests_ will be loaded.
 
 We also write a simple {{{initApp}}} method which instanciate the application. This method is annoted with a markup annotation : {{{@CsvMethod}}}, which tells the framework {{{initApp}}} can be used directly in CSV tests.
 
@@ -264,7 +264,7 @@ assertExact;Hello OCTO !;/rpcComposite/label/text
 
 We just passed a full GWT integration test in a standard JVM, with a real service implementation.
 
-Of course, this {{{getGwtCreateHandler()}}} implementation is quite basic. That's why _gwt-test-utils_ comes with another module to integrate the <a href="http://www.springsource.org/">Spring Framework</a> for server backends which are using it.
+Of course, this {{{getGwtCreateHandler()}}} implementation is quite basic. That's why *gwt-test-utils* comes with another module to integrate the <a href="http://www.springsource.org/">Spring Framework</a> for server backends which are using it.
 
 == Scenario with server calls using Spring ==
 
@@ -336,7 +336,7 @@ click;/rpcComposite/button
 assertExact;Hello OCTO !;/rpcComposite/label/text
 }}}
 
-Finally, there is one thing left to do : to specify _initMacro.csv_ as a Macro file for _gwt-test-utils_ to parse it correctly. It can be done with the {{{@CsvMacros}}} annotation : 
+Finally, there is one thing left to do : to specify _initMacro.csv_ as a Macro file for *gwt-test-utils* to parse it correctly. It can be done with the {{{@CsvMacros}}} annotation : 
 
 {{{
 @CsvDirectory("functional-tests")
