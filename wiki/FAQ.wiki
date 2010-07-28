@@ -1,15 +1,3 @@
-#summary Frequently Asked Questions
-
-== I get a {{{java.lang.UnsupportedClassVersionError}}}. Why ? ==
-
-The exception {{{java.lang.UnsupportedClassVersionError: Bad version number in .class file}}} will automatically be thrown if you are trying to launch your test with a JVM 5 or older.
-
-In fact, the java agent developped to modify GWT component (contained in {{{bootstrap.jar}}}) had to be compiled with a 1.6 JDK, beacuse JVM 5 is not able to modify native methods on the fly.
-
-So, you *must* launch your test with a JVM 6 or higher. Of course, the rest of your code can be compiled and run with any other Java version.
-
-
-
 == I get a {{{ java.lang.RuntimeException: No mock registered for class}}} What do I miss ? == 
 
 It simply means that you forget to declare the class to be mocked.
@@ -22,7 +10,7 @@ In your test class, you have to declare a mock for this service :
 private MyServiceAsync myService;
 }}}
 
-_gwt-test-utils_ will mock your {{{MyService}}} instance with <a href="http://easymock.org/">{{{EasyMock}}}</a>.
+_gwt-test-utils_ will mock your {{{MyService}}} instance with [http://easymock.org/ EasyMock].
 
 Note the you *have to* use the annotation on the asynchronous version of the service interface.
 
@@ -34,11 +22,13 @@ A complete example of mocking GWT RCP call is available in demonstration project
 
 This exception will be thrown whenever you use a widget fonctionnality which call a native JSNI method the framework does not patch yet for the standard JVM.
 
-Make sure you are using the lastest version of _gwt-test-utils_. If you are already up-to-date, please report an issue.
+If the widget is custom (e.g. not in GWT standard API), you will have to [http://code.google.com/p/gwt-test-utils/wiki/HowToWriteCustomPatcher write your own Patcher class] to simulate your component behaviour in any standard JVM.
+
+Otherwise, make sure you are using the lastest version of _gwt-test-utils_. If you are already up-to-date, please report an issue !
 
 == How to simule browser event on widget ? ==
 
-{{{AbstractGWTTest}}} comes with some helpfull methods to simule a large panel of browser event, such as "onClick", "onDblClick", "onBlur", mouseMouve" etc.
+{{{AbstractGWTTest}}} comes with some helpfull methods to simule a large panel of browser event, such as "onClick", "onBlur", mouseMouve" etc.
 
 In case the method you need is not available, just try with :
 
