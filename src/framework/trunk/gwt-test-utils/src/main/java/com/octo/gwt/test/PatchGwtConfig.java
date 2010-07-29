@@ -27,8 +27,8 @@ public class PatchGwtConfig {
 		GwtPatcher.gwtLogHandler = gwtLogHandler;
 	}
 
-	public static void setGwtCreateHandler(GwtCreateHandler gwtCreateHandler) {
-		GwtPatcher.gwtCreateHandler = gwtCreateHandler;
+	public static boolean addGwtCreateHandler(GwtCreateHandler gwtCreateHandler) {
+		return GwtPatcher.addGwtCreateHandler(gwtCreateHandler);
 	}
 
 	public static void setCurrentTestedModuleFile(String currentTestedModuleFile) {

@@ -7,7 +7,6 @@ import org.junit.runner.RunWith;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.octo.gwt.test.GwtTestClassLoader;
-import com.octo.gwt.test.PatchGwtConfig;
 import com.octo.gwt.test.integ.CsvMethod;
 import com.octo.gwt.test.integ.csvrunner.CsvRunner;
 import com.octo.gwt.test.integ.csvrunner.Node;
@@ -54,7 +53,9 @@ public abstract class MyGwtShell extends AbstractGwtIntegrationShell {
 						return object;
 					}
 				});
-		PatchGwtConfig.setGwtCreateHandler(handlerImpl);
+
+		addGwtCreateHandler(handlerImpl);
+
 		MyStringStore.appender = "";
 	}
 

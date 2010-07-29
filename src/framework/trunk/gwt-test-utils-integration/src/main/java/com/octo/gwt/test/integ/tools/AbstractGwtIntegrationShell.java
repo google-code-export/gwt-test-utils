@@ -9,11 +9,8 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
-import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.user.client.ui.CheckBox;
@@ -28,10 +25,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
-import com.octo.gwt.test.GwtCreateHandler;
-import com.octo.gwt.test.GwtLogHandler;
-import com.octo.gwt.test.PatchGwtConfig;
-import com.octo.gwt.test.PatchGwtReset;
+import com.octo.gwt.test.AbstractGwtConfigurableTest;
 import com.octo.gwt.test.integ.CsvMethod;
 import com.octo.gwt.test.integ.csvrunner.CsvRunner;
 import com.octo.gwt.test.integ.csvrunner.Node;
@@ -40,50 +34,12 @@ import com.octo.gwt.test.utils.GwtTestReflectionUtils;
 import com.octo.gwt.test.utils.GwtTestStringUtils;
 import com.octo.gwt.test.utils.WidgetUtils;
 
-public abstract class AbstractGwtIntegrationShell {
+public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurableTest {
 
 	protected CsvRunner csvRunner;
 
 	private DirectoryTestReader reader;
 	private MacroReader macroReader;
-
-	public String getCurrentTestedModuleFile() {
-		//this method can be overrided
-		return null;
-	}
-
-	protected GwtCreateHandler getGwtCreateHandler() throws Exception {
-		//this method can be overrided
-		return null;
-	}
-
-	protected Locale getLocale() {
-		//this method can be overrided
-		return null;
-	}
-
-	protected GwtLogHandler getLogHandler() {
-		//this method can be overrided
-		return null;
-	}
-
-	@Before
-	public void setUpAbstractGwtIntegrationShell() throws Exception {
-		PatchGwtConfig.setLocale(getLocale());
-		PatchGwtConfig.setGwtCreateHandler(getGwtCreateHandler());
-		PatchGwtConfig.setCurrentTestedModuleFile(getCurrentTestedModuleFile());
-		PatchGwtConfig.setLogHandler(getLogHandler());
-	}
-
-	@After
-	public void tearDownAbstractGwtIntegrationShell() throws Exception {
-		resetPatchGwt();
-	}
-
-	protected void resetPatchGwt() throws Exception {
-		// reinit GWT
-		PatchGwtReset.reset();
-	}
 
 	public void setReader(DirectoryTestReader reader) {
 		this.reader = reader;

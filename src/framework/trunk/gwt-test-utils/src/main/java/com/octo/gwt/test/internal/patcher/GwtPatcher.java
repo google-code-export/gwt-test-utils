@@ -3,7 +3,9 @@ package com.octo.gwt.test.internal.patcher;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
@@ -47,14 +49,18 @@ import com.octo.gwt.test.utils.PatchGwtUtils;
 @SuppressWarnings("deprecation")
 public class GwtPatcher extends AutomaticPatcher {
 
-	public static GwtCreateHandler gwtCreateHandler = null;
+	private static List<GwtCreateHandler> gwtCreateHandlers = new ArrayList<GwtCreateHandler>();
 	public static GwtLogHandler gwtLogHandler = null;
 	public static Map<Class<?>, Object> classes = new HashMap<Class<?>, Object>();
 
 	public static void reset() {
 		classes.clear();
-		gwtCreateHandler = null;
+		gwtCreateHandlers.clear();
 		gwtLogHandler = null;
+	}
+
+	public static boolean addGwtCreateHandler(GwtCreateHandler gwtCreateHandler) {
+		return gwtCreateHandlers.add(gwtCreateHandler);
 	}
 
 	@PatchMethod
@@ -141,8 +147,13 @@ public class GwtPatcher extends AutomaticPatcher {
 
 		Object o = classes.get(classLiteral);
 
-		if (o == null && gwtCreateHandler != null) {
-			o = gwtCreateHandler.create(classLiteral);
+		if (o == null) {
+			for (GwtCreateHandler gwtCreateHandler : gwtCreateHandlers) {
+				o = gwtCreateHandler.create(classLiteral);
+				if (o != null) {
+					return o;
+				}
+			}
 		}
 
 		if (o == null) {
