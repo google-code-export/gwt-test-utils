@@ -2,7 +2,7 @@ package com.octo.gwt.test;
 
 import java.io.File;
 import java.io.InputStream;
-import java.lang.annotation.Annotation;
+import java.lang.reflect.Constructor;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.util.ArrayList;
@@ -21,6 +21,7 @@ import java.util.jar.JarFile;
 import org.apache.log4j.Logger;
 
 import com.octo.gwt.test.internal.patcher.tools.PatchClass;
+import com.octo.gwt.test.utils.GwtTestReflectionUtils;
 
 public class ConfigurationLoader {
 
@@ -148,32 +149,49 @@ public class ConfigurationLoader {
 		Map<String, IPatcher> map = new HashMap<String, IPatcher>();
 		for (String className : classList) {
 			Class<?> clazz = Class.forName(className, true, classLoader);
-			for (Annotation a : clazz.getDeclaredAnnotations()) {
-				if (a.annotationType() == PatchClass.class) {
-					PatchClass patchClass = (PatchClass) a;
-					IPatcher patcher = (IPatcher) clazz.newInstance();
-					for (Class<?> c : patchClass.value()) {
-						String targetName = c.isMemberClass() ? c.getDeclaringClass().getCanonicalName() + "$" + c.getSimpleName() : c
-								.getCanonicalName();
-						if (map.get(targetName) != null) {
-							logger.error("Two patches for same class " + targetName);
-							throw new RuntimeException("Two patches for same class " + targetName);
-						}
-						map.put(targetName, patcher);
-						logger.info("Add patch for class " + targetName + " : " + clazz.getCanonicalName());
-					}
-					for (String s : patchClass.classes()) {
-						if (map.get(s) != null) {
-							logger.error("Two patches for same class " + s);
-							throw new RuntimeException("Two patches for same class " + s);
-						}
-						map.put(s, patcher);
-						logger.info("Add patch for class " + s + " : " + clazz.getCanonicalName());
-					}
+
+			PatchClass patchClass = GwtTestReflectionUtils.getAnnotation(clazz, PatchClass.class);
+
+			if (patchClass == null) {
+				continue;
+			}
+
+			if (!IPatcher.class.isAssignableFrom(clazz) || !hasDefaultConstructor(clazz)) {
+				throw new RuntimeException("The @" + PatchClass.class.getSimpleName() + " annotated class '" + clazz.getName() + "' must implements "
+						+ IPatcher.class.getSimpleName() + " interface and provide an empty constructor");
+			}
+
+			IPatcher patcher = (IPatcher) clazz.newInstance();
+
+			for (Class<?> c : patchClass.value()) {
+				String targetName = c.isMemberClass() ? c.getDeclaringClass().getCanonicalName() + "$" + c.getSimpleName() : c.getCanonicalName();
+				if (map.get(targetName) != null) {
+					logger.error("Two patches for same class " + targetName);
+					throw new RuntimeException("Two patches for same class " + targetName);
 				}
+				map.put(targetName, patcher);
+				logger.info("Add patch for class " + targetName + " : " + clazz.getCanonicalName());
+			}
+			for (String s : patchClass.classes()) {
+				if (map.get(s) != null) {
+					logger.error("Two patches for same class " + s);
+					throw new RuntimeException("Two patches for same class " + s);
+				}
+				map.put(s, patcher);
+				logger.info("Add patch for class " + s + " : " + clazz.getCanonicalName());
 			}
 		}
+
 		return map;
+	}
+
+	private boolean hasDefaultConstructor(Class<?> clazz) {
+		for (Constructor<?> cons : clazz.getConstructors()) {
+			if (cons.getParameterTypes().length == 0)
+				return true;
+		}
+
+		return false;
 	}
 
 }

@@ -16,7 +16,11 @@ public class GwtTestClassLoader extends Loader {
 				_instance = new GwtTestClassLoader();
 			}
 		} catch (Exception e) {
-			throw new RuntimeException(e);
+			if (e instanceof RuntimeException) {
+				throw (RuntimeException) e;
+			} else {
+				throw new RuntimeException(e);
+			}
 		}
 		return _instance;
 	}
