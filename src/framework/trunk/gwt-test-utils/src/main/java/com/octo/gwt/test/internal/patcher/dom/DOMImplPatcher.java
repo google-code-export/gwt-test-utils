@@ -9,6 +9,7 @@ import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.OptionElement;
 import com.google.gwt.dom.client.SelectElement;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.Event;
 import com.octo.gwt.test.ElementUtils;
 import com.octo.gwt.test.internal.overrides.OverrideEvent;
@@ -18,6 +19,7 @@ import com.octo.gwt.test.internal.patcher.tools.PatchClass;
 import com.octo.gwt.test.internal.patcher.tools.PatchMethod;
 import com.octo.gwt.test.internal.patcher.tools.PropertyContainer;
 import com.octo.gwt.test.internal.patcher.tools.SubClassedHelper;
+import com.octo.gwt.test.utils.GwtTestReflectionUtils;
 
 @PatchClass(classes = { "com.google.gwt.dom.client.DOMImpl" })
 public class DOMImplPatcher extends AutomaticPatcher {
@@ -275,6 +277,18 @@ public class DOMImplPatcher extends AutomaticPatcher {
 	public static void selectRemoveOption(Object domImpl, SelectElement select, int index) {
 		OverrideNodeList<Node> childNodes = (OverrideNodeList<Node>) select.getChildNodes();
 		childNodes.getList().remove(index);
+	}
+
+	@PatchMethod
+	public static void cssSetOpacity(Object domImpl, Style style, double value) {
+		String opacityField = GwtTestReflectionUtils.getStaticFieldValue(Style.class, "STYLE_OPACITY");
+		SubClassedHelper.setProperty(style, opacityField, String.valueOf(value));
+	}
+
+	@PatchMethod
+	public static void cssClearOpacity(Object domImpl, Style style) {
+		String opacityField = GwtTestReflectionUtils.getStaticFieldValue(Style.class, "STYLE_OPACITY");
+		SubClassedHelper.setProperty(style, opacityField, "");
 	}
 
 	private static OverrideNodeList<Node> getChildNodeList(Object domImpl, Node node) {
