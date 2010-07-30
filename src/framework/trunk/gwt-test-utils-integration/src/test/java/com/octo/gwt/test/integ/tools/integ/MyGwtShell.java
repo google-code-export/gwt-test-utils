@@ -11,7 +11,7 @@ import com.octo.gwt.test.integ.CsvMethod;
 import com.octo.gwt.test.integ.csvrunner.CsvRunner;
 import com.octo.gwt.test.integ.csvrunner.Node;
 import com.octo.gwt.test.integ.handler.DefaultGwtRpcExceptionHandler;
-import com.octo.gwt.test.integ.handler.GwtCreateHandlerImpl;
+import com.octo.gwt.test.integ.handler.GwtCreateRemoteServiceHandler;
 import com.octo.gwt.test.integ.junit.StandardJUnit4CsvRunner;
 import com.octo.gwt.test.integ.tools.AbstractGwtIntegrationShell;
 import com.octo.gwt.test.integ.tools.PrefixProcessor;
@@ -23,11 +23,11 @@ public abstract class MyGwtShell extends AbstractGwtIntegrationShell {
 
 	private MyBeautifulApp app;
 
-	private GwtCreateHandlerImpl handlerImpl;
+	private GwtCreateRemoteServiceHandler handlerImpl;
 
 	@Before
 	public void setUp() throws Exception {
-		handlerImpl = new GwtCreateHandlerImpl() {
+		handlerImpl = new GwtCreateRemoteServiceHandler() {
 
 			@Override
 			public Object findService(Class<?> remoteServiceClazz) {

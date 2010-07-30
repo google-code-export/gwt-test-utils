@@ -2,6 +2,6 @@ package com.octo.gwt.test;
 
 public interface GwtCreateHandler {
 
-	Object create(Class<?> classLiteral);
+	Object create(Class<?> classLiteral) throws Exception;
 
 }

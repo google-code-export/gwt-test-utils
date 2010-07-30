@@ -19,10 +19,6 @@ public class PatchGwtConfig {
 		return locale;
 	}
 
-	public static void addCreateClass(Class<?> classLiteral, Object object) {
-		GwtPatcher.classes.put(classLiteral, object);
-	}
-
 	public static void setLogHandler(GwtLogHandler gwtLogHandler) {
 		GwtPatcher.gwtLogHandler = gwtLogHandler;
 	}

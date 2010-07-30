@@ -4,9 +4,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.CurrencyList;
@@ -51,10 +49,8 @@ public class GwtPatcher extends AutomaticPatcher {
 
 	private static List<GwtCreateHandler> gwtCreateHandlers = new ArrayList<GwtCreateHandler>();
 	public static GwtLogHandler gwtLogHandler = null;
-	public static Map<Class<?>, Object> classes = new HashMap<Class<?>, Object>();
 
 	public static void reset() {
-		classes.clear();
 		gwtCreateHandlers.clear();
 		gwtLogHandler = null;
 	}
@@ -145,21 +141,18 @@ public class GwtPatcher extends AutomaticPatcher {
 			return ClientBundleProxyFactory.getFactory((Class<? extends ClientBundle>) classLiteral).createProxy();
 		}
 
-		Object o = classes.get(classLiteral);
-
-		if (o == null) {
-			for (GwtCreateHandler gwtCreateHandler : gwtCreateHandlers) {
-				o = gwtCreateHandler.create(classLiteral);
+		for (GwtCreateHandler gwtCreateHandler : gwtCreateHandlers) {
+			try {
+				Object o = gwtCreateHandler.create(classLiteral);
 				if (o != null) {
 					return o;
 				}
+			} catch (Exception e) {
+				throw new RuntimeException("Unable to create class " + classLiteral.getCanonicalName(), e);
 			}
 		}
 
-		if (o == null) {
-			throw new RuntimeException("No mock registered for class : " + classLiteral.getCanonicalName());
-		}
-		return o;
+		throw new RuntimeException("No mock registered for class : " + classLiteral.getCanonicalName());
 	}
 
 	private static Object generateImageWrapper(Class<?> clazz) {
