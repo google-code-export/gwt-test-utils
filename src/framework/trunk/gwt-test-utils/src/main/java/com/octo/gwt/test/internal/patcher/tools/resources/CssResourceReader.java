@@ -28,7 +28,6 @@ public class CssResourceReader {
 			Set<String> styles = new HashSet<String>();
 
 			Pattern constantPattern = Pattern.compile("^\\s*@def (\\S+)\\s+(\\S+)\\s*$");
-			Pattern styleCompletePattern = Pattern.compile("([^\\s:>+~-]*)[^\\{]*\\{.*$");
 
 			BufferedReader reader = null;
 
@@ -41,15 +40,6 @@ public class CssResourceReader {
 					m = constantPattern.matcher(line);
 					if (m.matches()) {
 						constants.put(m.group(1), m.group(2));
-					} else {
-						int index = line.lastIndexOf('.');
-						if (index != -1) {
-							m = styleCompletePattern.matcher(line.substring(index + 1));
-							if (m.matches()) {
-								styles.add(m.group(1));
-							}
-						}
-
 					}
 
 				}
@@ -73,19 +63,13 @@ public class CssResourceReader {
 	public static class CssParsingResult {
 
 		private Map<String, String> constants;
-		private Set<String> styles;
 
 		private CssParsingResult(Map<String, String> constants, Set<String> styles) {
 			this.constants = constants;
-			this.styles = styles;
 		}
 
 		public Map<String, String> getConstants() {
 			return constants;
-		}
-
-		public Set<String> getStyles() {
-			return styles;
 		}
 	}
 

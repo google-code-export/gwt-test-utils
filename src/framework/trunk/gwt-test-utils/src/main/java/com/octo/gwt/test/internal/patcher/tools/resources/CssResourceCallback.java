@@ -47,12 +47,8 @@ public class CssResourceCallback extends AbstractClientBundleCallback {
 		if (constant != null) {
 			return constant;
 		} else {
-			if (result.getStyles().contains(methodName)) {
-				return methodName;
-			}
+			return methodName;
 		}
-
-		return null;
 	}
 
 }
