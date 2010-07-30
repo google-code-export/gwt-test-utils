@@ -13,7 +13,7 @@ import com.octo.gwt.test.internal.patcher.tools.PatchMethod;
 @PatchClass(Image.class)
 public class ImagePatcher extends AutomaticPatcher {
 
-	private static final Pattern PATTERN = Pattern.compile("^(\\d*).*$");
+	private static final Pattern PATTERN = Pattern.compile("^(\\d+).*$");
 
 	@PatchMethod
 	public static ImageElement getImageElement(Image image) {

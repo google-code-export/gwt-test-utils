@@ -14,7 +14,8 @@ public class StylePatcher extends AutomaticSubclasser {
 
 	@PatchMethod
 	public static String getPropertyImpl(Style style, String propertyName) {
-		return SubClassedHelper.getProperty(style, propertyName);
+		String propertyValue = SubClassedHelper.getProperty(style, propertyName);
+		return (propertyValue != null) ? propertyValue : "";
 	}
 
 	@PatchMethod
