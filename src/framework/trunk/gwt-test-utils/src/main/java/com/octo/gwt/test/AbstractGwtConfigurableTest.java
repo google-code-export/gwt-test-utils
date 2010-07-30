@@ -29,7 +29,7 @@ public abstract class AbstractGwtConfigurableTest {
 		return null;
 	}
 
-	protected static Locale getLocale() {
+	protected Locale getLocale() {
 		// this method can be overrided by subclass
 		return null;
 	}

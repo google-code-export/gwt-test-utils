@@ -10,6 +10,7 @@ import java.util.Set;
 
 import org.easymock.IAnswer;
 import org.easymock.classextension.EasyMock;
+import org.junit.After;
 import org.junit.Before;
 
 import com.google.gwt.user.client.DOM;
@@ -36,6 +37,26 @@ public abstract class AbstractGwtEasyMockTest extends AbstractGwtTest {
 		}
 	}
 
+	@Before
+	public void setUpEasyMock() throws Exception {
+		for (Class<?> clazz : mockList) {
+			Object mock = EasyMock.createMock(clazz);
+			addMockedObject(clazz, mock);
+		}
+		for (Field f : annotatedFieldToInject) {
+			Object mock = mockedObject.get(f.getType());
+			f.setAccessible(true);
+			f.set(this, mock);
+		}
+
+		addGwtCreateHandler(new GwtCreateMockedObjectHandler());
+	}
+
+	@After
+	public void tearDownEasyMock() {
+		mockedObject.clear();
+	}
+
 	private class GwtCreateMockedObjectHandler implements GwtCreateHandler {
 
 		public Object create(Class<?> classLiteral) throws Exception {
@@ -50,21 +71,6 @@ public abstract class AbstractGwtEasyMockTest extends AbstractGwtTest {
 
 	protected void addMockedObject(Class<?> createClass, Object mock) {
 		mockedObject.put(createClass, mock);
-	}
-
-	@Before
-	public void setUpEasyMock() throws Exception {
-		for (Class<?> clazz : mockList) {
-			Object mock = EasyMock.createMock(clazz);
-			addMockedObject(clazz, mock);
-		}
-		for (Field f : annotatedFieldToInject) {
-			Object mock = mockedObject.get(f.getType());
-			f.setAccessible(true);
-			f.set(this, mock);
-		}
-
-		addGwtCreateHandler(new GwtCreateMockedObjectHandler());
 	}
 
 	public void replay() {
