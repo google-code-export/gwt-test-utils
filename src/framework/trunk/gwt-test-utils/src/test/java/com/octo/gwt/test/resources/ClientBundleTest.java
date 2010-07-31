@@ -103,6 +103,7 @@ public class ClientBundleTest extends AbstractGwtTest {
 		int heigh = testImageResource.getHeight();
 		int left = testImageResource.getLeft();
 		int width = testImageResource.getWidth();
+		int top = testImageResource.getTop();
 
 		// Assert
 		Assert.assertEquals("testImageResource", name);
@@ -110,6 +111,7 @@ public class ClientBundleTest extends AbstractGwtTest {
 		Assert.assertEquals(0, heigh);
 		Assert.assertEquals(0, left);
 		Assert.assertEquals(0, width);
+		Assert.assertEquals(0, top);
 	}
 
 	@Test
