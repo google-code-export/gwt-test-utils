@@ -116,7 +116,7 @@ public class AutomaticPatcher implements IPatcher {
 		}
 		for (int i = 0; i < classesAsked.length; i++) {
 			CtClass classFound = classesFound[i];
-			if (!classFound.getName().equals(classesAsked[i].getCanonicalName())) {
+			if (!classFound.getName().equals(classesAsked[i].getName())) {
 				return false;
 			}
 		}
