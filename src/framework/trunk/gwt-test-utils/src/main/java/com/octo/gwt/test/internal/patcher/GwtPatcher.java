@@ -11,6 +11,7 @@ import com.google.gwt.i18n.client.CurrencyList;
 import com.google.gwt.i18n.client.LocalizableResource;
 import com.google.gwt.i18n.client.impl.CldrImpl;
 import com.google.gwt.i18n.client.impl.LocaleInfoImpl;
+import com.google.gwt.layout.client.LayoutImplIE8;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.resources.client.impl.ImageResourcePrototype;
@@ -113,6 +114,10 @@ public class GwtPatcher extends AutomaticPatcher {
 		}
 		if (classLiteral == DateBox.DefaultFormat.class) {
 			return new DateBox.DefaultFormat();
+		}
+		if ("com.google.gwt.layout.client.LayoutImpl".equals(classLiteral.getName())) {
+			return new LayoutImplIE8();
+
 		}
 
 		if (classLiteral == MenuBar.Resources.class) {
