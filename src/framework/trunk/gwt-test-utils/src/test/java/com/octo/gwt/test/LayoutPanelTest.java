@@ -5,9 +5,11 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.layout.client.Layout.AnimationCallback;
 import com.google.gwt.layout.client.Layout.Layer;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 
@@ -62,18 +64,17 @@ public class LayoutPanelTest extends AbstractGwtTest {
 	}
 
 	@Test
-	public void check() {
-		//TODO: test those methods
-		//		panel.getWidgetContainerElement(child)
-		//		panel.insert(widget, beforeIndex)
-		//		panel.remove(w)
-		//		panel.setWidgetBottomHeight(child, bottom, bottomUnit, height, heightUnit)
-		//		panel.setWidgetHorizontalPosition(child, position)
-		//		panel.setWidgetLeftRight(child, left, leftUnit, right, rightUnit)
-		//		panel.setWidgetLeftWidth(child, left, leftUnit, width, widthUnit)
-		//		panel.setWidgetTopBottom(child, top, topUnit, bottom, bottomUnit)
-		//		panel.setWidgetTopHeight(child, top, topUnit, height, heightUnit)
-		//		panel.setWidgetVerticalPosition(child, position)
+	public void checkGetWidgetContainerElement() {
+		// Setup
+		FlowPanel fp1 = new FlowPanel();
+		panel.add(fp1);
+		Element fp1Element = ElementUtils.castToDomElement(fp1.getElement());
+
+		// Test
+		Element fp1Container = panel.getWidgetContainerElement(fp1);
+
+		// Assert
+		Assert.assertEquals(fp1Element, ElementUtils.castToDomElement(fp1Container.getFirstChildElement()));
 	}
 
 }
