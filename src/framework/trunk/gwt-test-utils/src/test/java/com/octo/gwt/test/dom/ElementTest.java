@@ -14,7 +14,6 @@ import com.google.gwt.dom.client.NodeList;
 import com.octo.gwt.test.AbstractGwtTest;
 import com.octo.gwt.test.internal.patcher.dom.NodeFactory;
 
-@SuppressWarnings("deprecation")
 public class ElementTest extends AbstractGwtTest {
 
 	private Element e;
@@ -97,7 +96,7 @@ public class ElementTest extends AbstractGwtTest {
 		// Set up
 		AnchorElement ae0 = Document.get().createAnchorElement();
 		AnchorElement ae1 = Document.get().createAnchorElement();
-		ButtonElement be = Document.get().createButtonElement();
+		ButtonElement be = Document.get().createPushButtonElement();
 		e.appendChild(ae0);
 		e.appendChild(ae1);
 		e.appendChild(be);
@@ -127,8 +126,8 @@ public class ElementTest extends AbstractGwtTest {
 
 		// Set up
 		Node node = NodeFactory.createNode();
-		ButtonElement be0 = Document.get().createButtonElement();
-		ButtonElement be1 = Document.get().createButtonElement();
+		ButtonElement be0 = Document.get().createPushButtonElement();
+		ButtonElement be1 = Document.get().createPushButtonElement();
 		e.appendChild(node);
 		e.appendChild(be0);
 		e.appendChild(be1);
@@ -167,8 +166,8 @@ public class ElementTest extends AbstractGwtTest {
 		Assert.assertNull(e.getNextSiblingElement());
 
 		// Set up
-		ButtonElement be0 = Document.get().createButtonElement();
-		ButtonElement be1 = Document.get().createButtonElement();
+		ButtonElement be0 = Document.get().createPushButtonElement();
+		ButtonElement be1 = Document.get().createPushButtonElement();
 		e.appendChild(be0);
 		e.appendChild(NodeFactory.createTextNode("test1"));
 		e.appendChild(be1);

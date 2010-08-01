@@ -16,8 +16,6 @@ import com.octo.gwt.test.internal.patcher.tools.PatchClass;
 import com.octo.gwt.test.internal.patcher.tools.PatchMethod;
 import com.octo.gwt.test.internal.patcher.tools.PropertyContainer;
 import com.octo.gwt.test.internal.patcher.tools.SubClassedHelper;
-import com.octo.gwt.test.utils.GwtTestReflectionUtils;
-import com.octo.gwt.test.utils.TagAware;
 
 @PatchClass(Element.class)
 public class ElementPatcher extends AutomaticElementSubclasser {
@@ -36,27 +34,13 @@ public class ElementPatcher extends AutomaticElementSubclasser {
 		cons.insertAfter(SubClassedHelper.getCodeSetProperty("this", STYLE_FIELD, NodeFactory.class.getCanonicalName() + ".createStyle()", true)
 				+ ";");
 		cons.insertAfter(SubClassedHelper.getCodeSetProperty("this", PROPERTY_MAP_FIELD, "new " + PropertyContainer.class.getCanonicalName() + "()",
-				true)
-				+ ";");
+				true) + ";");
 		cons.insertAfter(SubClassedHelper.getCodeSetProperty("this", ATTRIBUTE_MAP_FIELD, "new " + PropertyContainer.class.getCanonicalName() + "()",
-				true)
-				+ ";");
+				true) + ";");
 		cons.insertAfter(SubClassedHelper.getCodeSetProperty("this", ATTRIBUTE_MAP_FIELD, "new " + PropertyContainer.class.getCanonicalName() + "()",
-				true)
-				+ ";");
+				true) + ";");
 		cons.insertAfter(SubClassedHelper.getCodeSetProperty("this", CLASSNAME_FIELD, "\"\"", true) + ";");
 		cons.insertAfter(SubClassedHelper.getCodeSetProperty("this", ACCESSKEY_FIELD, "\"\"", true) + ";");
-	}
-
-	@PatchMethod
-	public static String getTagName(Element element) {
-		if (element == null)
-			return null;
-
-		if (element instanceof TagAware) {
-			return ((TagAware) element).getTag();
-		}
-		return GwtTestReflectionUtils.getStaticFieldValue(element.getClass(), "TAG");
 	}
 
 	@PatchMethod
@@ -132,7 +116,7 @@ public class ElementPatcher extends AutomaticElementSubclasser {
 	@PatchMethod
 	public static String getPropertyString(Element element, String propertyName) {
 		if ("tagName".equals(propertyName)) {
-			return getTagName(element);
+			return element.getTagName();
 		}
 		PropertyContainer propertyContainer = SubClassedHelper.getProperty(element, PROPERTY_MAP_FIELD);
 		return (String) propertyContainer.get(propertyName);

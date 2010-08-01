@@ -125,6 +125,7 @@ public class NodeTest extends AbstractGwtTest {
 	@Test
 	public void checkNodeType() {
 		Assert.assertEquals(Node.DOCUMENT_NODE, Document.get().getNodeType());
+		Assert.assertEquals(Node.ELEMENT_NODE, Document.get().getDocumentElement().getNodeType());
 		Assert.assertEquals(Node.ELEMENT_NODE, Document.get().createAnchorElement().getNodeType());
 		Assert.assertEquals(Node.TEXT_NODE, NodeFactory.createTextNode("test").getNodeType());
 	}

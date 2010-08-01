@@ -175,7 +175,6 @@ public class NodeFactory {
 		try {
 			Text text = (Text) SubClassedHelper.getSubClass(Text.class.getCanonicalName()).newInstance();
 			text.setData(data);
-			SubClassedHelper.setProperty(text, "NodeType", Node.TEXT_NODE);
 
 			return text;
 		} catch (Exception e) {
@@ -188,7 +187,6 @@ public class NodeFactory {
 			Element e = (Element) SubClassedHelper.getSubClass(Element.class.getCanonicalName()).newInstance();
 			SubClassedHelper.setProperty(e, "NodeName", "HTML");
 			SubClassedHelper.setProperty(e, "TagName", "HTML");
-			SubClassedHelper.setProperty(e, "NodeType", Node.DOCUMENT_NODE);
 
 			SubClassedHelper.setProperty(e, BODY_ELEMENT, createElement("body"));
 

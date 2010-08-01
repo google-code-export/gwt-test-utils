@@ -172,13 +172,14 @@ public class DocumentTest extends AbstractGwtTest {
 		Assert.assertEquals(3, d.getScrollTop());
 	}
 
+	@Test
 	public void checkGetDocumentElement() {
 		// Test
 		Element e = d.getDocumentElement();
 
 		Assert.assertEquals("HTML", e.getTagName());
 		Assert.assertEquals("HTML", e.getNodeName());
-		Assert.assertEquals(Node.DOCUMENT_NODE, e.getNodeType());
+		Assert.assertEquals(Node.ELEMENT_NODE, e.getNodeType());
 	}
 
 	@Test

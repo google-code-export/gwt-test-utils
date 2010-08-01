@@ -30,6 +30,14 @@ public class SubClassedHelper {
 		subClassedObject.getOverrideProperties().put(propertyName, propertyValue);
 	}
 
+	public static void setProperty(Object o, String propertyName, short propertyValue) {
+		setProperty(o, propertyName, (Object) propertyValue);
+	}
+
+	public static void setProperty(Object o, String propertyName, short propertyValue, boolean allowNull) {
+		setProperty(o, propertyName, (Object) propertyValue, allowNull);
+	}
+
 	public static void setProperty(Object o, String propertyName, int propertyValue) {
 		setProperty(o, propertyName, (Object) propertyValue);
 	}
@@ -77,6 +85,10 @@ public class SubClassedHelper {
 	@SuppressWarnings("unchecked")
 	public static <T> T getProperty(Object o, String propertyName) {
 		return (T) getSubClassedObjectOrNull(o).getOverrideProperties().get(propertyName);
+	}
+
+	public static short getPropertyShort(Object o, String propertyName) {
+		return getSubClassedObjectOrNull(o).getOverrideProperties().getShort(propertyName);
 	}
 
 	public static int getPropertyInteger(Object o, String propertyName) {

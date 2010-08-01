@@ -20,6 +20,7 @@ import com.octo.gwt.test.internal.patcher.tools.PatchMethod;
 import com.octo.gwt.test.internal.patcher.tools.PropertyContainer;
 import com.octo.gwt.test.internal.patcher.tools.SubClassedHelper;
 import com.octo.gwt.test.utils.GwtTestReflectionUtils;
+import com.octo.gwt.test.utils.TagAware;
 
 @PatchClass(classes = { "com.google.gwt.dom.client.DOMImpl" })
 public class DOMImplPatcher extends AutomaticPatcher {
@@ -30,6 +31,7 @@ public class DOMImplPatcher extends AutomaticPatcher {
 	private static final String INNER_HTML = "InnerHTML";
 	private static final String ABSOLUTE_LEFT = "AbsoluteLeft";
 	private static final String INNER_TEXT = "InnerText";
+	private static final String TAG_NAME = "TagName";
 	private static final String NODE_LIST_FIELD = "ChildNodes";
 
 	@PatchMethod
@@ -63,6 +65,19 @@ public class DOMImplPatcher extends AutomaticPatcher {
 	public static String getAttribute(Object domImpl, Element elem, String name) {
 		PropertyContainer propertyContainer = SubClassedHelper.getProperty(elem, ElementPatcher.PROPERTY_MAP_FIELD);
 		return (String) propertyContainer.get(name);
+	}
+
+	@PatchMethod
+	public static String getTagName(Object domImpl, Element elem) {
+		if (elem == null)
+			return null;
+
+		if (elem instanceof TagAware) {
+			return ((TagAware) elem).getTag();
+		}
+
+		String tagName = SubClassedHelper.getProperty(elem, TAG_NAME);
+		return (tagName != null) ? tagName : (String) GwtTestReflectionUtils.getStaticFieldValue(elem.getClass(), "TAG");
 	}
 
 	@PatchMethod

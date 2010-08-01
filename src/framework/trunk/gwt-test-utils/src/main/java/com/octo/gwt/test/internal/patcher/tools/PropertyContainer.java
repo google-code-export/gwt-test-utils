@@ -19,6 +19,11 @@ public class PropertyContainer extends HashMap<String, Object> {
 		return b == null ? false : b;
 	}
 
+	public short getShort(String key) {
+		Short s = (Short) get(key);
+		return s == null ? 0 : s;
+	}
+
 	public int getInteger(String key) {
 		Integer i = (Integer) get(key);
 		return i == null ? 0 : i;
