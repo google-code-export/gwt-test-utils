@@ -53,7 +53,7 @@ public class CsvRunner {
 		return lineExecuted;
 	}
 
-	public void executeRow(List<String> row, Object fixture) throws Exception {
+	public void executeRow(List<String> row, Object fixture) throws CsvRunnerException {
 		if (row.size() == 0) {
 			return;
 		}
@@ -92,7 +92,7 @@ public class CsvRunner {
 		list.addAll(newList);
 	}
 
-	public void executeLine(String methodName, List<String> args, Object fixture) throws Exception {
+	public void executeLine(String methodName, List<String> args, Object fixture) throws CsvRunnerException {
 		if (methodName.indexOf("**") != 0) {
 			List<String> filterArgs = new ArrayList<String>(args);
 			removeEmptyElements(filterArgs);
@@ -142,8 +142,12 @@ public class CsvRunner {
 		}
 	}
 
-	private Exception createCsvExecutionException(Throwable cause) {
-		return new Exception(getAssertionErrorMessagePrefix() + "Execution error", cause);
+	private CsvRunnerException createCsvExecutionException(Throwable cause) {
+		if (cause instanceof CsvRunnerException) {
+			return (CsvRunnerException) cause;
+		}
+
+		return new CsvRunnerException(this, cause);
 	}
 
 	private static Map<Class<?>, Map<String, Method>> csvMethodsCache = new HashMap<Class<?>, Map<String, Method>>();
