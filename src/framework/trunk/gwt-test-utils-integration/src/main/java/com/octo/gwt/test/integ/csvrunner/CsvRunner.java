@@ -128,13 +128,8 @@ public class CsvRunner {
 				Object[] finalArgList = argList.toArray(new Object[] {});
 				m.invoke(fixture, finalArgList);
 			} catch (InvocationTargetException e) {
-				if (e.getCause() instanceof Exception) {
-					Exception ex = (Exception) e.getCause();
-					throw ex;
-				}
-				if (e.getCause() instanceof Error) {
-					Error er = (Error) e.getCause();
-					throw er;
+				if (e.getCause() != null) {
+					throw createCsvExecutionException(e.getCause());
 				}
 				logger.error(getAssertionErrorMessagePrefix() + "Execution error", e);
 				Assert.fail(getAssertionErrorMessagePrefix() + "Error invoking " + methodName + " in fixture " + e.toString());
@@ -145,6 +140,10 @@ public class CsvRunner {
 		} else {
 			logger.debug(getProcessingMessagePrefix() + "commented line : " + methodName + " : " + args);
 		}
+	}
+
+	private Exception createCsvExecutionException(Throwable cause) {
+		return new Exception(getAssertionErrorMessagePrefix() + "Execution error", cause);
 	}
 
 	private static Map<Class<?>, Map<String, Method>> csvMethodsCache = new HashMap<Class<?>, Map<String, Method>>();
