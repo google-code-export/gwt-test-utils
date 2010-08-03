@@ -1,7 +1,7 @@
-package com.octo.gwt.test.internal.overrides;
+package com.octo.gwt.test.utils.events;
 
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 
 public class OverrideEvent extends Event {
@@ -26,11 +26,11 @@ public class OverrideEvent extends Event {
 
 	private Element overrideTargetElement;
 
-	public OverrideEvent(int type) {
+	protected OverrideEvent(int type) {
 		this(type, NativeEvent.BUTTON_LEFT);
 	}
 
-	public OverrideEvent(int type, int button) {
+	protected OverrideEvent(int type, int button) {
 		this.overrideType = type;
 		this.overrideButton = button;
 		this.overrideMetaKey = false;
@@ -40,7 +40,7 @@ public class OverrideEvent extends Event {
 		this.overrideKeyCode = 0;
 	}
 
-	public OverrideEvent(int type, Element targetElement) {
+	protected OverrideEvent(int type, Element targetElement) {
 		this.overrideTargetElement = targetElement;
 		this.overrideType = type;
 		this.overrideMetaKey = false;

@@ -7,6 +7,7 @@ import org.junit.Test;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.StackPanel;
+import com.octo.gwt.test.utils.events.Browser;
 
 public class StackPanelTest extends AbstractGwtTest {
 
@@ -59,7 +60,7 @@ public class StackPanelTest extends AbstractGwtTest {
 		panel.add(new Anchor());
 
 		// Test
-		click(panel, 1);
+		Browser.click(panel, 1);
 
 		// Assert that the "AbstractGWTTest.click(ComplexPanel, index)" method trigger the "showStack" method
 		Assert.assertEquals(1, index);

@@ -7,9 +7,9 @@ import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Node;
 import com.octo.gwt.test.ElementUtils;
 import com.octo.gwt.test.EventUtils;
-import com.octo.gwt.test.internal.overrides.OverrideEvent;
 import com.octo.gwt.test.internal.patcher.tools.AutomaticPatcher;
 import com.octo.gwt.test.internal.patcher.tools.PatchMethod;
+import com.octo.gwt.test.utils.events.EventBuilder;
 
 public class DOMImplSubClassPatcher extends AutomaticPatcher {
 
@@ -42,8 +42,7 @@ public class DOMImplSubClassPatcher extends AutomaticPatcher {
 
 	@PatchMethod
 	public static NativeEvent createHtmlEvent(Object domImpl, Document doc, String type, boolean canBubble, boolean cancelable) {
-		OverrideEvent event = new OverrideEvent(EventUtils.getEventTypeInt(type));
-		return event;
+		return EventBuilder.create(EventUtils.getEventTypeInt(type)).build();
 	}
 
 }

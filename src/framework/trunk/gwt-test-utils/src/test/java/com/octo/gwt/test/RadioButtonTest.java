@@ -6,6 +6,7 @@ import org.junit.Test;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.RadioButton;
+import com.octo.gwt.test.utils.events.Browser;
 
 public class RadioButtonTest extends AbstractGwtTest {
 
@@ -91,7 +92,7 @@ public class RadioButtonTest extends AbstractGwtTest {
 		Assert.assertEquals(false, tested);
 
 		//simule the event
-		click(r);
+		Browser.click(r);
 
 		Assert.assertEquals(true, tested);
 	}

@@ -7,6 +7,7 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.MenuItemSeparator;
+import com.octo.gwt.test.utils.events.Browser;
 
 public class MenuBarTest extends AbstractGwtTest {
 
@@ -91,7 +92,7 @@ public class MenuBarTest extends AbstractGwtTest {
 
 		Assert.assertEquals(false, called);
 
-		click(bar, item);
+		Browser.click(bar, item);
 
 		Assert.assertEquals(true, called);
 	}
@@ -106,7 +107,7 @@ public class MenuBarTest extends AbstractGwtTest {
 
 		Assert.assertEquals(false, called);
 
-		click(bar, item);
+		Browser.click(bar, item);
 
 		Assert.assertEquals(true, called);
 	}

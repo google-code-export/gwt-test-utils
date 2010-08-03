@@ -15,6 +15,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.ui.Button;
+import com.octo.gwt.test.utils.events.Browser;
 
 public class GwtTest extends AbstractGwtTest {
 
@@ -76,7 +77,7 @@ public class GwtTest extends AbstractGwtTest {
 		});
 
 		// Test
-		click(b);
+		Browser.click(b);
 
 		// Assert
 		Assert.assertTrue(success);

@@ -33,6 +33,7 @@ import com.octo.gwt.test.utils.ArrayUtils;
 import com.octo.gwt.test.utils.GwtTestReflectionUtils;
 import com.octo.gwt.test.utils.GwtTestStringUtils;
 import com.octo.gwt.test.utils.WidgetUtils;
+import com.octo.gwt.test.utils.events.Browser;
 
 public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurableTest {
 
@@ -193,7 +194,7 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 	@CsvMethod
 	public void blur(String objectLocalization) {
 		Widget widget = getObject(Widget.class, objectLocalization);
-		WidgetUtils.blur(widget);
+		Browser.blur(widget);
 	}
 
 	/**
@@ -205,7 +206,7 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 	@CsvMethod
 	public void change(String objectLocalization) {
 		Widget widget = getObject(Widget.class, objectLocalization);
-		WidgetUtils.change(widget);
+		Browser.change(widget);
 	}
 
 	/**
@@ -217,21 +218,21 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 	@CsvMethod
 	public void click(String objectLocalization) {
 		Widget widget = getObject(Widget.class, objectLocalization);
-		WidgetUtils.click(widget, csvRunner.getAssertionErrorMessagePrefix(), objectLocalization);
+		Browser.click(widget, csvRunner.getAssertionErrorMessagePrefix(), objectLocalization);
 	}
 
 	@CsvMethod
 	public void clickComplexPanel(String index, String objectLocalization) {
 		ComplexPanel widget = getObject(ComplexPanel.class, objectLocalization);
 		checkWidgetVisible(widget, objectLocalization);
-		WidgetUtils.click(widget, Integer.valueOf(index));
+		Browser.click(widget, Integer.valueOf(index));
 	}
 
 	@CsvMethod
 	public void clickPanel(String objectLocalization) {
 		FocusPanel widget = getObject(FocusPanel.class, objectLocalization);
 		checkWidgetVisibleAndEnable(widget, objectLocalization);
-		WidgetUtils.click(widget, csvRunner.getAssertionErrorMessagePrefix(), objectLocalization);
+		Browser.click(widget, csvRunner.getAssertionErrorMessagePrefix(), objectLocalization);
 	}
 
 	@CsvMethod
@@ -239,56 +240,56 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 		MenuBar menuBar = getObject(MenuBar.class, objectLocalization);
 		List<MenuItem> menuItems = GwtTestReflectionUtils.getPrivateFieldValue(menuBar, "items");
 		MenuItem itemToClick = menuItems.get(Integer.parseInt(index));
-		WidgetUtils.click(menuBar, itemToClick);
+		Browser.click(menuBar, itemToClick);
 	}
 
 	@CsvMethod
 	public void clickOnTableRow(String rowIndex, String objectLocalization) {
 		Grid grid = getObject(Grid.class, objectLocalization);
 		checkWidgetVisible(grid, objectLocalization);
-		WidgetUtils.click(grid, Integer.parseInt(rowIndex), 0);
+		Browser.click(grid, Integer.parseInt(rowIndex), 0);
 	}
 
 	@CsvMethod
 	public void focus(String objectLocalization) {
 		Widget widget = getObject(Widget.class, objectLocalization);
-		WidgetUtils.focus(widget);
+		Browser.focus(widget);
 	}
 
 	@CsvMethod
 	public void mouseDown(String objectLocalization) {
 		Widget widget = getObject(Widget.class, objectLocalization);
-		WidgetUtils.mouseDown(widget);
+		Browser.mouseDown(widget);
 	}
 
 	@CsvMethod
 	public void mouseMove(String objectLocalization) {
 		Widget widget = getObject(Widget.class, objectLocalization);
-		WidgetUtils.mouseMove(widget);
+		Browser.mouseMove(widget);
 	}
 
 	@CsvMethod
 	public void mouseUp(String objectLocalization) {
 		Widget widget = getObject(Widget.class, objectLocalization);
-		WidgetUtils.mouseUp(widget);
+		Browser.mouseUp(widget);
 	}
 
 	@CsvMethod
 	public void mouseWheel(String objectLocalization) {
 		Widget widget = getObject(Widget.class, objectLocalization);
-		WidgetUtils.mouseWheel(widget);
+		Browser.mouseWheel(widget);
 	}
 
 	@CsvMethod
 	public void mouseOut(String objectLocalization) {
 		Widget widget = getObject(Widget.class, objectLocalization);
-		WidgetUtils.mouseOut(widget);
+		Browser.mouseOut(widget);
 	}
 
 	@CsvMethod
 	public void mouseOver(String objectLocalization) {
 		Widget widget = getObject(Widget.class, objectLocalization);
-		WidgetUtils.mouseOver(widget);
+		Browser.mouseOver(widget);
 	}
 
 	@CsvMethod
@@ -381,16 +382,16 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 		TextBox textBox = getObject(TextBox.class, objectLocalization);
 		checkWidgetVisibleAndEnable(textBox, objectLocalization);
 		textBox.setText(value);
-		WidgetUtils.keyUp(textBox, KeyCodes.KEY_ENTER);
-		WidgetUtils.change(textBox);
+		Browser.keyUp(textBox, KeyCodes.KEY_ENTER);
+		Browser.change(textBox);
 	}
 
 	@CsvMethod
 	public void fillInvisibleTextBox(String value, String objectLocalization) {
 		TextBox textBox = getObject(TextBox.class, objectLocalization);
 		textBox.setText(value);
-		WidgetUtils.keyUp(textBox, KeyCodes.KEY_ENTER);
-		WidgetUtils.change(textBox);
+		Browser.keyUp(textBox, KeyCodes.KEY_ENTER);
+		Browser.change(textBox);
 	}
 
 	@CsvMethod
@@ -434,8 +435,8 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 
 		if (selectedIndex > -1) {
 			listBox.setSelectedIndex(selectedIndex);
-			WidgetUtils.click(listBox);
-			WidgetUtils.change(listBox);
+			Browser.click(listBox);
+			Browser.change(listBox);
 		} else {
 			errorMessage += WidgetUtils.getListBoxContentToString(listBox);
 			Assert.fail(csvRunner.getAssertionErrorMessagePrefix() + errorMessage);
@@ -466,7 +467,7 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 		SuggestBox suggestBox = getObject(SuggestBox.class, objectLocalization);
 		checkWidgetVisible(suggestBox, objectLocalization);
 		suggestBox.setText(value);
-		WidgetUtils.keyUp(suggestBox, KeyCodes.KEY_ENTER);
+		Browser.keyUp(suggestBox, KeyCodes.KEY_ENTER);
 	}
 
 	@CsvMethod

@@ -7,77 +7,173 @@ import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.Widget;
-import com.octo.gwt.test.utils.WidgetUtils;
+import com.octo.gwt.test.utils.events.Browser;
 
 @RunWith(GwtTestRunner.class)
 public abstract class AbstractGwtTest extends AbstractGwtConfigurableTest {
 
+	/**
+	 * @param target
+	 * @deprecated use {@link Browser#blur(Widget)} instead
+	 */
 	public static void blur(Widget target) {
-		WidgetUtils.blur(target);
+		Browser.blur(target);
 	}
 
+	/**
+	 * @param target
+	 * @deprecated use {@link Browser#change(Widget)} instead
+	 */
 	public static void change(Widget target) {
-		WidgetUtils.change(target);
+		Browser.change(target);
 	}
 
+	/**
+	 * @param target
+	 * @deprecated use {@link Browser#click(Widget)} instead
+	 */
 	public static void click(Widget target) {
-		WidgetUtils.click(target);
+		Browser.click(target);
 	}
 
+	/**
+	 * 
+	 * @param target
+	 * @param errorPrefix
+	 * @param widgetName
+	 * @deprecated use {@link Browser#click(Widget, String, String)} instead
+	 */
+	public static void click(Widget target, String errorPrefix, String widgetName) {
+		Browser.click(target, errorPrefix, widgetName);
+	}
+
+	/**
+	 * 
+	 * @param parent
+	 * @param clickedItem
+	 * @deprecated use {@link Browser#click(MenuBar, MenuItem)} instead
+	 */
 	public static void click(MenuBar parent, MenuItem clickedItem) {
-		WidgetUtils.click(parent, clickedItem);
+		Browser.click(parent, clickedItem);
 	}
 
+	/**
+	 * 
+	 * @param parent
+	 * @param clickedItemIndex
+	 * @deprecated use {@link Browser#click(MenuBar, int)} instead
+	 */
 	public static void click(MenuBar parent, int clickedItemIndex) {
-		WidgetUtils.click(parent, clickedItemIndex);
+		Browser.click(parent, clickedItemIndex);
 	}
 
+	/**
+	 * 
+	 * @param grid
+	 * @param row
+	 * @param column
+	 * @deprecated use {@link Browser#click(Grid, int, int)} instead
+	 */
 	public static void click(Grid grid, int row, int column) {
-		WidgetUtils.click(grid, row, column);
+		Browser.click(grid, row, column);
 	}
 
+	/**
+	 * 
+	 * @param panel
+	 * @param index
+	 * @deprecated use {@link Browser#click(ComplexPanel, int)} instead
+	 */
 	public static void click(ComplexPanel panel, int index) {
-		WidgetUtils.click(panel, index);
+		Browser.click(panel, index);
 	}
 
+	/**
+	 * 
+	 * @param target
+	 * @deprecated use {@link Browser#focus(Widget)} instead
+	 */
 	public static void focus(Widget target) {
-		WidgetUtils.focus(target);
+		Browser.focus(target);
 	}
 
+	/**
+	 * 
+	 * @param target
+	 * @param keyCode
+	 * @deprecated use {@link Browser#keyDown(Widget, int)} instead
+	 */
 	public static void keyDown(Widget target, int keyCode) {
-		WidgetUtils.keyDown(target, keyCode);
+		Browser.keyDown(target, keyCode);
 	}
 
+	/**
+	 * 
+	 * @param target
+	 * @param keyCode
+	 * @deprecated use {@link Browser#keyPress(Widget, int)} instead
+	 */
 	public static void keyPress(Widget target, int keyCode) {
-		WidgetUtils.keyPress(target, keyCode);
+		Browser.keyPress(target, keyCode);
 	}
 
+	/**
+	 * 
+	 * @param target
+	 * @param keyCode
+	 * @deprecated use {@link Browser#keyUp(Widget, int)} instead
+	 */
 	public static void keyUp(Widget target, int keyCode) {
-		WidgetUtils.keyUp(target, keyCode);
+		Browser.keyUp(target, keyCode);
 	}
 
+	/**
+	 * 
+	 * @param target
+	 * @deprecated use {@link Browser#mouseMove(Widget)} instead
+	 */
 	public static void mouseMove(Widget target) {
-		WidgetUtils.mouseMove(target);
+		Browser.mouseMove(target);
 	}
 
+	/**
+	 * @param target
+	 * @deprecated use {@link Browser#mouseDown(Widget)} instead
+	 */
 	public static void mouseDown(Widget target) {
-		WidgetUtils.mouseDown(target);
+		Browser.mouseDown(target);
 	}
 
+	/**
+	 * @param target
+	 * @deprecated use {@link Browser#mouseUp(Widget)} instead
+	 */
 	public static void mouseUp(Widget target) {
-		WidgetUtils.mouseUp(target);
+		Browser.mouseUp(target);
 	}
 
+	/**
+	 * @param target
+	 * @deprecated use {@link Browser#mouseWheel(Widget)} instead
+	 */
 	public static void mouseWheel(Widget target) {
-		WidgetUtils.mouseWheel(target);
+		Browser.mouseWheel(target);
 	}
 
+	/**
+	 * @param target
+	 * @deprecated use {@link Browser#mouseOver(Widget)} instead
+	 */
 	public static void mouseOver(Widget target) {
-		WidgetUtils.mouseOver(target);
+		Browser.mouseOver(target);
 	}
 
+	/**
+	 * @param target
+	 * @deprecated use {@link Browser#mouseOut(Widget)} instead
+	 */
+	@Deprecated
 	public static void mouseOut(Widget target) {
-		WidgetUtils.mouseOut(target);
+		Browser.mouseOut(target);
 	}
-
 }

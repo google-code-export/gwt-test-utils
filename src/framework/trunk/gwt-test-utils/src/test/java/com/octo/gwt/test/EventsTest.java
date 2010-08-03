@@ -39,6 +39,7 @@ import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.StackPanel;
+import com.octo.gwt.test.utils.events.Browser;
 
 public class EventsTest extends AbstractGwtTest {
 
@@ -58,7 +59,7 @@ public class EventsTest extends AbstractGwtTest {
 		});
 
 		// simule the event
-		click(b);
+		Browser.click(b);
 
 		Assert.assertTrue("onClick event was not triggered", tested);
 	}
@@ -83,7 +84,7 @@ public class EventsTest extends AbstractGwtTest {
 		panel.add(new Anchor());
 
 		// Test
-		click(panel, 0);
+		Browser.click(panel, 0);
 
 		// Assert
 		Assert.assertTrue("onClick event was not triggered", tested);
@@ -103,7 +104,7 @@ public class EventsTest extends AbstractGwtTest {
 		});
 
 		// simule the event
-		blur(b);
+		Browser.blur(b);
 
 		Assert.assertTrue("onBlur event was not triggered", tested);
 	}
@@ -121,7 +122,7 @@ public class EventsTest extends AbstractGwtTest {
 		});
 
 		// simule the event
-		focus(b);
+		Browser.focus(b);
 
 		Assert.assertTrue("onFocus event was not triggered", tested);
 	}
@@ -139,12 +140,12 @@ public class EventsTest extends AbstractGwtTest {
 		});
 
 		// Test
-		keyDown(b, KeyCodes.KEY_ESCAPE);
+		Browser.keyDown(b, KeyCodes.KEY_ESCAPE);
 		// Assert
 		Assert.assertFalse("onKeyDown event should not be triggered", tested);
 
 		// Test 2
-		keyDown(b, KeyCodes.KEY_ENTER);
+		Browser.keyDown(b, KeyCodes.KEY_ENTER);
 		// Assert 2
 		Assert.assertTrue("onKeyDown event was not triggered", tested);
 	}
@@ -162,12 +163,12 @@ public class EventsTest extends AbstractGwtTest {
 		});
 
 		// Test
-		keyDown(b, KeyCodes.KEY_ESCAPE);
+		Browser.keyDown(b, KeyCodes.KEY_ESCAPE);
 		// Assert
 		Assert.assertFalse("onKeyPress event should not be triggered", tested);
 
 		// Test 2
-		keyPress(b, KeyCodes.KEY_ENTER);
+		Browser.keyPress(b, KeyCodes.KEY_ENTER);
 		// Assert 2
 		Assert.assertTrue("onKeyPress event was not triggered", tested);
 	}
@@ -185,12 +186,12 @@ public class EventsTest extends AbstractGwtTest {
 		});
 
 		// Test
-		keyDown(b, KeyCodes.KEY_ESCAPE);
+		Browser.keyDown(b, KeyCodes.KEY_ESCAPE);
 		// Assert
 		Assert.assertFalse("onKeyUp event should not be triggered", tested);
 
 		// Test 2
-		keyUp(b, KeyCodes.KEY_ENTER);
+		Browser.keyUp(b, KeyCodes.KEY_ENTER);
 		// Assert 2
 		Assert.assertTrue("onKeyUp event was not triggered", tested);
 	}
@@ -208,7 +209,7 @@ public class EventsTest extends AbstractGwtTest {
 		});
 
 		// simule the event
-		mouseDown(b);
+		Browser.mouseDown(b);
 
 		Assert.assertTrue("onMouseDown event was not triggered", tested);
 	}
@@ -226,7 +227,7 @@ public class EventsTest extends AbstractGwtTest {
 		});
 
 		// simule the event
-		mouseUp(b);
+		Browser.mouseUp(b);
 
 		Assert.assertTrue("onMouseUp event was not triggered", tested);
 	}
@@ -244,7 +245,7 @@ public class EventsTest extends AbstractGwtTest {
 		});
 
 		// simule the event
-		mouseMove(b);
+		Browser.mouseMove(b);
 
 		Assert.assertTrue("onMouseMove event was not triggered", tested);
 	}
@@ -262,7 +263,7 @@ public class EventsTest extends AbstractGwtTest {
 		});
 
 		// simule the event
-		mouseWheel(b);
+		Browser.mouseWheel(b);
 
 		Assert.assertTrue("onMouseWheel event was not triggered", tested);
 	}
@@ -280,7 +281,7 @@ public class EventsTest extends AbstractGwtTest {
 		});
 
 		// simule the event
-		mouseOver(b);
+		Browser.mouseOver(b);
 
 		Assert.assertTrue("onMouseOver event was not triggered", tested);
 	}
@@ -298,7 +299,7 @@ public class EventsTest extends AbstractGwtTest {
 		});
 
 		// simule the event
-		mouseOut(b);
+		Browser.mouseOut(b);
 
 		Assert.assertTrue("onMouseOut event was not triggered", tested);
 	}

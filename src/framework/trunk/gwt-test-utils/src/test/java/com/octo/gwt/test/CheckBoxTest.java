@@ -4,6 +4,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.google.gwt.user.client.ui.CheckBox;
+import com.octo.gwt.test.utils.events.Browser;
 
 public class CheckBoxTest extends AbstractGwtTest {
 
@@ -16,7 +17,7 @@ public class CheckBoxTest extends AbstractGwtTest {
 		Assert.assertEquals(false, cb.getValue());
 
 		//we must use the parent click method to simule the click without registering an handler
-		click(cb);
+		Browser.click(cb);
 		Assert.assertEquals(true, cb.getValue());
 	}
 
