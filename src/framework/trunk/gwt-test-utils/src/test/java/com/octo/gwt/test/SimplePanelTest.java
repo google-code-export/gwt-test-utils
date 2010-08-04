@@ -4,6 +4,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 
 public class SimplePanelTest extends AbstractGwtTest {
@@ -25,14 +26,22 @@ public class SimplePanelTest extends AbstractGwtTest {
 
 	@Test
 	public void checkAdd() {
+		// Setup
 		SimplePanel panel = new SimplePanel();
+		RootPanel.get().add(panel);
+		Assert.assertTrue(panel.isAttached());
+		Assert.assertNull(panel.getWidget());
+		Button b1 = new Button();
+		Assert.assertFalse(b1.isAttached());
+		Assert.assertNull(b1.getParent());
 
-		Button b = new Button();
-		panel.add(b);
+		// Test
+		panel.add(b1);
 
-		Button b2 = (Button) panel.getWidget();
-
-		Assert.assertEquals(b, b2);
+		// Assert
+		Assert.assertTrue(b1.isAttached());
+		Assert.assertEquals(panel, b1.getParent());
+		Assert.assertEquals(b1, panel.getWidget());
 	}
 
 	@Test

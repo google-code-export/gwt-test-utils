@@ -6,6 +6,7 @@ import org.junit.Test;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.RootPanel;
 
 public class ComplexPanelTest extends AbstractGwtTest {
 
@@ -58,6 +59,29 @@ public class ComplexPanelTest extends AbstractGwtTest {
 		Assert.assertEquals(1, panel.getWidgetCount());
 		Assert.assertEquals(b1, panel.getWidget(0));
 		Assert.assertEquals(panel, b1.getParent());
+	}
+
+	@Test
+	public void checkAdd() {
+		// Setup
+		ComplexPanel panel = new FlowPanel();
+		RootPanel.get().add(panel);
+		Assert.assertTrue(panel.isAttached());
+		Assert.assertEquals(0, panel.getWidgetCount());
+		Button b1 = new Button();
+		Assert.assertFalse(b1.isAttached());
+		Assert.assertNull(b1.getParent());
+
+		// Test
+		panel.add(b1);
+
+		// Assert
+		Assert.assertTrue(b1.isAttached());
+		Assert.assertEquals(panel, b1.getParent());
+		Assert.assertEquals(1, panel.getWidgetCount());
+		Assert.assertEquals(b1, panel.getWidget(0));
+		Assert.assertEquals(0, panel.getWidgetIndex(b1));
+
 	}
 
 }

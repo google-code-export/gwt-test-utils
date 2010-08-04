@@ -231,18 +231,18 @@ public class CsvRunnerTest {
 		runner.executeLine("methVar1", Arrays.asList("a", "p0", "p1", "p2"), o);
 	}
 
-	@Test(expected = CsvRunnerException.class)
-	public void checkMeth1WrongValue() throws Exception {
+	@Test(expected = AssertionError.class)
+	public void checkMeth1WrongValue() throws CsvRunnerException {
 		runner.executeLine("meth1", Arrays.asList("p4"), o);
 	}
 
 	@Test(expected = CsvRunnerException.class)
-	public void checkRuntime() throws Exception {
+	public void checkRuntime() throws CsvRunnerException {
 		runner.executeLine("runException", new ArrayList<String>(), o);
 	}
 
 	@Test(expected = CsvRunnerException.class)
-	public void checkException() throws Exception {
+	public void checkException() throws CsvRunnerException {
 		runner.executeLine("runMyException", new ArrayList<String>(), o);
 	}
 

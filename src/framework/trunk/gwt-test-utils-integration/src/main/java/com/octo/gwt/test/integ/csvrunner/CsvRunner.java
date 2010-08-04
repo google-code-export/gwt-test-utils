@@ -129,6 +129,9 @@ public class CsvRunner {
 				m.invoke(fixture, finalArgList);
 			} catch (InvocationTargetException e) {
 				if (e.getCause() != null) {
+					if (e.getCause() instanceof AssertionError) {
+						throw (AssertionError) e.getCause();
+					}
 					throw createCsvExecutionException(e.getCause());
 				}
 				logger.error(getAssertionErrorMessagePrefix() + "Execution error", e);

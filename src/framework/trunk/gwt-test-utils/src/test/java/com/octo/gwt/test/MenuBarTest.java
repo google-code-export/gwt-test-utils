@@ -61,6 +61,8 @@ public class MenuBarTest extends AbstractGwtTest {
 
 		Assert.assertEquals(0, bar.getItemIndex(item0));
 		Assert.assertEquals(1, bar.getItemIndex(item1));
+		Assert.assertEquals(bar, item0.getParentMenu());
+		Assert.assertEquals(bar, item1.getParentMenu());
 	}
 
 	@Test

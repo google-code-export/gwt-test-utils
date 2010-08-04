@@ -38,17 +38,6 @@ public abstract class AbstractGwtTest extends AbstractGwtConfigurableTest {
 
 	/**
 	 * 
-	 * @param target
-	 * @param errorPrefix
-	 * @param widgetName
-	 * @deprecated use {@link Browser#click(Widget, String, String)} instead
-	 */
-	public static void click(Widget target, String errorPrefix, String widgetName) {
-		Browser.click(target, errorPrefix, widgetName);
-	}
-
-	/**
-	 * 
 	 * @param parent
 	 * @param clickedItem
 	 * @deprecated use {@link Browser#click(MenuBar, MenuItem)} instead

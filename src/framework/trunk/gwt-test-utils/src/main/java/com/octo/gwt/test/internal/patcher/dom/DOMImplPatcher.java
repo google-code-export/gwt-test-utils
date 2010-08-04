@@ -10,7 +10,6 @@ import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.OptionElement;
 import com.google.gwt.dom.client.SelectElement;
 import com.google.gwt.dom.client.Style;
-import com.google.gwt.user.client.Event;
 import com.octo.gwt.test.ElementUtils;
 import com.octo.gwt.test.internal.overrides.OverrideNodeList;
 import com.octo.gwt.test.internal.patcher.tools.AutomaticPatcher;
@@ -20,6 +19,7 @@ import com.octo.gwt.test.internal.patcher.tools.PropertyContainer;
 import com.octo.gwt.test.internal.patcher.tools.SubClassedHelper;
 import com.octo.gwt.test.utils.GwtTestReflectionUtils;
 import com.octo.gwt.test.utils.TagAware;
+import com.octo.gwt.test.utils.events.EventUtils;
 import com.octo.gwt.test.utils.events.OverrideEvent;
 
 @PatchClass(classes = { "com.google.gwt.dom.client.DOMImpl" })
@@ -113,7 +113,7 @@ public class DOMImplPatcher extends AutomaticPatcher {
 		for (int i = 0; i < nodeList.getLength(); i++) {
 			Node node = nodeList.getItem(i);
 			if (node instanceof Element) {
-				return (Element) node;
+				return ElementUtils.castToDomElement(node);
 			}
 		}
 
@@ -128,7 +128,7 @@ public class DOMImplPatcher extends AutomaticPatcher {
 		if (parent == null || !(parent instanceof Element))
 			return null;
 
-		return (Element) parent;
+		return ElementUtils.castToDomElement(parent);
 	}
 
 	@PatchMethod
@@ -146,7 +146,7 @@ public class DOMImplPatcher extends AutomaticPatcher {
 				while (i < list.getLength() - 1) {
 					i++;
 					if (list.getItem(i) instanceof Element) {
-						return (Element) list.getItem(i);
+						return ElementUtils.castToDomElement(list.getItem(i));
 					}
 				}
 			}
@@ -167,49 +167,7 @@ public class DOMImplPatcher extends AutomaticPatcher {
 
 	@PatchMethod
 	public static String eventGetType(Object domImpl, NativeEvent nativeEvent) {
-		OverrideEvent event = OverrideEvent.overrideCast(nativeEvent);
-		switch (event.getOverrideType()) {
-		case Event.ONBLUR:
-			return "blur";
-		case Event.ONCHANGE:
-			return "change";
-		case Event.ONCLICK:
-			return "click";
-		case Event.ONDBLCLICK:
-			return "dblclick";
-		case Event.ONFOCUS:
-			return "focus";
-		case Event.ONKEYDOWN:
-			return "keydown";
-		case Event.ONKEYPRESS:
-			return "keypress";
-		case Event.ONKEYUP:
-			return "keyup";
-		case Event.ONLOAD:
-			return "load";
-		case Event.ONLOSECAPTURE:
-			return "losecapture";
-		case Event.ONMOUSEDOWN:
-			return "mousedown";
-		case Event.ONMOUSEMOVE:
-			return "mousemove";
-		case Event.ONMOUSEOUT:
-			return "mouseout";
-		case Event.ONMOUSEOVER:
-			return "mouseover";
-		case Event.ONMOUSEUP:
-			return "mouseup";
-		case Event.ONSCROLL:
-			return "scroll";
-		case Event.ONERROR:
-			return "error";
-		case Event.ONMOUSEWHEEL:
-			return "mousewheel";
-		case Event.ONCONTEXTMENU:
-			return "contextmenu";
-		default:
-			throw new RuntimeException("Cannot get the String type of event with code [" + event.getOverrideType() + "]");
-		}
+		return EventUtils.getEventTypeString(nativeEvent);
 	}
 
 	@PatchMethod

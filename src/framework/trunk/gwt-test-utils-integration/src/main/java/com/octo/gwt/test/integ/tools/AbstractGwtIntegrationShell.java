@@ -13,17 +13,19 @@ import java.util.List;
 import org.junit.Assert;
 
 import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.ComplexPanel;
-import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 import com.octo.gwt.test.AbstractGwtConfigurableTest;
 import com.octo.gwt.test.integ.CsvMethod;
@@ -33,7 +35,8 @@ import com.octo.gwt.test.utils.ArrayUtils;
 import com.octo.gwt.test.utils.GwtTestReflectionUtils;
 import com.octo.gwt.test.utils.GwtTestStringUtils;
 import com.octo.gwt.test.utils.WidgetUtils;
-import com.octo.gwt.test.utils.events.Browser;
+import com.octo.gwt.test.utils.events.EventBuilder;
+import com.octo.gwt.test.utils.events.EventUtils;
 
 public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurableTest {
 
@@ -55,53 +58,10 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 		csvRunner.runSheet(reader.getTest(testName), this);
 	}
 
-	protected PrefixProcessor findPrefixProcessor(String prefix) {
-		if ("root".equals(prefix)) {
-			return new PrefixProcessor() {
-
-				public Object process(CsvRunner csvRunner, Node next, boolean failOnError) {
-					return csvRunner.getValue(failOnError, RootPanel.get(), next);
-				}
-
-			};
-		}
-		return null;
-	}
-
-	protected final <T> T getObject(Class<T> clazz, String objectLocalization) {
-		return getObject(clazz, objectLocalization, true);
-	}
-
-	@SuppressWarnings("unchecked")
-	protected final <T> T getObject(Class<T> clazz, String objectLocalization, boolean failOnError) {
-		Node n = Node.parse(objectLocalization);
-		Assert.assertNotNull(csvRunner.getAssertionErrorMessagePrefix() + "Unable to parse " + objectLocalization, n);
-		Assert.assertNotNull(csvRunner.getAssertionErrorMessagePrefix() + "Localization must have two /", n.getNext());
-		String prefix = n.getLabel();
-		Node next = n.getNext();
-		PrefixProcessor processor = findPrefixProcessor(prefix);
-		Assert.assertNotNull(csvRunner.getAssertionErrorMessagePrefix() + "Unkown prefix : <" + prefix + ">", processor);
-		Object o = processor.process(csvRunner, next, failOnError);
-		if (clazz.isInstance(o)) {
-			return (T) o;
-		}
-		if (!failOnError) {
-			return null;
-		}
-
-		if (o == null) {
-			Assert.fail(csvRunner.getAssertionErrorMessagePrefix() + "Targeted object [" + objectLocalization + "] is null");
-		}
-
-		Assert.fail(csvRunner.getAssertionErrorMessagePrefix() + "Wrong object type, not a " + clazz.getCanonicalName() + " : "
-				+ o.getClass().getCanonicalName());
-		return null;
-	}
-
 	@CsvMethod
 	public void runmacro(String macroName, String... params) throws Exception {
 		List<List<String>> macro = macroReader.getMacro(macroName);
-		Assert.assertNotNull(csvRunner.getAssertionErrorMessagePrefix() + "Not existing macro " + macroName, macro);
+		Assert.assertNotNull(csvRunner.getAssertionErrorMessagePrefix() + "CsvMacro '" + macroName + "' has not been found", macro);
 		int i = 0;
 		for (List<String> line : macro) {
 			List<String> l = new ArrayList<String>();
@@ -173,11 +133,6 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 		}
 	}
 
-	/**
-	 * 
-	 * @param value
-	 * @param objectLocalization
-	 */
 	@CsvMethod
 	public void assertContains(String value, String objectLocalization) {
 		value = GwtTestStringUtils.resolveBackSlash(value);
@@ -185,117 +140,108 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 		Assert.assertTrue(csvRunner.getAssertionErrorMessagePrefix() + " not containing string " + value, s.contains(value));
 	}
 
-	/**
-	 * Launch a JavaScript "onBlur" event on the target object.
-	 * 
-	 * @param objectLocalization
-	 *            The targeted object localisation path.
-	 */
 	@CsvMethod
-	public void blur(String objectLocalization) {
-		Widget widget = getObject(Widget.class, objectLocalization);
-		Browser.blur(widget);
+	public void blur(String identifier) {
+		Widget widget = getObject(Widget.class, identifier);
+		dispatchEvent(widget, Event.ONBLUR);
 	}
 
-	/**
-	 * Launch a JavaScript "onChange" event on a object
-	 * 
-	 * @param objectLocalization
-	 *            The targeted object localisation path.
-	 */
 	@CsvMethod
-	public void change(String objectLocalization) {
-		Widget widget = getObject(Widget.class, objectLocalization);
-		Browser.change(widget);
+	public void change(String identifier) {
+		Widget widget = getObject(Widget.class, identifier);
+		dispatchEvent(widget, Event.ONCHANGE);
 	}
 
-	/**
-	 * Launch a JavaScript "onClick" event on the target object.
-	 * 
-	 * @param objectLocalization
-	 *            The targeted object localisation path.
-	 */
 	@CsvMethod
-	public void click(String objectLocalization) {
-		Widget widget = getObject(Widget.class, objectLocalization);
-		Browser.click(widget, csvRunner.getAssertionErrorMessagePrefix(), objectLocalization);
+	public void click(String widgetIdentifier) {
+		Widget widget = getObject(Widget.class, widgetIdentifier);
+		dispatchEvent(widget, Event.ONCLICK);
 	}
 
 	@CsvMethod
 	public void clickComplexPanel(String index, String objectLocalization) {
-		ComplexPanel widget = getObject(ComplexPanel.class, objectLocalization);
-		checkWidgetVisible(widget, objectLocalization);
-		Browser.click(widget, Integer.valueOf(index));
+		ComplexPanel panel = getObject(ComplexPanel.class, objectLocalization);
+		Widget target = panel.getWidget(Integer.parseInt(index));
+
+		Event complexPanelClick = EventBuilder.create(Event.ONCLICK).setTarget(target.getElement()).build();
+		assertCanApplyEvent(target, complexPanelClick.getTypeInt());
+		dispatchEventInternal(panel, EventBuilder.create(Event.ONCLICK).setTarget(target.getElement()).build());
 	}
 
 	@CsvMethod
-	public void clickPanel(String objectLocalization) {
-		FocusPanel widget = getObject(FocusPanel.class, objectLocalization);
-		checkWidgetVisibleAndEnable(widget, objectLocalization);
-		Browser.click(widget, csvRunner.getAssertionErrorMessagePrefix(), objectLocalization);
+	public void clickSimplePanel(String objectLocalization) {
+		SimplePanel panel = getObject(SimplePanel.class, objectLocalization);
+		Event clickEvent = EventBuilder.create(Event.ONCLICK).build();
+		assertCanApplyEvent(panel.getWidget(), clickEvent.getTypeInt());
+		dispatchEventInternal(panel, clickEvent);
 	}
 
 	@CsvMethod
-	public void clickMenuItem(String index, String objectLocalization) {
-		MenuBar menuBar = getObject(MenuBar.class, objectLocalization);
+	public void clickMenuItem(String index, String identifier) {
+		MenuBar menuBar = getObject(MenuBar.class, identifier);
 		List<MenuItem> menuItems = GwtTestReflectionUtils.getPrivateFieldValue(menuBar, "items");
 		MenuItem itemToClick = menuItems.get(Integer.parseInt(index));
-		Browser.click(menuBar, itemToClick);
+
+		Event clickEvent = EventBuilder.create(Event.ONCLICK).setTarget(itemToClick.getElement()).build();
+		assertCanApplyEvent(itemToClick, clickEvent.getTypeInt());
+		dispatchEventInternal(menuBar, clickEvent);
 	}
 
 	@CsvMethod
-	public void clickOnTableRow(String rowIndex, String objectLocalization) {
-		Grid grid = getObject(Grid.class, objectLocalization);
-		checkWidgetVisible(grid, objectLocalization);
-		Browser.click(grid, Integer.parseInt(rowIndex), 0);
+	public void clickOnTableRow(String rowIndex, String identifier) {
+		Grid grid = getObject(Grid.class, identifier);
+		Widget target = grid.getWidget(Integer.parseInt(rowIndex), 0);
+		Event clickEvent = EventBuilder.create(Event.ONCLICK).setTarget(target.getElement()).build();
+		assertCanApplyEvent(target, clickEvent.getTypeInt());
+		dispatchEventInternal(grid, clickEvent);
 	}
 
 	@CsvMethod
-	public void focus(String objectLocalization) {
-		Widget widget = getObject(Widget.class, objectLocalization);
-		Browser.focus(widget);
+	public void focus(String identifier) {
+		Widget widget = getObject(Widget.class, identifier);
+		dispatchEvent(widget, EventBuilder.create(Event.ONFOCUS).build());
 	}
 
 	@CsvMethod
-	public void mouseDown(String objectLocalization) {
-		Widget widget = getObject(Widget.class, objectLocalization);
-		Browser.mouseDown(widget);
+	public void mouseDown(String identifier) {
+		Widget widget = getObject(Widget.class, identifier);
+		dispatchEvent(widget, EventBuilder.create(Event.ONMOUSEDOWN).build());
 	}
 
 	@CsvMethod
-	public void mouseMove(String objectLocalization) {
-		Widget widget = getObject(Widget.class, objectLocalization);
-		Browser.mouseMove(widget);
+	public void mouseMove(String identifier) {
+		Widget widget = getObject(Widget.class, identifier);
+		dispatchEvent(widget, EventBuilder.create(Event.ONMOUSEMOVE).build());
 	}
 
 	@CsvMethod
-	public void mouseUp(String objectLocalization) {
-		Widget widget = getObject(Widget.class, objectLocalization);
-		Browser.mouseUp(widget);
+	public void mouseUp(String identifier) {
+		Widget widget = getObject(Widget.class, identifier);
+		dispatchEvent(widget, EventBuilder.create(Event.ONMOUSEUP).build());
 	}
 
 	@CsvMethod
-	public void mouseWheel(String objectLocalization) {
-		Widget widget = getObject(Widget.class, objectLocalization);
-		Browser.mouseWheel(widget);
+	public void mouseWheel(String identifier) {
+		Widget widget = getObject(Widget.class, identifier);
+		dispatchEvent(widget, EventBuilder.create(Event.ONMOUSEWHEEL).build());
 	}
 
 	@CsvMethod
-	public void mouseOut(String objectLocalization) {
-		Widget widget = getObject(Widget.class, objectLocalization);
-		Browser.mouseOut(widget);
+	public void mouseOut(String identifier) {
+		Widget widget = getObject(Widget.class, identifier);
+		dispatchEvent(widget, EventBuilder.create(Event.ONMOUSEOUT).build());
 	}
 
 	@CsvMethod
-	public void mouseOver(String objectLocalization) {
-		Widget widget = getObject(Widget.class, objectLocalization);
-		Browser.mouseOver(widget);
+	public void mouseOver(String identifier) {
+		Widget widget = getObject(Widget.class, identifier);
+		dispatchEvent(widget, EventBuilder.create(Event.ONMOUSEOVER).build());
 	}
 
 	@CsvMethod
-	public void hasStyle(String style, String objectLocalization) {
-		Widget w = getObject(Widget.class, objectLocalization);
-		Assert.assertTrue(csvRunner.getAssertionErrorMessagePrefix() + "Style not found : " + style, w.getStyleName().contains(style));
+	public void hasStyle(String style, String identifier) {
+		UIObject object = getObject(UIObject.class, identifier);
+		Assert.assertTrue(csvRunner.getAssertionErrorMessagePrefix() + "Style not found : " + style, object.getStyleName().contains(style));
 	}
 
 	@CsvMethod
@@ -372,26 +318,28 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 	@CsvMethod
 	public void assertListBoxSelectedValueIs(String value, String objectLocalization) {
 		ListBox listBox = getObject(ListBox.class, objectLocalization);
-		Assert.assertEquals(csvRunner.getAssertionErrorMessagePrefix() + "Wrong ListBox selected value", value, listBox.getItemText(listBox
-				.getSelectedIndex()));
+		Assert.assertEquals(csvRunner.getAssertionErrorMessagePrefix() + "Wrong ListBox selected value", value,
+				listBox.getItemText(listBox.getSelectedIndex()));
 	}
 
-	// TODO: delete "ONCHANGE" events
 	@CsvMethod
-	public void fillTextBox(String value, String objectLocalization) {
-		TextBox textBox = getObject(TextBox.class, objectLocalization);
-		checkWidgetVisibleAndEnable(textBox, objectLocalization);
+	public void fillTextBox(String value, String identifier) {
+		TextBox textBox = getObject(TextBox.class, identifier);
 		textBox.setText(value);
-		Browser.keyUp(textBox, KeyCodes.KEY_ENTER);
-		Browser.change(textBox);
+
+		Event keyUpEvent = EventBuilder.create(Event.ONKEYUP).setKeyCode(KeyCodes.KEY_ENTER).build();
+		Event changeEvent = EventBuilder.create(Event.ONCHANGE).build();
+		dispatchEvent(textBox, keyUpEvent);
+		dispatchEvent(textBox, changeEvent);
 	}
 
 	@CsvMethod
 	public void fillInvisibleTextBox(String value, String objectLocalization) {
 		TextBox textBox = getObject(TextBox.class, objectLocalization);
 		textBox.setText(value);
-		Browser.keyUp(textBox, KeyCodes.KEY_ENTER);
-		Browser.change(textBox);
+
+		dispatchEventInternal(textBox, EventBuilder.create(Event.ONKEYUP).setKeyCode(KeyCodes.KEY_ENTER).build());
+		dispatchEventInternal(textBox, EventBuilder.create(Event.ONCHANGE).build());
 	}
 
 	@CsvMethod
@@ -420,9 +368,137 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 		selectInListBox(regex, objectLocalization);
 	}
 
-	protected void selectInListBox(ListBox listBox, String regex, String objectLocalization) {
-		checkWidgetVisibleAndEnable(listBox, objectLocalization);
+	@CsvMethod
+	public void selectSuggestByIndex(String index, String objectLocalization) {
+		SuggestBox suggestBox = getObject(SuggestBox.class, objectLocalization);
 
+		List<MenuItem> menuItems = WidgetUtils.getMenuItems(suggestBox);
+		MenuItem item = menuItems.get(Integer.parseInt(index));
+		assertCanApplyEvent(item, Event.ONCLICK);
+		item.getCommand().execute();
+	}
+
+	@CsvMethod
+	public void selectSuggestByText(String content, String objectLocalization) {
+		SuggestBox suggestBox = getObject(SuggestBox.class, objectLocalization);
+
+		List<MenuItem> menuItems = WidgetUtils.getMenuItems(suggestBox);
+		int i = 0;
+
+		while (i < menuItems.size()) {
+			MenuItem item = menuItems.get(i++);
+			if (content.equals(item.getHTML()) || content.equals(item.getText())) {
+				assertCanApplyEvent(item, Event.ONCLICK);
+				item.getCommand().execute();
+			}
+		}
+	}
+
+	@CsvMethod
+	public void fillSuggestBox(String value, String objectLocalization) {
+		SuggestBox suggestBox = getObject(SuggestBox.class, objectLocalization);
+
+		suggestBox.setText(value);
+
+		Event keyUpEvent = EventBuilder.create(Event.ONKEYUP).setKeyCode(KeyCodes.KEY_ENTER).build();
+		dispatchEvent(suggestBox, keyUpEvent);
+	}
+
+	@CsvMethod
+	public void isVisible(String identifier) {
+		UIObject object = getObject(UIObject.class, identifier);
+		Assert.assertTrue(csvRunner.getAssertionErrorMessagePrefix() + "targeted " + object.getClass().getSimpleName() + "is not visible",
+				WidgetUtils.isWidgetVisible(object));
+	}
+
+	@CsvMethod
+	public void isNotVisible(String identifier) {
+		UIObject object = getObject(UIObject.class, identifier);
+		Assert.assertFalse(csvRunner.getAssertionErrorMessagePrefix() + "targeted " + object.getClass().getSimpleName() + "is visible",
+				WidgetUtils.isWidgetVisible(object));
+	}
+
+	@CsvMethod
+	public void isEnabled(String identifier) {
+		FocusWidget button = getFocusWidget(identifier);
+		Assert.assertTrue(csvRunner.getAssertionErrorMessagePrefix() + "targeted " + button.getClass().getSimpleName() + "is not enabled",
+				button.isEnabled());
+	}
+
+	@CsvMethod
+	public void isNotEnabled(String identifier) {
+		FocusWidget button = getFocusWidget(identifier);
+		Assert.assertFalse(csvRunner.getAssertionErrorMessagePrefix() + "targeted " + button.getClass().getSimpleName() + "is enabled",
+				button.isEnabled());
+	}
+
+	protected void assertCanApplyEvent(UIObject widget, int eventTypeInt) {
+		if (!WidgetUtils.isWidgetVisible(widget)) {
+			String failureMessage = createFailureMessage(widget, eventTypeInt, "visible");
+			Assert.fail(csvRunner.getAssertionErrorMessagePrefix() + failureMessage);
+		}
+
+		if (widget instanceof FocusWidget && (!((FocusWidget) widget).isEnabled())) {
+			String failureMessage = createFailureMessage(widget, eventTypeInt, "enabled");
+			Assert.fail(csvRunner.getAssertionErrorMessagePrefix() + failureMessage);
+		}
+	}
+
+	protected void dispatchEvent(Widget target, int eventTypeInt) {
+		Event event = EventBuilder.create(eventTypeInt).build();
+		dispatchEvent(target, event);
+	}
+
+	protected void dispatchEvent(Widget target, Event event) {
+		assertCanApplyEvent(target, event.getTypeInt());
+
+		dispatchEventInternal(target, event);
+	}
+
+	protected PrefixProcessor findPrefixProcessor(String prefix) {
+		if ("root".equals(prefix)) {
+			return new PrefixProcessor() {
+
+				public Object process(CsvRunner csvRunner, Node next, boolean failOnError) {
+					return csvRunner.getValue(failOnError, RootPanel.get(), next);
+				}
+
+			};
+		}
+		return null;
+	}
+
+	protected final <T> T getObject(Class<T> clazz, String objectLocalization) {
+		return getObject(clazz, objectLocalization, true);
+	}
+
+	@SuppressWarnings("unchecked")
+	protected final <T> T getObject(Class<T> clazz, String objectLocalization, boolean failOnError) {
+		Node n = Node.parse(objectLocalization);
+		Assert.assertNotNull(csvRunner.getAssertionErrorMessagePrefix() + "Unable to parse " + objectLocalization, n);
+		Assert.assertNotNull(csvRunner.getAssertionErrorMessagePrefix() + "Localization must have two /", n.getNext());
+		String prefix = n.getLabel();
+		Node next = n.getNext();
+		PrefixProcessor processor = findPrefixProcessor(prefix);
+		Assert.assertNotNull(csvRunner.getAssertionErrorMessagePrefix() + "Unkown prefix : <" + prefix + ">", processor);
+		Object o = processor.process(csvRunner, next, failOnError);
+		if (clazz.isInstance(o)) {
+			return (T) o;
+		}
+		if (!failOnError) {
+			return null;
+		}
+
+		if (o == null) {
+			Assert.fail(csvRunner.getAssertionErrorMessagePrefix() + "Targeted object [" + objectLocalization + "] is null");
+		}
+
+		Assert.fail(csvRunner.getAssertionErrorMessagePrefix() + "Wrong object type, not a " + clazz.getCanonicalName() + " : "
+				+ o.getClass().getCanonicalName());
+		return null;
+	}
+
+	protected void selectInListBox(ListBox listBox, String regex, String objectLocalization) {
 		int selectedIndex;
 		String errorMessage;
 		if (regex.matches("^\\d*$")) {
@@ -435,81 +511,31 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 
 		if (selectedIndex > -1) {
 			listBox.setSelectedIndex(selectedIndex);
-			Browser.click(listBox);
-			Browser.change(listBox);
+			dispatchEvent(listBox, Event.ONCLICK);
+			dispatchEvent(listBox, Event.ONCHANGE);
 		} else {
 			errorMessage += WidgetUtils.getListBoxContentToString(listBox);
 			Assert.fail(csvRunner.getAssertionErrorMessagePrefix() + errorMessage);
 		}
 	}
 
-	@CsvMethod
-	public void selectSuggest(String index, String objectLocalization) {
-		SuggestBox suggestBox = getObject(SuggestBox.class, objectLocalization);
-		checkWidgetVisible(suggestBox, objectLocalization);
-		MenuItem item = getObject(MenuItem.class, objectLocalization + "/suggestionMenu/items[" + Integer.parseInt(index) + "]");
-		for (Method m : SuggestBox.class.getDeclaredMethods()) {
-			if ("setNewSelection".equals(m.getName())) {
-				try {
-					m.setAccessible(true);
-					m.invoke(suggestBox, item);
-					return;
-				} catch (Exception e) {
-					throw new RuntimeException(e);
-				}
-			}
-		}
-		throw new RuntimeException("Method not found setNewSelection");
+	private String createFailureMessage(UIObject target, int eventTypeInt, String attribut) {
+		StringBuilder sb = new StringBuilder();
+		String event = EventUtils.getEventTypeString(eventTypeInt);
+		sb.append("The targeted widget (").append(target.getClass().getSimpleName());
+		sb.append(") has to be ").append(attribut);
+		sb.append(" to apply a browser '").append(event).append("\' event");
+
+		return sb.toString();
+
 	}
 
-	@CsvMethod
-	public void fillSuggestBox(String value, String objectLocalization) {
-		SuggestBox suggestBox = getObject(SuggestBox.class, objectLocalization);
-		checkWidgetVisible(suggestBox, objectLocalization);
-		suggestBox.setText(value);
-		Browser.keyUp(suggestBox, KeyCodes.KEY_ENTER);
+	private FocusWidget getFocusWidget(String identifier) {
+		return getObject(FocusWidget.class, identifier);
 	}
 
-	@CsvMethod
-	public void isVisible(String objectLocalization) {
-		Widget widget = getObject(Widget.class, objectLocalization);
-		checkWidgetVisible(widget, objectLocalization);
-	}
-
-	@CsvMethod
-	public void isNotVisible(String objectLocalization) {
-		Widget widget = getObject(Widget.class, objectLocalization);
-		Assert.assertFalse(csvRunner.getAssertionErrorMessagePrefix() + "Visible " + objectLocalization, WidgetUtils.isWidgetVisible(widget));
-	}
-
-	@CsvMethod
-	public void isEnabled(String objectLocalization) {
-		FocusWidget button = getFocusWidget(objectLocalization);
-		Assert.assertTrue(csvRunner.getAssertionErrorMessagePrefix() + "is not Enabled " + objectLocalization, button.isEnabled());
-	}
-
-	@CsvMethod
-	public void isNotEnabled(String objectLocalization) {
-		FocusWidget button = getFocusWidget(objectLocalization);
-		Assert.assertFalse(csvRunner.getAssertionErrorMessagePrefix() + "is Enabled " + objectLocalization, button.isEnabled());
-	}
-
-	protected FocusWidget getFocusWidget(String objectLocalization) {
-		return getObject(FocusWidget.class, objectLocalization);
-	}
-
-	protected void checkWidgetVisibleAndEnable(FocusWidget widget, String objectLocalization) {
-		Assert.assertTrue(csvRunner.getAssertionErrorMessagePrefix() + "Widget have to be enabled : " + objectLocalization, widget.isEnabled());
-		checkWidgetVisible(widget, objectLocalization);
-	}
-
-	protected void checkWidgetVisibleAndEnable(FocusPanel widget, String objectLocalization) {
-		checkWidgetVisible(widget, objectLocalization);
-	}
-
-	protected void checkWidgetVisible(Widget widget, String objectLocalization) {
-		Assert.assertTrue(csvRunner.getAssertionErrorMessagePrefix() + "Widget have to be visible : " + objectLocalization + ", "
-				+ widget.getClass().getCanonicalName(), WidgetUtils.isWidgetVisible(widget));
+	private void dispatchEventInternal(Widget target, Event event) {
+		target.onBrowserEvent(event);
 	}
 
 	// MODE INTERACTIF

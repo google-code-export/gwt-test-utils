@@ -11,6 +11,8 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.SuggestBox;
+import com.octo.gwt.test.utils.GwtTestReflectionUtils;
 import com.octo.gwt.test.utils.WidgetUtils;
 
 public class WidgetUtilsTest extends AbstractGwtTest {
@@ -111,6 +113,30 @@ public class WidgetUtilsTest extends AbstractGwtTest {
 	}
 
 	@Test
+	public void checkSuggestBoxItems() {
+		// Setup
+		SuggestBox box = new SuggestBox();
+		MenuBar bar = GwtTestReflectionUtils.getPrivateFieldValue(box, "suggestionMenu");
+
+		Command cmd = new Command() {
+			public void execute() {
+			}
+
+		};
+
+		MenuItem item0 = bar.addItem("item0", cmd);
+		MenuItem item1 = bar.addItem("item1", cmd);
+
+		// Test
+		List<MenuItem> items = WidgetUtils.getMenuItems(box);
+
+		// Assert
+		Assert.assertEquals(2, items.size());
+		Assert.assertEquals(item0, items.get(0));
+		Assert.assertEquals(item1, items.get(1));
+	}
+
+	@Test
 	public void checkNewWidgetIsVisible() {
 		// Setup
 		Button b = new Button();
@@ -132,6 +158,20 @@ public class WidgetUtilsTest extends AbstractGwtTest {
 
 		// Test
 		Boolean isVisible = WidgetUtils.isWidgetVisible(b);
+
+		// Assert
+		Assert.assertFalse(isVisible);
+	}
+
+	@Test
+	public void checNewWidgetIsNotVisibleWhenParentIsNotVisible() {
+		MenuBar bar = new MenuBar();
+		bar.setVisible(false);
+		MenuItem item0 = bar.addItem("test0", (Command) null);
+		item0.setVisible(true);
+
+		// Test
+		Boolean isVisible = WidgetUtils.isWidgetVisible(item0);
 
 		// Assert
 		Assert.assertFalse(isVisible);

@@ -1,10 +1,8 @@
 package com.octo.gwt.test.internal.patcher.dom;
 
-import com.google.gwt.dom.client.Node;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.impl.DOMImpl;
 import com.octo.gwt.test.ElementUtils;
-import com.octo.gwt.test.internal.overrides.OverrideNodeList;
 import com.octo.gwt.test.internal.patcher.tools.AutomaticPatcher;
 import com.octo.gwt.test.internal.patcher.tools.PatchMethod;
 
@@ -12,14 +10,7 @@ public class DOMImplUserSubClassPatcher extends AutomaticPatcher {
 
 	@PatchMethod
 	public static void insertChild(DOMImpl domImpl, Element userParent, Element userChild, int index) {
-		com.google.gwt.dom.client.Element parent = ElementUtils.castToDomElement(userParent);
-		com.google.gwt.dom.client.Element child = ElementUtils.castToDomElement(userChild);
-		OverrideNodeList<Node> nodeList = (OverrideNodeList<Node>) parent.getChildNodes();
-		if (index >= nodeList.getLength()) {
-			nodeList.getList().add(child);
-		} else {
-			nodeList.getList().add(index, child);
-		}
+		NodePatcher.insertAtIndex(userParent, userChild, index);
 	}
 
 	@PatchMethod

@@ -1,5 +1,6 @@
-package com.octo.gwt.test;
+package com.octo.gwt.test.utils.events;
 
+import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.user.client.Event;
 
 public class EventUtils {
@@ -46,6 +47,56 @@ public class EventUtils {
 		}
 
 		throw new RuntimeException("Unable to convert DOM Event \"" + type + "\" to an integer");
+	}
+
+	public static String getEventTypeString(NativeEvent nativeEvent) {
+		OverrideEvent event = OverrideEvent.overrideCast(nativeEvent);
+		return getEventTypeString(event.getOverrideType());
+	}
+
+	public static String getEventTypeString(int eventTypeInt) {
+		switch (eventTypeInt) {
+		case Event.ONBLUR:
+			return "blur";
+		case Event.ONCHANGE:
+			return "change";
+		case Event.ONCLICK:
+			return "click";
+		case Event.ONDBLCLICK:
+			return "dblclick";
+		case Event.ONFOCUS:
+			return "focus";
+		case Event.ONKEYDOWN:
+			return "keydown";
+		case Event.ONKEYPRESS:
+			return "keypress";
+		case Event.ONKEYUP:
+			return "keyup";
+		case Event.ONLOAD:
+			return "load";
+		case Event.ONLOSECAPTURE:
+			return "losecapture";
+		case Event.ONMOUSEDOWN:
+			return "mousedown";
+		case Event.ONMOUSEMOVE:
+			return "mousemove";
+		case Event.ONMOUSEOUT:
+			return "mouseout";
+		case Event.ONMOUSEOVER:
+			return "mouseover";
+		case Event.ONMOUSEUP:
+			return "mouseup";
+		case Event.ONSCROLL:
+			return "scroll";
+		case Event.ONERROR:
+			return "error";
+		case Event.ONMOUSEWHEEL:
+			return "mousewheel";
+		case Event.ONCONTEXTMENU:
+			return "contextmenu";
+		default:
+			throw new RuntimeException("Cannot get the String type of event with code [" + eventTypeInt + "]");
+		}
 	}
 
 }

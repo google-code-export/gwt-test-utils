@@ -39,7 +39,7 @@ public abstract class AbstractGwtConfigurableTest {
 		PatchGwtReset.reset();
 	}
 
-	protected boolean addGwtCreateHandler(GwtCreateHandler gwtCreateHandler) throws Exception {
+	protected boolean addGwtCreateHandler(GwtCreateHandler gwtCreateHandler) {
 		return PatchGwtConfig.addGwtCreateHandler(gwtCreateHandler);
 	}
 

@@ -37,13 +37,15 @@ public class UIObjectPatcher extends AutomaticPatcher {
 
 	@PatchMethod
 	public static boolean isVisible(Element elem) {
+		elem = ElementUtils.castToDomElement(elem);
 		String display = elem.getStyle().getProperty("display");
 
-		return !(display != null && display.equals("none"));
+		return !display.equals("none");
 	}
 
 	@PatchMethod
 	public static void setVisible(Element elem, boolean visible) {
+		elem = ElementUtils.castToDomElement(elem);
 		String display = visible ? "" : "none";
 		elem.getStyle().setProperty("display", display);
 	}
@@ -79,7 +81,7 @@ public class UIObjectPatcher extends AutomaticPatcher {
 	@PatchMethod
 	public static void replaceElement(UIObject uiObject, Element elem) {
 		elem = ElementUtils.castToUserElement(elem);
-		com.google.gwt.user.client.Element element = GwtTestReflectionUtils.getPrivateFieldValue(uiObject, "element");
+		Element element = GwtTestReflectionUtils.getPrivateFieldValue(uiObject, "element");
 		if (element != null) {
 			// replace this.element in its parent with elem.
 			replaceNode(uiObject, element, elem);
@@ -90,6 +92,7 @@ public class UIObjectPatcher extends AutomaticPatcher {
 
 	@PatchMethod
 	public static void replaceNode(UIObject uiObject, Element node, Element newNode) {
+		node = ElementUtils.castToDomElement(node);
 		Node parent = node.getParentNode();
 
 		if (parent != null) {

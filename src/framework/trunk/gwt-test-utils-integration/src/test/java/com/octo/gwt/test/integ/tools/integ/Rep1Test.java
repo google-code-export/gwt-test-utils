@@ -30,7 +30,7 @@ public class Rep1Test {
 			}
 		}));
 		Assert.assertEquals(1, r.getRunCount());
-		//Assert.assertEquals(0, r.getFailureCount());
+		Assert.assertEquals(0, r.getFailureCount());
 		Assert.assertEquals("macro_End of 1st test", MyStringStore.appender);
 	}
 }

@@ -4,16 +4,14 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.junit.Assert;
-
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.ComplexPanel;
-import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.PopupPanel;
-import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 import com.octo.gwt.test.utils.events.Browser;
@@ -31,28 +29,28 @@ public class WidgetUtils {
 	 * if the current widget is a Popup, it is the isShowing() flag which would
 	 * be evaluate.
 	 * 
-	 * @param widget
+	 * @param object
 	 *            The widget to check.
 	 * @return True if the widget and its possible parents are visible, false
 	 *         otherwise.
 	 */
-	public static boolean isWidgetVisible(Widget widget) {
-		// FIXME : remove this hack which is required for octo main GWT
-		// project...
-		if (widget instanceof RootPanel) {
-			return true;
-		} else if (widget instanceof PopupPanel) {
-			PopupPanel popup = (PopupPanel) widget;
-			if (popup.isShowing()) {
-				return true;
-			}
-		} else if (!widget.isVisible()) {
-			return false;
-		} else if (widget.getParent() != null) {
-			return isWidgetVisible(widget.getParent());
+	public static boolean isWidgetVisible(UIObject object) {
+		if (object instanceof PopupPanel) {
+			PopupPanel popup = (PopupPanel) object;
+			return popup.isShowing();
+		} else {
+			return isElementVisible(object.getElement());
 		}
+	}
 
-		return true;
+	private static boolean isElementVisible(Element element) {
+		if (!UIObject.isVisible(element)) {
+			return false;
+		} else if (element.getParentElement() != null) {
+			return isElementVisible(element.getParentElement());
+		} else {
+			return true;
+		}
 	}
 
 	public static boolean assertListBoxDataMatch(ListBox listBox, String[] content) {
@@ -102,44 +100,13 @@ public class WidgetUtils {
 		return GwtTestReflectionUtils.getPrivateFieldValue(menuBar, "items");
 	}
 
+	public static List<MenuItem> getMenuItems(SuggestBox suggestBox) {
+		MenuBar suggestionMenu = GwtTestReflectionUtils.getPrivateFieldValue(suggestBox, "suggestionMenu");
+		return getMenuItems(suggestionMenu);
+	}
+
 	public static boolean hasStyle(UIObject object, String styleName) {
 		return object.getStyleName().contains(styleName);
-	}
-
-	public static void assertWidgetIsClickable(Widget widget, String errorPrefix, String widgetName) {
-		String action = "click";
-		assertWidgetIsVisible(widget, errorPrefix, widgetName, action);
-
-		if (widget instanceof FocusWidget) {
-			if (!((FocusWidget) widget).isEnabled()) {
-				Assert.fail(createFailureMessage(errorPrefix, widgetName, action, "enabled"));
-			}
-		}
-	}
-
-	public static void assertWidgetIsVisible(Widget widget, String errorPrefix, String widgetName, String action) {
-		String errorMessage = createFailureMessage(errorPrefix, widgetName, action, "visible");
-		Assert.assertTrue(errorMessage, isWidgetVisible(widget));
-	}
-
-	private static String createFailureMessage(String errorPrefix, String widgetName, String action, String attribut) {
-		StringBuilder sb = new StringBuilder();
-
-		if (errorPrefix != null)
-			sb.append(errorPrefix);
-		if (widgetName != null)
-			sb.append("Widget [" + widgetName + "]");
-		else
-			sb.append("The targeted widget");
-
-		sb.append(" and its possible parents have to be ");
-		sb.append(attribut);
-		sb.append(" to apply the browser \"");
-		sb.append(action);
-		sb.append("\" event");
-
-		return sb.toString();
-
 	}
 
 	/**
@@ -164,17 +131,6 @@ public class WidgetUtils {
 	 */
 	public static void click(Widget target) {
 		Browser.click(target);
-	}
-
-	/**
-	 * 
-	 * @param target
-	 * @param errorPrefix
-	 * @param widgetName
-	 * @deprecated use {@link Browser#click(Widget, String, String)} instead
-	 */
-	public static void click(Widget target, String errorPrefix, String widgetName) {
-		Browser.click(target, errorPrefix, widgetName);
 	}
 
 	/**

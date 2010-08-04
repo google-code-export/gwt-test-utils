@@ -65,21 +65,7 @@ public class NodePatcher extends AutomaticSubclasser {
 
 	@PatchMethod
 	public static Node appendChild(Node parent, Node newChild) {
-		parent = ElementUtils.castToDomElement(parent);
-		newChild = ElementUtils.castToDomElement(newChild);
-		// remove from old parent list if exist
-		Node oldParent = newChild.getParentNode();
-		if (oldParent != null) {
-			oldParent.removeChild(newChild);
-		}
-
-		// then, add to the new parent
-		OverrideNodeList<Node> list = getChildNodeList(parent);
-		list.getList().add(newChild);
-
-		SubClassedHelper.setProperty(newChild, PARENT_NODE_FIELD, parent);
-
-		return newChild;
+		return insertAtIndex(parent, newChild, -1);
 	}
 
 	@PatchMethod
@@ -172,18 +158,20 @@ public class NodePatcher extends AutomaticSubclasser {
 		refChild = ElementUtils.castToDomElement(refChild);
 		OverrideNodeList<Node> list = getChildNodeList(parent);
 
+		// get the index of refChild
+		int index = -1;
 		if (refChild != null) {
-			for (int i = 0; i < list.getLength(); i++) {
+			int i = 0;
+			while (index == -1 && i < list.getLength()) {
 				if (list.getItem(i).equals(refChild)) {
-					list.getList().add(i, newChild);
-					return newChild;
+					index = i;
 				}
+				i++;
 			}
 		}
 
-		// if refChild is null or was not found
-		list.getList().add(newChild);
-		return newChild;
+		// Then insert by index
+		return insertAtIndex(parent, newChild, index);
 	}
 
 	@PatchMethod
@@ -244,6 +232,30 @@ public class NodePatcher extends AutomaticSubclasser {
 			}
 		}
 		return newNode;
+	}
+
+	public static Node insertAtIndex(Node parent, Node newChild, int index) {
+		parent = ElementUtils.castToDomElement(parent);
+		newChild = ElementUtils.castToDomElement(newChild);
+		OverrideNodeList<Node> list = getChildNodeList(parent);
+
+		// First, remove from old parent
+		Node oldParent = newChild.getParentNode();
+		if (oldParent != null) {
+			oldParent.removeChild(newChild);
+		}
+
+		// Then, add
+		if (index == -1 || index >= list.getLength()) {
+			list.getList().add(newChild);
+		} else {
+			list.getList().add(index, newChild);
+		}
+
+		// Manage getParentNode() 
+		SubClassedHelper.setProperty(newChild, PARENT_NODE_FIELD, parent);
+
+		return newChild;
 	}
 
 	private static void fillNewPropertyContainer(PropertyContainer n, PropertyContainer old) {

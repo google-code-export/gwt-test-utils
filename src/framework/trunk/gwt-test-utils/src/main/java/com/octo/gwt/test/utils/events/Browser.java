@@ -1,21 +1,24 @@
 package com.octo.gwt.test.utils.events;
 
-import java.util.List;
+import org.junit.Assert;
 
-import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.ComplexPanel;
+import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
+import com.google.gwt.user.client.ui.SuggestBox;
+import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 import com.octo.gwt.test.utils.WidgetUtils;
 
 public class Browser {
 
 	public static void dispatchEvent(Widget target, Event event) {
-		target.onBrowserEvent(event);
+		assertCanApplyEvent(target, event);
+		dispatchEventInternal(target, event);
 	}
 
 	public static void blur(Widget target) {
@@ -31,43 +34,41 @@ public class Browser {
 			CheckBox checkBox = (CheckBox) target;
 			checkBox.setValue(!checkBox.getValue());
 		}
-
-		WidgetUtils.assertWidgetIsClickable(target, null, null);
-		dispatchEvent(target, EventBuilder.create(Event.ONCLICK).build());
-	}
-
-	public static void click(Widget target, String errorPrefix, String widgetName) {
-		if (target instanceof CheckBox) {
-			CheckBox checkBox = (CheckBox) target;
-			checkBox.setValue(!checkBox.getValue());
-		}
-
-		WidgetUtils.assertWidgetIsClickable(target, errorPrefix, widgetName);
 		dispatchEvent(target, EventBuilder.create(Event.ONCLICK).build());
 	}
 
 	public static void click(MenuBar parent, MenuItem clickedItem) {
-		WidgetUtils.assertWidgetIsClickable(parent, null, null);
-		dispatchEvent(parent, EventBuilder.create(Event.ONCLICK).setTarget(clickedItem.getElement()).build());
+		Event clickEvent = EventBuilder.create(Event.ONCLICK).setTarget(clickedItem.getElement()).build();
+		assertCanApplyEvent(clickedItem, clickEvent);
+		dispatchEventInternal(parent, clickEvent);
 	}
 
 	public static void click(MenuBar parent, int clickedItemIndex) {
-		WidgetUtils.assertWidgetIsClickable(parent, null, null);
-		List<MenuItem> menuItems = WidgetUtils.getMenuItems(parent);
-		MenuItem itemToClick = menuItems.get(clickedItemIndex);
-		click(parent, itemToClick);
+		click(parent, WidgetUtils.getMenuItems(parent).get(clickedItemIndex));
+	}
+
+	public static void click(SuggestBox parent, MenuItem clickedItem) {
+		Event clickEvent = EventBuilder.create(Event.ONCLICK).setTarget(clickedItem.getElement()).build();
+		assertCanApplyEvent(clickedItem, clickEvent);
+		dispatchEventInternal(parent, clickEvent);
+	}
+
+	public static void click(SuggestBox parent, int clickedItemIndex) {
+		click(parent, WidgetUtils.getMenuItems(parent).get(clickedItemIndex));
 	}
 
 	public static void click(Grid grid, int row, int column) {
-		WidgetUtils.assertWidgetIsClickable(grid, null, null);
-		Element target = grid.getWidget(row, column).getElement();
-		dispatchEvent(grid, EventBuilder.create(Event.ONCLICK).setTarget(target).build());
+		Widget target = grid.getWidget(row, column);
+		Event clickEvent = EventBuilder.create(Event.ONCLICK).setTarget(target.getElement()).build();
+		assertCanApplyEvent(target, clickEvent);
+		dispatchEventInternal(grid, clickEvent);
 	}
 
 	public static void click(ComplexPanel panel, int index) {
-		WidgetUtils.assertWidgetIsClickable(panel, null, null);
-		Element target = panel.getWidget(index).getElement();
-		dispatchEvent(panel, EventBuilder.create(Event.ONCLICK).setTarget(target).build());
+		Widget target = panel.getWidget(index);
+		Event clickEvent = EventBuilder.create(Event.ONCLICK).setTarget(target.getElement()).build();
+		assertCanApplyEvent(target, clickEvent);
+		dispatchEventInternal(panel, clickEvent);
 	}
 
 	public static void dblClick(Widget target) {
@@ -75,8 +76,6 @@ public class Browser {
 			CheckBox checkBox = (CheckBox) target;
 			checkBox.setValue(!checkBox.getValue());
 		}
-
-		WidgetUtils.assertWidgetIsClickable(target, null, null);
 		dispatchEvent(target, EventBuilder.create(Event.ONDBLCLICK).build());
 	}
 
@@ -118,6 +117,30 @@ public class Browser {
 
 	public static void mouseOut(Widget target) {
 		dispatchEvent(target, EventBuilder.create(Event.ONMOUSEOUT).build());
+	}
+
+	public static void dispatchEventInternal(Widget target, Event event) {
+		target.onBrowserEvent(event);
+	}
+
+	private static void assertCanApplyEvent(UIObject target, Event event) {
+		if (!WidgetUtils.isWidgetVisible(target)) {
+			Assert.fail(createFailureMessage(target, event, "visible"));
+		}
+
+		if (target instanceof FocusWidget && !((FocusWidget) target).isEnabled()) {
+			Assert.fail(createFailureMessage(target, event, "enabled"));
+		}
+	}
+
+	private static String createFailureMessage(UIObject target, Event event, String attribut) {
+		StringBuilder sb = new StringBuilder();
+
+		sb.append("The targeted widget (").append(target.getClass().getSimpleName());
+		sb.append(") and its possible parents have to be ").append(attribut);
+		sb.append(" to apply a browser '").append(event.getType()).append("\' event");
+
+		return sb.toString();
 	}
 
 }

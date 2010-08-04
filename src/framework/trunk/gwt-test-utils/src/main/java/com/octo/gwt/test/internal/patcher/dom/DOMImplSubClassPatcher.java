@@ -5,8 +5,8 @@ import com.google.gwt.dom.client.EventTarget;
 import com.google.gwt.dom.client.InputElement;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Node;
+import com.google.gwt.user.client.Event;
 import com.octo.gwt.test.ElementUtils;
-import com.octo.gwt.test.EventUtils;
 import com.octo.gwt.test.internal.patcher.tools.AutomaticPatcher;
 import com.octo.gwt.test.internal.patcher.tools.PatchMethod;
 import com.octo.gwt.test.utils.events.EventBuilder;
@@ -42,7 +42,7 @@ public class DOMImplSubClassPatcher extends AutomaticPatcher {
 
 	@PatchMethod
 	public static NativeEvent createHtmlEvent(Object domImpl, Document doc, String type, boolean canBubble, boolean cancelable) {
-		return EventBuilder.create(EventUtils.getEventTypeInt(type)).build();
+		return EventBuilder.create(Event.getTypeInt(type)).build();
 	}
 
 }
