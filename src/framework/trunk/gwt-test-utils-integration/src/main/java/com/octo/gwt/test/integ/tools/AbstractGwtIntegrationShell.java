@@ -318,8 +318,8 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 	@CsvMethod
 	public void assertListBoxSelectedValueIs(String value, String objectLocalization) {
 		ListBox listBox = getObject(ListBox.class, objectLocalization);
-		Assert.assertEquals(csvRunner.getAssertionErrorMessagePrefix() + "Wrong ListBox selected value", value,
-				listBox.getItemText(listBox.getSelectedIndex()));
+		Assert.assertEquals(csvRunner.getAssertionErrorMessagePrefix() + "Wrong ListBox selected value", value, listBox.getItemText(listBox
+				.getSelectedIndex()));
 	}
 
 	@CsvMethod
@@ -407,29 +407,29 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 	@CsvMethod
 	public void isVisible(String identifier) {
 		UIObject object = getObject(UIObject.class, identifier);
-		Assert.assertTrue(csvRunner.getAssertionErrorMessagePrefix() + "targeted " + object.getClass().getSimpleName() + "is not visible",
+		Assert.assertTrue(csvRunner.getAssertionErrorMessagePrefix() + "targeted " + object.getClass().getSimpleName() + " is not visible",
 				WidgetUtils.isWidgetVisible(object));
 	}
 
 	@CsvMethod
 	public void isNotVisible(String identifier) {
 		UIObject object = getObject(UIObject.class, identifier);
-		Assert.assertFalse(csvRunner.getAssertionErrorMessagePrefix() + "targeted " + object.getClass().getSimpleName() + "is visible",
-				WidgetUtils.isWidgetVisible(object));
+		Assert.assertFalse(csvRunner.getAssertionErrorMessagePrefix() + "targeted " + object.getClass().getSimpleName() + " is visible", WidgetUtils
+				.isWidgetVisible(object));
 	}
 
 	@CsvMethod
 	public void isEnabled(String identifier) {
 		FocusWidget button = getFocusWidget(identifier);
-		Assert.assertTrue(csvRunner.getAssertionErrorMessagePrefix() + "targeted " + button.getClass().getSimpleName() + "is not enabled",
-				button.isEnabled());
+		Assert.assertTrue(csvRunner.getAssertionErrorMessagePrefix() + "targeted " + button.getClass().getSimpleName() + " is not enabled", button
+				.isEnabled());
 	}
 
 	@CsvMethod
 	public void isNotEnabled(String identifier) {
 		FocusWidget button = getFocusWidget(identifier);
-		Assert.assertFalse(csvRunner.getAssertionErrorMessagePrefix() + "targeted " + button.getClass().getSimpleName() + "is enabled",
-				button.isEnabled());
+		Assert.assertFalse(csvRunner.getAssertionErrorMessagePrefix() + "targeted " + button.getClass().getSimpleName() + " is enabled", button
+				.isEnabled());
 	}
 
 	protected void assertCanApplyEvent(UIObject widget, int eventTypeInt) {
@@ -466,6 +466,10 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 			};
 		}
 		return null;
+	}
+
+	protected FocusWidget getFocusWidget(String identifier) {
+		return getObject(FocusWidget.class, identifier);
 	}
 
 	protected final <T> T getObject(Class<T> clazz, String objectLocalization) {
@@ -520,9 +524,10 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 	}
 
 	private String createFailureMessage(UIObject target, int eventTypeInt, String attribut) {
+		String className = target.getClass().isAnonymousClass() ? target.getClass().getName() : target.getClass().getSimpleName();
 		StringBuilder sb = new StringBuilder();
 		String event = EventUtils.getEventTypeString(eventTypeInt);
-		sb.append("The targeted widget (").append(target.getClass().getSimpleName());
+		sb.append("The targeted widget (").append(className);
 		sb.append(") has to be ").append(attribut);
 		sb.append(" to apply a browser '").append(event).append("\' event");
 
@@ -530,11 +535,11 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 
 	}
 
-	private FocusWidget getFocusWidget(String identifier) {
-		return getObject(FocusWidget.class, identifier);
-	}
-
 	private void dispatchEventInternal(Widget target, Event event) {
+		if (target instanceof CheckBox && event.getTypeInt() == Event.ONCLICK) {
+			CheckBox checkBox = (CheckBox) target;
+			checkBox.setValue(!checkBox.getValue());
+		}
 		target.onBrowserEvent(event);
 	}
 

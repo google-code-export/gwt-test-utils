@@ -30,10 +30,6 @@ public class Browser {
 	}
 
 	public static void click(Widget target) {
-		if (target instanceof CheckBox) {
-			CheckBox checkBox = (CheckBox) target;
-			checkBox.setValue(!checkBox.getValue());
-		}
 		dispatchEvent(target, EventBuilder.create(Event.ONCLICK).build());
 	}
 
@@ -72,10 +68,6 @@ public class Browser {
 	}
 
 	public static void dblClick(Widget target) {
-		if (target instanceof CheckBox) {
-			CheckBox checkBox = (CheckBox) target;
-			checkBox.setValue(!checkBox.getValue());
-		}
 		dispatchEvent(target, EventBuilder.create(Event.ONDBLCLICK).build());
 	}
 
@@ -119,7 +111,11 @@ public class Browser {
 		dispatchEvent(target, EventBuilder.create(Event.ONMOUSEOUT).build());
 	}
 
-	public static void dispatchEventInternal(Widget target, Event event) {
+	private static void dispatchEventInternal(Widget target, Event event) {
+		if (target instanceof CheckBox && event.getTypeInt() == Event.ONCLICK) {
+			CheckBox checkBox = (CheckBox) target;
+			checkBox.setValue(!checkBox.getValue());
+		}
 		target.onBrowserEvent(event);
 	}
 
@@ -136,7 +132,8 @@ public class Browser {
 	private static String createFailureMessage(UIObject target, Event event, String attribut) {
 		StringBuilder sb = new StringBuilder();
 
-		sb.append("The targeted widget (").append(target.getClass().getSimpleName());
+		String className = target.getClass().isAnonymousClass() ? target.getClass().getName() : target.getClass().getSimpleName();
+		sb.append("The targeted widget (").append(className);
 		sb.append(") and its possible parents have to be ").append(attribut);
 		sb.append(" to apply a browser '").append(event.getType()).append("\' event");
 

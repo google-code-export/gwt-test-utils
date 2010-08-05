@@ -11,6 +11,7 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.PopupPanel;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
@@ -35,7 +36,11 @@ public class WidgetUtils {
 	 *         otherwise.
 	 */
 	public static boolean isWidgetVisible(UIObject object) {
-		if (object instanceof PopupPanel) {
+		// FIXME : remove this hack which is required for octo main GWT
+		// project...
+		if (object instanceof RootPanel) {
+			return true;
+		} else if (object instanceof PopupPanel) {
 			PopupPanel popup = (PopupPanel) object;
 			return popup.isShowing();
 		} else {
