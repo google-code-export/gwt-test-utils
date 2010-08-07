@@ -275,7 +275,7 @@ public class CsvRunnerTest {
 		Assert.assertEquals("d", runner.getValue(o, Node.parse("/map[c]")));
 	}
 
-	@Test(expected = AssertionError.class)
+	@Test
 	public void checkGetMapNotFound() {
 		Assert.assertNull(runner.getValue(o, Node.parse("/map[b]")));
 	}

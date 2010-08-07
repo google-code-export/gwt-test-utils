@@ -8,7 +8,9 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.Assert;
 
@@ -44,14 +46,53 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 
 	private DirectoryTestReader reader;
 	private MacroReader macroReader;
+	private ObjectFinder defaultFinder;
+
+	private Map<String, NodeObjectFinder> prefixFinders = new HashMap<String, NodeObjectFinder>();
 
 	public void setReader(DirectoryTestReader reader) {
 		this.reader = reader;
-		this.csvRunner = new CsvRunner();
+		csvRunner = new CsvRunner();
+		defaultFinder = createDefaultFinder();
+		csvRunner.addObjectFinder(defaultFinder);
 		macroReader = new MacroReader();
 		for (String name : reader.getMacroFileList()) {
 			macroReader.read(reader.getMacroFile(name));
 		}
+	}
+
+	private ObjectFinder createDefaultFinder() {
+		ObjectFinder finder = new ObjectFinder() {
+
+			public Object find(CsvRunner csvRunner, String... params) {
+				if (params.length != 1) {
+					return null;
+				}
+
+				Node node = Node.parse(params[0]);
+				if (node == null) {
+					return null;
+				}
+
+				NodeObjectFinder finder = prefixFinders.get(node.getLabel());
+				Assert.assertNotNull(csvRunner.getAssertionErrorMessagePrefix() + "Unknown prefix '" + node.getLabel() + "'", finder);
+				return finder.find(csvRunner, node.getNext());
+			}
+
+		};
+
+		mapNodeObjectFinder("root", new NodeObjectFinder() {
+
+			public Object find(CsvRunner csvRunner, Node node) {
+				return csvRunner.getValue(RootPanel.get(), node);
+			}
+		});
+
+		return finder;
+	}
+
+	protected void mapNodeObjectFinder(String string, NodeObjectFinder nodeObjectFinder) {
+		prefixFinders.put(string, nodeObjectFinder);
 	}
 
 	public void launchTest(String testName) throws Exception {
@@ -93,7 +134,7 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 	@CsvMethod
 	public void assertExact(String value, String objectLocalization) {
 		value = GwtTestStringUtils.resolveBackSlash(value);
-		String s = getObject(String.class, objectLocalization, false);
+		String s = getObject(String.class, false, objectLocalization);
 		Assert.assertEquals(csvRunner.getAssertionErrorMessagePrefix() + "Wrong string", value, s);
 	}
 
@@ -104,7 +145,7 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 	 */
 	@CsvMethod
 	public void assertNumberExact(String value, String objectLocalization) {
-		Integer i = getObject(Integer.class, objectLocalization, false);
+		Integer i = getObject(Integer.class, false, objectLocalization);
 		if (i != null) {
 			Assert.assertEquals(csvRunner.getAssertionErrorMessagePrefix() + "Wrong number", Integer.parseInt(value), i.intValue());
 		} else {
@@ -115,7 +156,7 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 
 	@CsvMethod
 	public void assertTrue(String objectLocalization) {
-		Boolean b = getObject(Boolean.class, objectLocalization, false);
+		Boolean b = getObject(Boolean.class, false, objectLocalization);
 		if (b == null) {
 			Assert.fail(csvRunner.getAssertionErrorMessagePrefix() + "null Boolean");
 		} else {
@@ -125,7 +166,7 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 
 	@CsvMethod
 	public void assertFalse(String objectLocalization) {
-		Boolean b = getObject(Boolean.class, objectLocalization, false);
+		Boolean b = getObject(Boolean.class, false, objectLocalization);
 		if (b == null) {
 			Assert.fail(csvRunner.getAssertionErrorMessagePrefix() + "null Boolean");
 		} else {
@@ -246,13 +287,13 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 
 	@CsvMethod
 	public void assertNotExist(String objectLocalization) {
-		Object o = getObject(Object.class, objectLocalization, false);
+		Object o = getObject(Object.class, false, objectLocalization);
 		Assert.assertNull(csvRunner.getAssertionErrorMessagePrefix() + "Object exist", o);
 	}
 
 	@CsvMethod
 	public void callMethod(String objectLocalization) {
-		getObject(Object.class, objectLocalization, false);
+		getObject(Object.class, false, objectLocalization);
 	}
 
 	@CsvMethod
@@ -281,7 +322,7 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 
 	@CsvMethod
 	public void assertBiggerThan(String value, String objectLocalization) {
-		Integer i = getObject(Integer.class, objectLocalization, false);
+		Integer i = getObject(Integer.class, false, objectLocalization);
 		if (i != null) {
 			int currentValue = i.intValue();
 			int intValue = Integer.parseInt(value);
@@ -298,7 +339,7 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 
 	@CsvMethod
 	public void assertSmallerThan(String value, String objectLocalization) {
-		Integer i = getObject(Integer.class, objectLocalization, false);
+		Integer i = getObject(Integer.class, false, objectLocalization);
 		if (i != null) {
 			int currentValue = i.intValue();
 			int intValue = Integer.parseInt(value);
@@ -455,51 +496,16 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 		dispatchEventInternal(target, event);
 	}
 
-	protected PrefixProcessor findPrefixProcessor(String prefix) {
-		if ("root".equals(prefix)) {
-			return new PrefixProcessor() {
-
-				public Object process(CsvRunner csvRunner, Node next, boolean failOnError) {
-					return csvRunner.getValue(failOnError, RootPanel.get(), next);
-				}
-
-			};
-		}
-		return null;
-	}
-
 	protected FocusWidget getFocusWidget(String identifier) {
 		return getObject(FocusWidget.class, identifier);
 	}
 
-	protected final <T> T getObject(Class<T> clazz, String objectLocalization) {
-		return getObject(clazz, objectLocalization, true);
+	protected <T> T getObject(Class<T> clazz, String... params) {
+		return csvRunner.getObject(clazz, params);
 	}
 
-	@SuppressWarnings("unchecked")
-	protected final <T> T getObject(Class<T> clazz, String objectLocalization, boolean failOnError) {
-		Node n = Node.parse(objectLocalization);
-		Assert.assertNotNull(csvRunner.getAssertionErrorMessagePrefix() + "Unable to parse " + objectLocalization, n);
-		Assert.assertNotNull(csvRunner.getAssertionErrorMessagePrefix() + "Localization must have two /", n.getNext());
-		String prefix = n.getLabel();
-		Node next = n.getNext();
-		PrefixProcessor processor = findPrefixProcessor(prefix);
-		Assert.assertNotNull(csvRunner.getAssertionErrorMessagePrefix() + "Unkown prefix : <" + prefix + ">", processor);
-		Object o = processor.process(csvRunner, next, failOnError);
-		if (clazz.isInstance(o)) {
-			return (T) o;
-		}
-		if (!failOnError) {
-			return null;
-		}
-
-		if (o == null) {
-			Assert.fail(csvRunner.getAssertionErrorMessagePrefix() + "Targeted object [" + objectLocalization + "] is null");
-		}
-
-		Assert.fail(csvRunner.getAssertionErrorMessagePrefix() + "Wrong object type, not a " + clazz.getCanonicalName() + " : "
-				+ o.getClass().getCanonicalName());
-		return null;
+	protected <T> T getObject(Class<T> clazz, boolean failOnError, String... params) {
+		return csvRunner.getObject(clazz, failOnError, params);
 	}
 
 	protected void selectInListBox(ListBox listBox, String regex, String objectLocalization) {

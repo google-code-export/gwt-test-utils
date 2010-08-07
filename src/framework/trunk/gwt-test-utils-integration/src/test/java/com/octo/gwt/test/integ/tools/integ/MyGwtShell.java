@@ -14,7 +14,7 @@ import com.octo.gwt.test.integ.handler.DefaultGwtRpcExceptionHandler;
 import com.octo.gwt.test.integ.handler.GwtCreateRemoteServiceHandler;
 import com.octo.gwt.test.integ.junit.StandardJUnit4CsvRunner;
 import com.octo.gwt.test.integ.tools.AbstractGwtIntegrationShell;
-import com.octo.gwt.test.integ.tools.PrefixProcessor;
+import com.octo.gwt.test.integ.tools.NodeObjectFinder;
 import com.octo.gwt.test.utils.GwtTestReflectionUtils;
 import com.octo.gwt.test.utils.ISerializeCallback;
 
@@ -57,6 +57,21 @@ public abstract class MyGwtShell extends AbstractGwtIntegrationShell {
 		addGwtCreateHandler(handlerImpl);
 
 		MyStringStore.appender = "";
+
+		mapNodeObjectFinder("app", new NodeObjectFinder() {
+
+			public Object find(CsvRunner csvRunner, Node node) {
+				return csvRunner.getValue(app, node);
+			}
+		});
+
+		mapNodeObjectFinder("appender", new NodeObjectFinder() {
+
+			public Object find(CsvRunner csvRunner, Node node) {
+				return MyStringStore.appender;
+			}
+
+		});
 	}
 
 	@CsvMethod
@@ -68,29 +83,6 @@ public abstract class MyGwtShell extends AbstractGwtIntegrationShell {
 	@CsvMethod
 	public void append(String s) {
 		MyStringStore.appender += s;
-	}
-
-	@Override
-	public PrefixProcessor findPrefixProcessor(String prefix) {
-		if ("app".equals(prefix)) {
-			return new PrefixProcessor() {
-
-				public Object process(CsvRunner csvRunner, Node next, boolean failOnError) {
-					return csvRunner.getValue(failOnError, app, next);
-				}
-
-			};
-		}
-		if ("appender".equals(prefix)) {
-			return new PrefixProcessor() {
-
-				public Object process(CsvRunner csvRunner, Node next, boolean failOnError) {
-					return MyStringStore.appender;
-				}
-
-			};
-		}
-		return super.findPrefixProcessor(prefix);
 	}
 
 	@CsvMethod

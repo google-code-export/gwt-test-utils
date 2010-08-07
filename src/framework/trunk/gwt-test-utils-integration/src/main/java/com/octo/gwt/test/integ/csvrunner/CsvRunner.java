@@ -16,6 +16,7 @@ import org.junit.Assert;
 
 import com.octo.gwt.test.integ.CsvMethod;
 import com.octo.gwt.test.integ.tools.AbstractGwtIntegrationShell;
+import com.octo.gwt.test.integ.tools.ObjectFinder;
 import com.octo.gwt.test.utils.GwtTestReflectionUtils;
 
 public class CsvRunner {
@@ -25,6 +26,8 @@ public class CsvRunner {
 	private int lineNumber = -1;
 
 	private String extendedLineInfo = null;
+
+	private List<ObjectFinder> objectFinders = new ArrayList<ObjectFinder>();
 
 	public String getAssertionErrorMessagePrefix() {
 		return "Error line " + (lineNumber + 1) + (extendedLineInfo == null ? "" : " [" + extendedLineInfo + "]") + ": ";
@@ -202,23 +205,58 @@ public class CsvRunner {
 		return null;
 	}
 
-	public Object getValue(Object o, Node node) {
-		Object current = getValue(true, o, node);
-		return current;
+	public <T> T getObject(Class<T> clazz, String... params) {
+		return getObject(clazz, true, params);
 	}
 
 	@SuppressWarnings("unchecked")
-	public Object getValue(boolean failOnError, Object o, Node node) {
+	public <T> T getObject(Class<T> clazz, boolean failOnError, String... params) {
+		Object o = findObject(params);
+		if (clazz.isInstance(o)) {
+			return (T) o;
+		}
+		if (!failOnError) {
+			return null;
+		}
+
+		if (o == null) {
+			Assert.fail(getAssertionErrorMessagePrefix() + "Targeted object " + paramsToString(params) + " is null");
+		}
+
+		Assert.fail(getAssertionErrorMessagePrefix() + "Wrong object type, not a " + clazz.getCanonicalName() + " : "
+				+ o.getClass().getCanonicalName());
+		return null;
+	}
+
+	private String paramsToString(String... params) {
+		StringBuilder sb = new StringBuilder();
+		for (String param : params) {
+			sb.append("'").append(param).append("', ");
+		}
+
+		return sb.substring(0, sb.length() - 2);
+	}
+
+	private Object findObject(String... params) {
+		int i = 0;
+		Object result = null;
+
+		while (i < objectFinders.size() && result == null) {
+			ObjectFinder objectFinder = objectFinders.get(i++);
+			result = objectFinder.find(this, params);
+		}
+
+		return result;
+	}
+
+	@SuppressWarnings("unchecked")
+	public Object getValue(Object o, Node node) {
 		logger.debug(getProcessingMessagePrefix() + "GetValue on " + o.getClass().getCanonicalName() + ", objectLocalization " + node);
 		Object current = o;
 		Node currentNode = node;
 		while (currentNode != null) {
-			if (failOnError) {
-				Assert.assertNotNull(getAssertionErrorMessagePrefix() + "Unable to process leaving param list " + node, current);
-			} else {
-				if (current == null) {
-					return null;
-				}
+			if (current == null) {
+				return null;
 			}
 			String currentName = currentNode.getLabel();
 			boolean mapEqIsProcessed = false;
@@ -278,18 +316,11 @@ public class CsvRunner {
 				}
 			}
 			if (!ok) {
-				if (failOnError) {
-					Assert.fail(getAssertionErrorMessagePrefix() + "Not found <" + currentName + "> in " + current.getClass().getCanonicalName());
-				} else {
-					return null;
-				}
+				return null;
 			}
 			currentNode = currentNode.getNext();
 		}
-		if (failOnError) {
-			Assert.assertNotNull(getAssertionErrorMessagePrefix() + "Object not found or null object " + o.getClass().getCanonicalName()
-					+ ", params " + node, current);
-		}
+
 		return current;
 	}
 
@@ -382,7 +413,7 @@ public class CsvRunner {
 	}
 
 	private boolean checkCondition(Object n, Node before, String after) {
-		Object result = getValue(false, n, before);
+		Object result = getValue(n, before);
 		String s = result == null ? null : result.toString();
 		return after.equals(s);
 	}
@@ -402,6 +433,10 @@ public class CsvRunner {
 
 	public void setExtendedLineInfo(String extendedLineInfo) {
 		this.extendedLineInfo = extendedLineInfo;
+	}
+
+	public void addObjectFinder(ObjectFinder objectFinder) {
+		objectFinders.add(objectFinder);
 	}
 
 }
