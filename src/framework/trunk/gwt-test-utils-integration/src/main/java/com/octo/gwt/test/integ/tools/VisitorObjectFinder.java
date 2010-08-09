@@ -40,7 +40,7 @@ public abstract class VisitorObjectFinder implements ObjectFinder {
 	private void inspectChilds(Object displayedObject, WidgetRepository repository) {
 		for (Field field : GwtTestReflectionUtils.getFields(displayedObject.getClass())) {
 			if (field.getName().startsWith("$") || !Widget.class.isAssignableFrom(field.getType())
-					|| field.getType().getName().startsWith("com.google.gwt")) {
+					|| displayedObject.getClass().getName().startsWith("com.google.gwt.user.client")) {
 				continue;
 			}
 
