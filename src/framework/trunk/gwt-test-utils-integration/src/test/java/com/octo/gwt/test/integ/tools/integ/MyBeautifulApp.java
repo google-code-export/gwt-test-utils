@@ -36,12 +36,14 @@ public class MyBeautifulApp implements EntryPoint {
 
 	private ListBox lb;
 
+	private MyComposite myComposite;
+
 	public void onModuleLoad() {
 		FlowPanel panel = new FlowPanel();
-		b1 = new Button();
+		b1 = new Button("Button1's HTML");
 		panel.add(b1);
 
-		b2 = new Button();
+		b2 = new Button("Button2's HTML");
 		panel.add(b2);
 
 		l = new Label();
@@ -80,7 +82,7 @@ public class MyBeautifulApp implements EntryPoint {
 			}
 
 		});
-		b3 = new Button();
+		b3 = new Button("Button3's HTML");
 		b3.addClickHandler(new ClickHandler() {
 
 			public void onClick(ClickEvent arg0) {
@@ -99,7 +101,7 @@ public class MyBeautifulApp implements EntryPoint {
 			}
 		});
 
-		b4 = new Button();
+		b4 = new Button("Button4's HTML");
 		panel.add(b4);
 
 		b4.addClickHandler(new ClickHandler() {
@@ -121,7 +123,7 @@ public class MyBeautifulApp implements EntryPoint {
 
 		});
 
-		b5 = new Button();
+		b5 = new Button("Button5's HTML");
 		panel.add(b5);
 
 		b5.addClickHandler(new ClickHandler() {
@@ -159,6 +161,8 @@ public class MyBeautifulApp implements EntryPoint {
 
 		});
 
+		myComposite = new MyComposite("myComposite Label", "MyComposite Button");
+		panel.add(myComposite);
 	}
 
 }

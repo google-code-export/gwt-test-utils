@@ -240,10 +240,14 @@ public class CsvRunner {
 	private Object findObject(String... params) {
 		int i = 0;
 		Object result = null;
+		boolean accepted = false;
 
-		while (i < objectFinders.size() && result == null) {
+		while (i < objectFinders.size() && !accepted) {
 			ObjectFinder objectFinder = objectFinders.get(i++);
-			result = objectFinder.find(this, params);
+			accepted = objectFinder.accept(params);
+			if (accepted) {
+				result = objectFinder.find(this, params);
+			}
 		}
 
 		return result;

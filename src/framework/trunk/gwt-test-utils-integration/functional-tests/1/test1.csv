@@ -2,7 +2,7 @@ start
 initApp
 assertExact;init;/root/widget(0)/widget(2)/text
 assertExact;init;/app/l/text
-assertNumberExact;9;/root/widget(0)/widgetCount
+assertNumberExact;10;/root/widget(0)/widgetCount
 assertContains;nit;/app/l/text
 click;/app/b1
 assertExact;click on b1;/app/l/text

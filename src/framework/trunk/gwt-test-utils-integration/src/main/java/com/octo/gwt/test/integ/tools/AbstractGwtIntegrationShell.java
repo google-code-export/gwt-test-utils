@@ -64,11 +64,11 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 	private ObjectFinder createDefaultFinder() {
 		ObjectFinder finder = new ObjectFinder() {
 
-			public Object find(CsvRunner csvRunner, String... params) {
-				if (params.length != 1) {
-					return null;
-				}
+			public boolean accept(String... params) {
+				return params.length == 1 && params[0].matches("^/\\w+/.*$");
+			}
 
+			public Object find(CsvRunner csvRunner, String... params) {
 				Node node = Node.parse(params[0]);
 				if (node == null) {
 					return null;
@@ -359,8 +359,8 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 	@CsvMethod
 	public void assertListBoxSelectedValueIs(String value, String objectLocalization) {
 		ListBox listBox = getObject(ListBox.class, objectLocalization);
-		Assert.assertEquals(csvRunner.getAssertionErrorMessagePrefix() + "Wrong ListBox selected value", value, listBox.getItemText(listBox
-				.getSelectedIndex()));
+		Assert.assertEquals(csvRunner.getAssertionErrorMessagePrefix() + "Wrong ListBox selected value", value,
+				listBox.getItemText(listBox.getSelectedIndex()));
 	}
 
 	@CsvMethod
@@ -455,22 +455,22 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 	@CsvMethod
 	public void isNotVisible(String identifier) {
 		UIObject object = getObject(UIObject.class, identifier);
-		Assert.assertFalse(csvRunner.getAssertionErrorMessagePrefix() + "targeted " + object.getClass().getSimpleName() + " is visible", WidgetUtils
-				.isWidgetVisible(object));
+		Assert.assertFalse(csvRunner.getAssertionErrorMessagePrefix() + "targeted " + object.getClass().getSimpleName() + " is visible",
+				WidgetUtils.isWidgetVisible(object));
 	}
 
 	@CsvMethod
 	public void isEnabled(String identifier) {
 		FocusWidget button = getFocusWidget(identifier);
-		Assert.assertTrue(csvRunner.getAssertionErrorMessagePrefix() + "targeted " + button.getClass().getSimpleName() + " is not enabled", button
-				.isEnabled());
+		Assert.assertTrue(csvRunner.getAssertionErrorMessagePrefix() + "targeted " + button.getClass().getSimpleName() + " is not enabled",
+				button.isEnabled());
 	}
 
 	@CsvMethod
 	public void isNotEnabled(String identifier) {
 		FocusWidget button = getFocusWidget(identifier);
-		Assert.assertFalse(csvRunner.getAssertionErrorMessagePrefix() + "targeted " + button.getClass().getSimpleName() + " is enabled", button
-				.isEnabled());
+		Assert.assertFalse(csvRunner.getAssertionErrorMessagePrefix() + "targeted " + button.getClass().getSimpleName() + " is enabled",
+				button.isEnabled());
 	}
 
 	protected void assertCanApplyEvent(UIObject widget, int eventTypeInt) {

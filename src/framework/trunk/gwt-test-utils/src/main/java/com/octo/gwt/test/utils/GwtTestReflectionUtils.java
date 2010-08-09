@@ -23,6 +23,8 @@ public class GwtTestReflectionUtils {
 	private static DoubleMap<Class<?>, Class<?>, Map<Method, ?>> cacheAnnotatedMethod = new DoubleMap<Class<?>, Class<?>, Map<Method, ?>>();
 	private static DoubleMap<Class<?>, String, Method> cacheMethod = new DoubleMap<Class<?>, String, Method>();
 
+	private static Map<Class<?>, Set<Field>> cacheField = new HashMap<Class<?>, Set<Field>>();
+
 	public static Method getMethod(Class<?> clazz, String methodName) {
 		Method res = cacheMethod.get(clazz, methodName);
 		if (res != null) {
@@ -138,29 +140,25 @@ public class GwtTestReflectionUtils {
 		return map;
 	}
 
-	private static DoubleMap<Class<?>, String, Set<Field>> cacheField = new DoubleMap<Class<?>, String, Set<Field>>();
-
-	public static Set<Field> findFieldByName(Class<?> clazz, String fieldName) {
-		Set<Field> set = cacheField.get(clazz, fieldName);
+	public static Set<Field> getFields(Class<?> clazz) {
+		Set<Field> set = cacheField.get(clazz);
 		if (set != null) {
 			return set;
 		}
 		set = new HashSet<Field>();
 		;
-		for (Field f : clazz.getFields()) {
-			if (f.getName().equals(fieldName)) {
-				set.add(f);
-			}
-		}
+
 		for (Field f : clazz.getDeclaredFields()) {
-			if (f.getName().equals(fieldName)) {
-				set.add(f);
-			}
+			f.setAccessible(true);
+			set.add(f);
 		}
+
 		Class<?> superClazz = clazz.getSuperclass();
 		if (superClazz != null) {
-			set.addAll(findFieldByName(superClazz, fieldName));
+			set.addAll(getFields(superClazz));
 		}
+
+		cacheField.put(clazz, set);
 
 		return set;
 	}
@@ -172,15 +170,23 @@ public class GwtTestReflectionUtils {
 		if (f != null) {
 			return f;
 		}
-		Set<Field> set = findFieldByName(clazz, fieldName);
-		if (set.size() == 0) {
-			throw new RuntimeException("Unable to find field, class " + clazz + ", fieldName " + fieldName);
+		Set<Field> fieldSet = getFields(clazz);
+
+		Set<Field> result = new HashSet<Field>();
+
+		for (Field field : fieldSet) {
+			if (field.getName().equals(fieldName)) {
+				result.add(field);
+			}
 		}
-		if (set.size() > 1) {
-			throw new RuntimeException("Unable to choose field, " + clazz + ", fieldName " + fieldName);
+
+		if (result.size() == 0) {
+			throw new RuntimeException("Unable to find field, class '" + clazz + "', fieldName '" + fieldName + "'");
 		}
-		Field field = set.iterator().next();
-		field.setAccessible(true);
+		if (result.size() > 1) {
+			throw new RuntimeException("Unable to choose field, '" + clazz + "', fieldName '" + fieldName + "'");
+		}
+		Field field = result.iterator().next();
 		cacheUniqueField.put(clazz, fieldName, field);
 		return field;
 	}
