@@ -39,10 +39,19 @@ public abstract class VisitorObjectFinder implements ObjectFinder {
 
 	private void inspectChilds(Object displayedObject, WidgetRepository repository) {
 		for (Field field : GwtTestReflectionUtils.getFields(displayedObject.getClass())) {
-			if (field.getName().startsWith("$") || !Widget.class.isAssignableFrom(field.getType())) {
+			if (field.getName().startsWith("$") || !Widget.class.isAssignableFrom(field.getType())
+					|| field.getType().getName().startsWith("com.google.gwt")) {
 				continue;
 			}
-			Object fieldInstance = GwtTestReflectionUtils.getPrivateFieldValue(displayedObject, field.getName());
+
+			Object fieldInstance = null;
+
+			try {
+				fieldInstance = field.get(displayedObject);
+			} catch (Exception e) {
+				throw new RuntimeException("Error while getting '" + displayedObject.getClass().getSimpleName() + "." + field.getName()
+						+ " field value on the current visited object", e);
+			}
 
 			if (fieldInstance == null) {
 				continue;
