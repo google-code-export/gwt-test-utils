@@ -10,7 +10,7 @@ import javax.xml.xpath.XPathFactory;
 import org.w3c.dom.Document;
 
 import com.google.gwt.core.client.impl.Impl;
-import com.octo.gwt.test.PatchGwtConfig;
+import com.octo.gwt.test.AbstractGwtConfigurableTest;
 import com.octo.gwt.test.internal.patcher.tools.AutomaticPatcher;
 import com.octo.gwt.test.internal.patcher.tools.PatchClass;
 import com.octo.gwt.test.internal.patcher.tools.PatchMethod;
@@ -56,8 +56,8 @@ public class ImplPatcher extends AutomaticPatcher {
 	private static InputStream getModuleConfigurationFile() {
 		String fileName = currentTestedModuleFile;
 		if (fileName == null) {
-			throw new IllegalArgumentException("GWT module configuration file (.gwt.xml) to be used is not set. You should call "
-					+ PatchGwtConfig.class.getSimpleName() + ".setCurrentTestedModuleFile() method");
+			throw new IllegalArgumentException("GWT module configuration file (.gwt.xml) to be used is not set. You should override "
+					+ AbstractGwtConfigurableTest.class.getSimpleName() + ".getCurrentTestedModuleFile() method in your test class");
 		}
 		return ImplPatcher.class.getClassLoader().getResourceAsStream(fileName);
 	}

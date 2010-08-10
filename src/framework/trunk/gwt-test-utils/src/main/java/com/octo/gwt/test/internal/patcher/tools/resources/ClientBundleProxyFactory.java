@@ -1,6 +1,5 @@
 package com.octo.gwt.test.internal.patcher.tools.resources;
 
-import java.io.File;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
@@ -22,11 +21,11 @@ import javassist.bytecode.annotation.MemberValue;
 import javassist.bytecode.annotation.StringMemberValue;
 
 import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.ClientBundle.Source;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.DataResource;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.resources.client.TextResource;
-import com.google.gwt.resources.client.ClientBundle.Source;
 import com.google.gwt.resources.ext.DefaultExtensions;
 import com.octo.gwt.test.PatchGwtClassPool;
 import com.octo.gwt.test.internal.patcher.GwtPatcher;
@@ -58,7 +57,7 @@ public class ClientBundleProxyFactory {
 		InvocationHandler ih = new InvocationHandler() {
 
 			public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-				File resourceFile = methodRegistry.getResourceFile(method);
+				URL resourceFile = methodRegistry.getResourceURL(method);
 				if (TextResource.class.isAssignableFrom(method.getReturnType())) {
 					Class<? extends ClientBundle> clazz = (Class<ClientBundle>) method.getReturnType();
 					return generateInvocationHandler(new TextResourceCallback(clazz, resourceFile), method.getName());
@@ -101,7 +100,7 @@ public class ClientBundleProxyFactory {
 	protected class ClientBundleMethodsRegistry {
 
 		private CtClass ctClass;
-		private Map<String, File> resourceFiles = new HashMap<String, File>();
+		private Map<String, URL> resourceURLs = new HashMap<String, URL>();
 
 		public ClientBundleMethodsRegistry(Class<? extends ClientBundle> clazz) {
 			try {
@@ -111,17 +110,17 @@ public class ClientBundleProxyFactory {
 			}
 		}
 
-		public File getResourceFile(Method method) throws Exception {
-			File file = resourceFiles.get(method.getName());
-			if (file == null) {
-				file = computeResourceFile(method);
-				resourceFiles.put(method.getName(), file);
+		public URL getResourceURL(Method method) throws Exception {
+			URL resourceURL = resourceURLs.get(method.getName());
+			if (resourceURL == null) {
+				resourceURL = computeResourceURL(method);
+				resourceURLs.put(method.getName(), resourceURL);
 			}
 
-			return file;
+			return resourceURL;
 		}
 
-		private File computeResourceFile(Method method) throws NotFoundException, URISyntaxException {
+		private URL computeResourceURL(Method method) throws NotFoundException, URISyntaxException {
 			List<String> filesSimpleNames = new ArrayList<String>();
 			boolean computeExtensions = false;
 			CtMethod m = ctClass.getDeclaredMethod(method.getName());
@@ -146,7 +145,7 @@ public class ClientBundleProxyFactory {
 				computeExtensions = true;
 			}
 
-			List<File> existingFiles = new ArrayList<File>();
+			List<URL> existingFiles = new ArrayList<URL>();
 
 			for (String fileSimpleName : filesSimpleNames) {
 				String baseDir = ctClass.getPackageName().replaceAll("\\.", "/") + "/";
@@ -159,13 +158,13 @@ public class ClientBundleProxyFactory {
 						String possibleFile = fileName + extension;
 						URL url = GwtPatcher.class.getClassLoader().getResource(possibleFile);
 						if (url != null) {
-							existingFiles.add(new File(url.toURI()));
+							existingFiles.add(url);
 						}
 					}
 				} else {
 					URL url = GwtPatcher.class.getClassLoader().getResource(fileName);
 					if (url != null) {
-						existingFiles.add(new File(url.toURI()));
+						existingFiles.add(url);
 					}
 				}
 			}

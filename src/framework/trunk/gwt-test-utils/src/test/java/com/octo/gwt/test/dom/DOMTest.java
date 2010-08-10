@@ -25,7 +25,9 @@ import com.google.gwt.dom.client.TableRowElement;
 import com.google.gwt.dom.client.TableSectionElement;
 import com.google.gwt.dom.client.TextAreaElement;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.ui.Image;
 import com.octo.gwt.test.AbstractGwtTest;
+import com.octo.gwt.test.ElementUtils;
 
 public class DOMTest extends AbstractGwtTest {
 
@@ -304,6 +306,21 @@ public class DOMTest extends AbstractGwtTest {
 
 		// Assert
 		Assert.assertEquals("tr", elem.getTagName());
+	}
+
+	@Test
+	public void checkImageSrc() {
+		// Setup
+		Image img = new Image();
+		ImageElement elem = ElementUtils.castToDomElement(img.getElement());
+
+		// Test
+		DOM.setImgSrc(img.getElement(), "http://test/image.gif");
+		String imageSrc = DOM.getImgSrc(img.getElement());
+
+		// Assert
+		Assert.assertEquals("http://test/image.gif", elem.getSrc());
+		Assert.assertEquals("http://test/image.gif", imageSrc);
 	}
 
 }

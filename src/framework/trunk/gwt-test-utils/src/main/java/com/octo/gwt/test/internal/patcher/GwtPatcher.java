@@ -22,6 +22,7 @@ import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.ImageBundle;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.OverrideDefaultImages;
+import com.google.gwt.user.client.ui.TreeItem.TreeItemImpl;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.UIObject.DebugIdImpl;
 import com.google.gwt.user.client.ui.impl.ClippedImageImpl;
@@ -65,6 +66,16 @@ public class GwtPatcher extends AutomaticPatcher {
 		if (gwtLogHandler != null) {
 			gwtLogHandler.log(message, t);
 		}
+	}
+
+	@PatchMethod
+	public static String getVersion() {
+		return "GWT 2 by GWT-test-utils";
+	}
+
+	@PatchMethod
+	public static boolean isClient() {
+		return true;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -117,7 +128,10 @@ public class GwtPatcher extends AutomaticPatcher {
 		}
 		if ("com.google.gwt.layout.client.LayoutImpl".equals(classLiteral.getName())) {
 			return new LayoutImplIE8();
+		}
 
+		if (classLiteral == TreeItemImpl.class) {
+			return new TreeItemImpl();
 		}
 
 		if (classLiteral == MenuBar.Resources.class) {

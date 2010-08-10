@@ -3,6 +3,8 @@ package com.octo.gwt.test;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.ImageElement;
 import com.google.gwt.user.client.ui.Image;
 
 public class ImageTest extends AbstractGwtTest {
@@ -86,4 +88,16 @@ public class ImageTest extends AbstractGwtTest {
 		Image i = new Image();
 		Assert.assertEquals(0, i.getHeight());
 	}
+
+	@Test
+	public void checkGetImageElement() {
+		Image i = new Image();
+
+		// Test
+		Element e = i.getElement();
+
+		Assert.assertNotNull(e);
+		Assert.assertTrue(ImageElement.class.isInstance(ElementUtils.castToDomElement(e)));
+	}
+
 }

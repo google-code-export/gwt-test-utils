@@ -55,6 +55,21 @@ public class GwtTest extends AbstractGwtTest {
 	}
 
 	@Test
+	public void checkGetVersion() {
+		Assert.assertEquals("GWT 2 by GWT-test-utils", GWT.getVersion());
+	}
+
+	@Test
+	public void checkIsClient() {
+		Assert.assertTrue(GWT.isClient());
+	}
+
+	@Test
+	public void checkIsScript() {
+		Assert.assertFalse(GWT.isScript());
+	}
+
+	@Test
 	public void checkRunAsync() {
 		// Setup
 		Button b = new Button();

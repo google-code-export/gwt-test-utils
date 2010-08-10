@@ -1,7 +1,7 @@
 package com.octo.gwt.test.internal.patcher.tools.resources;
 
-import java.io.File;
 import java.lang.reflect.Method;
+import java.net.URL;
 
 import com.google.gwt.resources.client.ClientBundle;
 
@@ -9,9 +9,9 @@ public class ImageResourceCallback extends AbstractClientBundleCallback {
 
 	private String url;
 
-	protected ImageResourceCallback(Class<? extends ClientBundle> wrappedClass, File resourceFile, Class<? extends ClientBundle> proxiedClass) {
-		super(wrappedClass, resourceFile);
-		url = computeUrl(resourceFile, proxiedClass);
+	protected ImageResourceCallback(Class<? extends ClientBundle> wrappedClass, URL resourceURL, Class<? extends ClientBundle> proxiedClass) {
+		super(wrappedClass, resourceURL);
+		url = computeUrl(resourceURL, proxiedClass);
 	}
 
 	public Object call(Object proxy, Method method, Object[] args) throws Exception {

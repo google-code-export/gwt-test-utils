@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
+import java.net.URISyntaxException;
+import java.net.URL;
 
 import com.google.gwt.dom.client.StyleInjector;
 import com.google.gwt.resources.client.ClientBundle;
@@ -13,8 +15,8 @@ public class CssResourceCallback extends AbstractClientBundleCallback {
 
 	private boolean alreadyInjected = false;
 
-	protected CssResourceCallback(Class<? extends ClientBundle> wrappedClass, File resourceFile) {
-		super(wrappedClass, resourceFile);
+	protected CssResourceCallback(Class<? extends ClientBundle> wrappedClass, URL resourceURL) {
+		super(wrappedClass, resourceURL);
 	}
 
 	public Object call(Object proxy, Method method, Object[] args) throws Exception {
@@ -28,11 +30,11 @@ public class CssResourceCallback extends AbstractClientBundleCallback {
 
 	}
 
-	private String getCssText() throws UnsupportedEncodingException, IOException {
-		return TextResourceReader.readFile(resourceFile);
+	private String getCssText() throws UnsupportedEncodingException, IOException, URISyntaxException {
+		return TextResourceReader.readFile(new File(resourceURL.toURI()));
 	}
 
-	private boolean ensureInjected() throws UnsupportedEncodingException, IOException {
+	private boolean ensureInjected() throws UnsupportedEncodingException, IOException, URISyntaxException {
 		if (!alreadyInjected) {
 			StyleInjector.inject(getCssText());
 			alreadyInjected = true;
@@ -41,8 +43,8 @@ public class CssResourceCallback extends AbstractClientBundleCallback {
 		return false;
 	}
 
-	private String handleCustomMethod(String methodName) throws UnsupportedEncodingException, IOException {
-		CssParsingResult result = CssResourceReader.readFile(resourceFile);
+	private String handleCustomMethod(String methodName) throws UnsupportedEncodingException, IOException, URISyntaxException {
+		CssParsingResult result = CssResourceReader.readFile(new File(resourceURL.toURI()));
 		String constant = result.getConstants().get(methodName);
 		if (constant != null) {
 			return constant;

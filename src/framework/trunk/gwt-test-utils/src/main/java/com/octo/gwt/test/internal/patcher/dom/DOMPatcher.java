@@ -1,6 +1,7 @@
 package com.octo.gwt.test.internal.patcher.dom;
 
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.ImageElement;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.octo.gwt.test.ElementUtils;
@@ -158,16 +159,23 @@ public class DOMPatcher extends AutomaticPatcher {
 	}
 
 	@PatchMethod
+	public static Element clone(Element elem, boolean deep) {
+		return ElementUtils.castToUserElement((com.google.gwt.dom.client.Element) elem.cloneNode(deep));
+	}
+
+	@PatchMethod
 	public static Element getParent(Element elem) {
-		if (elem == null)
-			return null;
-		else
-			return ElementUtils.castToUserElement(elem.getParentElement());
+		return ElementUtils.castToUserElement(elem.getParentElement());
 	}
 
 	@PatchMethod
 	public static Element getFirstChild(Element elem) {
 		return ElementUtils.castToUserElement(elem.getFirstChildElement());
+	}
+
+	@PatchMethod
+	public static Element getNextSibling(Element elem) {
+		return ElementUtils.castToUserElement((com.google.gwt.dom.client.Element) elem.getNextSibling());
 	}
 
 	@PatchMethod
@@ -182,4 +190,15 @@ public class DOMPatcher extends AutomaticPatcher {
 		return ElementUtils.castToUserElement(element);
 	}
 
+	@PatchMethod
+	public static String getImgSrc(Element img) {
+		ImageElement imageElement = ElementUtils.castToDomElement(img);
+		return imageElement.getSrc();
+	}
+
+	@PatchMethod
+	public static void setImgSrc(Element elem, String url) {
+		ImageElement imageElement = ElementUtils.castToDomElement(elem);
+		imageElement.setSrc(url);
+	}
 }
