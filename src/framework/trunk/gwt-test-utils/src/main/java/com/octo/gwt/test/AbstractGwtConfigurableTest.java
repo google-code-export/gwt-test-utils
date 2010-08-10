@@ -43,4 +43,9 @@ public abstract class AbstractGwtConfigurableTest {
 		return PatchGwtConfig.addGwtCreateHandler(gwtCreateHandler);
 	}
 
+	@Deprecated
+	protected void setGwtCreateHandler(GwtCreateHandler gwtCreateHandler) {
+		addGwtCreateHandler(gwtCreateHandler);
+	}
+
 }

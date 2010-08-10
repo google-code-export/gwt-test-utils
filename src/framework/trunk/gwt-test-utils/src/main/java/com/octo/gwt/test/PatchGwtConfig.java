@@ -27,6 +27,21 @@ public class PatchGwtConfig {
 		return GwtPatcher.addGwtCreateHandler(gwtCreateHandler);
 	}
 
+	/**
+	 * Set a custom GwtCreateHandler to handle GWT.create(..) calls
+	 * 
+	 * @param gwtCreateHandler
+	 *            A handler gwt-test-utils will try to delegate GWT.create(..)
+	 *            calls
+	 * @deprecated Use
+	 *             {@link PatchGwtConfig#addGwtCreateHandler(GwtCreateHandler)
+	 *             instead}
+	 */
+	@Deprecated
+	public static void setGwtCreateHandler(GwtCreateHandler gwtCreateHandler) {
+		addGwtCreateHandler(gwtCreateHandler);
+	}
+
 	public static void setCurrentTestedModuleFile(String currentTestedModuleFile) {
 		ImplPatcher.currentTestedModuleFile = currentTestedModuleFile;
 	}
