@@ -279,4 +279,9 @@ public class DOMImplPatcher extends AutomaticPatcher {
 		return e;
 	}
 
+	@PatchMethod
+	public static void scrollIntoView(Object domImpl, Element elem) {
+
+	}
+
 }
