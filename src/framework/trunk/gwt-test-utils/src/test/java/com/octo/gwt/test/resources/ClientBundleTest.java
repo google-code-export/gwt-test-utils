@@ -129,4 +129,40 @@ public class ClientBundleTest extends AbstractGwtTest {
 
 	}
 
+	@Test
+	public void checkChildNoOverride() {
+		// Setup
+		DataResource testDataResource = MyChildClientBundle.INSTANCE.testDataResource();
+
+		// Test
+		String name = testDataResource.getName();
+		String url = testDataResource.getUrl();
+
+		// Assert
+		Assert.assertEquals("testDataResource", name);
+		Assert.assertEquals("http://localhost:8888/gwt_test_utils_module/com/octo/gwt/test/resources/textResourceXml.xml", url);
+	}
+
+	@Test
+	public void checkChildOverride() {
+		// Setup
+		ImageResource testImageResource = MyChildClientBundle.INSTANCE.testImageResource();
+
+		// Test
+		String name = testImageResource.getName();
+		String url = testImageResource.getURL();
+		int heigh = testImageResource.getHeight();
+		int left = testImageResource.getLeft();
+		int width = testImageResource.getWidth();
+		int top = testImageResource.getTop();
+
+		// Assert
+		Assert.assertEquals("testImageResource", name);
+		Assert.assertEquals("http://localhost:8888/gwt_test_utils_module/com/octo/gwt/test/resources/override_testImageResource.gif", url);
+		Assert.assertEquals(0, heigh);
+		Assert.assertEquals(0, left);
+		Assert.assertEquals(0, width);
+		Assert.assertEquals(0, top);
+	}
+
 }

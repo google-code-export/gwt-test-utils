@@ -123,7 +123,7 @@ public class ClientBundleProxyFactory {
 		private URL computeResourceURL(Method method) throws NotFoundException, URISyntaxException {
 			List<String> filesSimpleNames = new ArrayList<String>();
 			boolean computeExtensions = false;
-			CtMethod m = ctClass.getDeclaredMethod(method.getName());
+			CtMethod m = ctClass.getMethod(method.getName(), getDescriptor(method));
 			MethodInfo minfo = m.getMethodInfo2();
 			AnnotationsAttribute attr = (AnnotationsAttribute) minfo.getAttribute(AnnotationsAttribute.invisibleTag);
 			if (attr != null) {
@@ -177,6 +177,15 @@ public class ClientBundleProxyFactory {
 
 			return existingFiles.get(0);
 
+		}
+
+		private String getDescriptor(Method method) {
+			Class<?> returnType = method.getReturnType();
+			StringBuilder sb = new StringBuilder();
+			sb.append("()L").append(returnType.getName().replaceAll("\\.", "/"));
+			sb.append(";");
+
+			return sb.toString();
 		}
 
 		private String[] getResourceDefaultExtensions(Method method) {

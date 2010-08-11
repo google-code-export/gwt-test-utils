@@ -20,6 +20,8 @@ import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.Grid;
+import com.google.gwt.user.client.ui.HasHTML;
+import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
@@ -132,10 +134,23 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 	 * @param objectLocalization
 	 */
 	@CsvMethod
-	public void assertExact(String value, String objectLocalization) {
+	public void assertExact(String value, String... params) {
 		value = GwtTestStringUtils.resolveBackSlash(value);
-		String s = getObject(String.class, false, objectLocalization);
-		Assert.assertEquals(csvRunner.getAssertionErrorMessagePrefix() + "Wrong string", value, s);
+		Object o = getObject(Object.class, false, params);
+		String actualValue;
+
+		if (HasHTML.class.isInstance(o)) {
+			HasHTML hasHTML = (HasHTML) o;
+			String html = hasHTML.getHTML();
+			actualValue = (html != null && html.length() > 0) ? html : hasHTML.getText();
+		} else if (HasText.class.isInstance(o)) {
+			actualValue = ((HasText) o).getText();
+		} else {
+			actualValue = "" + o;
+		}
+
+		Assert.assertEquals(csvRunner.getAssertionErrorMessagePrefix() + "Wrong string", value, actualValue);
+
 	}
 
 	/**
