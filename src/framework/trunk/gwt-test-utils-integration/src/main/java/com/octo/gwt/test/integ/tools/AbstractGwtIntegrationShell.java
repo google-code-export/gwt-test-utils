@@ -425,36 +425,44 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 	}
 
 	@CsvMethod
-	public void selectSuggestByIndex(String index, String objectLocalization) {
+	public void fillAndSelectInSuggestBoxByIndex(String content, String index, String objectLocalization) {
 		SuggestBox suggestBox = getObject(SuggestBox.class, objectLocalization);
 
+		fillSuggestBox(suggestBox, content);
+		executeSuggestCommandByIndex(WidgetUtils.getMenuItems(suggestBox), Integer.parseInt(index));
+	}
+
+	@CsvMethod
+	public void fillAndSelectInSuggestBoxByText(String content, String selected, String objectLocalization) {
+		SuggestBox suggestBox = getObject(SuggestBox.class, objectLocalization);
+
+		fillSuggestBox(suggestBox, content);
+
 		List<MenuItem> menuItems = WidgetUtils.getMenuItems(suggestBox);
-		MenuItem item = menuItems.get(Integer.parseInt(index));
+		int i = 0;
+		int index = -1;
+
+		while (i < menuItems.size() && index == -1) {
+			MenuItem item = menuItems.get(i);
+			if (selected.equals(item.getHTML()) || selected.equals(item.getText())) {
+				index = i;
+			}
+			i++;
+		}
+
+		Assert.assertTrue(csvRunner.getAssertionErrorMessagePrefix() + "Cannot find '" + selected + "' in suggested choices", index > -1);
+
+		executeSuggestCommandByIndex(menuItems, index);
+	}
+
+	private void executeSuggestCommandByIndex(List<MenuItem> menuItems, int index) {
+		MenuItem item = menuItems.get(index);
 		assertCanApplyEvent(item, Event.ONCLICK);
 		item.getCommand().execute();
 	}
 
-	@CsvMethod
-	public void selectSuggestByText(String content, String objectLocalization) {
-		SuggestBox suggestBox = getObject(SuggestBox.class, objectLocalization);
-
-		List<MenuItem> menuItems = WidgetUtils.getMenuItems(suggestBox);
-		int i = 0;
-
-		while (i < menuItems.size()) {
-			MenuItem item = menuItems.get(i++);
-			if (content.equals(item.getHTML()) || content.equals(item.getText())) {
-				assertCanApplyEvent(item, Event.ONCLICK);
-				item.getCommand().execute();
-			}
-		}
-	}
-
-	@CsvMethod
-	public void fillSuggestBox(String value, String objectLocalization) {
-		SuggestBox suggestBox = getObject(SuggestBox.class, objectLocalization);
-
-		suggestBox.setText(value);
+	private void fillSuggestBox(SuggestBox suggestBox, String content) {
+		suggestBox.setText(content);
 
 		Event keyUpEvent = EventBuilder.create(Event.ONKEYUP).setKeyCode(KeyCodes.KEY_ENTER).build();
 		dispatchEvent(suggestBox, keyUpEvent);

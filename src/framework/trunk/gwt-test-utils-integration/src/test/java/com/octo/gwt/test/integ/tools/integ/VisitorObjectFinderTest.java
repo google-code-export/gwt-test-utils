@@ -7,6 +7,7 @@ import org.junit.Test;
 
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HasHTML;
+import com.google.gwt.user.client.ui.HasName;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
@@ -37,9 +38,21 @@ public class VisitorObjectFinderTest extends AbstractGwtEasyMockTest {
 				repository.addAlias(hasTextWidget.getText(), (Widget) hasTextWidget);
 			}
 
-			public void visitHasHTML(HasHTML hasHTMLWidget, String name, Object parent, WidgetRepository repository) {
-				repository.addAlias(hasHTMLWidget.getText(), (Widget) hasHTMLWidget);
-				repository.addAlias(hasHTMLWidget.getHTML(), (Widget) hasHTMLWidget);
+			public void visitHasHTML(HasHTML hasHTML, String name, Object parent, WidgetRepository repository) {
+				repository.addAlias(hasHTML.getText(), hasHTML);
+				repository.addAlias(hasHTML.getHTML(), hasHTML);
+			}
+
+			public void visitHasName(HasName hasName, String name,
+					Object parent, WidgetRepository repository) {
+				repository.addAlias(hasName.getName(), hasName);
+				
+			}
+
+			public void visitWidget(Widget widget, String name, Object parent,
+					WidgetRepository repository) {
+				repository.addAlias(widget.getElement().getId(), widget);
+				
 			}
 		};
 

@@ -8,6 +8,7 @@ import java.util.Set;
 
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasHTML;
+import com.google.gwt.user.client.ui.HasName;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.Widget;
 import com.octo.gwt.test.integ.csvrunner.CsvRunner;
@@ -17,7 +18,6 @@ public abstract class VisitorObjectFinder implements ObjectFinder {
 
 	private Map<Object, WidgetRepository> repositories = new HashMap<Object, WidgetRepository>();
 	private WidgetVisitor visitor;
-
 
 	public VisitorObjectFinder(WidgetVisitor visitor) {
 		this.visitor = visitor;
@@ -46,7 +46,7 @@ public abstract class VisitorObjectFinder implements ObjectFinder {
 		} else {
 			alreadyInspectedObjects.add(inspected);
 		}
-		
+
 		for (Field field : GwtTestReflectionUtils.getFields(inspected.getClass())) {
 			if (field.getName().startsWith("$") || !Widget.class.isAssignableFrom(field.getType())
 					|| inspected.getClass().getName().startsWith("com.google.gwt.user.client")) {
@@ -68,12 +68,26 @@ public abstract class VisitorObjectFinder implements ObjectFinder {
 
 			if (Composite.class.isInstance(fieldInstance)) {
 				inspectChilds(fieldInstance, repository, alreadyInspectedObjects);
-			} else if (HasHTML.class.isInstance(fieldInstance)) {
+			}
+
+			if (HasHTML.class.isInstance(fieldInstance)) {
 				HasHTML hasHTMLWidget = (HasHTML) fieldInstance;
 				visitor.visitHasHTML(hasHTMLWidget, field.getName(), inspected, repository);
-			} else if (HasText.class.isInstance(fieldInstance)) {
+			}
+
+			if (HasText.class.isInstance(fieldInstance)) {
 				HasText hasTextWidget = (HasText) fieldInstance;
 				visitor.visitHasText(hasTextWidget, field.getName(), inspected, repository);
+			}
+
+			if (HasName.class.isInstance(fieldInstance)) {
+				HasName hasNameWidget = (HasName) fieldInstance;
+				visitor.visitHasName(hasNameWidget, field.getName(), inspected, repository);
+			}
+
+			if (Widget.class.isInstance(fieldInstance)) {
+				Widget widget = (Widget) fieldInstance;
+				visitor.visitWidget(widget, field.getName(), inspected, repository);
 			}
 		}
 	}
@@ -82,26 +96,30 @@ public abstract class VisitorObjectFinder implements ObjectFinder {
 
 	public static class WidgetRepository {
 
-		private Map<String, Widget> map = new HashMap<String, Widget>();
+		private Map<String, Object> map = new HashMap<String, Object>();
 
-		public Widget addAlias(String alias, Widget widget) {
+		public Object addAlias(String alias, Object widget) {
 			return map.put(alias, widget);
 		}
 
-		public Widget getAlias(String alias) {
+		public Object getAlias(String alias) {
 			return map.get(alias);
 		}
 
-		public Widget removeAlias(String alias) {
+		public Object removeAlias(String alias) {
 			return map.remove(alias);
 		}
 	}
 
 	public static interface WidgetVisitor {
 
-		void visitHasHTML(HasHTML hasHTMLWidget, String name, Object parent, WidgetRepository repository);
+		void visitHasHTML(HasHTML hasHTML, String name, Object parent, WidgetRepository repository);
 
-		void visitHasText(HasText hasTextWidget, String name, Object parent, WidgetRepository repository);
+		void visitHasText(HasText hasText, String name, Object parent, WidgetRepository repository);
+
+		void visitHasName(HasName hasName, String name, Object parent, WidgetRepository repository);
+
+		void visitWidget(Widget widget, String name, Object parent, WidgetRepository repository);
 	}
 
 }
