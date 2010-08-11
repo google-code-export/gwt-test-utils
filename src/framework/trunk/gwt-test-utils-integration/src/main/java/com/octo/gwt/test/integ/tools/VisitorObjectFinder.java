@@ -2,7 +2,9 @@ package com.octo.gwt.test.integ.tools;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasHTML;
@@ -15,6 +17,7 @@ public abstract class VisitorObjectFinder implements ObjectFinder {
 
 	private Map<Object, WidgetRepository> repositories = new HashMap<Object, WidgetRepository>();
 	private WidgetVisitor visitor;
+
 
 	public VisitorObjectFinder(WidgetVisitor visitor) {
 		this.visitor = visitor;
@@ -29,7 +32,7 @@ public abstract class VisitorObjectFinder implements ObjectFinder {
 		WidgetRepository repository = repositories.get(displayedObject);
 		if (repository == null) {
 			repository = new WidgetRepository();
-			inspectChilds(displayedObject, repository);
+			inspectChilds(displayedObject, repository, new HashSet<Object>());
 			repositories.put(displayedObject, repository);
 		}
 
@@ -37,19 +40,25 @@ public abstract class VisitorObjectFinder implements ObjectFinder {
 
 	}
 
-	private void inspectChilds(Object displayedObject, WidgetRepository repository) {
-		for (Field field : GwtTestReflectionUtils.getFields(displayedObject.getClass())) {
+	private void inspectChilds(Object inspected, WidgetRepository repository, Set<Object> alreadyInspectedObjects) {
+		if (alreadyInspectedObjects.contains(inspected)) {
+			return;
+		} else {
+			alreadyInspectedObjects.add(inspected);
+		}
+		
+		for (Field field : GwtTestReflectionUtils.getFields(inspected.getClass())) {
 			if (field.getName().startsWith("$") || !Widget.class.isAssignableFrom(field.getType())
-					|| displayedObject.getClass().getName().startsWith("com.google.gwt.user.client")) {
+					|| inspected.getClass().getName().startsWith("com.google.gwt.user.client")) {
 				continue;
 			}
 
 			Object fieldInstance = null;
 
 			try {
-				fieldInstance = field.get(displayedObject);
+				fieldInstance = field.get(inspected);
 			} catch (Exception e) {
-				throw new RuntimeException("Error while getting '" + displayedObject.getClass().getSimpleName() + "." + field.getName()
+				throw new RuntimeException("Error while getting '" + inspected.getClass().getSimpleName() + "." + field.getName()
 						+ " field value on the current visited object", e);
 			}
 
@@ -58,13 +67,13 @@ public abstract class VisitorObjectFinder implements ObjectFinder {
 			}
 
 			if (Composite.class.isInstance(fieldInstance)) {
-				inspectChilds(fieldInstance, repository);
+				inspectChilds(fieldInstance, repository, alreadyInspectedObjects);
 			} else if (HasHTML.class.isInstance(fieldInstance)) {
 				HasHTML hasHTMLWidget = (HasHTML) fieldInstance;
-				visitor.visitHasHTML(hasHTMLWidget, field.getName(), displayedObject, repository);
+				visitor.visitHasHTML(hasHTMLWidget, field.getName(), inspected, repository);
 			} else if (HasText.class.isInstance(fieldInstance)) {
 				HasText hasTextWidget = (HasText) fieldInstance;
-				visitor.visitHasText(hasTextWidget, field.getName(), displayedObject, repository);
+				visitor.visitHasText(hasTextWidget, field.getName(), inspected, repository);
 			}
 		}
 	}
