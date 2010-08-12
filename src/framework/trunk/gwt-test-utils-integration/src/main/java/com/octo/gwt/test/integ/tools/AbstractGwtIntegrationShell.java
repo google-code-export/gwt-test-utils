@@ -149,7 +149,11 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 			actualValue = "" + o;
 		}
 
-		Assert.assertEquals(csvRunner.getAssertionErrorMessagePrefix() + "Wrong string", value, actualValue);
+		if (value == null) {
+			Assert.assertNull(csvRunner.getAssertionErrorMessagePrefix() + "Null was expected, but '" + o + "' has been find", o);
+		} else {
+			Assert.assertEquals(csvRunner.getAssertionErrorMessagePrefix() + "Wrong string", value, actualValue);
+		}
 
 	}
 
@@ -159,19 +163,19 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 	 * @param objectLocalization
 	 */
 	@CsvMethod
-	public void assertNumberExact(String value, String objectLocalization) {
-		Integer i = getObject(Integer.class, false, objectLocalization);
+	public void assertNumberExact(String value, String... params) {
+		Integer i = getObject(Integer.class, false, params);
 		if (i != null) {
 			Assert.assertEquals(csvRunner.getAssertionErrorMessagePrefix() + "Wrong number", Integer.parseInt(value), i.intValue());
 		} else {
-			Long l = getObject(Long.class, objectLocalization);
+			Long l = getObject(Long.class, params);
 			Assert.assertEquals(csvRunner.getAssertionErrorMessagePrefix() + "Wrong number", Long.parseLong(value), l.intValue());
 		}
 	}
 
 	@CsvMethod
-	public void assertTrue(String objectLocalization) {
-		Boolean b = getObject(Boolean.class, false, objectLocalization);
+	public void assertTrue(String... params) {
+		Boolean b = getObject(Boolean.class, false, params);
 		if (b == null) {
 			Assert.fail(csvRunner.getAssertionErrorMessagePrefix() + "null Boolean");
 		} else {
@@ -180,8 +184,8 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 	}
 
 	@CsvMethod
-	public void assertFalse(String objectLocalization) {
-		Boolean b = getObject(Boolean.class, false, objectLocalization);
+	public void assertFalse(String... params) {
+		Boolean b = getObject(Boolean.class, false, params);
 		if (b == null) {
 			Assert.fail(csvRunner.getAssertionErrorMessagePrefix() + "null Boolean");
 		} else {
@@ -190,33 +194,33 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 	}
 
 	@CsvMethod
-	public void assertContains(String value, String objectLocalization) {
+	public void assertContains(String value, String... params) {
 		value = GwtTestStringUtils.resolveBackSlash(value);
-		String s = getObject(String.class, objectLocalization);
+		String s = getObject(String.class, params);
 		Assert.assertTrue(csvRunner.getAssertionErrorMessagePrefix() + " not containing string " + value, s.contains(value));
 	}
 
 	@CsvMethod
-	public void blur(String identifier) {
-		Widget widget = getObject(Widget.class, identifier);
+	public void blur(String... params) {
+		Widget widget = getObject(Widget.class, params);
 		dispatchEvent(widget, Event.ONBLUR);
 	}
 
 	@CsvMethod
-	public void change(String identifier) {
-		Widget widget = getObject(Widget.class, identifier);
+	public void change(String... params) {
+		Widget widget = getObject(Widget.class, params);
 		dispatchEvent(widget, Event.ONCHANGE);
 	}
 
 	@CsvMethod
-	public void click(String widgetIdentifier) {
-		Widget widget = getObject(Widget.class, widgetIdentifier);
+	public void click(String... params) {
+		Widget widget = getObject(Widget.class, params);
 		dispatchEvent(widget, Event.ONCLICK);
 	}
 
 	@CsvMethod
-	public void clickComplexPanel(String index, String objectLocalization) {
-		ComplexPanel panel = getObject(ComplexPanel.class, objectLocalization);
+	public void clickComplexPanel(String index, String... params) {
+		ComplexPanel panel = getObject(ComplexPanel.class, params);
 		Widget target = panel.getWidget(Integer.parseInt(index));
 
 		Event complexPanelClick = EventBuilder.create(Event.ONCLICK).setTarget(target.getElement()).build();
@@ -225,8 +229,8 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 	}
 
 	@CsvMethod
-	public void clickSimplePanel(String objectLocalization) {
-		SimplePanel panel = getObject(SimplePanel.class, objectLocalization);
+	public void clickSimplePanel(String... params) {
+		SimplePanel panel = getObject(SimplePanel.class, params);
 		Event clickEvent = EventBuilder.create(Event.ONCLICK).build();
 		assertCanApplyEvent(panel.getWidget(), clickEvent.getTypeInt());
 		dispatchEventInternal(panel, clickEvent);
@@ -301,25 +305,25 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 	}
 
 	@CsvMethod
-	public void assertNotExist(String objectLocalization) {
-		Object o = getObject(Object.class, false, objectLocalization);
+	public void assertNotExist(String... params) {
+		Object o = getObject(Object.class, false, params);
 		Assert.assertNull(csvRunner.getAssertionErrorMessagePrefix() + "Object exist", o);
 	}
 
 	@CsvMethod
-	public void callMethod(String objectLocalization) {
-		getObject(Object.class, false, objectLocalization);
+	public void callMethod(String... params) {
+		getObject(Object.class, false, params);
 	}
 
 	@CsvMethod
-	public void isChecked(String objectLocalization) {
-		CheckBox checkBox = getObject(CheckBox.class, objectLocalization);
+	public void isChecked(String... params) {
+		CheckBox checkBox = getObject(CheckBox.class, params);
 		Assert.assertTrue(csvRunner.getAssertionErrorMessagePrefix() + "Checkbox not checked", checkBox.getValue());
 	}
 
 	@CsvMethod
-	public void isNotChecked(String objectLocalization) {
-		CheckBox checkBox = getObject(CheckBox.class, objectLocalization);
+	public void isNotChecked(String... params) {
+		CheckBox checkBox = getObject(CheckBox.class, params);
 		Assert.assertTrue(csvRunner.getAssertionErrorMessagePrefix() + "Checkbox checked", !checkBox.getValue());
 	}
 
@@ -336,15 +340,15 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 	}
 
 	@CsvMethod
-	public void assertBiggerThan(String value, String objectLocalization) {
-		Integer i = getObject(Integer.class, false, objectLocalization);
+	public void assertBiggerThan(String value, String... params) {
+		Integer i = getObject(Integer.class, false, params);
 		if (i != null) {
 			int currentValue = i.intValue();
 			int intValue = Integer.parseInt(value);
 			Assert.assertTrue(csvRunner.getAssertionErrorMessagePrefix() + "Current value <" + currentValue + "> is not bigger than <" + value + ">",
 					currentValue > intValue);
 		} else {
-			Long l = getObject(Long.class, objectLocalization);
+			Long l = getObject(Long.class, params);
 			long currentValue = l.longValue();
 			long longValue = Long.parseLong(value);
 			Assert.assertTrue(csvRunner.getAssertionErrorMessagePrefix() + "Current value <" + currentValue + "> is not bigger than <" + value + ">",
@@ -353,8 +357,8 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 	}
 
 	@CsvMethod
-	public void assertSmallerThan(String value, String objectLocalization) {
-		Integer i = getObject(Integer.class, false, objectLocalization);
+	public void assertSmallerThan(String value, String... params) {
+		Integer i = getObject(Integer.class, false, params);
 		if (i != null) {
 			int currentValue = i.intValue();
 			int intValue = Integer.parseInt(value);
@@ -362,7 +366,7 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 					csvRunner.getAssertionErrorMessagePrefix() + "Current value <" + currentValue + "> is not smaller than <" + value + ">",
 					currentValue < intValue);
 		} else {
-			Long l = getObject(Long.class, objectLocalization);
+			Long l = getObject(Long.class, params);
 			long currentValue = l.longValue();
 			long longValue = Long.parseLong(value);
 			Assert.assertTrue(
@@ -372,8 +376,8 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 	}
 
 	@CsvMethod
-	public void assertListBoxSelectedValueIs(String value, String objectLocalization) {
-		ListBox listBox = getObject(ListBox.class, objectLocalization);
+	public void assertListBoxSelectedValueIs(String value, String... params) {
+		ListBox listBox = getObject(ListBox.class, params);
 		Assert.assertEquals(csvRunner.getAssertionErrorMessagePrefix() + "Wrong ListBox selected value", value,
 				listBox.getItemText(listBox.getSelectedIndex()));
 	}
@@ -390,8 +394,8 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 	}
 
 	@CsvMethod
-	public void fillInvisibleTextBox(String value, String objectLocalization) {
-		TextBox textBox = getObject(TextBox.class, objectLocalization);
+	public void fillInvisibleTextBox(String value, String... params) {
+		TextBox textBox = getObject(TextBox.class, params);
 		textBox.setText(value);
 
 		dispatchEventInternal(textBox, EventBuilder.create(Event.ONKEYUP).setKeyCode(KeyCodes.KEY_ENTER).build());
@@ -399,8 +403,8 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 	}
 
 	@CsvMethod
-	public void assertListBoxDataEquals(String commaSeparatedContent, String objectLocalization) {
-		ListBox listBox = getObject(ListBox.class, objectLocalization);
+	public void assertListBoxDataEquals(String commaSeparatedContent, String... params) {
+		ListBox listBox = getObject(ListBox.class, params);
 		String[] content = commaSeparatedContent.split("\\s*,\\s*");
 		if (!WidgetUtils.assertListBoxDataMatch(listBox, content)) {
 			String lbContent = WidgetUtils.getListBoxContentToString(listBox);
@@ -409,32 +413,32 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 	}
 
 	@CsvMethod
-	public void selectInListBox(String value, String objectLocalization) {
-		ListBox listBox = getObject(ListBox.class, objectLocalization);
-		selectInListBox(listBox, value, objectLocalization);
+	public void selectInListBox(String value, String... params) {
+		ListBox listBox = getObject(ListBox.class, params);
+		selectInListBox(listBox, value, params);
 	}
 
 	@CsvMethod
-	public void selectInListBoxByIndex(String index, String objectLocalization) {
-		selectInListBox(index, objectLocalization);
+	public void selectInListBoxByIndex(String index, String... params) {
+		selectInListBox(index, params);
 	}
 
 	@CsvMethod
-	public void selectInListBoxByText(String regex, String objectLocalization) {
-		selectInListBox(regex, objectLocalization);
+	public void selectInListBoxByText(String regex, String... params) {
+		selectInListBox(regex, params);
 	}
 
 	@CsvMethod
-	public void fillAndSelectInSuggestBoxByIndex(String content, String index, String objectLocalization) {
-		SuggestBox suggestBox = getObject(SuggestBox.class, objectLocalization);
+	public void fillAndSelectInSuggestBoxByIndex(String content, String index, String... params) {
+		SuggestBox suggestBox = getObject(SuggestBox.class, params);
 
 		fillSuggestBox(suggestBox, content);
 		executeSuggestCommandByIndex(WidgetUtils.getMenuItems(suggestBox), Integer.parseInt(index));
 	}
 
 	@CsvMethod
-	public void fillAndSelectInSuggestBoxByText(String content, String selected, String objectLocalization) {
-		SuggestBox suggestBox = getObject(SuggestBox.class, objectLocalization);
+	public void fillAndSelectInSuggestBoxByText(String content, String selected, String... params) {
+		SuggestBox suggestBox = getObject(SuggestBox.class, params);
 
 		fillSuggestBox(suggestBox, content);
 
@@ -531,7 +535,7 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 		return csvRunner.getObject(clazz, failOnError, params);
 	}
 
-	protected void selectInListBox(ListBox listBox, String regex, String objectLocalization) {
+	protected void selectInListBox(ListBox listBox, String regex, String... params) {
 		int selectedIndex;
 		String errorMessage;
 		if (regex.matches("^\\d*$")) {
