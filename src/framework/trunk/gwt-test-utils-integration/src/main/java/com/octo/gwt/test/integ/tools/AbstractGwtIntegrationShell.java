@@ -50,7 +50,7 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 	private MacroReader macroReader;
 	private ObjectFinder defaultFinder;
 
-	private Map<String, NodeObjectFinder> prefixFinders = new HashMap<String, NodeObjectFinder>();
+	private Map<String, NodeObjectFinder> nodeFinders = new HashMap<String, NodeObjectFinder>();
 
 	public void setReader(DirectoryTestReader reader) {
 		this.reader = reader;
@@ -61,6 +61,18 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 		for (String name : reader.getMacroFileList()) {
 			macroReader.read(reader.getMacroFile(name));
 		}
+	}
+
+	protected NodeObjectFinder getNodeObjectFinder(String prefix) {
+		if (prefix.equals("root")) {
+			return new NodeObjectFinder() {
+
+				public Object find(CsvRunner csvRunner, Node node) {
+					return csvRunner.getNodeValue(RootPanel.get(), node);
+				}
+			};
+		}
+		return null;
 	}
 
 	private ObjectFinder createDefaultFinder() {
@@ -76,25 +88,23 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 					return null;
 				}
 
-				NodeObjectFinder finder = prefixFinders.get(node.getLabel());
-				Assert.assertNotNull(csvRunner.getAssertionErrorMessagePrefix() + "Unknown prefix '" + node.getLabel() + "'", finder);
+				String prefix = node.getLabel();
+
+				NodeObjectFinder finder = nodeFinders.get(prefix);
+				if (finder == null) {
+					finder = getNodeObjectFinder(node.getLabel());
+					nodeFinders.put(prefix, finder);
+				}
+
+				Assert.assertNotNull(csvRunner.getAssertionErrorMessagePrefix() + "Unknown prefix '" + node.getLabel()
+						+ "', you should override getNodeObjectFinder(..) method to provide a specific " + NodeObjectFinder.class.getSimpleName(),
+						finder);
 				return finder.find(csvRunner, node.getNext());
 			}
 
 		};
 
-		mapNodeObjectFinder("root", new NodeObjectFinder() {
-
-			public Object find(CsvRunner csvRunner, Node node) {
-				return csvRunner.getValue(RootPanel.get(), node);
-			}
-		});
-
 		return finder;
-	}
-
-	protected void mapNodeObjectFinder(String string, NodeObjectFinder nodeObjectFinder) {
-		prefixFinders.put(string, nodeObjectFinder);
 	}
 
 	public void launchTest(String testName) throws Exception {

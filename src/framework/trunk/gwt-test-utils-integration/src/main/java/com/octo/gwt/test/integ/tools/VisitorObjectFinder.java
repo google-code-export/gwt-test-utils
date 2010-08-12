@@ -49,7 +49,7 @@ public abstract class VisitorObjectFinder implements ObjectFinder {
 
 		for (Field field : GwtTestReflectionUtils.getFields(inspected.getClass())) {
 			if (field.getName().startsWith("$") || !Widget.class.isAssignableFrom(field.getType())
-					|| inspected.getClass().getName().startsWith("com.google.gwt.user.client")) {
+					|| inspected.getClass().getName().startsWith("com.google.gwt")) {
 				continue;
 			}
 

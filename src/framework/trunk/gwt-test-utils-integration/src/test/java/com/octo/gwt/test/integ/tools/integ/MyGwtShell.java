@@ -57,21 +57,27 @@ public abstract class MyGwtShell extends AbstractGwtIntegrationShell {
 		addGwtCreateHandler(handlerImpl);
 
 		MyStringStore.appender = "";
+	}
 
-		mapNodeObjectFinder("app", new NodeObjectFinder() {
+	@Override
+	protected NodeObjectFinder getNodeObjectFinder(String prefix) {
+		if ("app".equals(prefix)) {
+			return new NodeObjectFinder() {
 
-			public Object find(CsvRunner csvRunner, Node node) {
-				return csvRunner.getValue(app, node);
-			}
-		});
+				public Object find(CsvRunner csvRunner, Node node) {
+					return csvRunner.getNodeValue(app, node);
+				}
+			};
+		} else if ("appender".equals(prefix)) {
+			return new NodeObjectFinder() {
 
-		mapNodeObjectFinder("appender", new NodeObjectFinder() {
+				public Object find(CsvRunner csvRunner, Node node) {
+					return MyStringStore.appender;
+				}
+			};
 
-			public Object find(CsvRunner csvRunner, Node node) {
-				return MyStringStore.appender;
-			}
-
-		});
+		}
+		return super.getNodeObjectFinder(prefix);
 	}
 
 	@CsvMethod

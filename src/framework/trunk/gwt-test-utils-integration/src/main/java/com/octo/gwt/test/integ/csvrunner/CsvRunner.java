@@ -254,7 +254,7 @@ public class CsvRunner {
 	}
 
 	@SuppressWarnings("unchecked")
-	public Object getValue(Object o, Node node) {
+	public Object getNodeValue(Object o, Node node) {
 		logger.debug(getProcessingMessagePrefix() + "GetValue on " + o.getClass().getCanonicalName() + ", objectLocalization " + node);
 		Object current = o;
 		Node currentNode = node;
@@ -417,7 +417,7 @@ public class CsvRunner {
 	}
 
 	private boolean checkCondition(Object n, Node before, String after) {
-		Object result = getValue(n, before);
+		Object result = getNodeValue(n, before);
 		String s = result == null ? null : result.toString();
 		return after.equals(s);
 	}

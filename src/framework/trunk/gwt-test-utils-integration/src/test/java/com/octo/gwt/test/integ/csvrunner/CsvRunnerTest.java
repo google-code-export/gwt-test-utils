@@ -248,36 +248,36 @@ public class CsvRunnerTest {
 
 	@Test
 	public void checkGetter() {
-		Assert.assertEquals("public", runner.getValue(o, Node.parse("/public")));
-		Assert.assertEquals("public", runner.getValue(o, Node.parse("/getpublic")));
-		Assert.assertEquals("private", runner.getValue(o, Node.parse("/private")));
-		Assert.assertEquals("zz", runner.getValue(o, Node.parse("/zz")));
-		Assert.assertEquals("zzz", runner.getValue(o, Node.parse("/zzz")));
-		Assert.assertEquals("zzz", runner.getValue(o, Node.parse("/me/ME/getMe/zzz")));
-		Assert.assertNotNull("zz", runner.getValue(o, Node.parse("/toString")));
+		Assert.assertEquals("public", runner.getNodeValue(o, Node.parse("/public")));
+		Assert.assertEquals("public", runner.getNodeValue(o, Node.parse("/getpublic")));
+		Assert.assertEquals("private", runner.getNodeValue(o, Node.parse("/private")));
+		Assert.assertEquals("zz", runner.getNodeValue(o, Node.parse("/zz")));
+		Assert.assertEquals("zzz", runner.getNodeValue(o, Node.parse("/zzz")));
+		Assert.assertEquals("zzz", runner.getNodeValue(o, Node.parse("/me/ME/getMe/zzz")));
+		Assert.assertNotNull("zz", runner.getNodeValue(o, Node.parse("/toString")));
 	}
 
 	@Test
 	public void checkGetWidget() {
-		Assert.assertEquals("toto", runner.getValue(o, Node.parse("/getWidget(toto)")));
-		Assert.assertEquals("toto", runner.getValue(o, Node.parse("/WIDGET(toto)")));
+		Assert.assertEquals("toto", runner.getNodeValue(o, Node.parse("/getWidget(toto)")));
+		Assert.assertEquals("toto", runner.getNodeValue(o, Node.parse("/WIDGET(toto)")));
 	}
 
 	@Test
 	public void checkGetWidgetInt() {
-		Assert.assertEquals("0", runner.getValue(o, Node.parse("/getWidgetInt(0)")));
-		Assert.assertEquals("12", runner.getValue(o, Node.parse("/getWidgetInt(12)")));
+		Assert.assertEquals("0", runner.getNodeValue(o, Node.parse("/getWidgetInt(0)")));
+		Assert.assertEquals("12", runner.getNodeValue(o, Node.parse("/getWidgetInt(12)")));
 	}
 
 	@Test
 	public void checkGetMap() {
-		Assert.assertEquals("b", runner.getValue(o, Node.parse("/map[a]")));
-		Assert.assertEquals("d", runner.getValue(o, Node.parse("/map[c]")));
+		Assert.assertEquals("b", runner.getNodeValue(o, Node.parse("/map[a]")));
+		Assert.assertEquals("d", runner.getNodeValue(o, Node.parse("/map[c]")));
 	}
 
 	@Test
 	public void checkGetMapNotFound() {
-		Assert.assertNull(runner.getValue(o, Node.parse("/map[b]")));
+		Assert.assertNull(runner.getNodeValue(o, Node.parse("/map[b]")));
 	}
 
 	@Test
@@ -287,8 +287,8 @@ public class CsvRunnerTest {
 
 	@Test
 	public void checkGetterDerived() {
-		Assert.assertEquals("zz", runner.getValue(oo, Node.parse("/zz")));
-		Assert.assertEquals("zzz", runner.getValue(oo, Node.parse("/zzz")));
+		Assert.assertEquals("zz", runner.getNodeValue(oo, Node.parse("/zz")));
+		Assert.assertEquals("zzz", runner.getNodeValue(oo, Node.parse("/zzz")));
 	}
 
 	private SimiliWidgetContainer getList() {
@@ -305,20 +305,20 @@ public class CsvRunnerTest {
 	@Test
 	public void checkGetInList() {
 		SimiliWidgetContainer root = getList();
-		Assert.assertTrue(root.getWidget().list.get(2) == runner.getValue(root, Node.parse("/widget/widget(2)")));
-		Assert.assertTrue(root.getWidget().list.get(2) == runner.getValue(root, Node.parse("/widget/widget[label=child3]")));
-		Assert.assertTrue(root.getWidget().list.get(2) == runner.getValue(root, Node.parse("/widget/widget[getLabel=child3]")));
-		Assert.assertTrue(root.getWidget().list.get(2) == runner.getValue(root, Node.parse("/widget/widget[id=child3Id]")));
-		Assert.assertTrue(root.getWidget().list.get(2) == runner.getValue(root, Node.parse("/widget/list[id=child3Id]")));
-		Assert.assertTrue(root.getWidget().list.get(2) == runner.getValue(root, Node.parse("/widget/getCurrentlist[id=child3Id]")));
+		Assert.assertTrue(root.getWidget().list.get(2) == runner.getNodeValue(root, Node.parse("/widget/widget(2)")));
+		Assert.assertTrue(root.getWidget().list.get(2) == runner.getNodeValue(root, Node.parse("/widget/widget[label=child3]")));
+		Assert.assertTrue(root.getWidget().list.get(2) == runner.getNodeValue(root, Node.parse("/widget/widget[getLabel=child3]")));
+		Assert.assertTrue(root.getWidget().list.get(2) == runner.getNodeValue(root, Node.parse("/widget/widget[id=child3Id]")));
+		Assert.assertTrue(root.getWidget().list.get(2) == runner.getNodeValue(root, Node.parse("/widget/list[id=child3Id]")));
+		Assert.assertTrue(root.getWidget().list.get(2) == runner.getNodeValue(root, Node.parse("/widget/getCurrentlist[id=child3Id]")));
 	}
 
 	@Test
 	public void checkGetInListRecurse() {
 		SimiliWidgetContainer root = getList();
-		Assert.assertTrue(root.getWidget().list.get(2) == runner.getValue(root, Node.parse("/widget/widget[label/toString=child3]")));
-		Assert.assertTrue(root.getWidget().list.get(2) == runner.getValue(root, Node.parse("/widget/widget[labelWithParam(a)/toString=child3]")));
-		Assert.assertTrue(root.getWidget().list.get(2).id == runner.getValue(root, Node.parse("/widget/widget[label/toString=child3]/id")));
+		Assert.assertTrue(root.getWidget().list.get(2) == runner.getNodeValue(root, Node.parse("/widget/widget[label/toString=child3]")));
+		Assert.assertTrue(root.getWidget().list.get(2) == runner.getNodeValue(root, Node.parse("/widget/widget[labelWithParam(a)/toString=child3]")));
+		Assert.assertTrue(root.getWidget().list.get(2).id == runner.getNodeValue(root, Node.parse("/widget/widget[label/toString=child3]/id")));
 	}
 
 }
