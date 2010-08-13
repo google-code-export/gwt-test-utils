@@ -258,9 +258,9 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 	}
 
 	@CsvMethod
-	public void clickOnTableRow(String rowIndex, String identifier) {
+	public void clickGridCell(String rowIndex, String column, String identifier) {
 		Grid grid = getObject(Grid.class, identifier);
-		Widget target = grid.getWidget(Integer.parseInt(rowIndex), 0);
+		Widget target = grid.getWidget(Integer.parseInt(rowIndex), Integer.parseInt(column));
 		Event clickEvent = EventBuilder.create(Event.ONCLICK).setTarget(target.getElement()).build();
 		assertCanApplyEvent(target, clickEvent.getTypeInt());
 		dispatchEventInternal(grid, clickEvent);
