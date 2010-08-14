@@ -19,14 +19,21 @@ public abstract class AbstractClientBundleCallback implements IClientBundleCallb
 		return wrappedClass;
 	}
 
-	protected static String computeUrl(URL resourceURL, Class<? extends ClientBundle> proxiedClass) {
+	@SuppressWarnings("unchecked")
+	protected String computeUrl(URL resourceURL, Class<? extends ClientBundle> proxiedClass) {
 		//String fileSeparatorRegex = (File.separatorChar == '\\') ? "\\\\" : File.separator;
 		//String packagePath = proxiedClass.getPackage().getName().replaceAll("\\.", fileSeparatorRegex);
 		String packagePath = proxiedClass.getPackage().getName().replaceAll("\\.", "/");
-		String resourceRelativePath = resourceURL.getPath().substring(resourceURL.getPath().indexOf(packagePath));
-		//resourceRelativePath = resourceRelativePath.replaceAll(fileSeparatorRegex, "/");
+		int startIndex = resourceURL.getPath().indexOf(packagePath);
+		if (startIndex == -1) {
+			if (proxiedClass.getInterfaces() != null && proxiedClass.getInterfaces().length == 1) {
+				return computeUrl(resourceURL, (Class<? extends ClientBundle>) proxiedClass.getInterfaces()[0]);
+			} else {
+				throw new RuntimeException("Cannot compute the relative URL of resource '" + resourceURL + "'");
+			}
+		}
+		String resourceRelativePath = resourceURL.getPath().substring(startIndex);
 
 		return GWT.getModuleBaseURL() + resourceRelativePath;
 	}
-
 }

@@ -1,6 +1,5 @@
 package com.octo.gwt.test.internal.patcher.tools.resources;
 
-import java.io.File;
 import java.lang.reflect.Method;
 import java.net.URL;
 
@@ -14,7 +13,7 @@ public class TextResourceCallback extends AbstractClientBundleCallback {
 
 	public Object call(Object proxy, Method method, Object[] args) throws Exception {
 		if (method.getName().equals("getText")) {
-			return TextResourceReader.readFile(new File(resourceURL.toURI()));
+			return TextResourceReader.readFile(resourceURL);
 		}
 
 		return null;

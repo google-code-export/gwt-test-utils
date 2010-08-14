@@ -25,6 +25,8 @@ public class ImageResourceCallback extends AbstractClientBundleCallback {
 			return 0;
 		} else if (method.getName().equals("getTop")) {
 			return 0;
+		} else if (method.getName().equals("isAnimated")) {
+			return false;
 		}
 
 		return null;

@@ -4,9 +4,11 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.DataResource;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.resources.client.TextResource;
+import com.google.gwt.user.client.ui.Tree.Resources;
 import com.octo.gwt.test.AbstractGwtTest;
 
 public class ClientBundleTest extends AbstractGwtTest {
@@ -130,39 +132,16 @@ public class ClientBundleTest extends AbstractGwtTest {
 	}
 
 	@Test
-	public void checkChildNoOverride() {
+	public void checkGetExternalResource() {
 		// Setup
-		DataResource testDataResource = MyChildClientBundle.INSTANCE.testDataResource();
+		Resources treeResources = GWT.create(Resources.class);
 
 		// Test
-		String name = testDataResource.getName();
-		String url = testDataResource.getUrl();
+		String name = treeResources.treeOpen().getName();
+		String url = treeResources.treeLeaf().getURL();
 
 		// Assert
-		Assert.assertEquals("testDataResource", name);
-		Assert.assertEquals("http://localhost:8888/gwt_test_utils_module/com/octo/gwt/test/resources/textResourceXml.xml", url);
+		Assert.assertEquals("treeOpen", name);
+		Assert.assertEquals("http://localhost:8888/gwt_test_utils_module/com/google/gwt/user/client/ui/treeLeaf.gif", url);
 	}
-
-	@Test
-	public void checkChildOverride() {
-		// Setup
-		ImageResource testImageResource = MyChildClientBundle.INSTANCE.testImageResource();
-
-		// Test
-		String name = testImageResource.getName();
-		String url = testImageResource.getURL();
-		int heigh = testImageResource.getHeight();
-		int left = testImageResource.getLeft();
-		int width = testImageResource.getWidth();
-		int top = testImageResource.getTop();
-
-		// Assert
-		Assert.assertEquals("testImageResource", name);
-		Assert.assertEquals("http://localhost:8888/gwt_test_utils_module/com/octo/gwt/test/resources/override_testImageResource.gif", url);
-		Assert.assertEquals(0, heigh);
-		Assert.assertEquals(0, left);
-		Assert.assertEquals(0, width);
-		Assert.assertEquals(0, top);
-	}
-
 }

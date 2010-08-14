@@ -97,10 +97,21 @@ public class ClientBundleProxyFactory {
 		return Proxy.newProxyInstance(clazz.getClassLoader(), new Class<?>[] { clazz }, ih);
 	}
 
-	protected class ClientBundleMethodsRegistry {
+	private static class ClientBundleMethodsRegistry {
 
 		private CtClass ctClass;
-		private Map<String, URL> resourceURLs = new HashMap<String, URL>();
+		private Map<Method, URL> resourceURLs = new HashMap<Method, URL>();
+
+		private static class ResourceFileEntry {
+
+			public ResourceFileEntry(String resourceName, CtMethod resourceMethod) {
+				this.resourceName = resourceName;
+				this.resourceMethod = resourceMethod;
+			}
+
+			private String resourceName;
+			private CtMethod resourceMethod;
+		}
 
 		public ClientBundleMethodsRegistry(Class<? extends ClientBundle> clazz) {
 			try {
@@ -111,17 +122,17 @@ public class ClientBundleProxyFactory {
 		}
 
 		public URL getResourceURL(Method method) throws Exception {
-			URL resourceURL = resourceURLs.get(method.getName());
+			URL resourceURL = resourceURLs.get(method);
 			if (resourceURL == null) {
 				resourceURL = computeResourceURL(method);
-				resourceURLs.put(method.getName(), resourceURL);
+				resourceURLs.put(method, resourceURL);
 			}
 
 			return resourceURL;
 		}
 
 		private URL computeResourceURL(Method method) throws NotFoundException, URISyntaxException {
-			List<String> filesSimpleNames = new ArrayList<String>();
+			List<ResourceFileEntry> filesSimpleNames = new ArrayList<ResourceFileEntry>();
 			boolean computeExtensions = false;
 			CtMethod m = ctClass.getMethod(method.getName(), getDescriptor(method));
 			MethodInfo minfo = m.getMethodInfo2();
@@ -133,7 +144,7 @@ public class ClientBundleProxyFactory {
 					if (mvArray != null) {
 						for (MemberValue mv : mvArray) {
 							StringMemberValue smv = (StringMemberValue) mv;
-							filesSimpleNames.add(smv.getValue());
+							filesSimpleNames.add(new ResourceFileEntry(smv.getValue(), m));
 						}
 					}
 				}
@@ -141,15 +152,17 @@ public class ClientBundleProxyFactory {
 
 			if (filesSimpleNames.isEmpty()) {
 				// no @Source annotation detected
-				filesSimpleNames.add(method.getName());
+				filesSimpleNames.add(new ResourceFileEntry(method.getName(), m));
 				computeExtensions = true;
 			}
 
 			List<URL> existingFiles = new ArrayList<URL>();
 
-			for (String fileSimpleName : filesSimpleNames) {
-				String baseDir = ctClass.getPackageName().replaceAll("\\.", "/") + "/";
-				String fileName = (fileSimpleName.startsWith(baseDir)) ? fileSimpleName : baseDir + fileSimpleName;
+			for (ResourceFileEntry resourceEntry : filesSimpleNames) {
+				String resourceName = resourceEntry.resourceName;
+				CtClass declaringClass = resourceEntry.resourceMethod.getDeclaringClass();
+				String baseDir = declaringClass.getPackageName().replaceAll("\\.", "/") + "/";
+				String fileName = (resourceName.startsWith(baseDir)) ? resourceName : baseDir + resourceName;
 
 				if (computeExtensions) {
 					String[] extensions = getResourceDefaultExtensions(method);

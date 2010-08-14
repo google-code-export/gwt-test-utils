@@ -1,11 +1,10 @@
 package com.octo.gwt.test.internal.patcher.tools.resources;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -15,14 +14,14 @@ import java.util.regex.Pattern;
 
 public class CssResourceReader {
 
-	private static Map<String, CssParsingResult> cache;
+	private static Map<URL, CssParsingResult> cache;
 
-	public static CssParsingResult readFile(File file) throws UnsupportedEncodingException, IOException {
+	public static CssParsingResult readCss(URL url) throws UnsupportedEncodingException, IOException {
 		if (cache == null) {
-			cache = new HashMap<String, CssParsingResult>();
+			cache = new HashMap<URL, CssParsingResult>();
 		}
 
-		if (!cache.containsKey(file.getName())) {
+		if (!cache.containsKey(url)) {
 
 			Map<String, String> constants = new HashMap<String, String>();
 			Set<String> styles = new HashSet<String>();
@@ -32,7 +31,7 @@ public class CssResourceReader {
 			BufferedReader reader = null;
 
 			try {
-				reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));
+				reader = new BufferedReader(new InputStreamReader(url.openStream(), "UTF-8"));
 
 				String line;
 				Matcher m;
@@ -44,7 +43,7 @@ public class CssResourceReader {
 
 				}
 
-				cache.put(file.getName(), new CssParsingResult(constants, styles));
+				cache.put(url, new CssParsingResult(constants, styles));
 
 			} finally {
 				if (reader != null) {
@@ -53,7 +52,7 @@ public class CssResourceReader {
 			}
 		}
 
-		return cache.get(file.getName());
+		return cache.get(url);
 	}
 
 	public static void reset() {

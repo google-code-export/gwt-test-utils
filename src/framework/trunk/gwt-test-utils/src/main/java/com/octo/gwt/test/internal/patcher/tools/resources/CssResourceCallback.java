@@ -1,6 +1,5 @@
 package com.octo.gwt.test.internal.patcher.tools.resources;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
@@ -31,7 +30,7 @@ public class CssResourceCallback extends AbstractClientBundleCallback {
 	}
 
 	private String getCssText() throws UnsupportedEncodingException, IOException, URISyntaxException {
-		return TextResourceReader.readFile(new File(resourceURL.toURI()));
+		return TextResourceReader.readFile(resourceURL);
 	}
 
 	private boolean ensureInjected() throws UnsupportedEncodingException, IOException, URISyntaxException {
@@ -44,7 +43,7 @@ public class CssResourceCallback extends AbstractClientBundleCallback {
 	}
 
 	private String handleCustomMethod(String methodName) throws UnsupportedEncodingException, IOException, URISyntaxException {
-		CssParsingResult result = CssResourceReader.readFile(new File(resourceURL.toURI()));
+		CssParsingResult result = CssResourceReader.readCss(resourceURL);
 		String constant = result.getConstants().get(methodName);
 		if (constant != null) {
 			return constant;

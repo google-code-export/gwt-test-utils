@@ -1,30 +1,29 @@
 package com.octo.gwt.test.internal.patcher.tools.resources;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
 public class TextResourceReader {
 
-	private static Map<String, String> cache;
+	private static Map<URL, String> cache;
 
-	public static String readFile(File file) throws UnsupportedEncodingException, IOException {
+	public static String readFile(URL url) throws UnsupportedEncodingException, IOException {
 		if (cache == null) {
-			cache = new HashMap<String, String>();
+			cache = new HashMap<URL, String>();
 		}
 
-		if (!cache.containsKey(file.getName())) {
+		if (!cache.containsKey(url)) {
 			StringBuilder sb = new StringBuilder();
 
 			BufferedReader reader = null;
 
 			try {
-				reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));
+				reader = new BufferedReader(new InputStreamReader(url.openStream(), "UTF-8"));
 
 				String line;
 				while ((line = reader.readLine()) != null) {
@@ -34,7 +33,7 @@ public class TextResourceReader {
 				if (sb.length() > 0) {
 					sb.delete(sb.length() - "\r\n".length(), sb.length());
 				}
-				cache.put(file.getName(), sb.toString());
+				cache.put(url, sb.toString());
 			} finally {
 				if (reader != null) {
 					reader.close();
@@ -42,7 +41,7 @@ public class TextResourceReader {
 			}
 		}
 
-		return cache.get(file.getName());
+		return cache.get(url);
 	}
 
 	public static void reset() {
