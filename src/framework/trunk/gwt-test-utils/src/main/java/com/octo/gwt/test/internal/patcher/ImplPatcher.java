@@ -7,10 +7,13 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathFactory;
 
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.w3c.dom.Document;
 
 import com.google.gwt.core.client.impl.Impl;
+import com.google.gwt.dom.client.Node;
 import com.octo.gwt.test.AbstractGwtConfigurableTest;
+import com.octo.gwt.test.ElementUtils;
 import com.octo.gwt.test.internal.patcher.tools.AutomaticPatcher;
 import com.octo.gwt.test.internal.patcher.tools.PatchClass;
 import com.octo.gwt.test.internal.patcher.tools.PatchMethod;
@@ -24,7 +27,10 @@ public class ImplPatcher extends AutomaticPatcher {
 
 	@PatchMethod
 	public static int getHashCode(Object o) {
-		return o.hashCode();
+		if (o instanceof Node) {
+			o = ElementUtils.castToDomElement((Node) o);
+		}
+		return HashCodeBuilder.reflectionHashCode(o);
 	}
 
 	@PatchMethod

@@ -12,6 +12,7 @@
 		<easymock.version>2.3</easymock.version>
 		<log4j.version>1.2.14</log4j.version>
 		<antlr.runtime.version>3.0.1</antlr.runtime.version>
+		<commons-lang.version>2.4</commons-lang.version>
 	</properties>
 
 	<scm>
