@@ -132,7 +132,7 @@ public class ClientBundleTest extends AbstractGwtTest {
 	}
 
 	@Test
-	public void checkGetExternalResource() {
+	public void checkGetExternalResourceUrl() {
 		// Setup
 		Resources treeResources = GWT.create(Resources.class);
 
@@ -143,5 +143,20 @@ public class ClientBundleTest extends AbstractGwtTest {
 		// Assert
 		Assert.assertEquals("treeOpen", name);
 		Assert.assertEquals("http://localhost:8888/gwt_test_utils_module/com/google/gwt/user/client/ui/treeLeaf.gif", url);
+	}
+
+	@Test
+	public void checkGetExternalResourceText() {
+		// Setup
+		com.google.gwt.user.client.impl.WindowImplIE.Resources treeResources = GWT
+				.create(com.google.gwt.user.client.impl.WindowImplIE.Resources.class);
+
+		// Test
+		String name = treeResources.initWindowCloseHandler().getName();
+		String text = treeResources.initWindowCloseHandler().getText();
+
+		// Assert
+		Assert.assertEquals("initWindowCloseHandler", name);
+		Assert.assertTrue(text.startsWith("function __gwt_initWindowCloseHandler(beforeunload, unload) {"));
 	}
 }
