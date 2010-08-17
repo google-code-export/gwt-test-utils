@@ -2,7 +2,6 @@ package com.octo.gwt.test.utils;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,10 +13,10 @@ import javassist.CannotCompileException;
 import javassist.CtClass;
 import javassist.CtConstructor;
 import javassist.CtMethod;
+import javassist.Modifier;
+import javassist.NotFoundException;
 
-import com.octo.gwt.test.GwtTestClassLoader;
 import com.octo.gwt.test.IPatcher;
-import com.octo.gwt.test.PatchGwtClassPool;
 import com.octo.gwt.test.internal.patcher.tools.AutomaticPatcher;
 
 public class PatchGwtUtils {
@@ -72,67 +71,85 @@ public class PatchGwtUtils {
 		return getProperties(prefix);
 	}
 
-	@SuppressWarnings("unchecked")
-	public static <T> T generateInstance(String className, IPatcher patcher) {
-		try {
-			CtClass c = PatchGwtClassPool.get().makeClass(className + "SubClass");
-			CtClass superClazz = PatchGwtClassPool.get().get(className);
-
-			c.setSuperclass(superClazz);
-			CtConstructor constructor = new CtConstructor(new CtClass[] {}, c);
-			constructor.setBody(";");
-			c.addConstructor(constructor);
-
-			for (CtMethod m : superClazz.getMethods()) {
-				if (Modifier.isAbstract(m.getModifiers())) {
-					CtMethod mm = new CtMethod(m.getReturnType(), m.getName(), m.getParameterTypes(), c);
-					mm.setBody("{ throw new UnsupportedOperationException(\"" + m.getName() + " on generated sub class of " + c.getName() + "\"); }");
-					c.setModifiers(m.getModifiers() - Modifier.ABSTRACT);
-					c.addMethod(mm);
-				}
-			}
-			patch(c, patcher);
-			return (T) c.toClass(GwtTestClassLoader.getInstance(), null).newInstance();
-
-		} catch (Exception e) {
-			throw new RuntimeException("Unable to compile subclass of " + className, e);
-		}
-	}
-
 	public static void reset() {
 		cachedProperties.clear();
 		sequenceReplacementList.clear();
 	}
 
 	public static void patch(CtClass c, IPatcher patcher) throws Exception {
-		if (c == null) {
-			throw new IllegalArgumentException("the class to patch cannot be null");
-		}
+		treatClassToPatch(c);
+
 		if (patcher != null) {
 			patcher.initClass(c);
 		}
 
 		for (CtMethod m : c.getDeclaredMethods()) {
+			boolean wasAbstract = false;
+			String newBody = null;
 			if (Modifier.isAbstract(m.getModifiers())) {
-				// don't patch now
-				continue;
-			} else if (patcher != null) {
-				String newBody = patcher.getNewBody(m);
-				if (newBody != null) {
-					if (newBody.startsWith(AutomaticPatcher.INSERT_BEFORE)) {
-						PatchGwtUtils.insertBefore(m, newBody.substring(AutomaticPatcher.INSERT_BEFORE.length()));
-					} else if (newBody.startsWith(AutomaticPatcher.INSERT_AFTER)) {
-						PatchGwtUtils.insertAfter(m, newBody.substring(AutomaticPatcher.INSERT_AFTER.length()));
-					} else {
-						PatchGwtUtils.replaceImplementation(m, newBody);
-					}
+				m.setModifiers(m.getModifiers() - Modifier.ABSTRACT);
+				wasAbstract = true;
+			}
+			if (patcher != null) {
+				newBody = patcher.getNewBody(m);
+			}
+			if (newBody != null) {
+				if (newBody.startsWith(AutomaticPatcher.INSERT_BEFORE)) {
+					PatchGwtUtils.insertBefore(m, newBody.substring(AutomaticPatcher.INSERT_BEFORE.length()));
+				} else if (newBody.startsWith(AutomaticPatcher.INSERT_AFTER)) {
+					PatchGwtUtils.insertAfter(m, newBody.substring(AutomaticPatcher.INSERT_AFTER.length()));
+				} else {
+					PatchGwtUtils.replaceImplementation(m, newBody);
+				}
+			} else if (wasAbstract) {
+				if (patcher != null) {
+					m.setBody("{ throw new " + UnsupportedOperationException.class.getName() + "(\"abstract method '" + c.getSimpleName() + "."
+							+ m.getName() + "()' is not patched by " + patcher.getClass().getName() + "\"); }");
+				} else {
+					m.setBody("{ throw new " + UnsupportedOperationException.class.getName() + "(\"abstract method '" + c.getSimpleName() + "."
+							+ m.getName() + "()' is not patched by any declared " + IPatcher.class.getSimpleName() + "\"); }");
 				}
 			}
 		}
 
 		if (patcher != null) {
-			patcher.finalizeClass();
+			patcher.finalizeClass(c);
 		}
+	}
+
+	private static void treatClassToPatch(CtClass c) throws CannotCompileException {
+		if (c == null) {
+			throw new IllegalArgumentException("the class to patch cannot be null");
+		}
+
+		int modifiers = c.getModifiers();
+
+		if (Modifier.isAnnotation(modifiers)) {
+			throw new IllegalArgumentException("the class to patch cannot be an annotation");
+		}
+		if (Modifier.isInterface(modifiers)) {
+			throw new IllegalArgumentException("the class to patch cannot be an interface");
+		}
+		if (Modifier.isEnum(modifiers)) {
+			throw new IllegalArgumentException("the class to patch cannot be an enum");
+		}
+
+		c.setModifiers(Modifier.PUBLIC);
+
+		addDefaultConstructor(c);
+	}
+
+	private static void addDefaultConstructor(CtClass c) throws CannotCompileException {
+		CtConstructor cons;
+		try {
+			cons = c.getDeclaredConstructor(new CtClass[] {});
+			cons.setModifiers(Modifier.PUBLIC);
+		} catch (NotFoundException e) {
+			cons = new CtConstructor(new CtClass[] {}, c);
+			cons.setBody(";");
+			c.addConstructor(cons);
+		}
+
 	}
 
 	public static String getPropertyName(CtMethod m) throws Exception {

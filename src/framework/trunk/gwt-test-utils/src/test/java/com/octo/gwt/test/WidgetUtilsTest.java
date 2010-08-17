@@ -17,6 +17,11 @@ import com.octo.gwt.test.utils.WidgetUtils;
 
 public class WidgetUtilsTest extends AbstractGwtTest {
 
+	@Override
+	public String getCurrentTestedModuleFile() {
+		return "test-config.gwt.xml";
+	}
+
 	@Test
 	public void checkListBoxIndex() {
 		// Setup

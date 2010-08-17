@@ -11,6 +11,11 @@ import com.octo.gwt.test.utils.events.Browser;
 
 public class MenuBarTest extends AbstractGwtTest {
 
+	@Override
+	public String getCurrentTestedModuleFile() {
+		return "test-config.gwt.xml";
+	}
+
 	Command cmd = new Command() {
 
 		public void execute() {

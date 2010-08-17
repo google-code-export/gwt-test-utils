@@ -56,7 +56,7 @@ public class GwtTest extends AbstractGwtTest {
 
 	@Test
 	public void checkGetVersion() {
-		Assert.assertEquals("GWT 2 by GWT-test-utils", GWT.getVersion());
+		Assert.assertEquals("GWT 2 by gwt-test-utils", GWT.getVersion());
 	}
 
 	@Test

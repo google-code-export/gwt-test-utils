@@ -9,9 +9,9 @@ import com.octo.gwt.test.GwtCreateHandler;
 import com.octo.gwt.test.utils.DeserializationContext;
 import com.octo.gwt.test.utils.ISerializeCallback;
 
-public abstract class GwtCreateRemoteServiceHandler implements GwtCreateHandler {
+public abstract class RemoteServiceCreateHandler implements GwtCreateHandler {
 
-	private static final Logger logger = Logger.getLogger(GwtCreateRemoteServiceHandler.class);
+	private static final Logger logger = Logger.getLogger(RemoteServiceCreateHandler.class);
 
 	private DeserializationContext backToGwtCallbacks;
 
@@ -19,7 +19,7 @@ public abstract class GwtCreateRemoteServiceHandler implements GwtCreateHandler 
 
 	private IGwtRpcExceptionHandler exceptionHandler;
 
-	public GwtCreateRemoteServiceHandler() {
+	public RemoteServiceCreateHandler() {
 		this.exceptionHandler = new DefaultGwtRpcExceptionHandler();
 		this.backToGwtCallbacks = new DeserializationContext();
 		this.fromGwtCallbacks = new DeserializationContext();
@@ -39,8 +39,8 @@ public abstract class GwtCreateRemoteServiceHandler implements GwtCreateHandler 
 
 	public abstract Object findService(Class<?> remoteServiceClazz);
 
-	public Object createObject(Class<?> classLiteral) throws Exception {
-		return classLiteral.newInstance();
+	protected Object createObject(Class<?> classLiteral) throws Exception {
+		return null;
 	}
 
 	public Object create(Class<?> classLiteral) throws Exception {

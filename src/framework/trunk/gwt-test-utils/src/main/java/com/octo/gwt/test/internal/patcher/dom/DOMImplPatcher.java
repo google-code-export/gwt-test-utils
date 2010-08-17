@@ -3,6 +3,7 @@ package com.octo.gwt.test.internal.patcher.dom;
 import com.google.gwt.dom.client.ButtonElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.EventTarget;
 import com.google.gwt.dom.client.InputElement;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Node;
@@ -10,6 +11,7 @@ import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.OptionElement;
 import com.google.gwt.dom.client.SelectElement;
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.user.client.Event;
 import com.octo.gwt.test.ElementUtils;
 import com.octo.gwt.test.internal.overrides.OverrideNodeList;
 import com.octo.gwt.test.internal.patcher.tools.AutomaticPatcher;
@@ -19,6 +21,7 @@ import com.octo.gwt.test.internal.patcher.tools.PropertyContainer;
 import com.octo.gwt.test.internal.patcher.tools.SubClassedHelper;
 import com.octo.gwt.test.utils.GwtTestReflectionUtils;
 import com.octo.gwt.test.utils.TagAware;
+import com.octo.gwt.test.utils.events.EventBuilder;
 import com.octo.gwt.test.utils.events.EventUtils;
 import com.octo.gwt.test.utils.events.OverrideEvent;
 
@@ -282,6 +285,40 @@ public class DOMImplPatcher extends AutomaticPatcher {
 	@PatchMethod
 	public static void scrollIntoView(Object domImpl, Element elem) {
 
+	}
+
+	// Abstract methods
+
+	@PatchMethod
+	public static boolean isOrHasChild(Object domImpl, Node parent, Node child) {
+		parent = ElementUtils.castToDomElement(parent);
+		child = ElementUtils.castToDomElement(child);
+		if (parent.equals(child)) {
+			return true;
+		} else if (child.getParentElement() != null && child.getParentElement().equals(parent)) {
+			return true;
+		}
+		return false;
+	}
+
+	@PatchMethod
+	public static InputElement createInputRadioElement(Object domImpl, Document doc, String name) {
+		return DOMImplPatcher.createInputElement(doc, "RADIO", name);
+	}
+
+	@PatchMethod
+	public static EventTarget eventGetTarget(Object domImpl, NativeEvent nativeEvent) {
+		return null;
+	}
+
+	@PatchMethod
+	public static void eventPreventDefault(Object domImpl, NativeEvent evt) {
+
+	}
+
+	@PatchMethod
+	public static NativeEvent createHtmlEvent(Object domImpl, Document doc, String type, boolean canBubble, boolean cancelable) {
+		return EventBuilder.create(Event.getTypeInt(type)).build();
 	}
 
 }

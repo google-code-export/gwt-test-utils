@@ -9,6 +9,7 @@ import com.google.gwt.user.client.impl.HistoryImpl;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.WidgetCollection;
+import com.octo.gwt.test.internal.GwtCreateHandlerManager;
 import com.octo.gwt.test.internal.patcher.CurrencyListPatcher;
 import com.octo.gwt.test.internal.patcher.GwtPatcher;
 import com.octo.gwt.test.internal.patcher.HistoryImplPatcher;
@@ -29,6 +30,7 @@ public class PatchGwtReset {
 		GwtPatcher.reset();
 		TimerPatcher.reset();
 		ImplPatcher.reset();
+		GwtCreateHandlerManager.getInstance().reset();
 
 		WidgetCollection widgetCollection = GwtTestReflectionUtils.getPrivateFieldValue(RootPanel.get(), "children");
 		Widget[] array = GwtTestReflectionUtils.getPrivateFieldValue(widgetCollection, "array");

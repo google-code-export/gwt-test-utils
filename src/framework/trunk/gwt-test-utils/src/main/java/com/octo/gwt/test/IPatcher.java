@@ -9,6 +9,6 @@ public interface IPatcher {
 
 	public String getNewBody(CtMethod m) throws Exception;
 
-	public void finalizeClass() throws Exception;
+	public void finalizeClass(CtClass c) throws Exception;
 
 }

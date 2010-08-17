@@ -12,9 +12,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
-import java.util.Map.Entry;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -29,32 +29,119 @@ public class ConfigurationLoader {
 
 	private static final String CONFIG_FILENAME = "META-INF/gwt-test-utils.properties";
 
+	private static ConfigurationLoader INSTANCE;
+
+	static final ConfigurationLoader createInstance(ClassLoader classLoader) {
+		if (INSTANCE != null) {
+			throw new RuntimeException(ConfigurationLoader.class.getSimpleName() + " instance has already been initialized");
+		}
+
+		INSTANCE = new ConfigurationLoader(classLoader);
+
+		return INSTANCE;
+	}
+
+	public static ConfigurationLoader getInstance() {
+		if (INSTANCE == null) {
+			throw new RuntimeException(ConfigurationLoader.class.getSimpleName() + " instance has not been initialized yet");
+		}
+
+		return INSTANCE;
+	}
+
 	private ClassLoader classLoader;
-
 	private List<String> delegateList;
-
 	private List<String> notDelegateList;
-
 	private Set<String> scanPackageSet;
+	private Map<String, IPatcher> patchers;
 
-	public ConfigurationLoader(ClassLoader classLoader) {
+	private ConfigurationLoader(ClassLoader classLoader) {
 		this.classLoader = classLoader;
 		this.delegateList = new ArrayList<String>();
 		this.notDelegateList = new ArrayList<String>();
 		this.scanPackageSet = new HashSet<String>();
+
+		readFiles();
 	}
 
-	public void readFiles() throws Exception {
-		Enumeration<URL> l = classLoader.getResources(CONFIG_FILENAME);
-		while (l.hasMoreElements()) {
-			URL url = l.nextElement();
-			logger.info("Load config file " + url.toString());
-			Properties p = new Properties();
-			InputStream inputStream = url.openStream();
-			p.load(inputStream);
-			inputStream.close();
-			process(p);
-			logger.info("File loaded and processed " + url.toString());
+	public Map<String, IPatcher> getPatchers() {
+		if (patchers == null) {
+			try {
+				loadPatchers();
+			} catch (Exception e) {
+				throw new RuntimeException("Error while loading " + IPatcher.class.getSimpleName() + " instances", e);
+			}
+		}
+
+		return patchers;
+	}
+
+	private void loadPatchers() throws Exception {
+		patchers = new HashMap<String, IPatcher>();
+		List<String> classList = findScannedClasses();
+		for (String className : classList) {
+			Class<?> clazz = Class.forName(className, true, classLoader);
+
+			PatchClass patchClass = GwtTestReflectionUtils.getAnnotation(clazz, PatchClass.class);
+
+			if (patchClass == null) {
+				continue;
+			}
+
+			if (!IPatcher.class.isAssignableFrom(clazz) || !hasDefaultConstructor(clazz)) {
+				throw new RuntimeException("The @" + PatchClass.class.getSimpleName() + " annotated class '" + clazz.getName() + "' must implements "
+						+ IPatcher.class.getSimpleName() + " interface and provide an empty constructor");
+			}
+
+			IPatcher patcher = (IPatcher) clazz.newInstance();
+
+			for (Class<?> c : patchClass.value()) {
+				String targetName = c.isMemberClass() ? c.getDeclaringClass().getCanonicalName() + "$" + c.getSimpleName() : c.getCanonicalName();
+				if (patchers.get(targetName) != null) {
+					logger.error("Two patches for same class " + targetName);
+					throw new RuntimeException("Two patches for same class " + targetName);
+				}
+				patchers.put(targetName, patcher);
+				logger.debug("Add patch for class " + targetName + " : " + clazz.getCanonicalName());
+			}
+			for (String s : patchClass.classes()) {
+				if (patchers.get(s) != null) {
+					logger.error("Two patches for same class " + s);
+					throw new RuntimeException("Two patches for same class " + s);
+				}
+				patchers.put(s, patcher);
+				logger.debug("Add patch for class " + s + " : " + clazz.getCanonicalName());
+			}
+		}
+	}
+
+	private boolean hasDefaultConstructor(Class<?> clazz) {
+		for (Constructor<?> cons : clazz.getConstructors()) {
+			if (cons.getParameterTypes().length == 0) {
+				cons.setAccessible(true);
+				return true;
+			}
+
+		}
+
+		return false;
+	}
+
+	private void readFiles() {
+		try {
+			Enumeration<URL> l = classLoader.getResources(CONFIG_FILENAME);
+			while (l.hasMoreElements()) {
+				URL url = l.nextElement();
+				logger.debug("Load config file " + url.toString());
+				Properties p = new Properties();
+				InputStream inputStream = url.openStream();
+				p.load(inputStream);
+				inputStream.close();
+				process(p);
+				logger.debug("File loaded and processed " + url.toString());
+			}
+		} catch (Exception e) {
+			throw new RuntimeException("Error while reading '" + CONFIG_FILENAME + "' files", e);
 		}
 	}
 
@@ -87,11 +174,11 @@ public class ConfigurationLoader {
 		return Collections.unmodifiableList(notDelegateList);
 	}
 
-	public List<String> findScannedClasses() throws Exception {
+	private List<String> findScannedClasses() throws Exception {
 		List<String> classList = new ArrayList<String>();
 		for (String s : scanPackageSet) {
 			String path = s.replaceAll("\\.", "/");
-			logger.info("Scan package " + s);
+			logger.debug("Scan package " + s);
 			Enumeration<URL> l = classLoader.getResources(path);
 			while (l.hasMoreElements()) {
 				URL url = l.nextElement();
@@ -114,7 +201,7 @@ public class ConfigurationLoader {
 		String prefix = path.substring(path.indexOf("!") + 2);
 		String jarName = path.substring(0, path.indexOf("!"));
 		jarName = URLDecoder.decode(jarName, "UTF-8");
-		logger.info("Load classes from jar " + jarName);
+		logger.debug("Load classes from jar " + jarName);
 		JarFile jar = new JarFile(jarName);
 		Enumeration<JarEntry> entries = jar.entries();
 		while (entries.hasMoreElements()) {
@@ -126,11 +213,11 @@ public class ConfigurationLoader {
 				classList.add(className);
 			}
 		}
-		logger.info("Classes loaded from jar " + jarName);
+		logger.debug("Classes loaded from jar " + jarName);
 	}
 
 	private void loadClassesFromDirectory(File directoryToScan, String current, List<String> classList) {
-		logger.info("Scan directory " + directoryToScan);
+		logger.debug("Scan directory " + directoryToScan);
 		for (File f : directoryToScan.listFiles()) {
 			if (f.isDirectory()) {
 				if (!".".equals(f.getName()) && !"..".equals(f.getName())) {
@@ -142,56 +229,7 @@ public class ConfigurationLoader {
 				}
 			}
 		}
-		logger.info("Directory scanned " + directoryToScan);
-	}
-
-	public Map<String, IPatcher> fillPatchList(List<String> classList) throws Exception {
-		Map<String, IPatcher> map = new HashMap<String, IPatcher>();
-		for (String className : classList) {
-			Class<?> clazz = Class.forName(className, true, classLoader);
-
-			PatchClass patchClass = GwtTestReflectionUtils.getAnnotation(clazz, PatchClass.class);
-
-			if (patchClass == null) {
-				continue;
-			}
-
-			if (!IPatcher.class.isAssignableFrom(clazz) || !hasDefaultConstructor(clazz)) {
-				throw new RuntimeException("The @" + PatchClass.class.getSimpleName() + " annotated class '" + clazz.getName() + "' must implements "
-						+ IPatcher.class.getSimpleName() + " interface and provide an empty constructor");
-			}
-
-			IPatcher patcher = (IPatcher) clazz.newInstance();
-
-			for (Class<?> c : patchClass.value()) {
-				String targetName = c.isMemberClass() ? c.getDeclaringClass().getCanonicalName() + "$" + c.getSimpleName() : c.getCanonicalName();
-				if (map.get(targetName) != null) {
-					logger.error("Two patches for same class " + targetName);
-					throw new RuntimeException("Two patches for same class " + targetName);
-				}
-				map.put(targetName, patcher);
-				logger.info("Add patch for class " + targetName + " : " + clazz.getCanonicalName());
-			}
-			for (String s : patchClass.classes()) {
-				if (map.get(s) != null) {
-					logger.error("Two patches for same class " + s);
-					throw new RuntimeException("Two patches for same class " + s);
-				}
-				map.put(s, patcher);
-				logger.info("Add patch for class " + s + " : " + clazz.getCanonicalName());
-			}
-		}
-
-		return map;
-	}
-
-	private boolean hasDefaultConstructor(Class<?> clazz) {
-		for (Constructor<?> cons : clazz.getConstructors()) {
-			if (cons.getParameterTypes().length == 0)
-				return true;
-		}
-
-		return false;
+		logger.debug("Directory scanned " + directoryToScan);
 	}
 
 }

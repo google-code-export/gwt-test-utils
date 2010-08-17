@@ -2,38 +2,39 @@ package com.octo.gwt.test;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
+import javassist.CannotCompileException;
 import javassist.Loader;
+import javassist.NotFoundException;
 
 public class GwtTestClassLoader extends Loader {
 
-	private static GwtTestClassLoader _instance;
+	private static GwtTestClassLoader INSTANCE;
 
 	public static ClassLoader getInstance() {
-		try {
-			if (_instance == null) {
-				_instance = new GwtTestClassLoader();
-			}
-		} catch (Exception e) {
-			if (e instanceof RuntimeException) {
-				throw (RuntimeException) e;
-			} else {
-				throw new RuntimeException(e);
+		if (INSTANCE == null) {
+			try {
+				INSTANCE = new GwtTestClassLoader();
+			} catch (Exception e) {
+				if (e instanceof RuntimeException) {
+					throw (RuntimeException) e;
+				} else {
+					throw new RuntimeException(e);
+				}
 			}
 		}
-		return _instance;
+
+		return INSTANCE;
 	}
 
 	private GwtTranslator translator;
 
-	private GwtTestClassLoader() throws Exception {
+	private GwtTestClassLoader() throws NotFoundException, CannotCompileException {
 		super(PatchGwtClassPool.get());
 
 		init();
 
-		ConfigurationLoader configurationLoader = new ConfigurationLoader(getParent());
-		configurationLoader.readFiles();
+		ConfigurationLoader configurationLoader = ConfigurationLoader.createInstance(this.getParent());
 
 		for (String s : configurationLoader.getDelegateList()) {
 			delegateLoadingOf(s);
@@ -42,11 +43,7 @@ public class GwtTestClassLoader extends Loader {
 			notDelegateLoadingOf(s);
 		}
 
-		List<String> classList = configurationLoader.findScannedClasses();
-
-		Map<String, IPatcher> map = configurationLoader.fillPatchList(classList);
-
-		translator = new GwtTranslator(map);
+		translator = new GwtTranslator(configurationLoader.getPatchers());
 
 		addTranslator(PatchGwtClassPool.get(), translator);
 	}

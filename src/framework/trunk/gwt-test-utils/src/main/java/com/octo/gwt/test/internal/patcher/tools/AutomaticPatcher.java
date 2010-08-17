@@ -189,7 +189,7 @@ public class AutomaticPatcher implements IPatcher {
 		return (String) annotatedMethod.invoke(null, params.toArray());
 	}
 
-	public void finalizeClass() throws Exception {
+	public void finalizeClass(CtClass c) throws Exception {
 		for (Method m : annotatedMethods.keySet()) {
 			if (!processedMethods.contains(m)) {
 				throw new RuntimeException("@PatchMethod not used : " + m);
