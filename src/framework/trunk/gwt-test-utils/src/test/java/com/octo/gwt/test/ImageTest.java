@@ -6,6 +6,7 @@ import org.junit.Test;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.ImageElement;
 import com.google.gwt.user.client.ui.Image;
+import com.octo.gwt.test.internal.utils.ElementUtils;
 
 public class ImageTest extends AbstractGwtTest {
 

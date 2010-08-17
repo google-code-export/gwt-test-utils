@@ -28,7 +28,7 @@ import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.resources.client.TextResource;
 import com.google.gwt.resources.ext.DefaultExtensions;
 import com.octo.gwt.test.GwtCreateHandler;
-import com.octo.gwt.test.PatchGwtClassPool;
+import com.octo.gwt.test.internal.PatchGwtClassPool;
 import com.octo.gwt.test.internal.patcher.GwtPatcher;
 
 @SuppressWarnings("unchecked")

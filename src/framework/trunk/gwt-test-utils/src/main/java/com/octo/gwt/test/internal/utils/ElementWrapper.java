@@ -1,4 +1,4 @@
-package com.octo.gwt.test;
+package com.octo.gwt.test.internal.utils;
 
 import com.google.gwt.user.client.Element;
 import com.octo.gwt.test.utils.TagAware;

@@ -5,6 +5,8 @@ import java.util.Locale;
 import org.junit.After;
 import org.junit.Before;
 
+import com.octo.gwt.test.internal.PatchGwtReset;
+
 public abstract class AbstractGwtConfigurableTest {
 
 	@Before

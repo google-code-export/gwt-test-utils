@@ -1,4 +1,4 @@
-package com.octo.gwt.test;
+package com.octo.gwt.test.internal;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,6 +11,7 @@ import javassist.Translator;
 
 import org.apache.log4j.Logger;
 
+import com.octo.gwt.test.IPatcher;
 import com.octo.gwt.test.utils.PatchGwtUtils;
 
 public class GwtTranslator implements Translator {

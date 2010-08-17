@@ -7,7 +7,7 @@ import com.google.gwt.dom.client.AnchorElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.user.client.Element;
 import com.octo.gwt.test.AbstractGwtTest;
-import com.octo.gwt.test.ElementUtils;
+import com.octo.gwt.test.internal.utils.ElementUtils;
 
 public class ElementUtilsTest extends AbstractGwtTest {
 

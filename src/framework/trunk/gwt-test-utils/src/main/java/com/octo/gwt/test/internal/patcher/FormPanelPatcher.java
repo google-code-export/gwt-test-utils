@@ -8,10 +8,10 @@ import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.OverrideSubmitCompleteEvent;
 import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
 import com.google.gwt.user.client.ui.impl.FormPanelImpl;
-import com.octo.gwt.test.ElementUtils;
 import com.octo.gwt.test.internal.patcher.tools.AutomaticPatcher;
 import com.octo.gwt.test.internal.patcher.tools.PatchClass;
 import com.octo.gwt.test.internal.patcher.tools.PatchMethod;
+import com.octo.gwt.test.internal.utils.ElementUtils;
 import com.octo.gwt.test.utils.GwtTestReflectionUtils;
 
 @PatchClass(FormPanel.class)

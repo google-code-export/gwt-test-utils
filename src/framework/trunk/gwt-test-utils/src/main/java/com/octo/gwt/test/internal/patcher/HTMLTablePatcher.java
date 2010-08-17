@@ -5,11 +5,11 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.HTMLTable;
-import com.octo.gwt.test.ElementWrapper;
 import com.octo.gwt.test.internal.overrides.OverrideNodeList;
 import com.octo.gwt.test.internal.patcher.tools.AutomaticPatcher;
 import com.octo.gwt.test.internal.patcher.tools.PatchClass;
 import com.octo.gwt.test.internal.patcher.tools.PatchMethod;
+import com.octo.gwt.test.internal.utils.ElementWrapper;
 import com.octo.gwt.test.utils.GwtTestReflectionUtils;
 
 @PatchClass(HTMLTable.class)

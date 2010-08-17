@@ -12,6 +12,7 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.octo.gwt.test.internal.utils.ElementUtils;
 
 public class LayoutPanelTest extends AbstractGwtTest {
 

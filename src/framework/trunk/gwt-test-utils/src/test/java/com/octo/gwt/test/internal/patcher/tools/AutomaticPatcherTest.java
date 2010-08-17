@@ -7,7 +7,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.octo.gwt.test.PatchGwtClassPool;
+import com.octo.gwt.test.internal.PatchGwtClassPool;
 import com.octo.gwt.test.internal.patcher.tools.MyClassToPatch.MyInnerClass;
 import com.octo.gwt.test.utils.PatchGwtUtils;
 

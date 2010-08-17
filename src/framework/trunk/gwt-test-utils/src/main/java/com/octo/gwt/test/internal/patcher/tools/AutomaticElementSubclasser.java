@@ -40,7 +40,7 @@ import com.google.gwt.dom.client.TableRowElement;
 import com.google.gwt.dom.client.TextAreaElement;
 import com.google.gwt.dom.client.TitleElement;
 import com.google.gwt.dom.client.UListElement;
-import com.octo.gwt.test.ElementWrapper;
+import com.octo.gwt.test.internal.utils.ElementWrapper;
 
 @PatchClass( { AnchorElement.class, AreaElement.class, BaseElement.class, BodyElement.class, BRElement.class, ButtonElement.class, DivElement.class,
 		DListElement.class, FieldSetElement.class, FrameElement.class, FrameSetElement.class, FormElement.class, HeadElement.class, HRElement.class,

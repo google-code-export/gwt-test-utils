@@ -1,4 +1,4 @@
-package com.octo.gwt.test.utils;
+package com.octo.gwt.test.internal.utils;
 
 import java.io.IOException;
 import java.io.InputStream;

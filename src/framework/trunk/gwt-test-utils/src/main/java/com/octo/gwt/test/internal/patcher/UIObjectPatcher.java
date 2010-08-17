@@ -3,13 +3,13 @@ package com.octo.gwt.test.internal.patcher;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.user.client.ui.UIObject;
-import com.octo.gwt.test.ElementUtils;
 import com.octo.gwt.test.internal.patcher.dom.ElementPatcher;
 import com.octo.gwt.test.internal.patcher.tools.AutomaticPatcher;
 import com.octo.gwt.test.internal.patcher.tools.PatchClass;
 import com.octo.gwt.test.internal.patcher.tools.PatchMethod;
 import com.octo.gwt.test.internal.patcher.tools.PatchType;
 import com.octo.gwt.test.internal.patcher.tools.SubClassedHelper;
+import com.octo.gwt.test.internal.utils.ElementUtils;
 import com.octo.gwt.test.utils.GwtTestReflectionUtils;
 
 @PatchClass(UIObject.class)

@@ -8,9 +8,9 @@ import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.NotFoundException;
 
-import com.octo.gwt.test.ElementWrapper;
 import com.octo.gwt.test.GwtTestClassLoader;
-import com.octo.gwt.test.PatchGwtClassPool;
+import com.octo.gwt.test.internal.PatchGwtClassPool;
+import com.octo.gwt.test.internal.utils.ElementWrapper;
 
 public class SubClassedHelper {
 
