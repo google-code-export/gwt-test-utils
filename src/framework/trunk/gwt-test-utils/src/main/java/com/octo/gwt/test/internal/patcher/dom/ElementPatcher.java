@@ -11,11 +11,11 @@ import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Style;
 import com.octo.gwt.test.internal.overrides.OverrideNodeList;
-import com.octo.gwt.test.internal.patcher.tools.AutomaticElementSubclasser;
-import com.octo.gwt.test.internal.patcher.tools.PatchClass;
-import com.octo.gwt.test.internal.patcher.tools.PatchMethod;
-import com.octo.gwt.test.internal.patcher.tools.PropertyContainer;
-import com.octo.gwt.test.internal.patcher.tools.SubClassedHelper;
+import com.octo.gwt.test.patcher.AutomaticElementSubclasser;
+import com.octo.gwt.test.patcher.PatchClass;
+import com.octo.gwt.test.patcher.PatchMethod;
+import com.octo.gwt.test.patcher.PropertyContainer;
+import com.octo.gwt.test.patcher.PropertyContainerHelper;
 
 @PatchClass(Element.class)
 public class ElementPatcher extends AutomaticElementSubclasser {
@@ -31,16 +31,16 @@ public class ElementPatcher extends AutomaticElementSubclasser {
 		super.initClass(c);
 		CtConstructor cons = findConstructor(c);
 
-		cons.insertAfter(SubClassedHelper.getCodeSetProperty("this", STYLE_FIELD, NodeFactory.class.getCanonicalName() + ".createStyle()", true)
+		cons.insertAfter(PropertyContainerHelper.getCodeSetProperty("this", STYLE_FIELD, NodeFactory.class.getCanonicalName() + ".createStyle()", true)
 				+ ";");
-		cons.insertAfter(SubClassedHelper.getCodeSetProperty("this", PROPERTY_MAP_FIELD, "new " + PropertyContainer.class.getCanonicalName() + "()",
+		cons.insertAfter(PropertyContainerHelper.getCodeSetProperty("this", PROPERTY_MAP_FIELD, "new " + PropertyContainer.class.getCanonicalName() + "()",
 				true) + ";");
-		cons.insertAfter(SubClassedHelper.getCodeSetProperty("this", ATTRIBUTE_MAP_FIELD, "new " + PropertyContainer.class.getCanonicalName() + "()",
+		cons.insertAfter(PropertyContainerHelper.getCodeSetProperty("this", ATTRIBUTE_MAP_FIELD, "new " + PropertyContainer.class.getCanonicalName() + "()",
 				true) + ";");
-		cons.insertAfter(SubClassedHelper.getCodeSetProperty("this", ATTRIBUTE_MAP_FIELD, "new " + PropertyContainer.class.getCanonicalName() + "()",
+		cons.insertAfter(PropertyContainerHelper.getCodeSetProperty("this", ATTRIBUTE_MAP_FIELD, "new " + PropertyContainer.class.getCanonicalName() + "()",
 				true) + ";");
-		cons.insertAfter(SubClassedHelper.getCodeSetProperty("this", CLASSNAME_FIELD, "\"\"", true) + ";");
-		cons.insertAfter(SubClassedHelper.getCodeSetProperty("this", ACCESSKEY_FIELD, "\"\"", true) + ";");
+		cons.insertAfter(PropertyContainerHelper.getCodeSetProperty("this", CLASSNAME_FIELD, "\"\"", true) + ";");
+		cons.insertAfter(PropertyContainerHelper.getCodeSetProperty("this", ACCESSKEY_FIELD, "\"\"", true) + ";");
 	}
 
 	@PatchMethod
@@ -63,7 +63,7 @@ public class ElementPatcher extends AutomaticElementSubclasser {
 
 	@PatchMethod
 	public static Style getStyle(Element element) {
-		return SubClassedHelper.getProperty(element, STYLE_FIELD);
+		return PropertyContainerHelper.getProperty(element, STYLE_FIELD);
 	}
 
 	@PatchMethod
@@ -91,25 +91,25 @@ public class ElementPatcher extends AutomaticElementSubclasser {
 
 	@PatchMethod
 	public static void removeAttribute(Element element, String name) {
-		PropertyContainer propertyContainer = SubClassedHelper.getProperty(element, PROPERTY_MAP_FIELD);
+		PropertyContainer propertyContainer = PropertyContainerHelper.getProperty(element, PROPERTY_MAP_FIELD);
 		propertyContainer.remove(name);
 	}
 
 	@PatchMethod
 	public static boolean getPropertyBoolean(Element element, String propertyName) {
-		PropertyContainer propertyContainer = SubClassedHelper.getProperty(element, PROPERTY_MAP_FIELD);
+		PropertyContainer propertyContainer = PropertyContainerHelper.getProperty(element, PROPERTY_MAP_FIELD);
 		return propertyContainer.getBoolean(propertyName);
 	}
 
 	@PatchMethod
 	public static double getPropertyDouble(Element element, String propertyName) {
-		PropertyContainer propertyContainer = SubClassedHelper.getProperty(element, PROPERTY_MAP_FIELD);
+		PropertyContainer propertyContainer = PropertyContainerHelper.getProperty(element, PROPERTY_MAP_FIELD);
 		return propertyContainer.getDouble(propertyName);
 	}
 
 	@PatchMethod
 	public static int getPropertyInt(Element element, String propertyName) {
-		PropertyContainer propertyContainer = SubClassedHelper.getProperty(element, PROPERTY_MAP_FIELD);
+		PropertyContainer propertyContainer = PropertyContainerHelper.getProperty(element, PROPERTY_MAP_FIELD);
 		return propertyContainer.getInteger(propertyName);
 	}
 
@@ -118,37 +118,37 @@ public class ElementPatcher extends AutomaticElementSubclasser {
 		if ("tagName".equals(propertyName)) {
 			return element.getTagName();
 		}
-		PropertyContainer propertyContainer = SubClassedHelper.getProperty(element, PROPERTY_MAP_FIELD);
+		PropertyContainer propertyContainer = PropertyContainerHelper.getProperty(element, PROPERTY_MAP_FIELD);
 		return (String) propertyContainer.get(propertyName);
 	}
 
 	@PatchMethod
 	public static void setPropertyString(Element element, String propertyName, String value) {
-		PropertyContainer propertyContainer = SubClassedHelper.getProperty(element, PROPERTY_MAP_FIELD);
+		PropertyContainer propertyContainer = PropertyContainerHelper.getProperty(element, PROPERTY_MAP_FIELD);
 		propertyContainer.put(propertyName, value);
 	}
 
 	@PatchMethod
 	public static void setPropertyInt(Element element, String propertyName, int value) {
-		PropertyContainer propertyContainer = SubClassedHelper.getProperty(element, PROPERTY_MAP_FIELD);
+		PropertyContainer propertyContainer = PropertyContainerHelper.getProperty(element, PROPERTY_MAP_FIELD);
 		propertyContainer.put(propertyName, value);
 	}
 
 	@PatchMethod
 	public static void setPropertyBoolean(Element element, String propertyName, boolean value) {
-		PropertyContainer propertyContainer = SubClassedHelper.getProperty(element, PROPERTY_MAP_FIELD);
+		PropertyContainer propertyContainer = PropertyContainerHelper.getProperty(element, PROPERTY_MAP_FIELD);
 		propertyContainer.put(propertyName, value);
 	}
 
 	@PatchMethod
 	public static void setPropertyDouble(Element element, String propertyName, double value) {
-		PropertyContainer propertyContainer = SubClassedHelper.getProperty(element, PROPERTY_MAP_FIELD);
+		PropertyContainer propertyContainer = PropertyContainerHelper.getProperty(element, PROPERTY_MAP_FIELD);
 		propertyContainer.put(propertyName, value);
 	}
 
 	@PatchMethod
 	public static void setAttribute(Element element, String attributeName, String value) {
-		PropertyContainer propertyContainer = SubClassedHelper.getProperty(element, PROPERTY_MAP_FIELD);
+		PropertyContainer propertyContainer = PropertyContainerHelper.getProperty(element, PROPERTY_MAP_FIELD);
 		propertyContainer.put(attributeName, value);
 	}
 

@@ -3,10 +3,10 @@ package com.octo.gwt.test.internal.patcher;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.impl.FormPanelImpl;
 import com.google.gwt.user.client.ui.impl.FormPanelImplHost;
-import com.octo.gwt.test.internal.patcher.tools.AutomaticPatcher;
-import com.octo.gwt.test.internal.patcher.tools.PatchClass;
-import com.octo.gwt.test.internal.patcher.tools.PatchMethod;
-import com.octo.gwt.test.internal.patcher.tools.SubClassedHelper;
+import com.octo.gwt.test.patcher.AutomaticPatcher;
+import com.octo.gwt.test.patcher.PatchClass;
+import com.octo.gwt.test.patcher.PatchMethod;
+import com.octo.gwt.test.patcher.PropertyContainerHelper;
 
 @PatchClass(FormPanelImpl.class)
 public class FormPanelImplPatcher extends AutomaticPatcher {
@@ -18,13 +18,13 @@ public class FormPanelImplPatcher extends AutomaticPatcher {
 
 	@PatchMethod
 	public static void setEncoding(FormPanelImpl panelImpl, Element form, String encoding) {
-		SubClassedHelper.setProperty(form, "enctype", encoding);
-		SubClassedHelper.setProperty(form, "encoding", encoding);
+		PropertyContainerHelper.setProperty(form, "enctype", encoding);
+		PropertyContainerHelper.setProperty(form, "encoding", encoding);
 	}
 
 	@PatchMethod
 	public static String getEncoding(FormPanelImpl panelImpl, Element form) {
-		return SubClassedHelper.getProperty(form, "enctype");
+		return PropertyContainerHelper.getProperty(form, "enctype");
 	}
 
 	@PatchMethod

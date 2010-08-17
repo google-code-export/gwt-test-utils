@@ -6,11 +6,11 @@ import javassist.CtConstructor;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.InputElement;
 import com.google.gwt.user.client.ui.FileUpload;
-import com.octo.gwt.test.internal.patcher.tools.AutomaticPatcher;
-import com.octo.gwt.test.internal.patcher.tools.PatchClass;
-import com.octo.gwt.test.internal.patcher.tools.PatchMethod;
-import com.octo.gwt.test.internal.patcher.tools.PatchType;
 import com.octo.gwt.test.internal.utils.ElementUtils;
+import com.octo.gwt.test.patcher.AutomaticPatcher;
+import com.octo.gwt.test.patcher.PatchClass;
+import com.octo.gwt.test.patcher.PatchMethod;
+import com.octo.gwt.test.patcher.PatchType;
 
 @PatchClass(FileUpload.class)
 public class FileUploadPatcher extends AutomaticPatcher {

@@ -1,4 +1,4 @@
-package com.octo.gwt.test.internal.patcher.tools;
+package com.octo.gwt.test.patcher;
 
 import javassist.CtClass;
 
@@ -42,23 +42,23 @@ import com.google.gwt.dom.client.TitleElement;
 import com.google.gwt.dom.client.UListElement;
 import com.octo.gwt.test.internal.utils.ElementWrapper;
 
-@PatchClass( { AnchorElement.class, AreaElement.class, BaseElement.class, BodyElement.class, BRElement.class, ButtonElement.class, DivElement.class,
+@PatchClass({ AnchorElement.class, AreaElement.class, BaseElement.class, BodyElement.class, BRElement.class, ButtonElement.class, DivElement.class,
 		DListElement.class, FieldSetElement.class, FrameElement.class, FrameSetElement.class, FormElement.class, HeadElement.class, HRElement.class,
 		IFrameElement.class, ImageElement.class, LIElement.class, LabelElement.class, LegendElement.class, LinkElement.class, MapElement.class,
 		MetaElement.class, ObjectElement.class, OptionElement.class, OListElement.class, OptGroupElement.class, ParagraphElement.class,
 		ParamElement.class, PreElement.class, ScriptElement.class, StyleElement.class, SpanElement.class, TableCaptionElement.class,
 		TableElement.class, TableRowElement.class, TextAreaElement.class, TitleElement.class, UListElement.class })
-public class AutomaticElementSubclasser extends AutomaticSubclasser {
+public class AutomaticElementSubclasser extends AutomaticPropertyContainerPatcher {
 
 	@PatchMethod(PatchType.NEW_CODE_AS_STRING)
 	public static String as(CtClass clazz) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("{ if ($1 instanceof ");
-		sb.append(ElementWrapper.class.getCanonicalName());
+		sb.append(ElementWrapper.class.getName());
 		sb.append(") { return (");
 		sb.append(clazz.getName());
 		sb.append(") ((");
-		sb.append(ElementWrapper.class.getCanonicalName());
+		sb.append(ElementWrapper.class.getName());
 		sb.append(") $1).getWrappedElement(); } else { return (");
 		sb.append(clazz.getName());
 		sb.append(") $1; } }");

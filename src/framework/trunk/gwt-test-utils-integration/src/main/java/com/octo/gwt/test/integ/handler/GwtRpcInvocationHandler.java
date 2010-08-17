@@ -9,7 +9,7 @@ import org.apache.log4j.Logger;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.StatusCodeException;
-import com.octo.gwt.test.GwtTestClassLoader;
+import com.octo.gwt.test.internal.GwtTestClassLoader;
 import com.octo.gwt.test.utils.DeserializationContext;
 import com.octo.gwt.test.utils.GwtTestReflectionUtils;
 

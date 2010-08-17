@@ -4,9 +4,9 @@ import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.TableRowElement;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.FlexTable;
-import com.octo.gwt.test.internal.patcher.tools.AutomaticPatcher;
-import com.octo.gwt.test.internal.patcher.tools.PatchClass;
-import com.octo.gwt.test.internal.patcher.tools.PatchMethod;
+import com.octo.gwt.test.patcher.AutomaticPatcher;
+import com.octo.gwt.test.patcher.PatchClass;
+import com.octo.gwt.test.patcher.PatchMethod;
 
 @PatchClass(FlexTable.class)
 public class FlexTablePatcher extends AutomaticPatcher {

@@ -13,10 +13,10 @@ import org.w3c.dom.Document;
 import com.google.gwt.core.client.impl.Impl;
 import com.google.gwt.dom.client.Node;
 import com.octo.gwt.test.AbstractGwtConfigurableTest;
-import com.octo.gwt.test.internal.patcher.tools.AutomaticPatcher;
-import com.octo.gwt.test.internal.patcher.tools.PatchClass;
-import com.octo.gwt.test.internal.patcher.tools.PatchMethod;
 import com.octo.gwt.test.internal.utils.ElementUtils;
+import com.octo.gwt.test.patcher.AutomaticPatcher;
+import com.octo.gwt.test.patcher.PatchClass;
+import com.octo.gwt.test.patcher.PatchMethod;
 
 @PatchClass(Impl.class)
 public class ImplPatcher extends AutomaticPatcher {

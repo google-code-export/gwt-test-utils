@@ -1,4 +1,4 @@
-package com.octo.gwt.test.internal.patcher.tools;
+package com.octo.gwt.test.patcher;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

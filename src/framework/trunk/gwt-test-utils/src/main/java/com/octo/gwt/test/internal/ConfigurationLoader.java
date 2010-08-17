@@ -1,4 +1,4 @@
-package com.octo.gwt.test;
+package com.octo.gwt.test.internal;
 
 import java.io.File;
 import java.io.InputStream;
@@ -20,7 +20,8 @@ import java.util.jar.JarFile;
 
 import org.apache.log4j.Logger;
 
-import com.octo.gwt.test.internal.patcher.tools.PatchClass;
+import com.octo.gwt.test.IPatcher;
+import com.octo.gwt.test.patcher.PatchClass;
 import com.octo.gwt.test.utils.GwtTestReflectionUtils;
 
 public class ConfigurationLoader {

@@ -4,9 +4,9 @@ import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.ImageElement;
 import com.google.gwt.user.client.ui.impl.ClippedImageImpl;
-import com.octo.gwt.test.internal.patcher.tools.AutomaticPatcher;
-import com.octo.gwt.test.internal.patcher.tools.PatchClass;
-import com.octo.gwt.test.internal.patcher.tools.PatchMethod;
+import com.octo.gwt.test.patcher.AutomaticPatcher;
+import com.octo.gwt.test.patcher.PatchClass;
+import com.octo.gwt.test.patcher.PatchMethod;
 
 @PatchClass(ClippedImageImpl.class)
 public class ClippedImageImplPatcher extends AutomaticPatcher {

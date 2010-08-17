@@ -1,33 +1,26 @@
-package com.octo.gwt.test.internal.patcher.tools;
+package com.octo.gwt.test.patcher;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javassist.CannotCompileException;
-import javassist.ClassPool;
 import javassist.CtClass;
-import javassist.NotFoundException;
 
-import com.octo.gwt.test.GwtTestClassLoader;
-import com.octo.gwt.test.internal.PatchGwtClassPool;
+import com.octo.gwt.test.internal.GwtTestClassLoader;
 import com.octo.gwt.test.internal.utils.ElementWrapper;
 
-public class SubClassedHelper {
+public class PropertyContainerHelper {
 
 	public static void setProperty(Object o, String propertyName, Object propertyValue) {
 		setProperty(o, propertyName, propertyValue, false);
 	}
 
 	public static void setProperty(Object o, String propertyName, Object propertyValue, boolean allowNull) {
-		SubClassedObject subClassedObject = getSubClassedObjectOrNull(o);
-		if (subClassedObject == null) {
+		PropertyContainerAware pca = cast(o);
+		if (pca == null) {
 			if (allowNull) {
 				return;
 			} else {
 				throw new RuntimeException("Call setProperty on null object");
 			}
 		}
-		subClassedObject.getOverrideProperties().put(propertyName, propertyValue);
+		pca.getProperties().put(propertyName, propertyValue);
 	}
 
 	public static void setProperty(Object o, String propertyName, short propertyValue) {
@@ -63,75 +56,63 @@ public class SubClassedHelper {
 	}
 
 	public static String getCodeSetProperty(String object, String propertyName, String propertyValue, boolean allowNull) {
-		return SubClassedHelper.class.getCanonicalName() + ".setProperty(" + object + ", \"" + propertyName + "\", " + propertyValue + ", "
+		return PropertyContainerHelper.class.getCanonicalName() + ".setProperty(" + object + ", \"" + propertyName + "\", " + propertyValue + ", "
 				+ Boolean.toString(allowNull) + ")";
 	}
 
-	public static SubClassedObject getSubClassedObjectOrNull(Object o) {
+	public static PropertyContainerAware cast(Object o) {
 		if (o instanceof ElementWrapper) {
 			o = ((ElementWrapper) o).getWrappedElement();
 		}
 		if (o == null) {
 			return null;
 		}
-		if (o instanceof SubClassedObject) {
-			SubClassedObject subClassedObject = (SubClassedObject) o;
-			return subClassedObject;
+		if (o instanceof PropertyContainerAware) {
+			PropertyContainerAware pca = (PropertyContainerAware) o;
+			return pca;
 		} else {
-			throw new RuntimeException("Not SubClassedObject for getProperty " + o.getClass());
+			throw new RuntimeException("Not " + PropertyContainerAware.class.getSimpleName() + " for getProperty " + o.getClass());
 		}
 	}
 
 	@SuppressWarnings("unchecked")
 	public static <T> T getProperty(Object o, String propertyName) {
-		return (T) getSubClassedObjectOrNull(o).getOverrideProperties().get(propertyName);
+		return (T) cast(o).getProperties().get(propertyName);
 	}
 
 	public static short getPropertyShort(Object o, String propertyName) {
-		return getSubClassedObjectOrNull(o).getOverrideProperties().getShort(propertyName);
+		return cast(o).getProperties().getShort(propertyName);
 	}
 
 	public static int getPropertyInteger(Object o, String propertyName) {
-		return getSubClassedObjectOrNull(o).getOverrideProperties().getInteger(propertyName);
+		return cast(o).getProperties().getInteger(propertyName);
 	}
 
 	public static boolean getPropertyBoolean(Object o, String propertyName) {
-		return getSubClassedObjectOrNull(o).getOverrideProperties().getBoolean(propertyName);
+		return cast(o).getProperties().getBoolean(propertyName);
 	}
 
 	public static double getPropertyDouble(Object o, String propertyName) {
-		return getSubClassedObjectOrNull(o).getOverrideProperties().getDouble(propertyName);
+		return cast(o).getProperties().getDouble(propertyName);
 	}
 
 	public static String getCodeGetProperty(String object, String fieldName, CtClass returnType) {
 		if (returnType == CtClass.booleanType) {
-			return SubClassedHelper.class.getCanonicalName() + ".getPropertyBoolean(" + object + ", \"" + fieldName + "\")";
+			return PropertyContainerHelper.class.getCanonicalName() + ".getPropertyBoolean(" + object + ", \"" + fieldName + "\")";
 		} else if (returnType == CtClass.intType) {
-			return SubClassedHelper.class.getCanonicalName() + ".getPropertyInteger(" + object + ", \"" + fieldName + "\")";
+			return PropertyContainerHelper.class.getCanonicalName() + ".getPropertyInteger(" + object + ", \"" + fieldName + "\")";
 		} else if (returnType == CtClass.doubleType) {
-			return SubClassedHelper.class.getCanonicalName() + ".getPropertyDouble(" + object + ", \"" + fieldName + "\")";
+			return PropertyContainerHelper.class.getCanonicalName() + ".getPropertyDouble(" + object + ", \"" + fieldName + "\")";
 		}
-		return "(" + returnType.getName() + ") " + SubClassedHelper.class.getCanonicalName() + ".getProperty(" + object + ", \"" + fieldName + "\")";
+		return "(" + returnType.getName() + ") " + PropertyContainerHelper.class.getCanonicalName() + ".getProperty(" + object + ", \"" + fieldName
+				+ "\")";
 	}
 
-	private static Map<String, Class<?>> compiledMap = new HashMap<String, Class<?>>();
-
-	public static Class<?> getSubClass(String className) {
-		Class<?> subClazz = compiledMap.get(className);
-		if (subClazz != null) {
-			return subClazz;
-		}
+	public static Class<?> getPropertyContainerAware(String className) {
 		try {
-			ClassPool pool = PatchGwtClassPool.get();
-			String subClassName = className + AutomaticSubclasser.SUB_CLASSED;
-			CtClass ctClass = pool.get(subClassName);
-			subClazz = ctClass.toClass(GwtTestClassLoader.getInstance(), null);
-			compiledMap.put(className, subClazz);
-			return subClazz;
-		} catch (NotFoundException e) {
+			return GwtTestClassLoader.getInstance().loadClass(className);
+		} catch (ClassNotFoundException e) {
 			return null;
-		} catch (CannotCompileException e) {
-			throw new RuntimeException(e);
 		}
 	}
 

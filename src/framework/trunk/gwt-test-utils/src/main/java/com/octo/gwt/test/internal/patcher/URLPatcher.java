@@ -4,9 +4,9 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
 import com.google.gwt.http.client.URL;
-import com.octo.gwt.test.internal.patcher.tools.AutomaticPatcher;
-import com.octo.gwt.test.internal.patcher.tools.PatchClass;
-import com.octo.gwt.test.internal.patcher.tools.PatchMethod;
+import com.octo.gwt.test.patcher.AutomaticPatcher;
+import com.octo.gwt.test.patcher.PatchClass;
+import com.octo.gwt.test.patcher.PatchMethod;
 
 @PatchClass(URL.class)
 public class URLPatcher extends AutomaticPatcher {

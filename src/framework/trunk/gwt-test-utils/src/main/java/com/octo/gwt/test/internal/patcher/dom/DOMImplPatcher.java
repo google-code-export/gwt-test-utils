@@ -13,12 +13,12 @@ import com.google.gwt.dom.client.SelectElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.Event;
 import com.octo.gwt.test.internal.overrides.OverrideNodeList;
-import com.octo.gwt.test.internal.patcher.tools.AutomaticPatcher;
-import com.octo.gwt.test.internal.patcher.tools.PatchClass;
-import com.octo.gwt.test.internal.patcher.tools.PatchMethod;
-import com.octo.gwt.test.internal.patcher.tools.PropertyContainer;
-import com.octo.gwt.test.internal.patcher.tools.SubClassedHelper;
 import com.octo.gwt.test.internal.utils.ElementUtils;
+import com.octo.gwt.test.patcher.AutomaticPatcher;
+import com.octo.gwt.test.patcher.PatchClass;
+import com.octo.gwt.test.patcher.PatchMethod;
+import com.octo.gwt.test.patcher.PropertyContainer;
+import com.octo.gwt.test.patcher.PropertyContainerHelper;
 import com.octo.gwt.test.utils.GwtTestReflectionUtils;
 import com.octo.gwt.test.utils.TagAware;
 import com.octo.gwt.test.utils.events.EventBuilder;
@@ -55,7 +55,7 @@ public class DOMImplPatcher extends AutomaticPatcher {
 	@PatchMethod
 	public static ButtonElement createButtonElement(Object domImpl, Document doc, String type) {
 		ButtonElement e = (ButtonElement) doc.createElement("button");
-		SubClassedHelper.setProperty(e, "Type", type);
+		PropertyContainerHelper.setProperty(e, "Type", type);
 		return e;
 	}
 
@@ -66,7 +66,7 @@ public class DOMImplPatcher extends AutomaticPatcher {
 
 	@PatchMethod
 	public static String getAttribute(Object domImpl, Element elem, String name) {
-		PropertyContainer propertyContainer = SubClassedHelper.getProperty(elem, ElementPatcher.PROPERTY_MAP_FIELD);
+		PropertyContainer propertyContainer = PropertyContainerHelper.getProperty(elem, ElementPatcher.PROPERTY_MAP_FIELD);
 		return (String) propertyContainer.get(name);
 	}
 
@@ -79,33 +79,33 @@ public class DOMImplPatcher extends AutomaticPatcher {
 			return ((TagAware) elem).getTag();
 		}
 
-		String tagName = SubClassedHelper.getProperty(elem, TAG_NAME);
+		String tagName = PropertyContainerHelper.getProperty(elem, TAG_NAME);
 		return (tagName != null) ? tagName : (String) GwtTestReflectionUtils.getStaticFieldValue(elem.getClass(), "TAG");
 	}
 
 	@PatchMethod
 	public static String getInnerHTML(Object domImpl, Element elem) {
-		return SubClassedHelper.getProperty(elem, INNER_HTML);
+		return PropertyContainerHelper.getProperty(elem, INNER_HTML);
 	}
 
 	@PatchMethod
 	public static String getInnerText(Object domImpl, Element elem) {
-		return SubClassedHelper.getProperty(elem, INNER_TEXT);
+		return PropertyContainerHelper.getProperty(elem, INNER_TEXT);
 	}
 
 	@PatchMethod
 	public static void setInnerText(Object domImpl, Element elem, String text) {
-		SubClassedHelper.setProperty(elem, INNER_TEXT, text);
+		PropertyContainerHelper.setProperty(elem, INNER_TEXT, text);
 	}
 
 	@PatchMethod
 	public static int getAbsoluteLeft(Object domImpl, Element elem) {
-		return SubClassedHelper.getPropertyInteger(elem, ABSOLUTE_LEFT);
+		return PropertyContainerHelper.getPropertyInteger(elem, ABSOLUTE_LEFT);
 	}
 
 	@PatchMethod
 	public static int getAbsoluteTop(Object domImpl, Element elem) {
-		return SubClassedHelper.getPropertyInteger(elem, ABSOLUTE_TOP);
+		return PropertyContainerHelper.getPropertyInteger(elem, ABSOLUTE_TOP);
 	}
 
 	@PatchMethod
@@ -160,12 +160,12 @@ public class DOMImplPatcher extends AutomaticPatcher {
 
 	@PatchMethod
 	public static void setScrollLeft(Object domImpl, Element elem, int left) {
-		SubClassedHelper.setProperty(elem, SCROLL_LEFT, left);
+		PropertyContainerHelper.setProperty(elem, SCROLL_LEFT, left);
 	}
 
 	@PatchMethod
 	public static int getScrollLeft(Object domImpl, Element elem) {
-		return SubClassedHelper.getPropertyInteger(elem, SCROLL_LEFT);
+		return PropertyContainerHelper.getPropertyInteger(elem, SCROLL_LEFT);
 	}
 
 	@PatchMethod
@@ -211,12 +211,12 @@ public class DOMImplPatcher extends AutomaticPatcher {
 
 	@PatchMethod
 	public static String imgGetSrc(Object domImpl, Element img) {
-		return SubClassedHelper.getProperty(img, SRC);
+		return PropertyContainerHelper.getProperty(img, SRC);
 	}
 
 	@PatchMethod
 	public static void imgSetSrc(Object domImpl, Element img, String src) {
-		SubClassedHelper.setProperty(img, SRC, src);
+		PropertyContainerHelper.setProperty(img, SRC, src);
 	}
 
 	@PatchMethod
@@ -258,25 +258,25 @@ public class DOMImplPatcher extends AutomaticPatcher {
 	@PatchMethod
 	public static void cssSetOpacity(Object domImpl, Style style, double value) {
 		String opacityField = GwtTestReflectionUtils.getStaticFieldValue(Style.class, "STYLE_OPACITY");
-		SubClassedHelper.setProperty(style, opacityField, String.valueOf(value));
+		PropertyContainerHelper.setProperty(style, opacityField, String.valueOf(value));
 	}
 
 	@PatchMethod
 	public static void cssClearOpacity(Object domImpl, Style style) {
 		String opacityField = GwtTestReflectionUtils.getStaticFieldValue(Style.class, "STYLE_OPACITY");
-		SubClassedHelper.setProperty(style, opacityField, "");
+		PropertyContainerHelper.setProperty(style, opacityField, "");
 	}
 
 	private static OverrideNodeList<Node> getChildNodeList(Object domImpl, Node node) {
-		return SubClassedHelper.getProperty(node, NODE_LIST_FIELD);
+		return PropertyContainerHelper.getProperty(node, NODE_LIST_FIELD);
 	}
 
 	public static InputElement createInputElement(Document doc, String type, String name) {
 		InputElement e = (InputElement) doc.createElement("input");
-		SubClassedHelper.setProperty(e, "Type", type);
+		PropertyContainerHelper.setProperty(e, "Type", type);
 
 		if (name != null) {
-			SubClassedHelper.setProperty(e, "Name", name);
+			PropertyContainerHelper.setProperty(e, "Name", name);
 		}
 
 		return e;

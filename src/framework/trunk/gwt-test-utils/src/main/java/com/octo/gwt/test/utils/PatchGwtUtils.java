@@ -17,8 +17,8 @@ import javassist.Modifier;
 import javassist.NotFoundException;
 
 import com.octo.gwt.test.IPatcher;
-import com.octo.gwt.test.internal.patcher.tools.AutomaticPatcher;
 import com.octo.gwt.test.internal.utils.LoadPropertiesHelper;
+import com.octo.gwt.test.patcher.AutomaticPatcher;
 
 public class PatchGwtUtils {
 

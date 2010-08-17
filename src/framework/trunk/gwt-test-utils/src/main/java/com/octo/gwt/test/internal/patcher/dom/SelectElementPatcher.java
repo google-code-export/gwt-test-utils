@@ -6,11 +6,11 @@ import javassist.CtConstructor;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.SelectElement;
 import com.google.gwt.user.client.ui.UIObject;
-import com.octo.gwt.test.internal.patcher.tools.AutomaticElementSubclasser;
-import com.octo.gwt.test.internal.patcher.tools.PatchClass;
-import com.octo.gwt.test.internal.patcher.tools.PatchMethod;
-import com.octo.gwt.test.internal.patcher.tools.SubClassedHelper;
 import com.octo.gwt.test.internal.utils.ElementUtils;
+import com.octo.gwt.test.patcher.AutomaticElementSubclasser;
+import com.octo.gwt.test.patcher.PatchClass;
+import com.octo.gwt.test.patcher.PatchMethod;
+import com.octo.gwt.test.patcher.PropertyContainerHelper;
 
 @PatchClass(SelectElement.class)
 public class SelectElementPatcher extends AutomaticElementSubclasser {
@@ -22,7 +22,7 @@ public class SelectElementPatcher extends AutomaticElementSubclasser {
 		super.initClass(c);
 		CtConstructor cons = findConstructor(c);
 
-		cons.insertAfter(SubClassedHelper.getCodeSetProperty("this", SELECTED_INDEX_FIELD, "-1", false) + ";");
+		cons.insertAfter(PropertyContainerHelper.getCodeSetProperty("this", SELECTED_INDEX_FIELD, "-1", false) + ";");
 	}
 
 	@PatchMethod

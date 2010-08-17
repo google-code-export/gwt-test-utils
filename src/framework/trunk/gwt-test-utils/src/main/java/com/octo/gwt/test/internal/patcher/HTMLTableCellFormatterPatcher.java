@@ -4,10 +4,10 @@ import com.google.gwt.dom.client.TableCellElement;
 import com.google.gwt.dom.client.TableRowElement;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.HTMLTable.CellFormatter;
-import com.octo.gwt.test.internal.patcher.tools.AutomaticPatcher;
-import com.octo.gwt.test.internal.patcher.tools.PatchClass;
-import com.octo.gwt.test.internal.patcher.tools.PatchMethod;
 import com.octo.gwt.test.internal.utils.ElementUtils;
+import com.octo.gwt.test.patcher.AutomaticPatcher;
+import com.octo.gwt.test.patcher.PatchClass;
+import com.octo.gwt.test.patcher.PatchMethod;
 
 @PatchClass(CellFormatter.class)
 public class HTMLTableCellFormatterPatcher extends AutomaticPatcher {

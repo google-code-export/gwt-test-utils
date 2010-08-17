@@ -12,15 +12,15 @@ import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Text;
 import com.octo.gwt.test.internal.overrides.OverrideNodeList;
-import com.octo.gwt.test.internal.patcher.tools.AutomaticSubclasser;
-import com.octo.gwt.test.internal.patcher.tools.PatchClass;
-import com.octo.gwt.test.internal.patcher.tools.PatchMethod;
-import com.octo.gwt.test.internal.patcher.tools.PropertyContainer;
-import com.octo.gwt.test.internal.patcher.tools.SubClassedHelper;
 import com.octo.gwt.test.internal.utils.ElementUtils;
+import com.octo.gwt.test.patcher.AutomaticPropertyContainerPatcher;
+import com.octo.gwt.test.patcher.PatchClass;
+import com.octo.gwt.test.patcher.PatchMethod;
+import com.octo.gwt.test.patcher.PropertyContainer;
+import com.octo.gwt.test.patcher.PropertyContainerHelper;
 
 @PatchClass(Node.class)
-public class NodePatcher extends AutomaticSubclasser {
+public class NodePatcher extends AutomaticPropertyContainerPatcher {
 
 	public static final String NODE_LIST_FIELD = "ChildNodes";
 	public static final String PARENT_NODE_FIELD = "ParentNode";
@@ -30,7 +30,7 @@ public class NodePatcher extends AutomaticSubclasser {
 		super.initClass(c);
 		CtConstructor cons = findConstructor(c);
 
-		cons.insertAfter(SubClassedHelper.getCodeSetProperty("this", NodePatcher.NODE_LIST_FIELD, "new " + OverrideNodeList.class.getCanonicalName()
+		cons.insertAfter(PropertyContainerHelper.getCodeSetProperty("this", NodePatcher.NODE_LIST_FIELD, "new " + OverrideNodeList.class.getCanonicalName()
 				+ "()", true)
 				+ ";");
 	}
@@ -196,7 +196,7 @@ public class NodePatcher extends AutomaticSubclasser {
 
 	@PatchMethod
 	public static Node cloneNode(Node node, boolean deep) {
-		PropertyContainer propertyContainer = SubClassedHelper.getSubClassedObjectOrNull(node).getOverrideProperties();
+		PropertyContainer propertyContainer = PropertyContainerHelper.cast(node).getProperties();
 		node = ElementUtils.castToDomElement(node);
 
 		Node newNode;
@@ -216,7 +216,7 @@ public class NodePatcher extends AutomaticSubclasser {
 			throw new RuntimeException("Cannot create a Node of type [" + node.getClass().getCanonicalName() + "]");
 		}
 
-		PropertyContainer propertyContainer2 = SubClassedHelper.getSubClassedObjectOrNull(newNode).getOverrideProperties();
+		PropertyContainer propertyContainer2 = PropertyContainerHelper.cast(newNode).getProperties();
 
 		propertyContainer2.clear();
 
@@ -253,7 +253,7 @@ public class NodePatcher extends AutomaticSubclasser {
 		}
 
 		// Manage getParentNode() 
-		SubClassedHelper.setProperty(newChild, PARENT_NODE_FIELD, parent);
+		PropertyContainerHelper.setProperty(newChild, PARENT_NODE_FIELD, parent);
 
 		return newChild;
 	}
@@ -271,8 +271,8 @@ public class NodePatcher extends AutomaticSubclasser {
 				n.put(entry.getKey(), new Boolean((Boolean) entry.getValue()));
 			} else if (entry.getValue() instanceof Style) {
 				Style newStyle = NodeFactory.createStyle();
-				PropertyContainer o = SubClassedHelper.getSubClassedObjectOrNull(entry.getValue()).getOverrideProperties();
-				PropertyContainer nn = SubClassedHelper.getSubClassedObjectOrNull(newStyle).getOverrideProperties();
+				PropertyContainer o = PropertyContainerHelper.cast(entry.getValue()).getProperties();
+				PropertyContainer nn = PropertyContainerHelper.cast(newStyle).getProperties();
 				nn.clear();
 
 				fillNewPropertyContainer(nn, o);
@@ -289,6 +289,6 @@ public class NodePatcher extends AutomaticSubclasser {
 	}
 
 	private static OverrideNodeList<Node> getChildNodeList(Node node) {
-		return SubClassedHelper.getProperty(node, NODE_LIST_FIELD);
+		return PropertyContainerHelper.getProperty(node, NODE_LIST_FIELD);
 	}
 }

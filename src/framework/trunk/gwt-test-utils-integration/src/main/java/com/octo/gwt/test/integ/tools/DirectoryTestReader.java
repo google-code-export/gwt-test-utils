@@ -18,10 +18,10 @@ import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtMethod;
 
-import com.octo.gwt.test.GwtTestClassLoader;
 import com.octo.gwt.test.integ.CsvDirectory;
 import com.octo.gwt.test.integ.CsvMacros;
 import com.octo.gwt.test.integ.csvrunner.CsvReader;
+import com.octo.gwt.test.internal.GwtTestClassLoader;
 import com.octo.gwt.test.internal.PatchGwtClassPool;
 import com.octo.gwt.test.utils.GwtTestReflectionUtils;
 

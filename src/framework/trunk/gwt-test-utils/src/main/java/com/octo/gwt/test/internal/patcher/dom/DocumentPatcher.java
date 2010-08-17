@@ -4,13 +4,13 @@ import com.google.gwt.dom.client.BodyElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Text;
-import com.octo.gwt.test.internal.patcher.tools.AutomaticSubclasser;
-import com.octo.gwt.test.internal.patcher.tools.PatchClass;
-import com.octo.gwt.test.internal.patcher.tools.PatchMethod;
-import com.octo.gwt.test.internal.patcher.tools.SubClassedHelper;
+import com.octo.gwt.test.patcher.AutomaticPropertyContainerPatcher;
+import com.octo.gwt.test.patcher.PatchClass;
+import com.octo.gwt.test.patcher.PatchMethod;
+import com.octo.gwt.test.patcher.PropertyContainerHelper;
 
 @PatchClass(Document.class)
-public class DocumentPatcher extends AutomaticSubclasser {
+public class DocumentPatcher extends AutomaticPropertyContainerPatcher {
 
 	private static int ID = 0;
 
@@ -34,7 +34,7 @@ public class DocumentPatcher extends AutomaticSubclasser {
 	@PatchMethod
 	public static BodyElement getBody(Document document) {
 		Element e = document.getDocumentElement();
-		return SubClassedHelper.getProperty(e, NodeFactory.BODY_ELEMENT);
+		return PropertyContainerHelper.getProperty(e, NodeFactory.BODY_ELEMENT);
 	}
 
 	@PatchMethod

@@ -3,11 +3,11 @@ package com.octo.gwt.test.internal.patcher.dom;
 import javassist.CtClass;
 
 import com.google.gwt.dom.client.InputElement;
-import com.octo.gwt.test.internal.patcher.tools.AutomaticElementSubclasser;
-import com.octo.gwt.test.internal.patcher.tools.PatchClass;
-import com.octo.gwt.test.internal.patcher.tools.PatchMethod;
-import com.octo.gwt.test.internal.patcher.tools.PatchType;
-import com.octo.gwt.test.internal.patcher.tools.SubClassedHelper;
+import com.octo.gwt.test.patcher.AutomaticElementSubclasser;
+import com.octo.gwt.test.patcher.PatchClass;
+import com.octo.gwt.test.patcher.PatchMethod;
+import com.octo.gwt.test.patcher.PatchType;
+import com.octo.gwt.test.patcher.PropertyContainerHelper;
 
 @PatchClass(InputElement.class)
 public class InputElementPatcher extends AutomaticElementSubclasser {
@@ -24,7 +24,7 @@ public class InputElementPatcher extends AutomaticElementSubclasser {
 
 	@PatchMethod(value = PatchType.NEW_CODE_AS_STRING)
 	public static String useMap() {
-		return SubClassedHelper.getCodeGetProperty("this", "UserMap", CtClass.booleanType);
+		return PropertyContainerHelper.getCodeGetProperty("this", "UserMap", CtClass.booleanType);
 	}
 
 }

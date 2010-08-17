@@ -1,10 +1,8 @@
-package com.octo.gwt.test;
+package com.octo.gwt.test.internal;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.octo.gwt.test.internal.GwtTranslator;
-import com.octo.gwt.test.internal.PatchGwtClassPool;
 
 import javassist.CannotCompileException;
 import javassist.Loader;

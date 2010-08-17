@@ -4,12 +4,12 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.user.client.ui.UIObject;
 import com.octo.gwt.test.internal.patcher.dom.ElementPatcher;
-import com.octo.gwt.test.internal.patcher.tools.AutomaticPatcher;
-import com.octo.gwt.test.internal.patcher.tools.PatchClass;
-import com.octo.gwt.test.internal.patcher.tools.PatchMethod;
-import com.octo.gwt.test.internal.patcher.tools.PatchType;
-import com.octo.gwt.test.internal.patcher.tools.SubClassedHelper;
 import com.octo.gwt.test.internal.utils.ElementUtils;
+import com.octo.gwt.test.patcher.AutomaticPatcher;
+import com.octo.gwt.test.patcher.PatchClass;
+import com.octo.gwt.test.patcher.PatchMethod;
+import com.octo.gwt.test.patcher.PatchType;
+import com.octo.gwt.test.patcher.PropertyContainerHelper;
 import com.octo.gwt.test.utils.GwtTestReflectionUtils;
 
 @PatchClass(UIObject.class)
@@ -103,12 +103,12 @@ public class UIObjectPatcher extends AutomaticPatcher {
 
 	@PatchMethod
 	public static String getStyleName(Element elem) {
-		return SubClassedHelper.getProperty(elem, ElementPatcher.CLASSNAME_FIELD);
+		return PropertyContainerHelper.getProperty(elem, ElementPatcher.CLASSNAME_FIELD);
 	}
 
 	@PatchMethod
 	public static void setStyleName(Element elem, String styleName) {
-		SubClassedHelper.setProperty(elem, ElementPatcher.CLASSNAME_FIELD, styleName);
+		PropertyContainerHelper.setProperty(elem, ElementPatcher.CLASSNAME_FIELD, styleName);
 	}
 
 }
