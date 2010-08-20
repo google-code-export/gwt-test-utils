@@ -4,11 +4,14 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.google.gwt.dom.client.AnchorElement;
 import com.google.gwt.dom.client.ButtonElement;
+import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.InputElement;
 import com.google.gwt.dom.client.Node;
+import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Text;
 import com.octo.gwt.test.AbstractGwtTest;
 
@@ -177,9 +180,11 @@ public class DocumentTest extends AbstractGwtTest {
 		// Test
 		Element e = d.getDocumentElement();
 
+		// Assert
 		Assert.assertEquals("HTML", e.getTagName());
 		Assert.assertEquals("HTML", e.getNodeName());
 		Assert.assertEquals(Node.ELEMENT_NODE, e.getNodeType());
+		Assert.assertEquals(d.getChild(0), e);
 	}
 
 	@Test
@@ -201,5 +206,69 @@ public class DocumentTest extends AbstractGwtTest {
 	@Test
 	public void checkGetReferrer() {
 		Assert.assertEquals("", d.getReferrer());
+	}
+
+	@Test
+	public void checkGetElementByIdNotFound() {
+		// Setup
+		AnchorElement a1 = Document.get().createAnchorElement();
+		AnchorElement a2 = Document.get().createAnchorElement();
+		AnchorElement a3 = Document.get().createAnchorElement();
+		DivElement d1 = Document.get().createDivElement();
+		d.appendChild(a1);
+		d.appendChild(a1);
+		d.appendChild(a2);
+		a2.appendChild(a3);
+		d.appendChild(d1);
+
+		// Test
+		Element result = d.getElementById("myId");
+
+		// Assert
+		Assert.assertNull(result);
+	}
+
+	@Test
+	public void checkGetElementByIdFound() {
+		// Setup
+		AnchorElement a1 = Document.get().createAnchorElement();
+		AnchorElement a2 = Document.get().createAnchorElement();
+		AnchorElement a3 = Document.get().createAnchorElement();
+		a3.setId("myId");
+		DivElement d1 = Document.get().createDivElement();
+		d.appendChild(a1);
+		d.appendChild(a1);
+		d.appendChild(a2);
+		a2.appendChild(a3);
+		d.appendChild(d1);
+
+		// Test
+		Element result = d.getElementById("myId");
+
+		// Assert
+		Assert.assertEquals(a3, result);
+	}
+
+	@Test
+	public void checkGetElementByTagName() {
+		// Setup
+		AnchorElement a1 = Document.get().createAnchorElement();
+		AnchorElement a2 = Document.get().createAnchorElement();
+		AnchorElement a3 = Document.get().createAnchorElement();
+		DivElement d1 = Document.get().createDivElement();
+		d.appendChild(a1);
+		d.appendChild(a1);
+		d.appendChild(a2);
+		a2.appendChild(a3);
+		d.appendChild(d1);
+
+		// Test
+		NodeList<Element> nodes = d.getElementsByTagName("a");
+
+		// Assert
+		Assert.assertEquals(3, nodes.getLength());
+		Assert.assertEquals(a1, nodes.getItem(0));
+		Assert.assertEquals(a2, nodes.getItem(1));
+		Assert.assertEquals(a3, nodes.getItem(2));
 	}
 }

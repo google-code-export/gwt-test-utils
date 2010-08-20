@@ -30,8 +30,8 @@ public class NodePatcher extends AutomaticPropertyContainerPatcher {
 		super.initClass(c);
 		CtConstructor cons = findConstructor(c);
 
-		cons.insertAfter(PropertyContainerHelper.getCodeSetProperty("this", NodePatcher.NODE_LIST_FIELD, "new " + OverrideNodeList.class.getCanonicalName()
-				+ "()", true)
+		cons.insertAfter(PropertyContainerHelper.getCodeSetProperty("this", NodePatcher.NODE_LIST_FIELD,
+				"new " + OverrideNodeList.class.getCanonicalName() + "()", true)
 				+ ";");
 	}
 
@@ -245,7 +245,10 @@ public class NodePatcher extends AutomaticPropertyContainerPatcher {
 			oldParent.removeChild(newChild);
 		}
 
-		// Then, add
+		// Then, check parent doesn't contain newChild and remove it if necessary
+		list.getList().remove(newChild);
+
+		// Finally, add
 		if (index == -1 || index >= list.getLength()) {
 			list.getList().add(newChild);
 		} else {

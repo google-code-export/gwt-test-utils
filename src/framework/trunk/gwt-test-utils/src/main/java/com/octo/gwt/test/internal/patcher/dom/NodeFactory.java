@@ -62,69 +62,69 @@ public class NodeFactory {
 
 	public static final String BODY_ELEMENT = "Body";
 
-	private static Map<String, String> subclassedMap = new HashMap<String, String>();
-	private static Map<String, String> subclassedMapWithTag = new HashMap<String, String>();
+	private static Map<String, String> elementMap = new HashMap<String, String>();
+	private static Map<String, String> elementWithSpecialTagMap = new HashMap<String, String>();
 
 	static {
-		subclassedMap.put("a", AnchorElement.class.getName());
-		subclassedMap.put("area", AreaElement.class.getName());
-		subclassedMap.put("base", BaseElement.class.getName());
-		subclassedMap.put("body", BodyElement.class.getName());
-		subclassedMap.put("br", BRElement.class.getName());
-		subclassedMap.put("button", ButtonElement.class.getName());
-		subclassedMap.put("div", DivElement.class.getName());
-		subclassedMap.put("dl", DListElement.class.getName());
-		subclassedMap.put("fieldset", FieldSetElement.class.getName());
-		subclassedMap.put("form", FormElement.class.getName());
-		subclassedMap.put("frame", FrameElement.class.getName());
-		subclassedMap.put("frameset", FrameSetElement.class.getName());
-		subclassedMap.put("head", HeadElement.class.getName());
-		subclassedMap.put("hr", HRElement.class.getName());
-		subclassedMapWithTag.put("h1", HeadingElement.class.getName());
-		subclassedMapWithTag.put("h2", HeadingElement.class.getName());
-		subclassedMapWithTag.put("h3", HeadingElement.class.getName());
-		subclassedMapWithTag.put("h4", HeadingElement.class.getName());
-		subclassedMapWithTag.put("h5", HeadingElement.class.getName());
-		subclassedMapWithTag.put("h6", HeadingElement.class.getName());
-		subclassedMap.put("hr", HRElement.class.getName());
-		subclassedMap.put("iframe", IFrameElement.class.getName());
-		subclassedMap.put("img", ImageElement.class.getName());
-		subclassedMapWithTag.put("ins", ModElement.class.getName());
-		subclassedMapWithTag.put("del", ModElement.class.getName());
-		subclassedMap.put("input", InputElement.class.getName());
-		subclassedMap.put("label", LabelElement.class.getName());
-		subclassedMap.put("legend", LegendElement.class.getName());
-		subclassedMap.put("li", LIElement.class.getName());
-		subclassedMap.put("link", LinkElement.class.getName());
-		subclassedMap.put("map", MapElement.class.getName());
-		subclassedMap.put("meta", MetaElement.class.getName());
-		subclassedMap.put("object", ObjectElement.class.getName());
-		subclassedMap.put("ol", OListElement.class.getName());
-		subclassedMap.put("optgroup", OptGroupElement.class.getName());
-		subclassedMap.put("option", OptionElement.class.getName());
-		subclassedMap.put("options", OptionElement.class.getName());
-		subclassedMap.put("p", ParagraphElement.class.getName());
-		subclassedMap.put("param", ParamElement.class.getName());
-		subclassedMap.put("pre", PreElement.class.getName());
-		subclassedMapWithTag.put("q", QuoteElement.class.getName());
-		subclassedMapWithTag.put("blockquote", QuoteElement.class.getName());
-		subclassedMap.put("script", ScriptElement.class.getName());
-		subclassedMap.put("select", SelectElement.class.getName());
-		subclassedMap.put("span", SpanElement.class.getName());
-		subclassedMap.put("style", StyleElement.class.getName());
-		subclassedMap.put("caption", TableCaptionElement.class.getName());
-		subclassedMapWithTag.put("td", TableCellElement.class.getName());
-		subclassedMapWithTag.put("th", TableCellElement.class.getName());
-		subclassedMapWithTag.put("col", TableColElement.class.getName());
-		subclassedMapWithTag.put("colgroup", TableColElement.class.getName());
-		subclassedMap.put("table", TableElement.class.getName());
-		subclassedMap.put("tr", TableRowElement.class.getName());
-		subclassedMapWithTag.put("tbody", TableSectionElement.class.getName());
-		subclassedMapWithTag.put("tfoot", TableSectionElement.class.getName());
-		subclassedMapWithTag.put("thead", TableSectionElement.class.getName());
-		subclassedMap.put("textarea", TextAreaElement.class.getName());
-		subclassedMap.put("title", TitleElement.class.getName());
-		subclassedMap.put("ul", UListElement.class.getName());
+		elementMap.put("a", AnchorElement.class.getName());
+		elementMap.put("area", AreaElement.class.getName());
+		elementMap.put("base", BaseElement.class.getName());
+		elementMap.put("body", BodyElement.class.getName());
+		elementMap.put("br", BRElement.class.getName());
+		elementMap.put("button", ButtonElement.class.getName());
+		elementMap.put("div", DivElement.class.getName());
+		elementMap.put("dl", DListElement.class.getName());
+		elementMap.put("fieldset", FieldSetElement.class.getName());
+		elementMap.put("form", FormElement.class.getName());
+		elementMap.put("frame", FrameElement.class.getName());
+		elementMap.put("frameset", FrameSetElement.class.getName());
+		elementMap.put("head", HeadElement.class.getName());
+		elementMap.put("hr", HRElement.class.getName());
+		elementWithSpecialTagMap.put("h1", HeadingElement.class.getName());
+		elementWithSpecialTagMap.put("h2", HeadingElement.class.getName());
+		elementWithSpecialTagMap.put("h3", HeadingElement.class.getName());
+		elementWithSpecialTagMap.put("h4", HeadingElement.class.getName());
+		elementWithSpecialTagMap.put("h5", HeadingElement.class.getName());
+		elementWithSpecialTagMap.put("h6", HeadingElement.class.getName());
+		elementMap.put("hr", HRElement.class.getName());
+		elementMap.put("iframe", IFrameElement.class.getName());
+		elementMap.put("img", ImageElement.class.getName());
+		elementWithSpecialTagMap.put("ins", ModElement.class.getName());
+		elementWithSpecialTagMap.put("del", ModElement.class.getName());
+		elementMap.put("input", InputElement.class.getName());
+		elementMap.put("label", LabelElement.class.getName());
+		elementMap.put("legend", LegendElement.class.getName());
+		elementMap.put("li", LIElement.class.getName());
+		elementMap.put("link", LinkElement.class.getName());
+		elementMap.put("map", MapElement.class.getName());
+		elementMap.put("meta", MetaElement.class.getName());
+		elementMap.put("object", ObjectElement.class.getName());
+		elementMap.put("ol", OListElement.class.getName());
+		elementMap.put("optgroup", OptGroupElement.class.getName());
+		elementMap.put("option", OptionElement.class.getName());
+		elementMap.put("options", OptionElement.class.getName());
+		elementMap.put("p", ParagraphElement.class.getName());
+		elementMap.put("param", ParamElement.class.getName());
+		elementMap.put("pre", PreElement.class.getName());
+		elementWithSpecialTagMap.put("q", QuoteElement.class.getName());
+		elementWithSpecialTagMap.put("blockquote", QuoteElement.class.getName());
+		elementMap.put("script", ScriptElement.class.getName());
+		elementMap.put("select", SelectElement.class.getName());
+		elementMap.put("span", SpanElement.class.getName());
+		elementMap.put("style", StyleElement.class.getName());
+		elementMap.put("caption", TableCaptionElement.class.getName());
+		elementWithSpecialTagMap.put("td", TableCellElement.class.getName());
+		elementWithSpecialTagMap.put("th", TableCellElement.class.getName());
+		elementWithSpecialTagMap.put("col", TableColElement.class.getName());
+		elementWithSpecialTagMap.put("colgroup", TableColElement.class.getName());
+		elementMap.put("table", TableElement.class.getName());
+		elementMap.put("tr", TableRowElement.class.getName());
+		elementWithSpecialTagMap.put("tbody", TableSectionElement.class.getName());
+		elementWithSpecialTagMap.put("tfoot", TableSectionElement.class.getName());
+		elementWithSpecialTagMap.put("thead", TableSectionElement.class.getName());
+		elementMap.put("textarea", TextAreaElement.class.getName());
+		elementMap.put("title", TitleElement.class.getName());
+		elementMap.put("ul", UListElement.class.getName());
 	}
 
 	public static Document DOCUMENT;
@@ -147,7 +147,9 @@ public class NodeFactory {
 		if (DOCUMENT == null) {
 			try {
 				DOCUMENT = (Document) PropertyContainerHelper.getPropertyContainerAware(Document.class.getName()).newInstance();
-				PropertyContainerHelper.setProperty(DOCUMENT, "DocumentElement", createHTMLElement());
+				Element e = createHTMLElement();
+				DOCUMENT.appendChild(e);
+				PropertyContainerHelper.setProperty(DOCUMENT, "DocumentElement", e);
 			} catch (Exception e) {
 				throw new RuntimeException("Unable to create Document", e);
 			}
@@ -200,8 +202,8 @@ public class NodeFactory {
 		try {
 			Element elem = null;
 
-			String subClassName = subclassedMap.get(tag);
-			String subClassNameWithTag = subclassedMapWithTag.get(tag);
+			String subClassName = elementMap.get(tag);
+			String subClassNameWithTag = elementWithSpecialTagMap.get(tag);
 
 			if (subClassName != null) {
 				elem = (Element) PropertyContainerHelper.getPropertyContainerAware(subClassName).newInstance();
