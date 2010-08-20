@@ -12,7 +12,7 @@ import com.google.gwt.dom.client.Node;
 import com.octo.gwt.test.AbstractGwtTest;
 import com.octo.gwt.test.internal.overrides.OverrideNodeList;
 import com.octo.gwt.test.internal.patcher.dom.NodeFactory;
-import com.octo.gwt.test.utils.PatchGwtUtils;
+import com.octo.gwt.test.internal.utils.PatchGwtUtils;
 
 @SuppressWarnings("deprecation")
 public class NodeTest extends AbstractGwtTest {

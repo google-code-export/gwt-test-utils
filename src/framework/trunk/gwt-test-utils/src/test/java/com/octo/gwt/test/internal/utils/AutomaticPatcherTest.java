@@ -1,4 +1,4 @@
-package com.octo.gwt.test.internal.patcher.tools;
+package com.octo.gwt.test.internal.utils;
 
 import javassist.ClassPool;
 import javassist.CtClass;
@@ -8,9 +8,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.octo.gwt.test.internal.PatchGwtClassPool;
-import com.octo.gwt.test.internal.patcher.tools.MyClassToPatch.MyInnerClass;
+import com.octo.gwt.test.internal.utils.PatchGwtUtils;
+import com.octo.gwt.test.internal.utils.MyClassToPatch.MyInnerClass;
 import com.octo.gwt.test.patcher.AutomaticPatcher;
-import com.octo.gwt.test.utils.PatchGwtUtils;
 
 public class AutomaticPatcherTest {
 

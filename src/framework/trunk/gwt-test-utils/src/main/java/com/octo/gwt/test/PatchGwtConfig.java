@@ -6,8 +6,8 @@ import com.octo.gwt.test.internal.GwtCreateHandlerManager;
 import com.octo.gwt.test.internal.mock.MockCreateHandler;
 import com.octo.gwt.test.internal.patcher.GwtPatcher;
 import com.octo.gwt.test.internal.patcher.ImplPatcher;
-import com.octo.gwt.test.utils.PatchGwtUtils;
-import com.octo.gwt.test.utils.PatchGwtUtils.SequenceReplacement;
+import com.octo.gwt.test.internal.utils.PatchGwtUtils;
+import com.octo.gwt.test.internal.utils.PatchGwtUtils.SequenceReplacement;
 
 public class PatchGwtConfig {
 

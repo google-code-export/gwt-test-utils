@@ -8,8 +8,8 @@ import java.util.Properties;
 import com.google.gwt.i18n.client.LocalizableResource;
 import com.google.gwt.i18n.client.LocalizableResource.DefaultLocale;
 import com.octo.gwt.test.PatchGwtConfig;
+import com.octo.gwt.test.internal.utils.PatchGwtUtils;
 import com.octo.gwt.test.utils.GwtTestReflectionUtils;
-import com.octo.gwt.test.utils.PatchGwtUtils;
 
 public abstract class LocalizableResourcesInvocationHandler implements InvocationHandler {
 

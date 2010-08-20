@@ -8,7 +8,7 @@ import javassist.CtMethod;
 
 import com.google.gwt.dom.client.Text;
 import com.octo.gwt.test.internal.PatchGwtClassPool;
-import com.octo.gwt.test.utils.PatchGwtUtils;
+import com.octo.gwt.test.internal.utils.PatchGwtUtils;
 
 @PatchClass(Text.class)
 public class AutomaticPropertyContainerPatcher extends AutomaticPatcher {

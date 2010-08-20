@@ -1,6 +1,6 @@
-package com.octo.gwt.test.internal.patcher.tools;
+package com.octo.gwt.test.internal.utils;
 
-import com.octo.gwt.test.internal.patcher.tools.MyClassToPatch.MyInnerClass;
+import com.octo.gwt.test.internal.utils.MyClassToPatch.MyInnerClass;
 import com.octo.gwt.test.patcher.AutomaticPatcher;
 import com.octo.gwt.test.patcher.PatchClass;
 import com.octo.gwt.test.patcher.PatchMethod;

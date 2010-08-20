@@ -28,6 +28,7 @@ public class GwtCreateHandlerManager {
 	private GwtCreateHandler clientBundleCreateHander;
 	private GwtCreateHandler imageBundleCreateHandler;
 	private GwtCreateHandler defaultGwtCreateHandler;
+	private GwtCreateHandler abstractClassCreateHandler;
 
 	private GwtCreateHandlerManager() {
 		addedHandlers = new ArrayList<GwtCreateHandler>();
@@ -35,6 +36,7 @@ public class GwtCreateHandlerManager {
 		clientBundleCreateHander = new ClientBundleCreateHandler();
 		imageBundleCreateHandler = new ImageBundleCreateHandler();
 		defaultGwtCreateHandler = new DefaultGwtCreateHandler();
+		abstractClassCreateHandler = new AbstractClassCreateHandler();
 	}
 
 	public MockCreateHandler getMockCreateHandler() {
@@ -61,6 +63,7 @@ public class GwtCreateHandlerManager {
 		list.add(clientBundleCreateHander);
 		list.add(imageBundleCreateHandler);
 		list.add(defaultGwtCreateHandler);
+		list.add(abstractClassCreateHandler);
 
 		return Collections.unmodifiableList(list);
 	}

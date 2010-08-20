@@ -15,8 +15,8 @@ import com.google.gwt.i18n.client.Constants.DefaultStringArrayValue;
 import com.google.gwt.i18n.client.Constants.DefaultStringMapValue;
 import com.google.gwt.i18n.client.Constants.DefaultStringValue;
 import com.google.gwt.i18n.client.LocalizableResource;
-import com.octo.gwt.test.utils.PatchGwtUtils;
-import com.octo.gwt.test.utils.PatchGwtUtils.SequenceReplacement;
+import com.octo.gwt.test.internal.utils.PatchGwtUtils;
+import com.octo.gwt.test.internal.utils.PatchGwtUtils.SequenceReplacement;
 
 public class ConstantsInvocationHandler extends LocalizableResourcesInvocationHandler {
 

@@ -1,4 +1,4 @@
-package com.octo.gwt.test.utils;
+package com.octo.gwt.test.internal.utils;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -17,7 +17,6 @@ import javassist.Modifier;
 import javassist.NotFoundException;
 
 import com.octo.gwt.test.IPatcher;
-import com.octo.gwt.test.internal.utils.LoadPropertiesHelper;
 import com.octo.gwt.test.patcher.AutomaticPatcher;
 
 public class PatchGwtUtils {
@@ -104,11 +103,11 @@ public class PatchGwtUtils {
 				}
 			} else if (wasAbstract) {
 				if (patcher != null) {
-					m.setBody("{ throw new " + UnsupportedOperationException.class.getName() + "(\"abstract method '" + c.getSimpleName() + "."
+					m.setBody("{ throw new " + UnsupportedOperationException.class.getName() + "(\"Abstract method '" + c.getSimpleName() + "."
 							+ m.getName() + "()' is not patched by " + patcher.getClass().getName() + "\"); }");
 				} else {
-					m.setBody("{ throw new " + UnsupportedOperationException.class.getName() + "(\"abstract method '" + c.getSimpleName() + "."
-							+ m.getName() + "()' is not patched by any declared " + IPatcher.class.getSimpleName() + "\"); }");
+					m.setBody("{ throw new " + UnsupportedOperationException.class.getName() + "(\"Abstract method '" + c.getSimpleName() + "."
+							+ m.getName() + "()' is not patched by any declared " + IPatcher.class.getSimpleName() + " instance\"); }");
 				}
 			}
 		}

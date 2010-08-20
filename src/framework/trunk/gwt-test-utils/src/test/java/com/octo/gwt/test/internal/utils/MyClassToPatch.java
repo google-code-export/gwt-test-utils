@@ -1,4 +1,4 @@
-package com.octo.gwt.test.internal.patcher.tools;
+package com.octo.gwt.test.internal.utils;
 
 public class MyClassToPatch {
 

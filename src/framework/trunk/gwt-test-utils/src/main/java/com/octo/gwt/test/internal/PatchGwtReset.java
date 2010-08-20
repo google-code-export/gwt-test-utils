@@ -16,8 +16,8 @@ import com.octo.gwt.test.internal.patcher.HistoryImplPatcher;
 import com.octo.gwt.test.internal.patcher.ImplPatcher;
 import com.octo.gwt.test.internal.patcher.TimerPatcher;
 import com.octo.gwt.test.internal.patcher.dom.NodeFactory;
+import com.octo.gwt.test.internal.utils.PatchGwtUtils;
 import com.octo.gwt.test.utils.GwtTestReflectionUtils;
-import com.octo.gwt.test.utils.PatchGwtUtils;
 
 public class PatchGwtReset {
 

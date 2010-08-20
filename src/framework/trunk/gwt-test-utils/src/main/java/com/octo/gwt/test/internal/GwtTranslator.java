@@ -12,7 +12,7 @@ import javassist.Translator;
 import org.apache.log4j.Logger;
 
 import com.octo.gwt.test.IPatcher;
-import com.octo.gwt.test.utils.PatchGwtUtils;
+import com.octo.gwt.test.internal.utils.PatchGwtUtils;
 
 public class GwtTranslator implements Translator {
 
