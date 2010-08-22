@@ -13,7 +13,6 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.TreeItem;
-import com.octo.gwt.test.internal.utils.ElementUtils;
 import com.octo.gwt.test.patcher.AutomaticPatcher;
 import com.octo.gwt.test.patcher.PatchClass;
 import com.octo.gwt.test.patcher.PatchMethod;
@@ -23,14 +22,13 @@ public class TreePatcher extends AutomaticPatcher {
 
 	@PatchMethod
 	public static boolean shouldTreeDelegateFocusToElement(Element elem) {
-		com.google.gwt.dom.client.Element domElem = ElementUtils.castToDomElement(elem);
 		List<Class<?>> focusElementClasses = getFocusElementClasses();
 		int i = 0;
 		boolean shouldDelegate = false;
 
 		while (i < focusElementClasses.size() && !shouldDelegate) {
 			Class<?> focusElementClass = focusElementClasses.get(i++);
-			shouldDelegate = focusElementClass.isInstance(domElem);
+			shouldDelegate = focusElementClass.isInstance(elem);
 		}
 
 		return shouldDelegate;

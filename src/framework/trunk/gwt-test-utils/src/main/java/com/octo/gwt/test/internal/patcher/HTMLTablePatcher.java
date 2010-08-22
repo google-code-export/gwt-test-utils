@@ -6,7 +6,6 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.HTMLTable;
 import com.octo.gwt.test.internal.overrides.OverrideNodeList;
-import com.octo.gwt.test.internal.utils.ElementWrapper;
 import com.octo.gwt.test.patcher.AutomaticPatcher;
 import com.octo.gwt.test.patcher.PatchClass;
 import com.octo.gwt.test.patcher.PatchMethod;
@@ -19,10 +18,6 @@ public class HTMLTablePatcher extends AutomaticPatcher {
 	public static Element getEventTargetCell(HTMLTable table, Event event) {
 		Object bodyElem = GwtTestReflectionUtils.getPrivateFieldValue(table, "bodyElem");
 
-		if (bodyElem instanceof ElementWrapper) {
-			bodyElem = ((ElementWrapper) bodyElem).getWrappedElement();
-		}
-
 		Element td = DOM.eventGetTarget(event);
 		for (; td != null; td = DOM.getParent(td)) {
 			// If it's a TD, it might be the one we're looking for.
@@ -32,9 +27,6 @@ public class HTMLTablePatcher extends AutomaticPatcher {
 				Element tr = DOM.getParent(td);
 				Object body = DOM.getParent(tr);
 
-				if (body instanceof ElementWrapper) {
-					body = ((ElementWrapper) body).getWrappedElement();
-				}
 				if (body == bodyElem) {
 					return td;
 				}

@@ -1,10 +1,8 @@
 package com.octo.gwt.test.internal.patcher.dom;
 
-import com.google.gwt.dom.client.Document;
-import com.google.gwt.dom.client.ImageElement;
+import com.google.gwt.dom.client.Node;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
-import com.octo.gwt.test.internal.utils.ElementUtils;
 import com.octo.gwt.test.patcher.AutomaticPatcher;
 import com.octo.gwt.test.patcher.PatchClass;
 import com.octo.gwt.test.patcher.PatchMethod;
@@ -129,76 +127,12 @@ public class DOMPatcher extends AutomaticPatcher {
 	}
 
 	@PatchMethod
-	public static Element createElement(String tag) {
-		com.google.gwt.dom.client.Element element = Document.get().createElement(tag);
-		return ElementUtils.castToUserElement(element);
-	}
-
-	@PatchMethod
-	public static Element createInputCheck() {
-		com.google.gwt.dom.client.Element element = Document.get().createCheckInputElement();
-		return ElementUtils.castToUserElement(element);
-	}
-
-	@PatchMethod
-	public static Element createInputPassword() {
-		com.google.gwt.dom.client.Element element = Document.get().createPasswordInputElement();
-		return ElementUtils.castToUserElement(element);
-	}
-
-	@PatchMethod
-	public static Element createInputRadio(String name) {
-		com.google.gwt.dom.client.Element element = Document.get().createRadioInputElement(name);
-		return ElementUtils.castToUserElement(element);
-	}
-
-	@PatchMethod
-	public static Element createInputText() {
-		com.google.gwt.dom.client.Element element = Document.get().createTextInputElement();
-		return ElementUtils.castToUserElement(element);
-	}
-
-	@PatchMethod
-	public static Element clone(Element elem, boolean deep) {
-		return ElementUtils.castToUserElement((com.google.gwt.dom.client.Element) elem.cloneNode(deep));
-	}
-
-	@PatchMethod
-	public static Element getParent(Element elem) {
-		return ElementUtils.castToUserElement(elem.getParentElement());
-	}
-
-	@PatchMethod
 	public static Element getFirstChild(Element elem) {
-		return ElementUtils.castToUserElement(elem.getFirstChildElement());
-	}
-
-	@PatchMethod
-	public static Element getNextSibling(Element elem) {
-		return ElementUtils.castToUserElement((com.google.gwt.dom.client.Element) elem.getNextSibling());
-	}
-
-	@PatchMethod
-	public static Element createSelect() {
-		com.google.gwt.dom.client.Element element = Document.get().createSelectElement();
-		return ElementUtils.castToUserElement(element);
-	}
-
-	@PatchMethod
-	public static Element createSelect(boolean multiple) {
-		com.google.gwt.dom.client.Element element = Document.get().createSelectElement(multiple);
-		return ElementUtils.castToUserElement(element);
-	}
-
-	@PatchMethod
-	public static String getImgSrc(Element img) {
-		ImageElement imageElement = ElementUtils.castToDomElement(img);
-		return imageElement.getSrc();
-	}
-
-	@PatchMethod
-	public static void setImgSrc(Element elem, String url) {
-		ImageElement imageElement = ElementUtils.castToDomElement(elem);
-		imageElement.setSrc(url);
+		Node firstChild = elem.getFirstChildElement();
+		if (firstChild != null) {
+			return firstChild.cast();
+		} else {
+			return null;
+		}
 	}
 }

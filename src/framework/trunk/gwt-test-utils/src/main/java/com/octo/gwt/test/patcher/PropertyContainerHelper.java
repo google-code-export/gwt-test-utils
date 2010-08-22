@@ -3,7 +3,6 @@ package com.octo.gwt.test.patcher;
 import javassist.CtClass;
 
 import com.octo.gwt.test.internal.GwtTestClassLoader;
-import com.octo.gwt.test.internal.utils.ElementWrapper;
 
 public class PropertyContainerHelper {
 
@@ -61,9 +60,6 @@ public class PropertyContainerHelper {
 	}
 
 	public static PropertyContainerAware cast(Object o) {
-		if (o instanceof ElementWrapper) {
-			o = ((ElementWrapper) o).getWrappedElement();
-		}
 		if (o == null) {
 			return null;
 		}

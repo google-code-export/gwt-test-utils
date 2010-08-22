@@ -6,14 +6,13 @@ import javassist.CtConstructor;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.SelectElement;
 import com.google.gwt.user.client.ui.UIObject;
-import com.octo.gwt.test.internal.utils.ElementUtils;
-import com.octo.gwt.test.patcher.AutomaticElementSubclasser;
+import com.octo.gwt.test.patcher.AutomaticPropertyContainerPatcher;
 import com.octo.gwt.test.patcher.PatchClass;
 import com.octo.gwt.test.patcher.PatchMethod;
 import com.octo.gwt.test.patcher.PropertyContainerHelper;
 
 @PatchClass(SelectElement.class)
-public class SelectElementPatcher extends AutomaticElementSubclasser {
+public class SelectElementPatcher extends AutomaticPropertyContainerPatcher {
 
 	private static final String SELECTED_INDEX_FIELD = "SelectedIndex";
 
@@ -30,7 +29,7 @@ public class SelectElementPatcher extends AutomaticElementSubclasser {
 		int size = 0;
 
 		for (int i = 0; i < select.getChildNodes().getLength(); i++) {
-			Element e = ElementUtils.castToDomElement(select.getChildNodes().getItem(i));
+			Element e = select.getChildNodes().getItem(i).cast();
 			if (UIObject.isVisible(e)) {
 				size++;
 			}

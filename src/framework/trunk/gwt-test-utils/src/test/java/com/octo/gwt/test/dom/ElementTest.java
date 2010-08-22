@@ -16,7 +16,6 @@ import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
 import com.octo.gwt.test.AbstractGwtTest;
 import com.octo.gwt.test.internal.patcher.dom.NodeFactory;
-import com.octo.gwt.test.internal.utils.ElementUtils;
 
 public class ElementTest extends AbstractGwtTest {
 
@@ -293,32 +292,15 @@ public class ElementTest extends AbstractGwtTest {
 	}
 
 	@Test
-	public void checkEquals() {
-		// Setup
-		Element userElem1 = ElementUtils.castToUserElement(e);
-		Element userElem2 = ElementUtils.castToUserElement(e);
-
-		// Test & Assert
-		Assert.assertEquals(e, userElem1);
-		Assert.assertEquals(e, userElem2);
-		Assert.assertEquals(userElem1, userElem2);
-	}
-
-	@Test
 	public void checkHashCode() {
 		// Setup
-		Element userElem1 = ElementUtils.castToUserElement(e);
-		Element userElem2 = ElementUtils.castToUserElement(e);
-		userElem2.setAttribute("attribut", "myValue");
 		Map<Element, String> map = new HashMap<Element, String>();
 
 		// Test
-		map.put(userElem1, "a string value");
-		map.put(userElem2, "this value should have overrided the first one");
+		map.put(e, "a string value");
+		map.put(e, "this value should have overrided the first one");
 
 		// Assert
-		Assert.assertEquals("this value should have overrided the first one", map.get(userElem1));
-		Assert.assertEquals("this value should have overrided the first one", map.get(userElem2));
 		Assert.assertEquals("this value should have overrided the first one", map.get(e));
 	}
 

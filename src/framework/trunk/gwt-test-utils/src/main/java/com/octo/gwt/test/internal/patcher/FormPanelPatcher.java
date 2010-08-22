@@ -2,13 +2,11 @@ package com.octo.gwt.test.internal.patcher;
 
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.FormElement;
 import com.google.gwt.dom.client.IFrameElement;
 import com.google.gwt.user.client.ui.FormPanel;
-import com.google.gwt.user.client.ui.OverrideSubmitCompleteEvent;
 import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
+import com.google.gwt.user.client.ui.OverrideSubmitCompleteEvent;
 import com.google.gwt.user.client.ui.impl.FormPanelImpl;
-import com.octo.gwt.test.internal.utils.ElementUtils;
 import com.octo.gwt.test.patcher.AutomaticPatcher;
 import com.octo.gwt.test.patcher.PatchClass;
 import com.octo.gwt.test.patcher.PatchMethod;
@@ -16,11 +14,6 @@ import com.octo.gwt.test.utils.GwtTestReflectionUtils;
 
 @PatchClass(FormPanel.class)
 public class FormPanelPatcher extends AutomaticPatcher {
-
-	@PatchMethod
-	public static FormElement getFormElement(FormPanel formPanel) {
-		return ElementUtils.castToDomElement(formPanel.getElement());
-	}
 
 	//FIXME : implements correctly the element.setInnerHTML method..
 	@PatchMethod

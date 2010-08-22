@@ -11,14 +11,14 @@ import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Style;
 import com.octo.gwt.test.internal.overrides.OverrideNodeList;
-import com.octo.gwt.test.patcher.AutomaticElementSubclasser;
+import com.octo.gwt.test.patcher.AutomaticPropertyContainerPatcher;
 import com.octo.gwt.test.patcher.PatchClass;
 import com.octo.gwt.test.patcher.PatchMethod;
 import com.octo.gwt.test.patcher.PropertyContainer;
 import com.octo.gwt.test.patcher.PropertyContainerHelper;
 
 @PatchClass(Element.class)
-public class ElementPatcher extends AutomaticElementSubclasser {
+public class ElementPatcher extends AutomaticPropertyContainerPatcher {
 
 	public static final String PROPERTY_MAP_FIELD = "propertyMap";
 	public static final String ATTRIBUTE_MAP_FIELD = "attributeMap";
@@ -31,14 +31,17 @@ public class ElementPatcher extends AutomaticElementSubclasser {
 		super.initClass(c);
 		CtConstructor cons = findConstructor(c);
 
-		cons.insertAfter(PropertyContainerHelper.getCodeSetProperty("this", STYLE_FIELD, NodeFactory.class.getCanonicalName() + ".createStyle()", true)
+		cons.insertAfter(PropertyContainerHelper.getCodeSetProperty("this", STYLE_FIELD, NodeFactory.class.getCanonicalName() + ".createStyle()",
+				true) + ";");
+		cons.insertAfter(PropertyContainerHelper.getCodeSetProperty("this", PROPERTY_MAP_FIELD, "new " + PropertyContainer.class.getCanonicalName()
+				+ "()", true)
 				+ ";");
-		cons.insertAfter(PropertyContainerHelper.getCodeSetProperty("this", PROPERTY_MAP_FIELD, "new " + PropertyContainer.class.getCanonicalName() + "()",
-				true) + ";");
-		cons.insertAfter(PropertyContainerHelper.getCodeSetProperty("this", ATTRIBUTE_MAP_FIELD, "new " + PropertyContainer.class.getCanonicalName() + "()",
-				true) + ";");
-		cons.insertAfter(PropertyContainerHelper.getCodeSetProperty("this", ATTRIBUTE_MAP_FIELD, "new " + PropertyContainer.class.getCanonicalName() + "()",
-				true) + ";");
+		cons.insertAfter(PropertyContainerHelper.getCodeSetProperty("this", ATTRIBUTE_MAP_FIELD, "new " + PropertyContainer.class.getCanonicalName()
+				+ "()", true)
+				+ ";");
+		cons.insertAfter(PropertyContainerHelper.getCodeSetProperty("this", ATTRIBUTE_MAP_FIELD, "new " + PropertyContainer.class.getCanonicalName()
+				+ "()", true)
+				+ ";");
 		cons.insertAfter(PropertyContainerHelper.getCodeSetProperty("this", CLASSNAME_FIELD, "\"\"", true) + ";");
 		cons.insertAfter(PropertyContainerHelper.getCodeSetProperty("this", ACCESSKEY_FIELD, "\"\"", true) + ";");
 	}

@@ -8,7 +8,6 @@ import org.junit.Test;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.impl.FocusImpl;
-import com.octo.gwt.test.internal.utils.ElementUtils;
 
 public class FocusImplTest extends AbstractGwtTest {
 
@@ -17,7 +16,7 @@ public class FocusImplTest extends AbstractGwtTest {
 
 	@Before
 	public void setUpFocusImplTest() {
-		e = ElementUtils.castToUserElement(Document.get().createAnchorElement());
+		e = Document.get().createAnchorElement().cast();
 	}
 
 	@Test

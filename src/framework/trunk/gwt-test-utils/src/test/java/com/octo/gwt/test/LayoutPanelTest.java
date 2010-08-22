@@ -12,7 +12,6 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.octo.gwt.test.internal.utils.ElementUtils;
 
 public class LayoutPanelTest extends AbstractGwtTest {
 
@@ -69,13 +68,13 @@ public class LayoutPanelTest extends AbstractGwtTest {
 		// Setup
 		FlowPanel fp1 = new FlowPanel();
 		panel.add(fp1);
-		Element fp1Element = ElementUtils.castToDomElement(fp1.getElement());
+		Element fp1Element = fp1.getElement();
 
 		// Test
 		Element fp1Container = panel.getWidgetContainerElement(fp1);
 
 		// Assert
-		Assert.assertEquals(fp1Element, ElementUtils.castToDomElement(fp1Container.getFirstChildElement()));
+		Assert.assertEquals(fp1Element, fp1Container.getFirstChildElement());
 	}
 
 }

@@ -13,7 +13,6 @@ import com.google.gwt.dom.client.SelectElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.Event;
 import com.octo.gwt.test.internal.overrides.OverrideNodeList;
-import com.octo.gwt.test.internal.utils.ElementUtils;
 import com.octo.gwt.test.patcher.AutomaticPatcher;
 import com.octo.gwt.test.patcher.PatchClass;
 import com.octo.gwt.test.patcher.PatchMethod;
@@ -110,13 +109,12 @@ public class DOMImplPatcher extends AutomaticPatcher {
 
 	@PatchMethod
 	public static Element getFirstChildElement(Object domImpl, Element elem) {
-		elem = ElementUtils.castToDomElement(elem);
 		NodeList<Node> nodeList = elem.getChildNodes();
 
 		for (int i = 0; i < nodeList.getLength(); i++) {
 			Node node = nodeList.getItem(i);
 			if (node instanceof Element) {
-				return ElementUtils.castToDomElement(node);
+				return node.cast();
 			}
 		}
 
@@ -125,18 +123,16 @@ public class DOMImplPatcher extends AutomaticPatcher {
 
 	@PatchMethod
 	public static Element getParentElement(Object domImpl, Node elem) {
-		elem = ElementUtils.castToDomElement(elem);
 		Node parent = elem.getParentNode();
 
 		if (parent == null || !(parent instanceof Element))
 			return null;
 
-		return ElementUtils.castToDomElement(parent);
+		return parent.cast();
 	}
 
 	@PatchMethod
 	public static Element getNextSiblingElement(Object domImpl, Element elem) {
-		elem = ElementUtils.castToDomElement(elem);
 		Node parent = elem.getParentNode();
 		if (parent == null)
 			return null;
@@ -149,7 +145,7 @@ public class DOMImplPatcher extends AutomaticPatcher {
 				while (i < list.getLength() - 1) {
 					i++;
 					if (list.getItem(i) instanceof Element) {
-						return ElementUtils.castToDomElement(list.getItem(i));
+						return list.getItem(i).cast();
 					}
 				}
 			}
@@ -233,7 +229,7 @@ public class DOMImplPatcher extends AutomaticPatcher {
 		OverrideNodeList<OptionElement> list = new OverrideNodeList<OptionElement>();
 
 		for (int i = 0; i < select.getChildNodes().getLength(); i++) {
-			Element e = ElementUtils.castToDomElement(select.getChildNodes().getItem(i));
+			Element e = (Element) select.getChildNodes().getItem(i).cast();
 			if (e instanceof OptionElement) {
 				list.getList().add((OptionElement) e);
 			}
@@ -291,8 +287,6 @@ public class DOMImplPatcher extends AutomaticPatcher {
 
 	@PatchMethod
 	public static boolean isOrHasChild(Object domImpl, Node parent, Node child) {
-		parent = ElementUtils.castToDomElement(parent);
-		child = ElementUtils.castToDomElement(child);
 		if (parent.equals(child)) {
 			return true;
 		} else if (child.getParentElement() != null && child.getParentElement().equals(parent)) {

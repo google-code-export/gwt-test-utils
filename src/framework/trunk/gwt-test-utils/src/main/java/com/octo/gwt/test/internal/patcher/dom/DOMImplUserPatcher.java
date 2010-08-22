@@ -3,7 +3,6 @@ package com.octo.gwt.test.internal.patcher.dom;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.impl.DOMImpl;
-import com.octo.gwt.test.internal.utils.ElementUtils;
 import com.octo.gwt.test.patcher.AutomaticPatcher;
 import com.octo.gwt.test.patcher.PatchClass;
 import com.octo.gwt.test.patcher.PatchMethod;
@@ -36,12 +35,11 @@ public class DOMImplUserPatcher extends AutomaticPatcher {
 
 	@PatchMethod
 	public static Element getChild(DOMImpl domImpl, Element userElem, int index) {
-		com.google.gwt.dom.client.Element elem = ElementUtils.castToDomElement(userElem);
-		if (index >= elem.getChildNodes().getLength()) {
+		if (index >= userElem.getChildNodes().getLength()) {
 			return null;
 		}
 
-		return ElementUtils.castToUserElement((com.google.gwt.dom.client.Element) elem.getChildNodes().getItem(index));
+		return userElem.getChildNodes().getItem(index).cast();
 	}
 
 	@PatchMethod
@@ -50,11 +48,8 @@ public class DOMImplUserPatcher extends AutomaticPatcher {
 			return -1;
 		}
 
-		parent = ElementUtils.castToUserElement(parent);
-		com.google.gwt.dom.client.Element domElem = ElementUtils.castToDomElement(child);
-
 		for (int i = 0; i < parent.getChildNodes().getLength(); i++) {
-			if (domElem.equals(parent.getChildNodes().getItem(i))) {
+			if (child.equals(parent.getChildNodes().getItem(i))) {
 				return i;
 			}
 		}

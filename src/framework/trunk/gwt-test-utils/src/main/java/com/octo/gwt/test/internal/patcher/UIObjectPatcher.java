@@ -4,21 +4,14 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.user.client.ui.UIObject;
 import com.octo.gwt.test.internal.patcher.dom.ElementPatcher;
-import com.octo.gwt.test.internal.utils.ElementUtils;
 import com.octo.gwt.test.patcher.AutomaticPatcher;
 import com.octo.gwt.test.patcher.PatchClass;
 import com.octo.gwt.test.patcher.PatchMethod;
-import com.octo.gwt.test.patcher.PatchType;
 import com.octo.gwt.test.patcher.PropertyContainerHelper;
 import com.octo.gwt.test.utils.GwtTestReflectionUtils;
 
 @PatchClass(UIObject.class)
 public class UIObjectPatcher extends AutomaticPatcher {
-
-	@PatchMethod(value = PatchType.NEW_CODE_AS_STRING, args = { Element.class })
-	public static String setElement() {
-		return "setElement(" + ElementUtils.class.getCanonicalName() + ".castToUserElement($1))";
-	}
 
 	@PatchMethod
 	public static double extractLengthValue(UIObject uiObject, String s) {
@@ -37,7 +30,6 @@ public class UIObjectPatcher extends AutomaticPatcher {
 
 	@PatchMethod
 	public static boolean isVisible(Element elem) {
-		elem = ElementUtils.castToDomElement(elem);
 		String display = elem.getStyle().getProperty("display");
 
 		return !display.equals("none");
@@ -45,7 +37,6 @@ public class UIObjectPatcher extends AutomaticPatcher {
 
 	@PatchMethod
 	public static void setVisible(Element elem, boolean visible) {
-		elem = ElementUtils.castToDomElement(elem);
 		String display = visible ? "" : "none";
 		elem.getStyle().setProperty("display", display);
 	}
@@ -80,7 +71,6 @@ public class UIObjectPatcher extends AutomaticPatcher {
 
 	@PatchMethod
 	public static void replaceElement(UIObject uiObject, Element elem) {
-		elem = ElementUtils.castToUserElement(elem);
 		Element element = GwtTestReflectionUtils.getPrivateFieldValue(uiObject, "element");
 		if (element != null) {
 			// replace this.element in its parent with elem.
@@ -92,7 +82,6 @@ public class UIObjectPatcher extends AutomaticPatcher {
 
 	@PatchMethod
 	public static void replaceNode(UIObject uiObject, Element node, Element newNode) {
-		node = ElementUtils.castToDomElement(node);
 		Node parent = node.getParentNode();
 
 		if (parent != null) {

@@ -21,6 +21,9 @@ import java.util.jar.JarFile;
 import org.apache.log4j.Logger;
 
 import com.octo.gwt.test.IPatcher;
+import com.octo.gwt.test.internal.modifiers.ClassSubstituer;
+import com.octo.gwt.test.internal.modifiers.JavaClassModifier;
+import com.octo.gwt.test.internal.modifiers.MethodRemover;
 import com.octo.gwt.test.patcher.PatchClass;
 import com.octo.gwt.test.utils.GwtTestReflectionUtils;
 
@@ -31,6 +34,10 @@ public class ConfigurationLoader {
 	private static final String CONFIG_FILENAME = "META-INF/gwt-test-utils.properties";
 
 	private static ConfigurationLoader INSTANCE;
+
+	private List<JavaClassModifier> javaClassModifierList;
+
+	private MethodRemover methodRemover;
 
 	static final ConfigurationLoader createInstance(ClassLoader classLoader) {
 		if (INSTANCE != null) {
@@ -58,9 +65,12 @@ public class ConfigurationLoader {
 
 	private ConfigurationLoader(ClassLoader classLoader) {
 		this.classLoader = classLoader;
-		this.delegateList = new ArrayList<String>();
-		this.notDelegateList = new ArrayList<String>();
-		this.scanPackageSet = new HashSet<String>();
+		delegateList = new ArrayList<String>();
+		notDelegateList = new ArrayList<String>();
+		javaClassModifierList = new ArrayList<JavaClassModifier>();
+		methodRemover = new MethodRemover();
+		javaClassModifierList.add(methodRemover);
+		scanPackageSet = new HashSet<String>();
 
 		readFiles();
 	}
@@ -138,33 +148,65 @@ public class ConfigurationLoader {
 				InputStream inputStream = url.openStream();
 				p.load(inputStream);
 				inputStream.close();
-				process(p);
+				process(p, url);
 				logger.debug("File loaded and processed " + url.toString());
 			}
 		} catch (Exception e) {
+			if (e instanceof RuntimeException) {
+				throw (RuntimeException) e;
+			}
 			throw new RuntimeException("Error while reading '" + CONFIG_FILENAME + "' files", e);
 		}
 	}
 
-	private void process(Properties p) {
+	private void process(Properties p, URL url) {
 		for (Entry<Object, Object> entry : p.entrySet()) {
 			String key = (String) entry.getKey();
 			String value = (String) entry.getValue();
 			if ("scan-package".equals(value)) {
-				logger.debug("Scan package " + key);
 				if (!scanPackageSet.add(key)) {
-					throw new RuntimeException("scan-package mechanism is used to scan the same package twice : '" + key + "'");
+					throw new RuntimeException("'scan-package' mechanism is used to scan the same package twice : '" + key + "'");
 				}
 			} else if ("delegate".equals(value)) {
-				logger.debug("Delegate " + key);
 				delegateList.add(key);
 			} else if ("notDelegate".equals(value)) {
-				logger.debug("Not delegate " + key);
 				notDelegateList.add(key);
+			} else if ("remove-method".equals(value)) {
+				processRemoveMethod(key, url);
+			} else if ("substitute-class".equals(value)) {
+				processSubstituteClass(key, url);
 			} else {
-				throw new RuntimeException("Wrong gwt-test-utils.properties : unknown value " + value);
+				throw new RuntimeException("Error in '" + url.getPath() + "' : unknown value '" + value + "'");
 			}
 		}
+	}
+
+	private void processSubstituteClass(String key, URL url) {
+		String[] array = key.split("\\s*,\\s*");
+		if (array.length != 2) {
+			throw new RuntimeException("Invalid 'substitute-class' property format for value '" + key + "' in file '" + url.getPath() + "'");
+		}
+
+		String originalClass = array[0];
+		String substitutionClass = array[1];
+		javaClassModifierList.add(new ClassSubstituer(originalClass, substitutionClass));
+	}
+
+	private void processRemoveMethod(String key, URL url) {
+		String[] array = key.split("\\s*,\\s*");
+		if (array.length != 3) {
+			throw new RuntimeException("Invalid 'remove-method' property format for value '" + key + "' in file '" + url.getPath() + "'");
+		}
+
+		String methodClass = array[0];
+		String methodName = array[1];
+		String methodSignature = array[2];
+
+		methodRemover.removeMethod(methodClass, methodName, methodSignature);
+	}
+
+	public List<JavaClassModifier> getJavaClassModifierList() {
+		return Collections.unmodifiableList(javaClassModifierList);
 	}
 
 	public List<String> getDelegateList() {

@@ -6,7 +6,6 @@ import org.junit.Test;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.ImageElement;
 import com.google.gwt.user.client.ui.Image;
-import com.octo.gwt.test.internal.utils.ElementUtils;
 
 public class ImageTest extends AbstractGwtTest {
 
@@ -98,7 +97,7 @@ public class ImageTest extends AbstractGwtTest {
 		Element e = i.getElement();
 
 		Assert.assertNotNull(e);
-		Assert.assertTrue(ImageElement.class.isInstance(ElementUtils.castToDomElement(e)));
+		Assert.assertTrue(ImageElement.class.isInstance(e));
 	}
 
 }

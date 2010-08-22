@@ -16,7 +16,7 @@ import com.octo.gwt.test.internal.PatchGwtClassPool;
 import com.octo.gwt.test.utils.TagAware;
 
 @PatchClass({ HeadingElement.class, ModElement.class, QuoteElement.class, TableCellElement.class, TableColElement.class, TableSectionElement.class })
-public class AutomaticTagSubclasser extends AutomaticElementSubclasser {
+public class AutomaticTagSubclasser extends AutomaticPropertyContainerPatcher {
 
 	private static final String OVERRIDE_TAG = "overrideTag";
 

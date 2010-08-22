@@ -12,7 +12,6 @@ import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Text;
 import com.octo.gwt.test.internal.overrides.OverrideNodeList;
-import com.octo.gwt.test.internal.utils.ElementUtils;
 import com.octo.gwt.test.patcher.AutomaticPropertyContainerPatcher;
 import com.octo.gwt.test.patcher.PatchClass;
 import com.octo.gwt.test.patcher.PatchMethod;
@@ -51,7 +50,6 @@ public class NodePatcher extends AutomaticPropertyContainerPatcher {
 
 	@PatchMethod
 	public static short getNodeType(Node node) {
-		node = ElementUtils.castToDomElement(node);
 		if (node instanceof Document) {
 			return Node.DOCUMENT_NODE;
 		} else if (node instanceof Text) {
@@ -70,9 +68,6 @@ public class NodePatcher extends AutomaticPropertyContainerPatcher {
 
 	@PatchMethod
 	public static Node removeChild(Node oldParent, Node oldChild) {
-		oldParent = ElementUtils.castToDomElement(oldParent);
-		oldChild = ElementUtils.castToDomElement(oldChild);
-
 		OverrideNodeList<Node> list = getChildNodeList(oldParent);
 
 		if (list.getList().remove(oldChild)) {
@@ -84,7 +79,6 @@ public class NodePatcher extends AutomaticPropertyContainerPatcher {
 
 	@PatchMethod
 	public static Node getFirstChild(Node node) {
-		node = ElementUtils.castToDomElement(node);
 		OverrideNodeList<Node> list = getChildNodeList(node);
 
 		if (list.getLength() == 0) {
@@ -96,7 +90,6 @@ public class NodePatcher extends AutomaticPropertyContainerPatcher {
 
 	@PatchMethod
 	public static Node getLastChild(Node node) {
-		node = ElementUtils.castToDomElement(node);
 		OverrideNodeList<Node> list = getChildNodeList(node);
 
 		if (list.getLength() == 0) {
@@ -108,13 +101,11 @@ public class NodePatcher extends AutomaticPropertyContainerPatcher {
 
 	@PatchMethod
 	public static boolean hasChildNodes(Node node) {
-		node = ElementUtils.castToDomElement(node);
 		return getChildNodeList(node).getLength() > 0;
 	}
 
 	@PatchMethod
 	public static Node getNextSibling(Node node) {
-		node = ElementUtils.castToDomElement(node);
 		Node parent = node.getParentNode();
 		if (parent == null)
 			return null;
@@ -133,8 +124,6 @@ public class NodePatcher extends AutomaticPropertyContainerPatcher {
 
 	@PatchMethod
 	public static Node getPreviousSibling(Node node) {
-		node = ElementUtils.castToDomElement(node);
-
 		Node parent = node.getParentNode();
 		if (parent == null)
 			return null;
@@ -153,9 +142,6 @@ public class NodePatcher extends AutomaticPropertyContainerPatcher {
 
 	@PatchMethod
 	public static Node insertBefore(Node parent, Node newChild, Node refChild) {
-		parent = ElementUtils.castToDomElement(parent);
-		newChild = ElementUtils.castToDomElement(newChild);
-		refChild = ElementUtils.castToDomElement(refChild);
 		OverrideNodeList<Node> list = getChildNodeList(parent);
 
 		// get the index of refChild
@@ -176,9 +162,6 @@ public class NodePatcher extends AutomaticPropertyContainerPatcher {
 
 	@PatchMethod
 	public static Node replaceChild(Node parent, Node newChild, Node oldChild) {
-		parent = ElementUtils.castToDomElement(parent);
-		newChild = ElementUtils.castToDomElement(newChild);
-		oldChild = ElementUtils.castToDomElement(oldChild);
 		if (oldChild != null) {
 			OverrideNodeList<Node> list = getChildNodeList(parent);
 
@@ -197,7 +180,6 @@ public class NodePatcher extends AutomaticPropertyContainerPatcher {
 	@PatchMethod
 	public static Node cloneNode(Node node, boolean deep) {
 		PropertyContainer propertyContainer = PropertyContainerHelper.cast(node).getProperties();
-		node = ElementUtils.castToDomElement(node);
 
 		Node newNode;
 		if (node instanceof Element) {
@@ -235,8 +217,6 @@ public class NodePatcher extends AutomaticPropertyContainerPatcher {
 	}
 
 	public static Node insertAtIndex(Node parent, Node newChild, int index) {
-		parent = ElementUtils.castToDomElement(parent);
-		newChild = ElementUtils.castToDomElement(newChild);
 		OverrideNodeList<Node> list = getChildNodeList(parent);
 
 		// First, remove from old parent

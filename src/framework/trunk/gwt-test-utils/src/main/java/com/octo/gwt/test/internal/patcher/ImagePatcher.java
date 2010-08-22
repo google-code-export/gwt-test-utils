@@ -12,7 +12,6 @@ import javassist.NotFoundException;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.ImageElement;
 import com.google.gwt.user.client.ui.Image;
-import com.octo.gwt.test.internal.utils.ElementUtils;
 import com.octo.gwt.test.patcher.AutomaticPatcher;
 import com.octo.gwt.test.patcher.PatchClass;
 import com.octo.gwt.test.patcher.PatchMethod;
@@ -43,11 +42,6 @@ public class ImagePatcher extends AutomaticPatcher {
 	}
 
 	@PatchMethod
-	public static ImageElement getImageElement(Image image) {
-		return ElementUtils.castToDomElement(image.getElement());
-	}
-
-	@PatchMethod
 	public static int getWidth(Image image) {
 		return getDim(image, "width");
 	}
@@ -58,7 +52,7 @@ public class ImagePatcher extends AutomaticPatcher {
 	}
 
 	public static int getDim(Image image, String dim) {
-		ImageElement elem = ElementUtils.castToDomElement(image.getElement());
+		ImageElement elem = image.getElement().cast();
 		String width = elem.getStyle().getProperty(dim);
 		if (width == null)
 			return 0;

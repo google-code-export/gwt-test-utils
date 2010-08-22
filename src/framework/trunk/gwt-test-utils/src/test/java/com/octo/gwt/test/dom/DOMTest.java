@@ -27,7 +27,6 @@ import com.google.gwt.dom.client.TextAreaElement;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Image;
 import com.octo.gwt.test.AbstractGwtTest;
-import com.octo.gwt.test.internal.utils.ElementUtils;
 
 public class DOMTest extends AbstractGwtTest {
 
@@ -312,7 +311,7 @@ public class DOMTest extends AbstractGwtTest {
 	public void checkImageSrc() {
 		// Setup
 		Image img = new Image();
-		ImageElement elem = ElementUtils.castToDomElement(img.getElement());
+		ImageElement elem = img.getElement().cast();
 
 		// Test
 		DOM.setImgSrc(img.getElement(), "http://test/image.gif");

@@ -11,9 +11,7 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.w3c.dom.Document;
 
 import com.google.gwt.core.client.impl.Impl;
-import com.google.gwt.dom.client.Node;
 import com.octo.gwt.test.AbstractGwtConfigurableTest;
-import com.octo.gwt.test.internal.utils.ElementUtils;
 import com.octo.gwt.test.patcher.AutomaticPatcher;
 import com.octo.gwt.test.patcher.PatchClass;
 import com.octo.gwt.test.patcher.PatchMethod;
@@ -27,9 +25,6 @@ public class ImplPatcher extends AutomaticPatcher {
 
 	@PatchMethod
 	public static int getHashCode(Object o) {
-		if (o instanceof Node) {
-			o = ElementUtils.castToDomElement((Node) o);
-		}
 		return HashCodeBuilder.reflectionHashCode(o);
 	}
 

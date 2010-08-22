@@ -1,12 +1,18 @@
 package com.octo.gwt.test.internal;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
-
 
 import javassist.CannotCompileException;
 import javassist.Loader;
 import javassist.NotFoundException;
+
+import org.apache.bcel.classfile.ClassParser;
+import org.apache.bcel.classfile.JavaClass;
+
+import com.octo.gwt.test.internal.modifiers.JavaClassModifier;
 
 public class GwtTestClassLoader extends Loader {
 
@@ -45,8 +51,8 @@ public class GwtTestClassLoader extends Loader {
 		}
 
 		translator = new GwtTranslator(configurationLoader.getPatchers());
-
 		addTranslator(PatchGwtClassPool.get(), translator);
+
 	}
 
 	private List<String> delegate;
@@ -89,6 +95,7 @@ public class GwtTestClassLoader extends Loader {
 		}
 	}
 
+	@Override
 	protected Class<?> loadClassByDelegation(String classname) throws ClassNotFoundException {
 		if (isDelegated(classname)) {
 			return delegateToParent(classname);
@@ -114,6 +121,58 @@ public class GwtTestClassLoader extends Loader {
 			}
 		}
 		return false;
+	}
+
+	@Override
+	protected Class<?> findClass(String name) throws ClassNotFoundException {
+		byte[] classfile;
+		try {
+
+			translator.onLoad(PatchGwtClassPool.get(), name);
+
+			try {
+				classfile = PatchGwtClassPool.get().get(name).toBytecode();
+			} catch (NotFoundException e) {
+				return null;
+			}
+		} catch (Exception e) {
+			throw new ClassNotFoundException("caught an exception while obtaining a class file for " + name, e);
+		}
+
+		int i = name.lastIndexOf('.');
+		if (i != -1) {
+			String pname = name.substring(0, i);
+			if (getPackage(pname) == null)
+				try {
+					definePackage(pname, null, null, null, null, null, null, null);
+				} catch (IllegalArgumentException e) {
+					// ignore.  maybe the package object for the same
+					// name has been created just right away.
+				}
+		}
+
+		classfile = modifiyClass(classfile, name);
+
+		return defineClass(name, classfile, 0, classfile.length);
+	}
+
+	private byte[] modifiyClass(byte[] classfile, String name) {
+
+		ClassParser parser = new ClassParser(new ByteArrayInputStream(classfile), "");
+		try {
+			JavaClass cls = parser.parse();
+
+			for (JavaClassModifier modifier : ConfigurationLoader.getInstance().getJavaClassModifierList()) {
+				modifier.modify(cls);
+			}
+
+			ByteArrayOutputStream out = new ByteArrayOutputStream();
+			cls.dump(out);
+
+			return out.toByteArray();
+		} catch (Exception e) {
+			throw new RuntimeException("Error while modifying class '" + name + "'", e);
+		}
 	}
 
 }
