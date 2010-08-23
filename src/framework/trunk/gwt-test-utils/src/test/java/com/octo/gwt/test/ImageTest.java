@@ -5,9 +5,31 @@ import org.junit.Test;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.ImageElement;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.Image;
+import com.octo.gwt.test.resources.MyClientBundle;
 
 public class ImageTest extends AbstractGwtTest {
+
+	@Override
+	public String getCurrentTestedModuleFile() {
+		return "test-config.gwt.xml";
+	}
+
+	@Test
+	public void checkImageConstructor() {
+		ImageResource imageRessource = MyClientBundle.INSTANCE.testImageResource();
+
+		// Test
+		Image i = new Image(imageRessource);
+
+		// Assert
+		Assert.assertEquals("http://localhost:8888/gwt_test_utils_module/com/octo/gwt/test/resources/testImageResource.gif", i.getUrl());
+		Assert.assertEquals(0, i.getOriginLeft());
+		Assert.assertEquals(0, i.getOriginTop());
+		Assert.assertEquals(0, i.getWidth());
+		Assert.assertEquals(0, i.getHeight());
+	}
 
 	@Test
 	public void checkURL() {
