@@ -148,7 +148,12 @@ public class ElementTest extends AbstractGwtTest {
 	@Test
 	public void checkInnerHTML() {
 		e.setInnerHTML("<h1>test</h1>");
+
 		Assert.assertEquals("<h1>test</h1>", e.getInnerHTML());
+		Assert.assertEquals(1, e.getChildCount());
+		Element h1 = (Element) e.getChild(0);
+		Assert.assertEquals("H1", h1.getTagName());
+		Assert.assertEquals("test", h1.getInnerText());
 	}
 
 	@Test

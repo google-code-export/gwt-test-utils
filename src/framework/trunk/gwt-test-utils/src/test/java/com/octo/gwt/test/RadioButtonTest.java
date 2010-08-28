@@ -3,6 +3,7 @@ package com.octo.gwt.test;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.RadioButton;
@@ -40,6 +41,11 @@ public class RadioButtonTest extends AbstractGwtTest {
 		Assert.assertEquals("<h1>foo</h1>", rb.getHTML());
 		rb.setHTML("<h1>test</h1>");
 		Assert.assertEquals("<h1>test</h1>", rb.getHTML());
+		// Assert the labelElem value
+		Assert.assertEquals(1, rb.getElement().getChild(1).getChildCount());
+		Element h1 = (Element) rb.getElement().getChild(1).getChild(0);
+		Assert.assertEquals("H1", h1.getTagName());
+		Assert.assertEquals("test", h1.getInnerText());
 	}
 
 	@Test

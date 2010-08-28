@@ -1,8 +1,6 @@
 package com.octo.gwt.test.internal.patcher;
 
-import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.IFrameElement;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
 import com.google.gwt.user.client.ui.OverrideSubmitCompleteEvent;
@@ -14,14 +12,6 @@ import com.octo.gwt.test.utils.GwtTestReflectionUtils;
 
 @PatchClass(FormPanel.class)
 public class FormPanelPatcher extends AutomaticPatcher {
-
-	//FIXME : implements correctly the element.setInnerHTML method..
-	@PatchMethod
-	public static void createFrame(FormPanel formPanel) {
-		IFrameElement element = Document.get().createIFrameElement();
-
-		GwtTestReflectionUtils.setPrivateFieldValue(formPanel, "synthesizedFrame", element);
-	}
 
 	@PatchMethod
 	public static void submit(FormPanel formPanel) {

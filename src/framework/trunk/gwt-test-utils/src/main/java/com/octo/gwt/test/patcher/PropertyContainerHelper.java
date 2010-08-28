@@ -2,22 +2,12 @@ package com.octo.gwt.test.patcher;
 
 import javassist.CtClass;
 
-import com.octo.gwt.test.internal.GwtTestClassLoader;
-
 public class PropertyContainerHelper {
 
 	public static void setProperty(Object o, String propertyName, Object propertyValue) {
-		setProperty(o, propertyName, propertyValue, false);
-	}
-
-	public static void setProperty(Object o, String propertyName, Object propertyValue, boolean allowNull) {
 		PropertyContainerAware pca = cast(o);
 		if (pca == null) {
-			if (allowNull) {
-				return;
-			} else {
-				throw new RuntimeException("Call setProperty on null object");
-			}
+			throw new RuntimeException("Call setProperty on null object");
 		}
 		pca.getProperties().put(propertyName, propertyValue);
 	}
@@ -26,37 +16,20 @@ public class PropertyContainerHelper {
 		setProperty(o, propertyName, (Object) propertyValue);
 	}
 
-	public static void setProperty(Object o, String propertyName, short propertyValue, boolean allowNull) {
-		setProperty(o, propertyName, (Object) propertyValue, allowNull);
-	}
-
 	public static void setProperty(Object o, String propertyName, int propertyValue) {
 		setProperty(o, propertyName, (Object) propertyValue);
-	}
-
-	public static void setProperty(Object o, String propertyName, int propertyValue, boolean allowNull) {
-		setProperty(o, propertyName, (Object) propertyValue, allowNull);
 	}
 
 	public static void setProperty(Object o, String propertyName, boolean propertyValue) {
 		setProperty(o, propertyName, (Object) propertyValue);
 	}
 
-	public static void setProperty(Object o, String propertyName, boolean propertyValue, boolean allowNull) {
-		setProperty(o, propertyName, (Object) propertyValue, allowNull);
-	}
-
 	public static void setProperty(Object o, String propertyName, double propertyValue) {
 		setProperty(o, propertyName, (Object) propertyValue);
 	}
 
-	public static void setProperty(Object o, String propertyName, double propertyValue, boolean allowNull) {
-		setProperty(o, propertyName, (Object) propertyValue, allowNull);
-	}
-
-	public static String getCodeSetProperty(String object, String propertyName, String propertyValue, boolean allowNull) {
-		return PropertyContainerHelper.class.getCanonicalName() + ".setProperty(" + object + ", \"" + propertyName + "\", " + propertyValue + ", "
-				+ Boolean.toString(allowNull) + ")";
+	public static String getCodeSetProperty(String object, String propertyName, String propertyValue) {
+		return PropertyContainerHelper.class.getCanonicalName() + ".setProperty(" + object + ", \"" + propertyName + "\", " + propertyValue + ")";
 	}
 
 	public static PropertyContainerAware cast(Object o) {
@@ -102,14 +75,6 @@ public class PropertyContainerHelper {
 		}
 		return "(" + returnType.getName() + ") " + PropertyContainerHelper.class.getCanonicalName() + ".getProperty(" + object + ", \"" + fieldName
 				+ "\")";
-	}
-
-	public static Class<?> getPropertyContainerAware(String className) {
-		try {
-			return GwtTestClassLoader.getInstance().loadClass(className);
-		} catch (ClassNotFoundException e) {
-			return null;
-		}
 	}
 
 }

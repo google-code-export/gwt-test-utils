@@ -3,6 +3,7 @@ package com.octo.gwt.test;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
@@ -77,6 +78,11 @@ public class GridTest extends AbstractGwtTest {
 		Grid g = new Grid(1, 1);
 		g.setHTML(0, 0, "<h1>test</h1>");
 		Assert.assertEquals("<h1>test</h1>", g.getHTML(0, 0));
+		Element e = g.getCellFormatter().getElement(0, 0);
+		Assert.assertEquals(1, e.getChildCount());
+		Element h1 = (Element) e.getChild(0);
+		Assert.assertEquals("H1", h1.getTagName());
+		Assert.assertEquals("test", h1.getInnerText());
 	}
 
 	@Test

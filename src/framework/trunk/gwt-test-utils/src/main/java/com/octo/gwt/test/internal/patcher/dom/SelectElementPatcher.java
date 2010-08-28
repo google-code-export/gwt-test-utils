@@ -21,7 +21,7 @@ public class SelectElementPatcher extends AutomaticPropertyContainerPatcher {
 		super.initClass(c);
 		CtConstructor cons = findConstructor(c);
 
-		cons.insertAfter(PropertyContainerHelper.getCodeSetProperty("this", SELECTED_INDEX_FIELD, "-1", false) + ";");
+		cons.insertAfter(PropertyContainerHelper.getCodeSetProperty("this", SELECTED_INDEX_FIELD, "-1") + ";");
 	}
 
 	@PatchMethod

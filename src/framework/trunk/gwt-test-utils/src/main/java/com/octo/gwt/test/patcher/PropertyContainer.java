@@ -1,8 +1,8 @@
 package com.octo.gwt.test.patcher;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 
-public class PropertyContainer extends HashMap<String, Object> {
+public class PropertyContainer extends LinkedHashMap<String, Object> {
 
 	private static final long serialVersionUID = -2421991095282208998L;
 

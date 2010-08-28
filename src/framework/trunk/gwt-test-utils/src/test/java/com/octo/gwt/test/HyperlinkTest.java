@@ -3,6 +3,7 @@ package com.octo.gwt.test;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Hyperlink;
@@ -23,6 +24,11 @@ public class HyperlinkTest extends AbstractGwtTest {
 		Assert.assertEquals("<h1>foo</h1>", link.getHTML());
 		link.setHTML("<h1>test</h1>");
 		Assert.assertEquals("<h1>test</h1>", link.getHTML());
+		// Check the anchorElem childs
+		Assert.assertEquals(1, link.getElement().getChild(0).getChildCount());
+		Element h1 = (Element) link.getElement().getChild(0).getChild(0);
+		Assert.assertEquals("H1", h1.getTagName());
+		Assert.assertEquals("test", h1.getInnerText());
 	}
 
 	@Test

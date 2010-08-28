@@ -10,6 +10,7 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Style;
+import com.octo.gwt.test.internal.GwtHtmlParser;
 import com.octo.gwt.test.internal.overrides.OverrideNodeList;
 import com.octo.gwt.test.patcher.AutomaticPropertyContainerPatcher;
 import com.octo.gwt.test.patcher.PatchClass;
@@ -31,19 +32,19 @@ public class ElementPatcher extends AutomaticPropertyContainerPatcher {
 		super.initClass(c);
 		CtConstructor cons = findConstructor(c);
 
-		cons.insertAfter(PropertyContainerHelper.getCodeSetProperty("this", STYLE_FIELD, NodeFactory.class.getCanonicalName() + ".createStyle()",
-				true) + ";");
+		cons.insertAfter(PropertyContainerHelper.getCodeSetProperty("this", STYLE_FIELD, NodeFactory.class.getCanonicalName() + ".createStyle()")
+				+ ";");
 		cons.insertAfter(PropertyContainerHelper.getCodeSetProperty("this", PROPERTY_MAP_FIELD, "new " + PropertyContainer.class.getCanonicalName()
-				+ "()", true)
+				+ "()")
 				+ ";");
 		cons.insertAfter(PropertyContainerHelper.getCodeSetProperty("this", ATTRIBUTE_MAP_FIELD, "new " + PropertyContainer.class.getCanonicalName()
-				+ "()", true)
+				+ "()")
 				+ ";");
 		cons.insertAfter(PropertyContainerHelper.getCodeSetProperty("this", ATTRIBUTE_MAP_FIELD, "new " + PropertyContainer.class.getCanonicalName()
-				+ "()", true)
+				+ "()")
 				+ ";");
-		cons.insertAfter(PropertyContainerHelper.getCodeSetProperty("this", CLASSNAME_FIELD, "\"\"", true) + ";");
-		cons.insertAfter(PropertyContainerHelper.getCodeSetProperty("this", ACCESSKEY_FIELD, "\"\"", true) + ";");
+		cons.insertAfter(PropertyContainerHelper.getCodeSetProperty("this", CLASSNAME_FIELD, "\"\"") + ";");
+		cons.insertAfter(PropertyContainerHelper.getCodeSetProperty("this", ACCESSKEY_FIELD, "\"\"") + ";");
 	}
 
 	@PatchMethod
@@ -153,6 +154,12 @@ public class ElementPatcher extends AutomaticPropertyContainerPatcher {
 	public static void setAttribute(Element element, String attributeName, String value) {
 		PropertyContainer propertyContainer = PropertyContainerHelper.getProperty(element, PROPERTY_MAP_FIELD);
 		propertyContainer.put(attributeName, value);
+	}
+
+	@PatchMethod
+	public static void setInnerHTML(Element element, String html) {
+		GwtHtmlParser.setInnerHTML(element, html);
+		PropertyContainerHelper.setProperty(element, "InnerHTML", html);
 	}
 
 }

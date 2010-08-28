@@ -9,7 +9,7 @@ import com.octo.gwt.test.patcher.PatchMethod;
 @PatchClass(ElementMapperImpl.class)
 public class ElementMapperImplPatcher extends AutomaticPatcher {
 
-	private static final String widgetId = "__widgetID";
+	private static final String widgetId = "__uiObjectID";
 
 	@PatchMethod
 	public static void setIndex(Element e, int index) {

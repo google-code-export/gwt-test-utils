@@ -16,7 +16,7 @@ import com.octo.gwt.test.internal.PatchGwtClassPool;
 import com.octo.gwt.test.utils.TagAware;
 
 @PatchClass({ HeadingElement.class, ModElement.class, QuoteElement.class, TableCellElement.class, TableColElement.class, TableSectionElement.class })
-public class AutomaticTagSubclasser extends AutomaticPropertyContainerPatcher {
+public class AutomaticSpecificTagElementPatcher extends AutomaticPropertyContainerPatcher {
 
 	private static final String OVERRIDE_TAG = "overrideTag";
 
@@ -32,12 +32,12 @@ public class AutomaticTagSubclasser extends AutomaticPropertyContainerPatcher {
 		c.addField(tagField);
 
 		CtConstructor constructor = new CtConstructor(new CtClass[] { cp.get(String.class.getName()) }, c);
-		StringBuffer stringBuffer = new StringBuffer();
-		stringBuffer.append("{");
-		stringBuffer.append("super();");
-		stringBuffer.append("this." + OVERRIDE_TAG + " = $1;");
-		stringBuffer.append("}");
-		constructor.setBody(stringBuffer.toString());
+		StringBuilder sb = new StringBuilder();
+		sb.append("{");
+		sb.append("super();");
+		sb.append("this." + OVERRIDE_TAG + " = $1;");
+		sb.append("}");
+		constructor.setBody(sb.toString());
 		c.addConstructor(constructor);
 
 		CtMethod getTag = new CtMethod(cp.get(String.class.getName()), "getTag", new CtClass[] {}, c);

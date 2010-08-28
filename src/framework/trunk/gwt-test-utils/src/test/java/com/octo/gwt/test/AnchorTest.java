@@ -3,6 +3,7 @@ package com.octo.gwt.test;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.Anchor;
 
 public class AnchorTest extends AbstractGwtTest {
@@ -90,6 +91,10 @@ public class AnchorTest extends AbstractGwtTest {
 		a.setHTML("<h1>test</h1>");
 
 		Assert.assertEquals("<h1>test</h1>", a.getHTML());
+		Assert.assertEquals(1, a.getElement().getChildCount());
+		Element h1 = (Element) a.getElement().getChild(0);
+		Assert.assertEquals("H1", h1.getTagName());
+		Assert.assertEquals("test", h1.getInnerText());
 	}
 
 	@Test

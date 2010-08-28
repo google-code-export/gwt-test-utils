@@ -55,8 +55,10 @@ import com.google.gwt.dom.client.Text;
 import com.google.gwt.dom.client.TextAreaElement;
 import com.google.gwt.dom.client.TitleElement;
 import com.google.gwt.dom.client.UListElement;
+import com.octo.gwt.test.internal.GwtTestClassLoader;
 import com.octo.gwt.test.patcher.PropertyContainer;
 import com.octo.gwt.test.patcher.PropertyContainerHelper;
+import com.octo.gwt.test.utils.TagAware;
 
 public class NodeFactory {
 
@@ -146,7 +148,7 @@ public class NodeFactory {
 	public static Document getDocument() {
 		if (DOCUMENT == null) {
 			try {
-				DOCUMENT = (Document) PropertyContainerHelper.getPropertyContainerAware(Document.class.getName()).newInstance();
+				DOCUMENT = (Document) loadClass(Document.class.getName()).newInstance();
 				Element e = createHTMLElement();
 				DOCUMENT.appendChild(e);
 				PropertyContainerHelper.setProperty(DOCUMENT, "DocumentElement", e);
@@ -159,7 +161,7 @@ public class NodeFactory {
 
 	public static Style createStyle() {
 		try {
-			return (Style) PropertyContainerHelper.getPropertyContainerAware(Style.class.getName()).newInstance();
+			return (Style) loadClass(Style.class.getName()).newInstance();
 		} catch (Exception e) {
 			throw new RuntimeException("Unable to create text " + e);
 		}
@@ -167,7 +169,7 @@ public class NodeFactory {
 
 	public static Node createNode() {
 		try {
-			return (Node) PropertyContainerHelper.getPropertyContainerAware(Node.class.getName()).newInstance();
+			return (Node) loadClass(Node.class.getName()).newInstance();
 		} catch (Exception e) {
 			throw new RuntimeException("Unable to create node " + e);
 		}
@@ -175,7 +177,7 @@ public class NodeFactory {
 
 	public static Text createTextNode(String data) {
 		try {
-			Text text = (Text) PropertyContainerHelper.getPropertyContainerAware(Text.class.getName()).newInstance();
+			Text text = (Text) loadClass(Text.class.getName()).newInstance();
 			text.setData(data);
 
 			return text;
@@ -186,7 +188,7 @@ public class NodeFactory {
 
 	private static Element createHTMLElement() {
 		try {
-			Element e = (Element) PropertyContainerHelper.getPropertyContainerAware(Element.class.getName()).newInstance();
+			Element e = (Element) loadClass(Element.class.getName()).newInstance();
 			PropertyContainerHelper.setProperty(e, "NodeName", "HTML");
 			PropertyContainerHelper.setProperty(e, "TagName", "HTML");
 
@@ -199,20 +201,19 @@ public class NodeFactory {
 	}
 
 	public static Element createElement(String tag) {
+		Element elem = null;
 		try {
-			Element elem = null;
+			String elemClassName = elementMap.get(tag.toLowerCase());
+			String elemClassNameWithTag = elementWithSpecialTagMap.get(tag.toLowerCase());
 
-			String subClassName = elementMap.get(tag);
-			String subClassNameWithTag = elementWithSpecialTagMap.get(tag);
-
-			if (subClassName != null) {
-				elem = (Element) PropertyContainerHelper.getPropertyContainerAware(subClassName).newInstance();
-			} else if (subClassNameWithTag != null) {
-				Constructor<?> constructor = PropertyContainerHelper.getPropertyContainerAware(subClassNameWithTag).getConstructor(String.class);
+			if (elemClassName != null) {
+				elem = (Element) loadClass(elemClassName).newInstance();
+			} else if (elemClassNameWithTag != null) {
+				Constructor<?> constructor = loadClass(elemClassNameWithTag).getConstructor(String.class);
 				elem = (Element) constructor.newInstance(tag);
 			}
 			if (elem == null) {
-				throw new RuntimeException("Cannot create element for tag <" + tag + ">");
+				elem = new SpecificElement(tag);
 			}
 
 			// set the <body> element as default parent node
@@ -223,6 +224,27 @@ public class NodeFactory {
 			return elem;
 		} catch (Exception e) {
 			throw new RuntimeException("Cannot create element for tag <" + tag + ">", e);
+		}
+	}
+
+	private static Class<?> loadClass(String className) {
+		try {
+			return GwtTestClassLoader.getInstance().loadClass(className);
+		} catch (ClassNotFoundException e) {
+			return null;
+		}
+	}
+
+	private static class SpecificElement extends Element implements TagAware {
+
+		private String tag;
+
+		public SpecificElement(String tag) {
+			this.tag = tag;
+		}
+
+		public String getTag() {
+			return tag;
 		}
 
 	}

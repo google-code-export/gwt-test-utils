@@ -28,7 +28,7 @@ public class StylePatcher extends AutomaticPropertyContainerPatcher {
 		super.initClass(c);
 		CtConstructor cons = findConstructor(c);
 
-		cons.insertAfter(PropertyContainerHelper.getCodeSetProperty("this", "whiteSpace", "\"nowrap\"", false) + ";");
+		cons.insertAfter(PropertyContainerHelper.getCodeSetProperty("this", "whiteSpace", "\"nowrap\"") + ";");
 	}
 
 }

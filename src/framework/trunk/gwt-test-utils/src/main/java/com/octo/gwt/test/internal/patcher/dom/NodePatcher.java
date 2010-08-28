@@ -30,7 +30,7 @@ public class NodePatcher extends AutomaticPropertyContainerPatcher {
 		CtConstructor cons = findConstructor(c);
 
 		cons.insertAfter(PropertyContainerHelper.getCodeSetProperty("this", NodePatcher.NODE_LIST_FIELD,
-				"new " + OverrideNodeList.class.getCanonicalName() + "()", true)
+				"new " + OverrideNodeList.class.getCanonicalName() + "()")
 				+ ";");
 	}
 
