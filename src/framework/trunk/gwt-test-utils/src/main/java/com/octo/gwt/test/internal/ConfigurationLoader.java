@@ -39,7 +39,7 @@ public class ConfigurationLoader {
 
 	private MethodRemover methodRemover;
 
-	static final ConfigurationLoader createInstance(ClassLoader classLoader) {
+	public static final ConfigurationLoader createInstance(ClassLoader classLoader) {
 		if (INSTANCE != null) {
 			throw new RuntimeException(ConfigurationLoader.class.getSimpleName() + " instance has already been initialized");
 		}

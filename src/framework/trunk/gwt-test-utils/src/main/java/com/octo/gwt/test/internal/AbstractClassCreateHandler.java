@@ -9,6 +9,7 @@ import javassist.CtClass;
 import javassist.CtMethod;
 
 import com.octo.gwt.test.GwtCreateHandler;
+import com.octo.gwt.test.GwtTestClassLoader;
 import com.octo.gwt.test.internal.utils.PatchGwtUtils;
 
 public class AbstractClassCreateHandler implements GwtCreateHandler {

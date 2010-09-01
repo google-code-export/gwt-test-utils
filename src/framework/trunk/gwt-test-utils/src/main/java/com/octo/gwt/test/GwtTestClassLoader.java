@@ -1,4 +1,4 @@
-package com.octo.gwt.test.internal;
+package com.octo.gwt.test;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -12,6 +12,9 @@ import javassist.NotFoundException;
 import org.apache.bcel.classfile.ClassParser;
 import org.apache.bcel.classfile.JavaClass;
 
+import com.octo.gwt.test.internal.ConfigurationLoader;
+import com.octo.gwt.test.internal.GwtTranslator;
+import com.octo.gwt.test.internal.PatchGwtClassPool;
 import com.octo.gwt.test.internal.modifiers.JavaClassModifier;
 
 public class GwtTestClassLoader extends Loader {

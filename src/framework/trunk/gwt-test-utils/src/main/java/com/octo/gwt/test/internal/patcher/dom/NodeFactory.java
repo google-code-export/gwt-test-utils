@@ -55,7 +55,7 @@ import com.google.gwt.dom.client.Text;
 import com.google.gwt.dom.client.TextAreaElement;
 import com.google.gwt.dom.client.TitleElement;
 import com.google.gwt.dom.client.UListElement;
-import com.octo.gwt.test.internal.GwtTestClassLoader;
+import com.octo.gwt.test.GwtTestClassLoader;
 import com.octo.gwt.test.patcher.PropertyContainer;
 import com.octo.gwt.test.patcher.PropertyContainerHelper;
 import com.octo.gwt.test.utils.TagAware;
