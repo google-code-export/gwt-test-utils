@@ -1,0 +1,76 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.octo.gwt.test</groupId>
+	<artifactId>gwt-test-utils-parent</artifactId>
+	<packaging>pom</packaging>
+	<version>0.19</version>
+	<name>GWT Tests Utils Parent</name>
+
+	<properties>
+		<gwt.version>2.0.4</gwt.version>
+		<javassist.version>3.8.0.GA</javassist.version>
+		<easymock.version>2.3</easymock.version>
+		<log4j.version>1.2.14</log4j.version>
+		<antlr.runtime.version>3.0.1</antlr.runtime.version>
+		<commons-lang.version>2.4</commons-lang.version>
+		<bcel.version>5.2</bcel.version>
+		<htmlparser.version>1.6</htmlparser.version>
+	</properties>
+
+	<scm>
+		<developerConnection>scm:svn:https://gwt-test-utils.googlecode.com/svn/src/framework/tags/gwt-test-utils-parent-0.19</developerConnection>
+	</scm>
+
+	<distributionManagement>
+		<repository>
+			<id>forge.octo.com</id>
+      <url>http://forge.octo.com/nexus/content/repositories/releases/</url>
+		</repository>
+		<snapshotRepository>
+			<id>forge.octo.com</id>
+      <url>http://forge.octo.com/nexus/content/repositories/snapshots/</url>
+		</snapshotRepository>
+	</distributionManagement>
+
+	<modules>
+		<module>gwt-test-utils</module>
+		<module>gwt-test-utils-integration</module>
+	</modules>
+
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.7</version>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-release-plugin</artifactId>
+				<configuration>
+					<preparationGoals>clean install</preparationGoals>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<encoding>UTF-8</encoding>
+					<source>1.5</source>
+					<target>1.5</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>2.4.1</version>
+				<configuration>
+					<encoding>UTF-8</encoding>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>
