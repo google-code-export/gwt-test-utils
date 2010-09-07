@@ -1,4 +1,0 @@
-start
-initApp
-click;/app/b4
-assertExact;titi;/app/l/text
