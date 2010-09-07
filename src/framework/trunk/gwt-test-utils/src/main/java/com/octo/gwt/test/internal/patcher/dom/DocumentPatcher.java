@@ -7,10 +7,10 @@ import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Text;
 import com.octo.gwt.test.internal.overrides.OverrideNodeList;
+import com.octo.gwt.test.internal.utils.PropertyContainerHelper;
 import com.octo.gwt.test.patcher.AutomaticPropertyContainerPatcher;
 import com.octo.gwt.test.patcher.PatchClass;
 import com.octo.gwt.test.patcher.PatchMethod;
-import com.octo.gwt.test.patcher.PropertyContainerHelper;
 
 @PatchClass(Document.class)
 public class DocumentPatcher extends AutomaticPropertyContainerPatcher {

@@ -1,4 +1,4 @@
-package com.octo.gwt.test.patcher;
+package com.octo.gwt.test.internal.utils;
 
 public interface PropertyContainerAware {
 

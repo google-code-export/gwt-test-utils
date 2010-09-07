@@ -6,10 +6,10 @@ import javassist.CtConstructor;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.SelectElement;
 import com.google.gwt.user.client.ui.UIObject;
+import com.octo.gwt.test.internal.utils.PropertyContainerHelper;
 import com.octo.gwt.test.patcher.AutomaticPropertyContainerPatcher;
 import com.octo.gwt.test.patcher.PatchClass;
 import com.octo.gwt.test.patcher.PatchMethod;
-import com.octo.gwt.test.patcher.PropertyContainerHelper;
 
 @PatchClass(SelectElement.class)
 public class SelectElementPatcher extends AutomaticPropertyContainerPatcher {

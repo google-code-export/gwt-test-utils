@@ -14,7 +14,7 @@ import org.easymock.classextension.EasyMock;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.octo.gwt.test.Mock;
-import com.octo.gwt.test.utils.ArrayUtils;
+import com.octo.gwt.test.internal.utils.ArrayUtils;
 import com.octo.gwt.test.utils.GwtTestReflectionUtils;
 import com.octo.gwt.test.utils.GwtTestReflectionUtils.MethodCallback;
 

@@ -47,6 +47,9 @@ import com.google.gwt.dom.client.TitleElement;
 import com.google.gwt.dom.client.UListElement;
 import com.octo.gwt.test.internal.PatchGwtClassPool;
 import com.octo.gwt.test.internal.utils.PatchGwtUtils;
+import com.octo.gwt.test.internal.utils.PropertyContainer;
+import com.octo.gwt.test.internal.utils.PropertyContainerAware;
+import com.octo.gwt.test.internal.utils.PropertyContainerHelper;
 
 @PatchClass({ Text.class, AnchorElement.class, AreaElement.class, BaseElement.class, BodyElement.class, BRElement.class, ButtonElement.class,
 		DivElement.class, DListElement.class, FieldSetElement.class, FrameElement.class, FrameSetElement.class, FormElement.class, HeadElement.class,
@@ -73,7 +76,7 @@ public class AutomaticPropertyContainerPatcher extends AutomaticPatcher {
 		StringBuffer stringBuffer = new StringBuffer();
 		stringBuffer.append("{");
 		stringBuffer.append("if (" + PROPERTIES + " == null) {");
-		stringBuffer.append(PROPERTIES + " = new " + PropertyContainer.class.getName() + "();");
+		stringBuffer.append(PROPERTIES + " = " + PropertyContainerHelper.getConstructionCode() + ";");
 		stringBuffer.append("}");
 		stringBuffer.append("return " + PROPERTIES + ";");
 		stringBuffer.append("}");
@@ -91,7 +94,7 @@ public class AutomaticPropertyContainerPatcher extends AutomaticPatcher {
 			String fieldName = PatchGwtUtils.getPropertyName(m);
 			if (fieldName != null) {
 				if (m.getName().startsWith("set")) {
-					return PropertyContainerHelper.getCodeSetProperty("this", fieldName, "$1");
+					return PropertyContainerHelper.getCodeSetProperty("this", fieldName, "$1", true);
 				} else {
 					return "return " + PropertyContainerHelper.getCodeGetProperty("this", fieldName, m.getReturnType());
 				}

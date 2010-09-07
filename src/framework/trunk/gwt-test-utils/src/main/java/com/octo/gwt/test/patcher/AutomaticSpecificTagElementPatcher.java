@@ -13,7 +13,7 @@ import com.google.gwt.dom.client.TableCellElement;
 import com.google.gwt.dom.client.TableColElement;
 import com.google.gwt.dom.client.TableSectionElement;
 import com.octo.gwt.test.internal.PatchGwtClassPool;
-import com.octo.gwt.test.utils.TagAware;
+import com.octo.gwt.test.internal.utils.TagAware;
 
 @PatchClass({ HeadingElement.class, ModElement.class, QuoteElement.class, TableCellElement.class, TableColElement.class, TableSectionElement.class })
 public class AutomaticSpecificTagElementPatcher extends AutomaticPropertyContainerPatcher {

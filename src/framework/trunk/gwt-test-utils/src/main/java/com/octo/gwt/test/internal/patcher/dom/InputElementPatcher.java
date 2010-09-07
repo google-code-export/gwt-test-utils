@@ -3,11 +3,11 @@ package com.octo.gwt.test.internal.patcher.dom;
 import javassist.CtClass;
 
 import com.google.gwt.dom.client.InputElement;
+import com.octo.gwt.test.internal.utils.PropertyContainerHelper;
 import com.octo.gwt.test.patcher.AutomaticPropertyContainerPatcher;
 import com.octo.gwt.test.patcher.PatchClass;
 import com.octo.gwt.test.patcher.PatchMethod;
 import com.octo.gwt.test.patcher.PatchType;
-import com.octo.gwt.test.patcher.PropertyContainerHelper;
 
 @PatchClass(InputElement.class)
 public class InputElementPatcher extends AutomaticPropertyContainerPatcher {

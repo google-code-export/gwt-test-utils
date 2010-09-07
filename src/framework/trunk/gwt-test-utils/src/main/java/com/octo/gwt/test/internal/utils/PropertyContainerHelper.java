@@ -1,35 +1,53 @@
-package com.octo.gwt.test.patcher;
+package com.octo.gwt.test.internal.utils;
 
 import javassist.CtClass;
 
 public class PropertyContainerHelper {
 
+	public static String getConstructionCode() {
+		return "new " + PropertyContainer.class.getName() + "(this)";
+	}
+
 	public static void setProperty(Object o, String propertyName, Object propertyValue) {
+		setProperty(o, propertyName, propertyValue, true);
+	}
+
+	public static void setProperty(Object o, String propertyName, Object propertyValue, boolean record) {
 		PropertyContainerAware pca = cast(o);
 		if (pca == null) {
 			throw new RuntimeException("Call setProperty on null object");
 		}
-		pca.getProperties().put(propertyName, propertyValue);
+
+		if (record) {
+			pca.getProperties().put(propertyName, propertyValue);
+		} else {
+			pca.getProperties().putNotRecordedObject(propertyName, propertyValue);
+		}
 	}
 
-	public static void setProperty(Object o, String propertyName, short propertyValue) {
-		setProperty(o, propertyName, (Object) propertyValue);
+	public static void setProperty(Object o, String propertyName, short propertyValue, boolean record) {
+		setProperty(o, propertyName, (Object) propertyValue, record);
 	}
 
-	public static void setProperty(Object o, String propertyName, int propertyValue) {
-		setProperty(o, propertyName, (Object) propertyValue);
+	public static void setProperty(Object o, String propertyName, int propertyValue, boolean record) {
+		setProperty(o, propertyName, (Object) propertyValue, record);
 	}
 
-	public static void setProperty(Object o, String propertyName, boolean propertyValue) {
-		setProperty(o, propertyName, (Object) propertyValue);
+	public static void setProperty(Object o, String propertyName, boolean propertyValue, boolean record) {
+		setProperty(o, propertyName, (Object) propertyValue, record);
 	}
 
-	public static void setProperty(Object o, String propertyName, double propertyValue) {
-		setProperty(o, propertyName, (Object) propertyValue);
+	public static void setProperty(Object o, String propertyName, double propertyValue, boolean record) {
+		setProperty(o, propertyName, (Object) propertyValue, record);
+	}
+
+	public static String getCodeSetProperty(String object, String propertyName, String propertyValue, boolean record) {
+		return PropertyContainerHelper.class.getCanonicalName() + ".setProperty(" + object + ", \"" + propertyName + "\", " + propertyValue + ", "
+				+ record + ")";
 	}
 
 	public static String getCodeSetProperty(String object, String propertyName, String propertyValue) {
-		return PropertyContainerHelper.class.getCanonicalName() + ".setProperty(" + object + ", \"" + propertyName + "\", " + propertyValue + ")";
+		return getCodeSetProperty(object, propertyName, propertyValue, false);
 	}
 
 	public static PropertyContainerAware cast(Object o) {
@@ -40,7 +58,7 @@ public class PropertyContainerHelper {
 			PropertyContainerAware pca = (PropertyContainerAware) o;
 			return pca;
 		} else {
-			throw new RuntimeException("Not " + PropertyContainerAware.class.getSimpleName() + " for getProperty " + o.getClass());
+			throw new RuntimeException("Not " + PropertyContainerAware.class.getSimpleName() + " for getProperty on object : " + o);
 		}
 	}
 

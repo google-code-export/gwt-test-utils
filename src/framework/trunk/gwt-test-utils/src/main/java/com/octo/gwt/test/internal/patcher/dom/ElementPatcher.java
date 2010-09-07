@@ -12,18 +12,18 @@ import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Style;
 import com.octo.gwt.test.internal.GwtHtmlParser;
 import com.octo.gwt.test.internal.overrides.OverrideNodeList;
+import com.octo.gwt.test.internal.utils.PropertyContainer;
+import com.octo.gwt.test.internal.utils.PropertyContainerHelper;
 import com.octo.gwt.test.patcher.AutomaticPropertyContainerPatcher;
 import com.octo.gwt.test.patcher.PatchClass;
 import com.octo.gwt.test.patcher.PatchMethod;
-import com.octo.gwt.test.patcher.PropertyContainer;
-import com.octo.gwt.test.patcher.PropertyContainerHelper;
 
 @PatchClass(Element.class)
 public class ElementPatcher extends AutomaticPropertyContainerPatcher {
 
 	public static final String PROPERTY_MAP_FIELD = "propertyMap";
-	public static final String ATTRIBUTE_MAP_FIELD = "attributeMap";
-	public static final String STYLE_FIELD = "style";
+	public static final String ATTRIBUTE_MAP_FIELD = "AttributeMap";
+	public static final String STYLE_FIELD = "Style";
 	public static final String CLASSNAME_FIELD = "ClassName";
 	public static final String ACCESSKEY_FIELD = "AccessKey";
 
@@ -32,17 +32,11 @@ public class ElementPatcher extends AutomaticPropertyContainerPatcher {
 		super.initClass(c);
 		CtConstructor cons = findConstructor(c);
 
-		cons.insertAfter(PropertyContainerHelper.getCodeSetProperty("this", STYLE_FIELD, NodeFactory.class.getCanonicalName() + ".createStyle()")
+		cons.insertAfter(PropertyContainerHelper.getCodeSetProperty("this", STYLE_FIELD, NodeFactory.class.getCanonicalName() + ".createStyle(this)")
 				+ ";");
-		cons.insertAfter(PropertyContainerHelper.getCodeSetProperty("this", PROPERTY_MAP_FIELD, "new " + PropertyContainer.class.getCanonicalName()
-				+ "()")
-				+ ";");
-		cons.insertAfter(PropertyContainerHelper.getCodeSetProperty("this", ATTRIBUTE_MAP_FIELD, "new " + PropertyContainer.class.getCanonicalName()
-				+ "()")
-				+ ";");
-		cons.insertAfter(PropertyContainerHelper.getCodeSetProperty("this", ATTRIBUTE_MAP_FIELD, "new " + PropertyContainer.class.getCanonicalName()
-				+ "()")
-				+ ";");
+		cons.insertAfter(PropertyContainerHelper.getCodeSetProperty("this", PROPERTY_MAP_FIELD, PropertyContainerHelper.getConstructionCode()) + ";");
+		cons.insertAfter(PropertyContainerHelper.getCodeSetProperty("this", ATTRIBUTE_MAP_FIELD, PropertyContainerHelper.getConstructionCode()) + ";");
+		cons.insertAfter(PropertyContainerHelper.getCodeSetProperty("this", ATTRIBUTE_MAP_FIELD, PropertyContainerHelper.getConstructionCode()) + ";");
 		cons.insertAfter(PropertyContainerHelper.getCodeSetProperty("this", CLASSNAME_FIELD, "\"\"") + ";");
 		cons.insertAfter(PropertyContainerHelper.getCodeSetProperty("this", ACCESSKEY_FIELD, "\"\"") + ";");
 	}

@@ -4,10 +4,10 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.user.client.ui.UIObject;
 import com.octo.gwt.test.internal.patcher.dom.ElementPatcher;
+import com.octo.gwt.test.internal.utils.PropertyContainerHelper;
 import com.octo.gwt.test.patcher.AutomaticPatcher;
 import com.octo.gwt.test.patcher.PatchClass;
 import com.octo.gwt.test.patcher.PatchMethod;
-import com.octo.gwt.test.patcher.PropertyContainerHelper;
 import com.octo.gwt.test.utils.GwtTestReflectionUtils;
 
 @PatchClass(UIObject.class)

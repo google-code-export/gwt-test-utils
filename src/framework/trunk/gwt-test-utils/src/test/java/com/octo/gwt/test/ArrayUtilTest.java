@@ -3,7 +3,7 @@ package com.octo.gwt.test;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.octo.gwt.test.utils.ArrayUtils;
+import com.octo.gwt.test.internal.utils.ArrayUtils;
 
 public class ArrayUtilTest {
 

@@ -12,11 +12,11 @@ import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Text;
 import com.octo.gwt.test.internal.overrides.OverrideNodeList;
+import com.octo.gwt.test.internal.utils.PropertyContainer;
+import com.octo.gwt.test.internal.utils.PropertyContainerHelper;
 import com.octo.gwt.test.patcher.AutomaticPropertyContainerPatcher;
 import com.octo.gwt.test.patcher.PatchClass;
 import com.octo.gwt.test.patcher.PatchMethod;
-import com.octo.gwt.test.patcher.PropertyContainer;
-import com.octo.gwt.test.patcher.PropertyContainerHelper;
 
 @PatchClass(Node.class)
 public class NodePatcher extends AutomaticPropertyContainerPatcher {
@@ -236,7 +236,7 @@ public class NodePatcher extends AutomaticPropertyContainerPatcher {
 		}
 
 		// Manage getParentNode() 
-		PropertyContainerHelper.setProperty(newChild, PARENT_NODE_FIELD, parent);
+		PropertyContainerHelper.setProperty(newChild, PARENT_NODE_FIELD, parent, false);
 
 		return newChild;
 	}
@@ -253,7 +253,8 @@ public class NodePatcher extends AutomaticPropertyContainerPatcher {
 			} else if (entry.getValue() instanceof Boolean) {
 				n.put(entry.getKey(), new Boolean((Boolean) entry.getValue()));
 			} else if (entry.getValue() instanceof Style) {
-				Style newStyle = NodeFactory.createStyle();
+				// The propertyContainerAware have to be an instance of Element since Style requiers Element in its constructor with gwt-test-utils
+				Style newStyle = NodeFactory.createStyle((Element) n.getOwner());
 				PropertyContainer o = PropertyContainerHelper.cast(entry.getValue()).getProperties();
 				PropertyContainer nn = PropertyContainerHelper.cast(newStyle).getProperties();
 				nn.clear();
@@ -262,8 +263,9 @@ public class NodePatcher extends AutomaticPropertyContainerPatcher {
 				n.put(entry.getKey(), newStyle);
 			} else if (entry.getValue() instanceof OverrideNodeList<?>) {
 			} else if (entry.getValue() instanceof PropertyContainer) {
-				PropertyContainer nn = new PropertyContainer();
-				fillNewPropertyContainer(nn, (PropertyContainer) entry.getValue());
+				PropertyContainer toCopy = (PropertyContainer) entry.getValue();
+				PropertyContainer nn = new PropertyContainer(toCopy.getOwner());
+				fillNewPropertyContainer(nn, toCopy);
 				n.put(entry.getKey(), nn);
 			} else {
 				throw new RuntimeException("Not managed type " + entry.getValue().getClass() + ", value " + entry.getKey());

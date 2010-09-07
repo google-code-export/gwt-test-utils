@@ -1,6 +1,7 @@
 package com.octo.gwt.test.internal;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -16,6 +17,8 @@ import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
 import com.octo.gwt.test.internal.overrides.OverrideNodeList;
+import com.octo.gwt.test.internal.utils.PropertyContainer;
+import com.octo.gwt.test.internal.utils.PropertyContainerHelper;
 
 public class GwtHtmlParser {
 
@@ -23,7 +26,20 @@ public class GwtHtmlParser {
 
 	public static String format(Element e) {
 		StringBuilder sb = new StringBuilder();
+		if (e.getChildCount() == 0) {
+			return e.getInnerText();
+		}
+
 		sb.append("<").append(e.getTagName());
+		PropertyContainer pc = PropertyContainerHelper.cast(e).getProperties();
+		Iterator<String> it = pc.orderedIterator();
+		if (it.hasNext()) {
+			sb.append(" ");
+		}
+		while (it.hasNext()) {
+			String current = it.next();
+			sb.append(current).append("=\"").append(pc.get(current)).append("\" ");
+		}
 
 		return sb.toString();
 	}

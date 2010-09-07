@@ -56,9 +56,9 @@ import com.google.gwt.dom.client.TextAreaElement;
 import com.google.gwt.dom.client.TitleElement;
 import com.google.gwt.dom.client.UListElement;
 import com.octo.gwt.test.GwtTestClassLoader;
-import com.octo.gwt.test.patcher.PropertyContainer;
-import com.octo.gwt.test.patcher.PropertyContainerHelper;
-import com.octo.gwt.test.utils.TagAware;
+import com.octo.gwt.test.internal.utils.PropertyContainer;
+import com.octo.gwt.test.internal.utils.PropertyContainerHelper;
+import com.octo.gwt.test.internal.utils.TagAware;
 
 public class NodeFactory {
 
@@ -159,11 +159,11 @@ public class NodeFactory {
 		return DOCUMENT;
 	}
 
-	public static Style createStyle() {
+	public static Style createStyle(Element owner) {
 		try {
-			return (Style) loadClass(Style.class.getName()).newInstance();
+			return (Style) loadClass(Style.class.getName()).getConstructor(Element.class).newInstance(owner);
 		} catch (Exception e) {
-			throw new RuntimeException("Unable to create text " + e);
+			throw new RuntimeException("Unable to create style for element <" + owner.getTagName() + ">" + e);
 		}
 	}
 

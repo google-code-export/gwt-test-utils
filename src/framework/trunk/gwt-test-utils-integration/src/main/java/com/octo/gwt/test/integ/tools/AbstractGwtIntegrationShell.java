@@ -35,7 +35,7 @@ import com.octo.gwt.test.AbstractGwtConfigurableTest;
 import com.octo.gwt.test.integ.CsvMethod;
 import com.octo.gwt.test.integ.csvrunner.CsvRunner;
 import com.octo.gwt.test.integ.csvrunner.Node;
-import com.octo.gwt.test.utils.ArrayUtils;
+import com.octo.gwt.test.internal.utils.ArrayUtils;
 import com.octo.gwt.test.utils.GwtTestReflectionUtils;
 import com.octo.gwt.test.utils.GwtTestStringUtils;
 import com.octo.gwt.test.utils.WidgetUtils;
