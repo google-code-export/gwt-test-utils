@@ -75,49 +75,46 @@ The UI comportement is straightforward : moving the mouse on the logo image will
 
 To run tests, we need a Run class which can told were to find CSV files to run and how to start the GWT UI without the GWT Hosted Mode.
 {{{AbstractGwtIntegrationShell}}} is the base class to do it :
-
 {{{
 @CsvDirectory(value = "functional-tests", extension = ".csv")
 @RunWith(StandardJUnit4CsvRunner.class)
 public class MyTestShell extends AbstractGwtIntegrationShell {
 
-   private MyApp myApp;
+   private MyApp myApp = new MyApp();
 
    @CsvMethod
    public void initApp() {
-      myApp = new MyApp();
       myApp.onModuleLoad();
    }
 
    @Override
-   public PrefixProcessor findPrefixProcessor(String prefix) {
+   protected NodeObjectFinder getNodeObjectFinder(String prefix) {
       if ("myApp".equals(prefix)) {
-         return new PrefixProcessor() {
+         return new NodeObjectFinder() {
 
-            public Object process(CsvRunner csvRunner, Node next, boolean failOnError) {
-               return csvRunner.getValue(failOnError, myApp, next);
+            public Object find(CsvRunner csvRunner, Node node) {
+               return csvRunner.getNodeValue(myApp, node);
             }
 
          };
       } else if ("simpleComposite".equals(prefix)) {
-         return new PrefixProcessor() {
+         return new NodeObjectFinder() {
 
-            public Object process(CsvRunner csvRunner, Node next, boolean failOnError) {
-               return csvRunner.getValue(failOnError, RootPanel.get().getWidget(0), next);
+            public Object find(CsvRunner csvRunner, Node node) {
+               return csvRunner.getNodeValue(RootPanel.get().getWidget(0), node);
             }
          };
       } 
 
-      return super.findPrefixProcessor(prefix);
+      return super.getNodeObjectFinder(prefix);
    }
-}
 }}}
 
 The {{{@CsvDirectory}}} class annotation tells *gwt-test-utils* where to find CSV files. In this case, all files with the extension _*.csv*_ in the project folder _functional-tests_ will be loaded. The _extension_ property is optional and equals "*.csv*" by default.
 
-We also write a simple {{{initApp}}} method which instanciate the application. This method is annoted with a markup annotation : {{{@CsvMethod}}}, which tells the framework {{{initApp}}} can be used directly in CSV tests.
+We also write a simple {{{initApp}}} method which initialize the application. This method is annoted with a markup annotation : {{{@CsvMethod}}}, which tells the framework {{{initApp}}} can be used directly in CSV tests.
 
-Finally, we overrided the {{{AbstractGwtIntegrationShell.findPrefixProcessor(String prefix)}}} to provide a cool way to access the UI components.
+Finally, we overrided the {{{AbstractGwtIntegrationShell.getNodeObjectFinder(String prefix)}}} to provide a cool way to access the UI components.
 
 
 Now, we can write the corresponding CSV senario and assertions which will use {{{MyTestShell}}} functionalities : 
@@ -158,7 +155,7 @@ assertExact;mouse moved on picture !;/myApp/c1/label/text
 
 Those 3 lines do exactly the same thing with 3 different prefix processors : 
  * *simpleComposite* refers to the {{{SimpleComposite}}} instance we added in the {{{RootPanel}}} in {{{MyApp.onModuleLoad()}}}
- * *root* refers to the {{{RootPanel}}} itself. The corresponding {{{PrefixProcessor}}} is registered in the {{{AbstractGwtIntegrationShell.findPrefixProcessor()}}} we called after overriding it.
+ * *root* refers to the {{{RootPanel}}} itself. The corresponding {{{NodeObjectFinder}}} is registered in the {{{AbstractGwtIntegrationShell.getNodeObjectFinder(prefix)}}} we called after overriding it.
  * *myApp* refers to the custom {{{EntryPoint}}} instance we initialize though the {{{MyTestShell.initApp()}}} method.
 
 
@@ -193,64 +190,68 @@ We also have to modify the test class to provide some glue to connect the GWT UI
 @RunWith(StandardJUnit4CsvRunner.class)
 public class MyTestShell extends AbstractGwtIntegrationShell {
 
-   private MyApp myApp;
+   private MyApp myApp = new MyApp();
 
+   @CsvMethod
    public void initApp() {
-      myApp = new MyApp();
       myApp.onModuleLoad();
    }
 
    @Override
-   public PrefixProcessor findPrefixProcessor(String prefix) {
+   protected NodeObjectFinder getNodeObjectFinder(String prefix) {
       if ("myApp".equals(prefix)) {
-         return new PrefixProcessor() {
+         return new NodeObjectFinder() {
 
-            public Object process(CsvRunner csvRunner, Node next, boolean failOnError) {
-               return csvRunner.getValue(failOnError, myApp, next);
+            public Object find(CsvRunner csvRunner, Node node) {
+               return csvRunner.getNodeValue(myApp, node);
             }
+
          };
       } else if ("simpleComposite".equals(prefix)) {
-         return new PrefixProcessor() {
+         return new NodeObjectFinder() {
 
-            public Object process(CsvRunner csvRunner, Node next, boolean failOnError) {
-               return csvRunner.getValue(failOnError, RootPanel.get().getWidget(0), next);
+            public Object find(CsvRunner csvRunner, Node node) {
+               return csvRunner.getNodeValue(RootPanel.get().getWidget(0), node);
             }
          };
       } else if ("rpcComposite".equals(prefix)) {
-         return new PrefixProcessor() {
-   
-            public Object process(CsvRunner csvRunner, Node next, boolean failOnError) {
-               return csvRunner.getValue(failOnError, RootPanel.get().getWidget(2), next);
+         return new NodeObjectFinder() {
+
+            public Object find(CsvRunner csvRunner, Node node) {
+               return csvRunner.getNodeValue(RootPanel.get().getWidget(2), node);
             }
          };
-      }
+      } 
 
-      return super.findPrefixProcessor(prefix);
+      return super.getNodeObjectFinder(prefix);
    }
 
+   @Before
+   public void setUpMyTestShell() throws Exception {
+      addGwtCreateHandler(createGwtCreateHandler());
+   }
 
-   @Override
-   protected GwtCreateHandler getGwtCreateHandler() {
-      return new GwtCreateHandlerImpl() {
+   private GwtCreateHandler createGwtCreateHandler() {
+      return new RemoteServiceCreateHandler() {
 
          @Override
          public Object findService(Class<?> remoteServiceClazz) {
-            if (remoteServiceClazz == RCPService.class) {
-               return new RCPServiceImpl();
+            if (remoteServiceClazz == MyService.class) {
+               return new MyServiceImpl();
             }
             return null;
          }
-
       };
    }
+
 }
 }}}
 
-First, we added a new {{{PrefixProcessor}}} for string "rpcComposite".
+First, we added a new {{{NodeObjectFinder}}} for string "rpcComposite".
 
-Than, we had to override the {{{AbstractGwtIntegrationShell.getGwtCreateHandler()}}}, which return {{{null}}} by default.
-We used the out-of-the-box {{{GwtCreateHandlerImpl}}} implementation which handle RPC service creation and RPC calls exception. The only thing to do is to implement the abstract function {{{GwtCreateHandlerImpl.findService(Class<?> remoteServiceClazz)}}}.
-In our case, to ask for a {{{RCPService}}} service will return an instance of its simple implementation {{{RCPServiceImpl}}}.
+Than, we had to add a custom GwtCreateHandler to handle the {{{MyServiceAsync service = (MyServiceAsync) GWT.create(MyService.class);}}} instruction.
+We used the out-of-the-box {{{RemoteServiceCreateHandler}}} implementation which handle RPC service creation and RPC calls exception. The only thing to do is to implement the abstract function {{{RemoteServiceCreateHandler.findService(Class<?> remoteServiceClazz)}}}.
+In our case, to ask for a {{{MyService}}} service will return an instance of its simple implementation {{{MyServiceImpl}}}.
 
 Now, we can test the composite with a CSV test : 
 
@@ -264,7 +265,7 @@ assertExact;Hello OCTO !;/rpcComposite/label/text
 
 We just passed a full GWT integration test in a standard JVM, with a real service implementation.
 
-Of course, this {{{getGwtCreateHandler()}}} implementation is quite basic. 
+Of course, this implementation is quite basic. 
 But you could easily write your {{{findService}}} implementation which will get your service from a [http://www.springsource.org/ Spring] context, or any server backend you could imagine ;-)
 
 
