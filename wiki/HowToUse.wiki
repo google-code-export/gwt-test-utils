@@ -111,8 +111,8 @@ List of third-party jars requiered by *gwt-test-utils* :
 
  * bcel-5.2.jar
  * junit-4.7.jar
- * gwt-user-2.0.3.jar
- * gwt-servlet-2.0.3.jar
+ * gwt-user-2.0.4.jar
+ * gwt-servlet-2.0.4.jar
  * htmlparser-1.6.jar
  * jakarta-regexp-1.4.jar
  * javassist-3.8.0.GA.jar
