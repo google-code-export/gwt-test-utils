@@ -110,17 +110,19 @@ To run your GWT unit tests without Maven, just add the *gwt-test-utils-x.jar* to
 List of third-party jars requiered by *gwt-test-utils* :
 
  * bcel-5.2.jar
+ * cglib-nodep-2.1_3.jar
  * commons-lang-2.4.jar
- * junit-4.7.jar
- * gwt-user-2.0.4.jar
+ * easymock-2.3.jar
+ * easymockclassextension-2.3.jar
  * gwt-servlet-2.0.4.jar
+ * gwt-user-2.0.4.jar
  * htmlparser-1.6.jar
  * jakarta-regexp-1.4.jar
  * javassist-3.8.0.GA.jar
+ * junit-4.7.jar
  * log4j-1.2.14.jar
- * easymockclassextension-2.3.jar
- * easymock-2.3.jar
- * cglib-nodep-2.1_3.jar
+
+
 
 List of third-party jars requiered by *gwt-test-utils-integration* :
 
