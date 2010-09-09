@@ -29,6 +29,10 @@ public abstract class VisitorObjectFinder implements ObjectFinder {
 
 	public Object find(CsvRunner csvRunner, String... params) {
 		Object displayedObject = getDisplayedObject(csvRunner);
+		if (displayedObject == null) {
+			throw new RuntimeException("The displayed object cannot be null, please implements corretly the '"
+					+ VisitorObjectFinder.class.getSimpleName() + ".getDisplayedObject(..) method");
+		}
 		WidgetRepository repository = repositories.get(displayedObject);
 		if (repository == null) {
 			repository = new WidgetRepository();
