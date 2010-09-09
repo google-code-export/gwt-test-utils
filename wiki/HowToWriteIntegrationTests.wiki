@@ -122,7 +122,7 @@ Now, we can write the corresponding CSV senario and assertions which will use {{
 {{{
 start
 initApp
-assertNull;/simpleComposite/label/text
+assertNotExist;/simpleComposite/label/text
 mouseMove;/simpleComposite/img
 assertExact;mouse moved on picture !;/simpleComposite/label/text
 assertExact;mouse moved on picture !;/root/widget(0)/label/text
@@ -132,10 +132,10 @@ assertExact;mouse moved on picture !;/myApp/c1/label/text
 First, we had to start the script with the instruction {{{start}}}.
 Than, we called the {{{@CsvMethod MyTestShell.initApp()}}} method to instanciate the GWT application.
 
-Since the application is initialized, we can do some actions. So, let's explain the line {{{assertNull;/simpleComposite/label/text}}} : 
+Since the application is initialized, we can do some actions. So, let's explain the line {{{assertNotExist;/simpleComposite/label/text}}} : 
 
- * The first CSV cell desribe the action to do. Each action *must* have a corresponding {{{@CsvMethod}}} in the run test class (or any of its superclass), which can be retrieved by name. {{{AbstractGwtIntegrationShell}}} provides some generic test statements, such as {{{assertNull}}}, {{{assertExact}}}, {{{assertNumberExact}}}, {{{assertContains}}} and so on.
- * Other cells are the action arguments. In that case, the {{{AbstractGwtIntegrationShell.assertNull(String objectLocalisation)}}} requiers one only argument, the object localisation in the UI.
+ * The first CSV cell desribe the action to do. Each action *must* have a corresponding {{{@CsvMethod}}} in the run test class (or any of its superclass), which can be retrieved by name. {{{AbstractGwtIntegrationShell}}} provides some generic test statements, such as {{{assertNotExist}}}, {{{assertExact}}}, {{{assertNumberExact}}}, {{{assertContains}}} and so on.
+ * Other cells are the action arguments. In that case, the {{{AbstractGwtIntegrationShell.assertNotExist(String... params)}}} requiers one only argument, the object localisation in the UI.
 
 Object localization strings used to retrived objects in the UI use a _XPath-like_ syntax which is very easy to understand : {{{/simpleComposite/label/text}}} will retrieve the object binded to the "simpleComposite" prefix we defined by overriding {{{AbstractGwtIntegrationShell.getNodeObjectFinder(String prefix)}}} method.
 It assumes this object have an inner property called "label" which have a method "getText" with *no argument*.
@@ -258,7 +258,7 @@ Now, we can test the composite with a CSV test :
 {{{
 start
 initApp
-assertNull;/rpcComposite/label/text
+assertNotExist;/rpcComposite/label/text
 click;/rpcComposite/button
 assertExact;Hello OCTO !;/rpcComposite/label/text
 }}}
@@ -281,7 +281,7 @@ Look at the test examples above :
 {{{
 start
 initApp
-assertNull;/simpleComposite/label/text
+assertNotExist;/simpleComposite/label/text
 mouseMove;/simpleComposite/img
 assertExact;mouse moved on picture !;/simpleComposite/label/text
 assertExact;mouse moved on picture !;/root/widget(0)/label/text
@@ -293,7 +293,7 @@ assertExact;mouse moved on picture !;/myApp/c1/label/text
 {{{
 start
 initApp
-assertNull;/rpcComposite/label/text
+assertNotExist;/rpcComposite/label/text
 click;/rpcComposite/button
 assertExact;Hello OCTO !;/rpcComposite/label/text
 }}}
@@ -305,9 +305,9 @@ This could be done in {{{macro-init.csv}}} :
 {{{
 macro;InitialisationMacro
 initApp
-assertNull;/simpleComposite/label/text
-assertNull;/simpleComposite2/textBox/text
-assertNull;/rpcComposite/label/text
+assertNotExist;/simpleComposite/label/text
+assertNotExist;/simpleComposite2/textBox/text
+assertNotExist;/rpcComposite/label/text
 endmacro
 }}}
 
