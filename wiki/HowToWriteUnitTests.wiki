@@ -70,7 +70,7 @@ public class SimpleCompositeTest extends AbstractGwtTest {
       Assert.assertEquals(null, label.getText());
 		
       // simule the click event with AbstractGwtTest method
-      click(button);
+      Browser.click(button);
 		
       // assert the label has been filled
       Assert.assertEquals("The button was clicked !", label.getText());
@@ -80,7 +80,7 @@ public class SimpleCompositeTest extends AbstractGwtTest {
 
 Note that the test class *must* extends {{{AbstractGwtTest}}}, which provide the mecanism to allow the instanciation of GWT component in the JVM.
 
-{{{AbstractGwtTest}}} also provide some helpfull method to simule User Event, such as click, double-click, blur, etc.
+The {{{Browser}}} class provides some helpfull methods to simule User events, such as click, double-click, blur, etc.
 
 
 = Tests with a GWT RPC call =
@@ -204,7 +204,7 @@ public class RPCCompositeTest extends AbstractGwtEasyMockTest {
       Assert.assertEquals(null, label.getText());
 
       // click to call server back
-      click(button);
+      Browser.click(button);
 
       // Assert
       verify();
@@ -222,11 +222,12 @@ public class RPCCompositeTest extends AbstractGwtEasyMockTest {
 
       expectServiceAndCallbackOnFailure(new Exception("Mocked exception"));
       replay();
-      // Test
+      
       Assert.assertEquals(null, label.getText());
 
+      // Test
       // click to call server back
-      click(button);
+      Browser.click(button);
 
       // Assert
       verify();
