@@ -1,0 +1,6 @@
+macro;InitialisationMacro
+initApp
+assertNotExist;/simpleComposite/label/text
+assertNotExist;/simpleComposite2/textBox/text
+assertNotExist;/rpcComposite/label/text
+endmacro
