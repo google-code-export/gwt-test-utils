@@ -15,7 +15,7 @@
 		<htmlparser.version>1.6</htmlparser.version>
 		<javassist.version>3.8.0.GA</javassist.version>
 		<junit.version>4.8.1</junit.version>
-		<log4j.version>1.2.16</log4j.version>
+		<slf4j.version>1.6.1</slf4j.version>
 	</properties>
 
 	<scm>
@@ -43,6 +43,17 @@
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>${junit.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${slf4j.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-simple</artifactId>
+			<version>${slf4j.version}</version>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 

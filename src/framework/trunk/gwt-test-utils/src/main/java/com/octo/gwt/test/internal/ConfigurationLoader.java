@@ -18,7 +18,8 @@ import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.octo.gwt.test.IPatcher;
 import com.octo.gwt.test.internal.modifiers.ClassSubstituer;
@@ -29,7 +30,7 @@ import com.octo.gwt.test.utils.GwtTestReflectionUtils;
 
 public class ConfigurationLoader {
 
-	private static final Logger logger = Logger.getLogger(ConfigurationLoader.class);
+	private static final Logger logger = LoggerFactory.getLogger(ConfigurationLoader.class);
 
 	private static final String CONFIG_FILENAME = "META-INF/gwt-test-utils.properties";
 

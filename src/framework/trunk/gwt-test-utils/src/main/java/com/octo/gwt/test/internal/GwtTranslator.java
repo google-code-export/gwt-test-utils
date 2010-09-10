@@ -9,14 +9,15 @@ import javassist.CtClass;
 import javassist.NotFoundException;
 import javassist.Translator;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.octo.gwt.test.IPatcher;
 import com.octo.gwt.test.internal.utils.PatchGwtUtils;
 
 public class GwtTranslator implements Translator {
 
-	public static final Logger logger = Logger.getLogger(GwtTranslator.class);
+	public static final Logger logger = LoggerFactory.getLogger(GwtTranslator.class);
 
 	public void onLoad(ClassPool pool, String className) throws NotFoundException, CannotCompileException {
 		try {

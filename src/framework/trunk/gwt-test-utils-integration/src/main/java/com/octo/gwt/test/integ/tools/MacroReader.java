@@ -4,12 +4,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.junit.Assert;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class MacroReader {
 
-	private final static Logger logger = Logger.getLogger(MacroReader.class);
+	private final static Logger logger = LoggerFactory.getLogger(MacroReader.class);
 
 	private HashMap<String, List<List<String>>> macroList;
 

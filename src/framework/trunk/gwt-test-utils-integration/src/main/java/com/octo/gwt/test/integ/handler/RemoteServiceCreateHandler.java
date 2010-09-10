@@ -2,7 +2,8 @@ package com.octo.gwt.test.integ.handler;
 
 import java.lang.reflect.Proxy;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.octo.gwt.test.GwtCreateHandler;
@@ -11,7 +12,7 @@ import com.octo.gwt.test.utils.ISerializeCallback;
 
 public abstract class RemoteServiceCreateHandler implements GwtCreateHandler {
 
-	private static final Logger logger = Logger.getLogger(RemoteServiceCreateHandler.class);
+	private static final Logger logger = LoggerFactory.getLogger(RemoteServiceCreateHandler.class);
 
 	private DeserializationContext backToGwtCallbacks;
 

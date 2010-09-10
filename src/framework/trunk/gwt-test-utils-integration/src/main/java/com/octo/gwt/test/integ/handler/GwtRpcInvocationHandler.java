@@ -5,7 +5,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.StatusCodeException;
@@ -15,7 +16,7 @@ import com.octo.gwt.test.utils.GwtTestReflectionUtils;
 
 public class GwtRpcInvocationHandler implements InvocationHandler {
 
-	private static final Logger logger = Logger.getLogger(GwtRpcInvocationHandler.class);
+	private static final Logger logger = LoggerFactory.getLogger(GwtRpcInvocationHandler.class);
 
 	private Object target;
 

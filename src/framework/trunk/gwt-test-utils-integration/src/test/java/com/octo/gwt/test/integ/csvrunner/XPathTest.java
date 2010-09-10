@@ -2,19 +2,9 @@ package com.octo.gwt.test.integ.csvrunner;
 
 import junit.framework.Assert;
 
-import org.apache.log4j.Logger;
 import org.junit.Test;
 
 public class XPathTest {
-
-	private static final Logger logger = Logger.getLogger(XPathTest.class);
-
-	public Node processString(String s) {
-		logger.info("Processing " + s);
-		Node res = Node.parse(s);
-		logger.info(res);
-		return res;
-	}
 
 	@Test
 	public void testA() {
@@ -82,8 +72,7 @@ public class XPathTest {
 		Assert.assertNotNull(processString("/view/contractChooserPanel/stackPanel/widget(0)/contractTypesAnchors[OC00000002048]"));
 		Assert.assertNotNull(processString("/view/configuratorStackPanel/widget[title=TV - 1 erreurs]"));
 		Assert.assertNotNull(processString("/view/configuratorStackPanel/widget[title=TV - 1 erreur(s)]"));
-		Assert
-				.assertNotNull(processString("/view/configuratorStackPanel/widget[title=TV - 1 erreur(s)]/widget[widget(0)/text=Décodeur HauteDef Enregistreur]/widget(1)"));
+		Assert.assertNotNull(processString("/view/configuratorStackPanel/widget[title=TV - 1 erreur(s)]/widget[widget(0)/text=Décodeur HauteDef Enregistreur]/widget(1)"));
 		Assert.assertNotNull(processString("/view/configurationGrid/parametersGrid/widgetMap/widgetList[text=portal.contrats.OC00000002048]"));
 	}
 
@@ -110,6 +99,11 @@ public class XPathTest {
 	@Test
 	public void testErrorE() {
 		Assert.assertNull(processString("/toto//"));
+	}
+
+	private Node processString(String s) {
+		Node res = Node.parse(s);
+		return res;
 	}
 
 }

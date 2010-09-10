@@ -11,8 +11,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.apache.log4j.Logger;
 import org.junit.Assert;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.octo.gwt.test.integ.CsvMethod;
 import com.octo.gwt.test.integ.tools.AbstractGwtIntegrationShell;
@@ -21,7 +22,7 @@ import com.octo.gwt.test.utils.GwtTestReflectionUtils;
 
 public class CsvRunner {
 
-	private static final Logger logger = Logger.getLogger(CsvRunner.class);
+	private static final Logger logger = LoggerFactory.getLogger(CsvRunner.class);
 
 	private int lineNumber = -1;
 
