@@ -7,14 +7,15 @@
 	<name>GWT Tests Utils Parent</name>
 
 	<properties>
-		<gwt.version>2.0.4</gwt.version>
-		<javassist.version>3.8.0.GA</javassist.version>
-		<easymock.version>2.3</easymock.version>
-		<log4j.version>1.2.14</log4j.version>
 		<antlr.runtime.version>3.0.1</antlr.runtime.version>
-		<commons-lang.version>2.4</commons-lang.version>
 		<bcel.version>5.2</bcel.version>
+		<commons-lang.version>2.4</commons-lang.version>
+		<easymock.version>3.0</easymock.version>
+		<gwt.version>2.0.4</gwt.version>
 		<htmlparser.version>1.6</htmlparser.version>
+		<javassist.version>3.8.0.GA</javassist.version>
+		<junit.version>4.8.1</junit.version>
+		<log4j.version>1.2.16</log4j.version>
 	</properties>
 
 	<scm>
@@ -41,7 +42,7 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.7</version>
+			<version>${junit.version}</version>
 		</dependency>
 	</dependencies>
 
