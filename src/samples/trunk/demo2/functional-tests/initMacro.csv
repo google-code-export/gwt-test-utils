@@ -1,6 +1,0 @@
-macro;InitialisationMacro
-initApp
-assertNull;/simpleComposite/label/text
-assertNull;/simpleComposite2/textBox/text
-assertNull;/rpcComposite/label/text
-endmacro
