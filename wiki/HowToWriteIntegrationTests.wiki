@@ -347,6 +347,6 @@ public class MyTestShell extends AbstractGwtIntegrationShell {
 }
 }}}
 
-In this case, {{{MyTestShell}}} will load as a CSV macro any file in the project folder _functional-tests_ which name is matching the java regular expression {{{^macro.*\\.csv$}}}.
+In this case, {{{MyTestShell}}} will load as a CSV macro any file in the project folder _functional-tests_ which name is matching the java regular expression {{{^macro.*\\.csv$}}}. Each file which does not match this expression but ends with '.csv' will be considered has a integration-test scenario to launch.
 
 The {{{pattern}}} parameter is optional. If it's not set, any file in _functional-tests_ would have been loaded as a CSV macro.
