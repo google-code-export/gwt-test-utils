@@ -13,15 +13,14 @@
 
 		<!-- convenience to define GWT version in one place -->
 		<gwt.version>2.0.4</gwt.version>
-
+		
 		<!-- gwt maven plugin version -->
 		<gwt.maven.plugin.version>1.2</gwt.maven.plugin.version>
 
-		<!-- gwt-test-utils snapshot to be up-to-date -->
-		<gwt.test.utils.version>0.20-SNAPSHOT</gwt.test.utils.version>
+		<gwt.test.utils.version>${project.version}</gwt.test.utils.version>
 
 		<slf4j.version>1.6.1</slf4j.version>
-
+		
 		<!-- gwt exploded war root package -->
 		<gwt.war.path>${basedir}/target/war</gwt.war.path>
 
@@ -121,9 +120,8 @@
 				</configuration>
 			</plugin>
 
-			<!-- add src/integration-test/java as a source directory to be able to 
-				launch integration-test directly in your IDE -->
-			<plugin>
+			<!-- add src/integration-test/java as a source directory to be able to launch integration-test directly in your IDE -->
+						<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>build-helper-maven-plugin</artifactId>
 				<version>1.5</version>
@@ -170,18 +168,9 @@
 				<artifactId>maven-jetty-plugin</artifactId>
 				<version>6.1.5</version>
 			</plugin>
-
-			<!-- we don't want to deploy this demo in the nexus repository ! -->
-			<plugin>
-				<artifactId>maven-deploy-plugin</artifactId>
-				<configuration>
-					<skip>true</skip>
-				</configuration>
-			</plugin>
-
 		</plugins>
 	</build>
-
+	
 	<profiles>
 		<profile>
 			<id>no-gwt-compile</id>

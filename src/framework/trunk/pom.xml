@@ -36,7 +36,6 @@
 	<modules>
 		<module>gwt-test-utils</module>
 		<module>gwt-test-utils-integration</module>
-		<module>gwt-test-utils-demo</module>
 	</modules>
 
 	<dependencies>
