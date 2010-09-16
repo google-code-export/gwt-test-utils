@@ -61,7 +61,7 @@ public class CsvRunner {
 		if (row.size() == 0) {
 			return;
 		}
-		String methodName = row.get(0);
+		String methodName = row.get(0).trim();
 		if (!"".equals(methodName)) {
 			List<String> args = new ArrayList<String>();
 			args.addAll(row);

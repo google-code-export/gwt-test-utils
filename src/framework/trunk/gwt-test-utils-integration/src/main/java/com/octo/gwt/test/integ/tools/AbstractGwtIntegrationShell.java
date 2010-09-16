@@ -146,10 +146,34 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 	@CsvMethod
 	public void assertExact(String value, String... params) {
 		value = GwtTestStringUtils.resolveBackSlash(value);
-		Object o = getObject(Object.class, false, params);
-		String actualValue;
+		String actualValue = getString(params);
 
-		if (HasHTML.class.isInstance(o)) {
+		if (value == null) {
+			Assert.assertNull(csvRunner.getAssertionErrorMessagePrefix() + "Null was expected, but '" + actualValue + "' has been find", actualValue);
+		} else {
+			Assert.assertEquals(csvRunner.getAssertionErrorMessagePrefix() + "Wrong string", value, actualValue);
+		}
+
+	}
+
+	/**
+	 * 
+	 * @param containedValue
+	 * @param params
+	 */
+	@CsvMethod
+	public void assertContains(String containedValue, String... params) {
+		containedValue = GwtTestStringUtils.resolveBackSlash(containedValue);
+		String actual = getString(params);
+		Assert.assertTrue(csvRunner.getAssertionErrorMessagePrefix() + " not containing string " + containedValue, actual.contains(containedValue));
+	}
+
+	private String getString(String... params) {
+		Object o = getObject(Object.class, params);
+		String actualValue;
+		if (o == null) {
+			return null;
+		} else if (HasHTML.class.isInstance(o)) {
 			HasHTML hasHTML = (HasHTML) o;
 			String html = hasHTML.getHTML();
 			actualValue = (html != null && html.length() > 0) ? html : hasHTML.getText();
@@ -159,12 +183,7 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 			actualValue = "" + o;
 		}
 
-		if (value == null) {
-			Assert.assertNull(csvRunner.getAssertionErrorMessagePrefix() + "Null was expected, but '" + o + "' has been find", o);
-		} else {
-			Assert.assertEquals(csvRunner.getAssertionErrorMessagePrefix() + "Wrong string", value, actualValue);
-		}
-
+		return actualValue;
 	}
 
 	/**
@@ -201,13 +220,6 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 		} else {
 			Assert.assertFalse(csvRunner.getAssertionErrorMessagePrefix() + "FALSE expected", b.booleanValue());
 		}
-	}
-
-	@CsvMethod
-	public void assertContains(String value, String... params) {
-		value = GwtTestStringUtils.resolveBackSlash(value);
-		String s = getObject(String.class, params);
-		Assert.assertTrue(csvRunner.getAssertionErrorMessagePrefix() + " not containing string " + value, s.contains(value));
 	}
 
 	@CsvMethod
