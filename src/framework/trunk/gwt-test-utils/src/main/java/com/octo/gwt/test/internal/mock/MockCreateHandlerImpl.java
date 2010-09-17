@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.easymock.EasyMock;
 import org.easymock.IAnswer;
-import org.easymock.classextension.EasyMock;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.RemoteService;
@@ -86,7 +86,6 @@ public class MockCreateHandlerImpl implements MockCreateHandler {
 		return createMockAndKeepMethods(clazz, true, GwtTestReflectionUtils.findMethod(clazz, methodName, null));
 	}
 
-	@SuppressWarnings("unchecked")
 	public <T> T createMockAndKeepMethods(Class<T> clazz, final boolean keepSetters, final Method... list) {
 		final List<Method> l = new ArrayList<Method>();
 		GwtTestReflectionUtils.doWithMethods(clazz, new MethodCallback() {
@@ -100,9 +99,9 @@ public class MockCreateHandlerImpl implements MockCreateHandler {
 			}
 
 		});
-		Object o = EasyMock.createMock(clazz, l.toArray(new Method[] {}));
+		T o = EasyMock.createMockBuilder(clazz).addMockedMethods(l.toArray(new Method[] {})).createMock();
 		addMockedObject(clazz, o);
-		return (T) o;
+		return o;
 	}
 
 	public Object addMockedObject(Class<?> createClass, Object mock) {

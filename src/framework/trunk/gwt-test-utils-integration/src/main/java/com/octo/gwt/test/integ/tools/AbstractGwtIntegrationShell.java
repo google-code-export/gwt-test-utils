@@ -169,7 +169,7 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 	}
 
 	private String getString(String... params) {
-		Object o = getObject(Object.class, params);
+		Object o = getObject(Object.class, false, params);
 		String actualValue;
 		if (o == null) {
 			return null;

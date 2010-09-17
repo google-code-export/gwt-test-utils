@@ -1,7 +1,7 @@
 package com.octo.gwt.test;
 
+import org.easymock.EasyMock;
 import org.easymock.IArgumentMatcher;
-import org.easymock.classextension.EasyMock;
 
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 

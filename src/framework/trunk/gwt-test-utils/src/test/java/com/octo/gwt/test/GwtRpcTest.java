@@ -1,6 +1,6 @@
 package com.octo.gwt.test;
 
-import org.easymock.classextension.EasyMock;
+import org.easymock.EasyMock;
 import org.junit.Assert;
 import org.junit.Test;
 

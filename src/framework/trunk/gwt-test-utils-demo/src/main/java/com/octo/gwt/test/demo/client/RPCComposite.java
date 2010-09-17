@@ -15,12 +15,7 @@ public class RPCComposite extends Composite {
 	private Button button;
 	private Label label;
 
-	// Create the client proxy. Note that although you are creating the
-	// service interface proper, you cast the result to the asynchronous
-	// version of the interface. The cast is always safe because the 
-	// generated proxy implements the asynchronous interface automatically.
-	//
-	private MyServiceAsync service = (MyServiceAsync) GWT.create(MyService.class);
+	private MyServiceAsync service = GWT.create(MyService.class);
 
 	public RPCComposite() {
 		button = new Button();
