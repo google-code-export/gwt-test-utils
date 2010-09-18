@@ -103,13 +103,13 @@ public class StyleTest extends AbstractGwtTest {
 		style.setFloat(Style.Float.RIGHT);
 
 		// Assert 1
-		Assert.assertEquals(Style.Float.RIGHT.getCssName(), style.getProperty("cssFloat"));
+		Assert.assertEquals(Style.Float.RIGHT.getCssName(), style.getProperty("float"));
 
 		// Test 2
 		style.clearFloat();
 
 		// Assert 2
-		Assert.assertEquals("", style.getProperty("cssFloat"));
+		Assert.assertEquals("", style.getProperty("float"));
 	}
 
 	@Test

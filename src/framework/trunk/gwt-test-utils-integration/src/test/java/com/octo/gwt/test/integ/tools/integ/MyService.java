@@ -2,6 +2,9 @@ package com.octo.gwt.test.integ.tools.integ;
 
 import org.junit.Assert;
 
+import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
+
+@RemoteServiceRelativePath("myService")
 public class MyService implements MyRemoteService {
 
 	public String myMethod(String param1) {

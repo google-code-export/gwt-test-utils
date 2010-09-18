@@ -5,7 +5,6 @@ import org.junit.runner.RunWith;
 
 import com.google.gwt.user.client.ui.RootPanel;
 import com.octo.gwt.test.GwtCreateHandler;
-import com.octo.gwt.test.demo.server.MyServiceImpl;
 import com.octo.gwt.test.integ.CsvDirectory;
 import com.octo.gwt.test.integ.CsvMacros;
 import com.octo.gwt.test.integ.CsvMethod;
@@ -15,6 +14,8 @@ import com.octo.gwt.test.integ.handler.RemoteServiceCreateHandler;
 import com.octo.gwt.test.integ.junit.StandardJUnit4CsvRunner;
 import com.octo.gwt.test.integ.tools.AbstractGwtIntegrationShell;
 import com.octo.gwt.test.integ.tools.NodeObjectFinder;
+import com.octo.gwt.test.integ.tools.integ.MyRemoteService;
+import com.octo.gwt.test.integ.tools.integ.MyService;
 
 @CsvDirectory(value = "functional-tests", extension = ".csv")
 @CsvMacros(value = "functional-tests", pattern = "^macro.*\\.csv$")
@@ -38,9 +39,9 @@ public class MyTestShell extends AbstractGwtIntegrationShell {
 		return new RemoteServiceCreateHandler() {
 
 			@Override
-			public Object findService(Class<?> remoteServiceClazz) {
-				if (remoteServiceClazz == MyService.class) {
-					return new MyServiceImpl();
+			public Object findService(Class<?> remoteServiceClass, String remoteServiceRelativePath) {
+				if (remoteServiceClass == MyRemoteService.class && "myService".equals(remoteServiceRelativePath)) {
+					return new MyService();
 				}
 				return null;
 			}

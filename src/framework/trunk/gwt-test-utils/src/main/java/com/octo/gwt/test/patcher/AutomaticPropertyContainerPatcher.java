@@ -94,7 +94,7 @@ public class AutomaticPropertyContainerPatcher extends AutomaticPatcher {
 			String fieldName = PatchGwtUtils.getPropertyName(m);
 			if (fieldName != null) {
 				if (m.getName().startsWith("set")) {
-					return PropertyContainerHelper.getCodeSetProperty("this", fieldName, "$1", true);
+					return PropertyContainerHelper.getCodeSetProperty("this", fieldName, "$1");
 				} else {
 					return "return " + PropertyContainerHelper.getCodeGetProperty("this", fieldName, m.getReturnType());
 				}

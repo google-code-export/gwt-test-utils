@@ -1,62 +1,32 @@
 package com.octo.gwt.test.internal.utils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.Set;
-
-import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.Style;
-import com.octo.gwt.test.internal.patcher.dom.ElementPatcher;
+import java.util.List;
 
 public class PropertyContainer extends HashMap<String, Object> {
 
 	private static final long serialVersionUID = -2421991095282208998L;
 
-	private Set<String> history = new LinkedHashSet<String>();
-	private Object owner;
+	private PropertyContainerAware owner;
+	private List<PropertyContainerObserver> observers = new ArrayList<PropertyContainerObserver>();
 
-	public PropertyContainer(Object owner) {
-		this.owner = owner;
-	}
-
-	public Object getOwner() {
-		return owner;
-	}
-
-	void putNotRecordedObject(String key, Object value) {
-		super.put(key, value);
-	}
-
-	@Override
-	public Object put(String key, Object value) {
-		if (value == null || (String.class.isInstance(value) && ((String) value).trim().length() == 0)) {
-			history.remove(key);
-		} else if (!history.contains(key)) {
-			history.add(key);
-
-			if (Style.class.isInstance(owner)) {
-				Style style = (Style) owner;
-				Element targetElement = StyleHelper.getTargetElement(style);
-				PropertyContainer elemPc = PropertyContainerHelper.cast(targetElement).getProperties();
-				if (!elemPc.history.contains(ElementPatcher.STYLE_FIELD)) {
-					elemPc.history.add(ElementPatcher.STYLE_FIELD);
-				}
-			}
+	public PropertyContainer(Object o) {
+		if (!PropertyContainerAware.class.isInstance(o)) {
+			throw new IllegalArgumentException("Error while creating a '" + PropertyContainer.class.getSimpleName()
+					+ "' instance : owner object is not an instance of '" + PropertyContainerAware.class.getSimpleName() + "' : "
+					+ o.getClass().getName() + "'");
 		}
 
-		return super.put(key, value);
-
+		owner = (PropertyContainerAware) o;
 	}
 
 	@Override
-	public void clear() {
-		super.clear();
-		history.clear();
-	}
-
-	public Iterator<String> orderedIterator() {
-		return history.iterator();
+	public Object put(String propertyName, Object propertyValue) {
+		for (PropertyContainerObserver observer : observers) {
+			observer.fireSetProperty(owner, propertyName, propertyValue);
+		}
+		return super.put(propertyName, propertyValue);
 	}
 
 	public void put(String key, boolean value) {
@@ -85,6 +55,23 @@ public class PropertyContainer extends HashMap<String, Object> {
 	public double getDouble(String key) {
 		Double d = (Double) get(key);
 		return d == null ? 0 : d;
+	}
+	
+	public PropertyContainerAware getOwner() {
+		return owner;
+	}
+
+	public void addObserver(PropertyContainerObserver observer) {
+		observers.add(observer);
+	}
+
+	public boolean removeObserver(PropertyContainerObserver observer) {
+		return observers.remove(observer);
+	}
+
+	public static interface PropertyContainerObserver {
+
+		public void fireSetProperty(PropertyContainerAware owner, String propertyName, Object propertyValue);
 	}
 
 }

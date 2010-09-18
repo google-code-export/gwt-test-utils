@@ -30,8 +30,8 @@ public abstract class MyGwtShell extends AbstractGwtIntegrationShell {
 		handlerImpl = new RemoteServiceCreateHandler() {
 
 			@Override
-			public Object findService(Class<?> remoteServiceClazz) {
-				if (remoteServiceClazz == MyRemoteService.class) {
+			public Object findService(Class<?> remoteServiceClass, String remoteServiceRelativePath) {
+				if (remoteServiceClass == MyRemoteService.class && "myService".equals(remoteServiceRelativePath)) {
 					return new MyService();
 				}
 				return null;

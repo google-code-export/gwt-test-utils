@@ -236,7 +236,7 @@ public class NodePatcher extends AutomaticPropertyContainerPatcher {
 		}
 
 		// Manage getParentNode() 
-		PropertyContainerHelper.setProperty(newChild, PARENT_NODE_FIELD, parent, false);
+		PropertyContainerHelper.setProperty(newChild, PARENT_NODE_FIELD, parent);
 
 		return newChild;
 	}
