@@ -5,8 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.bcel.classfile.JavaClass;
-import org.apache.bcel.classfile.Method;
+import javassist.CtClass;
+import javassist.CtMethod;
 
 public class MethodRemover implements JavaClassModifier {
 
@@ -22,28 +22,13 @@ public class MethodRemover implements JavaClassModifier {
 		methods.add(m);
 	}
 
-	public void modify(JavaClass classToModify) {
-		if (toRemoveByClass.containsKey(classToModify.getClassName())) {
-			List<RemovedMethod> toRemove = toRemoveByClass.get(classToModify.getClassName());
-			Method[] methods = classToModify.getMethods();
-			ArrayList<Method> methodList = new ArrayList<Method>();
-			for (Method m : methods) {
-				String mname = m.getName();
-				String sig = m.getSignature();
-
-				boolean add = true;
-				for (RemovedMethod r : toRemove) {
-					if (r.getMethodName().equals(mname) && r.getSignature().equals(sig)) {
-						add = false;
-						break;
-					}
-				}
-
-				if (add) {
-					methodList.add(m);
-				}
+	public void modify(CtClass classToModify) throws Exception {
+		List<RemovedMethod> list = toRemoveByClass.get(classToModify.getName());
+		if (list != null) {
+			for (RemovedMethod r : list) {
+				CtMethod toRemove = classToModify.getMethod(r.getMethodName(), r.getSignature());
+				classToModify.removeMethod(toRemove);
 			}
-			classToModify.setMethods(methodList.toArray(new Method[0]));
 		}
 	}
 

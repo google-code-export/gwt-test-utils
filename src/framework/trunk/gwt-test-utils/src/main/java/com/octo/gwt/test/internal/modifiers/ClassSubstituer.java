@@ -1,9 +1,6 @@
 package com.octo.gwt.test.internal.modifiers;
 
-import org.apache.bcel.classfile.Constant;
-import org.apache.bcel.classfile.ConstantPool;
-import org.apache.bcel.classfile.ConstantUtf8;
-import org.apache.bcel.classfile.JavaClass;
+import javassist.CtClass;
 
 public class ClassSubstituer implements JavaClassModifier {
 
@@ -15,23 +12,12 @@ public class ClassSubstituer implements JavaClassModifier {
 		this.substitutionClass = substitionClass;
 	}
 
-	public void modify(JavaClass classToModify) {
-		if (classToModify.getClassName().equals(originalClass)) {
+	public void modify(CtClass classToModify) {
+		if (classToModify.getName().equals(originalClass)) {
 			return;
 		}
 
-		ConstantPool cp = classToModify.getConstantPool();
-		String renamedClsString = substitutionClass.replaceAll("\\.", "\\/");
-		String originalClsString = originalClass.replaceAll("\\.", "\\/");
-		for (Constant c : cp.getConstantPool()) {
-			if (c instanceof ConstantUtf8) {
-				ConstantUtf8 stringConstant = (ConstantUtf8) c;
-
-				if (stringConstant.getBytes().contains(originalClsString)) {
-					stringConstant.setBytes(stringConstant.getBytes().replaceAll(originalClsString, renamedClsString));
-				}
-			}
-		}
+		classToModify.getClassFile().renameClass(originalClass, substitutionClass);
 	}
 
 }

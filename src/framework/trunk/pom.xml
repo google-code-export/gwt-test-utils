@@ -8,7 +8,6 @@
 
 	<properties>
 		<antlr.runtime.version>3.0.1</antlr.runtime.version>
-		<bcel.version>5.2</bcel.version>
 		<commons-lang.version>2.4</commons-lang.version>
 		<easymock.version>3.0</easymock.version>
 		<gwt.version>2.0.4</gwt.version>

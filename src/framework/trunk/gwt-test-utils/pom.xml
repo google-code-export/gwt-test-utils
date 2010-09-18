@@ -38,11 +38,6 @@
 			<version>${commons-lang.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.bcel</groupId>
-			<artifactId>bcel</artifactId>
-			<version>${bcel.version}</version>
-		</dependency>
-		<dependency>
 			<groupId>org.htmlparser</groupId>
 			<artifactId>htmlparser</artifactId>
 			<version>${htmlparser.version}</version>

@@ -1,9 +1,9 @@
 package com.octo.gwt.test.internal.modifiers;
 
-import org.apache.bcel.classfile.JavaClass;
+import javassist.CtClass;
 
 public interface JavaClassModifier {
 
-	public void modify(JavaClass classToModify);
+	public void modify(CtClass classToModify) throws Exception;
 
 }
