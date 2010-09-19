@@ -34,13 +34,24 @@ public abstract class VisitorObjectFinder implements ObjectFinder {
 					+ VisitorObjectFinder.class.getSimpleName() + ".getDisplayedObject(..) method");
 		}
 		WidgetRepository repository = repositories.get(displayedObject);
+		Object result;
+
 		if (repository == null) {
 			repository = new WidgetRepository();
 			inspectChilds(displayedObject, repository, new HashSet<Object>());
 			repositories.put(displayedObject, repository);
+			result = repository.getAlias(params[0]);
+		} else {
+			result = repository.getAlias(params[0]);
+			if (result == null) {
+				// try another time since code could have instanciate new widget after the last inspection
+				repository.clear();
+				inspectChilds(displayedObject, repository, new HashSet<Object>());
+				result = repository.getAlias(params[0]);
+			}
 		}
 
-		return repository.getAlias(params[0]);
+		return result;
 
 	}
 
@@ -112,6 +123,10 @@ public abstract class VisitorObjectFinder implements ObjectFinder {
 
 		public Object removeAlias(String alias) {
 			return map.remove(alias);
+		}
+
+		public void clear() {
+			map.clear();
 		}
 	}
 
