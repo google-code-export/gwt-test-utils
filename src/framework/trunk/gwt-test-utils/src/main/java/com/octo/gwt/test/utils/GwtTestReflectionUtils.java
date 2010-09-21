@@ -240,7 +240,7 @@ public class GwtTestReflectionUtils {
 			l[i] = args[i].getClass();
 		}
 		try {
-			Method m = target.getClass().getDeclaredMethod(methodName, l);
+			Method m = findMethod(target.getClass(), methodName, l);
 			m.setAccessible(true);
 			Object res = m.invoke(target, args);
 			return (T) res;

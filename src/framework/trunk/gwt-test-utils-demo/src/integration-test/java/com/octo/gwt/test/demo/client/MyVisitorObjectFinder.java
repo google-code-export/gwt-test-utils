@@ -4,35 +4,32 @@ import com.google.gwt.user.client.ui.HasHTML;
 import com.google.gwt.user.client.ui.HasName;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.Widget;
-import com.octo.gwt.test.integ.csvrunner.CsvRunner;
 import com.octo.gwt.test.integ.tools.VisitorObjectFinder;
 
 public class MyVisitorObjectFinder extends VisitorObjectFinder {
 
-	private Application application;
-
-	public MyVisitorObjectFinder(Application myApp) {
+	public MyVisitorObjectFinder() {
 		super(new WidgetVisitor() {
 
-			public void visitHasText(HasText hasText, String name, Object parent, WidgetRepository repository) {
+			public void visitHasText(HasText hasText, WidgetRepository repository) {
 				if (hasText.getText() != null && hasText.getText().length() > 0) {
 					repository.addAlias(hasText.getText(), hasText);
 				}
 			}
 
-			public void visitHasHTML(HasHTML hasHTML, String name, Object parent, WidgetRepository repository) {
+			public void visitHasHTML(HasHTML hasHTML, WidgetRepository repository) {
 				if (hasHTML.getHTML() != null && hasHTML.getHTML().length() > 0) {
 					repository.addAlias(hasHTML.getHTML(), hasHTML);
 				}
 			}
 
-			public void visitHasName(HasName hasName, String name, Object parent, WidgetRepository repository) {
+			public void visitHasName(HasName hasName, WidgetRepository repository) {
 				if (hasName.getName() != null && hasName.getName().length() > 0) {
 					repository.addAlias(hasName.getName(), hasName);
 				}
 			}
 
-			public void visitWidget(Widget widget, String name, Object parent, WidgetRepository repository) {
+			public void visitWidget(Widget widget, WidgetRepository repository) {
 				if (widget.getElement() == null) {
 					return;
 				}
@@ -42,13 +39,6 @@ public class MyVisitorObjectFinder extends VisitorObjectFinder {
 				}
 			}
 		});
-
-		this.application = myApp;
-	}
-
-	@Override
-	public Object getDisplayedObject(CsvRunner csvRunner) {
-		return application;
 	}
 
 }

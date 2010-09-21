@@ -1,8 +1,10 @@
 package com.octo.gwt.test.integ.tools;
 
-import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -10,11 +12,16 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasHTML;
 import com.google.gwt.user.client.ui.HasName;
 import com.google.gwt.user.client.ui.HasText;
+import com.google.gwt.user.client.ui.HasWidgets;
+import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.client.ui.RootLayoutPanel;
+import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 import com.octo.gwt.test.integ.csvrunner.CsvRunner;
 import com.octo.gwt.test.utils.GwtTestReflectionUtils;
 
-public abstract class VisitorObjectFinder implements ObjectFinder {
+public class VisitorObjectFinder implements ObjectFinder {
 
 	private Map<Object, WidgetRepository> repositories = new HashMap<Object, WidgetRepository>();
 	private WidgetVisitor visitor;
@@ -28,86 +35,92 @@ public abstract class VisitorObjectFinder implements ObjectFinder {
 	}
 
 	public Object find(CsvRunner csvRunner, String... params) {
-		Object displayedObject = getDisplayedObject(csvRunner);
-		if (displayedObject == null) {
-			throw new RuntimeException("The displayed object cannot be null, please implements corretly the '"
-					+ VisitorObjectFinder.class.getSimpleName() + ".getDisplayedObject(..) method");
-		}
-		WidgetRepository repository = repositories.get(displayedObject);
 		Object result;
+		List<Panel> roots = getRootPanels();
 
-		if (repository == null) {
-			repository = new WidgetRepository();
-			inspectChilds(displayedObject, repository, new HashSet<Object>());
-			repositories.put(displayedObject, repository);
-			result = repository.getAlias(params[0]);
-		} else {
-			result = repository.getAlias(params[0]);
-			if (result == null) {
-				// try another time since code could have instanciate new widget after the last inspection
-				repository.clear();
-				inspectChilds(displayedObject, repository, new HashSet<Object>());
+		for (Panel root : roots) {
+			WidgetRepository repository = repositories.get(root);
+
+			if (repository == null) {
+				repository = new WidgetRepository();
+				inspectObject(root, repository, new HashSet<Object>());
+				repositories.put(root, repository);
 				result = repository.getAlias(params[0]);
+			} else {
+				result = repository.getAlias(params[0]);
+				if (result == null) {
+					// try another time since code could have instanciate new widget after the last inspection
+					repository.clear();
+					inspectObject(root, repository, new HashSet<Object>());
+					result = repository.getAlias(params[0]);
+				}
+			}
+
+			if (result != null) {
+				return result;
 			}
 		}
 
-		return result;
+		return null;
 
 	}
 
-	private void inspectChilds(Object inspected, WidgetRepository repository, Set<Object> alreadyInspectedObjects) {
-		if (alreadyInspectedObjects.contains(inspected)) {
+	protected List<Panel> getRootPanels() {
+		List<Panel> list = new ArrayList<Panel>();
+		list.add(RootPanel.get());
+		list.add(RootLayoutPanel.get());
+
+		return list;
+	}
+
+	private void inspectObject(Object inspected, WidgetRepository repository, Set<Object> alreadyInspectedObjects) {
+		if (inspected == null || alreadyInspectedObjects.contains(inspected)) {
 			return;
 		} else {
 			alreadyInspectedObjects.add(inspected);
 		}
 
-		for (Field field : GwtTestReflectionUtils.getFields(inspected.getClass())) {
-			if (field.getName().startsWith("$") || !Widget.class.isAssignableFrom(field.getType())
-					|| inspected.getClass().getName().startsWith("com.google.gwt")) {
-				continue;
+		if (UIObject.class.isInstance(inspected) && !((UIObject) inspected).isVisible()) {
+			if (Widget.class.isInstance(inspected)) {
+				// add the not visible widget but don't inspect its child
+				Widget widget = (Widget) inspected;
+				visitor.visitWidget(widget, repository);
 			}
 
-			Object fieldInstance = null;
+			return;
+		}
 
-			try {
-				fieldInstance = field.get(inspected);
-			} catch (Exception e) {
-				throw new RuntimeException("Error while getting '" + inspected.getClass().getSimpleName() + "." + field.getName()
-						+ " field value on the current visited object", e);
+		if (HasWidgets.class.isInstance(inspected)) {
+			Iterator<Widget> it = ((HasWidgets) inspected).iterator();
+			while (it.hasNext()) {
+				inspectObject(it.next(), repository, alreadyInspectedObjects);
 			}
+		} else if (Composite.class.isInstance(inspected)) {
+			Widget widget = GwtTestReflectionUtils.callPrivateMethod(inspected, "getWidget");
+			inspectObject(widget, repository, alreadyInspectedObjects);
+		}
 
-			if (fieldInstance == null) {
-				continue;
-			}
+		if (HasHTML.class.isInstance(inspected)) {
+			HasHTML hasHTMLWidget = (HasHTML) inspected;
+			visitor.visitHasHTML(hasHTMLWidget, repository);
+		}
 
-			if (Composite.class.isInstance(fieldInstance)) {
-				inspectChilds(fieldInstance, repository, alreadyInspectedObjects);
-			}
+		if (HasText.class.isInstance(inspected)) {
+			HasText hasTextWidget = (HasText) inspected;
+			visitor.visitHasText(hasTextWidget, repository);
+		}
 
-			if (HasHTML.class.isInstance(fieldInstance)) {
-				HasHTML hasHTMLWidget = (HasHTML) fieldInstance;
-				visitor.visitHasHTML(hasHTMLWidget, field.getName(), inspected, repository);
-			}
+		if (HasName.class.isInstance(inspected)) {
+			HasName hasNameWidget = (HasName) inspected;
+			visitor.visitHasName(hasNameWidget, repository);
+		}
 
-			if (HasText.class.isInstance(fieldInstance)) {
-				HasText hasTextWidget = (HasText) fieldInstance;
-				visitor.visitHasText(hasTextWidget, field.getName(), inspected, repository);
-			}
-
-			if (HasName.class.isInstance(fieldInstance)) {
-				HasName hasNameWidget = (HasName) fieldInstance;
-				visitor.visitHasName(hasNameWidget, field.getName(), inspected, repository);
-			}
-
-			if (Widget.class.isInstance(fieldInstance)) {
-				Widget widget = (Widget) fieldInstance;
-				visitor.visitWidget(widget, field.getName(), inspected, repository);
-			}
+		if (Widget.class.isInstance(inspected)) {
+			// add the not visible widget but don't inspect its child
+			Widget widget = (Widget) inspected;
+			visitor.visitWidget(widget, repository);
 		}
 	}
-
-	public abstract Object getDisplayedObject(CsvRunner csvRunner);
 
 	public static class WidgetRepository {
 
@@ -132,13 +145,13 @@ public abstract class VisitorObjectFinder implements ObjectFinder {
 
 	public static interface WidgetVisitor {
 
-		void visitHasHTML(HasHTML hasHTML, String name, Object parent, WidgetRepository repository);
+		void visitHasHTML(HasHTML hasHTML, WidgetRepository repository);
 
-		void visitHasText(HasText hasText, String name, Object parent, WidgetRepository repository);
+		void visitHasText(HasText hasText, WidgetRepository repository);
 
-		void visitHasName(HasName hasName, String name, Object parent, WidgetRepository repository);
+		void visitHasName(HasName hasName, WidgetRepository repository);
 
-		void visitWidget(Widget widget, String name, Object parent, WidgetRepository repository);
+		void visitWidget(Widget widget, WidgetRepository repository);
 	}
 
 }

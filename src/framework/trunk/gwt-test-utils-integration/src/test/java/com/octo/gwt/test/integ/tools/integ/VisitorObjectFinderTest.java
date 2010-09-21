@@ -34,35 +34,27 @@ public class VisitorObjectFinderTest extends AbstractGwtEasyMockTest {
 
 		WidgetVisitor myVisitor = new WidgetVisitor() {
 
-			public void visitHasText(HasText hasTextWidget, String name, Object parent, WidgetRepository repository) {
+			public void visitHasText(HasText hasTextWidget, WidgetRepository repository) {
 				repository.addAlias(hasTextWidget.getText(), (Widget) hasTextWidget);
 			}
 
-			public void visitHasHTML(HasHTML hasHTML, String name, Object parent, WidgetRepository repository) {
+			public void visitHasHTML(HasHTML hasHTML, WidgetRepository repository) {
 				repository.addAlias(hasHTML.getText(), hasHTML);
 				repository.addAlias(hasHTML.getHTML(), hasHTML);
 			}
 
-			public void visitHasName(HasName hasName, String name,
-					Object parent, WidgetRepository repository) {
+			public void visitHasName(HasName hasName, WidgetRepository repository) {
 				repository.addAlias(hasName.getName(), hasName);
-				
+
 			}
 
-			public void visitWidget(Widget widget, String name, Object parent,
-					WidgetRepository repository) {
+			public void visitWidget(Widget widget, WidgetRepository repository) {
 				repository.addAlias(widget.getElement().getId(), widget);
-				
+
 			}
 		};
 
-		finder = new VisitorObjectFinder(myVisitor) {
-
-			@Override
-			public Object getDisplayedObject(CsvRunner csvRunner) {
-				return app;
-			}
-		};
+		finder = new VisitorObjectFinder(myVisitor);
 	}
 
 	@Test

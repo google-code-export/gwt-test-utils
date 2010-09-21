@@ -256,7 +256,6 @@ public class CsvRunner {
 
 	@SuppressWarnings("unchecked")
 	public Object getNodeValue(Object o, Node node) {
-		logger.debug(getProcessingMessagePrefix() + "GetValue on " + o.getClass().getCanonicalName() + ", objectLocalization " + node);
 		Object current = o;
 		Node currentNode = node;
 		while (currentNode != null) {

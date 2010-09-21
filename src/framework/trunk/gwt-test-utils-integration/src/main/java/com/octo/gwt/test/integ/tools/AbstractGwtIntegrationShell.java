@@ -49,8 +49,19 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 	private DirectoryTestReader reader;
 	private MacroReader macroReader;
 	private ObjectFinder defaultFinder;
+	private Map<String, NodeObjectFinder> nodeFinders;
 
-	private Map<String, NodeObjectFinder> nodeFinders = new HashMap<String, NodeObjectFinder>();
+	public AbstractGwtIntegrationShell() {
+		nodeFinders = new HashMap<String, NodeObjectFinder>();
+		NodeObjectFinder rootObjectFinder = new NodeObjectFinder() {
+
+			public Object find(CsvRunner csvRunner, Node node) {
+				return csvRunner.getNodeValue(RootPanel.get(), node);
+			}
+		};
+
+		nodeFinders.put("root", rootObjectFinder);
+	}
 
 	public void setReader(DirectoryTestReader reader) {
 		this.reader = reader;
@@ -64,14 +75,6 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 	}
 
 	protected NodeObjectFinder getNodeObjectFinder(String prefix) {
-		if (prefix.equals("root")) {
-			return new NodeObjectFinder() {
-
-				public Object find(CsvRunner csvRunner, Node node) {
-					return csvRunner.getNodeValue(RootPanel.get(), node);
-				}
-			};
-		}
 		return null;
 	}
 
@@ -99,6 +102,7 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 				Assert.assertNotNull(csvRunner.getAssertionErrorMessagePrefix() + "Unknown prefix '" + node.getLabel()
 						+ "', you should override getNodeObjectFinder(..) method to provide a specific " + NodeObjectFinder.class.getSimpleName(),
 						finder);
+
 				return finder.find(csvRunner, node.getNext());
 			}
 
@@ -503,9 +507,11 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 
 	@CsvMethod
 	public void isNotVisible(String identifier) {
-		UIObject object = getObject(UIObject.class, identifier);
-		Assert.assertFalse(csvRunner.getAssertionErrorMessagePrefix() + "targeted " + object.getClass().getSimpleName() + " is visible",
-				WidgetUtils.isWidgetVisible(object));
+		UIObject object = getObject(UIObject.class, false, identifier);
+		if (object != null) {
+			Assert.assertFalse(csvRunner.getAssertionErrorMessagePrefix() + "targeted " + object.getClass().getSimpleName() + " is visible",
+					WidgetUtils.isWidgetVisible(object));
+		}
 	}
 
 	@CsvMethod
