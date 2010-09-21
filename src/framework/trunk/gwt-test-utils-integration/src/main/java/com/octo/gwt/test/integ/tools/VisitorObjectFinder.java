@@ -14,7 +14,6 @@ import com.google.gwt.user.client.ui.HasName;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Panel;
-import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
@@ -68,7 +67,6 @@ public class VisitorObjectFinder implements ObjectFinder {
 	protected List<Panel> getRootPanels() {
 		List<Panel> list = new ArrayList<Panel>();
 		list.add(RootPanel.get());
-		list.add(RootLayoutPanel.get());
 
 		return list;
 	}
