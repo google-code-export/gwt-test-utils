@@ -251,7 +251,7 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 
 		Event complexPanelClick = EventBuilder.create(Event.ONCLICK).setTarget(target.getElement()).build();
 		assertCanApplyEvent(target, complexPanelClick.getTypeInt());
-		dispatchEventInternal(panel, EventBuilder.create(Event.ONCLICK).setTarget(target.getElement()).build());
+		dispatchNotCheckedEvent(panel, EventBuilder.create(Event.ONCLICK).setTarget(target.getElement()).build());
 	}
 
 	@CsvMethod
@@ -259,7 +259,7 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 		SimplePanel panel = getObject(SimplePanel.class, params);
 		Event clickEvent = EventBuilder.create(Event.ONCLICK).build();
 		assertCanApplyEvent(panel.getWidget(), clickEvent.getTypeInt());
-		dispatchEventInternal(panel, clickEvent);
+		dispatchNotCheckedEvent(panel, clickEvent);
 	}
 
 	@CsvMethod
@@ -270,7 +270,7 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 
 		Event clickEvent = EventBuilder.create(Event.ONCLICK).setTarget(itemToClick.getElement()).build();
 		assertCanApplyEvent(itemToClick, clickEvent.getTypeInt());
-		dispatchEventInternal(menuBar, clickEvent);
+		dispatchNotCheckedEvent(menuBar, clickEvent);
 	}
 
 	@CsvMethod
@@ -279,7 +279,7 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 		Widget target = grid.getWidget(Integer.parseInt(rowIndex), Integer.parseInt(column));
 		Event clickEvent = EventBuilder.create(Event.ONCLICK).setTarget(target.getElement()).build();
 		assertCanApplyEvent(target, clickEvent.getTypeInt());
-		dispatchEventInternal(grid, clickEvent);
+		dispatchNotCheckedEvent(grid, clickEvent);
 	}
 
 	@CsvMethod
@@ -409,13 +409,7 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 	}
 
 	@CsvMethod
-	public void fillTextBox(String value, String identifier) {
-		TextBox textBox = getObject(TextBox.class, identifier);
-		fillText(textBox, value);
-	}
-
-	@CsvMethod
-	public void fillInvisibleTextBox(String value, String... params) {
+	public void fillTextBox(String value, String... params) {
 		TextBox textBox = getObject(TextBox.class, params);
 		fillText(textBox, value);
 	}
@@ -533,7 +527,7 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 	protected void dispatchEvent(Widget target, Event event) {
 		assertCanApplyEvent(target, event.getTypeInt());
 
-		dispatchEventInternal(target, event);
+		dispatchNotCheckedEvent(target, event);
 	}
 
 	protected FocusWidget getFocusWidget(String identifier) {
@@ -569,14 +563,26 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 		}
 	}
 
-	private void fillText(HasText hasTextWidget, String value) {
-		for (int i = 1; i <= value.length(); i++) {
+	protected void fillText(HasText hasTextWidget, String value) {
+		for (int i = 0; i <= value.length(); i++) {
 			hasTextWidget.setText(value.substring(0, i));
-			Event keyUpEvent = EventBuilder.create(Event.ONKEYUP).setKeyCode(KeyCodes.KEY_ENTER).build();
+			Event keyPressEvent = EventBuilder.create(Event.ONKEYPRESS).build();
 			Event changeEvent = EventBuilder.create(Event.ONCHANGE).build();
-			dispatchEvent((Widget) hasTextWidget, keyUpEvent);
+			dispatchEvent((Widget) hasTextWidget, keyPressEvent);
 			dispatchEvent((Widget) hasTextWidget, changeEvent);
 		}
+
+		Event keyUpEvent = EventBuilder.create(Event.ONKEYUP).setKeyCode(KeyCodes.KEY_ENTER).build();
+		dispatchEvent((Widget) hasTextWidget, keyUpEvent);
+		dispatchEvent((Widget) hasTextWidget, Event.ONBLUR);
+	}
+
+	protected void dispatchNotCheckedEvent(Widget target, Event event) {
+		if (target instanceof CheckBox && event.getTypeInt() == Event.ONCLICK) {
+			CheckBox checkBox = (CheckBox) target;
+			checkBox.setValue(!checkBox.getValue());
+		}
+		target.onBrowserEvent(event);
 	}
 
 	private String createFailureMessage(UIObject target, int eventTypeInt, String attribut) {
@@ -589,14 +595,6 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 
 		return sb.toString();
 
-	}
-
-	private void dispatchEventInternal(Widget target, Event event) {
-		if (target instanceof CheckBox && event.getTypeInt() == Event.ONCLICK) {
-			CheckBox checkBox = (CheckBox) target;
-			checkBox.setValue(!checkBox.getValue());
-		}
-		target.onBrowserEvent(event);
 	}
 
 	// MODE INTERACTIF
