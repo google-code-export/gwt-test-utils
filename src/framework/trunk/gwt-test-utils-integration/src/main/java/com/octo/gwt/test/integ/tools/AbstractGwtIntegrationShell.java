@@ -411,21 +411,13 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 	@CsvMethod
 	public void fillTextBox(String value, String identifier) {
 		TextBox textBox = getObject(TextBox.class, identifier);
-		textBox.setText(value);
-
-		Event keyUpEvent = EventBuilder.create(Event.ONKEYUP).setKeyCode(KeyCodes.KEY_ENTER).build();
-		Event changeEvent = EventBuilder.create(Event.ONCHANGE).build();
-		dispatchEvent(textBox, keyUpEvent);
-		dispatchEvent(textBox, changeEvent);
+		fillText(textBox, value);
 	}
 
 	@CsvMethod
 	public void fillInvisibleTextBox(String value, String... params) {
 		TextBox textBox = getObject(TextBox.class, params);
-		textBox.setText(value);
-
-		dispatchEventInternal(textBox, EventBuilder.create(Event.ONKEYUP).setKeyCode(KeyCodes.KEY_ENTER).build());
-		dispatchEventInternal(textBox, EventBuilder.create(Event.ONCHANGE).build());
+		fillText(textBox, value);
 	}
 
 	@CsvMethod
@@ -458,7 +450,7 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 	public void fillAndSelectInSuggestBoxByIndex(String content, String index, String... params) {
 		SuggestBox suggestBox = getObject(SuggestBox.class, params);
 
-		fillSuggestBox(suggestBox, content);
+		fillText(suggestBox, content);
 		executeSuggestCommandByIndex(WidgetUtils.getMenuItems(suggestBox), Integer.parseInt(index));
 	}
 
@@ -466,7 +458,7 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 	public void fillAndSelectInSuggestBoxByText(String content, String selected, String... params) {
 		SuggestBox suggestBox = getObject(SuggestBox.class, params);
 
-		fillSuggestBox(suggestBox, content);
+		fillText(suggestBox, content);
 
 		List<MenuItem> menuItems = WidgetUtils.getMenuItems(suggestBox);
 		int i = 0;
@@ -489,13 +481,6 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 		MenuItem item = menuItems.get(index);
 		assertCanApplyEvent(item, Event.ONCLICK);
 		item.getCommand().execute();
-	}
-
-	private void fillSuggestBox(SuggestBox suggestBox, String content) {
-		suggestBox.setText(content);
-
-		Event keyUpEvent = EventBuilder.create(Event.ONKEYUP).setKeyCode(KeyCodes.KEY_ENTER).build();
-		dispatchEvent(suggestBox, keyUpEvent);
 	}
 
 	@CsvMethod
@@ -581,6 +566,16 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 		} else {
 			errorMessage += WidgetUtils.getListBoxContentToString(listBox);
 			Assert.fail(csvRunner.getAssertionErrorMessagePrefix() + errorMessage);
+		}
+	}
+
+	private void fillText(HasText hasTextWidget, String value) {
+		for (int i = 1; i <= value.length(); i++) {
+			hasTextWidget.setText(value.substring(0, i));
+			Event keyUpEvent = EventBuilder.create(Event.ONKEYUP).setKeyCode(KeyCodes.KEY_ENTER).build();
+			Event changeEvent = EventBuilder.create(Event.ONCHANGE).build();
+			dispatchEvent((Widget) hasTextWidget, keyUpEvent);
+			dispatchEvent((Widget) hasTextWidget, changeEvent);
 		}
 	}
 
