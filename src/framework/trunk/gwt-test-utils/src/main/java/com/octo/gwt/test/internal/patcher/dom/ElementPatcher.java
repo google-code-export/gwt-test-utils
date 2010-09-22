@@ -22,7 +22,6 @@ import com.octo.gwt.test.patcher.PatchMethod;
 public class ElementPatcher extends AutomaticPropertyContainerPatcher {
 
 	public static final String PROPERTY_MAP_FIELD = "propertyMap";
-	public static final String ATTRIBUTE_MAP_FIELD = "AttributeMap";
 	public static final String STYLE_FIELD = "Style";
 	public static final String CLASSNAME_FIELD = "ClassName";
 	public static final String ACCESSKEY_FIELD = "AccessKey";
@@ -35,8 +34,6 @@ public class ElementPatcher extends AutomaticPropertyContainerPatcher {
 		cons.insertAfter(PropertyContainerHelper.getCodeSetProperty("this", STYLE_FIELD, NodeFactory.class.getCanonicalName() + ".createStyle(this)")
 				+ ";");
 		cons.insertAfter(PropertyContainerHelper.getCodeSetProperty("this", PROPERTY_MAP_FIELD, PropertyContainerHelper.getConstructionCode()) + ";");
-		cons.insertAfter(PropertyContainerHelper.getCodeSetProperty("this", ATTRIBUTE_MAP_FIELD, PropertyContainerHelper.getConstructionCode()) + ";");
-		cons.insertAfter(PropertyContainerHelper.getCodeSetProperty("this", ATTRIBUTE_MAP_FIELD, PropertyContainerHelper.getConstructionCode()) + ";");
 		cons.insertAfter(PropertyContainerHelper.getCodeSetProperty("this", CLASSNAME_FIELD, "\"\"") + ";");
 		cons.insertAfter(PropertyContainerHelper.getCodeSetProperty("this", ACCESSKEY_FIELD, "\"\"") + ";");
 	}

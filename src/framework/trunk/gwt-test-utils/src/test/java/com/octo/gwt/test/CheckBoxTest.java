@@ -73,4 +73,19 @@ public class CheckBoxTest extends AbstractGwtTest {
 		Assert.assertEquals(true, cb.getValue());
 	}
 
+	@Test
+	public void checkFormValue() {
+		// Setup
+		CheckBox cb = new CheckBox();
+		Assert.assertEquals("", cb.getFormValue());
+		cb.setFormValue("whatever");
+
+		// Test
+		String formValue = cb.getFormValue();
+
+		// Assert
+		Assert.assertEquals("whatever", formValue);
+
+	}
+
 }
