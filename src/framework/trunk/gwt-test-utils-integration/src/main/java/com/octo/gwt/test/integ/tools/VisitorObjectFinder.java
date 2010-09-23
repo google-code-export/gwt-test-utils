@@ -30,7 +30,7 @@ public class VisitorObjectFinder implements ObjectFinder {
 	}
 
 	public boolean accept(String... params) {
-		return params.length == 1;
+		return params.length == 1 && !params[0].trim().startsWith("/");
 	}
 
 	public Object find(CsvRunner csvRunner, String... params) {
@@ -139,17 +139,6 @@ public class VisitorObjectFinder implements ObjectFinder {
 		public void clear() {
 			map.clear();
 		}
-	}
-
-	public static interface WidgetVisitor {
-
-		void visitHasHTML(HasHTML hasHTML, WidgetRepository repository);
-
-		void visitHasText(HasText hasText, WidgetRepository repository);
-
-		void visitHasName(HasName hasName, WidgetRepository repository);
-
-		void visitWidget(Widget widget, WidgetRepository repository);
 	}
 
 }

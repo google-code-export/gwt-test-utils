@@ -8,9 +8,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.junit.Assert;
 
@@ -48,25 +46,13 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 
 	private DirectoryTestReader reader;
 	private MacroReader macroReader;
-	private ObjectFinder defaultFinder;
-	private Map<String, NodeObjectFinder> nodeFinders;
-
-	public AbstractGwtIntegrationShell() {
-		nodeFinders = new HashMap<String, NodeObjectFinder>();
-		NodeObjectFinder rootObjectFinder = new NodeObjectFinder() {
-
-			public Object find(CsvRunner csvRunner, Node node) {
-				return csvRunner.getNodeValue(RootPanel.get(), node);
-			}
-		};
-
-		nodeFinders.put("root", rootObjectFinder);
-	}
 
 	public void setReader(DirectoryTestReader reader) {
 		this.reader = reader;
 		csvRunner = new CsvRunner();
-		defaultFinder = createDefaultFinder();
+		VisitorObjectFinder visitorObjectFinder = new VisitorObjectFinder(getWidgetVisitor());
+		csvRunner.addObjectFinder(visitorObjectFinder);
+		ObjectFinder defaultFinder = createDefaultFinder(visitorObjectFinder);
 		csvRunner.addObjectFinder(defaultFinder);
 		macroReader = new MacroReader();
 		for (String name : reader.getMacroFileList()) {
@@ -74,11 +60,24 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 		}
 	}
 
+	protected WidgetVisitor getWidgetVisitor() {
+		return new DefaultWidgetVisitor();
+	}
+
 	protected NodeObjectFinder getNodeObjectFinder(String prefix) {
+		if ("root".equals(prefix)) {
+			return new NodeObjectFinder() {
+
+				public Object find(CsvRunner csvRunner, Node node) {
+					return csvRunner.getNodeValue(RootPanel.get(), node);
+				}
+			};
+		}
+
 		return null;
 	}
 
-	private ObjectFinder createDefaultFinder() {
+	private ObjectFinder createDefaultFinder(final ObjectFinder visitorObjectFinder) {
 		ObjectFinder finder = new ObjectFinder() {
 
 			public boolean accept(String... params) {
@@ -93,10 +92,20 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 
 				String prefix = node.getLabel();
 
-				NodeObjectFinder finder = nodeFinders.get(prefix);
+				if (prefix.equals("simpleComposite")) {
+					System.out.println("ok");
+				}
+
+				NodeObjectFinder finder = getNodeObjectFinder(node.getLabel());
 				if (finder == null) {
-					finder = getNodeObjectFinder(node.getLabel());
-					nodeFinders.put(prefix, finder);
+					final Object o = visitorObjectFinder.find(csvRunner, prefix);
+
+					finder = new NodeObjectFinder() {
+
+						public Object find(CsvRunner csvRunner, Node node) {
+							return csvRunner.getNodeValue(o, node);
+						}
+					};
 				}
 
 				Assert.assertNotNull(csvRunner.getAssertionErrorMessagePrefix() + "Unknown prefix '" + node.getLabel()

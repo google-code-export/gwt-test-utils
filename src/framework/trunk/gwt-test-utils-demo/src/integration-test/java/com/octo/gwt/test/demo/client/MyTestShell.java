@@ -26,7 +26,6 @@ public class MyTestShell extends AbstractGwtIntegrationShell {
 	@Before
 	public void setUpMyTestShell() throws Exception {
 		addGwtCreateHandler(createGwtCreateHandler());
-		csvRunner.addObjectFinder(new MyVisitorObjectFinder());
 	}
 
 	@CsvMethod

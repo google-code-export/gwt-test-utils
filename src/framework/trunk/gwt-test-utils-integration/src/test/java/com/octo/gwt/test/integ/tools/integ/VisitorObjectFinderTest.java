@@ -16,7 +16,7 @@ import com.octo.gwt.test.Mock;
 import com.octo.gwt.test.integ.csvrunner.CsvRunner;
 import com.octo.gwt.test.integ.tools.VisitorObjectFinder;
 import com.octo.gwt.test.integ.tools.VisitorObjectFinder.WidgetRepository;
-import com.octo.gwt.test.integ.tools.VisitorObjectFinder.WidgetVisitor;
+import com.octo.gwt.test.integ.tools.WidgetVisitor;
 import com.octo.gwt.test.utils.GwtTestReflectionUtils;
 
 public class VisitorObjectFinderTest extends AbstractGwtEasyMockTest {
