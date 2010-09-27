@@ -7,11 +7,12 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import javassist.ClassPool;
@@ -87,7 +88,7 @@ public class DirectoryTestReader {
 		newClazz.setSuperclass(cp.get(clazz.getCanonicalName()));
 		List<String> methodList = new ArrayList<String>();
 		for (Entry<String, List<List<String>>> entry : tests.entrySet()) {
-			String methodName = "run_" + csvShortName + "_" + entry.getKey();
+			String methodName = csvShortName + "_" + entry.getKey();
 			CtMethod m = new CtMethod(CtClass.voidType, methodName, new CtClass[0], newClazz);
 			methodList.add(methodName);
 			m.setBody("launchTest(\"" + entry.getKey() + "\");");
@@ -121,6 +122,13 @@ public class DirectoryTestReader {
 	}
 
 	public List<Method> getTestMethods() {
+		Collections.sort(testMethods, new Comparator<Method>() {
+
+			public int compare(Method o1, Method o2) {
+				return o1.getName().compareTo(o2.getName());
+			}
+		});
+		
 		return testMethods;
 	}
 

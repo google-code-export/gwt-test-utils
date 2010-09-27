@@ -92,11 +92,7 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 
 				String prefix = node.getLabel();
 
-				if (prefix.equals("simpleComposite")) {
-					System.out.println("ok");
-				}
-
-				NodeObjectFinder finder = getNodeObjectFinder(node.getLabel());
+				NodeObjectFinder finder = getNodeObjectFinder(prefix);
 				if (finder == null) {
 					final Object o = visitorObjectFinder.find(csvRunner, prefix);
 
@@ -108,7 +104,7 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 					};
 				}
 
-				Assert.assertNotNull(csvRunner.getAssertionErrorMessagePrefix() + "Unknown prefix '" + node.getLabel()
+				Assert.assertNotNull(csvRunner.getAssertionErrorMessagePrefix() + "Unknown prefix '" + prefix
 						+ "', you should override getNodeObjectFinder(..) method to provide a specific " + NodeObjectFinder.class.getSimpleName(),
 						finder);
 
@@ -159,6 +155,7 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 	@CsvMethod
 	public void assertExact(String value, String... params) {
 		value = GwtTestStringUtils.resolveBackSlash(value);
+		
 		String actualValue = getString(params);
 
 		if (value == null) {
@@ -181,8 +178,12 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 		Assert.assertTrue(csvRunner.getAssertionErrorMessagePrefix() + " not containing string " + containedValue, actual.contains(containedValue));
 	}
 
-	private String getString(String... params) {
+	protected String getString(String... params) {
 		Object o = getObject(Object.class, false, params);
+		return getString(o);
+	}
+	
+	protected String getString(Object o) {
 		String actualValue;
 		if (o == null) {
 			return null;
@@ -422,6 +423,15 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 		TextBox textBox = getObject(TextBox.class, params);
 		fillText(textBox, value);
 	}
+	
+	@CsvMethod
+	public void fillInvisibleTextBox(String value, String... params) {
+		TextBox textBox = getObject(TextBox.class, params);
+		textBox.setText(value);
+
+		dispatchNotCheckedEvent(textBox, EventBuilder.create(Event.ONKEYUP).setKeyCode(KeyCodes.KEY_ENTER).build());
+		dispatchNotCheckedEvent(textBox, EventBuilder.create(Event.ONCHANGE).build());
+	}
 
 	@CsvMethod
 	public void assertListBoxDataEquals(String commaSeparatedContent, String... params) {
@@ -556,10 +566,10 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 		String errorMessage;
 		if (regex.matches("^\\d*$")) {
 			selectedIndex = Integer.parseInt(regex);
-			errorMessage = "Cannot select negative index in ListBox <" + regex + ">";
+			errorMessage = "Cannot select negative index in ListBox <" + regex + "> in ListBox with values : ";
 		} else {
 			selectedIndex = WidgetUtils.getIndexInListBox(listBox, regex);
-			errorMessage = "Regex <" + regex + "> has not been matched in ListBox values";
+			errorMessage = "Regex <" + regex + "> has not been matched in ListBox values : ";
 		}
 
 		if (selectedIndex > -1) {

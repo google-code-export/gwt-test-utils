@@ -21,7 +21,7 @@ public class Rep1Test {
 
 			@Override
 			public boolean shouldRun(Description arg0) {
-				return arg0.getDisplayName().startsWith("run_1_test1");
+				return arg0.getDisplayName().startsWith("1_test1");
 			}
 
 			@Override
