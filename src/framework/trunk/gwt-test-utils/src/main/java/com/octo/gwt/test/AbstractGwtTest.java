@@ -9,6 +9,18 @@ import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.Widget;
 import com.octo.gwt.test.utils.events.Browser;
 
+/**
+ * Base class for test classes which need to manipulate (directly or indirectly)
+ * GWT components.
+ * 
+ * AbstractGwtTest provides the mechanism which allows the instantiation of GWT
+ * components in the Java Virtual Machine.
+ * 
+ * Class loading parameters used to instantiate classes referenced in tests can
+ * be configured using the META-INF\gwt-test-utils.properties file of your
+ * application.
+ * 
+ */
 @RunWith(GwtTestRunner.class)
 public abstract class AbstractGwtTest extends AbstractGwtConfigurableTest {
 

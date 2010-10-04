@@ -11,6 +11,10 @@ import com.octo.gwt.test.internal.ConfigurationLoader;
 import com.octo.gwt.test.internal.GwtTranslator;
 import com.octo.gwt.test.internal.PatchGwtClassPool;
 
+/**
+ * GwtTestClassLoader is the class loader used to instantiate classes referenced
+ * inside a test class extending AbstractGwtTest.
+ */
 public class GwtTestClassLoader extends Loader {
 
 	private static GwtTestClassLoader INSTANCE;
@@ -33,12 +37,14 @@ public class GwtTestClassLoader extends Loader {
 
 	private GwtTranslator translator;
 
-	private GwtTestClassLoader() throws NotFoundException, CannotCompileException {
+	private GwtTestClassLoader() throws NotFoundException,
+			CannotCompileException {
 		super(PatchGwtClassPool.get());
 
 		init();
 
-		ConfigurationLoader configurationLoader = ConfigurationLoader.createInstance(this.getParent());
+		ConfigurationLoader configurationLoader = ConfigurationLoader
+				.createInstance(this.getParent());
 
 		for (String s : configurationLoader.getDelegateList()) {
 			delegateLoadingOf(s);
@@ -92,7 +98,8 @@ public class GwtTestClassLoader extends Loader {
 		}
 	}
 
-	protected Class<?> loadClassByDelegation(String classname) throws ClassNotFoundException {
+	protected Class<?> loadClassByDelegation(String classname)
+			throws ClassNotFoundException {
 		if (isDelegated(classname)) {
 			return delegateToParent(classname);
 		}
