@@ -15,7 +15,7 @@ import com.octo.gwt.test.internal.mock.MockCreateHandlerImpl;
  * 
  * <p>
  * Those classes can declare fields annotated with
- * {@link com.octo.gwt.test.Mock @Mock}, which will result in the injection of
+ * {@link Mock @Mock}, which will result in the injection of
  * mock objects of the corresponding type.
  * </p>
  * 

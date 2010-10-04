@@ -12,9 +12,8 @@ import java.lang.annotation.Target;
  * </p>
  * 
  * <p>
- * The class declaring such a field must extend
- * {@link com.octo.gwt.test.AbstractGwtEasyMockTest AbstractGwtEasyMockTest} in
- * order to make the mock injection possible.
+ * The class declaring such a field must extend {@link AbstractGwtEasyMockTest}
+ * in order to make the mock injection possible.
  * </p>
  * 
  * <p>
