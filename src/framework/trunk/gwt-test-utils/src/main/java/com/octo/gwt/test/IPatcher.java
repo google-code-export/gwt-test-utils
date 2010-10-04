@@ -4,21 +4,21 @@ import javassist.CtClass;
 import javassist.CtMethod;
 
 /**
- * Interface for a class patcher.
+ * <p>Interface for a class patcher.</p>
  * 
- * A patcher provides custom bodies (implementations) for the methods of a
+ * <p>A patcher provides custom bodies (implementations) for the methods of a
  * class. Patchers are used to replace methods implementations which are not
  * suitable for a JVM (typically, those containing Javascript code) by valid
- * Java ones.
+ * Java ones.</p>
  * 
- * Although the framework provides generic patchers (which should permit to
+ * <p>Although the framework provides generic patchers (which should permit to
  * produce iso-functional, Java compliant code in the majority of cases), it is
  * possible for you to create your own patcher (specifically, if you're writing
  * your own GWT component class) if the default patching mechanisms doesn't suit
- * your needs.
+ * your needs.</p>
  * 
- * The custom patchers used to test an application are configured in the
- * META-INF\gwt-test-utils.properties file.
+ * <p>The custom patchers used to test an application are configured in the
+ * META-INF\gwt-test-utils.properties file.</p>
  * 
  */
 public interface IPatcher {

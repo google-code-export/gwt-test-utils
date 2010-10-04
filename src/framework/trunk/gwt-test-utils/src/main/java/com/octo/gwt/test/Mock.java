@@ -6,14 +6,21 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * <p>
  * Indicates that the annotated field should be initialized as a mock instance
  * of the field type.
+ * </p>
  * 
- * The class declaring such a field must extend AbstractGwtEasyMockTest in order
- * to make the mock injection possible.
+ * <p>
+ * The class declaring such a field must extend
+ * {@link com.octo.gwt.test.AbstractGwtEasyMockTest AbstractGwtEasyMockTest} in
+ * order to make the mock injection possible.
+ * </p>
  * 
+ * <p>
  * Mock objects initialized using this annotation will be replayed, verified and
  * reseted when calling the corresponding methods of AbstractGwtEasyMockTest.
+ * </p>
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)

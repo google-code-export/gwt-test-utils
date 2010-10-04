@@ -4,14 +4,14 @@ import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.InitializationError;
 
 /**
- * GwtTestRunner is a JUnit test runner allowing to run tests classes which
- * reference, directly or indirectly, GWT components.
+ * <p>GwtTestRunner is a JUnit test runner allowing to run tests classes which
+ * reference, directly or indirectly, GWT components.</p>
  * 
- * To achieve this, it uses a specific class loader (GwtTestClassLoader), which
+ * <p>To achieve this, it uses a specific class loader (GwtTestClassLoader), which
  * aim is to provide JVM-compliant versions of classes referenced in those test
  * classes. To obtain JVM-compliant code, the class loader rely on a set of
  * class patchers (implementing IPatcher) which can be configured using the
- * META-INF\gwt-test-utils.properties file of your application.
+ * META-INF\gwt-test-utils.properties file of your application.</p>
  */
 public class GwtTestRunner extends BlockJUnit4ClassRunner {
 

@@ -8,14 +8,21 @@ import org.junit.Before;
 import com.octo.gwt.test.internal.mock.MockCreateHandlerImpl;
 
 /**
+ * <p>
  * Base class for test classes which make use of the framework's mocking
- * features (which rely on EasyMock).
+ * features (which rely on {@link org.easymock.EasyMock EasyMock}).
+ * </p>
  * 
- * Those classes can declare fields annotated with @Mock, which will result in
- * the injection of mock objects of the corresponding type.
+ * <p>
+ * Those classes can declare fields annotated with
+ * {@link com.octo.gwt.test.Mock @Mock}, which will result in the injection of
+ * mock objects of the corresponding type.
+ * </p>
  * 
+ * <p>
  * Mock objects can then be manipulated using the standard EasyMock API, or with
  * the methods provided by AbstractGwtEasyMockTest.
+ * </p>
  */
 public abstract class AbstractGwtEasyMockTest extends AbstractGwtTest {
 
@@ -60,8 +67,7 @@ public abstract class AbstractGwtEasyMockTest extends AbstractGwtTest {
 	 * calling the onFailure() method of the corresponding AsyncCallback object.
 	 */
 	protected void expectServiceAndCallbackOnFailure(final Throwable exception) {
-		PatchGwtConfig.getMockCreateHandler()
-				.expectServiceAndCallbackOnFailure(exception);
+		PatchGwtConfig.getMockCreateHandler().expectServiceAndCallbackOnFailure(exception);
 	}
 
 	/**
@@ -69,8 +75,7 @@ public abstract class AbstractGwtEasyMockTest extends AbstractGwtTest {
 	 * calling the onSuccess() method of the corresponding AsyncCallback object.
 	 */
 	protected <T> void expectServiceAndCallbackOnSuccess(final T object) {
-		PatchGwtConfig.getMockCreateHandler()
-				.expectServiceAndCallbackOnSuccess(object);
+		PatchGwtConfig.getMockCreateHandler().expectServiceAndCallbackOnSuccess(object);
 	}
 
 	/**
@@ -78,26 +83,25 @@ public abstract class AbstractGwtEasyMockTest extends AbstractGwtTest {
 	 * except the one with the name given as a parameter.
 	 */
 	public <T> T createMockAndKeepOneMethod(Class<T> clazz, String methodName) {
-		return PatchGwtConfig.getMockCreateHandler()
-				.createMockAndKeepOneMethod(clazz, methodName);
+		return PatchGwtConfig.getMockCreateHandler().createMockAndKeepOneMethod(clazz, methodName);
 	}
 
 	/**
 	 * Creates a mock object for a given class, where all methods are mocked
 	 * except the one given as parameters.
 	 * 
-	 * @param clazz The class for which a mock object will be created
-	 * @param keepSetters False if setters should be mocked, true otherwise
-	 * @param list List of methods that should not be mocked
+	 * @param clazz
+	 *            The class for which a mock object will be created
+	 * @param keepSetters
+	 *            False if setters should be mocked, true otherwise
+	 * @param list
+	 *            List of methods that should not be mocked
 	 */
-	protected <T> T createMockAndKeepMethods(Class<T> clazz,
-			final boolean keepSetters, final Method... list) {
-		return PatchGwtConfig.getMockCreateHandler().createMockAndKeepMethods(
-				clazz, keepSetters, list);
+	protected <T> T createMockAndKeepMethods(Class<T> clazz, final boolean keepSetters, final Method... list) {
+		return PatchGwtConfig.getMockCreateHandler().createMockAndKeepMethods(clazz, keepSetters, list);
 	}
 
 	protected Object addMockedObject(Class<?> createClass, Object mock) {
-		return PatchGwtConfig.getMockCreateHandler().addMockedObject(
-				createClass, mock);
+		return PatchGwtConfig.getMockCreateHandler().addMockedObject(createClass, mock);
 	}
 }
