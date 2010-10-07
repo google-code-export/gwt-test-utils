@@ -1,4 +1,5 @@
 #summary How to write a simple unit test involving GWT widgets
+#sidebar TableOfContents
 
 == A simple GWT test ==
 
