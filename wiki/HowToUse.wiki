@@ -1,4 +1,4 @@
-#summary This page explains how to use gwt-test-utils
+#summary This page explains how to setup your project to use gwt-test-utils
 #sidebar TableOfContents
 
 = With Maven =
