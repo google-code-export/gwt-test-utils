@@ -3,7 +3,7 @@
 
 = Writing unit tests =
 
-*gwt-test-utils* allows you to unit test easily code that uses GWT components and features, like GWT widgets, GWT-RPC services calls, etc.
+*gwt-test-utils* allows you to easily unit test code that uses GWT components and features, like GWT widgets, GWT-RPC services calls, etc.
 
 The following pages explain how to write unit tests :
 
