@@ -29,7 +29,7 @@ In this example, we want to test that something occurs when the user clicks on a
 }
 }}}
 
-{{{Browser}}} provides many methods to simulate various events, like {{{blur()}}}, {{{change()}}}, {{{dblclick()}}}...
+{{{Browser}}} provides many predefined methods to simulate various events, like {{{blur()}}}, {{{change()}}}, {{{dblclick()}}}...
 
 = Using custom events =
 
@@ -54,3 +54,8 @@ For such a case, you can simulate this kind of event by using an {{{EventBuilder
       Assert.assertEquals("The button was clicked !", label.getText());
 }
 }}}
+
+= Events validation =
+
+In real life, your favorite web browser won't allow you to trigger any event on a disabled or invisible UI components, such as textboxes, buttons, etc.
+{Browser} class does the same by checking the targeted widget state before dispatching any event on it.
