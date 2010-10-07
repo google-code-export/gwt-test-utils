@@ -28,7 +28,7 @@ In this example, we want to test that something occurs when the user clicks on a
 }
 }}}
 
- {{{Browser}}} provides many methods to simulate various events, like {{{blur()}}}, {{{change()}}}, {{{dblclick()}}}...
+{{{Browser}}} provides many methods to simulate various events, like {{{blur()}}}, {{{change()}}}, {{{dblclick()}}}...
 
 = Using custom events =
 
