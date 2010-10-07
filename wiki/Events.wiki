@@ -1,4 +1,5 @@
 #summary How to simulate DOM events in unit tests
+#sidebar TableOfContents
 
 = Using DOM events =
 
