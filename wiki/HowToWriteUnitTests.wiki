@@ -1,84 +1,15 @@
 #summary This page explains how to write unit tests for GWT with gwt-test-utils
 #sidebar TableOfContents
 
+= Writing unit tests =
+
+*gwt-test-utils* allows you to unit test easily code that uses GWT components and features, like GWT widgets, GWT-RPC services calls, etc.
+
+The following pages explain how to write unit tests :
+* [SimpleUnitTest Writing a simple unit test]
+  * [MockingClasses Mocking classes]
+  * [MockingRpcServices Mocking RPC services]
+
 = Samples =
 
 A complete sample application is available through the [http://code.google.com/p/gwt-test-utils/downloads/list Downloads section].
-
-== A simple GWT test ==
-
-Let's create a simple GWT composite widget, which contains a button and a label :
-
-{{{
-public class SimpleComposite extends Composite {
-
-   private Button button = new Button();
-   private Label label = new Label();
-
-   public SimpleComposite() {
-
-      button.setHTML("display something");
-
-      // The wrapper panel
-      VerticalPanel vPanel = new VerticalPanel();
-      vPanel.setWidth("100%");
-      vPanel.setHorizontalAlignment(VerticalPanel.ALIGN_CENTER);
-      vPanel.add(button);
-      vPanel.add(label);
-
-      // All composites must call initWidget() in their constructors.
-      initWidget(vPanel);
-
-      VerticalPanel dialogVPanel = new VerticalPanel();
-      dialogVPanel.setWidth("100%");
-      dialogVPanel.setHorizontalAlignment(VerticalPanel.ALIGN_CENTER);
-
-      // Add click handlers to the button
-      button.addClickHandler(new ClickHandler() {
-
-         public void onClick(ClickEvent arg0) {
-            label.setText("The button was clicked !");
-         }
-			
-      });
-   }
-}
-}}}
-
-When the button is clicked, the label displays "_The button was clicked !_". This is very simple and works great when the {{{SimpleComposite}}} is added to GWT {{{RootPanel}}}.
-
-Now, we want to write a unit test to ensure that clicking the button will always display "_The button was clicked !_" in the label :
-
-{{{
-public class SimpleCompositeTest extends AbstractGwtTest {
-
-   // the tested composite
-   private SimpleComposite composite;
-
-   @Before
-   public void init() throws Exception {
-      // instanciate the composite
-      composite = new SimpleComposite();
-   }
-	
-   @Test
-   public void checkClick() {
-      // With this helper method, we can get private Widget in the composite
-      Button button = GwtTestReflectionUtils.getPrivateFieldValue(composite, "button");
-      Label label = GwtTestReflectionUtils.getPrivateFieldValue(composite, "label");
-		
-      // ensure label is empty
-      Assert.assertEquals(null, label.getText());
-		
-      // simule the click event with AbstractGwtTest method
-      Browser.click(button);
-		
-      // assert the label has been filled
-      Assert.assertEquals("The button was clicked !", label.getText());
-   }
-}
-}}}
-
-Note that the test class *must* extends {{{AbstractGwtTest}}}, which provides the mecanism to allow the instanciation of GWT component in the JVM.
-
-The {{{Browser}}} class provides some helpful methods to simulate user events, such as click, double-click, blur, etc.
