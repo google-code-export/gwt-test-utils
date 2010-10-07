@@ -1,4 +1,5 @@
 #summary Frequently Asked Questions
+#sidebar TableOfContents
 
 == I get a {{{ java.lang.RuntimeException: No mock registered for class}}} What do I miss ? == 
 
