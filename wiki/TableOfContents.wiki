@@ -1,6 +1,6 @@
  * [HowToUse Getting gwt-test-utils]
- * [HowToWriteUnitTests Writting unit tests]
-  * [SimpleUnitTest A simple unit test]
+ * [HowToWriteUnitTests Writing unit tests]
+  * [SimpleUnitTest Unit testing basics]
   * [MockingClasses Mocking classes]
   * [MockingRpcServices Mocking RPC services]
  * [HowToWriteIntegrationTests Writting integration tests]
