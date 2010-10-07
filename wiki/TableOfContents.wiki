@@ -1,5 +1,6 @@
  * [HowToUse Getting gwt-test-utils]
  * [HowToWriteUnitTests Writting unit tests]
+  * [SimpleUnitTest A simple unit test]
  * [HowToWriteIntegrationTests Writting integration tests]
  * [HowToWriteCustomPatchers Writting custom patchers]
  * [FAQ]
