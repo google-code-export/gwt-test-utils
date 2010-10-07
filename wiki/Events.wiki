@@ -1,0 +1,53 @@
+#summary How to simulate DOM events in unit tests
+
+= Using DOM events =
+
+In unit tests, you'll probably want to check that expected behavior do occur when the user interacts with the UI components, like clicking on a button or filling a text box.
+
+gwt-test-utils provides ways to simulate this user interaction and the corresponding DOM events.
+
+= Using predefined events =
+
+In this example, we want to test that something occurs when the user clicks on a button. We can achieve this by simulating the DOM 'click' event using the static method {{{click()}}} of the class {{{Browser}}} :
+
+{{{
+   @Test
+   public void checkClick() {
+      // With this helper method, we can get private Widget in the composite
+      Button button = GwtTestReflectionUtils.getPrivateFieldValue(composite, "button");
+      Label label = GwtTestReflectionUtils.getPrivateFieldValue(composite, "label");
+		
+      // ensure label is empty
+      Assert.assertEquals(null, label.getText());
+		
+      // simule the click event with AbstractGwtTest method
+      Browser.click(button);
+		
+      // assert the label has been filled
+      Assert.assertEquals("The button was clicked !", label.getText());
+}}}
+
+ {{{Browser}}} provides many methods to simulate various events, like {{{blur()}}}, {{{change()}}}, {{{dblclick()}}}...
+
+= Using custom events =
+
+Your application might also react to some slightly more complex events, like pressing a combination of keys.
+For such a case, you can simulate this kind of event by using an {{{EventBuilder}}} to build it, and then firing it with the {{{dispatchEvent()}}} method of {{{Browser}}}  :
+
+{{{
+   @Test
+   public void checkClick() {
+      // With this helper method, we can get private Widget in the composite
+      Button button = GwtTestReflectionUtils.getPrivateFieldValue(composite, "button");
+      Label label = GwtTestReflectionUtils.getPrivateFieldValue(composite, "label");
+		
+      // ensure label is empty
+      Assert.assertEquals(null, label.getText());
+		
+      // simulates a complex event (click + ctrl + shift)
+      Event clickEvent = EventBuilder.create(Event.ONCLICK).setCtrlKey(true).setShiftKey(true).setTarget(button.getElement()).build();
+      Browser.dispatchEvent(button, clickEvent);
+		
+      // assert the label has been filled
+      Assert.assertEquals("The button was clicked !", label.getText());
+}}}
