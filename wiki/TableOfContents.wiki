@@ -3,6 +3,6 @@
   * [SimpleUnitTest Unit testing basics]
   * [MockingClasses Mocking classes]
   * [MockingRpcServices Mocking RPC services]
- * [HowToWriteIntegrationTests Writting integration tests]
- * [HowToWriteCustomPatchers Writting custom patchers]
+ * [HowToWriteIntegrationTests Writing integration tests]
+ * [HowToWriteCustomPatchers Writing custom patchers]
  * [FAQ]
