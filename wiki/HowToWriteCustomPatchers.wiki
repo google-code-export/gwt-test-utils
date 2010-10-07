@@ -3,9 +3,10 @@
 
 = Introduction =
 
+The main challenge for *gwt-test-utils* has been to enable the instanciation of all GWT client side widgets in a standalone JVM and to simulate their behaviours in Java rather than in JavaScript.
+This is done by modifying GWT classes as they are loaded in the JVM by a custom classloader *gwt-test-utils* provides to launch JUnit tests.
 
-TODO : explain how gwt-test-utils enable GWT code execution in a standard JVM (no more hostedmode, jetty, gwt plugin for browser..)
-
+= The custom classloader =
  
 = The Patcher mecanism =
 
