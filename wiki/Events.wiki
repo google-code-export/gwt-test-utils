@@ -57,5 +57,5 @@ For such a case, you can simulate this kind of event by using an {{{EventBuilder
 
 = Events validation =
 
-In real life, your favorite web browser won't allow you to trigger any event on a disabled or invisible UI components, such as textboxes, buttons, etc.
+In real life, your favorite web browser won't allow you to trigger any event on a disabled or invisible UI components, such as text boxes, buttons, etc.
 {{{Browser}}} class does the same by checking the targeted widget state before dispatching any event on it.
