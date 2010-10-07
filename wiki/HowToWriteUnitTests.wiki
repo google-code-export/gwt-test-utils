@@ -4,9 +4,9 @@
 
 A complete sample application is available through the [http://code.google.com/p/gwt-test-utils/downloads/list Downloads section].
 
-== Tests on a button ==
+== A simple GWT test ==
 
-Let's create a simple GWT composite which contains a button and a label :
+Let's create a simple GWT composite widget, which contains a button and a label :
 
 {{{
 public class SimpleComposite extends Composite {
@@ -44,9 +44,9 @@ public class SimpleComposite extends Composite {
 }
 }}}
 
-When the button is clicked, the label display "_The button was clicked !_". This is very simple and works great when the {{{SimpleComposite}}} is added to GWT {{{RootPanel}}}.
+When the button is clicked, the label displays "_The button was clicked !_". This is very simple and works great when the {{{SimpleComposite}}} is added to GWT {{{RootPanel}}}.
 
-Now, we want to write a unit test to ensure clicking the button always will display "_The button was clicked !_" in the label :
+Now, we want to write a unit test to ensure that clicking the button will always display "_The button was clicked !_" in the label :
 
 {{{
 public class SimpleCompositeTest extends AbstractGwtTest {
@@ -78,14 +78,14 @@ public class SimpleCompositeTest extends AbstractGwtTest {
 }
 }}}
 
-Note that the test class *must* extends {{{AbstractGwtTest}}}, which provide the mecanism to allow the instanciation of GWT component in the JVM.
+Note that the test class *must* extends {{{AbstractGwtTest}}}, which provides the mecanism to allow the instanciation of GWT component in the JVM.
 
-The {{{Browser}}} class provides some helpfull methods to simule User events, such as click, double-click, blur, etc.
+The {{{Browser}}} class provides some helpful methods to simulate user events, such as click, double-click, blur, etc.
 
 
-= Tests with a GWT RPC call =
+= Mocking GWT-RPC calls =
 
-Frequently, your presentation layer will make server call.
+Frequently, your presentation layer will call remote services using GWT-RPC.
 In unit tests, you will need to mock the server calls. *gwt-test-utils* provides an elegant way to do it with [http://easymock.org/ EasyMock].
 
 First, the service exposed : 
@@ -236,7 +236,7 @@ public class RPCCompositeTest extends AbstractGwtEasyMockTest {
 }
 }}}
 
-This time, we extended {{{AbstractGwtEasyMockTest}}}, a subclass of {{{AbstractGwtTest}}} which provide some helpfull methods to inject mock object and use them :
+This time, we extended {{{AbstractGwtEasyMockTest}}}, a subclass of {{{AbstractGwtTest}}} which provides some helpful methods to inject mock objects and use them :
 
 *{{{@Mock}}}* tell *gwt-test-utils* to create a mock object
 
