@@ -1,4 +1,4 @@
- * [UserGuide Introduction]
+ * [UserGuide User Guide]
  * [HowToUse Getting gwt-test-utils]
  * [HowToWriteUnitTests Writing unit tests]
   * [SimpleUnitTest Unit testing basics]
