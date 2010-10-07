@@ -25,6 +25,7 @@ In this example, we want to test that something occurs when the user clicks on a
 		
       // assert the label has been filled
       Assert.assertEquals("The button was clicked !", label.getText());
+}
 }}}
 
  {{{Browser}}} provides many methods to simulate various events, like {{{blur()}}}, {{{change()}}}, {{{dblclick()}}}...
@@ -50,4 +51,5 @@ For such a case, you can simulate this kind of event by using an {{{EventBuilder
 		
       // assert the label has been filled
       Assert.assertEquals("The button was clicked !", label.getText());
+}
 }}}
