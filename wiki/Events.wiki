@@ -1,7 +1,7 @@
 #summary How to simulate DOM events in unit tests
 #sidebar TableOfContents
 
-= Using DOM events =
+= Introduction =
 
 In unit tests, you'll probably want to check that expected behavior do occur when the user interacts with the UI components, like clicking on a button or filling a text box.
 
