@@ -1,11 +1,15 @@
-#summary Describes how to write unit tests which mock GWT-RPC services calls.
+#summary Describes how to mock RPC services calls in unit tests.
 #sidebar TableOfContents
 
 
-= Mocking GWT-RPC calls =
+= Introduction =
 
 Frequently, your presentation layer will call remote services using GWT-RPC.
-In unit tests, you will need to mock the server calls. *gwt-test-utils* provides an elegant way to do it with [http://easymock.org/ EasyMock].
+In unit tests, you will need to mock the server calls. *gwt-test-utils* provides an elegant way to do it, using {{{AbstractGwtEasyMockTest}}} and the [http://easymock.org/ EasyMock] mocking framework.
+
+Mocking RPC services is much like mocking any other classes (see [MockingClasses Mocking classes]), with a few specificities, like asynchronous callback handling. 
+
+= Mocking RPC services =
 
 First, the service exposed : 
 
