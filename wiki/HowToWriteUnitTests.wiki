@@ -6,9 +6,10 @@
 *gwt-test-utils* allows you to unit test easily code that uses GWT components and features, like GWT widgets, GWT-RPC services calls, etc.
 
 The following pages explain how to write unit tests :
+
 * [SimpleUnitTest Writing a simple unit test]
-  * [MockingClasses Mocking classes]
-  * [MockingRpcServices Mocking RPC services]
+* [MockingClasses Mocking classes]
+* [MockingRpcServices Mocking RPC services]
 
 = Samples =
 
