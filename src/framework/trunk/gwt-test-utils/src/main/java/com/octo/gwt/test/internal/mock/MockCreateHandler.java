@@ -1,29 +1,24 @@
 package com.octo.gwt.test.internal.mock;
 
-import java.lang.reflect.Method;
+import java.util.Map;
 
+import com.google.gwt.user.client.rpc.RemoteService;
 import com.octo.gwt.test.GwtCreateHandler;
 
-public interface MockCreateHandler extends GwtCreateHandler {
+public class MockCreateHandler implements GwtCreateHandler {
 
-	public void beforeTest();
+	private Map<Class<?>, Object> mockObjects;
 
-	public void afterTest();
+	public MockCreateHandler(Map<Class<?>, Object> mockObjects) {
+		this.mockObjects = mockObjects;
+	}
 
-	public void replay();
-
-	public void verify();
-
-	public void reset();
-
-	public Object addMockedObject(Class<?> createClass, Object mock);
-
-	public void expectServiceAndCallbackOnFailure(final Throwable exception);
-
-	public <T> void expectServiceAndCallbackOnSuccess(final T object);
-
-	public <T> T createMockAndKeepOneMethod(Class<T> clazz, String methodName);
-
-	public <T> T createMockAndKeepMethods(Class<T> clazz, final boolean keepSetters, final Method... list);
+	public Object create(Class<?> classLiteral) throws Exception {
+		if (RemoteService.class.isAssignableFrom(classLiteral)) {
+			String asyncName = classLiteral.getCanonicalName() + "Async";
+			classLiteral = Class.forName(asyncName);
+		}
+		return mockObjects.get(classLiteral);
+	}
 
 }

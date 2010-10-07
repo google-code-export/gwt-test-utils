@@ -3,7 +3,6 @@ package com.octo.gwt.test;
 import java.util.Locale;
 
 import com.octo.gwt.test.internal.GwtCreateHandlerManager;
-import com.octo.gwt.test.internal.mock.MockCreateHandler;
 import com.octo.gwt.test.internal.patcher.GwtPatcher;
 import com.octo.gwt.test.internal.patcher.ImplPatcher;
 import com.octo.gwt.test.internal.utils.PatchGwtUtils;
@@ -23,14 +22,6 @@ public class PatchGwtConfig {
 
 	public static void setLogHandler(GwtLogHandler gwtLogHandler) {
 		GwtPatcher.gwtLogHandler = gwtLogHandler;
-	}
-
-	public static void setMockCreateHandler(MockCreateHandler mockCreateHandler) {
-		GwtCreateHandlerManager.getInstance().setMockCreateHandler(mockCreateHandler);
-	}
-
-	public static MockCreateHandler getMockCreateHandler() {
-		return GwtCreateHandlerManager.getInstance().getMockCreateHandler();
 	}
 
 	public static boolean addGwtCreateHandler(GwtCreateHandler gwtCreateHandler) {

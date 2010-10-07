@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.List;
 
 import com.octo.gwt.test.GwtCreateHandler;
-import com.octo.gwt.test.internal.mock.MockCreateHandler;
 import com.octo.gwt.test.internal.patcher.tools.i18n.LocalizableResourceCreateHandler;
 import com.octo.gwt.test.internal.patcher.tools.resources.ClientBundleCreateHandler;
 import com.octo.gwt.test.internal.patcher.tools.resources.ImageBundleCreateHandler;
@@ -23,7 +22,7 @@ public class GwtCreateHandlerManager {
 	}
 
 	private List<GwtCreateHandler> addedHandlers;
-	private MockCreateHandler mockCreateHandler;
+	private GwtCreateHandler mockCreateHandler;
 	private GwtCreateHandler localizableResourceHandler;
 	private GwtCreateHandler clientBundleCreateHander;
 	private GwtCreateHandler imageBundleCreateHandler;
@@ -39,11 +38,7 @@ public class GwtCreateHandlerManager {
 		abstractClassCreateHandler = new AbstractClassCreateHandler();
 	}
 
-	public MockCreateHandler getMockCreateHandler() {
-		return mockCreateHandler;
-	}
-
-	public void setMockCreateHandler(MockCreateHandler mockCreateHandler) {
+	public void setMockCreateHandler(GwtCreateHandler mockCreateHandler) {
 		this.mockCreateHandler = mockCreateHandler;
 	}
 
