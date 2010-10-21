@@ -10,10 +10,15 @@ import com.octo.gwt.test.patcher.PatchMethod;
 
 @PatchClass(FormPanelImpl.class)
 public class FormPanelImplPatcher extends AutomaticPatcher {
-
+	
 	@PatchMethod
 	public static void hookEvents(FormPanelImpl panelImpl, Element iframe, Element form, FormPanelImplHost listener) {
 
+	}
+	
+	@PatchMethod
+	public static void unhookEvents(FormPanelImpl panelImpl, Element iframe, Element form) {
+		
 	}
 
 	@PatchMethod

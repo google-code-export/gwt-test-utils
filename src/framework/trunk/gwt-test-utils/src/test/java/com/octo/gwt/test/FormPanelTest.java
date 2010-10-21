@@ -8,12 +8,12 @@ import org.junit.Test;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.FormPanel;
+import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
+import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
-import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
 
 public class FormPanelTest extends AbstractGwtTest {
 
@@ -119,6 +119,15 @@ public class FormPanelTest extends AbstractGwtTest {
 		// Assert 3
 		Assert.assertEquals("40px", form.getElement().getStyle().getHeight());
 		Assert.assertEquals("30px", form.getElement().getStyle().getWidth());
+	}
+	
+	@Test
+	public void checkRemoveFromParent() {
+		// Test
+		form.removeFromParent();
+		
+		// Assert
+		Assert.assertFalse(form.isAttached());
 	}
 
 	@Test
