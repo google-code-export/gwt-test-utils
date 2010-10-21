@@ -23,6 +23,7 @@ import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
+import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.SuggestBox;
@@ -597,9 +598,13 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 	}
 
 	protected void dispatchNotCheckedEvent(Widget target, Event event) {
-		if (target instanceof CheckBox && event.getTypeInt() == Event.ONCLICK) {
+		if (CheckBox.class.isInstance(target) && event.getTypeInt() == Event.ONCLICK) {
 			CheckBox checkBox = (CheckBox) target;
-			checkBox.setValue(!checkBox.getValue());
+			if (RadioButton.class.isInstance(target)) {
+				checkBox.setValue(true);
+			} else {
+				checkBox.setValue(!checkBox.getValue());
+			}
 		}
 		target.onBrowserEvent(event);
 	}

@@ -9,19 +9,21 @@ import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
+import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 import com.octo.gwt.test.utils.WidgetUtils;
 
 /**
- * Provides several methods to simulate the occurring of browser events (onClick,
- * onKeyDown, onChange, etc.) caused by the interaction with a widget.
+ * Provides several methods to simulate the occurring of browser events
+ * (onClick, onKeyDown, onChange, etc.) caused by the interaction with a widget.
  */
 public class Browser {
 
 	/**
-	 * Simulates an occurring of the given event due to an interaction with the target widget.
+	 * Simulates an occurring of the given event due to an interaction with the
+	 * target widget.
 	 */
 	public static void dispatchEvent(Widget target, Event event) {
 		assertCanApplyEvent(target, event);
@@ -53,8 +55,7 @@ public class Browser {
 	 * Simulates a onchange event on a particular MenuItem of a MenuBar.
 	 */
 	public static void click(MenuBar parent, MenuItem clickedItem) {
-		Event clickEvent = EventBuilder.create(Event.ONCLICK).setTarget(
-				clickedItem.getElement()).build();
+		Event clickEvent = EventBuilder.create(Event.ONCLICK).setTarget(clickedItem.getElement()).build();
 		assertCanApplyEvent(clickedItem, clickEvent);
 		dispatchEventInternal(parent, clickEvent);
 	}
@@ -70,8 +71,7 @@ public class Browser {
 	 * Simulates a click event on a particular MenuItem of a SuggestBox.
 	 */
 	public static void click(SuggestBox parent, MenuItem clickedItem) {
-		Event clickEvent = EventBuilder.create(Event.ONCLICK).setTarget(
-				clickedItem.getElement()).build();
+		Event clickEvent = EventBuilder.create(Event.ONCLICK).setTarget(clickedItem.getElement()).build();
 		assertCanApplyEvent(clickedItem, clickEvent);
 		dispatchEventInternal(parent, clickEvent);
 	}
@@ -88,19 +88,18 @@ public class Browser {
 	 */
 	public static void click(Grid grid, int row, int column) {
 		Widget target = grid.getWidget(row, column);
-		Event clickEvent = EventBuilder.create(Event.ONCLICK).setTarget(
-				target.getElement()).build();
+		Event clickEvent = EventBuilder.create(Event.ONCLICK).setTarget(target.getElement()).build();
 		assertCanApplyEvent(target, clickEvent);
 		dispatchEventInternal(grid, clickEvent);
 	}
 
 	/**
-	 * Simulates a click event on the widget with the given index inside a ComplexPanel.
+	 * Simulates a click event on the widget with the given index inside a
+	 * ComplexPanel.
 	 */
 	public static void click(ComplexPanel panel, int index) {
 		Widget target = panel.getWidget(index);
-		Event clickEvent = EventBuilder.create(Event.ONCLICK).setTarget(
-				target.getElement()).build();
+		Event clickEvent = EventBuilder.create(Event.ONCLICK).setTarget(target.getElement()).build();
 		assertCanApplyEvent(target, clickEvent);
 		dispatchEventInternal(panel, clickEvent);
 	}
@@ -123,24 +122,21 @@ public class Browser {
 	 * Simulates a keydown event.
 	 */
 	public static void keyDown(Widget target, int keyCode) {
-		dispatchEvent(target, EventBuilder.create(Event.ONKEYDOWN).setKeyCode(
-				keyCode).build());
+		dispatchEvent(target, EventBuilder.create(Event.ONKEYDOWN).setKeyCode(keyCode).build());
 	}
 
 	/**
 	 * Simulates a keypress event.
 	 */
 	public static void keyPress(Widget target, int keyCode) {
-		dispatchEvent(target, EventBuilder.create(Event.ONKEYPRESS).setKeyCode(
-				keyCode).build());
+		dispatchEvent(target, EventBuilder.create(Event.ONKEYPRESS).setKeyCode(keyCode).build());
 	}
 
 	/**
 	 * Simulates a keyup event.
 	 */
 	public static void keyUp(Widget target, int keyCode) {
-		dispatchEvent(target, EventBuilder.create(Event.ONKEYUP).setKeyCode(
-				keyCode).build());
+		dispatchEvent(target, EventBuilder.create(Event.ONKEYUP).setKeyCode(keyCode).build());
 	}
 
 	/**
@@ -186,9 +182,13 @@ public class Browser {
 	}
 
 	private static void dispatchEventInternal(Widget target, Event event) {
-		if (target instanceof CheckBox && event.getTypeInt() == Event.ONCLICK) {
+		if (CheckBox.class.isInstance(target) && event.getTypeInt() == Event.ONCLICK) {
 			CheckBox checkBox = (CheckBox) target;
-			checkBox.setValue(!checkBox.getValue());
+			if (RadioButton.class.isInstance(target)) {
+				checkBox.setValue(true);
+			} else {
+				checkBox.setValue(!checkBox.getValue());
+			}
 		}
 		target.onBrowserEvent(event);
 	}
@@ -198,22 +198,18 @@ public class Browser {
 			Assert.fail(createFailureMessage(target, event, "visible"));
 		}
 
-		if (target instanceof FocusWidget
-				&& !((FocusWidget) target).isEnabled()) {
+		if (target instanceof FocusWidget && !((FocusWidget) target).isEnabled()) {
 			Assert.fail(createFailureMessage(target, event, "enabled"));
 		}
 	}
 
-	private static String createFailureMessage(UIObject target, Event event,
-			String attribut) {
+	private static String createFailureMessage(UIObject target, Event event, String attribut) {
 		StringBuilder sb = new StringBuilder();
 
-		String className = target.getClass().isAnonymousClass() ? target
-				.getClass().getName() : target.getClass().getSimpleName();
+		String className = target.getClass().isAnonymousClass() ? target.getClass().getName() : target.getClass().getSimpleName();
 		sb.append("The targeted widget (").append(className);
 		sb.append(") and its possible parents have to be ").append(attribut);
-		sb.append(" to apply a browser '").append(event.getType()).append(
-				"\' event");
+		sb.append(" to apply a browser '").append(event.getType()).append("\' event");
 
 		return sb.toString();
 	}

@@ -101,6 +101,38 @@ public class RadioButtonTest extends AbstractGwtTest {
 		Browser.click(r);
 
 		Assert.assertEquals(true, tested);
+		Assert.assertEquals(true, r.getValue());
+	}
+	
+	@Test
+	public void checkRadioButtonClickTwice() {
+		tested = false;
+		RadioButton r1 = new RadioButton("myRadioGroup", "r1");
+		RadioButton r2 = new RadioButton("myRadioGroup", "r2");
+		r1.addClickHandler(new ClickHandler() {
+
+			public void onClick(ClickEvent event) {
+				tested = !tested;
+			}
+
+		});
+		
+		r2.addClickHandler(new ClickHandler() {
+
+			public void onClick(ClickEvent event) {
+				tested = !tested;
+			}
+
+		});
+
+		Assert.assertEquals(false, tested);
+
+		//simule the event
+		Browser.click(r1);
+		Browser.click(r1);
+
+		Assert.assertEquals(false, tested);
+		Assert.assertEquals(true, r1.getValue());
 	}
 
 }
