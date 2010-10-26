@@ -192,7 +192,9 @@ public class NodeFactory {
 			PropertyContainerHelper.setProperty(e, "NodeName", "HTML");
 			PropertyContainerHelper.setProperty(e, "TagName", "HTML");
 
-			PropertyContainerHelper.setProperty(e, BODY_ELEMENT, createElement("body"));
+			BodyElement bodyElement = (BodyElement) createElement("body");
+			PropertyContainerHelper.setProperty(e, BODY_ELEMENT, bodyElement);
+			e.appendChild(bodyElement);
 
 			return e;
 		} catch (Exception e) {

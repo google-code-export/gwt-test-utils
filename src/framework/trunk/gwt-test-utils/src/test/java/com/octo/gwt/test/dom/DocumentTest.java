@@ -250,6 +250,22 @@ public class DocumentTest extends AbstractGwtTest {
 	}
 
 	@Test
+	public void checkGetElementByIdInBody() {
+		// Setup
+		AnchorElement a = Document.get().createAnchorElement();
+		a.setId("myId");
+		DivElement div = Document.get().createDivElement();
+		div.appendChild(a);
+		d.getBody().appendChild(div);
+
+		// Test
+		Element result = d.getElementById("myId");
+
+		// Assert
+		Assert.assertEquals(a, result);
+	}
+
+	@Test
 	public void checkGetElementByTagName() {
 		// Setup
 		AnchorElement a1 = Document.get().createAnchorElement();
@@ -271,4 +287,5 @@ public class DocumentTest extends AbstractGwtTest {
 		Assert.assertEquals(a2, nodes.getItem(1));
 		Assert.assertEquals(a3, nodes.getItem(2));
 	}
+
 }
