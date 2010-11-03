@@ -13,9 +13,9 @@ import org.slf4j.LoggerFactory;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import com.octo.gwt.test.GwtCreateHandler;
+import com.octo.gwt.test.integ.internal.DeserializationContext;
+import com.octo.gwt.test.integ.tools.ISerializeCallback;
 import com.octo.gwt.test.internal.PatchGwtClassPool;
-import com.octo.gwt.test.utils.DeserializationContext;
-import com.octo.gwt.test.utils.ISerializeCallback;
 
 public abstract class RemoteServiceCreateHandler implements GwtCreateHandler {
 

@@ -1,8 +1,10 @@
-package com.octo.gwt.test.utils;
+package com.octo.gwt.test.integ.internal;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import com.octo.gwt.test.integ.tools.ISerializeCallback;
 
 public class DeserializationContext extends HashMap<Class<?>, ISerializeCallback> {
 

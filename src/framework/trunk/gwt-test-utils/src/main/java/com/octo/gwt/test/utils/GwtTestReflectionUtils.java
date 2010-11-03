@@ -1,15 +1,11 @@
 package com.octo.gwt.test.utils;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.ObjectStreamClass;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -249,64 +245,125 @@ public class GwtTestReflectionUtils {
 			throw new RuntimeException("Unable to call method \"" + target.getClass().getSimpleName() + "." + methodName + "\"", e);
 		}
 	}
+	
+	/**
+	 * Make the given field accessible, explicitly setting it accessible if
+	 * necessary. The <code>setAccessible(true)</code> method is only called
+	 * when actually necessary, to avoid unnecessary conflicts with a JVM
+	 * SecurityManager (if active).
+	 * 
+	 * @param field
+	 *            the field to make accessible
+	 * @see java.lang.reflect.Field#setAccessible
+	 */
+	public static void makeAccessible(Field field) {
+		if (!Modifier.isPublic(field.getModifiers()) || !Modifier.isPublic(field.getDeclaringClass().getModifiers())) {
+			field.setAccessible(true);
+		}
+	}
+
+	/**
+	 * Make the given method accessible, explicitly setting it accessible if
+	 * necessary. The <code>setAccessible(true)</code> method is only called
+	 * when actually necessary, to avoid unnecessary conflicts with a JVM
+	 * SecurityManager (if active).
+	 * 
+	 * @param method
+	 *            the method to make accessible
+	 * @see java.lang.reflect.Method#setAccessible
+	 */
+	public static void makeAccessible(Method method) {
+		if (!Modifier.isPublic(method.getModifiers()) || !Modifier.isPublic(method.getDeclaringClass().getModifiers())) {
+			method.setAccessible(true);
+		}
+	}
+
+	/**
+	 * Make the given constructor accessible, explicitly setting it accessible
+	 * if necessary. The <code>setAccessible(true)</code> method is only called
+	 * when actually necessary, to avoid unnecessary conflicts with a JVM
+	 * SecurityManager (if active).
+	 * 
+	 * @param ctor
+	 *            the constructor to make accessible
+	 * @see java.lang.reflect.Constructor#setAccessible
+	 */
+	public static void makeAccessible(Constructor<?> ctor) {
+		if (!Modifier.isPublic(ctor.getModifiers()) || !Modifier.isPublic(ctor.getDeclaringClass().getModifiers())) {
+			ctor.setAccessible(true);
+		}
+	}
+
+	/**
+	 * Convenience method to instantiate a class using its no-arg constructor.
+	 * As this method doesn't try to load classes by name, it should avoid
+	 * class-loading issues.
+	 * <p>
+	 * Note that this method tries to set the constructor accessible if given a
+	 * non-accessible (that is, non-public) constructor.
+	 * 
+	 * @param <T>
+	 *            the type of object to instanciate
+	 * @param clazz
+	 *            class to instantiate
+	 * @return the new instance
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> T instantiateClass(Class<T> clazz) {
+		if (clazz == null) {
+			throw new IllegalArgumentException("Class must not be null");
+		}
+		if (clazz.isInterface()) {
+			throw new RuntimeException("Error during instanciation of '" + clazz.getName() + "'. Specified class is an interface");
+		}
+		try {
+			return (T) instantiateClass(clazz.getDeclaredConstructor());
+		} catch (NoSuchMethodException ex) {
+			throw new RuntimeException("Error during instanciation of '" + clazz.getName() + "'. No default constructor found", ex);
+		}
+	}
+
+	/**
+	 * Convenience method to instantiate a class using the given constructor. As
+	 * this method doesn't try to load classes by name, it should avoid
+	 * class-loading issues.
+	 * <p>
+	 * Note that this method tries to set the constructor accessible if given a
+	 * non-accessible (that is, non-public) constructor.
+	 * 
+	 * @param ctor
+	 *            the constructor to instantiate
+	 * @param args
+	 *            the constructor arguments to apply
+	 * @return the new instance
+	 */
+	public static Object instantiateClass(Constructor<?> ctor, Object... args) {
+		if (ctor == null) {
+			throw new IllegalArgumentException("Constructor must not be null");
+		}
+
+		try {
+			makeAccessible(ctor);
+			return ctor.newInstance(args);
+		} catch (InstantiationException ex) {
+			throw new RuntimeException("Error during instanciation of '" + ctor.getDeclaringClass().getName() + "'. Is it an abstract class?", ex);
+		} catch (IllegalAccessException ex) {
+			throw new RuntimeException("Error during instanciation of '" + ctor.getDeclaringClass().getName()
+					+ "'. Has the class definition changed? Is the constructor accessible?", ex);
+		} catch (IllegalArgumentException ex) {
+			throw new RuntimeException("Error during instanciation of '" + ctor.getDeclaringClass().getName()
+					+ "'. Illegal arguments for constructor", ex);
+		} catch (InvocationTargetException ex) {
+			ex.printStackTrace();
+			throw new RuntimeException("Error during instanciation of '" + ctor.getDeclaringClass().getName() + "'. Constructor threw exception",
+					ex.getTargetException());
+		}
+	}
 
 	public static void getStaticAndCallClear(Class<?> clazz, String fieldName) {
 		callPrivateMethod(getStaticFieldValue(clazz, fieldName), "clear");
 	}
-
-	static class CustomObjectInputStream extends ObjectInputStream {
-
-		private ClassLoader classLoader;
-
-		private DeserializationContext callbacks;
-
-		public CustomObjectInputStream(InputStream in, ClassLoader classLoader, DeserializationContext callbacks) throws IOException {
-			super(in);
-			enableResolveObject(true);
-			this.classLoader = classLoader;
-			this.callbacks = callbacks;
-		}
-
-		@Override
-		protected Class<?> resolveClass(ObjectStreamClass desc) throws IOException, ClassNotFoundException {
-			return classLoader == null ? super.resolveClass(desc) : Class.forName(desc.getName(), true, classLoader);
-		}
-
-		@Override
-		protected Object resolveObject(Object obj) throws IOException {
-			if (callbacks == null) {
-				return super.resolveObject(obj);
-			}
-			try {
-				return callbacks.resolve(obj);
-			} catch (Exception e) {
-				throw new RuntimeException(e);
-			}
-		}
-
-	}
-
-	@SuppressWarnings("unchecked")
-	public static <T> T serializeUnserialize(Object o) {
-		return (T) serializeUnserialize(o, null, null);
-	}
-
-	@SuppressWarnings("unchecked")
-	public static <T> T serializeUnserialize(Object o, ClassLoader classLoader, DeserializationContext callbacks) {
-		if (o == null) {
-			return null;
-		}
-		try {
-			ByteArrayOutputStream bos = new ByteArrayOutputStream();
-			ObjectOutputStream oos = new ObjectOutputStream(bos);
-			oos.writeObject(o);
-			ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
-			ObjectInputStream ois = new CustomObjectInputStream(bis, classLoader, callbacks);
-			return (T) ois.readObject();
-		} catch (Exception e) {
-			throw new RuntimeException("Unable to serialize / unserialize object " + o.getClass().getCanonicalName(), e);
-		}
-	}
+	
 
 	/**
 	 * Action to take on each method.

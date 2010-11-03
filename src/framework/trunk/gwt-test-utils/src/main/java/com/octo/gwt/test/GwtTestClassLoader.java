@@ -37,14 +37,12 @@ public class GwtTestClassLoader extends Loader {
 
 	private GwtTranslator translator;
 
-	private GwtTestClassLoader() throws NotFoundException,
-			CannotCompileException {
+	private GwtTestClassLoader() throws NotFoundException, CannotCompileException {
 		super(PatchGwtClassPool.get());
 
 		init();
 
-		ConfigurationLoader configurationLoader = ConfigurationLoader
-				.createInstance(this.getParent());
+		ConfigurationLoader configurationLoader = ConfigurationLoader.createInstance(this.getParent());
 
 		for (String s : configurationLoader.getDelegateList()) {
 			delegateLoadingOf(s);
@@ -59,47 +57,45 @@ public class GwtTestClassLoader extends Loader {
 	}
 
 	private List<String> delegate;
-	private List<String> delegatePackage;
 
 	private List<String> notDelegate;
-	private List<String> notDelegatePackage;
 
 	private void init() {
 		if (delegate == null) {
 			delegate = new ArrayList<String>();
 		}
-		if (delegatePackage == null) {
-			delegatePackage = new ArrayList<String>();
-		}
 		if (notDelegate == null) {
 			notDelegate = new ArrayList<String>();
-		}
-		if (notDelegatePackage == null) {
-			notDelegatePackage = new ArrayList<String>();
 		}
 	}
 
 	@Override
 	public void delegateLoadingOf(String classname) {
 		init();
-		if (classname.endsWith(".")) {
-			delegatePackage.add(classname);
-		} else {
-			delegate.add(classname);
-		}
+		delegate.add(buildRegex(classname));
 	}
 
 	public void notDelegateLoadingOf(String classname) {
 		init();
-		if (classname.endsWith(".")) {
-			notDelegatePackage.add(classname);
-		} else {
-			notDelegate.add(classname);
-		}
+		notDelegate.add(buildRegex(classname));
 	}
 
-	protected Class<?> loadClassByDelegation(String classname)
-			throws ClassNotFoundException {
+	private String buildRegex(String classname) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("^");
+		classname = classname.replaceAll("\\.", "\\\\\\.");
+		classname = classname.replaceAll("\\*", ".*");
+
+		if (classname.endsWith(".")) {
+			classname = classname + ".*";
+		}
+
+		sb.append(classname);
+		sb.append("$");
+		return sb.toString();
+	}
+
+	protected Class<?> loadClassByDelegation(String classname) throws ClassNotFoundException {
 		if (isDelegated(classname)) {
 			return delegateToParent(classname);
 		}
@@ -107,19 +103,13 @@ public class GwtTestClassLoader extends Loader {
 	}
 
 	private boolean isDelegated(String classname) {
-		if (notDelegate.contains(classname)) {
-			return false;
-		}
-		if (delegate.contains(classname)) {
-			return true;
-		}
-		for (String pkg : notDelegatePackage) {
-			if (classname.startsWith(pkg)) {
+		for (String pkg : notDelegate) {
+			if (classname.matches(pkg)) {
 				return false;
 			}
 		}
-		for (String pkg : delegatePackage) {
-			if (classname.startsWith(pkg)) {
+		for (String pkg : delegate) {
+			if (classname.matches(pkg)) {
 				return true;
 			}
 		}

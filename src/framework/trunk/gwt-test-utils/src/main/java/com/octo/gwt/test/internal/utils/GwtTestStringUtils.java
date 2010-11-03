@@ -1,6 +1,6 @@
-package com.octo.gwt.test.utils;
+package com.octo.gwt.test.internal.utils;
 
-public class GwtTestStringUtils {
+public abstract class GwtTestStringUtils {
 
 	public static String resolveBackSlash(String input) {
 		if (input == null || "".equals(input.trim()))

@@ -195,7 +195,7 @@ public class CsvRunner {
 	private Field getField(Object fixture, Class<?> clazz, String fieldName) {
 		for (Field f : clazz.getDeclaredFields()) {
 			if (f.getName().equalsIgnoreCase(fieldName)) {
-				f.setAccessible(true);
+				GwtTestReflectionUtils.makeAccessible(f);
 				return f;
 			}
 		}
@@ -330,7 +330,7 @@ public class CsvRunner {
 
 	private Object invoke(Object current, Method m, List<String> list) throws IllegalArgumentException, IllegalAccessException {
 		logger.debug("Invoking " + m.getName() + " on " + current.getClass().getCanonicalName() + " with param " + list);
-		m.setAccessible(true);
+		GwtTestReflectionUtils.makeAccessible(m);
 		if (list == null) {
 			if (m.getParameterTypes().length == 0) {
 				try {

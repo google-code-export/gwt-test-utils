@@ -16,7 +16,10 @@ public class MyService implements MyRemoteService {
 
 	public MyCustomObject myMethod2(MyCustomObject object) {
 		Assert.assertEquals("toto", object.myField);
-		return new MyCustomObject();
+
+		object.myField = "titi";
+		object.myTransientField = "this will not be serialized";
+		return object;
 	}
 
 	public void myMethod3() {

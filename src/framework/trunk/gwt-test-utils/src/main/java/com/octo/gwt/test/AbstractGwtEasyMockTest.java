@@ -59,7 +59,7 @@ public abstract class AbstractGwtEasyMockTest extends AbstractGwtTest {
 		try {
 			for (Field f : annotatedFieldToInject) {
 				Object mock = mockObjects.get(f.getType());
-				f.setAccessible(true);
+				GwtTestReflectionUtils.makeAccessible(f);
 				f.set(this, mock);
 			}
 		} catch (Exception e) {

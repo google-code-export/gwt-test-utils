@@ -35,8 +35,8 @@ import com.octo.gwt.test.integ.CsvMethod;
 import com.octo.gwt.test.integ.csvrunner.CsvRunner;
 import com.octo.gwt.test.integ.csvrunner.Node;
 import com.octo.gwt.test.internal.utils.ArrayUtils;
+import com.octo.gwt.test.internal.utils.GwtTestStringUtils;
 import com.octo.gwt.test.utils.GwtTestReflectionUtils;
-import com.octo.gwt.test.utils.GwtTestStringUtils;
 import com.octo.gwt.test.utils.WidgetUtils;
 import com.octo.gwt.test.utils.events.EventBuilder;
 import com.octo.gwt.test.utils.events.EventUtils;
@@ -156,7 +156,7 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 	@CsvMethod
 	public void assertExact(String value, String... params) {
 		value = GwtTestStringUtils.resolveBackSlash(value);
-		
+
 		String actualValue = getString(params);
 
 		if (value == null) {
@@ -183,7 +183,7 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 		Object o = getObject(Object.class, false, params);
 		return getString(o);
 	}
-	
+
 	protected String getString(Object o) {
 		String actualValue;
 		if (o == null) {
@@ -424,7 +424,7 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 		TextBox textBox = getObject(TextBox.class, params);
 		fillText(textBox, value);
 	}
-	
+
 	@CsvMethod
 	public void fillInvisibleTextBox(String value, String... params) {
 		TextBox textBox = getObject(TextBox.class, params);

@@ -11,7 +11,8 @@ import org.slf4j.LoggerFactory;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.StatusCodeException;
 import com.octo.gwt.test.GwtTestClassLoader;
-import com.octo.gwt.test.utils.DeserializationContext;
+import com.octo.gwt.test.integ.internal.DeserializationContext;
+import com.octo.gwt.test.integ.internal.GwtSerializationUtils;
 import com.octo.gwt.test.utils.GwtTestReflectionUtils;
 
 public class GwtRpcInvocationHandler implements InvocationHandler {
@@ -35,7 +36,7 @@ public class GwtRpcInvocationHandler implements InvocationHandler {
 			for (Method m2 : target.getClass().getMethods()) {
 				if (m.getName().equals(m2.getName()) && m.getParameterTypes().length == m2.getParameterTypes().length + 1) {
 					methodTable.put(m, m2);
-					m2.setAccessible(true);
+					GwtTestReflectionUtils.makeAccessible(m2);
 				}
 			}
 		}
@@ -70,11 +71,11 @@ public class GwtRpcInvocationHandler implements InvocationHandler {
 			// Serialize objects
 			Object[] serializedArgs = new Object[subArgs.length];
 			for (int i = 0; i < subArgs.length; i++) {
-				serializedArgs[i] = GwtTestReflectionUtils.serializeUnserialize(subArgs[i], GwtTestClassLoader.getInstance().getParent(),
+				serializedArgs[i] = GwtSerializationUtils.serializeUnserialize(subArgs[i], GwtTestClassLoader.getInstance().getParent(),
 						fromGwtCallbacks);
 			}
 			Object returnValue = m.invoke(target, serializedArgs);
-			Object o = GwtTestReflectionUtils.serializeUnserialize(returnValue, GwtTestClassLoader.getInstance(), backToGwtCallbacks);
+			Object o = GwtSerializationUtils.serializeUnserialize(returnValue, GwtTestClassLoader.getInstance(), backToGwtCallbacks);
 			logger.debug("Result of " + m.getName() + " : " + o);
 			callback.onSuccess(o);
 		} catch (InvocationTargetException e) {

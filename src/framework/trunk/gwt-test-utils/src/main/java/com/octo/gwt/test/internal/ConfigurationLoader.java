@@ -2,7 +2,6 @@ package com.octo.gwt.test.internal;
 
 import java.io.File;
 import java.io.InputStream;
-import java.lang.reflect.Constructor;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.util.ArrayList;
@@ -105,7 +104,7 @@ public class ConfigurationLoader {
 						+ IPatcher.class.getSimpleName() + " interface and provide an empty constructor");
 			}
 
-			IPatcher patcher = (IPatcher) clazz.newInstance();
+			IPatcher patcher = (IPatcher) GwtTestReflectionUtils.instantiateClass(clazz);
 
 			for (Class<?> c : patchClass.value()) {
 				String targetName = c.isMemberClass() ? c.getDeclaringClass().getCanonicalName() + "$" + c.getSimpleName() : c.getCanonicalName();
@@ -128,15 +127,11 @@ public class ConfigurationLoader {
 	}
 
 	private boolean hasDefaultConstructor(Class<?> clazz) {
-		for (Constructor<?> cons : clazz.getConstructors()) {
-			if (cons.getParameterTypes().length == 0) {
-				cons.setAccessible(true);
-				return true;
-			}
-
+		try {
+			return clazz.getDeclaredConstructor() != null;
+		} catch (NoSuchMethodException e) {
+			return false;
 		}
-
-		return false;
 	}
 
 	private void readFiles() {

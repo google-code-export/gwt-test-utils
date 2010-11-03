@@ -128,7 +128,7 @@ public class DirectoryTestReader {
 				return o1.getName().compareTo(o2.getName());
 			}
 		});
-		
+
 		return testMethods;
 	}
 

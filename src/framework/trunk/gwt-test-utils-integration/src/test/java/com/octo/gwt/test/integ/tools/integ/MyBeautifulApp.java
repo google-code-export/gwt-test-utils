@@ -108,14 +108,14 @@ public class MyBeautifulApp implements EntryPoint {
 
 			public void onClick(ClickEvent arg0) {
 				MyRemoteServiceAsync remoteServiceAsync = GWT.create(MyRemoteService.class);
-				remoteServiceAsync.myMethod2(new MyCustomObject(), new AsyncCallback<MyCustomObject>() {
+				remoteServiceAsync.myMethod2(new MyCustomObject("toto"), new AsyncCallback<MyCustomObject>() {
 
-					public void onSuccess(MyCustomObject arg0) {
-						l.setText(arg0.myField);
+					public void onSuccess(MyCustomObject object) {
+						l.setText(object.myField + " " + object.myTransientField);
 					}
 
-					public void onFailure(Throwable arg0) {
-						l.setText("error");
+					public void onFailure(Throwable t) {
+						throw new RuntimeException(t);
 					}
 
 				});

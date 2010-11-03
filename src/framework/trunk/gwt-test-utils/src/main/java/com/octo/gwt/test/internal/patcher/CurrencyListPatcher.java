@@ -18,6 +18,7 @@ import com.octo.gwt.test.internal.utils.PatchGwtUtils;
 import com.octo.gwt.test.patcher.AutomaticPatcher;
 import com.octo.gwt.test.patcher.PatchClass;
 import com.octo.gwt.test.patcher.PatchMethod;
+import com.octo.gwt.test.utils.GwtTestReflectionUtils;
 
 @PatchClass(CurrencyList.class)
 public class CurrencyListPatcher extends AutomaticPatcher {
@@ -28,7 +29,7 @@ public class CurrencyListPatcher extends AutomaticPatcher {
 	private static CurrencyData create() {
 		try {
 			Constructor<CurrencyDataImpl> constructor = CurrencyDataImpl.class.getDeclaredConstructor();
-			constructor.setAccessible(true);
+			GwtTestReflectionUtils.makeAccessible(constructor);
 			return constructor.newInstance();
 		} catch (Exception e) {
 			throw new RuntimeException(e);
