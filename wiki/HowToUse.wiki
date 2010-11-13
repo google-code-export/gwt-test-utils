@@ -13,7 +13,7 @@ First, you have to setup the required dependency in the _pom.xml_ :
    <dependency>
       <groupId>com.octo.gwt.test</groupId>
       <artifactId>gwt-test-utils</artifactId>
-      <version>0.19</version>
+      <version>0.22</version>
       <scope>test</scope>
    </dependency>
    ...
@@ -28,7 +28,7 @@ If you want to run integration tests with *gwt-test-utils* scenario writer featu
    <dependency>
       <groupId>com.octo.gwt.test</groupId>
       <artifactId>gwt-test-utils-integration</artifactId>
-      <version>0.19</version>
+      <version>0.22</version>
       <scope>test</scope>
    </dependency>
    ...
@@ -77,7 +77,7 @@ Sometimes, it could be helpfull to get the lastest snapshot. It's done with the 
    <dependency>
       <groupId>com.octo.gwt.test</groupId>
       <artifactId>gwt-test-utils-integration</artifactId>
-      <version>0.20-SNAPSHOT</version>
+      <version>0.23-SNAPSHOT</version>
       <scope>test</scope>
    </dependency>
    ...
@@ -116,18 +116,16 @@ To run your GWT unit tests without Maven, just add the *gwt-test-utils-x.jar* to
 
 List of third-party jars requiered by *gwt-test-utils* :
 
- * bcel-5.2.jar
- * cglib-nodep-2.1_3.jar
+ * cglib-nodep-2.2.jar
  * commons-lang-2.4.jar
- * easymock-2.3.jar
- * easymockclassextension-2.3.jar
+ * easymock-3.0.jar
  * gwt-servlet-2.0.4.jar
  * gwt-user-2.0.4.jar
  * htmlparser-1.6.jar
- * jakarta-regexp-1.4.jar
  * javassist-3.8.0.GA.jar
- * junit-4.7.jar
- * log4j-1.2.14.jar
+ * junit-4.8.1.jar
+ * objenesis-1.2.jar
+ * slf4j-api-1.6.1.jar (with the adapter of your choice)
 
 
 
