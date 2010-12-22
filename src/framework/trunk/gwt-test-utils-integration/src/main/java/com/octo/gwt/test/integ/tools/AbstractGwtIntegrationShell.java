@@ -38,6 +38,7 @@ import com.octo.gwt.test.internal.utils.ArrayUtils;
 import com.octo.gwt.test.internal.utils.GwtTestStringUtils;
 import com.octo.gwt.test.utils.GwtTestReflectionUtils;
 import com.octo.gwt.test.utils.WidgetUtils;
+import com.octo.gwt.test.utils.events.Browser;
 import com.octo.gwt.test.utils.events.EventBuilder;
 import com.octo.gwt.test.utils.events.EventUtils;
 
@@ -422,7 +423,7 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 	@CsvMethod
 	public void fillTextBox(String value, String... params) {
 		TextBox textBox = getObject(TextBox.class, params);
-		fillText(textBox, value);
+		Browser.fillText(textBox, value);
 	}
 
 	@CsvMethod
@@ -464,7 +465,7 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 	public void fillAndSelectInSuggestBoxByIndex(String content, String index, String... params) {
 		SuggestBox suggestBox = getObject(SuggestBox.class, params);
 
-		fillText(suggestBox, content);
+		Browser.fillText(suggestBox, content);
 		executeSuggestCommandByIndex(WidgetUtils.getMenuItems(suggestBox), Integer.parseInt(index));
 	}
 
@@ -472,7 +473,7 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 	public void fillAndSelectInSuggestBoxByText(String content, String selected, String... params) {
 		SuggestBox suggestBox = getObject(SuggestBox.class, params);
 
-		fillText(suggestBox, content);
+		Browser.fillText(suggestBox, content);
 
 		List<MenuItem> menuItems = WidgetUtils.getMenuItems(suggestBox);
 		int i = 0;
@@ -581,21 +582,6 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 			errorMessage += WidgetUtils.getListBoxContentToString(listBox);
 			Assert.fail(csvRunner.getAssertionErrorMessagePrefix() + errorMessage);
 		}
-	}
-
-	//TODO: remove : use Browser.fillText(..)
-	protected void fillText(HasText hasTextWidget, String value) {
-		for (int i = 0; i <= value.length(); i++) {
-			hasTextWidget.setText(value.substring(0, i));
-			Event keyPressEvent = EventBuilder.create(Event.ONKEYPRESS).build();
-			Event changeEvent = EventBuilder.create(Event.ONCHANGE).build();
-			dispatchEvent((Widget) hasTextWidget, keyPressEvent);
-			dispatchEvent((Widget) hasTextWidget, changeEvent);
-		}
-
-		Event keyUpEvent = EventBuilder.create(Event.ONKEYUP).setKeyCode(KeyCodes.KEY_ENTER).build();
-		dispatchEvent((Widget) hasTextWidget, keyUpEvent);
-		dispatchEvent((Widget) hasTextWidget, Event.ONBLUR);
 	}
 
 	protected void dispatchNotCheckedEvent(Widget target, Event event) {
