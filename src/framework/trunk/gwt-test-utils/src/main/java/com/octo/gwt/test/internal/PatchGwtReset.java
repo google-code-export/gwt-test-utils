@@ -51,7 +51,7 @@ public class PatchGwtReset {
 		GwtTestReflectionUtils
 				.callPrivateMethod(
 						GwtTestReflectionUtils.getPrivateFieldValue(GwtTestReflectionUtils.getPrivateFieldValue(
-								GwtTestReflectionUtils.getPrivateFieldValue(historyImpl, "handlers"), "registry"), "map"), "clear");
+								GwtTestReflectionUtils.getPrivateFieldValue(historyImpl, "handlers"), "eventBus"), "map"), "clear");
 
 		GwtTestReflectionUtils.setStaticField(NumberFormat.class, "cachedDecimalFormat", null);
 		GwtTestReflectionUtils.setStaticField(NumberFormat.class, "cachedScientificFormat", null);

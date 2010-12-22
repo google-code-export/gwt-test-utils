@@ -12,6 +12,7 @@ import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.SourcesTableEvents;
 import com.google.gwt.user.client.ui.TableListener;
 import com.google.gwt.user.client.ui.Widget;
+import com.octo.gwt.test.utils.events.Browser;
 
 @SuppressWarnings("deprecation")
 public class GridTest extends AbstractGwtTest {
@@ -176,7 +177,7 @@ public class GridTest extends AbstractGwtTest {
 
 		Assert.assertEquals(false, clicked);
 		// simule the click
-		click(g.getWidget(0, 0));
+		Browser.click(g.getWidget(0, 0));
 
 		Assert.assertEquals(true, clicked);
 	}

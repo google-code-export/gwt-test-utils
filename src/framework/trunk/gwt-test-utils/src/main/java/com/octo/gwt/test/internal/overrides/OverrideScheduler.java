@@ -18,28 +18,35 @@ public class OverrideScheduler extends Scheduler {
 
 	}
 
-	@Override
 	public void scheduleDeferred(ScheduledCommand cmd) {
 		cmd.execute();
 	}
 
-	@Override
 	public void scheduleFinally(ScheduledCommand cmd) {
 		cmd.execute();
 	}
 
-	@Override
 	public void scheduleFixedDelay(RepeatingCommand cmd, int delayMs) {
 		cmd.execute();
 	}
 
-	@Override
 	public void scheduleFixedPeriod(RepeatingCommand cmd, int delayMs) {
 		cmd.execute();
 	}
 
-	@Override
 	public void scheduleIncremental(RepeatingCommand cmd) {
+		cmd.execute();
+	}
+	
+	public void scheduleEntry(RepeatingCommand cmd) {
+		cmd.execute();
+	}
+
+	public void scheduleEntry(ScheduledCommand cmd) {
+		cmd.execute();
+	}
+
+	public void scheduleFinally(RepeatingCommand cmd) {
 		cmd.execute();
 	}
 

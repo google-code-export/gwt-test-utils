@@ -2,11 +2,13 @@ package com.octo.gwt.test.utils.events;
 
 import org.junit.Assert;
 
+import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.Grid;
+import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.RadioButton;
@@ -73,7 +75,7 @@ public class Browser {
 	public static void click(SuggestBox parent, MenuItem clickedItem) {
 		Event clickEvent = EventBuilder.create(Event.ONCLICK).setTarget(clickedItem.getElement()).build();
 		assertCanApplyEvent(clickedItem, clickEvent);
-		dispatchEventInternal(parent, clickEvent);
+		clickedItem.getCommand().execute();
 	}
 
 	/**
@@ -81,6 +83,26 @@ public class Browser {
 	 */
 	public static void click(SuggestBox parent, int clickedItemIndex) {
 		click(parent, WidgetUtils.getMenuItems(parent).get(clickedItemIndex));
+	}
+
+	public static void fillText(HasText hasTextWidget, String value) {
+		if (!Widget.class.isInstance(hasTextWidget)) {
+			return;
+		}
+		Event keyPressEvent = EventBuilder.create(Event.ONKEYPRESS).build();
+		Event changeEvent = EventBuilder.create(Event.ONCHANGE).build();
+
+		assertCanApplyEvent((Widget) hasTextWidget, keyPressEvent);
+
+		for (int i = 0; i <= value.length(); i++) {
+			hasTextWidget.setText(value.substring(0, i));
+			dispatchEventInternal((Widget) hasTextWidget, keyPressEvent);
+			dispatchEventInternal((Widget) hasTextWidget, changeEvent);
+		}
+
+		Event keyUpEvent = EventBuilder.create(Event.ONKEYUP).setKeyCode(KeyCodes.KEY_ENTER).build();
+		dispatchEventInternal((Widget) hasTextWidget, keyUpEvent);
+		dispatchEventInternal((Widget) hasTextWidget, EventBuilder.create(Event.ONBLUR).build());
 	}
 
 	/**

@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 import com.octo.gwt.test.GwtCreateHandler;
-import com.octo.gwt.test.internal.patcher.tools.i18n.LocalizableResourceCreateHandler;
+import com.octo.gwt.test.internal.patcher.tools.i18n.LocalizableCreateHandler;
 import com.octo.gwt.test.internal.patcher.tools.resources.ClientBundleCreateHandler;
 import com.octo.gwt.test.internal.patcher.tools.resources.ImageBundleCreateHandler;
 
@@ -31,7 +31,7 @@ public class GwtCreateHandlerManager {
 
 	private GwtCreateHandlerManager() {
 		addedHandlers = new ArrayList<GwtCreateHandler>();
-		localizableResourceHandler = new LocalizableResourceCreateHandler();
+		localizableResourceHandler = new LocalizableCreateHandler();
 		clientBundleCreateHander = new ClientBundleCreateHandler();
 		imageBundleCreateHandler = new ImageBundleCreateHandler();
 		defaultGwtCreateHandler = new DefaultGwtCreateHandler();

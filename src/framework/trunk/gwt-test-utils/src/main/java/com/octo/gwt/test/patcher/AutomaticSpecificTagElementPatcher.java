@@ -9,13 +9,12 @@ import javassist.CtMethod;
 import com.google.gwt.dom.client.HeadingElement;
 import com.google.gwt.dom.client.ModElement;
 import com.google.gwt.dom.client.QuoteElement;
-import com.google.gwt.dom.client.TableCellElement;
 import com.google.gwt.dom.client.TableColElement;
 import com.google.gwt.dom.client.TableSectionElement;
 import com.octo.gwt.test.internal.PatchGwtClassPool;
 import com.octo.gwt.test.internal.utils.TagAware;
 
-@PatchClass({ HeadingElement.class, ModElement.class, QuoteElement.class, TableCellElement.class, TableColElement.class, TableSectionElement.class })
+@PatchClass({ HeadingElement.class, ModElement.class, QuoteElement.class, TableColElement.class, TableSectionElement.class })
 public class AutomaticSpecificTagElementPatcher extends AutomaticPropertyContainerPatcher {
 
 	private static final String OVERRIDE_TAG = "overrideTag";

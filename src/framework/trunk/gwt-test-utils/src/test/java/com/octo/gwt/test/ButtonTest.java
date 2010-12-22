@@ -24,8 +24,8 @@ public class ButtonTest extends AbstractGwtTest {
 		// Test
 		Button b = Button.wrap(element);
 
-		// Assert that the tabIndex is automatically reset to 0
-		Assert.assertEquals(0, b.getTabIndex());
+		// Assert 1
+		Assert.assertEquals(3, b.getTabIndex());
 
 		// Test 2
 		b.setTabIndex(1);

@@ -1,10 +1,16 @@
 package com.octo.gwt.test.utils;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.event.dom.client.DomEvent.Type;
+import com.google.gwt.event.shared.EventHandler;
+import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.ListBox;
@@ -13,6 +19,7 @@ import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SuggestBox;
+import com.google.gwt.user.client.ui.SuggestBox.SuggestionDisplay;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 import com.octo.gwt.test.utils.events.Browser;
@@ -23,6 +30,7 @@ import com.octo.gwt.test.utils.events.Browser;
  * @author GLZ
  * 
  */
+@SuppressWarnings("deprecation")
 public class WidgetUtils {
 
 	/**
@@ -46,6 +54,25 @@ public class WidgetUtils {
 		} else {
 			return isElementVisible(object.getElement());
 		}
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <T extends EventHandler> List<T> getHandlers(Widget widget, Type<T> eventType) {
+		HandlerManager handlerManager = GwtTestReflectionUtils.getPrivateFieldValue(widget, "handlerManager");
+		Object handlerRegistry = GwtTestReflectionUtils.getPrivateFieldValue(handlerManager, "eventBus");
+		Map<GwtEvent.Type<?>, Map<Object, List<?>>> map = GwtTestReflectionUtils.getPrivateFieldValue(handlerRegistry, "map");
+
+		Map<Object, List<?>> eventHandlerMap = map.get(eventType);
+
+		List<T> result = new ArrayList<T>();
+
+		if (eventHandlerMap != null) {
+			for (List<?> eventHandlerList : eventHandlerMap.values()) {
+				result.addAll((List<T>) eventHandlerList);
+			}
+		}
+
+		return result;
 	}
 
 	private static boolean isElementVisible(Element element) {
@@ -106,7 +133,8 @@ public class WidgetUtils {
 	}
 
 	public static List<MenuItem> getMenuItems(SuggestBox suggestBox) {
-		MenuBar suggestionMenu = GwtTestReflectionUtils.getPrivateFieldValue(suggestBox, "suggestionMenu");
+		SuggestionDisplay display = GwtTestReflectionUtils.getPrivateFieldValue(suggestBox, "display");
+		MenuBar suggestionMenu = GwtTestReflectionUtils.getPrivateFieldValue(display, "suggestionMenu");
 		return getMenuItems(suggestionMenu);
 	}
 

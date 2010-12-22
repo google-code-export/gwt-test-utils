@@ -38,13 +38,22 @@ import com.google.gwt.user.client.Event.NativePreviewHandler;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ComplexPanel;
+import com.google.gwt.user.client.ui.Grid;
+import com.google.gwt.user.client.ui.HTMLTable.Cell;
+import com.google.gwt.user.client.ui.MultiWordSuggestOracle;
 import com.google.gwt.user.client.ui.StackPanel;
+import com.google.gwt.user.client.ui.SuggestBox;
 import com.octo.gwt.test.utils.events.Browser;
 
 public class EventsTest extends AbstractGwtTest {
 
 	private boolean tested;
 	private int counter;
+
+	@Override
+	public String getCurrentTestedModuleFile() {
+		return "test-config.gwt.xml";
+	}
 
 	@Test
 	public void checkClickEvent() {
@@ -88,7 +97,46 @@ public class EventsTest extends AbstractGwtTest {
 
 		// Assert
 		Assert.assertTrue("onClick event was not triggered", tested);
+	}
 
+	Cell clickedCell;
+
+	@Test
+	public void checkClickOnGrid() {
+		// Setup
+		final Grid g = new Grid(2, 2);
+		g.addClickHandler(new ClickHandler() {
+
+			public void onClick(ClickEvent event) {
+				clickedCell = g.getCellForEvent(event);
+			}
+		});
+
+		Anchor a = new Anchor();
+		g.setWidget(1, 1, a);
+
+		// Test
+		Browser.click(g, 1, 1);
+
+		// Assert
+		Assert.assertEquals(1, clickedCell.getRowIndex());
+		Assert.assertEquals(1, clickedCell.getCellIndex());
+	}
+
+	@Test
+	public void checkClickOnSuggestBox() {
+		// Setup
+		MultiWordSuggestOracle oracle = new MultiWordSuggestOracle();
+		oracle.add("suggestion 1");
+		oracle.add("suggestion 2");
+		SuggestBox box = new SuggestBox(oracle);
+
+		// Test
+		Browser.fillText(box, "sug");
+		Browser.click(box, 1);
+
+		// Assert
+		Assert.assertEquals("suggestion 2", box.getText());
 	}
 
 	@Test

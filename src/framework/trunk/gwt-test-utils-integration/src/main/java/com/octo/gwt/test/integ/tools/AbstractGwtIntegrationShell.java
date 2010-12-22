@@ -583,6 +583,7 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 		}
 	}
 
+	//TODO: remove : use Browser.fillText(..)
 	protected void fillText(HasText hasTextWidget, String value) {
 		for (int i = 0; i <= value.length(); i++) {
 			hasTextWidget.setText(value.substring(0, i));

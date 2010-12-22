@@ -12,6 +12,7 @@ import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.SuggestBox;
+import com.google.gwt.user.client.ui.SuggestBox.SuggestionDisplay;
 import com.octo.gwt.test.utils.GwtTestReflectionUtils;
 import com.octo.gwt.test.utils.WidgetUtils;
 
@@ -121,7 +122,8 @@ public class WidgetUtilsTest extends AbstractGwtTest {
 	public void checkSuggestBoxItems() {
 		// Setup
 		SuggestBox box = new SuggestBox();
-		MenuBar bar = GwtTestReflectionUtils.getPrivateFieldValue(box, "suggestionMenu");
+		SuggestionDisplay display = GwtTestReflectionUtils.getPrivateFieldValue(box, "display");
+		MenuBar bar = GwtTestReflectionUtils.getPrivateFieldValue(display, "suggestionMenu");
 
 		Command cmd = new Command() {
 			public void execute() {

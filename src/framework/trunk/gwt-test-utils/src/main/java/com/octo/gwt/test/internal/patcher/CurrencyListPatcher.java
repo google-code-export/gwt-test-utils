@@ -1,10 +1,7 @@
 package com.octo.gwt.test.internal.patcher;
 
-import java.lang.reflect.Constructor;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
@@ -18,29 +15,29 @@ import com.octo.gwt.test.internal.utils.PatchGwtUtils;
 import com.octo.gwt.test.patcher.AutomaticPatcher;
 import com.octo.gwt.test.patcher.PatchClass;
 import com.octo.gwt.test.patcher.PatchMethod;
-import com.octo.gwt.test.utils.GwtTestReflectionUtils;
 
 @PatchClass(CurrencyList.class)
 public class CurrencyListPatcher extends AutomaticPatcher {
 
-	private static List<CurrencyData> currencyDatas;
-	private static List<String[]> contents;
+	private static Map<Locale, CurrencyData> currencyDatas = new HashMap<Locale, CurrencyData>();
 
-	private static CurrencyData create() {
-		try {
-			Constructor<CurrencyDataImpl> constructor = CurrencyDataImpl.class.getDeclaredConstructor();
-			GwtTestReflectionUtils.makeAccessible(constructor);
-			return constructor.newInstance();
-		} catch (Exception e) {
-			throw new RuntimeException(e);
+	@PatchMethod
+	public static CurrencyData getDefaultJava(CurrencyList currencyList) {
+		Locale locale = PatchGwtConfig.getLocale();
+		if (locale == null) {
+			locale = Locale.ENGLISH;
 		}
+
+		CurrencyData currencyData = currencyDatas.get(locale);
+		if (currencyData == null) {
+			currencyData = createCurrencyData(locale);
+			currencyDatas.put(locale, currencyData);
+		}
+
+		return currencyData;
 	}
 
-	private static void init() {
-		if (contents != null) {
-			return;
-		}
-		Locale locale = PatchGwtConfig.getLocale();
+	private static CurrencyData createCurrencyData(Locale locale) {
 		Properties currencyData = PatchGwtUtils.getLocalizedProperties("com/google/gwt/i18n/client/impl/cldr/CurrencyData", locale);
 		Properties currencyExtra = PatchGwtUtils.getProperties("com/google/gwt/i18n/client/constants/CurrencyExtra");
 		Properties numberConstants = PatchGwtUtils.getLocalizedProperties("com/google/gwt/i18n/client/constants/NumberConstantsImpl", locale);
@@ -48,18 +45,17 @@ public class CurrencyListPatcher extends AutomaticPatcher {
 		String[] currencies = new String[keySet.size()];
 		keySet.toArray(currencies);
 		Arrays.sort(currencies);
-		Map<String, String> nameMap = new HashMap<String, String>();
 
 		String defCurrencyCode = numberConstants.getProperty("defCurrencyCode");
 		if (defCurrencyCode == null) {
 			defCurrencyCode = "USD";
 		}
 
-		String[] defCurrencyObject = new String[] { defCurrencyCode, defCurrencyCode, Integer.toString(2), "" };
+		CurrencyData defCurrencyData = new CurrencyDataImpl(defCurrencyCode, defCurrencyCode, 2, "");
+
 		for (String currencyCode : currencies) {
 			String currencyEntry = currencyData.getProperty(currencyCode);
 			String[] currencySplit = currencyEntry.split("\\|");
-			String currencyDisplay = currencySplit[0];
 			String currencySymbol = null;
 			if (currencySplit.length > 1 && currencySplit[1].length() > 0) {
 				currencySymbol = currencySplit[1];
@@ -71,14 +67,7 @@ public class CurrencyListPatcher extends AutomaticPatcher {
 				} catch (NumberFormatException e) {
 				}
 			}
-			boolean currencyObsolete = false;
-			if (currencySplit.length > 3 && currencySplit[3].length() > 0) {
-				try {
-					currencyObsolete = Integer.valueOf(currencySplit[3]) != 0;
-				} catch (NumberFormatException e) {
-					// Ignore bad values
-				}
-			}
+
 			int currencyFlags = currencyFractionDigits;
 			String extraData = currencyExtra.getProperty(currencyCode);
 			String portableSymbol = "";
@@ -114,58 +103,17 @@ public class CurrencyListPatcher extends AutomaticPatcher {
 			if (currencySymbol == null) {
 				currencySymbol = currencyCode;
 			}
-			String[] currencyObject = new String[] { currencyCode, currencySymbol, Integer.toString(currencyFlags), "" };
-			if (portableSymbol.length() > 0) {
-				currencyObject[3] += portableSymbol;
-			}
-			if (!currencyObsolete) {
-				nameMap.put(currencyCode, currencyDisplay);
-				//writer.println("// " + currencyDisplay);
-				//writer.println("\":" + quote(currencyCode) + "\": " + currencyObject + ",");
-			}
+
 			if (currencyCode.equals(defCurrencyCode)) {
-				defCurrencyObject = currencyObject;
+				return new CurrencyDataImpl(currencyCode, currencySymbol, currencyFlags, portableSymbol);
 			}
 		}
-		currencyDatas = new ArrayList<CurrencyData>();
-		contents = new ArrayList<String[]>();
 
-		currencyDatas.add(create());
-		contents.add(defCurrencyObject);
-
-	}
-
-	@PatchMethod
-	public static CurrencyData getDefault(CurrencyList currencyList) {
-		init();
-		return currencyDatas.get(0);
-	}
-
-	private static String[] get(CurrencyData currencyData) {
-		init();
-		for (int i = 0; i < currencyDatas.size(); i++) {
-			if (currencyDatas.get(i) == currencyData) {
-				return contents.get(i);
-			}
-		}
-		return null;
-	}
-
-	public static String getCurrencyCode(CurrencyData currencyData) {
-		return get(currencyData)[0];
-	}
-
-	public static String getCurrencySymbol(CurrencyData currencyData) {
-		return get(currencyData)[1];
-	}
-
-	public static int getFlagsAndPrecision(CurrencyData currencyData) {
-		return Integer.parseInt(get(currencyData)[2]);
+		return defCurrencyData;
 	}
 
 	public static void reset() {
-		contents = null;
-		currencyDatas = null;
+		currencyDatas.clear();
 	}
 
 }

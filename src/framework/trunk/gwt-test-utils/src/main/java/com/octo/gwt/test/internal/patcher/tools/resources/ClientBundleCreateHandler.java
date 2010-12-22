@@ -11,14 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import javassist.CtClass;
-import javassist.CtMethod;
 import javassist.NotFoundException;
-import javassist.bytecode.AnnotationsAttribute;
-import javassist.bytecode.MethodInfo;
-import javassist.bytecode.annotation.Annotation;
-import javassist.bytecode.annotation.ArrayMemberValue;
-import javassist.bytecode.annotation.MemberValue;
-import javassist.bytecode.annotation.StringMemberValue;
 
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.ClientBundle.Source;
@@ -114,13 +107,13 @@ public class ClientBundleCreateHandler implements GwtCreateHandler {
 
 			private static class ResourceFileEntry {
 
-				public ResourceFileEntry(String resourceName, CtMethod resourceMethod) {
+				public ResourceFileEntry(String resourceName, Method resourceMethod) {
 					this.resourceName = resourceName;
 					this.resourceMethod = resourceMethod;
 				}
 
 				private String resourceName;
-				private CtMethod resourceMethod;
+				private Method resourceMethod;
 			}
 
 			public ClientBundleMethodsRegistry(Class<? extends ClientBundle> clazz) {
@@ -144,25 +137,32 @@ public class ClientBundleCreateHandler implements GwtCreateHandler {
 			private URL computeResourceURL(Method method) throws NotFoundException, URISyntaxException {
 				List<ResourceFileEntry> filesSimpleNames = new ArrayList<ResourceFileEntry>();
 				boolean computeExtensions = false;
-				CtMethod m = ctClass.getMethod(method.getName(), getDescriptor(method));
-				MethodInfo minfo = m.getMethodInfo2();
-				AnnotationsAttribute attr = (AnnotationsAttribute) minfo.getAttribute(AnnotationsAttribute.invisibleTag);
-				if (attr != null) {
-					Annotation an = attr.getAnnotation(Source.class.getName());
-					if (an != null) {
-						MemberValue[] mvArray = ((ArrayMemberValue) an.getMemberValue("value")).getValue();
-						if (mvArray != null) {
-							for (MemberValue mv : mvArray) {
-								StringMemberValue smv = (StringMemberValue) mv;
-								filesSimpleNames.add(new ResourceFileEntry(smv.getValue(), m));
-							}
-						}
+				//CtMethod m = ctClass.getMethod(method.getName(), getDescriptor(method));
+				//				MethodInfo minfo = m.getMethodInfo2();
+				//				AnnotationsAttribute attr = (AnnotationsAttribute) minfo.getAttribute(AnnotationsAttribute.invisibleTag);
+				//				if (attr != null) {
+				//					Annotation an = attr.getAnnotation(Source.class.getName());
+				//					if (an != null) {
+				//						MemberValue[] mvArray = ((ArrayMemberValue) an.getMemberValue("value")).getValue();
+				//						if (mvArray != null) {
+				//							for (MemberValue mv : mvArray) {
+				//								StringMemberValue smv = (StringMemberValue) mv;
+				//								filesSimpleNames.add(new ResourceFileEntry(smv.getValue(), m));
+				//							}
+				//						}
+				//					}
+				//				}
+
+				Source source = method.getAnnotation(Source.class);
+				if (source != null) {
+					for (String value : source.value()) {
+						filesSimpleNames.add(new ResourceFileEntry(value, method));
 					}
 				}
 
 				if (filesSimpleNames.isEmpty()) {
 					// no @Source annotation detected
-					filesSimpleNames.add(new ResourceFileEntry(method.getName(), m));
+					filesSimpleNames.add(new ResourceFileEntry(method.getName(), method));
 					computeExtensions = true;
 				}
 
@@ -170,8 +170,8 @@ public class ClientBundleCreateHandler implements GwtCreateHandler {
 
 				for (ResourceFileEntry resourceEntry : filesSimpleNames) {
 					String resourceName = resourceEntry.resourceName;
-					CtClass declaringClass = resourceEntry.resourceMethod.getDeclaringClass();
-					String baseDir = declaringClass.getPackageName().replaceAll("\\.", "/") + "/";
+					Class<?> declaringClass = resourceEntry.resourceMethod.getDeclaringClass();
+					String baseDir = declaringClass.getPackage().getName().replaceAll("\\.", "/") + "/";
 					String fileName = (resourceName.startsWith(baseDir)) ? resourceName : baseDir + resourceName;
 
 					if (computeExtensions) {

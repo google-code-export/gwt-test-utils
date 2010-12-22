@@ -11,7 +11,7 @@ import com.octo.gwt.test.patcher.PatchMethod;
 public class NumberFormatPatcher extends AutomaticPatcher {
 
 	@PatchMethod
-	public static String toFixed(double d, int digits) {
+	public static String toPrecision(double d, int digits) {
 		return new BigDecimal(d).setScale(digits, BigDecimal.ROUND_DOWN).toString();
 	}
 

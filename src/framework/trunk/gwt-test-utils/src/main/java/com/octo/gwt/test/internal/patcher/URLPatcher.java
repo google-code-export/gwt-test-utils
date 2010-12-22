@@ -12,7 +12,7 @@ import com.octo.gwt.test.patcher.PatchMethod;
 public class URLPatcher extends AutomaticPatcher {
 
 	@PatchMethod
-	public static String encodeComponentImpl(String decodedURLComponent) {
+	public static String encodeQueryStringImpl(String decodedURLComponent) {
 		try {
 			return URLEncoder.encode(decodedURLComponent, "UTF-8");
 		} catch (UnsupportedEncodingException e) {

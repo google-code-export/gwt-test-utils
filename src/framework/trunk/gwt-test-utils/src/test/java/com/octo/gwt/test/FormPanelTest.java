@@ -21,6 +21,11 @@ public class FormPanelTest extends AbstractGwtTest {
 	private boolean submitted;
 	private boolean completeSubmitted;
 
+	@Override
+	protected String getCurrentTestedModuleFile() {
+		return "test-config.gwt.xml";
+	}
+
 	@Before
 	public void setupFormPanel() {
 		form = new FormPanel();
@@ -120,12 +125,12 @@ public class FormPanelTest extends AbstractGwtTest {
 		Assert.assertEquals("40px", form.getElement().getStyle().getHeight());
 		Assert.assertEquals("30px", form.getElement().getStyle().getWidth());
 	}
-	
+
 	@Test
 	public void checkRemoveFromParent() {
 		// Test
 		form.removeFromParent();
-		
+
 		// Assert
 		Assert.assertFalse(form.isAttached());
 	}

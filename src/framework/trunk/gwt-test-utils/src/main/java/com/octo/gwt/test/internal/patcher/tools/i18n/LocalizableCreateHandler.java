@@ -3,23 +3,57 @@ package com.octo.gwt.test.internal.patcher.tools.i18n;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import com.google.gwt.i18n.client.Constants;
 import com.google.gwt.i18n.client.ConstantsWithLookup;
+import com.google.gwt.i18n.client.DefaultDateTimeFormatInfo;
 import com.google.gwt.i18n.client.LocalizableResource;
 import com.google.gwt.i18n.client.Messages;
+import com.google.gwt.i18n.client.impl.CldrImpl;
+import com.google.gwt.i18n.client.impl.cldr.DateTimeFormatInfoImpl;
 import com.octo.gwt.test.GwtCreateHandler;
+import com.octo.gwt.test.PatchGwtConfig;
 
-public class LocalizableResourceCreateHandler implements GwtCreateHandler {
+public class LocalizableCreateHandler implements GwtCreateHandler {
 
 	@SuppressWarnings("unchecked")
 	public Object create(Class<?> classLiteral) throws Exception {
-		if (!LocalizableResource.class.isAssignableFrom(classLiteral)) {
-			return null;
+		if (LocalizableResource.class.isAssignableFrom(classLiteral)) {
+			return LocalizableResourceProxyFactory.getFactory((Class<? extends LocalizableResource>) classLiteral).createProxy();
+		} else if (CldrImpl.class == classLiteral) {
+			return getLocalizedClassImpl(CldrImpl.class, CldrImpl.class);
+		} else if (DateTimeFormatInfoImpl.class == classLiteral) {
+			return getLocalizedClassImpl(DateTimeFormatInfoImpl.class, DefaultDateTimeFormatInfo.class);
 		}
 
-		return LocalizableResourceProxyFactory.getFactory((Class<? extends LocalizableResource>) classLiteral).createProxy();
+		return null;
+
+	}
+
+	private Object getLocalizedClassImpl(Class<?> localizedClass, Class<?> defaultImpl) throws Exception {
+		Locale locale = PatchGwtConfig.getLocale();
+		if (locale == null) {
+			return defaultImpl.newInstance();
+		}
+
+		Class<?> implementationClass;
+		try {
+			implementationClass = Class.forName(localizedClass.getName() + "_" + locale.getLanguage());
+		} catch (ClassNotFoundException e) {
+			try {
+				implementationClass = Class.forName(localizedClass.getName() + "_" + locale.getCountry());
+			} catch (ClassNotFoundException e2) {
+				implementationClass = null;
+			}
+		}
+
+		if (implementationClass == null) {
+			implementationClass = defaultImpl;
+		}
+
+		return implementationClass.newInstance();
 	}
 
 	private static class LocalizableResourceProxyFactory {

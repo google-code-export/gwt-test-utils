@@ -33,6 +33,7 @@ public class DOMImplPatcher extends AutomaticPatcher {
 	private static final String INNER_HTML = "InnerHTML";
 	private static final String ABSOLUTE_LEFT = "AbsoluteLeft";
 	private static final String INNER_TEXT = "InnerText";
+	private static final String TAB_INDEX = "TabIndex";
 	private static final String TAG_NAME = "TagName";
 	private static final String NODE_LIST_FIELD = "ChildNodes";
 
@@ -105,6 +106,11 @@ public class DOMImplPatcher extends AutomaticPatcher {
 	@PatchMethod
 	public static int getAbsoluteTop(Object domImpl, Element elem) {
 		return PropertyContainerHelper.getPropertyInteger(elem, ABSOLUTE_TOP);
+	}
+
+	@PatchMethod
+	public static int getTabIndex(Object domImpl, Element elem) {
+		return PropertyContainerHelper.getPropertyInteger(elem, TAB_INDEX);
 	}
 
 	@PatchMethod

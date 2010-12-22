@@ -40,7 +40,6 @@ import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.StyleElement;
 import com.google.gwt.dom.client.TableCaptionElement;
 import com.google.gwt.dom.client.TableElement;
-import com.google.gwt.dom.client.TableRowElement;
 import com.google.gwt.dom.client.Text;
 import com.google.gwt.dom.client.TextAreaElement;
 import com.google.gwt.dom.client.TitleElement;
@@ -56,7 +55,7 @@ import com.octo.gwt.test.internal.utils.PropertyContainerHelper;
 		HRElement.class, IFrameElement.class, ImageElement.class, LIElement.class, LabelElement.class, LegendElement.class, LinkElement.class,
 		MapElement.class, MetaElement.class, ObjectElement.class, OptionElement.class, OListElement.class, OptGroupElement.class,
 		ParagraphElement.class, ParamElement.class, PreElement.class, ScriptElement.class, StyleElement.class, SpanElement.class,
-		TableCaptionElement.class, TableElement.class, TableRowElement.class, TextAreaElement.class, TitleElement.class, UListElement.class })
+		TableCaptionElement.class, TableElement.class, TextAreaElement.class, TitleElement.class, UListElement.class })
 public class AutomaticPropertyContainerPatcher extends AutomaticPatcher {
 
 	private static final String PROPERTIES = "__PROPERTIES__";

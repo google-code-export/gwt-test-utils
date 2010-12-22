@@ -3,6 +3,8 @@ package com.octo.gwt.test.internal.patcher.dom;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.Event;
+import com.octo.gwt.test.internal.patcher.EventPatcher;
 import com.octo.gwt.test.patcher.AutomaticPatcher;
 import com.octo.gwt.test.patcher.PatchClass;
 import com.octo.gwt.test.patcher.PatchMethod;
@@ -134,5 +136,10 @@ public class DOMPatcher extends AutomaticPatcher {
 		} else {
 			return null;
 		}
+	}
+
+	@PatchMethod
+	public static Element eventGetTarget(Event evt) {
+		return EventPatcher.getTarget(evt).cast();
 	}
 }
