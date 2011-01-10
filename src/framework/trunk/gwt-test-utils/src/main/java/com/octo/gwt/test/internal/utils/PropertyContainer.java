@@ -1,15 +1,12 @@
 package com.octo.gwt.test.internal.utils;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class PropertyContainer extends HashMap<String, Object> {
 
 	private static final long serialVersionUID = -2421991095282208998L;
 
 	private PropertyContainerAware owner;
-	private List<PropertyContainerObserver> observers = new ArrayList<PropertyContainerObserver>();
 
 	public PropertyContainer(Object o) {
 		if (!PropertyContainerAware.class.isInstance(o)) {
@@ -19,14 +16,6 @@ public class PropertyContainer extends HashMap<String, Object> {
 		}
 
 		owner = (PropertyContainerAware) o;
-	}
-
-	@Override
-	public Object put(String propertyName, Object propertyValue) {
-		for (PropertyContainerObserver observer : observers) {
-			observer.fireSetProperty(owner, propertyName, propertyValue);
-		}
-		return super.put(propertyName, propertyValue);
 	}
 
 	public void put(String key, boolean value) {
@@ -64,19 +53,6 @@ public class PropertyContainer extends HashMap<String, Object> {
 
 	public PropertyContainerAware getOwner() {
 		return owner;
-	}
-
-	public void addObserver(PropertyContainerObserver observer) {
-		observers.add(observer);
-	}
-
-	public boolean removeObserver(PropertyContainerObserver observer) {
-		return observers.remove(observer);
-	}
-
-	public static interface PropertyContainerObserver {
-
-		public void fireSetProperty(PropertyContainerAware owner, String propertyName, Object propertyValue);
 	}
 
 }
