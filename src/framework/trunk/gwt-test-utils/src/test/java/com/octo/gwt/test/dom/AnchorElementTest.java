@@ -48,7 +48,7 @@ public class AnchorElementTest extends AbstractGwtTest {
 
 	@Test
 	public void checkHref() {
-		Assert.assertNull("Href should be null", a.getHref());
+		Assert.assertEquals("", a.getHref());
 		// Set up
 		a.setHref("Href");
 
@@ -58,7 +58,7 @@ public class AnchorElementTest extends AbstractGwtTest {
 
 	@Test
 	public void checkHreflang() {
-		Assert.assertNull("Hreflang should be null", a.getHreflang());
+		Assert.assertEquals("", a.getHreflang());
 		// Set up
 		a.setHreflang("Href");
 
@@ -68,7 +68,7 @@ public class AnchorElementTest extends AbstractGwtTest {
 
 	@Test
 	public void checkName() {
-		Assert.assertNull("Name should be null", a.getName());
+		Assert.assertEquals("", a.getName());
 		// Set up
 		a.setName("Name");
 
@@ -78,7 +78,7 @@ public class AnchorElementTest extends AbstractGwtTest {
 
 	@Test
 	public void checkRel() {
-		Assert.assertNull("Rel should be null", a.getRel());
+		Assert.assertEquals("", a.getRel());
 		// Set up
 		a.setRel("Rel");
 
@@ -98,7 +98,7 @@ public class AnchorElementTest extends AbstractGwtTest {
 
 	@Test
 	public void checkTarget() {
-		Assert.assertNull("Target should be null", a.getTarget());
+		Assert.assertEquals("", a.getTarget());
 		// Set up
 		a.setTarget("Target");
 
@@ -108,7 +108,7 @@ public class AnchorElementTest extends AbstractGwtTest {
 
 	@Test
 	public void checkType() {
-		Assert.assertNull("Type should be null", a.getType());
+		Assert.assertEquals("", a.getType());
 		// Set up
 		a.setType("Type");
 

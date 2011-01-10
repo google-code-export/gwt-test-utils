@@ -26,7 +26,7 @@ public class BaseElementTest extends AbstractGwtTest {
 
 	@Test
 	public void checkHref() {
-		Assert.assertNull("Href should be null", b.getHref());
+		Assert.assertEquals("", b.getHref());
 		// Set up
 		b.setHref("Href");
 
@@ -36,7 +36,7 @@ public class BaseElementTest extends AbstractGwtTest {
 
 	@Test
 	public void checkTarget() {
-		Assert.assertNull("Target should be null", b.getTarget());
+		Assert.assertEquals("", b.getTarget());
 		// Set up
 		b.setTarget("Target");
 

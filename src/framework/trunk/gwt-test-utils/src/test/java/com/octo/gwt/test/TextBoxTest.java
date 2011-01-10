@@ -58,4 +58,10 @@ public class TextBoxTest extends AbstractGwtTest {
 		Assert.assertEquals(2, t.getCursorPos());
 	}
 
+	@Test
+	public void checkValue() {
+		TextBox t = new TextBox();
+		Assert.assertEquals("", t.getValue());
+	}
+
 }

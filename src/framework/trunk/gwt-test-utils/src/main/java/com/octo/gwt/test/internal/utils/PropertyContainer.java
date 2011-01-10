@@ -56,7 +56,12 @@ public class PropertyContainer extends HashMap<String, Object> {
 		Double d = (Double) get(key);
 		return d == null ? 0 : d;
 	}
-	
+
+	public String getString(String key) {
+		String s = (String) get(key);
+		return s == null ? "" : s;
+	}
+
 	public PropertyContainerAware getOwner() {
 		return owner;
 	}

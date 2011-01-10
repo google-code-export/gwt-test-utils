@@ -24,7 +24,6 @@ public class ElementPatcher extends AutomaticPropertyContainerPatcher {
 	public static final String PROPERTY_MAP_FIELD = "propertyMap";
 	public static final String STYLE_FIELD = "Style";
 	public static final String CLASSNAME_FIELD = "ClassName";
-	public static final String ACCESSKEY_FIELD = "AccessKey";
 
 	@Override
 	public void initClass(CtClass c) throws Exception {
@@ -35,7 +34,6 @@ public class ElementPatcher extends AutomaticPropertyContainerPatcher {
 				+ ";");
 		cons.insertAfter(PropertyContainerHelper.getCodeSetProperty("this", PROPERTY_MAP_FIELD, PropertyContainerHelper.getConstructionCode()) + ";");
 		cons.insertAfter(PropertyContainerHelper.getCodeSetProperty("this", CLASSNAME_FIELD, "\"\"") + ";");
-		cons.insertAfter(PropertyContainerHelper.getCodeSetProperty("this", ACCESSKEY_FIELD, "\"\"") + ";");
 	}
 
 	@PatchMethod
@@ -114,7 +112,7 @@ public class ElementPatcher extends AutomaticPropertyContainerPatcher {
 			return element.getTagName();
 		}
 		PropertyContainer propertyContainer = PropertyContainerHelper.getProperty(element, PROPERTY_MAP_FIELD);
-		return (String) propertyContainer.get(propertyName);
+		return propertyContainer.getString(propertyName);
 	}
 
 	@PatchMethod

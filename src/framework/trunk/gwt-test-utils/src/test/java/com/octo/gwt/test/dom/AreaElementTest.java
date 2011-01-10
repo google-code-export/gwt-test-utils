@@ -36,7 +36,7 @@ public class AreaElementTest extends AbstractGwtTest {
 
 	@Test
 	public void checkAlt() {
-		Assert.assertNull("Alt should be null", a.getAlt());
+		Assert.assertEquals("", a.getAlt());
 		// Set up
 		a.setAlt("Alt");
 
@@ -46,7 +46,7 @@ public class AreaElementTest extends AbstractGwtTest {
 
 	@Test
 	public void checkCoords() {
-		Assert.assertNull("Coords should be null", a.getCoords());
+		Assert.assertEquals("", a.getCoords());
 		// Set up
 		a.setCoords("Coords");
 
@@ -56,7 +56,7 @@ public class AreaElementTest extends AbstractGwtTest {
 
 	@Test
 	public void checkHref() {
-		Assert.assertNull("Href should be null", a.getHref());
+		Assert.assertEquals("", a.getHref());
 		// Set up
 		a.setHref("Href");
 
@@ -66,7 +66,7 @@ public class AreaElementTest extends AbstractGwtTest {
 
 	@Test
 	public void checkShape() {
-		Assert.assertNull("Shape should be null", a.getShape());
+		Assert.assertEquals("", a.getShape());
 		// Set up
 		a.setShape("Shape");
 
@@ -86,7 +86,7 @@ public class AreaElementTest extends AbstractGwtTest {
 
 	@Test
 	public void checkTarget() {
-		Assert.assertNull("Target should be null", a.getTarget());
+		Assert.assertEquals("", a.getTarget());
 		// Set up
 		a.setTarget("Target");
 
