@@ -85,12 +85,12 @@ public class DOMImplPatcher extends AutomaticPatcher {
 
 	@PatchMethod
 	public static String getInnerHTML(Object domImpl, Element elem) {
-		return PropertyContainerHelper.getProperty(elem, INNER_HTML);
+		return PropertyContainerHelper.getPropertyString(elem, INNER_HTML);
 	}
 
 	@PatchMethod
 	public static String getInnerText(Object domImpl, Element elem) {
-		return PropertyContainerHelper.getProperty(elem, INNER_TEXT);
+		return PropertyContainerHelper.getPropertyString(elem, INNER_TEXT);
 	}
 
 	@PatchMethod

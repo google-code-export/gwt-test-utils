@@ -6,16 +6,16 @@
 	<groupId>com.octo.gwt.test</groupId>
 	<artifactId>gwt-test-utils-demo</artifactId>
 	<packaging>war</packaging>
-	<version>0.21-SNAPSHOT</version>
+	<version>0.24-SNAPSHOT</version>
 	<name>GWT Tests Utils Demo application</name>
 
 	<properties>
 
 		<!-- convenience to define GWT version in one place -->
-		<gwt.version>2.0.4</gwt.version>
+		<gwt.version>2.1.1</gwt.version>
 		
 		<!-- gwt maven plugin version -->
-		<gwt.maven.plugin.version>1.2</gwt.maven.plugin.version>
+		<gwt.maven.plugin.version>2.1.0-1</gwt.maven.plugin.version>
 
 		<gwt.test.utils.version>${project.version}</gwt.test.utils.version>
 

@@ -43,7 +43,7 @@ public class RPCCompositeTest extends AbstractGwtEasyMockTest {
 		// replay all @Mock objects
 		replay();
 
-		Assert.assertEquals(null, label.getText());
+		Assert.assertEquals("", label.getText());
 
 		// Test
 		Browser.click(button);
@@ -69,7 +69,7 @@ public class RPCCompositeTest extends AbstractGwtEasyMockTest {
 		// replay all @Mock objects
 		replay();
 
-		Assert.assertEquals(null, label.getText());
+		Assert.assertEquals("", label.getText());
 
 		// Test
 		Browser.click(button);

@@ -114,7 +114,7 @@ public class ButtonTest extends AbstractGwtTest {
 
 		});
 
-		Assert.assertEquals(null, b.getHTML());
+		Assert.assertEquals("", b.getHTML());
 
 		// simulate click
 		click(b);
@@ -135,7 +135,7 @@ public class ButtonTest extends AbstractGwtTest {
 			}
 		});
 
-		Assert.assertEquals(null, b.getHTML());
+		Assert.assertEquals("", b.getHTML());
 
 		// simulate click
 		click(b);

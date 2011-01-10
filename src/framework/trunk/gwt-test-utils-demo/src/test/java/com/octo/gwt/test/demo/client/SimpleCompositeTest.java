@@ -25,7 +25,7 @@ public class SimpleCompositeTest extends AbstractGwtTest {
 		Image img = GwtTestReflectionUtils.getPrivateFieldValue(composite, "img");
 		Label label = GwtTestReflectionUtils.getPrivateFieldValue(composite, "label");
 
-		Assert.assertEquals(null, label.getText());
+		Assert.assertEquals("", label.getText());
 
 		// Test
 		Browser.mouseMove(img);

@@ -168,6 +168,11 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 
 	}
 
+	@CsvMethod
+	public void assertEmpty(String... params) {
+		assertExact("", params);
+	}
+
 	/**
 	 * 
 	 * @param containedValue

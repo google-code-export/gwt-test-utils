@@ -34,7 +34,7 @@ public class SimpleCompositeTest2 extends AbstractGwtTest {
 		textBox.setText("Gael");
 		Browser.change(textBox);
 
-		Assert.assertEquals(null, label.getText());
+		Assert.assertEquals("", label.getText());
 		Assert.assertEquals("Good morning", listBox.getItemText(listBox.getSelectedIndex()));
 
 		//Test

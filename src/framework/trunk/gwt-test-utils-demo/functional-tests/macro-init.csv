@@ -1,6 +1,6 @@
 macro;InitialisationMacro
 initApp
-assertNotExist;/simpleComposite/label/text
-assertNotExist;/simpleComposite2/textBox/text
-assertNotExist;/rpcComposite/label/text
+assertEmpty;/simpleComposite/label/text
+assertEmpty;/simpleComposite2/textBox/text
+assertEmpty;/rpcComposite/label/text
 endmacro
