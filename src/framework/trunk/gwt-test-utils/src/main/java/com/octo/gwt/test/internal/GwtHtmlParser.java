@@ -1,6 +1,8 @@
 package com.octo.gwt.test.internal;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -15,66 +17,77 @@ import org.htmlparser.visitors.NodeVisitor;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
+import com.google.gwt.dom.client.NodeList;
 import com.octo.gwt.test.internal.overrides.OverrideNodeList;
+import com.octo.gwt.test.internal.patcher.dom.NodeFactory;
 
 public class GwtHtmlParser {
 
 	private static Pattern STYLE_PATTERN = Pattern.compile("(.+):(.+)");
 
-//	public static String format(Element e) {
-//		StringBuilder sb = new StringBuilder();
-//		if (e.getChildCount() == 0) {
-//			return e.getInnerText();
-//		}
-//
-//		sb.append("<").append(e.getTagName());
-//		PropertyContainer pc = PropertyContainerHelper.cast(e).getProperties();
-//		Iterator<String> it = pc.orderedIterator();
-//		if (it.hasNext()) {
-//			sb.append(" ");
-//		}
-//		while (it.hasNext()) {
-//			String current = it.next();
-//			sb.append(current).append("=\"").append(pc.get(current)).append("\" ");
-//		}
-//
-//		return sb.toString();
-//	}
+	//	public static String format(Element e) {
+	//		StringBuilder sb = new StringBuilder();
+	//		if (e.getChildCount() == 0) {
+	//			return e.getInnerText();
+	//		}
+	//
+	//		sb.append("<").append(e.getTagName());
+	//		PropertyContainer pc = PropertyContainerHelper.cast(e).getProperties();
+	//		Iterator<String> it = pc.orderedIterator();
+	//		if (it.hasNext()) {
+	//			sb.append(" ");
+	//		}
+	//		while (it.hasNext()) {
+	//			String current = it.next();
+	//			sb.append(current).append("=\"").append(pc.get(current)).append("\" ");
+	//		}
+	//
+	//		return sb.toString();
+	//	}
 
-	public static void setInnerHTML(Element root, String html) {
+	public static NodeList<Node> parse(String html) {
+		if (html == null) {
+			return new OverrideNodeList<Node>();
+		}
 
-		// remove old root childs
-		OverrideNodeList<Node> list = (OverrideNodeList<Node>) root.getChildNodes();
-		list.getList().clear();
+		Parser parser = Parser.createParser(html, "UTF-8");
+		try {
+			GwtNodeVisitor visitor = new GwtNodeVisitor();
+			parser.visitAllNodesWith(visitor);
 
-		if (html != null) {
-			Parser parser = Parser.createParser(html, "UTF-8");
-			try {
-				parser.visitAllNodesWith(new GwtNodeVisitor(root));
-			} catch (ParserException e) {
-				throw new RuntimeException("error while parsing <" + root.getTagName() + "> element's innerHTML : " + html, e);
-			}
+			return new OverrideNodeList<Node>(visitor.visitedNodes);
+		} catch (ParserException e) {
+			throw new RuntimeException("error while parsing HTML : " + html, e);
 		}
 	}
 
 	private static class GwtNodeVisitor extends NodeVisitor {
 
 		private Map<org.htmlparser.Node, Element> map = new HashMap<org.htmlparser.Node, Element>();
-		private Element root;
 
-		private GwtNodeVisitor(Element root) {
+		public List<Node> visitedNodes;
+
+		private GwtNodeVisitor() {
 			super(true);
-			this.root = root;
+			visitedNodes = new ArrayList<Node>();
 		}
 
 		@Override
 		public void visitStringNode(Text string) {
-			Element parent = getParent(string.getParent());
-			parent.setInnerText(string.getText());
+			Element parent = getParent(string);
+			if (parent != null) {
+				parent.setInnerText(string.getText());
+			} else {
+				visitedNodes.add(NodeFactory.createTextNode(string.getText()));
+			}
 		}
 
 		@Override
 		public void visitTag(Tag tag) {
+			if (tag.getTagName().startsWith("!")) {
+				// Commentaire ou !DOCTYPE
+				return;
+			}
 			Element e = Document.get().createElement(tag.getTagName());
 			map.put(tag, e);
 			for (Object o : tag.getAttributesEx()) {
@@ -89,14 +102,17 @@ public class GwtHtmlParser {
 					e.setAttribute(a.getName(), a.getValue());
 				}
 			}
-			Element parent = getParent(tag.getParent());
-			parent.appendChild(e);
+			Element parent = getParent(tag);
+			if (parent != null) {
+				parent.appendChild(e);
+			} else {
+				visitedNodes.add(e);
+			}
 
 		}
 
 		private Element getParent(org.htmlparser.Node node) {
-			Element parent = map.get(node);
-			return parent != null ? parent : root;
+			return map.get(node.getParent());
 		}
 
 		private void processStyle(Element e, String value) {

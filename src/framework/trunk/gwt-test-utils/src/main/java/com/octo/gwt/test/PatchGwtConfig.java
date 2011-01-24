@@ -5,6 +5,7 @@ import java.util.Locale;
 import com.octo.gwt.test.internal.GwtCreateHandlerManager;
 import com.octo.gwt.test.internal.patcher.GwtPatcher;
 import com.octo.gwt.test.internal.patcher.ImplPatcher;
+import com.octo.gwt.test.internal.patcher.dom.NodeFactory;
 import com.octo.gwt.test.internal.utils.PatchGwtUtils;
 import com.octo.gwt.test.internal.utils.PatchGwtUtils.SequenceReplacement;
 
@@ -22,6 +23,10 @@ public class PatchGwtConfig {
 
 	public static void setLogHandler(GwtLogHandler gwtLogHandler) {
 		GwtPatcher.gwtLogHandler = gwtLogHandler;
+	}
+
+	public static void setHostPagePath(String hostPagePath) {
+		NodeFactory.hostPagePath = hostPagePath;
 	}
 
 	public static boolean addGwtCreateHandler(GwtCreateHandler gwtCreateHandler) {

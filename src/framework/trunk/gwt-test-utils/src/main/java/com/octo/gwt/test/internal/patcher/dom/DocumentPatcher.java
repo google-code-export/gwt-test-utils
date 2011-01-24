@@ -17,8 +17,6 @@ public class DocumentPatcher extends AutomaticPropertyContainerPatcher {
 
 	private static int ID = 0;
 
-	public static final String BODY_PROPERTY = "Body";
-
 	@PatchMethod
 	public static String getCompatMode(Document document) {
 		return "toto";
@@ -36,8 +34,11 @@ public class DocumentPatcher extends AutomaticPropertyContainerPatcher {
 
 	@PatchMethod
 	public static BodyElement getBody(Document document) {
-		Element e = document.getDocumentElement();
-		return PropertyContainerHelper.getProperty(e, NodeFactory.BODY_ELEMENT);
+		NodeList<Element> bodyList = getElementsByTagName(document, "body");
+		if (bodyList.getLength() < 1)
+			return null;
+		else
+			return bodyList.getItem(0).cast();
 	}
 
 	@PatchMethod
@@ -60,8 +61,11 @@ public class DocumentPatcher extends AutomaticPropertyContainerPatcher {
 	public static Element getElementById(Node document, String elementId) {
 		OverrideNodeList<Node> childs = getChildNodeList(document);
 		for (Node n : childs.getList()) {
-			if (Element.class.isInstance(n) && elementId.equals(((Element) n).getId())) {
-				return (Element) n;
+			if (Node.ELEMENT_NODE == n.getNodeType()) {
+				Element currentElement = n.cast();
+				if (elementId.equals(currentElement.getId())) {
+					return currentElement;
+				}
 			}
 			Element result = getElementById(n, elementId);
 			if (result != null) {

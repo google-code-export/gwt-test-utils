@@ -1,10 +1,9 @@
 package com.octo.gwt.test.integ.tools;
 
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -35,7 +34,7 @@ public class VisitorObjectFinder implements ObjectFinder {
 
 	public Object find(CsvRunner csvRunner, String... params) {
 		Object result;
-		List<Panel> roots = getRootPanels();
+		Collection<RootPanel> roots = getRootPanels();
 
 		for (Panel root : roots) {
 			WidgetRepository repository = repositories.get(root);
@@ -64,11 +63,12 @@ public class VisitorObjectFinder implements ObjectFinder {
 
 	}
 
-	protected List<Panel> getRootPanels() {
-		List<Panel> list = new ArrayList<Panel>();
-		list.add(RootPanel.get());
+	protected Collection<RootPanel> getRootPanels() {
+		// initialize the default rootPanel if not initialized yet
+		RootPanel.get();
+		Map<String, RootPanel> rootPanels = GwtTestReflectionUtils.getStaticFieldValue(RootPanel.class, "rootPanels");
 
-		return list;
+		return rootPanels.values();
 	}
 
 	private void inspectObject(Object inspected, WidgetRepository repository, Set<Object> alreadyInspectedObjects) {

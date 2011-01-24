@@ -28,6 +28,11 @@ public class MyTestShell extends AbstractGwtIntegrationShell {
 		addGwtCreateHandler(createGwtCreateHandler());
 	}
 
+	@Override
+	protected String getHostPagePath() {
+		return "com/octo/gwt/test/demo/public/Application.html";
+	}
+
 	@CsvMethod
 	public void initApp() {
 		application.onModuleLoad();
@@ -60,21 +65,21 @@ public class MyTestShell extends AbstractGwtIntegrationShell {
 			return new NodeObjectFinder() {
 
 				public Object find(CsvRunner csvRunner, Node node) {
-					return csvRunner.getNodeValue(RootPanel.get().getWidget(0), node);
+					return csvRunner.getNodeValue(RootPanel.get("main").getWidget(0), node);
 				}
 			};
 		} else if ("simpleComposite2".equals(prefix)) {
 			return new NodeObjectFinder() {
 
 				public Object find(CsvRunner csvRunner, Node node) {
-					return csvRunner.getNodeValue(RootPanel.get().getWidget(1), node);
+					return csvRunner.getNodeValue(RootPanel.get("main").getWidget(1), node);
 				}
 			};
 		} else if ("rpcComposite".equals(prefix)) {
 			return new NodeObjectFinder() {
 
 				public Object find(CsvRunner csvRunner, Node node) {
-					return csvRunner.getNodeValue(RootPanel.get().getWidget(2), node);
+					return csvRunner.getNodeValue(RootPanel.get("main").getWidget(2), node);
 				}
 			};
 		}

@@ -147,7 +147,15 @@ public class ElementPatcher extends AutomaticPropertyContainerPatcher {
 
 	@PatchMethod
 	public static void setInnerHTML(Element element, String html) {
-		GwtHtmlParser.setInnerHTML(element, html);
+		OverrideNodeList<Node> list = (OverrideNodeList<Node>) element.getChildNodes();
+		list.getList().clear();
+
+		NodeList<Node> nodes = GwtHtmlParser.parse(html);
+
+		for (int i = 0; i < nodes.getLength(); i++) {
+			list.getList().add(nodes.getItem(i));
+		}
+
 		PropertyContainerHelper.setProperty(element, "InnerHTML", html);
 	}
 

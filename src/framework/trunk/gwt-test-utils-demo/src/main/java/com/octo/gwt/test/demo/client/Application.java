@@ -18,10 +18,10 @@ public class Application implements EntryPoint {
 	public void onModuleLoad() {
 
 		c1 = new SimpleComposite();
-		RootPanel.get().add(c1);
+		RootPanel.get("main").add(c1);
 		c2 = new SimpleComposite2();
-		RootPanel.get().add(c2);
+		RootPanel.get("main").add(c2);
 		c3 = new RPCComposite();
-		RootPanel.get().add(c3);
+		RootPanel.get("main").add(c3);
 	}
 }

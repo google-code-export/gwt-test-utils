@@ -11,6 +11,7 @@ import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.OptionElement;
 import com.google.gwt.dom.client.SelectElement;
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.Text;
 import com.google.gwt.user.client.Event;
 import com.octo.gwt.test.internal.overrides.OverrideNodeList;
 import com.octo.gwt.test.internal.utils.PropertyContainer;
@@ -32,7 +33,6 @@ public class DOMImplPatcher extends AutomaticPatcher {
 	private static final String ABSOLUTE_TOP = "AbsoluteTop";
 	private static final String INNER_HTML = "InnerHTML";
 	private static final String ABSOLUTE_LEFT = "AbsoluteLeft";
-	private static final String INNER_TEXT = "InnerText";
 	private static final String TAB_INDEX = "TabIndex";
 	private static final String TAG_NAME = "TagName";
 	private static final String NODE_LIST_FIELD = "ChildNodes";
@@ -90,12 +90,36 @@ public class DOMImplPatcher extends AutomaticPatcher {
 
 	@PatchMethod
 	public static String getInnerText(Object domImpl, Element elem) {
-		return PropertyContainerHelper.getPropertyString(elem, INNER_TEXT);
+		Text textNode = getTextNode(elem);
+		if (textNode != null) {
+			return textNode.getData();
+		} else {
+			return "";
+		}
 	}
 
 	@PatchMethod
 	public static void setInnerText(Object domImpl, Element elem, String text) {
-		PropertyContainerHelper.setProperty(elem, INNER_TEXT, text);
+		Text textNode = getTextNode(elem);
+		if (textNode != null) {
+			textNode.setData(text);
+		} else {
+			textNode = NodeFactory.createTextNode(text);
+			elem.appendChild(textNode);
+		}
+	}
+
+	private static Text getTextNode(Element elem) {
+		NodeList<Node> list = elem.getChildNodes();
+
+		for (int i = 0; i < list.getLength(); i++) {
+			Node node = list.getItem(i);
+			if (Text.class.isInstance(node)) {
+				return (Text) node;
+			}
+		}
+
+		return null;
 	}
 
 	@PatchMethod
@@ -143,7 +167,7 @@ public class DOMImplPatcher extends AutomaticPatcher {
 		if (parent == null)
 			return null;
 
-		OverrideNodeList<Node> list = getChildNodeList(domImpl, parent);
+		OverrideNodeList<Node> list = getChildNodeList(parent);
 
 		for (int i = 0; i < list.getLength(); i++) {
 			Node current = list.getItem(i);
@@ -269,7 +293,7 @@ public class DOMImplPatcher extends AutomaticPatcher {
 		PropertyContainerHelper.setProperty(style, opacityField, "");
 	}
 
-	private static OverrideNodeList<Node> getChildNodeList(Object domImpl, Node node) {
+	private static OverrideNodeList<Node> getChildNodeList(Node node) {
 		return PropertyContainerHelper.getProperty(node, NODE_LIST_FIELD);
 	}
 

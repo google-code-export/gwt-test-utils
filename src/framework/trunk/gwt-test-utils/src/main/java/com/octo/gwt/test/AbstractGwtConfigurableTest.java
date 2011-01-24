@@ -14,6 +14,7 @@ public abstract class AbstractGwtConfigurableTest {
 		PatchGwtConfig.setLocale(getLocale());
 		PatchGwtConfig.setCurrentTestedModuleFile(getCurrentTestedModuleFile());
 		PatchGwtConfig.setLogHandler(getLogHandler());
+		PatchGwtConfig.setHostPagePath(getHostPagePath());
 	}
 
 	@After
@@ -32,6 +33,11 @@ public abstract class AbstractGwtConfigurableTest {
 	}
 
 	protected Locale getLocale() {
+		// this method can be overrided by subclass
+		return null;
+	}
+
+	protected String getHostPagePath() {
 		// this method can be overrided by subclass
 		return null;
 	}

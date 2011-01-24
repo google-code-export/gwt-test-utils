@@ -30,7 +30,7 @@ public class ImplPatcher extends AutomaticPatcher {
 
 	@PatchMethod
 	public static String getHostPageBaseURL() {
-		return "http://localhost:8888/";
+		return "http://127.0.0.1:8888/";
 	}
 
 	@PatchMethod

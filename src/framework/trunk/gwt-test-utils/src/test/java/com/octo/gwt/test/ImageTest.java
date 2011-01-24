@@ -24,7 +24,7 @@ public class ImageTest extends AbstractGwtTest {
 		Image i = new Image(imageRessource);
 
 		// Assert
-		Assert.assertEquals("http://localhost:8888/gwt_test_utils_module/com/octo/gwt/test/resources/testImageResource.gif", i.getUrl());
+		Assert.assertEquals("http://127.0.0.1:8888/gwt_test_utils_module/com/octo/gwt/test/resources/testImageResource.gif", i.getUrl());
 		Assert.assertEquals(0, i.getOriginLeft());
 		Assert.assertEquals(0, i.getOriginTop());
 		Assert.assertEquals(0, i.getWidth());

@@ -5,10 +5,11 @@ import org.junit.Test;
 
 import com.google.gwt.dom.client.BRElement;
 import com.google.gwt.dom.client.DivElement;
-import com.google.gwt.dom.client.Document;
-import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Node;
+import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.Text;
 import com.octo.gwt.test.internal.GwtHtmlParser;
 
 public class GwtHtmlParserTest extends AbstractGwtTest {
@@ -45,21 +46,20 @@ public class GwtHtmlParserTest extends AbstractGwtTest {
 	//	}
 
 	@Test
-	public void checkSetInnerHTML() throws Exception {
+	public void checkParse() throws Exception {
 		// Setup
 		String html = "<div id=\"parent0\"></div><div id=\"parent1\"><div id=\"child0\"><span class=\"spanClass\" >test</span></div><BR><DIV id=\"child2\" style=\"color:red; font-style:italic; font-weight:bold; font-family:Arial\"></div>";
-		Element root = Document.get().createDivElement();
 
 		// Test
-		GwtHtmlParser.setInnerHTML(root, html);
+		NodeList<Node> nodes = GwtHtmlParser.parse(html);
 
 		// Assert
-		Assert.assertEquals(2, root.getChildCount());
-		DivElement parent0 = (DivElement) root.getChild(0);
+		Assert.assertEquals(2, nodes.getLength());
+		DivElement parent0 = (DivElement) nodes.getItem(0);
 		Assert.assertEquals("parent0", parent0.getId());
 		Assert.assertEquals(0, parent0.getChildCount());
 
-		DivElement parent1 = (DivElement) root.getChild(1);
+		DivElement parent1 = (DivElement) nodes.getItem(1);
 		Assert.assertEquals("parent1", parent1.getId());
 		Assert.assertEquals(3, parent1.getChildCount());
 
@@ -70,7 +70,10 @@ public class GwtHtmlParserTest extends AbstractGwtTest {
 		SpanElement span = (SpanElement) child0.getChild(0);
 		Assert.assertEquals("", span.getId());
 		Assert.assertEquals("spanClass", span.getClassName());
-		Assert.assertEquals(0, span.getChildCount());
+		Assert.assertEquals(1, span.getChildCount());
+		Assert.assertEquals(Node.TEXT_NODE, span.getChild(0).getNodeType());
+		Text text = span.getChild(0).cast();
+		Assert.assertEquals("test", text.getData());
 		Assert.assertEquals("test", span.getInnerText());
 
 		BRElement br = (BRElement) parent1.getChild(1);

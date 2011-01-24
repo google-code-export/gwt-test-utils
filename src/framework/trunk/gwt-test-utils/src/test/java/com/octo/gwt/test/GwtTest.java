@@ -41,7 +41,7 @@ public class GwtTest extends AbstractGwtTest {
 
 	@Test
 	public void checkGetHostPageBase() {
-		Assert.assertEquals("http://localhost:8888/", GWT.getHostPageBaseURL());
+		Assert.assertEquals("http://127.0.0.1:8888/", GWT.getHostPageBaseURL());
 	}
 
 	@Test
@@ -51,7 +51,7 @@ public class GwtTest extends AbstractGwtTest {
 
 	@Test
 	public void checkGetModuleBaseURL() {
-		Assert.assertEquals("http://localhost:8888/gwt_test_utils_module/", GWT.getModuleBaseURL());
+		Assert.assertEquals("http://127.0.0.1:8888/gwt_test_utils_module/", GWT.getModuleBaseURL());
 	}
 
 	@Test
