@@ -33,6 +33,7 @@ public class LabelTest extends AbstractGwtTest {
 		Assert.assertEquals(false, label.isVisible());
 	}
 
+	@SuppressWarnings("deprecation")
 	@Test
 	public void checkDirection() {
 		Label label = new Label();

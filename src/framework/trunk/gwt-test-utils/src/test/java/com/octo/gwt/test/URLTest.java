@@ -11,7 +11,7 @@ public class URLTest extends AbstractGwtTest {
 	public void checkEncodeComponent() {
 		String stringToEncode = "test";
 
-		Assert.assertEquals(stringToEncode, URL.encodeComponent(stringToEncode));
+		Assert.assertEquals(stringToEncode, URL.encodeQueryString(stringToEncode));
 	}
 
 }

@@ -7,6 +7,7 @@ import com.octo.gwt.test.patcher.AutomaticPatcher;
 import com.octo.gwt.test.patcher.PatchClass;
 import com.octo.gwt.test.patcher.PatchMethod;
 
+@SuppressWarnings("deprecation")
 @PatchClass(DeferredCommand.class)
 public class DeferredCommandPatcher extends AutomaticPatcher {
 

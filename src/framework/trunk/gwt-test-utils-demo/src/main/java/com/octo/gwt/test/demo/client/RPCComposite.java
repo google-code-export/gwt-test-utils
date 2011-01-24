@@ -6,8 +6,8 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.VerticalPanel;
 import com.octo.gwt.test.demo.beans.FooBean;
 
 public class RPCComposite extends Composite {
@@ -25,14 +25,13 @@ public class RPCComposite extends Composite {
 		button.addStyleName("pc-template-btn");
 
 		//the wrapper panel
-		VerticalPanel vPanel = new VerticalPanel();
-		vPanel.setWidth("100%");
-		vPanel.setHorizontalAlignment(VerticalPanel.ALIGN_CENTER);
-		vPanel.add(button);
+		FlowPanel panel = new FlowPanel();
+		panel.getElement().setClassName("composite");
+		panel.add(button);
 
 		label = new Label();
 		label.getElement().setId("labelId");
-		vPanel.add(label);
+		panel.add(label);
 
 		button.addClickHandler(new ClickHandler() {
 
@@ -57,7 +56,7 @@ public class RPCComposite extends Composite {
 		});
 
 		// All composites must call initWidget() in their constructors.
-		initWidget(vPanel);
+		initWidget(panel);
 	}
 
 }

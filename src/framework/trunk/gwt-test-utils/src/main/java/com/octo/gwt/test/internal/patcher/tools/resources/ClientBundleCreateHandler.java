@@ -202,15 +202,6 @@ public class ClientBundleCreateHandler implements GwtCreateHandler {
 
 			}
 
-			private String getDescriptor(Method method) {
-				Class<?> returnType = method.getReturnType();
-				StringBuilder sb = new StringBuilder();
-				sb.append("()L").append(returnType.getName().replaceAll("\\.", "/"));
-				sb.append(";");
-
-				return sb.toString();
-			}
-
 			private String[] getResourceDefaultExtensions(Method method) {
 				DefaultExtensions annotation = method.getReturnType().getAnnotation(DefaultExtensions.class);
 				if (annotation == null) {

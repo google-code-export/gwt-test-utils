@@ -1,14 +1,10 @@
 /** Add css rules here for your application. */
 
 button {
-  display: block;
   font-size: 16pt
 }
 
-.widePanel {
-  width: 100%
-}
-
-img {
-  margin-top: 20px;
+.composite {
+	margin: 20px;
+	text-align: center;
 }
