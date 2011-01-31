@@ -187,7 +187,8 @@ public class ConfigurationLoader {
 
 		String originalClass = array[0];
 		String substitutionClass = array[1];
-		javaClassModifierList.add(new ClassSubstituer(originalClass, substitutionClass));
+		// add in second position, just after method-substituer
+		javaClassModifierList.add(1, new ClassSubstituer(originalClass, substitutionClass));
 	}
 
 	private void processRemoveMethod(String key, URL url) {
