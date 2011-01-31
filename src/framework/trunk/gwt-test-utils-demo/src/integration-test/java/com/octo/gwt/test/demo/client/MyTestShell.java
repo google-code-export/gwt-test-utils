@@ -9,16 +9,16 @@ import com.octo.gwt.test.demo.server.MyServiceImpl;
 import com.octo.gwt.test.integ.CsvDirectory;
 import com.octo.gwt.test.integ.CsvMacros;
 import com.octo.gwt.test.integ.CsvMethod;
+import com.octo.gwt.test.integ.GwtCsvTestRunner;
 import com.octo.gwt.test.integ.csvrunner.CsvRunner;
 import com.octo.gwt.test.integ.csvrunner.Node;
 import com.octo.gwt.test.integ.handler.RemoteServiceCreateHandler;
-import com.octo.gwt.test.integ.junit.StandardJUnit4CsvRunner;
 import com.octo.gwt.test.integ.tools.AbstractGwtIntegrationShell;
 import com.octo.gwt.test.integ.tools.NodeObjectFinder;
 
 @CsvDirectory(value = "functional-tests", extension = ".csv")
 @CsvMacros(value = "functional-tests", pattern = "^macro.*\\.csv$")
-@RunWith(StandardJUnit4CsvRunner.class)
+@RunWith(GwtCsvTestRunner.class)
 public class MyTestShell extends AbstractGwtIntegrationShell {
 
 	private Application application = new Application();

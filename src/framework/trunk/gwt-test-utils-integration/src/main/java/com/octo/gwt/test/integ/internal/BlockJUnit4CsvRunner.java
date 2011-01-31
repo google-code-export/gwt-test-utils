@@ -1,4 +1,4 @@
-package com.octo.gwt.test.integ.junit;
+package com.octo.gwt.test.integ.internal;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -12,11 +12,11 @@ import com.octo.gwt.test.GwtTestClassLoader;
 import com.octo.gwt.test.integ.tools.DirectoryTestReader;
 import com.octo.gwt.test.utils.GwtTestReflectionUtils;
 
-public class StandardJUnit4CsvRunner extends BlockJUnit4ClassRunner {
+public class BlockJUnit4CsvRunner extends BlockJUnit4ClassRunner {
 
 	private DirectoryTestReader reader;
 
-	public StandardJUnit4CsvRunner(Class<?> clazz) throws InitializationError, ClassNotFoundException {
+	public BlockJUnit4CsvRunner(Class<?> clazz) throws InitializationError, ClassNotFoundException {
 		super(GwtTestClassLoader.getInstance().loadClass(clazz.getName()));
 	}
 
@@ -35,7 +35,7 @@ public class StandardJUnit4CsvRunner extends BlockJUnit4ClassRunner {
 	@Override
 	protected Object createTest() throws Exception {
 		Object testInstance = reader.createObject();
-		Method m = GwtTestReflectionUtils.findMethod(testInstance.getClass(), "setReader", null);
+		Method m = GwtTestReflectionUtils.findMethod(testInstance.getClass(), "setReader");
 		m.invoke(testInstance, reader);
 		return testInstance;
 	}

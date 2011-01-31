@@ -1,4 +1,4 @@
-package com.octo.gwt.test.integ.spring;
+package com.octo.gwt.test.spring;
 
 import org.springframework.context.ApplicationContext;
 

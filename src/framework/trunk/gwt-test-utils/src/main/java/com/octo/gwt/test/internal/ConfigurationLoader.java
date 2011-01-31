@@ -67,10 +67,10 @@ public class ConfigurationLoader {
 		this.classLoader = classLoader;
 		delegateList = new ArrayList<String>();
 		notDelegateList = new ArrayList<String>();
+		scanPackageSet = new HashSet<String>();
 		javaClassModifierList = new ArrayList<JavaClassModifier>();
 		methodRemover = new MethodRemover();
 		javaClassModifierList.add(methodRemover);
-		scanPackageSet = new HashSet<String>();
 
 		readFiles();
 	}
@@ -171,6 +171,8 @@ public class ConfigurationLoader {
 				processRemoveMethod(key, url);
 			} else if ("substitute-class".equals(value)) {
 				processSubstituteClass(key, url);
+			} else if ("class-modifier".equals(value)) {
+				processClassModifier(key, url);
 			} else {
 				throw new RuntimeException("Error in '" + url.getPath() + "' : unknown value '" + value + "'");
 			}
@@ -199,6 +201,31 @@ public class ConfigurationLoader {
 		String methodSignature = array[2];
 
 		methodRemover.removeMethod(methodClass, methodName, methodSignature);
+	}
+
+	private void processClassModifier(String key, URL url) {
+		Class<?> clazz = null;
+
+		// get the class
+		try {
+			clazz = Class.forName(key);
+		} catch (ClassNotFoundException e) {
+			throw new RuntimeException("Invalid 'class-modifier' property : " + key + " class cannot be found");
+		}
+
+		// check it implements JavaClassModifier
+		if (!JavaClassModifier.class.isAssignableFrom(clazz)) {
+			throw new RuntimeException("Invalid 'class-modifier' property : " + key + " is not implementing "
+					+ JavaClassModifier.class.getSimpleName() + " interface");
+		}
+
+		// Instanciate it and add it to the list of JavaClassModifier
+		try {
+			JavaClassModifier modifier = (JavaClassModifier) clazz.newInstance();
+			javaClassModifierList.add(modifier);
+		} catch (Exception e) {
+			throw new RuntimeException("Error while instanciating " + key + " through the default constructor", e);
+		}
 	}
 
 	public List<JavaClassModifier> getJavaClassModifierList() {

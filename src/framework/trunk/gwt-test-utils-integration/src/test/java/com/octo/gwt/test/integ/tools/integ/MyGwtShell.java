@@ -1,21 +1,17 @@
 package com.octo.gwt.test.integ.tools.integ;
 
-import junit.framework.Assert;
-
 import org.junit.Before;
 import org.junit.runner.RunWith;
 
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.octo.gwt.test.integ.CsvMethod;
+import com.octo.gwt.test.integ.GwtCsvTestRunner;
 import com.octo.gwt.test.integ.csvrunner.CsvRunner;
 import com.octo.gwt.test.integ.csvrunner.Node;
-import com.octo.gwt.test.integ.handler.DefaultGwtRpcExceptionHandler;
 import com.octo.gwt.test.integ.handler.RemoteServiceCreateHandler;
-import com.octo.gwt.test.integ.junit.StandardJUnit4CsvRunner;
 import com.octo.gwt.test.integ.tools.AbstractGwtIntegrationShell;
 import com.octo.gwt.test.integ.tools.NodeObjectFinder;
 
-@RunWith(StandardJUnit4CsvRunner.class)
+@RunWith(GwtCsvTestRunner.class)
 public abstract class MyGwtShell extends AbstractGwtIntegrationShell {
 
 	private MyBeautifulApp app;
@@ -71,21 +67,6 @@ public abstract class MyGwtShell extends AbstractGwtIntegrationShell {
 	@CsvMethod
 	public void append(String s) {
 		MyStringStore.appender += s;
-	}
-
-	@CsvMethod
-	public void enableNewExceptionHandler() {
-
-		handlerImpl.setExceptionHandler(new DefaultGwtRpcExceptionHandler() {
-
-			@Override
-			public void handle(Throwable t, AsyncCallback<?> callback) {
-				Assert.assertEquals(NullPointerException.class, t.getClass());
-				MyStringStore.appender = "toto";
-				super.handle(t, callback);
-			}
-
-		});
 	}
 
 }

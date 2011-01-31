@@ -7,6 +7,7 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.impl.HistoryImpl;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.octo.gwt.test.GwtTestClassLoader;
 import com.octo.gwt.test.PatchGwtConfig;
 import com.octo.gwt.test.internal.patcher.CurrencyListPatcher;
 import com.octo.gwt.test.internal.patcher.GwtPatcher;
@@ -26,6 +27,7 @@ public class PatchGwtReset {
 		PatchGwtUtils.reset();
 		HistoryImplPatcher.reset();
 		GwtPatcher.reset();
+		GwtTestClassLoader.reset();
 		TimerPatcher.reset();
 		ImplPatcher.reset();
 		GwtCreateHandlerManager.getInstance().reset();

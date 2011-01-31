@@ -1,9 +1,9 @@
-package com.octo.gwt.test.internal.utils;
+package com.octo.gwt.test.patcher;
 
-import com.octo.gwt.test.internal.utils.MyClassToPatch.MyInnerClass;
 import com.octo.gwt.test.patcher.AutomaticPatcher;
 import com.octo.gwt.test.patcher.PatchClass;
 import com.octo.gwt.test.patcher.PatchMethod;
+import com.octo.gwt.test.patcher.MyClassToPatch.MyInnerClass;
 
 @PatchClass(MyClassToPatch.class)
 public class MyClassToPatchPatcher extends AutomaticPatcher {

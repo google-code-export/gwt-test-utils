@@ -64,12 +64,12 @@ public class AutomaticPropertyContainerPatcher extends AutomaticPatcher {
 	public void initClass(CtClass c) throws Exception {
 		super.initClass(c);
 
-		CtClass pcType = PatchGwtClassPool.get().get(PropertyContainer.class.getName());
+		CtClass pcType = PatchGwtClassPool.getCtClass(PropertyContainer.class);
 		CtField field = new CtField(pcType, PROPERTIES, c);
 		field.setModifiers(Modifier.PRIVATE);
 		c.addField(field);
 
-		c.addInterface(PatchGwtClassPool.get().get(PropertyContainerAware.class.getName()));
+		c.addInterface(PatchGwtClassPool.getCtClass(PropertyContainerAware.class));
 
 		CtMethod getProperties = new CtMethod(pcType, "getProperties", new CtClass[] {}, c);
 		StringBuffer stringBuffer = new StringBuffer();

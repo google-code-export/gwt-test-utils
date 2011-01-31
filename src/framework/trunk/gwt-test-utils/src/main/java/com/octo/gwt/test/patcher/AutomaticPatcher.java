@@ -14,6 +14,7 @@ import javassist.CtMethod;
 import javassist.NotFoundException;
 
 import com.octo.gwt.test.IPatcher;
+import com.octo.gwt.test.internal.utils.PatchGwtUtils;
 import com.octo.gwt.test.utils.GwtTestReflectionUtils;
 
 public class AutomaticPatcher implements IPatcher {
@@ -144,10 +145,10 @@ public class AutomaticPatcher implements IPatcher {
 				break;
 			case STATIC_CALL:
 				processedMethods.add(annotatedMethod);
-				StringBuffer buffer = new StringBuffer();
+				StringBuilder buffer = new StringBuilder();
 				buffer.append("{");
 				buffer.append("return ");
-				buffer.append(this.getClass().getCanonicalName() + "." + annotatedMethod.getName());
+				buffer.append(this.getClass().getName() + "." + annotatedMethod.getName());
 				buffer.append("(");
 				boolean append = false;
 				if (!Modifier.isStatic(m.getModifiers())) {
@@ -199,33 +200,7 @@ public class AutomaticPatcher implements IPatcher {
 	}
 
 	protected CtConstructor findConstructor(CtClass ctClass, Class<?>... argsClasses) throws NotFoundException {
-		List<CtConstructor> l = new ArrayList<CtConstructor>();
-
-		for (CtConstructor c : ctClass.getDeclaredConstructors()) {
-			if (argsClasses == null || argsClasses.length == c.getParameterTypes().length) {
-				l.add(c);
-
-				if (argsClasses != null) {
-					int i = 0;
-					for (Class<?> argClass : argsClasses) {
-						if (!argClass.getName().equals(c.getParameterTypes()[i].getName())) {
-							l.remove(c);
-							continue;
-						}
-						i++;
-					}
-				}
-			}
-		}
-
-		if (l.size() == 1) {
-			return l.get(0);
-		}
-		if (l.size() == 0) {
-			throw new RuntimeException("Unable to find a constructor with the specifed parameter types in class " + ctClass.getName());
-		}
-		throw new RuntimeException("Multiple constructor in class " + ctClass.getName() + ", you have to set parameter types discriminators");
-
+		return PatchGwtUtils.findConstructor(ctClass, argsClasses);
 	}
 
 }

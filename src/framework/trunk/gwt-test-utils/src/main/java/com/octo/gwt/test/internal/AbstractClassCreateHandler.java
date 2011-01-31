@@ -4,7 +4,6 @@ import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.Map;
 
-import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtMethod;
 
@@ -30,10 +29,8 @@ public class AbstractClassCreateHandler implements GwtCreateHandler {
 			return newClass.newInstance();
 		}
 
-		ClassPool cp = PatchGwtClassPool.get();
-
-		CtClass ctClass = PatchGwtClassPool.get().get(classLiteral.getName());
-		CtClass subClass = cp.makeClass(classLiteral.getCanonicalName() + "SubClass");
+		CtClass ctClass = PatchGwtClassPool.getCtClass(classLiteral);
+		CtClass subClass = PatchGwtClassPool.get().makeClass(classLiteral.getCanonicalName() + "SubClass");
 
 		subClass.setSuperclass(ctClass);
 
@@ -46,7 +43,7 @@ public class AbstractClassCreateHandler implements GwtCreateHandler {
 
 		PatchGwtUtils.patch(subClass, null);
 
-		newClass = GwtTestClassLoader.getInstance().loadClass(subClass.getName());
+		newClass = subClass.toClass(GwtTestClassLoader.getInstance(), null);
 		cache.put(classLiteral, newClass);
 
 		return newClass.newInstance();

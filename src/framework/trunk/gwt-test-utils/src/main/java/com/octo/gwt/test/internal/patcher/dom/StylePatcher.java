@@ -1,6 +1,5 @@
 package com.octo.gwt.test.internal.patcher.dom;
 
-import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtConstructor;
 import javassist.CtField;
@@ -25,12 +24,10 @@ public class StylePatcher extends AutomaticPropertyContainerPatcher {
 	public void initClass(CtClass c) throws Exception {
 		super.initClass(c);
 
-		ClassPool cp = PatchGwtClassPool.get();
-
-		CtField targetElementField = new CtField(cp.get(Element.class.getName()), TARGET_ELEMENT, c);
+		CtField targetElementField = new CtField(PatchGwtClassPool.getCtClass(Element.class), TARGET_ELEMENT, c);
 		c.addField(targetElementField);
 
-		CtConstructor constructor = new CtConstructor(new CtClass[] { cp.get(Element.class.getName()) }, c);
+		CtConstructor constructor = new CtConstructor(new CtClass[] { PatchGwtClassPool.getCtClass(Element.class) }, c);
 		StringBuilder sb = new StringBuilder();
 		sb.append("{");
 		sb.append("this." + TARGET_ELEMENT + " = $1;");
@@ -53,7 +50,7 @@ public class StylePatcher extends AutomaticPropertyContainerPatcher {
 	@PatchMethod
 	public static String getBorderWidth(Style style) {
 		String borderWidth = PropertyContainerHelper.getProperty(style, "border-top-width");
-		return (borderWidth != null)? borderWidth : "";
+		return (borderWidth != null) ? borderWidth : "";
 	}
 
 	@PatchMethod

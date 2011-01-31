@@ -1,4 +1,4 @@
-package com.octo.gwt.test.integ.handler;
+package com.octo.gwt.test.integ.internal;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
@@ -10,9 +10,8 @@ import org.slf4j.LoggerFactory;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.StatusCodeException;
-import com.octo.gwt.test.GwtTestClassLoader;
-import com.octo.gwt.test.integ.internal.DeserializationContext;
-import com.octo.gwt.test.integ.internal.GwtSerializationUtils;
+import com.octo.gwt.test.integ.handler.IGwtRpcExceptionHandler;
+import com.octo.gwt.test.integ.handler.IGwtRpcSerializerHandler;
 import com.octo.gwt.test.utils.GwtTestReflectionUtils;
 
 public class GwtRpcInvocationHandler implements InvocationHandler {
@@ -20,17 +19,16 @@ public class GwtRpcInvocationHandler implements InvocationHandler {
 	private static final Logger logger = LoggerFactory.getLogger(GwtRpcInvocationHandler.class);
 
 	private Object target;
-
+	private IGwtRpcExceptionHandler exceptionHandler;
+	private IGwtRpcSerializerHandler serializerHander;
 	private HashMap<Method, Method> methodTable;
 
-	private DeserializationContext backToGwtCallbacks;
-
-	private DeserializationContext fromGwtCallbacks;
-
-	private IGwtRpcExceptionHandler exceptionHandler;
-
-	public GwtRpcInvocationHandler(Class<?> asyncClazz, Object target) {
+	public GwtRpcInvocationHandler(Class<?> asyncClazz, Object target, IGwtRpcExceptionHandler exceptionHandler,
+			IGwtRpcSerializerHandler serializerHandler) {
 		this.target = target;
+		this.exceptionHandler = exceptionHandler;
+		this.serializerHander = serializerHandler;
+
 		this.methodTable = new HashMap<Method, Method>();
 		for (Method m : asyncClazz.getMethods()) {
 			for (Method m2 : target.getClass().getMethods()) {
@@ -40,18 +38,6 @@ public class GwtRpcInvocationHandler implements InvocationHandler {
 				}
 			}
 		}
-	}
-
-	public void setBackToGwtCallbacks(DeserializationContext backToGwtCallbacks) {
-		this.backToGwtCallbacks = backToGwtCallbacks;
-	}
-
-	public void setFromGwtCallbacks(DeserializationContext fromGwtCallbacks) {
-		this.fromGwtCallbacks = fromGwtCallbacks;
-	}
-
-	public void setExceptionHandler(IGwtRpcExceptionHandler exceptionHandler) {
-		this.exceptionHandler = exceptionHandler;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -71,22 +57,35 @@ public class GwtRpcInvocationHandler implements InvocationHandler {
 			// Serialize objects
 			Object[] serializedArgs = new Object[subArgs.length];
 			for (int i = 0; i < subArgs.length; i++) {
-				serializedArgs[i] = GwtSerializationUtils.serializeUnserialize(subArgs[i], GwtTestClassLoader.getInstance().getParent(),
-						fromGwtCallbacks);
+				try {
+					serializedArgs[i] = serializerHander.serializeUnserialize(subArgs[i]);
+				} catch (Exception e) {
+					throw new RuntimeException("Error while serializing argument " + i + " of type " + subArgs[i].getClass().getName()
+							+ " in method " + method.getDeclaringClass().getSimpleName() + "." + method.getName() + "(..)", e);
+				}
 			}
-			Object returnValue = m.invoke(target, serializedArgs);
-			Object o = GwtSerializationUtils.serializeUnserialize(returnValue, GwtTestClassLoader.getInstance(), backToGwtCallbacks);
-			logger.debug("Result of " + m.getName() + " : " + o);
-			callback.onSuccess(o);
+			Object resultObject = m.invoke(target, serializedArgs);
+			Object returnObject = null;
+
+			try {
+				returnObject = serializerHander.serializeUnserialize(resultObject);
+			} catch (Exception e) {
+				throw new RuntimeException("Error while serializing object of type " + resultObject.getClass().getName()
+						+ " which was returned from RPC Service " + method.getDeclaringClass().getSimpleName() + "." + method.getName() + "(..)", e);
+			}
+
+			logger.debug("Result of " + m.getName() + " : " + returnObject);
+			callback.onSuccess(returnObject);
+
 		} catch (InvocationTargetException e) {
-			logger.info("Exception when invoking service throw to handler " + e.getMessage());
+			logger.info("Exception when invoking service throw to handler : " + e.getMessage());
 			exceptionHandler.handle(e.getCause(), callback);
 			return null;
 		} catch (IllegalAccessException e) {
-			logger.error("Invokation exception : " + e.toString(), e);
+			logger.error("GWT RPC invokation error : ", e);
 			callback.onFailure(new StatusCodeException(500, e.toString()));
 		} catch (IllegalArgumentException e) {
-			logger.error("Invokation exception : " + e.toString(), e);
+			logger.error("GWT RPC invokation error : ", e);
 			callback.onFailure(new StatusCodeException(500, e.toString()));
 		}
 		return null;

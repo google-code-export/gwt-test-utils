@@ -6,7 +6,7 @@
 	<groupId>com.octo.gwt.test</groupId>
 	<artifactId>gwt-test-utils-demo</artifactId>
 	<packaging>war</packaging>
-	<version>0.24-SNAPSHOT</version>
+	<version>0.25-SNAPSHOT</version>
 	<name>GWT Tests Utils Demo application</name>
 
 	<properties>

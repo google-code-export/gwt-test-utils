@@ -17,7 +17,7 @@ public class MyServiceImpl extends RemoteServiceServlet implements MyService {
 		FooBean fb = new FooBean();
 		fb.setName(name);
 
-		logger.warn(FooBean.class.getSimpleName() + " instance create with '" + name + "'");
+		logger.info(FooBean.class.getSimpleName() + " instance create with '" + name + "'");
 
 		return fb;
 	}

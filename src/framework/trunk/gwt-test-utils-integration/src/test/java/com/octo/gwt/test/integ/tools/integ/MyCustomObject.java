@@ -1,8 +1,8 @@
 package com.octo.gwt.test.integ.tools.integ;
 
-import java.io.Serializable;
+import com.google.gwt.user.client.rpc.IsSerializable;
 
-public class MyCustomObject implements Serializable {
+public class MyCustomObject implements IsSerializable {
 
 	private static final long serialVersionUID = -4047482702956475369L;
 
@@ -12,7 +12,7 @@ public class MyCustomObject implements Serializable {
 	/**
 	 * Default constructor for serialization
 	 */
-	protected MyCustomObject() {
+	MyCustomObject() {
 
 	}
 

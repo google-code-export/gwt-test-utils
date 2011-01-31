@@ -50,7 +50,7 @@ public class GwtTranslator implements Translator {
 	}
 
 	private void modifiyClass(String className) throws Exception {
-		logger.debug("Modify class " + className + ", with modifier declared in 'META-INF/gwt-test-utils.properties'");
+		logger.debug("Modify class " + className + ", with modifiers declared in 'META-INF/gwt-test-utils.properties'");
 		CtClass classToModify = PatchGwtClassPool.get().get(className);
 		for (JavaClassModifier modifier : ConfigurationLoader.getInstance().getJavaClassModifierList()) {
 			modifier.modify(classToModify);

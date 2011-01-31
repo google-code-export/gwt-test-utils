@@ -41,7 +41,7 @@ public abstract class AbstractGwtEasyMockTest extends AbstractGwtTest {
 	private Map<Class<?>, Object> mockObjects = new HashMap<Class<?>, Object>();
 	private List<Class<?>> mockedClasses = new ArrayList<Class<?>>();
 	private Set<Field> annotatedFieldToInject;
-	
+
 	public AbstractGwtEasyMockTest() {
 		GwtCreateHandlerManager.getInstance().setMockCreateHandler(new MockCreateHandler(mockObjects));
 		annotatedFieldToInject = GwtTestReflectionUtils.getAnnotatedField(this.getClass(), Mock.class);
@@ -124,7 +124,7 @@ public abstract class AbstractGwtEasyMockTest extends AbstractGwtTest {
 	 * except the one with the name given as a parameter.
 	 */
 	public <T> T createMockAndKeepOneMethod(Class<T> clazz, String methodName) {
-		return createMockAndKeepMethods(clazz, true, GwtTestReflectionUtils.findMethod(clazz, methodName, null));
+		return createMockAndKeepMethods(clazz, true, GwtTestReflectionUtils.findMethod(clazz, methodName));
 	}
 
 	/**

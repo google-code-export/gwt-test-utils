@@ -15,7 +15,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtMethod;
 
@@ -82,10 +81,9 @@ public class DirectoryTestReader {
 	private void initTestMethods(Class<?> clazz, CsvDirectory csvDirectory) throws Exception {
 		testMethods = new ArrayList<Method>();
 		String csvShortName = csvDirectory.value().substring(csvDirectory.value().lastIndexOf('/') + 1);
-		ClassPool cp = PatchGwtClassPool.get();
 
-		CtClass newClazz = cp.makeClass(clazz.getCanonicalName() + ".generated" + System.nanoTime());
-		newClazz.setSuperclass(cp.get(clazz.getCanonicalName()));
+		CtClass newClazz = PatchGwtClassPool.get().makeClass(clazz.getName() + ".generated" + System.nanoTime());
+		newClazz.setSuperclass(PatchGwtClassPool.getCtClass(clazz));
 		List<String> methodList = new ArrayList<String>();
 		for (Entry<String, List<List<String>>> entry : tests.entrySet()) {
 			String methodName = csvShortName + "_" + entry.getKey();

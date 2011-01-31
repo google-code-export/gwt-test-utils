@@ -71,13 +71,13 @@ public class GwtTestReflectionUtils {
 		return result;
 	}
 
-	public static Method findMethod(Class<?> clazz, String name, Class<?>[] paramTypes) {
+	public static Method findMethod(Class<?> clazz, String name, Class<?>... paramTypes) {
 		Class<?> searchType = clazz;
 		while (!Object.class.equals(searchType) && searchType != null) {
 			Method[] methods = (searchType.isInterface() ? searchType.getMethods() : searchType.getDeclaredMethods());
 			for (int i = 0; i < methods.length; i++) {
 				Method method = methods[i];
-				if (name.equals(method.getName()) && (paramTypes == null || Arrays.equals(paramTypes, method.getParameterTypes()))) {
+				if (name.equals(method.getName()) && (paramTypes.length == 0 || Arrays.equals(paramTypes, method.getParameterTypes()))) {
 					return method;
 				}
 			}
@@ -245,7 +245,7 @@ public class GwtTestReflectionUtils {
 			throw new RuntimeException("Unable to call method \"" + target.getClass().getSimpleName() + "." + methodName + "\"", e);
 		}
 	}
-	
+
 	/**
 	 * Make the given field accessible, explicitly setting it accessible if
 	 * necessary. The <code>setAccessible(true)</code> method is only called
@@ -363,7 +363,6 @@ public class GwtTestReflectionUtils {
 	public static void getStaticAndCallClear(Class<?> clazz, String fieldName) {
 		callPrivateMethod(getStaticFieldValue(clazz, fieldName), "clear");
 	}
-	
 
 	/**
 	 * Action to take on each method.

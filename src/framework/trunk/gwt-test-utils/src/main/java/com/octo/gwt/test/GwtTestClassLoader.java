@@ -19,6 +19,10 @@ public class GwtTestClassLoader extends Loader {
 
 	private static GwtTestClassLoader INSTANCE;
 
+	public static void reset() {
+		Thread.currentThread().setContextClassLoader(INSTANCE.getParent());
+	}
+
 	public static ClassLoader getInstance() {
 		if (INSTANCE == null) {
 			try {
@@ -31,6 +35,8 @@ public class GwtTestClassLoader extends Loader {
 				}
 			}
 		}
+
+		Thread.currentThread().setContextClassLoader(INSTANCE);
 
 		return INSTANCE;
 	}

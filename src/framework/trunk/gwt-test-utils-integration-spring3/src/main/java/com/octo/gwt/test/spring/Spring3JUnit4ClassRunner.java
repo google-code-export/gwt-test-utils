@@ -1,4 +1,4 @@
-package com.octo.gwt.test.integ.spring;
+package com.octo.gwt.test.spring;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -35,7 +35,7 @@ public class Spring3JUnit4ClassRunner extends SpringJUnit4ClassRunner {
 	@Override
 	protected Object createTest() throws Exception {
 		Object testInstance = reader.createObject();
-		Method m = GwtTestReflectionUtils.findMethod(testInstance.getClass(), "setReader", null);
+		Method m = GwtTestReflectionUtils.findMethod(testInstance.getClass(), "setReader");
 		m.invoke(testInstance, reader);
 		getTestContextManager().prepareTestInstance(testInstance);
 		return testInstance;
