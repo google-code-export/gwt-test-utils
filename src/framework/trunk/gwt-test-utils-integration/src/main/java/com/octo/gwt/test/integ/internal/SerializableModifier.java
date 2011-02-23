@@ -4,7 +4,6 @@ import java.io.Externalizable;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
-import java.lang.reflect.Field;
 
 import javassist.CannotCompileException;
 import javassist.CtClass;
@@ -19,6 +18,8 @@ import com.octo.gwt.test.internal.modifiers.JavaClassModifier;
 import com.octo.gwt.test.utils.GwtTestReflectionUtils;
 
 public class SerializableModifier implements JavaClassModifier {
+
+	private static final String DEFAULT_CONS_METHOD_NAME = "DEFAULT_CONS_METHOD";
 
 	public void modify(CtClass classToModify) throws Exception {
 
@@ -43,22 +44,40 @@ public class SerializableModifier implements JavaClassModifier {
 			return;
 		}
 
-		// if not exists, add a private void readObject(ObjectInputStream ois) throws ClassNotFoundException, IOException method
-		CtClass[] paramTypes = new CtClass[] { PatchGwtClassPool.getCtClass(ObjectInputStream.class) };
-		try {
-			classToModify.getDeclaredMethod("readObject", paramTypes);
-		} catch (NotFoundException e) {
-			overrideReadObject(classToModify);
+		if (getReadObjectMethod(classToModify) != null) {
+			// this class should never be serialized by GWT RPC
+			return;
 		}
 
-		// Serializable Instance should have an empty public constructor
-		CtConstructor defaultCons = null;
-		try {
-			defaultCons = classToModify.getConstructor(Descriptor.ofConstructor(new CtClass[0]));
-			defaultCons.setModifiers(Modifier.PUBLIC);
-		} catch (NotFoundException e) {
-			// this class should never be serialized by GWT RPC
+		// GWT RPC Serializable objects should have an empty constructor
+		CtConstructor defaultCons = getDefaultConstructor(classToModify);
+		if (defaultCons == null) {
+			return;
 		}
+
+		CtMethod defaultConstMethod = defaultCons.toMethod(DEFAULT_CONS_METHOD_NAME, classToModify);
+		defaultConstMethod.setModifiers(Modifier.PUBLIC);
+		classToModify.addMethod(defaultConstMethod);
+
+		overrideReadObject(classToModify);
+	}
+
+	private CtConstructor getDefaultConstructor(CtClass ctClass) {
+		try {
+			return ctClass.getConstructor(Descriptor.ofConstructor(new CtClass[0]));
+		} catch (NotFoundException e) {
+			return null;
+		}
+	}
+
+	private CtMethod getReadObjectMethod(CtClass ctClass) {
+		CtClass[] paramTypes = new CtClass[] { PatchGwtClassPool.getCtClass(ObjectInputStream.class) };
+		try {
+			return ctClass.getDeclaredMethod("readObject", paramTypes);
+		} catch (NotFoundException e) {
+			return null;
+		}
+
 	}
 
 	private void overrideReadObject(CtClass classToModify) throws NotFoundException, CannotCompileException {
@@ -89,30 +108,16 @@ public class SerializableModifier implements JavaClassModifier {
 
 	public static void readObject(Serializable ex, ObjectInputStream ois) throws ClassNotFoundException, IOException {
 		// call the default read method
-		ois.defaultReadObject();
-
-		Object prototype = null;
-
 		try {
-			// handle transient fields
-			for (Field f : GwtTestReflectionUtils.getFields(ex.getClass())) {
-				if (Modifier.isTransient(f.getModifiers()) && !Modifier.isFinal(f.getModifiers()) && !Modifier.isStatic(f.getModifiers())) {
+			ois.defaultReadObject();
 
-					GwtTestReflectionUtils.makeAccessible(f);
+			// call the exported default constructor to reinitialise triansient field values
+			// which are not expected to be null
+			GwtTestReflectionUtils.callPrivateMethod(ex, DEFAULT_CONS_METHOD_NAME);
 
-					if (prototype == null) {
-						prototype = ex.getClass().newInstance();
-					}
-
-					f.set(ex, f.get(prototype));
-				}
-			}
-		} catch (IllegalAccessException e) {
-			throw new RuntimeException("Error during deserialization of object " + ex.getClass().getName(), e);
-		} catch (InstantiationException e) {
+		} catch (Exception e) {
 			throw new RuntimeException("Error during deserialization of object " + ex.getClass().getName(), e);
 		}
 
 	}
-
 }

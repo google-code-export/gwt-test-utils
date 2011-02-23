@@ -10,7 +10,7 @@
 		<antlr.runtime.version>3.0.1</antlr.runtime.version>
 		<commons-lang.version>2.4</commons-lang.version>
 		<easymock.version>3.0</easymock.version>
-		<gwt.version>2.1.0</gwt.version>
+		<gwt.version>2.1.1</gwt.version>
 		<htmlparser.version>1.6</htmlparser.version>
 		<jackson.version>1.7.1</jackson.version>
 		<javassist.version>3.8.0.GA</javassist.version>

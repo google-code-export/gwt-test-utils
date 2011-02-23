@@ -341,8 +341,18 @@ public class DOMImplPatcher extends AutomaticPatcher {
 	}
 
 	@PatchMethod
+	public static int eventGetCharCode(Object domImpl, NativeEvent evt) {
+		return (int) evt.getKeyCode();
+	}
+
+	@PatchMethod
 	public static NativeEvent createHtmlEvent(Object domImpl, Document doc, String type, boolean canBubble, boolean cancelable) {
 		return EventBuilder.create(Event.getTypeInt(type)).build();
+	}
+
+	@PatchMethod
+	public static void eventStopPropagation(Object domImpl, NativeEvent evt) {
+
 	}
 
 }

@@ -27,11 +27,11 @@ public abstract class RemoteServiceCreateHandler implements GwtCreateHandler {
 		serializerHander = getSerializerHandler();
 	}
 
-	public IGwtRpcSerializerHandler getSerializerHandler() {
+	protected IGwtRpcSerializerHandler getSerializerHandler() {
 		return new DefaultGwtRpcSerializerHandler();
 	}
 
-	public IGwtRpcExceptionHandler getExceptionHandler() {
+	protected IGwtRpcExceptionHandler getExceptionHandler() {
 		return new DefaultGwtRpcExceptionHandler();
 	}
 

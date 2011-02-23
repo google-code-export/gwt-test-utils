@@ -257,8 +257,14 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 
 	@CsvMethod
 	public void click(String... params) {
-		Widget widget = getObject(Widget.class, params);
-		dispatchEvent(widget, Event.ONCLICK);
+		Widget target = getObject(Widget.class, params);
+
+		Event onMouseOver = EventBuilder.create(Event.ONMOUSEOVER).setTarget(target.getElement()).build();
+		Event onMouseDown = EventBuilder.create(Event.ONMOUSEDOWN).setButton(Event.BUTTON_LEFT).build();
+		Event onMouseUp = EventBuilder.create(Event.ONMOUSEUP).setButton(Event.BUTTON_LEFT).build();
+		Event onClick = EventBuilder.create(Event.ONCLICK).build();
+
+		dispatchEvent(target, onMouseOver, onMouseDown, onMouseUp, onClick);
 	}
 
 	@CsvMethod
@@ -266,17 +272,26 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 		ComplexPanel panel = getObject(ComplexPanel.class, params);
 		Widget target = panel.getWidget(Integer.parseInt(index));
 
-		Event complexPanelClick = EventBuilder.create(Event.ONCLICK).setTarget(target.getElement()).build();
-		assertCanApplyEvent(target, complexPanelClick.getTypeInt());
-		dispatchNotCheckedEvent(panel, EventBuilder.create(Event.ONCLICK).setTarget(target.getElement()).build());
+		Event onMouseOver = EventBuilder.create(Event.ONMOUSEOVER).setTarget(target.getElement()).build();
+		Event onMouseDown = EventBuilder.create(Event.ONMOUSEDOWN).setTarget(target.getElement()).setButton(Event.BUTTON_LEFT).build();
+		Event onMouseUp = EventBuilder.create(Event.ONMOUSEUP).setTarget(target.getElement()).setButton(Event.BUTTON_LEFT).build();
+		Event onClick = EventBuilder.create(Event.ONCLICK).setTarget(target.getElement()).build();
+
+		assertCanApplyEvent(target, onMouseOver, onMouseDown, onMouseUp, onClick);
+		dispatchNotCheckedEvent(panel, onMouseOver, onMouseDown, onMouseUp, onClick);
 	}
 
 	@CsvMethod
 	public void clickSimplePanel(String... params) {
 		SimplePanel panel = getObject(SimplePanel.class, params);
-		Event clickEvent = EventBuilder.create(Event.ONCLICK).build();
-		assertCanApplyEvent(panel.getWidget(), clickEvent.getTypeInt());
-		dispatchNotCheckedEvent(panel, clickEvent);
+
+		Event onMouseOver = EventBuilder.create(Event.ONMOUSEOVER).setTarget(panel.getElement()).build();
+		Event onMouseDown = EventBuilder.create(Event.ONMOUSEDOWN).setButton(Event.BUTTON_LEFT).build();
+		Event onMouseUp = EventBuilder.create(Event.ONMOUSEUP).setButton(Event.BUTTON_LEFT).build();
+		Event onClick = EventBuilder.create(Event.ONCLICK).build();
+
+		assertCanApplyEvent(panel.getWidget(), onMouseOver, onMouseDown, onMouseUp, onClick);
+		dispatchNotCheckedEvent(panel, onMouseOver, onMouseDown, onMouseUp, onClick);
 	}
 
 	@CsvMethod
@@ -285,18 +300,27 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 		List<MenuItem> menuItems = GwtTestReflectionUtils.getPrivateFieldValue(menuBar, "items");
 		MenuItem itemToClick = menuItems.get(Integer.parseInt(index));
 
-		Event clickEvent = EventBuilder.create(Event.ONCLICK).setTarget(itemToClick.getElement()).build();
-		assertCanApplyEvent(itemToClick, clickEvent.getTypeInt());
-		dispatchNotCheckedEvent(menuBar, clickEvent);
+		Event onMouseOver = EventBuilder.create(Event.ONMOUSEOVER).setTarget(itemToClick.getElement()).build();
+		Event onMouseDown = EventBuilder.create(Event.ONMOUSEDOWN).setTarget(itemToClick.getElement()).setButton(Event.BUTTON_LEFT).build();
+		Event onMouseUp = EventBuilder.create(Event.ONMOUSEUP).setTarget(itemToClick.getElement()).setButton(Event.BUTTON_LEFT).build();
+		Event onClick = EventBuilder.create(Event.ONCLICK).setTarget(itemToClick.getElement()).build();
+
+		assertCanApplyEvent(itemToClick, onMouseOver, onMouseDown, onMouseUp, onClick);
+		dispatchNotCheckedEvent(menuBar, onMouseOver, onMouseDown, onMouseUp, onClick);
 	}
 
 	@CsvMethod
 	public void clickGridCell(String rowIndex, String column, String identifier) {
 		Grid grid = getObject(Grid.class, identifier);
 		Widget target = grid.getWidget(Integer.parseInt(rowIndex), Integer.parseInt(column));
-		Event clickEvent = EventBuilder.create(Event.ONCLICK).setTarget(target.getElement()).build();
-		assertCanApplyEvent(target, clickEvent.getTypeInt());
-		dispatchNotCheckedEvent(grid, clickEvent);
+
+		Event onMouseOver = EventBuilder.create(Event.ONMOUSEOVER).setTarget(target.getElement()).build();
+		Event onMouseDown = EventBuilder.create(Event.ONMOUSEDOWN).setTarget(target.getElement()).setButton(Event.BUTTON_LEFT).build();
+		Event onMouseUp = EventBuilder.create(Event.ONMOUSEUP).setTarget(target.getElement()).setButton(Event.BUTTON_LEFT).build();
+		Event onClick = EventBuilder.create(Event.ONCLICK).setTarget(target.getElement()).build();
+
+		assertCanApplyEvent(target, onMouseOver, onMouseDown, onMouseUp, onClick);
+		dispatchNotCheckedEvent(grid, onMouseOver, onMouseDown, onMouseUp, onClick);
 	}
 
 	@CsvMethod
@@ -533,15 +557,22 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 				button.isEnabled());
 	}
 
-	protected void assertCanApplyEvent(UIObject widget, int eventTypeInt) {
+	protected void assertCanApplyEvent(UIObject widget, int eventType) {
+
 		if (!WidgetUtils.isWidgetVisible(widget)) {
-			String failureMessage = createFailureMessage(widget, eventTypeInt, "visible");
+			String failureMessage = createFailureMessage(widget, eventType, "visible");
 			Assert.fail(csvRunner.getAssertionErrorMessagePrefix() + failureMessage);
 		}
 
 		if (widget instanceof FocusWidget && (!((FocusWidget) widget).isEnabled())) {
-			String failureMessage = createFailureMessage(widget, eventTypeInt, "enabled");
+			String failureMessage = createFailureMessage(widget, eventType, "enabled");
 			Assert.fail(csvRunner.getAssertionErrorMessagePrefix() + failureMessage);
+		}
+	}
+
+	protected void assertCanApplyEvent(UIObject widget, Event... events) {
+		for (Event event : events) {
+			assertCanApplyEvent(widget, event.getTypeInt());
 		}
 	}
 
@@ -550,10 +581,10 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 		dispatchEvent(target, event);
 	}
 
-	protected void dispatchEvent(Widget target, Event event) {
-		assertCanApplyEvent(target, event.getTypeInt());
+	protected void dispatchEvent(Widget target, Event... events) {
+		assertCanApplyEvent(target, events);
 
-		dispatchNotCheckedEvent(target, event);
+		dispatchNotCheckedEvent(target, events);
 	}
 
 	protected FocusWidget getFocusWidget(String identifier) {
@@ -589,16 +620,18 @@ public abstract class AbstractGwtIntegrationShell extends AbstractGwtConfigurabl
 		}
 	}
 
-	protected void dispatchNotCheckedEvent(Widget target, Event event) {
-		if (CheckBox.class.isInstance(target) && event.getTypeInt() == Event.ONCLICK) {
-			CheckBox checkBox = (CheckBox) target;
-			if (RadioButton.class.isInstance(target)) {
-				checkBox.setValue(true);
-			} else {
-				checkBox.setValue(!checkBox.getValue());
+	protected void dispatchNotCheckedEvent(Widget target, Event... events) {
+		for (Event event : events) {
+			if (CheckBox.class.isInstance(target) && event.getTypeInt() == Event.ONCLICK) {
+				CheckBox checkBox = (CheckBox) target;
+				if (RadioButton.class.isInstance(target)) {
+					checkBox.setValue(true);
+				} else {
+					checkBox.setValue(!checkBox.getValue());
+				}
 			}
+			target.onBrowserEvent(event);
 		}
-		target.onBrowserEvent(event);
 	}
 
 	private String createFailureMessage(UIObject target, int eventTypeInt, String attribut) {

@@ -27,9 +27,9 @@ public class Browser {
 	 * Simulates an occurring of the given event due to an interaction with the
 	 * target widget.
 	 */
-	public static void dispatchEvent(Widget target, Event event) {
-		assertCanApplyEvent(target, event);
-		dispatchEventInternal(target, event);
+	public static void dispatchEvent(Widget target, Event... events) {
+		assertCanApplyEvent(target, events);
+		dispatchEventInternal(target, events);
 	}
 
 	/**
@@ -50,16 +50,25 @@ public class Browser {
 	 * Simulates a click event.
 	 */
 	public static void click(Widget target) {
-		dispatchEvent(target, EventBuilder.create(Event.ONCLICK).build());
+		Event onMouseOver = EventBuilder.create(Event.ONMOUSEOVER).setTarget(target.getElement()).build();
+		Event onMouseDown = EventBuilder.create(Event.ONMOUSEDOWN).setButton(Event.BUTTON_LEFT).build();
+		Event onMouseUp = EventBuilder.create(Event.ONMOUSEUP).setButton(Event.BUTTON_LEFT).build();
+		Event onClick = EventBuilder.create(Event.ONCLICK).build();
+
+		dispatchEvent(target, onMouseOver, onMouseDown, onMouseUp, onClick);
 	}
 
 	/**
 	 * Simulates a onchange event on a particular MenuItem of a MenuBar.
 	 */
 	public static void click(MenuBar parent, MenuItem clickedItem) {
-		Event clickEvent = EventBuilder.create(Event.ONCLICK).setTarget(clickedItem.getElement()).build();
-		assertCanApplyEvent(clickedItem, clickEvent);
-		dispatchEventInternal(parent, clickEvent);
+		Event onMouseOver = EventBuilder.create(Event.ONMOUSEOVER).setTarget(clickedItem.getElement()).build();
+		Event onMouseDown = EventBuilder.create(Event.ONMOUSEDOWN).setTarget(clickedItem.getElement()).setButton(Event.BUTTON_LEFT).build();
+		Event onMouseUp = EventBuilder.create(Event.ONMOUSEUP).setTarget(clickedItem.getElement()).setButton(Event.BUTTON_LEFT).build();
+		Event onClick = EventBuilder.create(Event.ONCLICK).setTarget(clickedItem.getElement()).build();
+
+		assertCanApplyEvent(clickedItem, onMouseOver, onMouseDown, onMouseUp, onClick);
+		dispatchEventInternal(parent, onMouseOver, onMouseDown, onMouseUp, onClick);
 	}
 
 	/**
@@ -73,8 +82,12 @@ public class Browser {
 	 * Simulates a click event on a particular MenuItem of a SuggestBox.
 	 */
 	public static void click(SuggestBox parent, MenuItem clickedItem) {
-		Event clickEvent = EventBuilder.create(Event.ONCLICK).setTarget(clickedItem.getElement()).build();
-		assertCanApplyEvent(clickedItem, clickEvent);
+		Event onMouseOver = EventBuilder.create(Event.ONMOUSEOVER).setTarget(clickedItem.getElement()).build();
+		Event onMouseDown = EventBuilder.create(Event.ONMOUSEDOWN).setTarget(clickedItem.getElement()).setButton(Event.BUTTON_LEFT).build();
+		Event onMouseUp = EventBuilder.create(Event.ONMOUSEUP).setTarget(clickedItem.getElement()).setButton(Event.BUTTON_LEFT).build();
+		Event onClick = EventBuilder.create(Event.ONCLICK).setTarget(clickedItem.getElement()).build();
+
+		assertCanApplyEvent(clickedItem, onMouseOver, onMouseDown, onMouseUp, onClick);
 		clickedItem.getCommand().execute();
 	}
 
@@ -89,15 +102,15 @@ public class Browser {
 		if (!Widget.class.isInstance(hasTextWidget)) {
 			return;
 		}
-		Event keyPressEvent = EventBuilder.create(Event.ONKEYPRESS).build();
-		Event changeEvent = EventBuilder.create(Event.ONCHANGE).build();
 
-		assertCanApplyEvent((Widget) hasTextWidget, keyPressEvent);
+		for (int i = 0; i < value.length(); i++) {
+			hasTextWidget.setText(value.substring(0, i + 1));
 
-		for (int i = 0; i <= value.length(); i++) {
-			hasTextWidget.setText(value.substring(0, i));
-			dispatchEventInternal((Widget) hasTextWidget, keyPressEvent);
-			dispatchEventInternal((Widget) hasTextWidget, changeEvent);
+			int keyCode = (int) value.charAt(i);
+			Event keyPressEvent = EventBuilder.create(Event.ONKEYPRESS).setKeyCode(keyCode).build();
+			Event changeEvent = EventBuilder.create(Event.ONCHANGE).build();
+
+			dispatchEvent((Widget) hasTextWidget, keyPressEvent, changeEvent);
 		}
 
 		Event keyUpEvent = EventBuilder.create(Event.ONKEYUP).setKeyCode(KeyCodes.KEY_ENTER).build();
@@ -203,25 +216,29 @@ public class Browser {
 		dispatchEvent(target, EventBuilder.create(Event.ONMOUSEOUT).build());
 	}
 
-	private static void dispatchEventInternal(Widget target, Event event) {
-		if (CheckBox.class.isInstance(target) && event.getTypeInt() == Event.ONCLICK) {
-			CheckBox checkBox = (CheckBox) target;
-			if (RadioButton.class.isInstance(target)) {
-				checkBox.setValue(true);
-			} else {
-				checkBox.setValue(!checkBox.getValue());
+	private static void dispatchEventInternal(Widget target, Event... events) {
+		for (Event event : events) {
+			if (CheckBox.class.isInstance(target) && event.getTypeInt() == Event.ONCLICK) {
+				CheckBox checkBox = (CheckBox) target;
+				if (RadioButton.class.isInstance(target)) {
+					checkBox.setValue(true);
+				} else {
+					checkBox.setValue(!checkBox.getValue());
+				}
 			}
+			target.onBrowserEvent(event);
 		}
-		target.onBrowserEvent(event);
 	}
 
-	private static void assertCanApplyEvent(UIObject target, Event event) {
-		if (!WidgetUtils.isWidgetVisible(target)) {
-			Assert.fail(createFailureMessage(target, event, "visible"));
-		}
+	private static void assertCanApplyEvent(UIObject target, Event... events) {
+		for (Event event : events) {
+			if (!WidgetUtils.isWidgetVisible(target)) {
+				Assert.fail(createFailureMessage(target, event, "visible"));
+			}
 
-		if (target instanceof FocusWidget && !((FocusWidget) target).isEnabled()) {
-			Assert.fail(createFailureMessage(target, event, "enabled"));
+			if (target instanceof FocusWidget && !((FocusWidget) target).isEnabled()) {
+				Assert.fail(createFailureMessage(target, event, "enabled"));
+			}
 		}
 	}
 

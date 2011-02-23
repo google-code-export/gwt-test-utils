@@ -1,0 +1,36 @@
+package com.octo.gwt.test;
+
+import org.junit.Assert;
+import org.junit.Test;
+
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.ui.PushButton;
+import com.octo.gwt.test.utils.events.Browser;
+
+public class PushButtonTest extends AbstractGwtTest {
+
+	private boolean clicked;
+
+	@Test
+	public void checkClick() {
+
+		// Setup
+		clicked = false;
+
+		PushButton b = new PushButton("up", "down", new ClickHandler() {
+
+			public void onClick(ClickEvent event) {
+				clicked = true;
+
+			}
+		});
+
+		// Test
+		Browser.click(b);
+
+		// Assert
+		Assert.assertTrue("PushedButton onClick was not triggered", clicked);
+	}
+
+}

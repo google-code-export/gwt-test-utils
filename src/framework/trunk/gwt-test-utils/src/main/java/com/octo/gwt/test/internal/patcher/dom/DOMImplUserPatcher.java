@@ -71,4 +71,14 @@ public class DOMImplUserPatcher extends AutomaticPatcher {
 		return elem.getChildCount();
 	}
 
+	@PatchMethod
+	public static void releaseCapture(Object domImpl, Element elem) {
+
+	}
+
+	@PatchMethod
+	public static void setCapture(Object domImpl, Element elem) {
+
+	}
+
 }
