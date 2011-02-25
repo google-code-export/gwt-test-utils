@@ -33,7 +33,7 @@ public class LocalizableCreateHandler implements GwtCreateHandler {
 	}
 
 	private Object getLocalizedClassImpl(Class<?> localizedClass, Class<?> defaultImpl) throws Exception {
-		Locale locale = PatchGwtConfig.getLocale();
+		Locale locale = PatchGwtConfig.get().getLocale();
 		if (locale == null) {
 			return defaultImpl.newInstance();
 		}

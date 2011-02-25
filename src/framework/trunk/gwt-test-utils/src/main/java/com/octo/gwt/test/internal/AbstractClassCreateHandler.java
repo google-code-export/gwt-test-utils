@@ -43,7 +43,7 @@ public class AbstractClassCreateHandler implements GwtCreateHandler {
 
 		PatchGwtUtils.patch(subClass, null);
 
-		newClass = subClass.toClass(GwtTestClassLoader.getInstance(), null);
+		newClass = subClass.toClass(GwtTestClassLoader.get(), null);
 		cache.put(classLiteral, newClass);
 
 		return newClass.newInstance();

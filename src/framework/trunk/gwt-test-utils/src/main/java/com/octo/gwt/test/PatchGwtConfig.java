@@ -1,63 +1,83 @@
 package com.octo.gwt.test;
 
+import java.util.List;
 import java.util.Locale;
 
-import com.octo.gwt.test.internal.GwtCreateHandlerManager;
-import com.octo.gwt.test.internal.patcher.GwtPatcher;
-import com.octo.gwt.test.internal.patcher.ImplPatcher;
-import com.octo.gwt.test.internal.patcher.dom.NodeFactory;
-import com.octo.gwt.test.internal.utils.PatchGwtUtils;
-import com.octo.gwt.test.internal.utils.PatchGwtUtils.SequenceReplacement;
+import com.octo.gwt.test.internal.ModuleData;
 
 public class PatchGwtConfig {
 
-	private static Locale locale;
+	private static PatchGwtConfig INSTANCE;
 
-	public static void setLocale(Locale locale) {
-		PatchGwtConfig.locale = locale;
+	public static PatchGwtConfig get() {
+		if (INSTANCE == null) {
+			INSTANCE = new PatchGwtConfig();
+		}
+
+		return INSTANCE;
 	}
 
-	public static Locale getLocale() {
+	private Locale locale;
+	private GwtLogHandler logHandler;
+	private String hostPagePath;
+	private String moduleName;
+
+	private PatchGwtConfig() {
+
+	}
+
+	public void reset() {
+		locale = null;
+		logHandler = null;
+		hostPagePath = null;
+		moduleName = null;
+	}
+
+	public void setLogHandler(GwtLogHandler logHandler) {
+		this.logHandler = logHandler;
+	}
+
+	public GwtLogHandler getLogHandler() {
+		return logHandler;
+	}
+
+	public void setLocale(Locale locale) {
+		this.locale = locale;
+	}
+
+	public Locale getLocale() {
 		return locale;
 	}
 
-	public static void setLogHandler(GwtLogHandler gwtLogHandler) {
-		GwtPatcher.gwtLogHandler = gwtLogHandler;
+	public void setHostPagePath(String hostPagePath) {
+		this.hostPagePath = hostPagePath;
 	}
 
-	public static void setHostPagePath(String hostPagePath) {
-		NodeFactory.hostPagePath = hostPagePath;
+	public String getHostPagePath() {
+		return hostPagePath;
 	}
 
-	public static boolean addGwtCreateHandler(GwtCreateHandler gwtCreateHandler) {
-		return GwtCreateHandlerManager.getInstance().addGwtCreateHandler(gwtCreateHandler);
+	public void setModuleName(String moduleName) {
+		this.moduleName = moduleName;
 	}
 
-	/**
-	 * Set a custom GwtCreateHandler to handle GWT.create(..) calls
-	 * 
-	 * @param gwtCreateHandler
-	 *            A handler gwt-test-utils will try to delegate GWT.create(..)
-	 *            calls
-	 * @deprecated Use
-	 *             {@link PatchGwtConfig#addGwtCreateHandler(GwtCreateHandler)
-	 *             instead}
-	 */
-	@Deprecated
-	public static void setGwtCreateHandler(GwtCreateHandler gwtCreateHandler) {
-		addGwtCreateHandler(gwtCreateHandler);
-	}
+	public String getModuleName() {
+		if (moduleName != null)
+			return moduleName;
 
-	public static void setCurrentTestedModuleFile(String currentTestedModuleFile) {
-		ImplPatcher.currentTestedModuleFile = currentTestedModuleFile;
-	}
+		List<String> moduleNames = ModuleData.get().getModuleNames();
 
-	public static void replaceSequenceInProperties(String regex, String to) {
-		PatchGwtUtils.sequenceReplacementList.add(new SequenceReplacement(regex, to));
-	}
+		switch (moduleNames.size()) {
+		case 0:
+			return null;
+		case 1:
+			return moduleNames.get(0);
+		default:
+			throw new RuntimeException(
+					"You have declared more than one 'module-file' in your META-INF/gwt-test-utils.properties files. Please override the "
+							+ AbstractGwtConfigurableTest.class.getSimpleName() + ".getModuleName() method to tell which module is currently tested");
+		}
 
-	public static void reset() {
-		locale = null;
 	}
 
 }

@@ -13,7 +13,7 @@ import org.junit.internal.runners.JUnit4ClassRunner;
 public class OldJunitVersionGwtTestRunner extends JUnit4ClassRunner {
 
 	public OldJunitVersionGwtTestRunner(Class<?> clazz) throws InitializationError, ClassNotFoundException {
-		super(GwtTestClassLoader.getInstance().loadClass(clazz.getName()));
+		super(GwtTestClassLoader.get().loadClass(clazz.getName()));
 	}
 
 }

@@ -4,6 +4,7 @@ import com.google.gwt.core.client.GWT;
 import com.octo.gwt.test.GwtCreateHandler;
 import com.octo.gwt.test.GwtLogHandler;
 import com.octo.gwt.test.Mock;
+import com.octo.gwt.test.PatchGwtConfig;
 import com.octo.gwt.test.internal.GwtCreateHandlerManager;
 import com.octo.gwt.test.patcher.AutomaticPatcher;
 import com.octo.gwt.test.patcher.PatchClass;
@@ -12,16 +13,11 @@ import com.octo.gwt.test.patcher.PatchMethod;
 @PatchClass(GWT.class)
 public class GwtPatcher extends AutomaticPatcher {
 
-	public static GwtLogHandler gwtLogHandler = null;
-
-	public static void reset() {
-		gwtLogHandler = null;
-	}
-
 	@PatchMethod
 	public static void log(String message, Throwable t) {
-		if (gwtLogHandler != null) {
-			gwtLogHandler.log(message, t);
+		GwtLogHandler logHandler = PatchGwtConfig.get().getLogHandler();
+		if (logHandler != null) {
+			logHandler.log(message, t);
 		}
 	}
 
@@ -37,7 +33,7 @@ public class GwtPatcher extends AutomaticPatcher {
 
 	@PatchMethod
 	public static Object create(Class<?> classLiteral) {
-		for (GwtCreateHandler gwtCreateHandler : GwtCreateHandlerManager.getInstance().getGwtCreateHandlers()) {
+		for (GwtCreateHandler gwtCreateHandler : GwtCreateHandlerManager.get().getGwtCreateHandlers()) {
 			try {
 				Object o = gwtCreateHandler.create(classLiteral);
 				if (o != null) {

@@ -22,7 +22,7 @@ public class MyConstantsTest extends AbstractGwtTest {
 
 	@Test
 	public void checkMyConstantsWithSpecialChar() {
-		PatchGwtConfig.setLocale(Locale.FRENCH);
+		PatchGwtConfig.get().setLocale(Locale.FRENCH);
 
 		// Test
 		String hello = constants.hello();
@@ -57,7 +57,7 @@ public class MyConstantsTest extends AbstractGwtTest {
 	@Test
 	public void checkMyConstantsChange() {
 		// Setup
-		PatchGwtConfig.setLocale(Locale.ENGLISH);
+		PatchGwtConfig.get().setLocale(Locale.ENGLISH);
 
 		// Test 1
 		String hello = constants.hello();
@@ -81,7 +81,7 @@ public class MyConstantsTest extends AbstractGwtTest {
 		Assert.assertEquals((float) 6.66, map.get("functionFloat"));
 
 		// Test 2
-		PatchGwtConfig.setLocale(Locale.US);
+		PatchGwtConfig.get().setLocale(Locale.US);
 		hello = constants.hello();
 		goodbye = constants.goodbye();
 		stringArray = constants.stringArray();

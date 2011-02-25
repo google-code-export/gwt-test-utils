@@ -46,10 +46,11 @@ public abstract class LocalizableResourcesInvocationHandler implements Invocatio
 
 	protected abstract Object extractDefaultValue(Method method, Object[] args, Locale locale) throws Throwable;
 
-	private static Locale getResourceLocale(Class<?> clazz) {
-		if (PatchGwtConfig.getLocale() != null) {
-			return PatchGwtConfig.getLocale();
+	private Locale getResourceLocale(Class<?> clazz) {
+		if (PatchGwtConfig.get().getLocale() != null) {
+			return PatchGwtConfig.get().getLocale();
 		}
+
 		DefaultLocale annotation = GwtTestReflectionUtils.getAnnotation(clazz, DefaultLocale.class);
 		if (annotation != null) {
 			String[] localeCodes = annotation.value().split("_");

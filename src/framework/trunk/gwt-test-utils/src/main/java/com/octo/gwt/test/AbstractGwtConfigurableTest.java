@@ -5,16 +5,26 @@ import java.util.Locale;
 import org.junit.After;
 import org.junit.Before;
 
+import com.octo.gwt.test.internal.GwtCreateHandlerManager;
 import com.octo.gwt.test.internal.PatchGwtReset;
 
 public abstract class AbstractGwtConfigurableTest {
 
 	@Before
 	public void setUpAbstractGwtIntegrationShell() throws Exception {
-		PatchGwtConfig.setLocale(getLocale());
-		PatchGwtConfig.setCurrentTestedModuleFile(getCurrentTestedModuleFile());
-		PatchGwtConfig.setLogHandler(getLogHandler());
-		PatchGwtConfig.setHostPagePath(getHostPagePath());
+		PatchGwtConfig.get().setLocale(getLocale());
+		PatchGwtConfig.get().setLogHandler(getLogHandler());
+		PatchGwtConfig.get().setHostPagePath(getHostPagePath());
+
+		String moduleName = getModuleName();
+		if (moduleName == null) {
+			if (getCurrentTestedModuleFile() != null) {
+				moduleName = getCurrentTestedModuleFile().substring(0, getCurrentTestedModuleFile().toLowerCase().indexOf(".gwt.xml")).replaceAll(
+						"/", ".");
+			}
+		}
+
+		PatchGwtConfig.get().setModuleName(moduleName);
 	}
 
 	@After
@@ -22,6 +32,12 @@ public abstract class AbstractGwtConfigurableTest {
 		resetPatchGwt();
 	}
 
+	protected String getModuleName() {
+		// this method can be overrided by subclass
+		return null;
+	}
+
+	@Deprecated
 	protected String getCurrentTestedModuleFile() {
 		// this method can be overrided by subclass
 		return null;
@@ -48,7 +64,7 @@ public abstract class AbstractGwtConfigurableTest {
 	}
 
 	protected boolean addGwtCreateHandler(GwtCreateHandler gwtCreateHandler) {
-		return PatchGwtConfig.addGwtCreateHandler(gwtCreateHandler);
+		return GwtCreateHandlerManager.get().addGwtCreateHandler(gwtCreateHandler);
 	}
 
 	@Deprecated

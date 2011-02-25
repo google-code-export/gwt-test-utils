@@ -16,7 +16,7 @@ public abstract class AbstractGwtTestRunner extends Runner implements Filterable
 	private Runner runner;
 
 	public AbstractGwtTestRunner(Class<?> clazz) throws Exception {
-		Class<?> runnerClass = GwtTestClassLoader.getInstance().loadClass(getClassRunnerClassName());
+		Class<?> runnerClass = GwtTestClassLoader.get().loadClass(getClassRunnerClassName());
 
 		if (!Runner.class.isAssignableFrom(runnerClass)) {
 			throw new RuntimeException("Cannot create a valid JUnit " + Runner.class.getSimpleName() + " : class '" + getClassRunnerClassName()
@@ -25,7 +25,7 @@ public abstract class AbstractGwtTestRunner extends Runner implements Filterable
 
 		Constructor<?> cons = runnerClass.getConstructor(Class.class);
 
-		runner = (Runner) cons.newInstance(GwtTestClassLoader.getInstance().loadClass(clazz.getCanonicalName()));
+		runner = (Runner) cons.newInstance(GwtTestClassLoader.get().loadClass(clazz.getCanonicalName()));
 	}
 
 	protected abstract String getClassRunnerClassName();

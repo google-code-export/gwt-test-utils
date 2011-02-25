@@ -22,7 +22,7 @@ public class MyConstantsWithLookupTest extends AbstractGwtTest {
 
 	@Test
 	public void checkMyConstantsWithSpecialChar() {
-		PatchGwtConfig.setLocale(Locale.FRENCH);
+		PatchGwtConfig.get().setLocale(Locale.FRENCH);
 
 		// Test
 		String hello = constants.hello();

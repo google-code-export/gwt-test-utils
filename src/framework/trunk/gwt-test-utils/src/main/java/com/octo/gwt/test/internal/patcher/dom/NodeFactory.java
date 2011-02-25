@@ -62,14 +62,13 @@ import com.google.gwt.dom.client.TitleElement;
 import com.google.gwt.dom.client.UListElement;
 import com.octo.gwt.test.AbstractGwtConfigurableTest;
 import com.octo.gwt.test.GwtTestClassLoader;
+import com.octo.gwt.test.PatchGwtConfig;
 import com.octo.gwt.test.internal.GwtHtmlParser;
 import com.octo.gwt.test.internal.utils.PropertyContainer;
 import com.octo.gwt.test.internal.utils.PropertyContainerHelper;
 import com.octo.gwt.test.internal.utils.TagAware;
 
 public class NodeFactory {
-
-	public static String hostPagePath;
 
 	private static Map<String, String> elementMap = new HashMap<String, String>();
 	private static Map<String, String> elementWithSpecialTagMap = new HashMap<String, String>();
@@ -194,18 +193,18 @@ public class NodeFactory {
 	}
 
 	private static Element parseHTMLElement() {
-		String html = getHostPageHTML();
-
-		if (html != null) {
+		String hostPagePath = PatchGwtConfig.get().getHostPagePath();
+		if (hostPagePath != null) {
 			// parsing of the host page
+			String html = getHostPageHTML(hostPagePath);
 			NodeList<Node> nodes = GwtHtmlParser.parse(html);
-			return findHTMLElement(nodes);
+			return findHTMLElement(hostPagePath, nodes);
 		} else {
 			return createNewHTMLElement();
 		}
 	}
 
-	private static Element findHTMLElement(NodeList<Node> nodes) {
+	private static Element findHTMLElement(String hostPagePath, NodeList<Node> nodes) {
 		int i = 0;
 		while (i < nodes.getLength()) {
 			Node node = nodes.getItem(i);
@@ -219,10 +218,8 @@ public class NodeFactory {
 		throw new RuntimeException("Cannot find a root HTML element in file '" + hostPagePath + "'");
 	}
 
-	private static String getHostPageHTML() {
-		if (hostPagePath == null) {
-			return null;
-		}
+	private static String getHostPageHTML(String hostPagePath) {
+
 		InputStream is = NodeFactory.class.getClassLoader().getResourceAsStream(hostPagePath);
 		if (is == null) {
 			throw new RuntimeException("Cannot find file '" + hostPagePath + "', please override "
@@ -294,7 +291,7 @@ public class NodeFactory {
 
 	private static Class<?> loadClass(String className) {
 		try {
-			return GwtTestClassLoader.getInstance().loadClass(className);
+			return GwtTestClassLoader.get().loadClass(className);
 		} catch (ClassNotFoundException e) {
 			return null;
 		}

@@ -20,7 +20,7 @@ import org.junit.runners.model.InitializationError;
 public class GwtTestRunner extends BlockJUnit4ClassRunner {
 
 	public GwtTestRunner(Class<?> clazz) throws InitializationError, ClassNotFoundException {
-		super(GwtTestClassLoader.getInstance().loadClass(clazz.getName()));
+		super(GwtTestClassLoader.get().loadClass(clazz.getName()));
 	}
 
 }

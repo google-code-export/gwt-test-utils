@@ -23,7 +23,7 @@ public class FormPanelTest extends AbstractGwtTest {
 
 	@Override
 	protected String getCurrentTestedModuleFile() {
-		return "test-config.gwt.xml";
+		return "com/octo/gwt/test/test-config.gwt.xml";
 	}
 
 	@Before

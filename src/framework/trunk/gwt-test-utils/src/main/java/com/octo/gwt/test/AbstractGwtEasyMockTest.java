@@ -43,7 +43,7 @@ public abstract class AbstractGwtEasyMockTest extends AbstractGwtTest {
 	private Set<Field> annotatedFieldToInject;
 
 	public AbstractGwtEasyMockTest() {
-		GwtCreateHandlerManager.getInstance().setMockCreateHandler(new MockCreateHandler(mockObjects));
+		GwtCreateHandlerManager.get().setMockCreateHandler(new MockCreateHandler(mockObjects));
 		annotatedFieldToInject = GwtTestReflectionUtils.getAnnotatedField(this.getClass(), Mock.class);
 		for (Field f : annotatedFieldToInject) {
 			mockedClasses.add(f.getType());

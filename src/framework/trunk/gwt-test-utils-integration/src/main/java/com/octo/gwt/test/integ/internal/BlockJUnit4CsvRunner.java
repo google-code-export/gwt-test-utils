@@ -17,7 +17,7 @@ public class BlockJUnit4CsvRunner extends BlockJUnit4ClassRunner {
 	private DirectoryTestReader reader;
 
 	public BlockJUnit4CsvRunner(Class<?> clazz) throws InitializationError, ClassNotFoundException {
-		super(GwtTestClassLoader.getInstance().loadClass(clazz.getName()));
+		super(GwtTestClassLoader.get().loadClass(clazz.getName()));
 	}
 
 	@Override

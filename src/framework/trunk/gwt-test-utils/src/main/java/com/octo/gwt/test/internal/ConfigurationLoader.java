@@ -35,10 +35,6 @@ public class ConfigurationLoader {
 
 	private static ConfigurationLoader INSTANCE;
 
-	private List<JavaClassModifier> javaClassModifierList;
-
-	private MethodRemover methodRemover;
-
 	public static final ConfigurationLoader createInstance(ClassLoader classLoader) {
 		if (INSTANCE != null) {
 			throw new RuntimeException(ConfigurationLoader.class.getSimpleName() + " instance has already been initialized");
@@ -49,7 +45,7 @@ public class ConfigurationLoader {
 		return INSTANCE;
 	}
 
-	public static ConfigurationLoader getInstance() {
+	public static ConfigurationLoader get() {
 		if (INSTANCE == null) {
 			throw new RuntimeException(ConfigurationLoader.class.getSimpleName() + " instance has not been initialized yet");
 		}
@@ -59,14 +55,14 @@ public class ConfigurationLoader {
 
 	private ClassLoader classLoader;
 	private List<String> delegateList;
-	private List<String> notDelegateList;
 	private Set<String> scanPackageSet;
 	private Map<String, IPatcher> patchers;
+	private List<JavaClassModifier> javaClassModifierList;
+	private MethodRemover methodRemover;
 
 	private ConfigurationLoader(ClassLoader classLoader) {
 		this.classLoader = classLoader;
 		delegateList = new ArrayList<String>();
-		notDelegateList = new ArrayList<String>();
 		scanPackageSet = new HashSet<String>();
 		javaClassModifierList = new ArrayList<JavaClassModifier>();
 		methodRemover = new MethodRemover();
@@ -87,51 +83,12 @@ public class ConfigurationLoader {
 		return patchers;
 	}
 
-	private void loadPatchers() throws Exception {
-		patchers = new HashMap<String, IPatcher>();
-		List<String> classList = findScannedClasses();
-		for (String className : classList) {
-			Class<?> clazz = Class.forName(className, true, classLoader);
-
-			PatchClass patchClass = GwtTestReflectionUtils.getAnnotation(clazz, PatchClass.class);
-
-			if (patchClass == null) {
-				continue;
-			}
-
-			if (!IPatcher.class.isAssignableFrom(clazz) || !hasDefaultConstructor(clazz)) {
-				throw new RuntimeException("The @" + PatchClass.class.getSimpleName() + " annotated class '" + clazz.getName() + "' must implements "
-						+ IPatcher.class.getSimpleName() + " interface and provide an empty constructor");
-			}
-
-			IPatcher patcher = (IPatcher) GwtTestReflectionUtils.instantiateClass(clazz);
-
-			for (Class<?> c : patchClass.value()) {
-				String targetName = c.isMemberClass() ? c.getDeclaringClass().getCanonicalName() + "$" + c.getSimpleName() : c.getCanonicalName();
-				if (patchers.get(targetName) != null) {
-					logger.error("Two patches for same class " + targetName);
-					throw new RuntimeException("Two patches for same class " + targetName);
-				}
-				patchers.put(targetName, patcher);
-				logger.debug("Add patch for class " + targetName + " : " + clazz.getCanonicalName());
-			}
-			for (String s : patchClass.classes()) {
-				if (patchers.get(s) != null) {
-					logger.error("Two patches for same class " + s);
-					throw new RuntimeException("Two patches for same class " + s);
-				}
-				patchers.put(s, patcher);
-				logger.debug("Add patch for class " + s + " : " + clazz.getCanonicalName());
-			}
-		}
+	public List<JavaClassModifier> getJavaClassModifierList() {
+		return Collections.unmodifiableList(javaClassModifierList);
 	}
 
-	private boolean hasDefaultConstructor(Class<?> clazz) {
-		try {
-			return clazz.getDeclaredConstructor() != null;
-		} catch (NoSuchMethodException e) {
-			return false;
-		}
+	public List<String> getDelegateList() {
+		return Collections.unmodifiableList(delegateList);
 	}
 
 	private void readFiles() {
@@ -165,18 +122,22 @@ public class ConfigurationLoader {
 				}
 			} else if ("delegate".equals(value)) {
 				delegateList.add(key);
-			} else if ("notDelegate".equals(value)) {
-				notDelegateList.add(key);
 			} else if ("remove-method".equals(value)) {
 				processRemoveMethod(key, url);
 			} else if ("substitute-class".equals(value)) {
 				processSubstituteClass(key, url);
 			} else if ("class-modifier".equals(value)) {
 				processClassModifier(key, url);
+			} else if ("module-file".equals(value)) {
+				processModuleFile(key, url);
 			} else {
 				throw new RuntimeException("Error in '" + url.getPath() + "' : unknown value '" + value + "'");
 			}
 		}
+	}
+
+	private void processModuleFile(String key, URL url) {
+		ModuleData.get().parseModule(key);
 	}
 
 	private void processSubstituteClass(String key, URL url) {
@@ -229,16 +190,51 @@ public class ConfigurationLoader {
 		}
 	}
 
-	public List<JavaClassModifier> getJavaClassModifierList() {
-		return Collections.unmodifiableList(javaClassModifierList);
+	private void loadPatchers() throws Exception {
+		patchers = new HashMap<String, IPatcher>();
+		List<String> classList = findScannedClasses();
+		for (String className : classList) {
+			Class<?> clazz = Class.forName(className, true, classLoader);
+
+			PatchClass patchClass = GwtTestReflectionUtils.getAnnotation(clazz, PatchClass.class);
+
+			if (patchClass == null) {
+				continue;
+			}
+
+			if (!IPatcher.class.isAssignableFrom(clazz) || !hasDefaultConstructor(clazz)) {
+				throw new RuntimeException("The @" + PatchClass.class.getSimpleName() + " annotated class '" + clazz.getName() + "' must implements "
+						+ IPatcher.class.getSimpleName() + " interface and provide an empty constructor");
+			}
+
+			IPatcher patcher = (IPatcher) GwtTestReflectionUtils.instantiateClass(clazz);
+
+			for (Class<?> c : patchClass.value()) {
+				String targetName = c.isMemberClass() ? c.getDeclaringClass().getCanonicalName() + "$" + c.getSimpleName() : c.getCanonicalName();
+				if (patchers.get(targetName) != null) {
+					logger.error("Two patches for same class " + targetName);
+					throw new RuntimeException("Two patches for same class " + targetName);
+				}
+				patchers.put(targetName, patcher);
+				logger.debug("Add patch for class " + targetName + " : " + clazz.getCanonicalName());
+			}
+			for (String s : patchClass.classes()) {
+				if (patchers.get(s) != null) {
+					logger.error("Two patches for same class " + s);
+					throw new RuntimeException("Two patches for same class " + s);
+				}
+				patchers.put(s, patcher);
+				logger.debug("Add patch for class " + s + " : " + clazz.getCanonicalName());
+			}
+		}
 	}
 
-	public List<String> getDelegateList() {
-		return Collections.unmodifiableList(delegateList);
-	}
-
-	public List<String> getNotDelegateList() {
-		return Collections.unmodifiableList(notDelegateList);
+	private boolean hasDefaultConstructor(Class<?> clazz) {
+		try {
+			return clazz.getDeclaredConstructor() != null;
+		} catch (NoSuchMethodException e) {
+			return false;
+		}
 	}
 
 	private List<String> findScannedClasses() throws Exception {

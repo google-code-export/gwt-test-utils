@@ -23,7 +23,7 @@ public class CurrencyListPatcher extends AutomaticPatcher {
 
 	@PatchMethod
 	public static CurrencyData getDefaultJava(CurrencyList currencyList) {
-		Locale locale = PatchGwtConfig.getLocale();
+		Locale locale = PatchGwtConfig.get().getLocale();
 		if (locale == null) {
 			locale = Locale.ENGLISH;
 		}

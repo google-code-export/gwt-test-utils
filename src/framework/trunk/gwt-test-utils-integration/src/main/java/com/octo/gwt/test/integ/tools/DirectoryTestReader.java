@@ -92,7 +92,7 @@ public class DirectoryTestReader {
 			m.setBody("launchTest(\"" + entry.getKey() + "\");");
 			newClazz.addMethod(m);
 		}
-		generatedClazz = newClazz.toClass(GwtTestClassLoader.getInstance(), null);
+		generatedClazz = newClazz.toClass(GwtTestClassLoader.get(), null);
 		for (String methodName : methodList) {
 			Method m = generatedClazz.getMethod(methodName);
 			testMethods.add(m);

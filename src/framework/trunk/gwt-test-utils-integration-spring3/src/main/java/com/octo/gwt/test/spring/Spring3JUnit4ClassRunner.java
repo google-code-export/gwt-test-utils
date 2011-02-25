@@ -17,7 +17,7 @@ public class Spring3JUnit4ClassRunner extends SpringJUnit4ClassRunner {
 	private DirectoryTestReader reader;
 
 	public Spring3JUnit4ClassRunner(Class<?> clazz) throws InitializationError, ClassNotFoundException {
-		super(GwtTestClassLoader.getInstance().loadClass(clazz.getCanonicalName()));
+		super(GwtTestClassLoader.get().loadClass(clazz.getCanonicalName()));
 	}
 
 	protected List<FrameworkMethod> computeTestMethods() {

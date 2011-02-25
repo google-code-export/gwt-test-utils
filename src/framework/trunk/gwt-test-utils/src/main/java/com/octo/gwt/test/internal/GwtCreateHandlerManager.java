@@ -13,7 +13,7 @@ public class GwtCreateHandlerManager {
 
 	private static GwtCreateHandlerManager INSTANCE;
 
-	public static GwtCreateHandlerManager getInstance() {
+	public static GwtCreateHandlerManager get() {
 		if (INSTANCE == null) {
 			INSTANCE = new GwtCreateHandlerManager();
 		}

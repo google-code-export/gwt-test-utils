@@ -16,7 +16,7 @@ public class GwtLogTest extends AbstractGwtTest {
 		message = null;
 		t = null;
 		GWT.log("toto", new Exception("e1"));
-		PatchGwtConfig.setLogHandler(new GwtLogHandler() {
+		PatchGwtConfig.get().setLogHandler(new GwtLogHandler() {
 
 			public void log(String message, Throwable t) {
 				GwtLogTest.this.message = message;

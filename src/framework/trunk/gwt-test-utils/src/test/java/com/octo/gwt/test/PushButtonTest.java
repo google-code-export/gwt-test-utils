@@ -18,19 +18,24 @@ public class PushButtonTest extends AbstractGwtTest {
 		// Setup
 		clicked = false;
 
-		PushButton b = new PushButton("up", "down", new ClickHandler() {
+		final PushButton b = new PushButton("Up", "Down");
+
+		b.addClickHandler(new ClickHandler() {
 
 			public void onClick(ClickEvent event) {
 				clicked = true;
-
 			}
 		});
+
+		// Pre-Assert
+		Assert.assertEquals("Up", b.getText());
 
 		// Test
 		Browser.click(b);
 
 		// Assert
 		Assert.assertTrue("PushedButton onClick was not triggered", clicked);
+		Assert.assertEquals("Up", b.getText());
 	}
 
 }

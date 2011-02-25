@@ -13,7 +13,7 @@ public class GwtTestContextLoader extends GenericXmlContextLoader {
 	@Override
 	protected BeanDefinitionReader createBeanDefinitionReader(GenericApplicationContext context) {
 		XmlBeanDefinitionReader beanDefinitionReader = new XmlBeanDefinitionReader(context);
-		beanDefinitionReader.setResourceLoader(new DefaultResourceLoader(GwtTestClassLoader.getInstance()));
+		beanDefinitionReader.setResourceLoader(new DefaultResourceLoader(GwtTestClassLoader.get()));
 		return beanDefinitionReader;
 	}
 

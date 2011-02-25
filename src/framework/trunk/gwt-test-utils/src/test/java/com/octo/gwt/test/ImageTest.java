@@ -12,8 +12,8 @@ import com.octo.gwt.test.resources.MyClientBundle;
 public class ImageTest extends AbstractGwtTest {
 
 	@Override
-	public String getCurrentTestedModuleFile() {
-		return "test-config.gwt.xml";
+	public String getModuleName() {
+		return "gwt_test_utils_module";
 	}
 
 	@Test

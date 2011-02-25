@@ -52,7 +52,7 @@ public class EventsTest extends AbstractGwtTest {
 
 	@Override
 	public String getCurrentTestedModuleFile() {
-		return "test-config.gwt.xml";
+		return "com/octo/gwt/test/test-config.gwt.xml";
 	}
 
 	@Test

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module rename-to='gwt_test_utils_module'>
+	<inherits name='com.google.gwt.user.User' />
+	<inherits name='com.google.gwt.user.theme.standard.Standard' />
+	<inherits name='com.octo.gwt.test.test-config-without-rename' />	
+
+	<!-- Specify the app entry point class. -->
+	<entry-point class='com.octo.gwt.demo.client.Gwt_test_utils_demo' />
+
+	<!-- Specify the paths for translatable code -->
+	<source path='client' />
+	<source path='shared'>
+		<exclude name="Test1.java" />
+		<exclude name="Test2.jaVa" />
+		<exclude name="Test3" />
+		<exclude name=" " />
+		<exclude />
+	</source>
+	<source  path=' '/>
+	<source />
+
+
+</module>

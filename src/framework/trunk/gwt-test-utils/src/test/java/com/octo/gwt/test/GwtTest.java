@@ -23,13 +23,13 @@ public class GwtTest extends AbstractGwtTest {
 	private boolean success;
 
 	@Override
-	public String getCurrentTestedModuleFile() {
-		return "test-config.gwt.xml";
+	public String getModuleName() {
+		return "gwt_test_utils_module";
 	}
 
 	@Before
 	public void setupGWTTest() {
-		PatchGwtConfig.setLocale(new Locale("FR"));
+		PatchGwtConfig.get().setLocale(new Locale("FR"));
 		sToday = DateTimeFormat.getFormat("EEE dd MMM").format(new Date(1259103600000l));
 		success = false;
 	}

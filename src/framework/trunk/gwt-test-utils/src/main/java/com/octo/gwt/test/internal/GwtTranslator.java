@@ -2,6 +2,7 @@ package com.octo.gwt.test.internal;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import javassist.CannotCompileException;
 import javassist.ClassPool;
@@ -19,6 +20,8 @@ import com.octo.gwt.test.internal.utils.PatchGwtUtils;
 public class GwtTranslator implements Translator {
 
 	public static final Logger logger = LoggerFactory.getLogger(GwtTranslator.class);
+
+	private static final Pattern TEST_PATTERN = Pattern.compile("^.*[T|t][E|e][S|s][T|t].*$");
 
 	private Map<String, IPatcher> map = new HashMap<String, IPatcher>();
 
@@ -50,9 +53,31 @@ public class GwtTranslator implements Translator {
 	}
 
 	private void modifiyClass(String className) throws Exception {
+
+		for (String exclusion : ModuleData.get().getClientExclusions()) {
+			if (className.equals(exclusion)) {
+				// don't modify this class
+				return;
+			}
+		}
+
+		for (String clientPackage : ModuleData.get().getClientPaths()) {
+			if (className.startsWith(clientPackage)) {
+				// modifiy this class
+				applyJavaClassModifier(className);
+				return;
+			}
+		}
+
+		if (TEST_PATTERN.matcher(className).matches()) {
+			applyJavaClassModifier(className);
+		}
+	}
+
+	private void applyJavaClassModifier(String className) throws Exception {
 		logger.debug("Modify class " + className + ", with modifiers declared in 'META-INF/gwt-test-utils.properties'");
 		CtClass classToModify = PatchGwtClassPool.get().get(className);
-		for (JavaClassModifier modifier : ConfigurationLoader.getInstance().getJavaClassModifierList()) {
+		for (JavaClassModifier modifier : ConfigurationLoader.get().getJavaClassModifierList()) {
 			modifier.modify(classToModify);
 		}
 	}

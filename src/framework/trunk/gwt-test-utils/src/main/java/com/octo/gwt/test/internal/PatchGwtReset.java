@@ -10,9 +10,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.octo.gwt.test.GwtTestClassLoader;
 import com.octo.gwt.test.PatchGwtConfig;
 import com.octo.gwt.test.internal.patcher.CurrencyListPatcher;
-import com.octo.gwt.test.internal.patcher.GwtPatcher;
 import com.octo.gwt.test.internal.patcher.HistoryImplPatcher;
-import com.octo.gwt.test.internal.patcher.ImplPatcher;
 import com.octo.gwt.test.internal.patcher.TimerPatcher;
 import com.octo.gwt.test.internal.patcher.dom.NodeFactory;
 import com.octo.gwt.test.internal.utils.PatchGwtUtils;
@@ -22,15 +20,13 @@ public class PatchGwtReset {
 
 	public static void reset() throws Exception {
 		NodeFactory.reset();
-		PatchGwtConfig.reset();
+		PatchGwtConfig.get().reset();
 		CurrencyListPatcher.reset();
 		PatchGwtUtils.reset();
 		HistoryImplPatcher.reset();
-		GwtPatcher.reset();
 		GwtTestClassLoader.reset();
 		TimerPatcher.reset();
-		ImplPatcher.reset();
-		GwtCreateHandlerManager.getInstance().reset();
+		GwtCreateHandlerManager.get().reset();
 
 		GwtTestReflectionUtils.getStaticAndCallClear(Timer.class, "timers");
 		GwtTestReflectionUtils.getStaticAndCallClear(RootPanel.class, "rootPanels");

@@ -21,25 +21,6 @@ import com.octo.gwt.test.patcher.AutomaticPatcher;
 
 public class PatchGwtUtils {
 
-	public static class SequenceReplacement {
-
-		private String regex;
-
-		private String to;
-
-		public String treat(String s) {
-			return s.replaceAll(regex, to);
-		}
-
-		public SequenceReplacement(String regex, String to) {
-			this.regex = regex;
-			this.to = to;
-		}
-
-	}
-
-	public static final List<SequenceReplacement> sequenceReplacementList = new ArrayList<SequenceReplacement>();
-
 	private static Map<String, Properties> cachedProperties = new HashMap<String, Properties>();
 
 	public static Properties getProperties(String path) {
@@ -73,7 +54,6 @@ public class PatchGwtUtils {
 
 	public static void reset() {
 		cachedProperties.clear();
-		sequenceReplacementList.clear();
 	}
 
 	public static void patch(CtClass c, IPatcher patcher) throws Exception {

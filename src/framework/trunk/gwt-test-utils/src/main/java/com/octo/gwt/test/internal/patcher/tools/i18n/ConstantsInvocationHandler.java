@@ -15,8 +15,7 @@ import com.google.gwt.i18n.client.Constants.DefaultStringArrayValue;
 import com.google.gwt.i18n.client.Constants.DefaultStringMapValue;
 import com.google.gwt.i18n.client.Constants.DefaultStringValue;
 import com.google.gwt.i18n.client.LocalizableResource;
-import com.octo.gwt.test.internal.utils.PatchGwtUtils;
-import com.octo.gwt.test.internal.utils.PatchGwtUtils.SequenceReplacement;
+import com.octo.gwt.test.internal.PropertiesStringModifier;
 
 public class ConstantsInvocationHandler extends LocalizableResourcesInvocationHandler {
 
@@ -32,8 +31,6 @@ public class ConstantsInvocationHandler extends LocalizableResourcesInvocationHa
 			return null;
 		}
 
-		line = treatLine(line);
-
 		Class<?> returnType = method.getReturnType();
 
 		if (returnType == String.class) {
@@ -44,6 +41,7 @@ public class ConstantsInvocationHandler extends LocalizableResourcesInvocationHa
 			Class<?> clazz = method.getDeclaringClass();
 			Map<String, Object> result = new HashMap<String, Object>();
 			String[] v = line.split("\\s*,\\s*");
+
 			for (int i = 0; i < v.length; i++) {
 				String methodName = v[i];
 				Method correspondingKeyMethod = clazz.getMethod(methodName);
@@ -120,11 +118,7 @@ public class ConstantsInvocationHandler extends LocalizableResourcesInvocationHa
 	}
 
 	private String treatLine(String line) {
-		for (SequenceReplacement sr : PatchGwtUtils.sequenceReplacementList) {
-			line = sr.treat(line);
-		}
-
-		return line;
+		return PropertiesStringModifier.get().treatString(line);
 	}
 
 	private <T extends Annotation> T getCheckedAnnotation(Method method, Class<T> defaultAnnotation) {

@@ -13,9 +13,7 @@ public class NumberFormatTest extends AbstractGwtTest {
 
 	@Test
 	public void checkNumberFormatFr() throws Exception {
-		PatchGwtConfig.setLocale(Locale.FRENCH);
-
-		PatchGwtConfig.replaceSequenceInProperties("\\u00A0", " ");
+		PatchGwtConfig.get().setLocale(Locale.FRENCH);
 
 		Assert.assertEquals("10,00 €", NumberFormat.getCurrencyFormat().format(10));
 		Assert.assertEquals("3,142", NumberFormat.getDecimalFormat().format(3.1416));
@@ -23,7 +21,7 @@ public class NumberFormatTest extends AbstractGwtTest {
 
 	@Test
 	public void checkNumberFormatUs() {
-		PatchGwtConfig.setLocale(Locale.ENGLISH);
+		PatchGwtConfig.get().setLocale(Locale.ENGLISH);
 
 		Assert.assertEquals("$10.00", NumberFormat.getCurrencyFormat().format(10));
 		Assert.assertEquals("3.142", NumberFormat.getDecimalFormat().format(3.1416));
@@ -32,7 +30,7 @@ public class NumberFormatTest extends AbstractGwtTest {
 	@Test
 	public void checkNumberFormatWithSpecificPattern() {
 		// Set Up
-		PatchGwtConfig.setLocale(Locale.FRENCH);
+		PatchGwtConfig.get().setLocale(Locale.FRENCH);
 		NumberFormat numberFormat = NumberFormat.getFormat("0000000000");
 
 		// Test
@@ -45,7 +43,7 @@ public class NumberFormatTest extends AbstractGwtTest {
 	@Test
 	public void checkNumberFormatWithSpecificPatternWithDouble() {
 		// Set Up
-		PatchGwtConfig.setLocale(Locale.FRENCH);
+		PatchGwtConfig.get().setLocale(Locale.FRENCH);
 		NumberFormat numberFormat = NumberFormat.getFormat("0000000000");
 
 		// Test

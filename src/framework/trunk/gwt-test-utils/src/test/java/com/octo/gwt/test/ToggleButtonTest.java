@@ -27,6 +27,7 @@ public class ToggleButtonTest extends AbstractGwtTest {
 
 		// Pre-Assert
 		Assert.assertFalse("ToggleButton should not be toggled by default", toggleButton.isDown());
+		Assert.assertEquals("Up", toggleButton.getText());
 
 		// Test
 		Browser.click(toggleButton);
@@ -34,10 +35,12 @@ public class ToggleButtonTest extends AbstractGwtTest {
 		// Assert
 		Assert.assertTrue("ToggleButton onClick was not triggered", clicked);
 		Assert.assertTrue("ToggleButton should be toggled after being clicked once", toggleButton.isDown());
+		Assert.assertEquals("Down", toggleButton.getText());
 
 		// Test 2
 		Browser.click(toggleButton);
 		Assert.assertFalse("ToggleButton should not be toggled after being clicked twice", toggleButton.isDown());
+		Assert.assertEquals("Up", toggleButton.getText());
 	}
 
 }
