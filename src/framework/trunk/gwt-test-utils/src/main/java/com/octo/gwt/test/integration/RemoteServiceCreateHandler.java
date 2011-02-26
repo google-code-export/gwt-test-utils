@@ -27,16 +27,6 @@ public abstract class RemoteServiceCreateHandler implements GwtCreateHandler {
 		serializerHander = getSerializerHandler();
 	}
 
-	protected IGwtRpcSerializerHandler getSerializerHandler() {
-		return new DefaultGwtRpcSerializerHandler();
-	}
-
-	protected IGwtRpcExceptionHandler getExceptionHandler() {
-		return new DefaultGwtRpcExceptionHandler();
-	}
-
-	protected abstract Object findService(Class<?> remoteServiceClass, String remoteServiceRelativePath);
-
 	public Object create(Class<?> classLiteral) throws Exception {
 
 		if (!RemoteService.class.isAssignableFrom(classLiteral)) {
@@ -63,6 +53,16 @@ public abstract class RemoteServiceCreateHandler implements GwtCreateHandler {
 
 		return Proxy.newProxyInstance(getClass().getClassLoader(), new Class[] { asyncClazz }, handler);
 	}
+
+	protected IGwtRpcSerializerHandler getSerializerHandler() {
+		return new DefaultGwtRpcSerializerHandler();
+	}
+
+	protected IGwtRpcExceptionHandler getExceptionHandler() {
+		return new DefaultGwtRpcExceptionHandler();
+	}
+
+	protected abstract Object findService(Class<?> remoteServiceClass, String remoteServiceRelativePath);
 
 	private String getRemoveServiceRelativePath(Class<?> clazz) {
 		CtClass ctClass = PatchGwtClassPool.getCtClass((clazz));

@@ -4,6 +4,9 @@ import java.io.Externalizable;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
+import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Map;
 
 import javassist.CannotCompileException;
 import javassist.CtClass;
@@ -23,9 +26,6 @@ public class SerializableModifier implements JavaClassModifier {
 
 	public void modify(CtClass classToModify) throws Exception {
 
-		if (classToModify.getSimpleName().contains("Bindable")) {
-			System.out.println(classToModify.getName());
-		}
 		if (classToModify.isInterface() || classToModify.isPrimitive() || classToModify.isEnum() || classToModify.isArray()
 				|| classToModify.isAnnotation() || Modifier.isAbstract(classToModify.getModifiers())) {
 			return;
@@ -110,20 +110,40 @@ public class SerializableModifier implements JavaClassModifier {
 	}
 
 	public static void readObject(Serializable ex, ObjectInputStream ois) throws ClassNotFoundException, IOException {
-		// call the default read method
-		if (ex.getClass().getSimpleName().contains("Bindable")) {
-			System.out.println(ex.getClass());
-		}
 		try {
+			// call the default read method
 			ois.defaultReadObject();
+
+			// keep non transient/static/final value somhere
+			Map<Field, Object> buffer = getFieldValues(ex);
 
 			// call the exported default constructor to reinitialise triansient field values
 			// which are not expected to be null
 			GwtTestReflectionUtils.callPrivateMethod(ex, DEFAULT_CONS_METHOD_NAME);
 
+			// set the kept field values
+			for (Map.Entry<Field, Object> entry : buffer.entrySet()) {
+				entry.getKey().set(ex, entry.getValue());
+			}
+
 		} catch (Exception e) {
 			throw new RuntimeException("Error during deserialization of object " + ex.getClass().getName(), e);
 		}
 
+	}
+
+	private static Map<Field, Object> getFieldValues(Serializable o) throws IllegalArgumentException, IllegalAccessException {
+		Map<Field, Object> result = new HashMap<Field, Object>();
+
+		for (Field field : o.getClass().getFields()) {
+			int fieldModifier = field.getModifiers();
+			if (!Modifier.isFinal(fieldModifier) && !Modifier.isStatic(fieldModifier) && !Modifier.isTransient(fieldModifier)) {
+				GwtTestReflectionUtils.makeAccessible(field);
+
+				result.put(field, field.get(o));
+			}
+		}
+
+		return result;
 	}
 }

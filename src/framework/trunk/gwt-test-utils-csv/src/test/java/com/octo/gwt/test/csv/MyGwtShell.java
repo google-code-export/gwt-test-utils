@@ -3,9 +3,6 @@ package com.octo.gwt.test.csv;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 
-import com.octo.gwt.test.csv.AbstractGwtCsvTest;
-import com.octo.gwt.test.csv.CsvMethod;
-import com.octo.gwt.test.csv.GwtCsvTestRunner;
 import com.octo.gwt.test.csv.data.MyBeautifulApp;
 import com.octo.gwt.test.csv.data.MyRemoteService;
 import com.octo.gwt.test.csv.data.MyService;
@@ -20,11 +17,9 @@ public abstract class MyGwtShell extends AbstractGwtCsvTest {
 
 	private MyBeautifulApp app;
 
-	private RemoteServiceCreateHandler handlerImpl;
-
 	@Before
 	public void setUp() throws Exception {
-		handlerImpl = new RemoteServiceCreateHandler() {
+		RemoteServiceCreateHandler remoteServiceCreateHandler = new RemoteServiceCreateHandler() {
 
 			@Override
 			public Object findService(Class<?> remoteServiceClass, String remoteServiceRelativePath) {
@@ -36,7 +31,7 @@ public abstract class MyGwtShell extends AbstractGwtCsvTest {
 
 		};
 
-		addGwtCreateHandler(handlerImpl);
+		addGwtCreateHandler(remoteServiceCreateHandler);
 
 		MyStringStore.appender = "";
 	}
