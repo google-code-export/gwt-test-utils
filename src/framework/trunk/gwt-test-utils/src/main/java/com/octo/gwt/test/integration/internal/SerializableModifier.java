@@ -1,4 +1,4 @@
-package com.octo.gwt.test.integ.internal;
+package com.octo.gwt.test.integration.internal;
 
 import java.io.Externalizable;
 import java.io.IOException;
@@ -23,6 +23,9 @@ public class SerializableModifier implements JavaClassModifier {
 
 	public void modify(CtClass classToModify) throws Exception {
 
+		if (classToModify.getSimpleName().contains("Bindable")) {
+			System.out.println(classToModify.getName());
+		}
 		if (classToModify.isInterface() || classToModify.isPrimitive() || classToModify.isEnum() || classToModify.isArray()
 				|| classToModify.isAnnotation() || Modifier.isAbstract(classToModify.getModifiers())) {
 			return;
@@ -108,6 +111,9 @@ public class SerializableModifier implements JavaClassModifier {
 
 	public static void readObject(Serializable ex, ObjectInputStream ois) throws ClassNotFoundException, IOException {
 		// call the default read method
+		if (ex.getClass().getSimpleName().contains("Bindable")) {
+			System.out.println(ex.getClass());
+		}
 		try {
 			ois.defaultReadObject();
 

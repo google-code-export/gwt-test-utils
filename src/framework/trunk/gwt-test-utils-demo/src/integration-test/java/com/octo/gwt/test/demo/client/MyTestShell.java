@@ -5,21 +5,21 @@ import org.junit.runner.RunWith;
 
 import com.google.gwt.user.client.ui.RootPanel;
 import com.octo.gwt.test.GwtCreateHandler;
+import com.octo.gwt.test.csv.AbstractGwtCsvTest;
+import com.octo.gwt.test.csv.CsvDirectory;
+import com.octo.gwt.test.csv.CsvMacros;
+import com.octo.gwt.test.csv.CsvMethod;
+import com.octo.gwt.test.csv.GwtCsvTestRunner;
+import com.octo.gwt.test.csv.runner.CsvRunner;
+import com.octo.gwt.test.csv.runner.Node;
+import com.octo.gwt.test.csv.tools.NodeObjectFinder;
 import com.octo.gwt.test.demo.server.MyServiceImpl;
-import com.octo.gwt.test.integ.CsvDirectory;
-import com.octo.gwt.test.integ.CsvMacros;
-import com.octo.gwt.test.integ.CsvMethod;
-import com.octo.gwt.test.integ.GwtCsvTestRunner;
-import com.octo.gwt.test.integ.csvrunner.CsvRunner;
-import com.octo.gwt.test.integ.csvrunner.Node;
-import com.octo.gwt.test.integ.handler.RemoteServiceCreateHandler;
-import com.octo.gwt.test.integ.tools.AbstractGwtIntegrationShell;
-import com.octo.gwt.test.integ.tools.NodeObjectFinder;
+import com.octo.gwt.test.integration.RemoteServiceCreateHandler;
 
 @CsvDirectory(value = "functional-tests", extension = ".csv")
 @CsvMacros(value = "functional-tests", pattern = "^macro.*\\.csv$")
 @RunWith(GwtCsvTestRunner.class)
-public class MyTestShell extends AbstractGwtIntegrationShell {
+public class MyTestShell extends AbstractGwtCsvTest {
 
 	private Application application = new Application();
 

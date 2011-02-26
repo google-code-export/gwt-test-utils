@@ -1,4 +1,4 @@
-package com.octo.gwt.test.integ.handler;
+package com.octo.gwt.test.integration;
 
 public interface IGwtRpcSerializerHandler {
 

@@ -9,7 +9,6 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.TabPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-@SuppressWarnings("deprecation")
 public class TabPanelTest extends AbstractGwtTest {
 
 	int selectedTabIndex = -1;

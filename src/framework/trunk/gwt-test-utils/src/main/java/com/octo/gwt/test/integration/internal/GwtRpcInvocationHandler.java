@@ -1,4 +1,4 @@
-package com.octo.gwt.test.integ.internal;
+package com.octo.gwt.test.integration.internal;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
@@ -10,8 +10,8 @@ import org.slf4j.LoggerFactory;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.StatusCodeException;
-import com.octo.gwt.test.integ.handler.IGwtRpcExceptionHandler;
-import com.octo.gwt.test.integ.handler.IGwtRpcSerializerHandler;
+import com.octo.gwt.test.integration.IGwtRpcExceptionHandler;
+import com.octo.gwt.test.integration.IGwtRpcSerializerHandler;
 import com.octo.gwt.test.utils.GwtTestReflectionUtils;
 
 public class GwtRpcInvocationHandler implements InvocationHandler {

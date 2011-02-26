@@ -2,7 +2,7 @@ package com.octo.gwt.test.spring;
 
 import org.springframework.context.ApplicationContext;
 
-import com.octo.gwt.test.integ.handler.RemoteServiceCreateHandler;
+import com.octo.gwt.test.integration.RemoteServiceCreateHandler;
 
 public abstract class SpringServiceGwtCreateHandler extends RemoteServiceCreateHandler {
 	

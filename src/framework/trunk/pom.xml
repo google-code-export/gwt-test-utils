@@ -37,7 +37,7 @@
 
 	<modules>
 		<module>gwt-test-utils</module>
-		<module>gwt-test-utils-integration</module>
+		<module>gwt-test-utils-csv</module>
 		<module>gwt-test-utils-integration-spring2</module>
 		<module>gwt-test-utils-integration-spring3</module>
 	</modules>

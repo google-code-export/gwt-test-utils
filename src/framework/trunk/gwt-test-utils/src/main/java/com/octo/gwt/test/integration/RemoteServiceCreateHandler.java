@@ -1,4 +1,4 @@
-package com.octo.gwt.test.integ.handler;
+package com.octo.gwt.test.integration;
 
 import java.lang.reflect.Proxy;
 
@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import com.octo.gwt.test.GwtCreateHandler;
-import com.octo.gwt.test.integ.internal.GwtRpcInvocationHandler;
+import com.octo.gwt.test.integration.internal.GwtRpcInvocationHandler;
 import com.octo.gwt.test.internal.PatchGwtClassPool;
 
 public abstract class RemoteServiceCreateHandler implements GwtCreateHandler {
