@@ -15,7 +15,7 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
 import com.octo.gwt.test.AbstractGwtTest;
-import com.octo.gwt.test.internal.patcher.dom.NodeFactory;
+import com.octo.gwt.test.internal.patchers.dom.NodeFactory;
 
 public class ElementTest extends AbstractGwtTest {
 
@@ -77,7 +77,7 @@ public class ElementTest extends AbstractGwtTest {
 
 	@Test
 	public void checkAttribute() {
-		Assert.assertNull(e.getAttribute("input"));
+		Assert.assertEquals("", e.getAttribute("input"));
 		e.setAttribute("input", "text");
 		Assert.assertEquals("text", e.getAttribute("input"));
 	}
@@ -282,7 +282,7 @@ public class ElementTest extends AbstractGwtTest {
 		e.removeAttribute("test");
 
 		// Assert
-		Assert.assertNull("Removed attribute should return null", e.getAttribute("test"));
+		Assert.assertEquals("Removed attribute should return emptyString", "", e.getAttribute("test"));
 	}
 
 	@Test

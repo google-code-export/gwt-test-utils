@@ -9,10 +9,10 @@ import com.google.gwt.user.client.impl.HistoryImpl;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.octo.gwt.test.GwtTestClassLoader;
 import com.octo.gwt.test.PatchGwtConfig;
-import com.octo.gwt.test.internal.patcher.CurrencyListPatcher;
-import com.octo.gwt.test.internal.patcher.HistoryImplPatcher;
-import com.octo.gwt.test.internal.patcher.TimerPatcher;
-import com.octo.gwt.test.internal.patcher.dom.NodeFactory;
+import com.octo.gwt.test.internal.patchers.CurrencyListPatcher;
+import com.octo.gwt.test.internal.patchers.HistoryImplPatcher;
+import com.octo.gwt.test.internal.patchers.TimerPatcher;
+import com.octo.gwt.test.internal.patchers.dom.NodeFactory;
 import com.octo.gwt.test.internal.utils.PatchGwtUtils;
 import com.octo.gwt.test.utils.GwtTestReflectionUtils;
 

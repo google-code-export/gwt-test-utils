@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.htmlparser.Attribute;
 import org.htmlparser.Parser;
@@ -19,31 +17,10 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
 import com.octo.gwt.test.internal.overrides.OverrideNodeList;
-import com.octo.gwt.test.internal.patcher.dom.NodeFactory;
+import com.octo.gwt.test.internal.patchers.dom.NodeFactory;
+import com.octo.gwt.test.internal.utils.StyleHelper;
 
 public class GwtHtmlParser {
-
-	private static Pattern STYLE_PATTERN = Pattern.compile("(.+):(.+)");
-
-	//	public static String format(Element e) {
-	//		StringBuilder sb = new StringBuilder();
-	//		if (e.getChildCount() == 0) {
-	//			return e.getInnerText();
-	//		}
-	//
-	//		sb.append("<").append(e.getTagName());
-	//		PropertyContainer pc = PropertyContainerHelper.cast(e).getProperties();
-	//		Iterator<String> it = pc.orderedIterator();
-	//		if (it.hasNext()) {
-	//			sb.append(" ");
-	//		}
-	//		while (it.hasNext()) {
-	//			String current = it.next();
-	//			sb.append(current).append("=\"").append(pc.get(current)).append("\" ");
-	//		}
-	//
-	//		return sb.toString();
-	//	}
 
 	public static NodeList<Node> parse(String html) {
 		if (html == null) {
@@ -95,7 +72,7 @@ public class GwtHtmlParser {
 				if ("id".equalsIgnoreCase(a.getName())) {
 					e.setId(a.getValue());
 				} else if ("style".equalsIgnoreCase(a.getName())) {
-					processStyle(e, a.getValue());
+					StyleHelper.setStyle(e.getStyle(), a.getValue());
 				} else if ("class".equalsIgnoreCase(a.getName())) {
 					e.setClassName(a.getValue());
 				} else if (!a.isEmpty() && !a.isWhitespace() && a.isValued()) {
@@ -114,18 +91,6 @@ public class GwtHtmlParser {
 		private Element getParent(org.htmlparser.Node node) {
 			return map.get(node.getParent());
 		}
-
-		private void processStyle(Element e, String value) {
-			String[] styles = value.split("\\s*;\\s*");
-			for (String style : styles) {
-				Matcher m = STYLE_PATTERN.matcher(style);
-				if (m.matches()) {
-					e.getStyle().setProperty(m.group(1), m.group(2));
-				}
-			}
-
-		}
-
 	}
 
 }

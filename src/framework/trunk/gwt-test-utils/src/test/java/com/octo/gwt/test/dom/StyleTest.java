@@ -5,6 +5,7 @@ import org.junit.Test;
 
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Display;
+import com.google.gwt.dom.client.Style.Float;
 import com.google.gwt.dom.client.Style.ListStyleType;
 import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.dom.client.Style.Position;
@@ -36,7 +37,8 @@ public class StyleTest extends AbstractGwtTest {
 	@Test
 	public void checkEmptyStyle() {
 		// Setup
-		Style style = new Button().getElement().getStyle();
+		Button button = new Button();
+		Style style = button.getElement().getStyle();
 
 		// Tests
 		Assert.assertEquals("", style.getBackgroundColor());
@@ -79,43 +81,57 @@ public class StyleTest extends AbstractGwtTest {
 	@Test
 	public void checkOpacity() {
 		// Setup
-		Style style = new Button().getElement().getStyle();
+		Button button = new Button();
+		Style style = button.getElement().getStyle();
 
 		// Test 1
 		style.setOpacity(1.0);
 
 		// Assert 1
-		Assert.assertEquals("1.0", style.getOpacity());
+		Assert.assertEquals("1", style.getOpacity());
+		Assert.assertEquals("opacity: 1;", button.getElement().getAttribute("style"));
 
 		// Test 2
-		style.clearOpacity();
+		style.setOpacity(0.94);
 
 		// Assert 2
+		Assert.assertEquals("0.94", style.getOpacity());
+		Assert.assertEquals("opacity: 0.94;", button.getElement().getAttribute("style"));
+
+		// Test 3
+		style.clearOpacity();
+		Assert.assertEquals("", button.getElement().getAttribute("style"));
+
+		// Assert 3
 		Assert.assertEquals("", style.getOpacity());
 	}
 
 	@Test
 	public void checkFloat() {
 		// Setup
-		Style style = new Button().getElement().getStyle();
+		Button button = new Button();
+		Style style = button.getElement().getStyle();
 
 		// Test 1
 		style.setFloat(Style.Float.RIGHT);
 
 		// Assert 1
 		Assert.assertEquals(Style.Float.RIGHT.getCssName(), style.getProperty("float"));
+		Assert.assertEquals("float: right;", button.getElement().getAttribute("style"));
 
 		// Test 2
 		style.clearFloat();
 
 		// Assert 2
 		Assert.assertEquals("", style.getProperty("float"));
+		Assert.assertEquals("", button.getElement().getAttribute("style"));
 	}
 
 	@Test
 	public void checkProperties() {
 		// Setup
-		Style style = new Button().getElement().getStyle();
+		Button button = new Button();
+		Style style = button.getElement().getStyle();
 
 		// Test 1
 		style.setBackgroundColor("black");
@@ -125,6 +141,7 @@ public class StyleTest extends AbstractGwtTest {
 		style.setBottom(4.0, Unit.PX);
 		style.setColor("red");
 		style.setCursor(Style.Cursor.E_RESIZE);
+		style.setFloat(Float.LEFT);
 		style.setDisplay(Display.INLINE_BLOCK);
 		style.setFontSize(10.5, Style.Unit.CM);
 		style.setFontStyle(Style.FontStyle.NORMAL);
@@ -155,6 +172,9 @@ public class StyleTest extends AbstractGwtTest {
 		style.setZIndex(1000);
 
 		// Assert 1
+		Assert.assertEquals(
+				"background-color: black; background-image: /img.png; border-color: blue; bottom: 4.0px; color: red; cursor: e-resize; float: left; display: inline-block; font-size: 10.5cm; font-style: normal; font-weight: bold; height: 3.1pc; left: 40.0in; list-style-type: circle; margin: 30.5%; margin-bottom: 29.0pt; margin-left: 47.0ex; margin-right: 3.0mm; margin-top: 10.3cm; overflow: scroll; padding: 10.0px; padding-bottom: 11.0px; padding-left: 12.0px; padding-right: 13.0px; padding-top: 14.0px; position: relative; string: stringvalue; double-unit: 17.2cm; right: 13.4cm; text-decoration: overline; top: 7.77pc; vertical-align: middle; visibility: visible; width: 3.5px; z-index: 1000;",
+				button.getElement().getAttribute("style"));
 		Assert.assertEquals("black", style.getBackgroundColor());
 		Assert.assertEquals("/img.png", style.getBackgroundImage());
 		Assert.assertEquals("blue", style.getBorderColor());
@@ -192,7 +212,6 @@ public class StyleTest extends AbstractGwtTest {
 		Assert.assertEquals("1000", style.getZIndex());
 
 		// Test2
-
 		style.clearBackgroundColor();
 		style.clearBackgroundImage();
 		style.clearBorderColor();
@@ -201,6 +220,7 @@ public class StyleTest extends AbstractGwtTest {
 		style.clearColor();
 		style.clearCursor();
 		style.clearDisplay();
+		style.clearFloat();
 		style.clearFontSize();
 		style.clearFontStyle();
 		style.clearFontWeight();
@@ -229,6 +249,8 @@ public class StyleTest extends AbstractGwtTest {
 		style.clearZIndex();
 
 		// Assert 2
+		// the only style we didn't remove in the test
+		Assert.assertEquals("vertical-align: middle;", button.getElement().getAttribute("style"));
 		Assert.assertEquals("", style.getBackgroundColor());
 		Assert.assertEquals("", style.getBackgroundImage());
 		Assert.assertEquals("", style.getBorderColor());

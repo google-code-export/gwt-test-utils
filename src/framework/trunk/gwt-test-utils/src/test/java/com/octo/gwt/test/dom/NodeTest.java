@@ -11,7 +11,7 @@ import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Node;
 import com.octo.gwt.test.AbstractGwtTest;
 import com.octo.gwt.test.internal.overrides.OverrideNodeList;
-import com.octo.gwt.test.internal.patcher.dom.NodeFactory;
+import com.octo.gwt.test.internal.patchers.dom.NodeFactory;
 import com.octo.gwt.test.internal.utils.PatchGwtUtils;
 
 @SuppressWarnings("deprecation")

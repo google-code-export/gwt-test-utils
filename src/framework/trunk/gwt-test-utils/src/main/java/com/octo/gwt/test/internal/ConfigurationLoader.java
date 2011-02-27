@@ -24,7 +24,7 @@ import com.octo.gwt.test.IPatcher;
 import com.octo.gwt.test.internal.modifiers.ClassSubstituer;
 import com.octo.gwt.test.internal.modifiers.JavaClassModifier;
 import com.octo.gwt.test.internal.modifiers.MethodRemover;
-import com.octo.gwt.test.patcher.PatchClass;
+import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.utils.GwtTestReflectionUtils;
 
 public class ConfigurationLoader {

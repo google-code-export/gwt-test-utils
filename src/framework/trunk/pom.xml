@@ -11,6 +11,7 @@
 		<commons-lang.version>2.4</commons-lang.version>
 		<easymock.version>3.0</easymock.version>
 		<gwt.version>2.1.1</gwt.version>
+		<gxt.version>2.2.0</gxt.version>
 		<htmlparser.version>1.6</htmlparser.version>
 		<javassist.version>3.8.0.GA</javassist.version>
 		<junit.version>4.8.1</junit.version>
@@ -37,6 +38,7 @@
 	<modules>
 		<module>gwt-test-utils</module>
 		<module>gwt-test-utils-csv</module>
+		<module>gwt-test-utils-gxt</module>
 		<module>gwt-test-utils-integration-spring2</module>
 		<module>gwt-test-utils-integration-spring3</module>
 	</modules>

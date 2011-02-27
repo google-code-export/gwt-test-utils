@@ -13,7 +13,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
-			<artifactId>gwt-test-utils-integration</artifactId>
+			<artifactId>gwt-test-utils-csv</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
