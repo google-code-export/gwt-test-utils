@@ -12,7 +12,11 @@ public class NodeListPatcher extends AutomaticPatcher {
 
 	@PatchMethod
 	public static <T extends Node> T getItem(NodeList<T> nodeList, int index) {
-		return ((OverrideNodeList<T>) nodeList).getList().get(index);
+		if (nodeList.getLength() <= index) {
+			return null;
+		} else {
+			return ((OverrideNodeList<T>) nodeList).getList().get(index);
+		}
 	}
 
 	@PatchMethod

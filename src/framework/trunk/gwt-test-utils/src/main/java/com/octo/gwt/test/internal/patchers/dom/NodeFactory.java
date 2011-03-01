@@ -174,14 +174,6 @@ public class NodeFactory {
 		}
 	}
 
-	public static Node createNode() {
-		try {
-			return (Node) loadClass(Node.class.getName()).newInstance();
-		} catch (Exception e) {
-			throw new RuntimeException("Unable to create node " + e);
-		}
-	}
-
 	public static Text createTextNode(String data) {
 		try {
 			Text text = (Text) loadClass(Text.class.getName()).newInstance();
@@ -215,6 +207,7 @@ public class NodeFactory {
 					return e;
 				}
 			}
+			i++;
 		}
 		throw new RuntimeException("Cannot find a root HTML element in file '" + hostPagePath + "'");
 	}

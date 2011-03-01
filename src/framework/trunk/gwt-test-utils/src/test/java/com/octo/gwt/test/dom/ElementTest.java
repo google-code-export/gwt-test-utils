@@ -8,7 +8,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.google.gwt.dom.client.AnchorElement;
-import com.google.gwt.dom.client.BaseElement;
 import com.google.gwt.dom.client.ButtonElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
@@ -84,8 +83,26 @@ public class ElementTest extends AbstractGwtTest {
 
 	@Test
 	public void checkClassName() {
+		// Test 1
 		e.setClassName("clazz");
+
+		// Assert 1
 		Assert.assertEquals("clazz", e.getClassName());
+		Assert.assertEquals("clazz", e.getAttribute("class"));
+
+		// Test 2
+		e.addClassName("addon");
+
+		// Assert 2
+		Assert.assertEquals("clazz addon", e.getClassName());
+		Assert.assertEquals("clazz addon", e.getAttribute("class"));
+
+		// Test 3
+		e.setAttribute("class", "override");
+
+		// Assert 3
+		Assert.assertEquals("override", e.getClassName());
+		Assert.assertEquals("override", e.getAttribute("class"));
 	}
 
 	@Test
@@ -128,7 +145,7 @@ public class ElementTest extends AbstractGwtTest {
 		Assert.assertNull(e.getFirstChildElement());
 
 		// Set up
-		Node node = NodeFactory.createNode();
+		Node node = Document.get().createTextNode("test");
 		ButtonElement be0 = Document.get().createPushButtonElement();
 		ButtonElement be1 = Document.get().createPushButtonElement();
 		e.appendChild(node);
@@ -141,8 +158,19 @@ public class ElementTest extends AbstractGwtTest {
 
 	@Test
 	public void checkId() {
+		// Test 1
 		e.setId("myId");
+
+		// Assert 1
 		Assert.assertEquals("myId", e.getId());
+		Assert.assertEquals("myId", e.getAttribute("id"));
+
+		// Test 2
+		e.setAttribute("id", "updatedId");
+
+		// Assert 2
+		Assert.assertEquals("updatedId", e.getId());
+		Assert.assertEquals("updatedId", e.getAttribute("id"));
 	}
 
 	@Test
@@ -189,18 +217,18 @@ public class ElementTest extends AbstractGwtTest {
 	@Test
 	public void checkGetParentElement() {
 		//Set up
-		BaseElement be = Document.get().createBaseElement();
-		e.appendChild(be);
+
+		Element otherParent = Document.get().createDivElement();
+		Element child = Document.get().createBaseElement();
+		e.appendChild(child);
 
 		//Test and assert
-		Assert.assertEquals(e, be.getParentElement());
+		Assert.assertEquals(e, child.getParentElement());
 
-		//Set up
-		Node node = NodeFactory.createNode();
-		node.appendChild(be);
+		//Test 2
+		otherParent.appendChild(child);
 
-		Assert.assertNull(be.getParentElement());
-
+		// Assert 2
 		Assert.assertFalse("Child nodes list should be empty since the only child has been attached to another parent node", e.hasChildNodes());
 	}
 

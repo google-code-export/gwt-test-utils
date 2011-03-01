@@ -62,6 +62,52 @@ public class NodePatcher extends AutomaticPropertyContainerPatcher {
 	}
 
 	@PatchMethod
+	public static String getNodeName(Node node) {
+		switch (node.getNodeType()) {
+		case Node.DOCUMENT_NODE:
+			return "#document";
+		case Node.ELEMENT_NODE:
+			Element e = node.cast();
+			return e.getTagName();
+		case Node.TEXT_NODE:
+			return "#text";
+		default:
+			throw new RuntimeException("Invalid Node type (not a Document / Element / Text : " + node.getNodeType());
+		}
+	}
+
+	@PatchMethod
+	public static String getNodeValue(Node node) {
+		switch (node.getNodeType()) {
+		case Node.DOCUMENT_NODE:
+			return null;
+		case Node.ELEMENT_NODE:
+			return null;
+		case Node.TEXT_NODE:
+			Text text = node.cast();
+			return text.getData();
+		default:
+			throw new RuntimeException("Invalid Node type (not a Document / Element / Text : " + node.getNodeType());
+		}
+	}
+
+	@PatchMethod
+	public static void setNodeValue(Node node, String nodeValue) {
+		switch (node.getNodeType()) {
+		case Node.DOCUMENT_NODE:
+			// nothing to do
+			break;
+		case Node.ELEMENT_NODE:
+			// nothing to do
+			break;
+		case Node.TEXT_NODE:
+			Text text = node.cast();
+			text.setData(nodeValue);
+			break;
+		}
+	}
+
+	@PatchMethod
 	public static Node appendChild(Node parent, Node newChild) {
 		return insertAtIndex(parent, newChild, -1);
 	}
@@ -182,19 +228,21 @@ public class NodePatcher extends AutomaticPropertyContainerPatcher {
 		PropertyContainer propertyContainer = PropertyContainerHelper.cast(node).getProperties();
 
 		Node newNode;
-		if (node instanceof Element) {
+		switch (node.getNodeType()) {
+		case Node.ELEMENT_NODE:
 			try {
 				newNode = NodeFactory.createElement(((Element) node).getTagName());
 			} catch (Exception e) {
 				throw new RuntimeException("Error while creating an element of type [" + node.getClass().getName() + "]");
 			}
-		} else if (node instanceof Document) {
+			break;
+		case Node.DOCUMENT_NODE:
 			newNode = NodeFactory.getDocument();
-		} else if (node instanceof Text) {
+			break;
+		case Node.TEXT_NODE:
 			newNode = NodeFactory.createTextNode(((Text) node).getData());
-		} else if (node instanceof Node) {
-			newNode = NodeFactory.createNode();
-		} else {
+			break;
+		default:
 			throw new RuntimeException("Cannot create a Node of type [" + node.getClass().getCanonicalName() + "]");
 		}
 
@@ -207,10 +255,19 @@ public class NodePatcher extends AutomaticPropertyContainerPatcher {
 		OverrideNodeList<Node> newChilds = new OverrideNodeList<Node>();
 		propertyContainer2.put(NODE_LIST_FIELD, newChilds);
 
+		OverrideNodeList<Node> childs = getChildNodeList(node);
 		if (deep) {
-			OverrideNodeList<Node> childs = getChildNodeList(node);
+			// copy all child nodes
 			for (Node child : childs.getList()) {
 				appendChild(newNode, cloneNode(child, true));
+			}
+		} else {
+			// only copy the TextNode if exists
+			for (Node child : childs.getList()) {
+				if (Node.TEXT_NODE == child.getNodeType()) {
+					appendChild(newNode, Document.get().createTextNode(child.getNodeValue()));
+					break;
+				}
 			}
 		}
 		return newNode;

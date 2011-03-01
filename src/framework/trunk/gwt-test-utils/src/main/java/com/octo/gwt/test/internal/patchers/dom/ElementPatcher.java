@@ -1,8 +1,5 @@
 package com.octo.gwt.test.internal.patchers.dom;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javassist.CtClass;
 import javassist.CtConstructor;
 
@@ -60,26 +57,8 @@ public class ElementPatcher extends AutomaticPropertyContainerPatcher {
 	}
 
 	@PatchMethod
-	public static NodeList<Element> getElementsByTagName(Element elem, String name) {
-		NodeList<Node> nodeList = elem.getChildNodes();
-
-		List<Element> list = new ArrayList<Element>();
-
-		for (int i = 0; i < nodeList.getLength(); i++) {
-			Node node = nodeList.getItem(i);
-
-			if (node instanceof Element) {
-				Element child = (Element) node;
-				if (name.equals("*")) {
-					list.add(child);
-				} else if (name.equals(child.getTagName())) {
-					list.add(child);
-				}
-
-			}
-		}
-
-		return new OverrideNodeList<Element>(list);
+	public static NodeList<Element> getElementsByTagName(Element elem, String tagName) {
+		return DocumentPatcher.getElementsByTagName(elem, tagName);
 	}
 
 	@PatchMethod
@@ -112,7 +91,9 @@ public class ElementPatcher extends AutomaticPropertyContainerPatcher {
 			return element.getTagName();
 		}
 		PropertyContainer propertyContainer = PropertyContainerHelper.getProperty(element, PROPERTY_MAP_FIELD);
-		return propertyContainer.getString(propertyName);
+
+		// null is a possible value here
+		return (String) propertyContainer.get(propertyName);
 	}
 
 	@PatchMethod
@@ -157,6 +138,26 @@ public class ElementPatcher extends AutomaticPropertyContainerPatcher {
 		}
 
 		PropertyContainerHelper.setProperty(element, "InnerHTML", html);
+	}
+
+	@PatchMethod
+	public static void setId(Element element, String id) {
+		element.setAttribute("id", id);
+	}
+
+	@PatchMethod
+	public static String getId(Element element) {
+		return element.getAttribute("id");
+	}
+
+	@PatchMethod
+	public static void setClassName(Element element, String className) {
+		element.setAttribute("class", className);
+	}
+
+	@PatchMethod
+	public static String getClassName(Element element) {
+		return element.getAttribute("class");
 	}
 
 }

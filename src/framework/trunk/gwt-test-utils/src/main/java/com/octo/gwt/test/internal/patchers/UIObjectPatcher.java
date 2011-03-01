@@ -3,8 +3,6 @@ package com.octo.gwt.test.internal.patchers;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.user.client.ui.UIObject;
-import com.octo.gwt.test.internal.patchers.dom.ElementPatcher;
-import com.octo.gwt.test.internal.utils.PropertyContainerHelper;
 import com.octo.gwt.test.patchers.AutomaticPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
@@ -91,13 +89,13 @@ public class UIObjectPatcher extends AutomaticPatcher {
 	}
 
 	@PatchMethod
-	public static String getStyleName(Element elem) {
-		return PropertyContainerHelper.getProperty(elem, ElementPatcher.CLASSNAME_FIELD);
+	public static void setStyleName(Element elem, String styleName) {
+		elem.setAttribute("class", styleName);
 	}
 
 	@PatchMethod
-	public static void setStyleName(Element elem, String styleName) {
-		PropertyContainerHelper.setProperty(elem, ElementPatcher.CLASSNAME_FIELD, styleName);
+	public static String getStyleName(Element elem) {
+		return elem.getAttribute("class");
 	}
 
 }

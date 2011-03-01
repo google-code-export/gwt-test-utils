@@ -8,7 +8,9 @@ import com.google.gwt.dom.client.AnchorElement;
 import com.google.gwt.dom.client.BaseElement;
 import com.google.gwt.dom.client.ButtonElement;
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
+import com.google.gwt.dom.client.Text;
 import com.octo.gwt.test.AbstractGwtTest;
 import com.octo.gwt.test.internal.overrides.OverrideNodeList;
 import com.octo.gwt.test.internal.patchers.dom.NodeFactory;
@@ -21,7 +23,7 @@ public class NodeTest extends AbstractGwtTest {
 
 	@Before
 	public void initElement() {
-		n = NodeFactory.createNode();
+		n = Document.get().createDivElement();
 	}
 
 	@Test
@@ -53,31 +55,57 @@ public class NodeTest extends AbstractGwtTest {
 
 	@Test
 	public void checkCloneDeep() {
-		n.setNodeValue("value");
-
+		// Setup
 		AnchorElement child = Document.get().createAnchorElement();
+		child.setInnerText("child inner text");
 		n.appendChild(child);
 
+		Element e = n.cast();
+		e.setInnerText("text");
+
+		// Test
 		Node newNode = n.cloneNode(true);
-		Assert.assertEquals("value", newNode.getNodeValue());
+
+		// Assert
+		Assert.assertEquals(Node.ELEMENT_NODE, newNode.getNodeType());
+		Element newElement = newNode.cast();
+
+		Assert.assertEquals("text", newElement.getInnerText());
 		Assert.assertNull("Cloned node's parent should be null", newNode.getParentNode());
-		Assert.assertEquals("Deep cloned node should have child nodes", 1, newNode.getChildNodes().getLength());
-		Assert.assertTrue(child != newNode.getChildNodes().getItem(0));
+		Assert.assertEquals("Deep cloned node should have child nodes", n.getChildNodes().getLength(), newNode.getChildNodes().getLength());
+
+		Assert.assertEquals(Node.ELEMENT_NODE, newNode.getChildNodes().getItem(0).getNodeType());
+		Element childElement = newNode.getChildNodes().getItem(0).cast();
+		Assert.assertEquals("child inner text", childElement.getInnerText());
+
+		Assert.assertEquals(Node.TEXT_NODE, newNode.getChildNodes().getItem(1).getNodeType());
+		Text textNode = newNode.getChildNodes().getItem(1).cast();
+		Assert.assertEquals("text", textNode.getData());
+
 	}
 
 	@Test
 	public void checkCloneNotDeep() {
-		n.setNodeValue("value");
-
+		// Setup
 		AnchorElement child = Document.get().createAnchorElement();
-		child.setTitle("child");
+		child.setInnerText("child inner text");
 		n.appendChild(child);
 
+		Element e = n.cast();
+		e.setInnerText("text");
+
+		// Test
 		Node newNode = n.cloneNode(false);
-		Assert.assertEquals("value", newNode.getNodeValue());
+
+		// Assert
+		Assert.assertEquals(Node.ELEMENT_NODE, newNode.getNodeType());
+		Element newElement = newNode.cast();
+
+		Assert.assertEquals("text", newElement.getInnerText());
+
 		Assert.assertNull("Cloned node's parent should be null", newNode.getParentNode());
-		Assert.assertEquals(1, n.getChildNodes().getLength());
-		Assert.assertEquals("Not deep cloned node should not have child nodes", 0, newNode.getChildNodes().getLength());
+		Assert.assertEquals(2, n.getChildNodes().getLength());
+		Assert.assertEquals("Not deep cloned node should not have child nodes", 1, newNode.getChildNodes().getLength());
 	}
 
 	@Test
@@ -131,9 +159,54 @@ public class NodeTest extends AbstractGwtTest {
 	}
 
 	@Test
-	public void checkNodeValue() {
-		n.setNodeValue("node");
-		Assert.assertEquals("node", n.getNodeValue());
+	public void checkNodeName() {
+		Assert.assertEquals("#document", Document.get().getNodeName());
+		Assert.assertEquals("HTML", Document.get().getDocumentElement().getNodeName());
+		Assert.assertEquals("a", Document.get().createAnchorElement().getNodeName());
+		Assert.assertEquals("#text", NodeFactory.createTextNode("test").getNodeName());
+	}
+
+	@Test
+	public void checkNodeValueOnDocument() {
+		// Setup
+		Node documentNode = Document.get();
+		// Pre-Assert
+		Assert.assertNull(documentNode.getNodeValue());
+
+		// Test
+		documentNode.setNodeValue("node");
+
+		// Assert
+		Assert.assertNull(documentNode.getNodeValue());
+	}
+
+	@Test
+	public void checkNodeValueOnElement() {
+		// Setup
+		Node doucmentNode = Document.get().getDocumentElement();
+		// Pre-Assert
+		Assert.assertNull(doucmentNode.getNodeValue());
+
+		// Test
+		doucmentNode.setNodeValue("node");
+
+		// Assert
+		Assert.assertNull(doucmentNode.getNodeValue());
+	}
+
+	@Test
+	public void checkNodeValueOnText() {
+		// Setup
+		Text textNode = Document.get().createTextNode("data");
+		// Pre-Assert
+		Assert.assertEquals("data", textNode.getNodeValue());
+
+		// Test
+		textNode.setNodeValue("node");
+
+		// Assert
+		Assert.assertEquals("node", textNode.getNodeValue());
+		Assert.assertEquals("node", textNode.getData());
 	}
 
 	@Test

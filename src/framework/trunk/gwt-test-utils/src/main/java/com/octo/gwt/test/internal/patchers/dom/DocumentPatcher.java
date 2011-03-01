@@ -77,10 +77,10 @@ public class DocumentPatcher extends AutomaticPropertyContainerPatcher {
 	}
 
 	@PatchMethod
-	public static NodeList<Element> getElementsByTagName(Document document, String tagName) {
+	public static NodeList<Element> getElementsByTagName(Node node, String tagName) {
 		OverrideNodeList<Element> result = new OverrideNodeList<Element>();
 
-		inspectDomForTag(document, tagName, result);
+		inspectDomForTag(node, tagName, result);
 
 		return result;
 	}
@@ -88,8 +88,11 @@ public class DocumentPatcher extends AutomaticPropertyContainerPatcher {
 	private static void inspectDomForTag(Node node, String tagName, OverrideNodeList<Element> result) {
 		OverrideNodeList<Node> childs = getChildNodeList(node);
 		for (Node n : childs.getList()) {
-			if (Element.class.isInstance(n) && tagName.equals(((Element) n).getTagName())) {
-				result.getList().add((Element) n);
+			if (Node.ELEMENT_NODE == n.getNodeType()) {
+				Element childElem = n.cast();
+				if ("*".equals(tagName) || tagName.equalsIgnoreCase(childElem.getTagName())) {
+					result.getList().add((Element) n);
+				}
 			}
 			inspectDomForTag(n, tagName, result);
 		}
