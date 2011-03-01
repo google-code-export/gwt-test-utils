@@ -1,5 +1,6 @@
 package com.octo.gxt.test;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.extjs.gxt.ui.client.widget.ContentPanel;
@@ -18,8 +19,8 @@ public class MyGXTAppTest extends AbstractGwtTest {
 
 		// Assert
 		ContentPanel panel = (ContentPanel) RootPanel.get().getWidget(0);
-		//		Assert.assertEquals(10, panel.getPosition(true).x);
-		//		Assert.assertEquals(10, panel.getPosition(true).y);
+		Assert.assertEquals(10, panel.getPosition(true).x);
+		Assert.assertEquals(10, panel.getPosition(true).y);
 	}
 
 }
