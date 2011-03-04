@@ -88,9 +88,6 @@ public class StylePatcher extends AutomaticPropertyContainerPatcher {
 		// treat case when propertyValue = "250.0px" => "250px" instead
 		propertyValue = GwtTestStringUtils.treatDoubleValue(propertyValue);
 
-		if ("250px".equals(propertyValue) || "140px".equals(propertyValue)) {
-			System.out.println(propertyName);
-		}
 		PropertyContainerHelper.setProperty(style, propertyName, propertyValue);
 
 		Element owner = StyleHelper.getOwnerElement(style);

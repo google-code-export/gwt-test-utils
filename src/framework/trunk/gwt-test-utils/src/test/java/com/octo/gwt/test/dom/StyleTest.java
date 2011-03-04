@@ -173,13 +173,13 @@ public class StyleTest extends AbstractGwtTest {
 
 		// Assert 1
 		Assert.assertEquals(
-				"background-color: black; background-image: /img.png; border-color: blue; bottom: 4.0px; color: red; cursor: e-resize; float: left; display: inline-block; font-size: 10.5cm; font-style: normal; font-weight: bold; height: 3.1pc; left: 40.0in; list-style-type: circle; margin: 30.5%; margin-bottom: 29.0pt; margin-left: 47.0ex; margin-right: 3.0mm; margin-top: 10.3cm; overflow: scroll; padding: 10.0px; padding-bottom: 11.0px; padding-left: 12.0px; padding-right: 13.0px; padding-top: 14.0px; position: relative; string: stringvalue; double-unit: 17.2cm; right: 13.4cm; text-decoration: overline; top: 7.77pc; vertical-align: middle; visibility: visible; width: 3.5px; z-index: 1000;",
+				"background-color: black; background-image: /img.png; border-color: blue; bottom: 4px; color: red; cursor: e-resize; float: left; display: inline-block; font-size: 10.5cm; font-style: normal; font-weight: bold; height: 3.1pc; left: 40in; list-style-type: circle; margin: 30.5%; margin-bottom: 29pt; margin-left: 47ex; margin-right: 3mm; margin-top: 10.3cm; overflow: scroll; padding: 10px; padding-bottom: 11px; padding-left: 12px; padding-right: 13px; padding-top: 14px; position: relative; string: stringvalue; double-unit: 17.2cm; right: 13.4cm; text-decoration: overline; top: 7.77pc; vertical-align: middle; visibility: visible; width: 3.5px; z-index: 1000;",
 				button.getElement().getAttribute("style"));
 		Assert.assertEquals("black", style.getBackgroundColor());
 		Assert.assertEquals("/img.png", style.getBackgroundImage());
 		Assert.assertEquals("blue", style.getBorderColor());
 		Assert.assertEquals("1.0em", style.getBorderWidth());
-		Assert.assertEquals("4.0px", style.getBottom());
+		Assert.assertEquals("4px", style.getBottom());
 		Assert.assertEquals("red", style.getColor());
 		Assert.assertEquals(Style.Cursor.E_RESIZE.getCssName(), style.getCursor());
 		Assert.assertEquals(Display.INLINE_BLOCK.getCssName(), style.getDisplay());
@@ -187,19 +187,19 @@ public class StyleTest extends AbstractGwtTest {
 		Assert.assertEquals(Style.FontStyle.NORMAL.getCssName(), style.getFontStyle());
 		Assert.assertEquals(Style.FontWeight.BOLD.getCssName(), style.getFontWeight());
 		Assert.assertEquals("3.1pc", style.getHeight());
-		Assert.assertEquals("40.0in", style.getLeft());
+		Assert.assertEquals("40in", style.getLeft());
 		Assert.assertEquals(ListStyleType.CIRCLE.getCssName(), style.getListStyleType());
 		Assert.assertEquals("30.5%", style.getMargin());
-		Assert.assertEquals("29.0pt", style.getMarginBottom());
-		Assert.assertEquals("47.0ex", style.getMarginLeft());
-		Assert.assertEquals("3.0mm", style.getMarginRight());
+		Assert.assertEquals("29pt", style.getMarginBottom());
+		Assert.assertEquals("47ex", style.getMarginLeft());
+		Assert.assertEquals("3mm", style.getMarginRight());
 		Assert.assertEquals("10.3cm", style.getMarginTop());
 		Assert.assertEquals(Overflow.SCROLL.getCssName(), style.getOverflow());
-		Assert.assertEquals("10.0px", style.getPadding());
-		Assert.assertEquals("11.0px", style.getPaddingBottom());
-		Assert.assertEquals("12.0px", style.getPaddingLeft());
-		Assert.assertEquals("13.0px", style.getPaddingRight());
-		Assert.assertEquals("14.0px", style.getPaddingTop());
+		Assert.assertEquals("10px", style.getPadding());
+		Assert.assertEquals("11px", style.getPaddingBottom());
+		Assert.assertEquals("12px", style.getPaddingLeft());
+		Assert.assertEquals("13px", style.getPaddingRight());
+		Assert.assertEquals("14px", style.getPaddingTop());
 		Assert.assertEquals(Position.RELATIVE.getCssName(), style.getPosition());
 		Assert.assertEquals("stringvalue", style.getProperty("string"));
 		Assert.assertEquals("17.2cm", style.getProperty("doubleUnit"));
