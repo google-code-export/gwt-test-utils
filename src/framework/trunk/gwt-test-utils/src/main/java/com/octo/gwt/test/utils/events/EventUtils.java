@@ -2,8 +2,13 @@ package com.octo.gwt.test.utils.events;
 
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.user.client.Event;
+import com.octo.gwt.test.internal.overrides.OverrideEvent;
 
 public class EventUtils {
+
+	private EventUtils() {
+
+	}
 
 	public static int getEventTypeInt(String type) {
 		if (type.equals("blur")) {

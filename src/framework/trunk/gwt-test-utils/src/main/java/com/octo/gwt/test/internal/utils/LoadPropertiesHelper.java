@@ -9,6 +9,10 @@ import com.octo.gwt.test.internal.PropertiesStringModifier;
 
 public class LoadPropertiesHelper {
 
+	private LoadPropertiesHelper() {
+
+	}
+
 	public static synchronized void load(Properties properties, Reader reader) throws IOException {
 		load0(properties, new LineReader(reader));
 	}

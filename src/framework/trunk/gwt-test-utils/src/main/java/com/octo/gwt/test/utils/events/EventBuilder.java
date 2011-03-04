@@ -2,6 +2,7 @@ package com.octo.gwt.test.utils.events;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.Event;
+import com.octo.gwt.test.internal.overrides.OverrideEvent;
 
 public class EventBuilder {
 

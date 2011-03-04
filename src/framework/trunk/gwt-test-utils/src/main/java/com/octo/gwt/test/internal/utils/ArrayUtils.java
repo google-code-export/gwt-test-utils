@@ -5,6 +5,10 @@ import java.util.Map;
 
 public class ArrayUtils {
 
+	private ArrayUtils() {
+
+	}
+
 	public static boolean contains(Object[] array, Object valueToFind) {
 		for (int i = 0; i < array.length; i++) {
 			if (valueToFind.equals(array[i])) {

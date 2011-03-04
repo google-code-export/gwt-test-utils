@@ -18,8 +18,11 @@ public class GwtTestReflectionUtils {
 	private static DoubleMap<Class<?>, Class<?>, Set<Field>> cacheAnnotatedField = new DoubleMap<Class<?>, Class<?>, Set<Field>>();
 	private static DoubleMap<Class<?>, Class<?>, Map<Method, ?>> cacheAnnotatedMethod = new DoubleMap<Class<?>, Class<?>, Map<Method, ?>>();
 	private static DoubleMap<Class<?>, String, Method> cacheMethod = new DoubleMap<Class<?>, String, Method>();
-
 	private static Map<Class<?>, Set<Field>> cacheField = new HashMap<Class<?>, Set<Field>>();
+
+	private GwtTestReflectionUtils() {
+
+	}
 
 	public static Method getMethod(Class<?> clazz, String methodName) {
 		Method res = cacheMethod.get(clazz, methodName);

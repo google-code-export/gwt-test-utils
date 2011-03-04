@@ -18,6 +18,10 @@ public class PropertyContainerHelper {
 		}
 	}
 
+	private PropertyContainerHelper() {
+
+	}
+
 	public static String getConstructionCode() {
 		return "new " + PropertyContainer.class.getName() + "(this)";
 	}

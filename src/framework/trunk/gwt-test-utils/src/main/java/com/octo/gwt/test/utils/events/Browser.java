@@ -23,6 +23,10 @@ import com.octo.gwt.test.utils.WidgetUtils;
  */
 public class Browser {
 
+	private Browser() {
+
+	}
+
 	/**
 	 * Simulates an occurring of the given event due to an interaction with the
 	 * target widget.

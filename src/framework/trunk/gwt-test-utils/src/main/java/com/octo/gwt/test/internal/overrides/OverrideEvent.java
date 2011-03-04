@@ -1,4 +1,4 @@
-package com.octo.gwt.test.utils.events;
+package com.octo.gwt.test.internal.overrides;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
@@ -26,7 +26,7 @@ public class OverrideEvent extends Event {
 
 	private Element overrideTargetElement;
 
-	protected OverrideEvent(int type) {
+	public OverrideEvent(int type) {
 		this(type, NativeEvent.BUTTON_LEFT);
 	}
 

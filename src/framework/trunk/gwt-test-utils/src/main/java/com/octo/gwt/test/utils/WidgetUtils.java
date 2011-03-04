@@ -27,10 +27,14 @@ import com.octo.gwt.test.utils.events.Browser;
 /**
  * Class which provide reflection utilities on {@link Widget} classes.
  * 
- * @author GLZ
+ * @author Gael Lazzari
  * 
  */
 public class WidgetUtils {
+
+	private WidgetUtils() {
+
+	}
 
 	/**
 	 * Check if the current widget and its possible parents are visible. NOTE :

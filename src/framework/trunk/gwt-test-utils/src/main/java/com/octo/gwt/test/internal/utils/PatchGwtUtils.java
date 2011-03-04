@@ -23,6 +23,10 @@ public class PatchGwtUtils {
 
 	private static Map<String, Properties> cachedProperties = new HashMap<String, Properties>();
 
+	private PatchGwtUtils() {
+
+	}
+
 	public static Properties getProperties(String path) {
 		Properties properties = cachedProperties.get(path);
 

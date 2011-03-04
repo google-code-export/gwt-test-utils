@@ -1,6 +1,17 @@
 package com.octo.gwt.test.internal.utils;
 
-public abstract class GwtTestStringUtils {
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public class GwtTestStringUtils {
+
+	private static Pattern NUMBER_PATTERN = Pattern.compile("^\\s*(\\d+).*$");
+
+	private static Pattern DOUBLE_PATTERN = Pattern.compile("^\\s*\\d+\\.(\\d+).*$");
+
+	private GwtTestStringUtils() {
+
+	}
 
 	public static String camelize(String s) {
 		String[] strings = s.split("[-|_|\\s]");
@@ -90,5 +101,34 @@ public abstract class GwtTestStringUtils {
 			}
 		}
 		return b.toString();
+	}
+
+	public static int parseInt(String value, int defaultValue) {
+		Matcher m = NUMBER_PATTERN.matcher(value);
+		if (m.matches()) {
+			return Integer.parseInt(m.group(1));
+		} else {
+			return defaultValue;
+		}
+	}
+
+	/**
+	 * 250px => 250px 250.1px => 250.1px 250.0px => 250px
+	 * 
+	 * @param string
+	 * @return
+	 */
+	public static String treatDoubleValue(String string) {
+
+		if (string == null || "".equals(string)) {
+			return string;
+		}
+
+		Matcher m = DOUBLE_PATTERN.matcher(string);
+		if (m.matches() && Integer.valueOf(m.group(1)) == 0) {
+			return string.replace("." + m.group(1), "");
+		} else {
+			return string;
+		}
 	}
 }

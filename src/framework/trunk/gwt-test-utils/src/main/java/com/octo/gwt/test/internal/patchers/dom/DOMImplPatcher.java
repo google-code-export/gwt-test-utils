@@ -13,6 +13,7 @@ import com.google.gwt.dom.client.SelectElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Text;
 import com.google.gwt.user.client.Event;
+import com.octo.gwt.test.internal.overrides.OverrideEvent;
 import com.octo.gwt.test.internal.overrides.OverrideNodeList;
 import com.octo.gwt.test.internal.utils.PropertyContainer;
 import com.octo.gwt.test.internal.utils.PropertyContainerHelper;
@@ -23,7 +24,6 @@ import com.octo.gwt.test.patchers.PatchMethod;
 import com.octo.gwt.test.utils.GwtTestReflectionUtils;
 import com.octo.gwt.test.utils.events.EventBuilder;
 import com.octo.gwt.test.utils.events.EventUtils;
-import com.octo.gwt.test.utils.events.OverrideEvent;
 
 @PatchClass(classes = { "com.google.gwt.dom.client.DOMImpl" })
 public class DOMImplPatcher extends AutomaticPatcher {
