@@ -2,7 +2,8 @@ package com.octo.gwt.test;
 
 import static junit.framework.Assert.assertEquals;
 
-import java.util.Date;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.Locale;
 
 import org.junit.Assert;
@@ -29,14 +30,16 @@ public class GwtTest extends AbstractGwtTest {
 
 	@Before
 	public void setupGWTTest() {
-		PatchGwtConfig.get().setLocale(new Locale("FR"));
-		sToday = DateTimeFormat.getFormat("EEE dd MMM").format(new Date(1259103600000l));
+		PatchGwtConfig.get().setLocale(new Locale("fr", "FR"));
+		Calendar cal = new GregorianCalendar();
+		cal.set(2010, 10, 24);
+		sToday = DateTimeFormat.getFormat("EEE dd MMM").format(cal.getTime());
 		success = false;
 	}
 
 	@Test
 	public void checkThatGwtInitialiseOccursBeforeTheJUnitInitialisationOfTheClass() {
-		assertEquals("mer. 25 nov.", sToday);
+		assertEquals("mer. 24 nov.", sToday);
 	}
 
 	@Test
