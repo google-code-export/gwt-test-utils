@@ -178,7 +178,7 @@ public class StyleTest extends AbstractGwtTest {
 		Assert.assertEquals("black", style.getBackgroundColor());
 		Assert.assertEquals("/img.png", style.getBackgroundImage());
 		Assert.assertEquals("blue", style.getBorderColor());
-		Assert.assertEquals("1.0em", style.getBorderWidth());
+		Assert.assertEquals("1em", style.getBorderWidth());
 		Assert.assertEquals("4px", style.getBottom());
 		Assert.assertEquals("red", style.getColor());
 		Assert.assertEquals(Style.Cursor.E_RESIZE.getCssName(), style.getCursor());

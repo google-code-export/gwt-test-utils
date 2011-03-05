@@ -42,12 +42,12 @@ public class RemoteServiceTest extends AbstractGwtTest {
 		myService.update(object, new AsyncCallback<MyObject>() {
 
 			public void onSuccess(MyObject result) {
-				Assert.assertEquals("updated field by server side code", result.myField);
-				Assert.assertEquals("transient field", result.myTransientField);
+				Assert.assertEquals("updated field by server side code", result.getMyField());
+				Assert.assertEquals("transient field", result.getMyTransientField());
 
-				Assert.assertEquals("A single child object should have been instanciate in server code", 1, result.myChildObjects.size());
-				Assert.assertEquals("this is a child !", result.myChildObjects.get(0).myChildField);
-				Assert.assertEquals("child object transient field", result.myChildObjects.get(0).myChildTransientField);
+				Assert.assertEquals("A single child object should have been instanciate in server code", 1, result.getMyChildObjects().size());
+				Assert.assertEquals("this is a child !", result.getMyChildObjects().get(0).getMyChildField());
+				Assert.assertEquals("child object transient field", result.getMyChildObjects().get(0).getMyChildTransientField());
 				success = true;
 			}
 

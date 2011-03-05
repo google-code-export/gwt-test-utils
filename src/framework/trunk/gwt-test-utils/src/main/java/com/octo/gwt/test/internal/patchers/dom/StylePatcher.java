@@ -45,7 +45,8 @@ public class StylePatcher extends AutomaticPropertyContainerPatcher {
 	@PatchMethod
 	public static void setBorderWidth(Style style, double value, Unit unit) {
 		PropertyContainer pc = PropertyContainerHelper.cast(style).getProperties();
-		String completeValue = value + unit.getType();
+		double modulo = value % 1;
+		String completeValue = (modulo == 0) ? Integer.toString((int) value) + unit.getType() : Double.toString(value) + unit.getType();
 		pc.put("border-top-width", completeValue);
 		pc.put("border-right-width", completeValue);
 		pc.put("border-bottom-width", completeValue);

@@ -9,9 +9,9 @@ public class MyObject implements IsSerializable {
 
 	private static final long serialVersionUID = -4047482702956475369L;
 
-	public String myField;
-	public transient String myTransientField = "transient field";
-	public List<MyChildObject> myChildObjects = new ArrayList<MyChildObject>();
+	private String myField;
+	private transient String myTransientField = "transient field";
+	private List<MyChildObject> myChildObjects = new ArrayList<MyChildObject>();
 
 	/**
 	 * Default constructor for serialization
@@ -22,6 +22,26 @@ public class MyObject implements IsSerializable {
 
 	public MyObject(String myField) {
 		this.myField = myField;
+	}
+
+	public String getMyField() {
+		return myField;
+	}
+
+	public void setMyField(String myField) {
+		this.myField = myField;
+	}
+
+	public String getMyTransientField() {
+		return myTransientField;
+	}
+
+	public void setMyTransientField(String myTransientField) {
+		this.myTransientField = myTransientField;
+	}
+
+	public List<MyChildObject> getMyChildObjects() {
+		return myChildObjects;
 	}
 
 }

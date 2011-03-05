@@ -6,13 +6,13 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 public class MyServiceImpl implements MyService {
 
 	public MyObject update(MyObject object) {
-		object.myField = "updated field by server side code";
-		object.myTransientField = "this will not be serialized";
+		object.setMyField("updated field by server side code");
+		object.setMyTransientField("this will not be serialized");
 
 		MyChildObject childObject = new MyChildObject("this is a child !");
-		childObject.myChildTransientField = "this will not be serialized too";
+		childObject.setMyChildTransientField("this will not be serialized too");
 
-		object.myChildObjects.add(childObject);
+		object.getMyChildObjects().add(childObject);
 
 		return object;
 	}

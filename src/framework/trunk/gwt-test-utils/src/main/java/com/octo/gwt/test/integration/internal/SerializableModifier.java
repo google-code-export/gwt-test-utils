@@ -114,6 +114,10 @@ public class SerializableModifier implements JavaClassModifier {
 			// call the default read method
 			ois.defaultReadObject();
 
+			if (ex.getClass().getName().endsWith("DeliveryAddressBlockModel")) {
+				System.out.println(ex.getClass());
+			}
+
 			// keep non transient/static/final value somhere
 			Map<Field, Object> buffer = getFieldValues(ex);
 
@@ -135,11 +139,9 @@ public class SerializableModifier implements JavaClassModifier {
 	private static Map<Field, Object> getFieldValues(Serializable o) throws IllegalArgumentException, IllegalAccessException {
 		Map<Field, Object> result = new HashMap<Field, Object>();
 
-		for (Field field : o.getClass().getFields()) {
+		for (Field field : GwtTestReflectionUtils.getFields(o.getClass())) {
 			int fieldModifier = field.getModifiers();
 			if (!Modifier.isFinal(fieldModifier) && !Modifier.isStatic(fieldModifier) && !Modifier.isTransient(fieldModifier)) {
-				GwtTestReflectionUtils.makeAccessible(field);
-
 				result.put(field, field.get(o));
 			}
 		}
