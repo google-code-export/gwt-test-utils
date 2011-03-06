@@ -2,7 +2,7 @@ package com.octo.gwt.test.integration;
 
 import java.io.Serializable;
 
-public class MyChildObject implements Serializable {
+public class MyChildObject extends MyObject implements Serializable {
 
 	private static final long serialVersionUID = -8359127151374995805L;
 

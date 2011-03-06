@@ -48,6 +48,9 @@ public class RemoteServiceTest extends AbstractGwtTest {
 				Assert.assertEquals("A single child object should have been instanciate in server code", 1, result.getMyChildObjects().size());
 				Assert.assertEquals("this is a child !", result.getMyChildObjects().get(0).getMyChildField());
 				Assert.assertEquals("child object transient field", result.getMyChildObjects().get(0).getMyChildTransientField());
+
+				Assert.assertEquals("the field inherited from the parent has been updated !", result.getMyChildObjects().get(0).getMyField());
+				Assert.assertEquals("transient field", result.getMyChildObjects().get(0).getMyTransientField());
 				success = true;
 			}
 

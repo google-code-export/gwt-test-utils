@@ -11,6 +11,8 @@ public class MyServiceImpl implements MyService {
 
 		MyChildObject childObject = new MyChildObject("this is a child !");
 		childObject.setMyChildTransientField("this will not be serialized too");
+		childObject.setMyField("the field inherited from the parent has been updated !");
+		childObject.setMyTransientField("this field is not expected to be serialized too");
 
 		object.getMyChildObjects().add(childObject);
 

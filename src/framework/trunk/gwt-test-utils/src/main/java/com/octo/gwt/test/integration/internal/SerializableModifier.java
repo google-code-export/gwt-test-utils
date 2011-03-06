@@ -60,9 +60,22 @@ public class SerializableModifier implements JavaClassModifier {
 
 		CtMethod defaultConstMethod = defaultCons.toMethod(DEFAULT_CONS_METHOD_NAME, classToModify);
 		defaultConstMethod.setModifiers(Modifier.PUBLIC);
+
+		if (hasDefaultConstMethod(classToModify.getSuperclass())) {
+			defaultConstMethod.insertBefore("super." + DEFAULT_CONS_METHOD_NAME + "();");
+		}
 		classToModify.addMethod(defaultConstMethod);
 
 		overrideReadObject(classToModify);
+	}
+
+	private boolean hasDefaultConstMethod(CtClass ctClass) {
+		try {
+			CtMethod m = ctClass.getMethod(DEFAULT_CONS_METHOD_NAME, Descriptor.ofMethod(CtClass.voidType, new CtClass[0]));
+			return m != null;
+		} catch (NotFoundException e) {
+			return false;
+		}
 	}
 
 	private CtConstructor getDefaultConstructor(CtClass ctClass) {
@@ -113,10 +126,6 @@ public class SerializableModifier implements JavaClassModifier {
 		try {
 			// call the default read method
 			ois.defaultReadObject();
-
-			if (ex.getClass().getName().endsWith("DeliveryAddressBlockModel")) {
-				System.out.println(ex.getClass());
-			}
 
 			// keep non transient/static/final value somhere
 			Map<Field, Object> buffer = getFieldValues(ex);
