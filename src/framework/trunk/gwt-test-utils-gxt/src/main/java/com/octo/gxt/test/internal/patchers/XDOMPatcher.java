@@ -11,6 +11,11 @@ import com.octo.gwt.test.patchers.PatchMethod;
 public class XDOMPatcher extends AutomaticPatcher {
 
 	@PatchMethod
+	public static Element getDocument() {
+		return Document.get().getDocumentElement().cast();
+	}
+
+	@PatchMethod
 	public static Element getBody() {
 		return Document.get().getBody().cast();
 	}

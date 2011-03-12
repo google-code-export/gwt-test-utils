@@ -7,6 +7,7 @@ import se.fishtank.css.selectors.dom.DOMNodeSelector;
 
 import com.extjs.gxt.ui.client.core.DomQuery;
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.user.client.Element;
 import com.octo.gwt.test.internal.overrides.OverrideNodeList;
@@ -17,10 +18,11 @@ import com.octo.gwt.test.patchers.PatchMethod;
 @PatchClass(DomQuery.class)
 public class DomQueryPatcher extends AutomaticPatcher {
 
-	//	@PatchMethod
-	//	public static JavaScriptObject internalSelect(String selector) {
-	//		return internalSelect(selector, Document.get());
-	//	}
+	@PatchMethod
+	public static JavaScriptObject internalSelect(String selector) {
+		Element body = Document.get().getBody().cast();
+		return internalSelect(selector, body);
+	}
 
 	@PatchMethod
 	public static JavaScriptObject internalSelect(String selector, Element root) {
