@@ -10,6 +10,11 @@ import com.octo.gwt.test.AbstractGwtTest;
 
 public class MyGXTAppTest extends AbstractGwtTest {
 
+	@Override
+	protected String getModuleName() {
+		return "fake";
+	}
+
 	@Test
 	public void checkOnModuleLoad() {
 		// Setup
