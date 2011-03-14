@@ -14,7 +14,7 @@ import com.extjs.gxt.desktop.client.Desktop;
 import com.extjs.gxt.desktop.client.Shortcut;
 import com.extjs.gxt.desktop.client.StartMenu;
 import com.extjs.gxt.desktop.client.TaskBar;
-import com.extjs.gxt.samples.resources.client.TestData;
+import com.extjs.gxt.samples.resources.client.ResourcesData;
 import com.extjs.gxt.samples.resources.client.model.Stock;
 import com.extjs.gxt.ui.client.Style.Scroll;
 import com.extjs.gxt.ui.client.data.BaseModelData;
@@ -242,21 +242,21 @@ public class DesktopApp implements EntryPoint {
 		cp.setAnimCollapse(false);
 		cp.setHeading("Settings");
 		cp.setBodyStyleName("pad-text");
-		cp.addText(TestData.DUMMY_TEXT_SHORT);
+		cp.addText(ResourcesData.DUMMY_TEXT_SHORT);
 		w.add(cp);
 
 		cp = new ContentPanel();
 		cp.setAnimCollapse(false);
 		cp.setHeading("Stuff");
 		cp.setBodyStyleName("pad-text");
-		cp.addText(TestData.DUMMY_TEXT_SHORT);
+		cp.addText(ResourcesData.DUMMY_TEXT_SHORT);
 		w.add(cp);
 
 		cp = new ContentPanel();
 		cp.setAnimCollapse(false);
 		cp.setHeading("More Stuff");
 		cp.setBodyStyleName("pad-text");
-		cp.addText(TestData.DUMMY_TEXT_SHORT);
+		cp.addText(ResourcesData.DUMMY_TEXT_SHORT);
 		w.add(cp);
 		return w;
 	}
@@ -271,7 +271,7 @@ public class DesktopApp implements EntryPoint {
 		w.setLayout(new FitLayout());
 
 		GroupingStore<Stock> store = new GroupingStore<Stock>();
-		store.add(TestData.getCompanies());
+		store.add(ResourcesData.getCompanies());
 		store.groupBy("industry");
 
 		ColumnConfig company = new ColumnConfig("name", "Company", 60);

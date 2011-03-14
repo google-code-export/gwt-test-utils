@@ -22,7 +22,7 @@ import com.extjs.gxt.samples.resources.client.model.TeamSales;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.Random;
 
-public class TestData {
+public class ResourcesData {
 
   public static String DUMMY_TEXT_SHORT = "Lorem Ipsum is simply dummy text of the "
       + "printing and typesetting industry. Lorem Ipsum has been the industry's standard "
