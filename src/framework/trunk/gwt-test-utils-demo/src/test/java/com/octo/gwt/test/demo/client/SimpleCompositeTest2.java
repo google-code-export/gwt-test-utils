@@ -8,11 +8,11 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
-import com.octo.gwt.test.AbstractGwtTest;
-import com.octo.gwt.test.utils.GwtTestReflectionUtils;
+import com.octo.gwt.test.GwtTest;
+import com.octo.gwt.test.utils.GwtReflectionUtils;
 import com.octo.gwt.test.utils.events.Browser;
 
-public class SimpleCompositeTest2 extends AbstractGwtTest {
+public class SimpleCompositeTest2 extends GwtTest {
 
 	private SimpleComposite2 composite2;
 
@@ -24,10 +24,10 @@ public class SimpleCompositeTest2 extends AbstractGwtTest {
 	@Test
 	public void checkDisplayClick() {
 		// Setup
-		TextBox textBox = GwtTestReflectionUtils.getPrivateFieldValue(composite2, "textBox");
-		Button button = GwtTestReflectionUtils.getPrivateFieldValue(composite2, "button");
-		Label label = GwtTestReflectionUtils.getPrivateFieldValue(composite2, "label");
-		ListBox listBox = GwtTestReflectionUtils.getPrivateFieldValue(composite2, "listBox");
+		TextBox textBox = GwtReflectionUtils.getPrivateFieldValue(composite2, "textBox");
+		Button button = GwtReflectionUtils.getPrivateFieldValue(composite2, "button");
+		Label label = GwtReflectionUtils.getPrivateFieldValue(composite2, "label");
+		ListBox listBox = GwtReflectionUtils.getPrivateFieldValue(composite2, "listBox");
 		listBox.setSelectedIndex(1);
 
 		// fill the textBox

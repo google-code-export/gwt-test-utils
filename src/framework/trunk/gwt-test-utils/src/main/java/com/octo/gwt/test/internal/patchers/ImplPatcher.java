@@ -3,7 +3,7 @@ package com.octo.gwt.test.internal.patchers;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
 import com.google.gwt.core.client.impl.Impl;
-import com.octo.gwt.test.PatchGwtConfig;
+import com.octo.gwt.test.GwtConfig;
 import com.octo.gwt.test.patchers.AutomaticPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
@@ -23,7 +23,7 @@ public class ImplPatcher extends AutomaticPatcher {
 
 	@PatchMethod
 	public static String getModuleName() {
-		return PatchGwtConfig.get().getModuleName();
+		return GwtConfig.get().getModuleName();
 	}
 
 	@PatchMethod

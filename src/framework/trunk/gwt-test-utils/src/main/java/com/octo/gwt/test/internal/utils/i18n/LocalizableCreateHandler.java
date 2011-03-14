@@ -14,7 +14,7 @@ import com.google.gwt.i18n.client.Messages;
 import com.google.gwt.i18n.client.impl.CldrImpl;
 import com.google.gwt.i18n.client.impl.cldr.DateTimeFormatInfoImpl;
 import com.octo.gwt.test.GwtCreateHandler;
-import com.octo.gwt.test.PatchGwtConfig;
+import com.octo.gwt.test.GwtConfig;
 
 public class LocalizableCreateHandler implements GwtCreateHandler {
 
@@ -33,7 +33,7 @@ public class LocalizableCreateHandler implements GwtCreateHandler {
 	}
 
 	private Object getLocalizedClassImpl(Class<?> localizedClass, Class<?> defaultImpl) throws Exception {
-		Locale locale = PatchGwtConfig.get().getLocale();
+		Locale locale = GwtConfig.get().getLocale();
 		if (locale == null) {
 			return defaultImpl.newInstance();
 		}

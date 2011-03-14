@@ -30,7 +30,7 @@ import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
-import com.octo.gwt.test.AbstractGwtConfigurableTest;
+import com.octo.gwt.test.GwtTestBase;
 import com.octo.gwt.test.csv.runner.CsvRunner;
 import com.octo.gwt.test.csv.runner.Node;
 import com.octo.gwt.test.csv.tools.DefaultWidgetVisitor;
@@ -41,14 +41,14 @@ import com.octo.gwt.test.csv.tools.ObjectFinder;
 import com.octo.gwt.test.csv.tools.VisitorObjectFinder;
 import com.octo.gwt.test.csv.tools.WidgetVisitor;
 import com.octo.gwt.test.internal.utils.ArrayUtils;
-import com.octo.gwt.test.internal.utils.GwtTestStringUtils;
-import com.octo.gwt.test.utils.GwtTestReflectionUtils;
+import com.octo.gwt.test.internal.utils.GwtStringUtils;
+import com.octo.gwt.test.utils.GwtReflectionUtils;
 import com.octo.gwt.test.utils.WidgetUtils;
 import com.octo.gwt.test.utils.events.Browser;
 import com.octo.gwt.test.utils.events.EventBuilder;
 import com.octo.gwt.test.utils.events.EventUtils;
 
-public abstract class AbstractGwtCsvTest extends AbstractGwtConfigurableTest {
+public abstract class GwtCsvTest extends GwtTestBase {
 
 	protected CsvRunner csvRunner;
 
@@ -162,7 +162,7 @@ public abstract class AbstractGwtCsvTest extends AbstractGwtConfigurableTest {
 	 */
 	@CsvMethod
 	public void assertExact(String value, String... params) {
-		value = GwtTestStringUtils.resolveBackSlash(value);
+		value = GwtStringUtils.resolveBackSlash(value);
 
 		String actualValue = getString(params);
 
@@ -186,7 +186,7 @@ public abstract class AbstractGwtCsvTest extends AbstractGwtConfigurableTest {
 	 */
 	@CsvMethod
 	public void assertContains(String containedValue, String... params) {
-		containedValue = GwtTestStringUtils.resolveBackSlash(containedValue);
+		containedValue = GwtStringUtils.resolveBackSlash(containedValue);
 		String actual = getString(params);
 		Assert.assertTrue(csvRunner.getAssertionErrorMessagePrefix() + " not containing string " + containedValue, actual.contains(containedValue));
 	}
@@ -281,7 +281,7 @@ public abstract class AbstractGwtCsvTest extends AbstractGwtConfigurableTest {
 	@CsvMethod
 	public void clickMenuItem(String index, String identifier) {
 		MenuBar menuBar = getObject(MenuBar.class, identifier);
-		List<MenuItem> menuItems = GwtTestReflectionUtils.getPrivateFieldValue(menuBar, "items");
+		List<MenuItem> menuItems = GwtReflectionUtils.getPrivateFieldValue(menuBar, "items");
 		MenuItem itemToClick = menuItems.get(Integer.parseInt(index));
 
 		Event onMouseOver = EventBuilder.create(Event.ONMOUSEOVER).setTarget(itemToClick.getElement()).build();

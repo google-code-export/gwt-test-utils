@@ -17,7 +17,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 import com.octo.gwt.test.csv.runner.CsvRunner;
-import com.octo.gwt.test.utils.GwtTestReflectionUtils;
+import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 public class VisitorObjectFinder implements ObjectFinder {
 
@@ -66,7 +66,7 @@ public class VisitorObjectFinder implements ObjectFinder {
 	protected Collection<RootPanel> getRootPanels() {
 		// initialize the default rootPanel if not initialized yet
 		RootPanel.get();
-		Map<String, RootPanel> rootPanels = GwtTestReflectionUtils.getStaticFieldValue(RootPanel.class, "rootPanels");
+		Map<String, RootPanel> rootPanels = GwtReflectionUtils.getStaticFieldValue(RootPanel.class, "rootPanels");
 
 		return rootPanels.values();
 	}
@@ -94,7 +94,7 @@ public class VisitorObjectFinder implements ObjectFinder {
 				inspectObject(it.next(), repository, alreadyInspectedObjects);
 			}
 		} else if (Composite.class.isInstance(inspected)) {
-			Widget widget = GwtTestReflectionUtils.callPrivateMethod(inspected, "getWidget");
+			Widget widget = GwtReflectionUtils.callPrivateMethod(inspected, "getWidget");
 			inspectObject(widget, repository, alreadyInspectedObjects);
 		}
 

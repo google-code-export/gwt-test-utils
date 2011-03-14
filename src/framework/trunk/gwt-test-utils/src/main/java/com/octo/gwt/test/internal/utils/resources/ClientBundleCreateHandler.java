@@ -21,7 +21,7 @@ import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.resources.client.TextResource;
 import com.google.gwt.resources.ext.DefaultExtensions;
 import com.octo.gwt.test.GwtCreateHandler;
-import com.octo.gwt.test.internal.PatchGwtClassPool;
+import com.octo.gwt.test.internal.GwtClassPool;
 import com.octo.gwt.test.internal.patchers.GwtPatcher;
 
 @SuppressWarnings("unchecked")
@@ -118,7 +118,7 @@ public class ClientBundleCreateHandler implements GwtCreateHandler {
 
 			public ClientBundleMethodsRegistry(Class<? extends ClientBundle> clazz) {
 				try {
-					ctClass = PatchGwtClassPool.get().get(clazz.getName());
+					ctClass = GwtClassPool.get().get(clazz.getName());
 				} catch (NotFoundException e) {
 					throw new RuntimeException("Unable to find class [" + clazz.getName() + "]", e);
 				}

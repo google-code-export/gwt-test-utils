@@ -7,14 +7,14 @@ public class GwtTestStringUtilsTest {
 
 	@Test
 	public void checkHyphenize() throws Exception {
-		Assert.assertEquals("foo", GwtTestStringUtils.hyphenize("foo"));
-		Assert.assertEquals("foo-bar", GwtTestStringUtils.hyphenize("fooBar"));
+		Assert.assertEquals("foo", GwtStringUtils.hyphenize("foo"));
+		Assert.assertEquals("foo-bar", GwtStringUtils.hyphenize("fooBar"));
 	}
 
 	@Test
 	public void checkDehyphenize() throws Exception {
-		Assert.assertEquals("foo", GwtTestStringUtils.dehyphenize("foo"));
-		Assert.assertEquals("fooBar", GwtTestStringUtils.dehyphenize("foo-bar"));
+		Assert.assertEquals("foo", GwtStringUtils.dehyphenize("foo"));
+		Assert.assertEquals("fooBar", GwtStringUtils.dehyphenize("foo-bar"));
 	}
 
 }

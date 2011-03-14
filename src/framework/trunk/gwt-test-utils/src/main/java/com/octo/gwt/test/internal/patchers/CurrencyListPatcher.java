@@ -10,8 +10,8 @@ import java.util.Set;
 import com.google.gwt.i18n.client.CurrencyData;
 import com.google.gwt.i18n.client.CurrencyList;
 import com.google.gwt.i18n.client.impl.CurrencyDataImpl;
-import com.octo.gwt.test.PatchGwtConfig;
-import com.octo.gwt.test.internal.utils.PatchGwtUtils;
+import com.octo.gwt.test.GwtConfig;
+import com.octo.gwt.test.internal.utils.i18n.GwtPropertiesHelper;
 import com.octo.gwt.test.patchers.AutomaticPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
@@ -23,7 +23,7 @@ public class CurrencyListPatcher extends AutomaticPatcher {
 
 	@PatchMethod
 	public static CurrencyData getDefaultJava(CurrencyList currencyList) {
-		Locale locale = PatchGwtConfig.get().getLocale();
+		Locale locale = GwtConfig.get().getLocale();
 		if (locale == null) {
 			locale = Locale.ENGLISH;
 		}
@@ -38,9 +38,10 @@ public class CurrencyListPatcher extends AutomaticPatcher {
 	}
 
 	private static CurrencyData createCurrencyData(Locale locale) {
-		Properties currencyData = PatchGwtUtils.getLocalizedProperties("com/google/gwt/i18n/client/impl/cldr/CurrencyData", locale);
-		Properties currencyExtra = PatchGwtUtils.getProperties("com/google/gwt/i18n/client/constants/CurrencyExtra");
-		Properties numberConstants = PatchGwtUtils.getLocalizedProperties("com/google/gwt/i18n/client/constants/NumberConstantsImpl", locale);
+		Properties currencyData = GwtPropertiesHelper.get().getLocalizedProperties("com/google/gwt/i18n/client/impl/cldr/CurrencyData", locale);
+		Properties currencyExtra = GwtPropertiesHelper.get().getProperties("com/google/gwt/i18n/client/constants/CurrencyExtra");
+		Properties numberConstants = GwtPropertiesHelper.get().getLocalizedProperties("com/google/gwt/i18n/client/constants/NumberConstantsImpl",
+				locale);
 		Set<Object> keySet = currencyData.keySet();
 		String[] currencies = new String[keySet.size()];
 		keySet.toArray(currencies);

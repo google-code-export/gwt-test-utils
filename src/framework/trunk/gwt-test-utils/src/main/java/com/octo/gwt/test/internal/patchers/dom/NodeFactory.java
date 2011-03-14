@@ -60,14 +60,14 @@ import com.google.gwt.dom.client.Text;
 import com.google.gwt.dom.client.TextAreaElement;
 import com.google.gwt.dom.client.TitleElement;
 import com.google.gwt.dom.client.UListElement;
-import com.octo.gwt.test.AbstractGwtConfigurableTest;
+import com.octo.gwt.test.GwtTestBase;
 import com.octo.gwt.test.GwtTestClassLoader;
-import com.octo.gwt.test.PatchGwtConfig;
+import com.octo.gwt.test.GwtConfig;
 import com.octo.gwt.test.internal.GwtHtmlParser;
 import com.octo.gwt.test.internal.utils.PropertyContainer;
 import com.octo.gwt.test.internal.utils.PropertyContainerHelper;
 import com.octo.gwt.test.internal.utils.TagAware;
-import com.octo.gwt.test.utils.GwtTestReflectionUtils;
+import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 public class NodeFactory {
 
@@ -186,7 +186,7 @@ public class NodeFactory {
 	}
 
 	private static Element parseHTMLElement() {
-		String hostPagePath = PatchGwtConfig.get().getHostPagePath();
+		String hostPagePath = GwtConfig.get().getHostPagePath();
 		if (hostPagePath != null) {
 			// parsing of the host page
 			String html = getHostPageHTML(hostPagePath);
@@ -217,7 +217,7 @@ public class NodeFactory {
 		InputStream is = NodeFactory.class.getClassLoader().getResourceAsStream(hostPagePath);
 		if (is == null) {
 			throw new RuntimeException("Cannot find file '" + hostPagePath + "', please override "
-					+ AbstractGwtConfigurableTest.class.getSimpleName() + ".getHostPagePath() method correctly (see "
+					+ GwtTestBase.class.getSimpleName() + ".getHostPagePath() method correctly (see "
 					+ ClassLoader.class.getSimpleName() + ".getResourceAsStream(string name))");
 		}
 		BufferedReader br = null;
@@ -267,7 +267,7 @@ public class NodeFactory {
 				PropertyContainerHelper.setProperty(elem, "NodeName", "HTML");
 				PropertyContainerHelper.setProperty(elem, "TagName", "HTML");
 			} else if (elemClassName != null) {
-				elem = (Element) GwtTestReflectionUtils.instantiateClass(loadClass(elemClassName));
+				elem = (Element) GwtReflectionUtils.instantiateClass(loadClass(elemClassName));
 			} else if (elemClassNameWithTag != null) {
 				Constructor<?> constructor = loadClass(elemClassNameWithTag).getConstructor(String.class);
 				elem = (Element) constructor.newInstance(tag);

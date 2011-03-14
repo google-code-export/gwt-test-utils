@@ -11,7 +11,7 @@ import com.google.gwt.user.client.ui.HasName;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
-import com.octo.gwt.test.AbstractGwtEasyMockTest;
+import com.octo.gwt.test.GwtTestWithEasyMock;
 import com.octo.gwt.test.Mock;
 import com.octo.gwt.test.csv.data.MyBeautifulApp;
 import com.octo.gwt.test.csv.data.MyComposite;
@@ -19,9 +19,9 @@ import com.octo.gwt.test.csv.runner.CsvRunner;
 import com.octo.gwt.test.csv.tools.VisitorObjectFinder;
 import com.octo.gwt.test.csv.tools.WidgetVisitor;
 import com.octo.gwt.test.csv.tools.VisitorObjectFinder.WidgetRepository;
-import com.octo.gwt.test.utils.GwtTestReflectionUtils;
+import com.octo.gwt.test.utils.GwtReflectionUtils;
 
-public class VisitorObjectFinderTest extends AbstractGwtEasyMockTest {
+public class VisitorObjectFinderTest extends GwtTestWithEasyMock {
 
 	private MyBeautifulApp app;
 	private VisitorObjectFinder finder;
@@ -62,10 +62,10 @@ public class VisitorObjectFinderTest extends AbstractGwtEasyMockTest {
 	@Test
 	public void checkFind() {
 		// Setup
-		Button expectedB1 = GwtTestReflectionUtils.getPrivateFieldValue(app, "b1");
-		Button expectedB2 = GwtTestReflectionUtils.getPrivateFieldValue(app, "b2");
-		MyComposite myComposite = GwtTestReflectionUtils.getPrivateFieldValue(app, "myComposite");
-		Label expectedCompositeLabel = GwtTestReflectionUtils.getPrivateFieldValue(myComposite, "compositeLabel");
+		Button expectedB1 = GwtReflectionUtils.getPrivateFieldValue(app, "b1");
+		Button expectedB2 = GwtReflectionUtils.getPrivateFieldValue(app, "b2");
+		MyComposite myComposite = GwtReflectionUtils.getPrivateFieldValue(app, "myComposite");
+		Label expectedCompositeLabel = GwtReflectionUtils.getPrivateFieldValue(myComposite, "compositeLabel");
 
 		replay();
 

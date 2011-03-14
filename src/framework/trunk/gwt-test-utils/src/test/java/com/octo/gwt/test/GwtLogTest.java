@@ -5,7 +5,7 @@ import org.junit.Test;
 
 import com.google.gwt.core.client.GWT;
 
-public class GwtLogTest extends AbstractGwtTest {
+public class GwtLogTest extends GwtTest {
 
 	private String message;
 
@@ -16,7 +16,7 @@ public class GwtLogTest extends AbstractGwtTest {
 		message = null;
 		t = null;
 		GWT.log("toto", new Exception("e1"));
-		PatchGwtConfig.get().setLogHandler(new GwtLogHandler() {
+		GwtConfig.get().setLogHandler(new GwtLogHandler() {
 
 			public void log(String message, Throwable t) {
 				GwtLogTest.this.message = message;

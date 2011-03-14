@@ -5,11 +5,11 @@ import org.junit.runner.RunWith;
 
 import com.google.gwt.user.client.ui.RootPanel;
 import com.octo.gwt.test.GwtCreateHandler;
-import com.octo.gwt.test.csv.AbstractGwtCsvTest;
 import com.octo.gwt.test.csv.CsvDirectory;
 import com.octo.gwt.test.csv.CsvMacros;
 import com.octo.gwt.test.csv.CsvMethod;
-import com.octo.gwt.test.csv.GwtCsvTestRunner;
+import com.octo.gwt.test.csv.GwtCsvRunner;
+import com.octo.gwt.test.csv.GwtCsvTest;
 import com.octo.gwt.test.csv.runner.CsvRunner;
 import com.octo.gwt.test.csv.runner.Node;
 import com.octo.gwt.test.csv.tools.NodeObjectFinder;
@@ -18,8 +18,8 @@ import com.octo.gwt.test.integration.RemoteServiceCreateHandler;
 
 @CsvDirectory(value = "functional-tests", extension = ".csv")
 @CsvMacros(value = "functional-tests", pattern = "^macro.*\\.csv$")
-@RunWith(GwtCsvTestRunner.class)
-public class MyTestShell extends AbstractGwtCsvTest {
+@RunWith(GwtCsvRunner.class)
+public class MyTestShell extends GwtCsvTest {
 
 	private Application application = new Application();
 

@@ -12,7 +12,7 @@ import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Widget;
 
 @SuppressWarnings("deprecation")
-public class ButtonTest extends AbstractGwtTest {
+public class ButtonTest extends GwtTest {
 
 	@Test
 	public void checkWrap() {

@@ -8,7 +8,7 @@ import com.google.gwt.user.client.ui.impl.FormPanelImpl;
 import com.octo.gwt.test.patchers.AutomaticPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
-import com.octo.gwt.test.utils.GwtTestReflectionUtils;
+import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 @PatchClass(FormPanel.class)
 public class FormPanelPatcher extends AutomaticPatcher {
@@ -18,8 +18,8 @@ public class FormPanelPatcher extends AutomaticPatcher {
 		FormPanel.SubmitEvent event = new FormPanel.SubmitEvent();
 		formPanel.fireEvent(event);
 		if (!event.isCanceled()) {
-			FormPanelImpl impl = GwtTestReflectionUtils.getPrivateFieldValue(formPanel, "impl");
-			Element synthesizedFrame = GwtTestReflectionUtils.getPrivateFieldValue(formPanel, "synthesizedFrame");
+			FormPanelImpl impl = GwtReflectionUtils.getPrivateFieldValue(formPanel, "impl");
+			Element synthesizedFrame = GwtReflectionUtils.getPrivateFieldValue(formPanel, "synthesizedFrame");
 			FormPanel.SubmitCompleteEvent completeEvent = createCompleteSubmitEvent(impl.getContents(synthesizedFrame));
 			formPanel.fireEvent(completeEvent);
 		}

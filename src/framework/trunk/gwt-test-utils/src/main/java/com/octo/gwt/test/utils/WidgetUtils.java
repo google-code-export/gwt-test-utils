@@ -61,9 +61,9 @@ public class WidgetUtils {
 
 	@SuppressWarnings("unchecked")
 	public static <T extends EventHandler> List<T> getHandlers(Widget widget, Type<T> eventType) {
-		HandlerManager handlerManager = GwtTestReflectionUtils.getPrivateFieldValue(widget, "handlerManager");
-		Object handlerRegistry = GwtTestReflectionUtils.getPrivateFieldValue(handlerManager, "eventBus");
-		Map<GwtEvent.Type<?>, Map<Object, List<?>>> map = GwtTestReflectionUtils.getPrivateFieldValue(handlerRegistry, "map");
+		HandlerManager handlerManager = GwtReflectionUtils.getPrivateFieldValue(widget, "handlerManager");
+		Object handlerRegistry = GwtReflectionUtils.getPrivateFieldValue(handlerManager, "eventBus");
+		Map<GwtEvent.Type<?>, Map<Object, List<?>>> map = GwtReflectionUtils.getPrivateFieldValue(handlerRegistry, "map");
 
 		Map<Object, List<?>> eventHandlerMap = map.get(eventType);
 
@@ -132,12 +132,12 @@ public class WidgetUtils {
 	}
 
 	public static List<MenuItem> getMenuItems(MenuBar menuBar) {
-		return GwtTestReflectionUtils.getPrivateFieldValue(menuBar, "items");
+		return GwtReflectionUtils.getPrivateFieldValue(menuBar, "items");
 	}
 
 	public static List<MenuItem> getMenuItems(SuggestBox suggestBox) {
-		SuggestionDisplay display = GwtTestReflectionUtils.getPrivateFieldValue(suggestBox, "display");
-		MenuBar suggestionMenu = GwtTestReflectionUtils.getPrivateFieldValue(display, "suggestionMenu");
+		SuggestionDisplay display = GwtReflectionUtils.getPrivateFieldValue(suggestBox, "display");
+		MenuBar suggestionMenu = GwtReflectionUtils.getPrivateFieldValue(display, "suggestionMenu");
 		return getMenuItems(suggestionMenu);
 	}
 

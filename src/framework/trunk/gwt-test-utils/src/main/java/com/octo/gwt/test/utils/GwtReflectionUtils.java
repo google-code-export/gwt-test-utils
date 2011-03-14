@@ -12,7 +12,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class GwtTestReflectionUtils {
+public class GwtReflectionUtils {
 
 	private static DoubleMap<Class<?>, Class<?>, Object> cacheAnnotation = new DoubleMap<Class<?>, Class<?>, Object>();
 	private static DoubleMap<Class<?>, Class<?>, Set<Field>> cacheAnnotatedField = new DoubleMap<Class<?>, Class<?>, Set<Field>>();
@@ -20,8 +20,7 @@ public class GwtTestReflectionUtils {
 	private static DoubleMap<Class<?>, String, Method> cacheMethod = new DoubleMap<Class<?>, String, Method>();
 	private static Map<Class<?>, Set<Field>> cacheField = new HashMap<Class<?>, Set<Field>>();
 
-	private GwtTestReflectionUtils() {
-
+	private GwtReflectionUtils() {
 	}
 
 	public static Method getMethod(Class<?> clazz, String methodName) {

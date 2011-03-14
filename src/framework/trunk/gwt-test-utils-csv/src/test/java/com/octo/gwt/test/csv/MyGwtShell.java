@@ -12,8 +12,8 @@ import com.octo.gwt.test.csv.runner.Node;
 import com.octo.gwt.test.csv.tools.NodeObjectFinder;
 import com.octo.gwt.test.integration.RemoteServiceCreateHandler;
 
-@RunWith(GwtCsvTestRunner.class)
-public abstract class MyGwtShell extends AbstractGwtCsvTest {
+@RunWith(GwtCsvRunner.class)
+public abstract class MyGwtShell extends GwtCsvTest {
 
 	private MyBeautifulApp app;
 

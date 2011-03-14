@@ -4,7 +4,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
 
 import com.octo.gwt.test.GwtCreateHandler;
-import com.octo.gwt.test.utils.GwtTestReflectionUtils;
+import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 public class DefaultGwtCreateHandler implements GwtCreateHandler {
 
@@ -17,8 +17,8 @@ public class DefaultGwtCreateHandler implements GwtCreateHandler {
 		
 		try {
 			Constructor<Object> cons = (Constructor<Object>) classLiteral.getDeclaredConstructor();
-			GwtTestReflectionUtils.makeAccessible(cons);
-			return GwtTestReflectionUtils.instantiateClass(cons);
+			GwtReflectionUtils.makeAccessible(cons);
+			return GwtReflectionUtils.instantiateClass(cons);
 		} catch (NoSuchMethodException e) {
 			return null;
 		}

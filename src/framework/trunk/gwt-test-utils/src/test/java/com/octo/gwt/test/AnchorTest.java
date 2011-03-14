@@ -6,7 +6,7 @@ import org.junit.Test;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.Anchor;
 
-public class AnchorTest extends AbstractGwtTest {
+public class AnchorTest extends GwtTest {
 
 	@Test
 	public void checkTarget() {

@@ -5,7 +5,7 @@ import org.junit.Test;
 
 import com.google.gwt.user.client.Window.Location;
 
-public class LocationTest extends AbstractGwtTest {
+public class LocationTest extends GwtTest {
 
 	@Test
 	public void checkLocationInformations() {

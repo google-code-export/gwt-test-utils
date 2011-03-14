@@ -26,9 +26,9 @@ import com.google.gwt.dom.client.TableSectionElement;
 import com.google.gwt.dom.client.TextAreaElement;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Image;
-import com.octo.gwt.test.AbstractGwtTest;
+import com.octo.gwt.test.GwtTest;
 
-public class DOMTest extends AbstractGwtTest {
+public class DOMTest extends GwtTest {
 
 	@Test
 	public void checkCreateAnchor() {

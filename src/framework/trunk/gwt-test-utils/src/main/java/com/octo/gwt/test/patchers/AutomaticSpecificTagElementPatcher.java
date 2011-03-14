@@ -11,7 +11,7 @@ import com.google.gwt.dom.client.ModElement;
 import com.google.gwt.dom.client.QuoteElement;
 import com.google.gwt.dom.client.TableColElement;
 import com.google.gwt.dom.client.TableSectionElement;
-import com.octo.gwt.test.internal.PatchGwtClassPool;
+import com.octo.gwt.test.internal.GwtClassPool;
 import com.octo.gwt.test.internal.utils.TagAware;
 
 @PatchClass({ HeadingElement.class, ModElement.class, QuoteElement.class, TableColElement.class, TableSectionElement.class })
@@ -23,7 +23,7 @@ public class AutomaticSpecificTagElementPatcher extends AutomaticPropertyContain
 	public void initClass(CtClass c) throws Exception {
 		super.initClass(c);
 
-		ClassPool cp = PatchGwtClassPool.get();
+		ClassPool cp = GwtClassPool.get();
 
 		c.addInterface(cp.get(TagAware.class.getName()));
 

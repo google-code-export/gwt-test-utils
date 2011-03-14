@@ -3,13 +3,13 @@ package com.octo.gwt.test.internal.utils;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class GwtTestStringUtils {
+public class GwtStringUtils {
 
 	private static Pattern NUMBER_PATTERN = Pattern.compile("^\\s*(\\d+).*$");
 
 	private static Pattern DOUBLE_PATTERN = Pattern.compile("^\\s*\\d+\\.(\\d+).*$");
 
-	private GwtTestStringUtils() {
+	private GwtStringUtils() {
 
 	}
 

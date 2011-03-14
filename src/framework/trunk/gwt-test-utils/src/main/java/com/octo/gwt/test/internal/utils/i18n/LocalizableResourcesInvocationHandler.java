@@ -7,9 +7,8 @@ import java.util.Properties;
 
 import com.google.gwt.i18n.client.LocalizableResource;
 import com.google.gwt.i18n.client.LocalizableResource.DefaultLocale;
-import com.octo.gwt.test.PatchGwtConfig;
-import com.octo.gwt.test.internal.utils.PatchGwtUtils;
-import com.octo.gwt.test.utils.GwtTestReflectionUtils;
+import com.octo.gwt.test.GwtConfig;
+import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 public abstract class LocalizableResourcesInvocationHandler implements InvocationHandler {
 
@@ -21,7 +20,7 @@ public abstract class LocalizableResourcesInvocationHandler implements Invocatio
 
 	public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 		Locale locale = getResourceLocale(proxiedClass);
-		Properties prop = PatchGwtUtils.getLocalizedProperties(proxiedClass.getCanonicalName().replaceAll("\\.", "/"), locale);
+		Properties prop = GwtPropertiesHelper.get().getLocalizedProperties(proxiedClass.getCanonicalName().replaceAll("\\.", "/"), locale);
 
 		Object result = null;
 		if (prop != null) {
@@ -47,11 +46,11 @@ public abstract class LocalizableResourcesInvocationHandler implements Invocatio
 	protected abstract Object extractDefaultValue(Method method, Object[] args, Locale locale) throws Throwable;
 
 	private Locale getResourceLocale(Class<?> clazz) {
-		if (PatchGwtConfig.get().getLocale() != null) {
-			return PatchGwtConfig.get().getLocale();
+		if (GwtConfig.get().getLocale() != null) {
+			return GwtConfig.get().getLocale();
 		}
 
-		DefaultLocale annotation = GwtTestReflectionUtils.getAnnotation(clazz, DefaultLocale.class);
+		DefaultLocale annotation = GwtReflectionUtils.getAnnotation(clazz, DefaultLocale.class);
 		if (annotation != null) {
 			String[] localeCodes = annotation.value().split("_");
 			switch (localeCodes.length) {

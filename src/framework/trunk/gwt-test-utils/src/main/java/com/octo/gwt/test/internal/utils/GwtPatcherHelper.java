@@ -1,13 +1,7 @@
 package com.octo.gwt.test.internal.utils;
 
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Properties;
 
 import javassist.CannotCompileException;
 import javassist.CtClass;
@@ -19,48 +13,22 @@ import javassist.NotFoundException;
 import com.octo.gwt.test.IPatcher;
 import com.octo.gwt.test.patchers.AutomaticPatcher;
 
-public class PatchGwtUtils {
+public class GwtPatcherHelper {
 
-	private static Map<String, Properties> cachedProperties = new HashMap<String, Properties>();
+	private static GwtPatcherHelper INSTANCE;
 
-	private PatchGwtUtils() {
+	public static GwtPatcherHelper get() {
+		if (INSTANCE == null) {
+			INSTANCE = new GwtPatcherHelper();
+		}
+		return INSTANCE;
+	}
+
+	private GwtPatcherHelper() {
 
 	}
 
-	public static Properties getProperties(String path) {
-		Properties properties = cachedProperties.get(path);
-
-		if (properties != null) {
-			return properties;
-		}
-		String propertiesNameFile = "/" + path + ".properties";
-		InputStream inputStream = path.getClass().getResourceAsStream(propertiesNameFile);
-		if (inputStream == null) {
-			return null;
-		}
-		try {
-			properties = new Properties();
-			InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
-			LoadPropertiesHelper.load(properties, inputStreamReader);
-			cachedProperties.put(path, properties);
-			return properties;
-		} catch (Exception e) {
-			throw new RuntimeException("Unable to load property file [" + path + "]", e);
-		}
-	}
-
-	public static Properties getLocalizedProperties(String prefix, Locale locale) {
-		if (locale != null) {
-			prefix += ("_" + locale.toString());
-		}
-		return getProperties(prefix);
-	}
-
-	public static void reset() {
-		cachedProperties.clear();
-	}
-
-	public static void patch(CtClass c, IPatcher patcher) throws Exception {
+	public void patch(CtClass c, IPatcher patcher) throws Exception {
 		treatClassToPatch(c);
 
 		if (patcher != null) {
@@ -79,11 +47,11 @@ public class PatchGwtUtils {
 			}
 			if (newBody != null) {
 				if (newBody.startsWith(AutomaticPatcher.INSERT_BEFORE)) {
-					PatchGwtUtils.insertBefore(m, newBody.substring(AutomaticPatcher.INSERT_BEFORE.length()));
+					insertBefore(m, newBody.substring(AutomaticPatcher.INSERT_BEFORE.length()));
 				} else if (newBody.startsWith(AutomaticPatcher.INSERT_AFTER)) {
-					PatchGwtUtils.insertAfter(m, newBody.substring(AutomaticPatcher.INSERT_AFTER.length()));
+					insertAfter(m, newBody.substring(AutomaticPatcher.INSERT_AFTER.length()));
 				} else {
-					PatchGwtUtils.replaceImplementation(m, newBody);
+					replaceImplementation(m, newBody);
 				}
 			} else if (wasAbstract) {
 				if (patcher != null) {
@@ -101,7 +69,7 @@ public class PatchGwtUtils {
 		}
 	}
 
-	public static CtConstructor findConstructor(CtClass ctClass, Class<?>... argsClasses) throws NotFoundException {
+	public CtConstructor findConstructor(CtClass ctClass, Class<?>... argsClasses) throws NotFoundException {
 		List<CtConstructor> l = new ArrayList<CtConstructor>();
 
 		for (CtConstructor c : ctClass.getDeclaredConstructors()) {
@@ -131,7 +99,7 @@ public class PatchGwtUtils {
 
 	}
 
-	private static void treatClassToPatch(CtClass c) throws CannotCompileException {
+	private void treatClassToPatch(CtClass c) throws CannotCompileException {
 		if (c == null) {
 			throw new IllegalArgumentException("the class to patch cannot be null");
 		}
@@ -153,7 +121,7 @@ public class PatchGwtUtils {
 		addDefaultConstructor(c);
 	}
 
-	private static void addDefaultConstructor(CtClass c) throws CannotCompileException {
+	private void addDefaultConstructor(CtClass c) throws CannotCompileException {
 		CtConstructor cons;
 		try {
 			cons = c.getDeclaredConstructor(new CtClass[] {});
@@ -166,7 +134,7 @@ public class PatchGwtUtils {
 
 	}
 
-	public static String getPropertyName(CtMethod m) throws Exception {
+	public String getPropertyName(CtMethod m) throws Exception {
 		String fieldName = null;
 		if (m.getName().startsWith("get") && m.getParameterTypes().length == 0) {
 			fieldName = m.getName().substring(3);
@@ -179,7 +147,7 @@ public class PatchGwtUtils {
 		return fieldName;
 	}
 
-	private static void replaceImplementation(CtMethod m, String src) throws Exception {
+	private void replaceImplementation(CtMethod m, String src) throws Exception {
 		removeNativeModifier(m);
 
 		if (src == null || src.trim().length() == 0) {
@@ -209,23 +177,23 @@ public class PatchGwtUtils {
 		}
 	}
 
-	private static void insertBefore(CtMethod m, String newBody) throws Exception {
+	private void insertBefore(CtMethod m, String newBody) throws Exception {
 		removeNativeModifier(m);
 		m.insertBefore(newBody);
 	}
 
-	private static void insertAfter(CtMethod m, String newBody) throws Exception {
+	private void insertAfter(CtMethod m, String newBody) throws Exception {
 		removeNativeModifier(m);
 		m.insertAfter(newBody);
 	}
 
-	private static void removeNativeModifier(CtMethod m) throws Exception {
+	private void removeNativeModifier(CtMethod m) throws Exception {
 		if (Modifier.isNative(m.getModifiers())) {
 			m.setModifiers(m.getModifiers() - Modifier.NATIVE);
 		}
 	}
 
-	public static boolean areAssertionEnabled() {
+	public boolean areAssertionEnabled() {
 		boolean enabled = false;
 		assert enabled = true;
 		return enabled;

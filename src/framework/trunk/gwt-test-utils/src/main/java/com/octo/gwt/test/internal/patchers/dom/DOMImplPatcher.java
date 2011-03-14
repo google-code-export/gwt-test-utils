@@ -21,7 +21,7 @@ import com.octo.gwt.test.internal.utils.TagAware;
 import com.octo.gwt.test.patchers.AutomaticPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
-import com.octo.gwt.test.utils.GwtTestReflectionUtils;
+import com.octo.gwt.test.utils.GwtReflectionUtils;
 import com.octo.gwt.test.utils.events.EventBuilder;
 import com.octo.gwt.test.utils.events.EventUtils;
 
@@ -82,7 +82,7 @@ public class DOMImplPatcher extends AutomaticPatcher {
 		}
 
 		String tagName = PropertyContainerHelper.getProperty(elem, TAG_NAME);
-		return (tagName != null) ? tagName : (String) GwtTestReflectionUtils.getStaticFieldValue(elem.getClass(), "TAG");
+		return (tagName != null) ? tagName : (String) GwtReflectionUtils.getStaticFieldValue(elem.getClass(), "TAG");
 	}
 
 	@PatchMethod

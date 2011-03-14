@@ -9,7 +9,7 @@ import javassist.CtMethod;
 
 import com.octo.gwt.test.GwtCreateHandler;
 import com.octo.gwt.test.GwtTestClassLoader;
-import com.octo.gwt.test.internal.utils.PatchGwtUtils;
+import com.octo.gwt.test.internal.utils.GwtPatcherHelper;
 
 public class AbstractClassCreateHandler implements GwtCreateHandler {
 
@@ -29,8 +29,8 @@ public class AbstractClassCreateHandler implements GwtCreateHandler {
 			return newClass.newInstance();
 		}
 
-		CtClass ctClass = PatchGwtClassPool.getCtClass(classLiteral);
-		CtClass subClass = PatchGwtClassPool.get().makeClass(classLiteral.getCanonicalName() + "SubClass");
+		CtClass ctClass = GwtClassPool.getCtClass(classLiteral);
+		CtClass subClass = GwtClassPool.get().makeClass(classLiteral.getCanonicalName() + "SubClass");
 
 		subClass.setSuperclass(ctClass);
 
@@ -41,7 +41,7 @@ public class AbstractClassCreateHandler implements GwtCreateHandler {
 			}
 		}
 
-		PatchGwtUtils.patch(subClass, null);
+		GwtPatcherHelper.get().patch(subClass, null);
 
 		newClass = subClass.toClass(GwtTestClassLoader.get(), null);
 		cache.put(classLiteral, newClass);

@@ -15,7 +15,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import com.octo.gwt.test.PatchGwtConfig;
+import com.octo.gwt.test.GwtConfig;
 
 public class ModuleData {
 
@@ -85,7 +85,7 @@ public class ModuleData {
 
 	private Document createDocument(String moduleFilePath) throws Exception {
 
-		InputStream is = PatchGwtConfig.class.getClassLoader().getResourceAsStream(moduleFilePath);
+		InputStream is = GwtConfig.class.getClassLoader().getResourceAsStream(moduleFilePath);
 
 		if (is == null) {
 			throw new IllegalArgumentException("Cannot find GWT module configuration file '" + moduleFilePath + "', please see the "

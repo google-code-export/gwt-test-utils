@@ -12,7 +12,7 @@ import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.Widget;
 
 @SuppressWarnings("deprecation")
-public class FlexTableTest extends AbstractGwtTest {
+public class FlexTableTest extends GwtTest {
 
 	private boolean clicked = false;
 

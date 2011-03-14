@@ -13,10 +13,10 @@ import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.SuggestBox.SuggestionDisplay;
-import com.octo.gwt.test.utils.GwtTestReflectionUtils;
+import com.octo.gwt.test.utils.GwtReflectionUtils;
 import com.octo.gwt.test.utils.WidgetUtils;
 
-public class WidgetUtilsTest extends AbstractGwtTest {
+public class WidgetUtilsTest extends GwtTest {
 
 	@Override
 	public String getCurrentTestedModuleFile() {
@@ -122,8 +122,8 @@ public class WidgetUtilsTest extends AbstractGwtTest {
 	public void checkSuggestBoxItems() {
 		// Setup
 		SuggestBox box = new SuggestBox();
-		SuggestionDisplay display = GwtTestReflectionUtils.getPrivateFieldValue(box, "display");
-		MenuBar bar = GwtTestReflectionUtils.getPrivateFieldValue(display, "suggestionMenu");
+		SuggestionDisplay display = GwtReflectionUtils.getPrivateFieldValue(box, "display");
+		MenuBar bar = GwtReflectionUtils.getPrivateFieldValue(display, "suggestionMenu");
 
 		Command cmd = new Command() {
 			public void execute() {

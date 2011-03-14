@@ -11,7 +11,7 @@ import com.octo.gwt.test.internal.utils.StyleHelper;
 import com.octo.gwt.test.patchers.AutomaticPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
-import com.octo.gwt.test.utils.GwtTestReflectionUtils;
+import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 @PatchClass(El.class)
 public class ElPatcher extends AutomaticPatcher {
@@ -69,7 +69,7 @@ public class ElPatcher extends AutomaticPatcher {
 	}
 
 	private static Element getWrappedElement(El el) {
-		return GwtTestReflectionUtils.getPrivateFieldValue(el, "dom");
+		return GwtReflectionUtils.getPrivateFieldValue(el, "dom");
 	}
 
 }

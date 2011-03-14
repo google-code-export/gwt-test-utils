@@ -6,14 +6,14 @@ import com.google.gwt.user.client.ui.LayoutPanel;
 import com.octo.gwt.test.patchers.AutomaticPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
-import com.octo.gwt.test.utils.GwtTestReflectionUtils;
+import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 @PatchClass(LayoutPanel.class)
 public class LayoutPanelPatcher extends AutomaticPatcher {
 
 	@PatchMethod
 	public static void animate(LayoutPanel panel, final int duration, final AnimationCallback callback) {
-		LayoutCommand layoutCmd = GwtTestReflectionUtils.getPrivateFieldValue(panel, "layoutCmd");
+		LayoutCommand layoutCmd = GwtReflectionUtils.getPrivateFieldValue(panel, "layoutCmd");
 		layoutCmd.schedule(0, callback);
 	}
 

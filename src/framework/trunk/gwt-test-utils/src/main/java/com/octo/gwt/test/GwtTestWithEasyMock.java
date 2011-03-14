@@ -17,8 +17,8 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.octo.gwt.test.internal.GwtCreateHandlerManager;
 import com.octo.gwt.test.internal.mock.MockCreateHandler;
 import com.octo.gwt.test.internal.utils.ArrayUtils;
-import com.octo.gwt.test.utils.GwtTestReflectionUtils;
-import com.octo.gwt.test.utils.GwtTestReflectionUtils.MethodCallback;
+import com.octo.gwt.test.utils.GwtReflectionUtils;
+import com.octo.gwt.test.utils.GwtReflectionUtils.MethodCallback;
 
 /**
  * <p>
@@ -36,15 +36,15 @@ import com.octo.gwt.test.utils.GwtTestReflectionUtils.MethodCallback;
  * the methods provided by AbstractGwtEasyMockTest.
  * </p>
  */
-public abstract class AbstractGwtEasyMockTest extends AbstractGwtTest {
+public abstract class GwtTestWithEasyMock extends GwtTest {
 
 	private Map<Class<?>, Object> mockObjects = new HashMap<Class<?>, Object>();
 	private List<Class<?>> mockedClasses = new ArrayList<Class<?>>();
 	private Set<Field> annotatedFieldToInject;
 
-	public AbstractGwtEasyMockTest() {
+	public GwtTestWithEasyMock() {
 		GwtCreateHandlerManager.get().setMockCreateHandler(new MockCreateHandler(mockObjects));
-		annotatedFieldToInject = GwtTestReflectionUtils.getAnnotatedField(this.getClass(), Mock.class);
+		annotatedFieldToInject = GwtReflectionUtils.getAnnotatedField(this.getClass(), Mock.class);
 		for (Field f : annotatedFieldToInject) {
 			mockedClasses.add(f.getType());
 		}
@@ -59,7 +59,7 @@ public abstract class AbstractGwtEasyMockTest extends AbstractGwtTest {
 		try {
 			for (Field f : annotatedFieldToInject) {
 				Object mock = mockObjects.get(f.getType());
-				GwtTestReflectionUtils.makeAccessible(f);
+				GwtReflectionUtils.makeAccessible(f);
 				f.set(this, mock);
 			}
 		} catch (Exception e) {
@@ -124,7 +124,7 @@ public abstract class AbstractGwtEasyMockTest extends AbstractGwtTest {
 	 * except the one with the name given as a parameter.
 	 */
 	public <T> T createMockAndKeepOneMethod(Class<T> clazz, String methodName) {
-		return createMockAndKeepMethods(clazz, true, GwtTestReflectionUtils.findMethod(clazz, methodName));
+		return createMockAndKeepMethods(clazz, true, GwtReflectionUtils.findMethod(clazz, methodName));
 	}
 
 	/**
@@ -140,7 +140,7 @@ public abstract class AbstractGwtEasyMockTest extends AbstractGwtTest {
 	 */
 	public <T> T createMockAndKeepMethods(Class<T> clazz, final boolean keepSetters, final Method... list) {
 		final List<Method> l = new ArrayList<Method>();
-		GwtTestReflectionUtils.doWithMethods(clazz, new MethodCallback() {
+		GwtReflectionUtils.doWithMethods(clazz, new MethodCallback() {
 
 			public void doWith(Method method) throws IllegalArgumentException, IllegalAccessException {
 				if (!ArrayUtils.contains(list, method)) {
@@ -161,9 +161,9 @@ public abstract class AbstractGwtEasyMockTest extends AbstractGwtTest {
 	 * class.
 	 * 
 	 * You can use this method if you want to use AbstractGwtEasyMockTest's mock
-	 * handling methods ({@link AbstractGwtEasyMockTest#replay()},
-	 * {@link AbstractGwtEasyMockTest#verify()},
-	 * {@link AbstractGwtEasyMockTest#reset()}...) for a mock that you created
+	 * handling methods ({@link GwtTestWithEasyMock#replay()},
+	 * {@link GwtTestWithEasyMock#verify()},
+	 * {@link GwtTestWithEasyMock#reset()}...) for a mock that you created
 	 * without using the framework's {@link Mock @Mock} annotation.
 	 * 
 	 * @param clazz

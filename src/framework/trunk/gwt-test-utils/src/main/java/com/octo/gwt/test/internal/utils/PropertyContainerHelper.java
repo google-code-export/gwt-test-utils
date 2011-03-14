@@ -3,7 +3,7 @@ package com.octo.gwt.test.internal.utils;
 import javassist.CtClass;
 import javassist.NotFoundException;
 
-import com.octo.gwt.test.internal.PatchGwtClassPool;
+import com.octo.gwt.test.internal.GwtClassPool;
 
 public class PropertyContainerHelper {
 
@@ -11,7 +11,7 @@ public class PropertyContainerHelper {
 
 	static {
 		try {
-			STRING_TYPE = PatchGwtClassPool.get().get(String.class.getName());
+			STRING_TYPE = GwtClassPool.get().get(String.class.getName());
 		} catch (NotFoundException e) {
 			// Never append
 			throw new RuntimeException(e);

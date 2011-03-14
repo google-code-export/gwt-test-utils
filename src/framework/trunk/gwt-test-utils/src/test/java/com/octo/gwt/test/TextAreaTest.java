@@ -4,9 +4,9 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.google.gwt.user.client.ui.TextArea;
-import com.octo.gwt.test.utils.GwtTestReflectionUtils;
+import com.octo.gwt.test.utils.GwtReflectionUtils;
 
-public class TextAreaTest extends AbstractGwtTest {
+public class TextAreaTest extends GwtTest {
 
 	@Test
 	public void checkName() {
@@ -50,7 +50,7 @@ public class TextAreaTest extends AbstractGwtTest {
 		// Set up
 		TextArea t = new TextArea();
 		t.setText("myText");
-		GwtTestReflectionUtils.setPrivateFieldValue(t, "attached", true);
+		GwtReflectionUtils.setPrivateFieldValue(t, "attached", true);
 
 		// Test
 		t.setCursorPos(2);
@@ -63,7 +63,7 @@ public class TextAreaTest extends AbstractGwtTest {
 		// Set up
 		TextArea t = new TextArea();
 		t.setText("myText");
-		GwtTestReflectionUtils.setPrivateFieldValue(t, "attached", true);
+		GwtReflectionUtils.setPrivateFieldValue(t, "attached", true);
 
 		// Test
 		t.setSelectionRange(1, 3);

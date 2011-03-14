@@ -6,9 +6,9 @@ import org.junit.Test;
 import com.extjs.gxt.ui.client.widget.ContentPanel;
 import com.extjs.gxt.ui.client.widget.button.ToolButton;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.octo.gwt.test.AbstractGwtTest;
+import com.octo.gwt.test.GwtTest;
 
-public class MyGXTAppTest extends AbstractGwtTest {
+public class MyGXTAppTest extends GwtTest {
 
 	@Override
 	protected String getModuleName() {

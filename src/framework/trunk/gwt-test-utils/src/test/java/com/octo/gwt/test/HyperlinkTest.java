@@ -8,7 +8,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Hyperlink;
 
-public class HyperlinkTest extends AbstractGwtTest {
+public class HyperlinkTest extends GwtTest {
 
 	@Test
 	public void checkTitle() {

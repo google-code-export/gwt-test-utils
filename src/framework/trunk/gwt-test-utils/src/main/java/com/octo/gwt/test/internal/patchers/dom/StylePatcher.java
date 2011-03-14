@@ -11,8 +11,8 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Float;
 import com.google.gwt.dom.client.Style.Unit;
-import com.octo.gwt.test.internal.PatchGwtClassPool;
-import com.octo.gwt.test.internal.utils.GwtTestStringUtils;
+import com.octo.gwt.test.internal.GwtClassPool;
+import com.octo.gwt.test.internal.utils.GwtStringUtils;
 import com.octo.gwt.test.internal.utils.PropertyContainer;
 import com.octo.gwt.test.internal.utils.PropertyContainerHelper;
 import com.octo.gwt.test.internal.utils.StyleHelper;
@@ -29,10 +29,10 @@ public class StylePatcher extends AutomaticPropertyContainerPatcher {
 	public void initClass(CtClass c) throws Exception {
 		super.initClass(c);
 
-		CtField targetElementField = new CtField(PatchGwtClassPool.getCtClass(Element.class), TARGET_ELEMENT, c);
+		CtField targetElementField = new CtField(GwtClassPool.getCtClass(Element.class), TARGET_ELEMENT, c);
 		c.addField(targetElementField);
 
-		CtConstructor constructor = new CtConstructor(new CtClass[] { PatchGwtClassPool.getCtClass(Element.class) }, c);
+		CtConstructor constructor = new CtConstructor(new CtClass[] { GwtClassPool.getCtClass(Element.class) }, c);
 		StringBuilder sb = new StringBuilder();
 		sb.append("{");
 		sb.append("this." + TARGET_ELEMENT + " = $1;");
@@ -87,7 +87,7 @@ public class StylePatcher extends AutomaticPropertyContainerPatcher {
 	@PatchMethod
 	public static void setPropertyImpl(Style style, String propertyName, String propertyValue) {
 		// treat case when propertyValue = "250.0px" => "250px" instead
-		propertyValue = GwtTestStringUtils.treatDoubleValue(propertyValue);
+		propertyValue = GwtStringUtils.treatDoubleValue(propertyValue);
 
 		PropertyContainerHelper.setProperty(style, propertyName, propertyValue);
 
@@ -96,7 +96,7 @@ public class StylePatcher extends AutomaticPropertyContainerPatcher {
 
 		LinkedHashMap<String, String> styleProperties = StyleHelper.getStyleProperties(styleAttribute);
 
-		String cssProperyName = GwtTestStringUtils.hyphenize(propertyName);
+		String cssProperyName = GwtStringUtils.hyphenize(propertyName);
 
 		if (styleProperties.containsKey(cssProperyName)) {
 			styleProperties.remove(cssProperyName);

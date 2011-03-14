@@ -5,7 +5,7 @@ import org.junit.Test;
 
 import com.google.gwt.xml.client.XMLParser;
 
-public class XMLParserTest extends AbstractGwtTest {
+public class XMLParserTest extends GwtTest {
 
 	@Test
 	public void checkParseThrowsException() {

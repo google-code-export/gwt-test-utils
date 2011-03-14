@@ -18,7 +18,7 @@ import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.ui.Button;
 import com.octo.gwt.test.utils.events.Browser;
 
-public class GwtTest extends AbstractGwtTest {
+public class MainGwtTest extends GwtTest {
 
 	private String sToday;
 	private boolean success;
@@ -30,7 +30,7 @@ public class GwtTest extends AbstractGwtTest {
 
 	@Before
 	public void setupGWTTest() {
-		PatchGwtConfig.get().setLocale(new Locale("fr", "FR"));
+		GwtConfig.get().setLocale(new Locale("fr", "FR"));
 		Calendar cal = new GregorianCalendar();
 		cal.set(2010, 10, 24);
 		sToday = DateTimeFormat.getFormat("EEE dd MMM").format(cal.getTime());

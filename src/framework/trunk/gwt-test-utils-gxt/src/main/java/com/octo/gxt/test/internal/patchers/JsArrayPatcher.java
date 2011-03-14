@@ -5,7 +5,7 @@ import com.google.gwt.core.client.JavaScriptObject;
 import com.octo.gwt.test.patchers.AutomaticPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
-import com.octo.gwt.test.utils.GwtTestReflectionUtils;
+import com.octo.gwt.test.utils.GwtReflectionUtils;
 import com.octo.gxt.test.internal.overrides.JsArrayJSO;
 
 @PatchClass(JsArray.class)
@@ -112,6 +112,6 @@ public class JsArrayPatcher extends AutomaticPatcher {
 	}
 
 	private static JsArrayJSO getJsArrayJSO(JsArray jsArray) {
-		return GwtTestReflectionUtils.getPrivateFieldValue(jsArray, "jsArray");
+		return GwtReflectionUtils.getPrivateFieldValue(jsArray, "jsArray");
 	}
 }

@@ -7,9 +7,9 @@ import org.junit.Test;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.octo.gwt.test.AbstractGwtTest;
+import com.octo.gwt.test.GwtTest;
 
-public class RemoteServiceTest extends AbstractGwtTest {
+public class RemoteServiceTest extends GwtTest {
 
 	private boolean success;
 	private boolean failure;

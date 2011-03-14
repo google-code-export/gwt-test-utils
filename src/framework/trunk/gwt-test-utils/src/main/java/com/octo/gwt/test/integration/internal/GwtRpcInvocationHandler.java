@@ -12,7 +12,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.StatusCodeException;
 import com.octo.gwt.test.integration.IGwtRpcExceptionHandler;
 import com.octo.gwt.test.integration.IGwtRpcSerializerHandler;
-import com.octo.gwt.test.utils.GwtTestReflectionUtils;
+import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 public class GwtRpcInvocationHandler implements InvocationHandler {
 
@@ -34,7 +34,7 @@ public class GwtRpcInvocationHandler implements InvocationHandler {
 			for (Method m2 : target.getClass().getMethods()) {
 				if (m.getName().equals(m2.getName()) && m.getParameterTypes().length == m2.getParameterTypes().length + 1) {
 					methodTable.put(m, m2);
-					GwtTestReflectionUtils.makeAccessible(m2);
+					GwtReflectionUtils.makeAccessible(m2);
 				}
 			}
 		}

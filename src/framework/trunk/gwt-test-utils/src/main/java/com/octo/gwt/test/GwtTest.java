@@ -27,8 +27,8 @@ import com.octo.gwt.test.utils.events.Browser;
  * </p>
  * 
  */
-@RunWith(GwtTestRunner.class)
-public abstract class AbstractGwtTest extends AbstractGwtConfigurableTest {
+@RunWith(GwtRunner.class)
+public abstract class GwtTest extends GwtTestBase {
 
 	/**
 	 * @param target

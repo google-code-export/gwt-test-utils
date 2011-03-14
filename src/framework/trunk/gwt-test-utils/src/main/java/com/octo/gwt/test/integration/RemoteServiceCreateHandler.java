@@ -13,7 +13,7 @@ import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import com.octo.gwt.test.GwtCreateHandler;
 import com.octo.gwt.test.integration.internal.GwtRpcInvocationHandler;
-import com.octo.gwt.test.internal.PatchGwtClassPool;
+import com.octo.gwt.test.internal.GwtClassPool;
 
 public abstract class RemoteServiceCreateHandler implements GwtCreateHandler {
 
@@ -65,7 +65,7 @@ public abstract class RemoteServiceCreateHandler implements GwtCreateHandler {
 	protected abstract Object findService(Class<?> remoteServiceClass, String remoteServiceRelativePath);
 
 	private String getRemoveServiceRelativePath(Class<?> clazz) {
-		CtClass ctClass = PatchGwtClassPool.getCtClass((clazz));
+		CtClass ctClass = GwtClassPool.getCtClass((clazz));
 		Object[] annotations = ctClass.getAvailableAnnotations();
 		for (Object o : annotations) {
 			if (Proxy.isProxyClass(o.getClass())) {

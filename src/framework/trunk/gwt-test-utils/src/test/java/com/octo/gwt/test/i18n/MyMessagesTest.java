@@ -8,10 +8,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.google.gwt.core.client.GWT;
-import com.octo.gwt.test.AbstractGwtTest;
-import com.octo.gwt.test.PatchGwtConfig;
+import com.octo.gwt.test.GwtTest;
+import com.octo.gwt.test.GwtConfig;
 
-public class MyMessagesTest extends AbstractGwtTest {
+public class MyMessagesTest extends GwtTest {
 
 	private MyMessages messages;
 
@@ -36,7 +36,7 @@ public class MyMessagesTest extends AbstractGwtTest {
 		}
 
 		// Setup 2
-		PatchGwtConfig.get().setLocale(Locale.FRANCE);
+		GwtConfig.get().setLocale(Locale.FRANCE);
 
 		// Test 2
 		result = messages.a_message("Gael", 23, true);
@@ -48,7 +48,7 @@ public class MyMessagesTest extends AbstractGwtTest {
 	@Test
 	public void checkMeaningAnnotation() {
 		// Setup 1
-		PatchGwtConfig.get().setLocale(Locale.FRANCE);
+		GwtConfig.get().setLocale(Locale.FRANCE);
 
 		// Test 1
 		String orangeColor = messages.orangeColor();
@@ -59,7 +59,7 @@ public class MyMessagesTest extends AbstractGwtTest {
 		Assert.assertEquals("Orange", orangeFruit);
 
 		// Setup 2
-		PatchGwtConfig.get().setLocale(Locale.ENGLISH);
+		GwtConfig.get().setLocale(Locale.ENGLISH);
 
 		// Test 2
 		orangeColor = messages.orangeColor();
@@ -87,7 +87,7 @@ public class MyMessagesTest extends AbstractGwtTest {
 	@Test
 	public void checkWidgetCount_fr() {
 		// Setup
-		PatchGwtConfig.get().setLocale(Locale.FRANCE);
+		GwtConfig.get().setLocale(Locale.FRANCE);
 
 		// Test
 		String result0 = messages.widgetCount(0);
@@ -103,7 +103,7 @@ public class MyMessagesTest extends AbstractGwtTest {
 	@Test
 	public void checkTotalAmount() {
 		// Setup 1
-		PatchGwtConfig.get().setLocale(Locale.US);
+		GwtConfig.get().setLocale(Locale.US);
 
 		// Test
 		String totalAmount = messages.totalAmount(6);
@@ -112,7 +112,7 @@ public class MyMessagesTest extends AbstractGwtTest {
 		Assert.assertEquals("Your cart total is $6.00", totalAmount);
 
 		// Setup 2
-		PatchGwtConfig.get().setLocale(Locale.FRANCE);
+		GwtConfig.get().setLocale(Locale.FRANCE);
 
 		// Test 2
 		totalAmount = messages.totalAmount(6);

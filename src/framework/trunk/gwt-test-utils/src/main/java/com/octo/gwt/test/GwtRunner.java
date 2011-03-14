@@ -17,9 +17,9 @@ import org.junit.runners.model.InitializationError;
  * using the META-INF\gwt-test-utils.properties file of your application.
  * </p>
  */
-public class GwtTestRunner extends BlockJUnit4ClassRunner {
+public class GwtRunner extends BlockJUnit4ClassRunner {
 
-	public GwtTestRunner(Class<?> clazz) throws InitializationError, ClassNotFoundException {
+	public GwtRunner(Class<?> clazz) throws InitializationError, ClassNotFoundException {
 		super(GwtTestClassLoader.get().loadClass(clazz.getName()));
 	}
 

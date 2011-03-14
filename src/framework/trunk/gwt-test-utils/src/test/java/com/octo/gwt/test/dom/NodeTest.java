@@ -11,13 +11,13 @@ import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.Text;
-import com.octo.gwt.test.AbstractGwtTest;
+import com.octo.gwt.test.GwtTest;
 import com.octo.gwt.test.internal.overrides.OverrideNodeList;
 import com.octo.gwt.test.internal.patchers.dom.NodeFactory;
-import com.octo.gwt.test.internal.utils.PatchGwtUtils;
+import com.octo.gwt.test.internal.utils.GwtPatcherHelper;
 
 @SuppressWarnings("deprecation")
-public class NodeTest extends AbstractGwtTest {
+public class NodeTest extends GwtTest {
 
 	private Node n;
 
@@ -29,7 +29,7 @@ public class NodeTest extends AbstractGwtTest {
 	@Test
 	public void checkAs() {
 		Assert.assertEquals(n, Node.as(n));
-		if (!PatchGwtUtils.areAssertionEnabled()) {
+		if (!GwtPatcherHelper.get().areAssertionEnabled()) {
 			Assert.assertNull(Node.as(null));
 		}
 	}

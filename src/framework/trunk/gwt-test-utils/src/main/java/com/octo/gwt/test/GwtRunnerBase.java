@@ -11,11 +11,11 @@ import org.junit.runner.manipulation.Sortable;
 import org.junit.runner.manipulation.Sorter;
 import org.junit.runner.notification.RunNotifier;
 
-public abstract class AbstractGwtTestRunner extends Runner implements Filterable, Sortable {
+public abstract class GwtRunnerBase extends Runner implements Filterable, Sortable {
 
 	private Runner runner;
 
-	public AbstractGwtTestRunner(Class<?> clazz) throws Exception {
+	public GwtRunnerBase(Class<?> clazz) throws Exception {
 		Class<?> runnerClass = GwtTestClassLoader.get().loadClass(getClassRunnerClassName());
 
 		if (!Runner.class.isAssignableFrom(runnerClass)) {

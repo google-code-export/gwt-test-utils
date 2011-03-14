@@ -6,11 +6,11 @@ import javassist.NotFoundException;
 
 import com.octo.gwt.test.internal.ConfigurationLoader;
 import com.octo.gwt.test.internal.GwtTranslator;
-import com.octo.gwt.test.internal.PatchGwtClassPool;
+import com.octo.gwt.test.internal.GwtClassPool;
 
 /**
  * GwtTestClassLoader is the class loader used to instantiate classes referenced
- * inside a test class extending {@link AbstractGwtTest}.
+ * inside a test class extending {@link GwtTest}.
  */
 public class GwtTestClassLoader extends Loader {
 
@@ -41,7 +41,7 @@ public class GwtTestClassLoader extends Loader {
 	private GwtTranslator translator;
 
 	private GwtTestClassLoader() throws NotFoundException, CannotCompileException {
-		super(PatchGwtClassPool.get());
+		super(GwtClassPool.get());
 
 		ConfigurationLoader configurationLoader = ConfigurationLoader.createInstance(this.getParent());
 
@@ -51,7 +51,7 @@ public class GwtTestClassLoader extends Loader {
 
 		translator = new GwtTranslator(configurationLoader.getPatchers());
 
-		addTranslator(PatchGwtClassPool.get(), translator);
+		addTranslator(GwtClassPool.get(), translator);
 	}
 
 }

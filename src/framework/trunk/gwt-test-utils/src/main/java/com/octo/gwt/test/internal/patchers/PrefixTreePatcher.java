@@ -8,7 +8,7 @@ import com.octo.gwt.test.internal.utils.PropertyContainerHelper;
 import com.octo.gwt.test.patchers.AutomaticPropertyContainerPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
-import com.octo.gwt.test.utils.GwtTestReflectionUtils;
+import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 @PatchClass(classes = { "com.google.gwt.user.client.ui.PrefixTree" })
 public class PrefixTreePatcher extends AutomaticPropertyContainerPatcher {
@@ -42,7 +42,7 @@ public class PrefixTreePatcher extends AutomaticPropertyContainerPatcher {
 
 	@PatchMethod
 	public static void clear(Object prefixTree) {
-		GwtTestReflectionUtils.setPrivateFieldValue(prefixTree, "size", 0);
+		GwtReflectionUtils.setPrivateFieldValue(prefixTree, "size", 0);
 	}
 
 }

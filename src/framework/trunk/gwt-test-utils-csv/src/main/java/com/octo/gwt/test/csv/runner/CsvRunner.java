@@ -16,10 +16,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.gwt.event.shared.UmbrellaException;
-import com.octo.gwt.test.csv.AbstractGwtCsvTest;
+import com.octo.gwt.test.csv.GwtCsvTest;
 import com.octo.gwt.test.csv.CsvMethod;
 import com.octo.gwt.test.csv.tools.ObjectFinder;
-import com.octo.gwt.test.utils.GwtTestReflectionUtils;
+import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 public class CsvRunner {
 
@@ -171,7 +171,7 @@ public class CsvRunner {
 			classCsvMethods = new HashMap<String, Method>();
 			csvMethodsCache.put(clazz, classCsvMethods);
 
-			Map<Method, CsvMethod> csvMethods = GwtTestReflectionUtils.getAnnotatedMethod(clazz, CsvMethod.class);
+			Map<Method, CsvMethod> csvMethods = GwtReflectionUtils.getAnnotatedMethod(clazz, CsvMethod.class);
 			for (Map.Entry<Method, CsvMethod> entry : csvMethods.entrySet()) {
 				classCsvMethods.put(getMethodName(entry), entry.getKey());
 			}
@@ -180,7 +180,7 @@ public class CsvRunner {
 		Method res = classCsvMethods.get(methodName);
 		if (res != null) {
 			return res;
-		} else if (clazz == AbstractGwtCsvTest.class) {
+		} else if (clazz == GwtCsvTest.class) {
 			return null;
 		} else {
 			Class<?> superClass = clazz.getSuperclass();
@@ -200,7 +200,7 @@ public class CsvRunner {
 	private Field getField(Object fixture, Class<?> clazz, String fieldName) {
 		for (Field f : clazz.getDeclaredFields()) {
 			if (f.getName().equalsIgnoreCase(fieldName)) {
-				GwtTestReflectionUtils.makeAccessible(f);
+				GwtReflectionUtils.makeAccessible(f);
 				return f;
 			}
 		}
@@ -274,10 +274,10 @@ public class CsvRunner {
 			if (!ok) {
 				Method m = null;
 				if (m == null) {
-					m = GwtTestReflectionUtils.getMethod(current.getClass(), currentName);
+					m = GwtReflectionUtils.getMethod(current.getClass(), currentName);
 				}
 				if (m == null) {
-					m = GwtTestReflectionUtils.getMethod(current.getClass(), "get" + currentName);
+					m = GwtReflectionUtils.getMethod(current.getClass(), "get" + currentName);
 				}
 				if (m != null) {
 					try {
@@ -335,7 +335,7 @@ public class CsvRunner {
 
 	private Object invoke(Object current, Method m, List<String> list) throws IllegalArgumentException, IllegalAccessException {
 		logger.debug("Invoking " + m.getName() + " on " + current.getClass().getCanonicalName() + " with param " + list);
-		GwtTestReflectionUtils.makeAccessible(m);
+		GwtReflectionUtils.makeAccessible(m);
 		if (list == null) {
 			if (m.getParameterTypes().length == 0) {
 				try {
@@ -367,7 +367,7 @@ public class CsvRunner {
 		if (m.getParameterTypes().length != 1 && m.getParameterTypes()[0] != int.class) {
 			Assert.fail("Unable to navigate " + current.getClass().getCanonicalName() + " with method " + m.getName());
 		}
-		Method countM = GwtTestReflectionUtils.getMethod(current.getClass(), m.getName() + "Count");
+		Method countM = GwtReflectionUtils.getMethod(current.getClass(), m.getName() + "Count");
 		if (countM == null) {
 			Assert.fail("Count method not found in " + current.getClass().getCanonicalName() + " method " + m.getName());
 		}

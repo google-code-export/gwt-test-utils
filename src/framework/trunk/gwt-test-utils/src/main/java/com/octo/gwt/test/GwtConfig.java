@@ -5,13 +5,13 @@ import java.util.Locale;
 
 import com.octo.gwt.test.internal.ModuleData;
 
-public class PatchGwtConfig {
+public class GwtConfig {
 
-	private static PatchGwtConfig INSTANCE;
+	private static GwtConfig INSTANCE;
 
-	public static PatchGwtConfig get() {
+	public static GwtConfig get() {
 		if (INSTANCE == null) {
-			INSTANCE = new PatchGwtConfig();
+			INSTANCE = new GwtConfig();
 		}
 
 		return INSTANCE;
@@ -22,7 +22,7 @@ public class PatchGwtConfig {
 	private String hostPagePath;
 	private String moduleName;
 
-	private PatchGwtConfig() {
+	private GwtConfig() {
 
 	}
 
@@ -75,7 +75,7 @@ public class PatchGwtConfig {
 		default:
 			throw new RuntimeException(
 					"You have declared more than one 'module-file' in your META-INF/gwt-test-utils.properties files. Please override the "
-							+ AbstractGwtConfigurableTest.class.getSimpleName() + ".getModuleName() method to tell which module is currently tested");
+							+ GwtTestBase.class.getSimpleName() + ".getModuleName() method to tell which module is currently tested");
 		}
 
 	}

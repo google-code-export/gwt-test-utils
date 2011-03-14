@@ -4,7 +4,7 @@ import com.google.gwt.core.client.GWT;
 import com.octo.gwt.test.GwtCreateHandler;
 import com.octo.gwt.test.GwtLogHandler;
 import com.octo.gwt.test.Mock;
-import com.octo.gwt.test.PatchGwtConfig;
+import com.octo.gwt.test.GwtConfig;
 import com.octo.gwt.test.internal.GwtCreateHandlerManager;
 import com.octo.gwt.test.patchers.AutomaticPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
@@ -15,7 +15,7 @@ public class GwtPatcher extends AutomaticPatcher {
 
 	@PatchMethod
 	public static void log(String message, Throwable t) {
-		GwtLogHandler logHandler = PatchGwtConfig.get().getLogHandler();
+		GwtLogHandler logHandler = GwtConfig.get().getLogHandler();
 		if (logHandler != null) {
 			logHandler.log(message, t);
 		}

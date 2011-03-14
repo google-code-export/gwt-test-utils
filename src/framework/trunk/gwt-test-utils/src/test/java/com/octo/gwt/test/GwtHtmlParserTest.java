@@ -12,7 +12,7 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Text;
 import com.octo.gwt.test.internal.GwtHtmlParser;
 
-public class GwtHtmlParserTest extends AbstractGwtTest {
+public class GwtHtmlParserTest extends GwtTest {
 
 	//	@Test
 	//	public void checkFormat() throws Exception {

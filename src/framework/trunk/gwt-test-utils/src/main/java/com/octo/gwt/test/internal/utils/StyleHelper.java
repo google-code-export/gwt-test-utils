@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 import com.octo.gwt.test.internal.patchers.dom.StylePatcher;
-import com.octo.gwt.test.utils.GwtTestReflectionUtils;
+import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 public class StyleHelper {
 
@@ -20,7 +20,7 @@ public class StyleHelper {
 
 	public static void setStyle(Style target, String value) {
 		for (Map.Entry<String, String> entry : getStyleProperties(value).entrySet()) {
-			target.setProperty(GwtTestStringUtils.camelize(entry.getKey()), entry.getValue());
+			target.setProperty(GwtStringUtils.camelize(entry.getKey()), entry.getValue());
 		}
 	}
 
@@ -39,7 +39,7 @@ public class StyleHelper {
 	}
 
 	public static Element getOwnerElement(Style style) {
-		return GwtTestReflectionUtils.getPrivateFieldValue(style, StylePatcher.TARGET_ELEMENT);
+		return GwtReflectionUtils.getPrivateFieldValue(style, StylePatcher.TARGET_ELEMENT);
 	}
 
 }

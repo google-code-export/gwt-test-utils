@@ -1,12 +1,12 @@
 package com.octo.gwt.test.spring;
 
-import com.octo.gwt.test.AbstractGwtTestRunner;
+import com.octo.gwt.test.GwtRunnerBase;
 
-public class GwtSpring3TestRunner extends AbstractGwtTestRunner {
+public class GwtSpringRunner extends GwtRunnerBase {
 
 	private static final String classRunnerName = "org.springframework.test.context.junit4.SpringJUnit4ClassRunner";
 
-	public GwtSpring3TestRunner(Class<?> clazz) throws Exception {
+	public GwtSpringRunner(Class<?> clazz) throws Exception {
 		super(clazz);
 	}
 

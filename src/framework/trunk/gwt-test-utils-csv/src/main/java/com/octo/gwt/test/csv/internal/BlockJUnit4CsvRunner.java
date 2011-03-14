@@ -10,7 +10,7 @@ import org.junit.runners.model.InitializationError;
 
 import com.octo.gwt.test.GwtTestClassLoader;
 import com.octo.gwt.test.csv.tools.DirectoryTestReader;
-import com.octo.gwt.test.utils.GwtTestReflectionUtils;
+import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 public class BlockJUnit4CsvRunner extends BlockJUnit4ClassRunner {
 
@@ -35,7 +35,7 @@ public class BlockJUnit4CsvRunner extends BlockJUnit4ClassRunner {
 	@Override
 	protected Object createTest() throws Exception {
 		Object testInstance = reader.createObject();
-		Method m = GwtTestReflectionUtils.findMethod(testInstance.getClass(), "setReader");
+		Method m = GwtReflectionUtils.findMethod(testInstance.getClass(), "setReader");
 		m.invoke(testInstance, reader);
 		return testInstance;
 	}

@@ -6,11 +6,11 @@ import org.junit.Test;
 
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
-import com.octo.gwt.test.AbstractGwtTest;
-import com.octo.gwt.test.utils.GwtTestReflectionUtils;
+import com.octo.gwt.test.GwtTest;
+import com.octo.gwt.test.utils.GwtReflectionUtils;
 import com.octo.gwt.test.utils.events.Browser;
 
-public class SimpleCompositeTest extends AbstractGwtTest {
+public class SimpleCompositeTest extends GwtTest {
 
 	private SimpleComposite composite;
 
@@ -22,8 +22,8 @@ public class SimpleCompositeTest extends AbstractGwtTest {
 	@Test
 	public void checkMouseMoveOnPicture() {
 		// Setup
-		Image img = GwtTestReflectionUtils.getPrivateFieldValue(composite, "img");
-		Label label = GwtTestReflectionUtils.getPrivateFieldValue(composite, "label");
+		Image img = GwtReflectionUtils.getPrivateFieldValue(composite, "img");
+		Label label = GwtReflectionUtils.getPrivateFieldValue(composite, "label");
 
 		Assert.assertEquals("", label.getText());
 

@@ -8,13 +8,13 @@ import org.junit.Test;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Label;
-import com.octo.gwt.test.AbstractGwtEasyMockTest;
+import com.octo.gwt.test.GwtTestWithEasyMock;
 import com.octo.gwt.test.Mock;
 import com.octo.gwt.test.demo.beans.FooBean;
-import com.octo.gwt.test.utils.GwtTestReflectionUtils;
+import com.octo.gwt.test.utils.GwtReflectionUtils;
 import com.octo.gwt.test.utils.events.Browser;
 
-public class RPCCompositeTest extends AbstractGwtEasyMockTest {
+public class RPCCompositeTest extends GwtTestWithEasyMock {
 
 	@Mock
 	private MyServiceAsync service;
@@ -30,8 +30,8 @@ public class RPCCompositeTest extends AbstractGwtEasyMockTest {
 	@Test
 	public void checkRPCCallSuccess() {
 		//Setup
-		Button button = GwtTestReflectionUtils.getPrivateFieldValue(composite, "button");
-		Label label = GwtTestReflectionUtils.getPrivateFieldValue(composite, "label");
+		Button button = GwtReflectionUtils.getPrivateFieldValue(composite, "button");
+		Label label = GwtReflectionUtils.getPrivateFieldValue(composite, "label");
 
 		service.createBean(EasyMock.eq("OCTO"), EasyMock.isA(AsyncCallback.class));
 
@@ -59,8 +59,8 @@ public class RPCCompositeTest extends AbstractGwtEasyMockTest {
 	@Test
 	public void checkRPCCallFailure() {
 		//Setup
-		Button button = GwtTestReflectionUtils.getPrivateFieldValue(composite, "button");
-		Label label = GwtTestReflectionUtils.getPrivateFieldValue(composite, "label");
+		Button button = GwtReflectionUtils.getPrivateFieldValue(composite, "button");
+		Label label = GwtReflectionUtils.getPrivateFieldValue(composite, "label");
 
 		service.createBean(EasyMock.eq("OCTO"), EasyMock.isA(AsyncCallback.class));
 

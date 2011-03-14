@@ -9,10 +9,10 @@ import org.junit.Test;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.user.client.ui.TextBox;
-import com.octo.gwt.test.utils.GwtTestReflectionUtils;
+import com.octo.gwt.test.utils.GwtReflectionUtils;
 import com.octo.gwt.test.utils.events.Browser;
 
-public class TextBoxTest extends AbstractGwtTest {
+public class TextBoxTest extends GwtTest {
 
 	@Test
 	public void checkName() {
@@ -56,7 +56,7 @@ public class TextBoxTest extends AbstractGwtTest {
 		// Set up
 		TextBox t = new TextBox();
 		t.setText("myText");
-		GwtTestReflectionUtils.setPrivateFieldValue(t, "attached", true);
+		GwtReflectionUtils.setPrivateFieldValue(t, "attached", true);
 
 		// Test
 		t.setCursorPos(2);

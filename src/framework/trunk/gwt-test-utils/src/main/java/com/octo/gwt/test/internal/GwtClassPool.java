@@ -4,7 +4,7 @@ import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.NotFoundException;
 
-public class PatchGwtClassPool {
+public class GwtClassPool {
 
 	private static ClassPool classPool = ClassPool.getDefault();
 

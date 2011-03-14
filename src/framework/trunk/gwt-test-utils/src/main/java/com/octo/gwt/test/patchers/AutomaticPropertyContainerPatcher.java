@@ -44,8 +44,8 @@ import com.google.gwt.dom.client.Text;
 import com.google.gwt.dom.client.TextAreaElement;
 import com.google.gwt.dom.client.TitleElement;
 import com.google.gwt.dom.client.UListElement;
-import com.octo.gwt.test.internal.PatchGwtClassPool;
-import com.octo.gwt.test.internal.utils.PatchGwtUtils;
+import com.octo.gwt.test.internal.GwtClassPool;
+import com.octo.gwt.test.internal.utils.GwtPatcherHelper;
 import com.octo.gwt.test.internal.utils.PropertyContainer;
 import com.octo.gwt.test.internal.utils.PropertyContainerAware;
 import com.octo.gwt.test.internal.utils.PropertyContainerHelper;
@@ -64,12 +64,12 @@ public class AutomaticPropertyContainerPatcher extends AutomaticPatcher {
 	public void initClass(CtClass c) throws Exception {
 		super.initClass(c);
 
-		CtClass pcType = PatchGwtClassPool.getCtClass(PropertyContainer.class);
+		CtClass pcType = GwtClassPool.getCtClass(PropertyContainer.class);
 		CtField field = new CtField(pcType, PROPERTIES, c);
 		field.setModifiers(Modifier.PRIVATE);
 		c.addField(field);
 
-		c.addInterface(PatchGwtClassPool.getCtClass(PropertyContainerAware.class));
+		c.addInterface(GwtClassPool.getCtClass(PropertyContainerAware.class));
 
 		CtMethod getProperties = new CtMethod(pcType, "getProperties", new CtClass[] {}, c);
 		StringBuffer stringBuffer = new StringBuffer();
@@ -90,7 +90,7 @@ public class AutomaticPropertyContainerPatcher extends AutomaticPatcher {
 			return superNewBody;
 		}
 		if (Modifier.isNative(m.getModifiers())) {
-			String fieldName = PatchGwtUtils.getPropertyName(m);
+			String fieldName = GwtPatcherHelper.get().getPropertyName(m);
 			if (fieldName != null) {
 				if (m.getName().startsWith("set")) {
 					return PropertyContainerHelper.getCodeSetProperty("this", fieldName, "$1");

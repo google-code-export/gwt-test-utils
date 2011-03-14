@@ -6,7 +6,7 @@ import java.util.List;
 import com.extjs.gxt.ui.client.core.FastMap;
 import com.extjs.gxt.ui.client.core.impl.ComputedStyleImpl;
 import com.google.gwt.user.client.Element;
-import com.octo.gwt.test.internal.utils.GwtTestStringUtils;
+import com.octo.gwt.test.internal.utils.GwtStringUtils;
 import com.octo.gwt.test.internal.utils.StyleHelper;
 import com.octo.gwt.test.patchers.AutomaticPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
@@ -24,7 +24,7 @@ public class ComputedStyleImplPatcher extends AutomaticPatcher {
 		LinkedHashMap<String, String> styleProperties = StyleHelper.getStyleProperties(elem.getAttribute("style"));
 
 		for (String name : orginalNames) {
-			String value = styleProperties.get(GwtTestStringUtils.hyphenize(name));
+			String value = styleProperties.get(GwtStringUtils.hyphenize(name));
 			if (value == null) {
 				value = "";
 			}

@@ -16,9 +16,9 @@ import javassist.Modifier;
 import javassist.NotFoundException;
 import javassist.bytecode.Descriptor;
 
-import com.octo.gwt.test.internal.PatchGwtClassPool;
+import com.octo.gwt.test.internal.GwtClassPool;
 import com.octo.gwt.test.internal.modifiers.JavaClassModifier;
-import com.octo.gwt.test.utils.GwtTestReflectionUtils;
+import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 public class SerializableModifier implements JavaClassModifier {
 
@@ -31,18 +31,18 @@ public class SerializableModifier implements JavaClassModifier {
 			return;
 		}
 
-		CtClass charSequenceCtClass = PatchGwtClassPool.getCtClass(CharSequence.class);
+		CtClass charSequenceCtClass = GwtClassPool.getCtClass(CharSequence.class);
 		if (classToModify.subtypeOf(charSequenceCtClass)) {
 			return;
 		}
 
 		// Externalizable object which is not serialized by GWT RPC
-		CtClass externalizableCtClass = PatchGwtClassPool.getCtClass(Externalizable.class);
+		CtClass externalizableCtClass = GwtClassPool.getCtClass(Externalizable.class);
 		if (classToModify.subtypeOf(externalizableCtClass)) {
 			return;
 		}
 
-		CtClass serializableCtClass = PatchGwtClassPool.getCtClass(Serializable.class);
+		CtClass serializableCtClass = GwtClassPool.getCtClass(Serializable.class);
 		if (!classToModify.subtypeOf(serializableCtClass)) {
 			return;
 		}
@@ -87,7 +87,7 @@ public class SerializableModifier implements JavaClassModifier {
 	}
 
 	private CtMethod getReadObjectMethod(CtClass ctClass) {
-		CtClass[] paramTypes = new CtClass[] { PatchGwtClassPool.getCtClass(ObjectInputStream.class) };
+		CtClass[] paramTypes = new CtClass[] { GwtClassPool.getCtClass(ObjectInputStream.class) };
 		try {
 			return ctClass.getDeclaredMethod("readObject", paramTypes);
 		} catch (NotFoundException e) {
@@ -97,13 +97,13 @@ public class SerializableModifier implements JavaClassModifier {
 	}
 
 	private void overrideReadObject(CtClass classToModify) throws NotFoundException, CannotCompileException {
-		CtClass[] paramTypes = new CtClass[] { PatchGwtClassPool.getCtClass(ObjectInputStream.class) };
+		CtClass[] paramTypes = new CtClass[] { GwtClassPool.getCtClass(ObjectInputStream.class) };
 		CtMethod readObjectMethod = new CtMethod(CtClass.voidType, "readObject", paramTypes, classToModify);
 		readObjectMethod.setModifiers(Modifier.PRIVATE);
 
 		// add exception types
-		CtClass classNotFoundException = PatchGwtClassPool.getCtClass(ClassNotFoundException.class);
-		CtClass ioException = PatchGwtClassPool.getCtClass(IOException.class);
+		CtClass classNotFoundException = GwtClassPool.getCtClass(ClassNotFoundException.class);
+		CtClass ioException = GwtClassPool.getCtClass(IOException.class);
 		readObjectMethod.setExceptionTypes(new CtClass[] { classNotFoundException, ioException });
 
 		// set body (call static readObject(Serializable, ObjectInputStream)
@@ -132,7 +132,7 @@ public class SerializableModifier implements JavaClassModifier {
 
 			// call the exported default constructor to reinitialise triansient field values
 			// which are not expected to be null
-			GwtTestReflectionUtils.callPrivateMethod(ex, DEFAULT_CONS_METHOD_NAME);
+			GwtReflectionUtils.callPrivateMethod(ex, DEFAULT_CONS_METHOD_NAME);
 
 			// set the kept field values
 			for (Map.Entry<Field, Object> entry : buffer.entrySet()) {
@@ -148,7 +148,7 @@ public class SerializableModifier implements JavaClassModifier {
 	private static Map<Field, Object> getFieldValues(Serializable o) throws IllegalArgumentException, IllegalAccessException {
 		Map<Field, Object> result = new HashMap<Field, Object>();
 
-		for (Field field : GwtTestReflectionUtils.getFields(o.getClass())) {
+		for (Field field : GwtReflectionUtils.getFields(o.getClass())) {
 			int fieldModifier = field.getModifiers();
 			if (!Modifier.isFinal(fieldModifier) && !Modifier.isStatic(fieldModifier) && !Modifier.isTransient(fieldModifier)) {
 				result.put(field, field.get(o));

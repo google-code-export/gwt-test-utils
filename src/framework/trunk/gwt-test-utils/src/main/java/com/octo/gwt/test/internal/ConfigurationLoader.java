@@ -25,7 +25,7 @@ import com.octo.gwt.test.internal.modifiers.ClassSubstituer;
 import com.octo.gwt.test.internal.modifiers.JavaClassModifier;
 import com.octo.gwt.test.internal.modifiers.MethodRemover;
 import com.octo.gwt.test.patchers.PatchClass;
-import com.octo.gwt.test.utils.GwtTestReflectionUtils;
+import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 public class ConfigurationLoader {
 
@@ -196,7 +196,7 @@ public class ConfigurationLoader {
 		for (String className : classList) {
 			Class<?> clazz = Class.forName(className, true, classLoader);
 
-			PatchClass patchClass = GwtTestReflectionUtils.getAnnotation(clazz, PatchClass.class);
+			PatchClass patchClass = GwtReflectionUtils.getAnnotation(clazz, PatchClass.class);
 
 			if (patchClass == null) {
 				continue;
@@ -207,7 +207,7 @@ public class ConfigurationLoader {
 						+ IPatcher.class.getSimpleName() + " interface and provide an empty constructor");
 			}
 
-			IPatcher patcher = (IPatcher) GwtTestReflectionUtils.instantiateClass(clazz);
+			IPatcher patcher = (IPatcher) GwtReflectionUtils.instantiateClass(clazz);
 
 			for (Class<?> c : patchClass.value()) {
 				String targetName = c.isMemberClass() ? c.getDeclaringClass().getCanonicalName() + "$" + c.getSimpleName() : c.getCanonicalName();

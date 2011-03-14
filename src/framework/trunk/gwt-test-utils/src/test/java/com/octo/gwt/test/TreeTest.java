@@ -11,7 +11,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.TreeItem;
 
-public class TreeTest extends AbstractGwtTest {
+public class TreeTest extends GwtTest {
 
 	private Tree tree;
 	private TreeItem parent;

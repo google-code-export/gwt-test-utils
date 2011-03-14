@@ -8,10 +8,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.google.gwt.core.client.GWT;
-import com.octo.gwt.test.AbstractGwtTest;
-import com.octo.gwt.test.PatchGwtConfig;
+import com.octo.gwt.test.GwtTest;
+import com.octo.gwt.test.GwtConfig;
 
-public class MyConstantsTest extends AbstractGwtTest {
+public class MyConstantsTest extends GwtTest {
 
 	private MyConstants constants;
 
@@ -22,7 +22,7 @@ public class MyConstantsTest extends AbstractGwtTest {
 
 	@Test
 	public void checkMyConstantsWithSpecialChar() {
-		PatchGwtConfig.get().setLocale(Locale.FRENCH);
+		GwtConfig.get().setLocale(Locale.FRENCH);
 
 		// Test
 		String hello = constants.hello();
@@ -57,7 +57,7 @@ public class MyConstantsTest extends AbstractGwtTest {
 	@Test
 	public void checkMyConstantsChange() {
 		// Setup
-		PatchGwtConfig.get().setLocale(Locale.ENGLISH);
+		GwtConfig.get().setLocale(Locale.ENGLISH);
 
 		// Test 1
 		String hello = constants.hello();
@@ -81,7 +81,7 @@ public class MyConstantsTest extends AbstractGwtTest {
 		Assert.assertEquals((float) 6.66, map.get("functionFloat"));
 
 		// Test 2
-		PatchGwtConfig.get().setLocale(Locale.US);
+		GwtConfig.get().setLocale(Locale.US);
 		hello = constants.hello();
 		goodbye = constants.goodbye();
 		stringArray = constants.stringArray();

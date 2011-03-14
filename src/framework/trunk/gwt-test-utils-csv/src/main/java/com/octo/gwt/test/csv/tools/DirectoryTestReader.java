@@ -22,8 +22,8 @@ import com.octo.gwt.test.GwtTestClassLoader;
 import com.octo.gwt.test.csv.CsvDirectory;
 import com.octo.gwt.test.csv.CsvMacros;
 import com.octo.gwt.test.csv.runner.CsvReader;
-import com.octo.gwt.test.internal.PatchGwtClassPool;
-import com.octo.gwt.test.utils.GwtTestReflectionUtils;
+import com.octo.gwt.test.internal.GwtClassPool;
+import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 public class DirectoryTestReader {
 
@@ -82,8 +82,8 @@ public class DirectoryTestReader {
 		testMethods = new ArrayList<Method>();
 		String csvShortName = csvDirectory.value().substring(csvDirectory.value().lastIndexOf('/') + 1);
 
-		CtClass newClazz = PatchGwtClassPool.get().makeClass(clazz.getName() + ".generated" + System.nanoTime());
-		newClazz.setSuperclass(PatchGwtClassPool.getCtClass(clazz));
+		CtClass newClazz = GwtClassPool.get().makeClass(clazz.getName() + ".generated" + System.nanoTime());
+		newClazz.setSuperclass(GwtClassPool.getCtClass(clazz));
 		List<String> methodList = new ArrayList<String>();
 		for (Entry<String, List<List<String>>> entry : tests.entrySet()) {
 			String methodName = csvShortName + "_" + entry.getKey();
@@ -100,7 +100,7 @@ public class DirectoryTestReader {
 	}
 
 	private static <T> T getAnnotation(Class<?> clazz, Class<T> annotationClass) {
-		T annotation = GwtTestReflectionUtils.getAnnotation(clazz, annotationClass);
+		T annotation = GwtReflectionUtils.getAnnotation(clazz, annotationClass);
 		if (annotation == null) {
 			throw new RuntimeException("Missing annotation \'@" + annotationClass.getSimpleName() + "\' on class [" + clazz.getCanonicalName() + "]");
 		}

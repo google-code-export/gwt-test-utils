@@ -7,7 +7,7 @@ import com.google.gwt.user.client.Cookies;
 import com.octo.gwt.test.patchers.AutomaticPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
-import com.octo.gwt.test.utils.GwtTestReflectionUtils;
+import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 @PatchClass(Cookies.class)
 public class CookiesPatcher extends AutomaticPatcher {
@@ -23,7 +23,7 @@ public class CookiesPatcher extends AutomaticPatcher {
 		Map<String, String> cachedCookies = getCookiesMap();
 		if (cachedCookies == null) {
 			cachedCookies = new HashMap<String, String>();
-			GwtTestReflectionUtils.setStaticField(Cookies.class, "cachedCookies", cachedCookies);
+			GwtReflectionUtils.setStaticField(Cookies.class, "cachedCookies", cachedCookies);
 		}
 
 		cachedCookies.put(name, value);
@@ -45,7 +45,7 @@ public class CookiesPatcher extends AutomaticPatcher {
 	}
 
 	private static Map<String, String> getCookiesMap() {
-		Map<String, String> cachedCookies = GwtTestReflectionUtils.getStaticFieldValue(Cookies.class, "cachedCookies");
+		Map<String, String> cachedCookies = GwtReflectionUtils.getStaticFieldValue(Cookies.class, "cachedCookies");
 		return cachedCookies;
 	}
 

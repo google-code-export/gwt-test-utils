@@ -9,7 +9,7 @@ import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Style;
 import com.octo.gwt.test.internal.GwtHtmlParser;
 import com.octo.gwt.test.internal.overrides.OverrideNodeList;
-import com.octo.gwt.test.internal.utils.GwtTestStringUtils;
+import com.octo.gwt.test.internal.utils.GwtStringUtils;
 import com.octo.gwt.test.internal.utils.PropertyContainer;
 import com.octo.gwt.test.internal.utils.PropertyContainerHelper;
 import com.octo.gwt.test.patchers.AutomaticPropertyContainerPatcher;
@@ -163,22 +163,22 @@ public class ElementPatcher extends AutomaticPropertyContainerPatcher {
 
 	@PatchMethod
 	public static int getOffsetHeight(Element element) {
-		return GwtTestStringUtils.parseInt(element.getStyle().getHeight(), 0);
+		return GwtStringUtils.parseInt(element.getStyle().getHeight(), 0);
 	}
 
 	@PatchMethod
 	public static int getOffsetLeft(Element element) {
-		return GwtTestStringUtils.parseInt(element.getStyle().getLeft(), 0);
+		return GwtStringUtils.parseInt(element.getStyle().getLeft(), 0);
 	}
 
 	@PatchMethod
 	public static int getOffsetTop(Element element) {
-		return GwtTestStringUtils.parseInt(element.getStyle().getTop(), 0);
+		return GwtStringUtils.parseInt(element.getStyle().getTop(), 0);
 	}
 
 	@PatchMethod
 	public static int getOffsetWidth(Element element) {
-		return GwtTestStringUtils.parseInt(element.getStyle().getWidth(), 0);
+		return GwtStringUtils.parseInt(element.getStyle().getWidth(), 0);
 	}
 
 }

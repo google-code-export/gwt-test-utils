@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
 
 import com.octo.gwt.test.IPatcher;
 import com.octo.gwt.test.internal.modifiers.JavaClassModifier;
-import com.octo.gwt.test.internal.utils.PatchGwtUtils;
+import com.octo.gwt.test.internal.utils.GwtPatcherHelper;
 
 public class GwtTranslator implements Translator {
 
@@ -36,7 +36,7 @@ public class GwtTranslator implements Translator {
 				logger.debug("Load class " + className + ", use patcher " + patcher.getClass().getCanonicalName());
 				CtClass clazz = pool.get(className);
 				logger.debug("Patch class " + className);
-				PatchGwtUtils.patch(clazz, patcher);
+				GwtPatcherHelper.get().patch(clazz, patcher);
 				logger.debug("Class loaded & patched " + className);
 			} else {
 				logger.debug("Load class " + className + ", no patch");
@@ -76,7 +76,7 @@ public class GwtTranslator implements Translator {
 
 	private void applyJavaClassModifier(String className) throws Exception {
 		logger.debug("Modify class " + className + ", with modifiers declared in 'META-INF/gwt-test-utils.properties'");
-		CtClass classToModify = PatchGwtClassPool.get().get(className);
+		CtClass classToModify = GwtClassPool.get().get(className);
 		for (JavaClassModifier modifier : ConfigurationLoader.get().getJavaClassModifierList()) {
 			modifier.modify(classToModify);
 		}

@@ -6,15 +6,15 @@ import org.junit.After;
 import org.junit.Before;
 
 import com.octo.gwt.test.internal.GwtCreateHandlerManager;
-import com.octo.gwt.test.internal.PatchGwtReset;
+import com.octo.gwt.test.internal.GwtReset;
 
-public abstract class AbstractGwtConfigurableTest {
+public abstract class GwtTestBase {
 
 	@Before
 	public void setUpAbstractGwtIntegrationShell() throws Exception {
-		PatchGwtConfig.get().setLocale(getLocale());
-		PatchGwtConfig.get().setLogHandler(getLogHandler());
-		PatchGwtConfig.get().setHostPagePath(getHostPagePath());
+		GwtConfig.get().setLocale(getLocale());
+		GwtConfig.get().setLogHandler(getLogHandler());
+		GwtConfig.get().setHostPagePath(getHostPagePath());
 
 		String moduleName = getModuleName();
 		if (moduleName == null) {
@@ -24,7 +24,7 @@ public abstract class AbstractGwtConfigurableTest {
 			}
 		}
 
-		PatchGwtConfig.get().setModuleName(moduleName);
+		GwtConfig.get().setModuleName(moduleName);
 	}
 
 	@After
@@ -60,7 +60,7 @@ public abstract class AbstractGwtConfigurableTest {
 
 	protected void resetPatchGwt() throws Exception {
 		// reinit GWT
-		PatchGwtReset.reset();
+		GwtReset.reset();
 	}
 
 	protected boolean addGwtCreateHandler(GwtCreateHandler gwtCreateHandler) {

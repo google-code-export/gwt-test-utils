@@ -9,7 +9,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.ToggleButton;
 import com.octo.gwt.test.utils.events.Browser;
 
-public class ToggleButtonTest extends AbstractGwtTest {
+public class ToggleButtonTest extends GwtTest {
 
 	private boolean clicked;
 

@@ -13,9 +13,9 @@ import se.fishtank.css.selectors.dom.DOMNodeSelector;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
-import com.octo.gwt.test.AbstractGwtTest;
+import com.octo.gwt.test.GwtTest;
 
-public class DOMNodeSelectorTest extends AbstractGwtTest {
+public class DOMNodeSelectorTest extends GwtTest {
 
 	private static final Map<String, Integer> testDataMap = new LinkedHashMap<String, Integer>();
 
