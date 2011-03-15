@@ -310,7 +310,6 @@ public class GwtReflectionUtils {
 	 *            class to instantiate
 	 * @return the new instance
 	 */
-	@SuppressWarnings("unchecked")
 	public static <T> T instantiateClass(Class<T> clazz) {
 		if (clazz == null) {
 			throw new IllegalArgumentException("Class must not be null");
@@ -319,7 +318,7 @@ public class GwtReflectionUtils {
 			throw new RuntimeException("Error during instanciation of '" + clazz.getName() + "'. Specified class is an interface");
 		}
 		try {
-			return (T) instantiateClass(clazz.getDeclaredConstructor());
+			return instantiateClass(clazz.getDeclaredConstructor());
 		} catch (NoSuchMethodException ex) {
 			throw new RuntimeException("Error during instanciation of '" + clazz.getName() + "'. No default constructor found", ex);
 		}
@@ -333,13 +332,15 @@ public class GwtReflectionUtils {
 	 * Note that this method tries to set the constructor accessible if given a
 	 * non-accessible (that is, non-public) constructor.
 	 * 
+	 * @param <T>
+	 *            The object type
 	 * @param ctor
 	 *            the constructor to instantiate
 	 * @param args
 	 *            the constructor arguments to apply
 	 * @return the new instance
 	 */
-	public static Object instantiateClass(Constructor<?> ctor, Object... args) {
+	public static <T> T instantiateClass(Constructor<T> ctor, Object... args) {
 		if (ctor == null) {
 			throw new IllegalArgumentException("Constructor must not be null");
 		}

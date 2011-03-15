@@ -47,7 +47,7 @@ public class GridTest extends GwtTest {
 
 		});
 
-		click(g, 0, 0);
+		Browser.click(g, 0, 0);
 
 		Assert.assertTrue("TableListener should have been notified", clicked);
 
@@ -68,7 +68,7 @@ public class GridTest extends GwtTest {
 			}
 		});
 
-		click(g, 0, 0);
+		Browser.click(g, 0, 0);
 
 		Assert.assertTrue("TableListener should have been notified", clicked);
 
@@ -136,6 +136,7 @@ public class GridTest extends GwtTest {
 
 	@Test
 	public void checkClickListenerNestedWidget() {
+		// Setup
 		// Grids must be sized explicitly, though they can be resized later.
 		Grid g = new Grid(1, 1);
 
@@ -152,9 +153,11 @@ public class GridTest extends GwtTest {
 		g.setWidget(0, 0, b);
 
 		Assert.assertEquals(false, clicked);
-		// simule the click
-		click(g.getWidget(0, 0));
 
+		// Test : simule the click
+		Browser.click(g.getWidget(0, 0));
+
+		// Assert
 		Assert.assertEquals(true, clicked);
 	}
 

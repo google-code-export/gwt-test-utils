@@ -4,7 +4,7 @@ import com.google.gwt.core.client.GWT;
 import com.octo.gwt.test.GwtCreateHandler;
 import com.octo.gwt.test.GwtLogHandler;
 import com.octo.gwt.test.Mock;
-import com.octo.gwt.test.GwtConfig;
+import com.octo.gwt.test.internal.GwtConfig;
 import com.octo.gwt.test.internal.GwtCreateHandlerManager;
 import com.octo.gwt.test.patchers.AutomaticPatcher;
 import com.octo.gwt.test.patchers.PatchClass;

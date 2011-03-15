@@ -15,8 +15,8 @@ public class XMLParserTest extends GwtTest {
 		} catch (Exception e) {
 			// Assert
 			Assert.assertEquals(UnsupportedOperationException.class, e.getClass());
-			Assert.assertEquals("Abstract method 'XMLParserImplSubClass.parseImpl()' is not patched by any declared IPatcher instance",
-					e.getMessage());
+			Assert.assertEquals("Abstract method 'XMLParserImplSubClass.parseImpl()' is not patched by any declared " + Patcher.class.getSimpleName()
+					+ " instance", e.getMessage());
 		}
 	}
 

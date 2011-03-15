@@ -10,25 +10,16 @@ import javassist.CtMethod;
 import javassist.Modifier;
 import javassist.NotFoundException;
 
-import com.octo.gwt.test.IPatcher;
+import com.octo.gwt.test.Patcher;
 import com.octo.gwt.test.patchers.AutomaticPatcher;
 
-public class GwtPatcherHelper {
+public class GwtPatcherUtils {
 
-	private static GwtPatcherHelper INSTANCE;
-
-	public static GwtPatcherHelper get() {
-		if (INSTANCE == null) {
-			INSTANCE = new GwtPatcherHelper();
-		}
-		return INSTANCE;
-	}
-
-	private GwtPatcherHelper() {
+	private GwtPatcherUtils() {
 
 	}
 
-	public void patch(CtClass c, IPatcher patcher) throws Exception {
+	public static void patch(CtClass c, Patcher patcher) throws Exception {
 		treatClassToPatch(c);
 
 		if (patcher != null) {
@@ -59,7 +50,7 @@ public class GwtPatcherHelper {
 							+ m.getName() + "()' is not patched by " + patcher.getClass().getName() + "\"); }");
 				} else {
 					m.setBody("{ throw new " + UnsupportedOperationException.class.getName() + "(\"Abstract method '" + c.getSimpleName() + "."
-							+ m.getName() + "()' is not patched by any declared " + IPatcher.class.getSimpleName() + " instance\"); }");
+							+ m.getName() + "()' is not patched by any declared " + Patcher.class.getSimpleName() + " instance\"); }");
 				}
 			}
 		}
@@ -69,7 +60,7 @@ public class GwtPatcherHelper {
 		}
 	}
 
-	public CtConstructor findConstructor(CtClass ctClass, Class<?>... argsClasses) throws NotFoundException {
+	public static CtConstructor findConstructor(CtClass ctClass, Class<?>... argsClasses) throws NotFoundException {
 		List<CtConstructor> l = new ArrayList<CtConstructor>();
 
 		for (CtConstructor c : ctClass.getDeclaredConstructors()) {
@@ -96,10 +87,28 @@ public class GwtPatcherHelper {
 			throw new RuntimeException("Unable to find a constructor with the specifed parameter types in class " + ctClass.getName());
 		}
 		throw new RuntimeException("Multiple constructor in class " + ctClass.getName() + ", you have to set parameter types discriminators");
-
 	}
 
-	private void treatClassToPatch(CtClass c) throws CannotCompileException {
+	public static String getPropertyName(CtMethod m) throws Exception {
+		String fieldName = null;
+		if (m.getName().startsWith("get") && m.getParameterTypes().length == 0) {
+			fieldName = m.getName().substring(3);
+		} else if (m.getName().startsWith("is") && m.getParameterTypes().length == 0) {
+			fieldName = m.getName().substring(2);
+		} else if (m.getName().startsWith("set") && m.getParameterTypes().length == 1) {
+			fieldName = m.getName().substring(3);
+		}
+
+		return fieldName;
+	}
+
+	public static boolean areAssertionEnabled() {
+		boolean enabled = false;
+		assert enabled = true;
+		return enabled;
+	}
+
+	private static void treatClassToPatch(CtClass c) throws CannotCompileException {
 		if (c == null) {
 			throw new IllegalArgumentException("the class to patch cannot be null");
 		}
@@ -121,7 +130,7 @@ public class GwtPatcherHelper {
 		addDefaultConstructor(c);
 	}
 
-	private void addDefaultConstructor(CtClass c) throws CannotCompileException {
+	private static void addDefaultConstructor(CtClass c) throws CannotCompileException {
 		CtConstructor cons;
 		try {
 			cons = c.getDeclaredConstructor(new CtClass[] {});
@@ -134,20 +143,7 @@ public class GwtPatcherHelper {
 
 	}
 
-	public String getPropertyName(CtMethod m) throws Exception {
-		String fieldName = null;
-		if (m.getName().startsWith("get") && m.getParameterTypes().length == 0) {
-			fieldName = m.getName().substring(3);
-		} else if (m.getName().startsWith("is") && m.getParameterTypes().length == 0) {
-			fieldName = m.getName().substring(2);
-		} else if (m.getName().startsWith("set") && m.getParameterTypes().length == 1) {
-			fieldName = m.getName().substring(3);
-		}
-
-		return fieldName;
-	}
-
-	private void replaceImplementation(CtMethod m, String src) throws Exception {
+	private static void replaceImplementation(CtMethod m, String src) throws Exception {
 		removeNativeModifier(m);
 
 		if (src == null || src.trim().length() == 0) {
@@ -177,26 +173,20 @@ public class GwtPatcherHelper {
 		}
 	}
 
-	private void insertBefore(CtMethod m, String newBody) throws Exception {
+	private static void insertBefore(CtMethod m, String newBody) throws Exception {
 		removeNativeModifier(m);
 		m.insertBefore(newBody);
 	}
 
-	private void insertAfter(CtMethod m, String newBody) throws Exception {
+	private static void insertAfter(CtMethod m, String newBody) throws Exception {
 		removeNativeModifier(m);
 		m.insertAfter(newBody);
 	}
 
-	private void removeNativeModifier(CtMethod m) throws Exception {
+	private static void removeNativeModifier(CtMethod m) throws Exception {
 		if (Modifier.isNative(m.getModifiers())) {
 			m.setModifiers(m.getModifiers() - Modifier.NATIVE);
 		}
-	}
-
-	public boolean areAssertionEnabled() {
-		boolean enabled = false;
-		assert enabled = true;
-		return enabled;
 	}
 
 }

@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
 import javassist.CtClass;
 import javassist.CtMethod;
 
-import com.octo.gwt.test.GwtTestClassLoader;
+import com.octo.gwt.test.GwtClassLoader;
 import com.octo.gwt.test.csv.CsvDirectory;
 import com.octo.gwt.test.csv.CsvMacros;
 import com.octo.gwt.test.csv.runner.CsvReader;
@@ -92,7 +92,7 @@ public class DirectoryTestReader {
 			m.setBody("launchTest(\"" + entry.getKey() + "\");");
 			newClazz.addMethod(m);
 		}
-		generatedClazz = newClazz.toClass(GwtTestClassLoader.get(), null);
+		generatedClazz = newClazz.toClass(GwtClassLoader.get(), null);
 		for (String methodName : methodList) {
 			Method m = generatedClazz.getMethod(methodName);
 			testMethods.add(m);

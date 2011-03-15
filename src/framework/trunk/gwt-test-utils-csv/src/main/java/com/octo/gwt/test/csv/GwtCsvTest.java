@@ -30,7 +30,7 @@ import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
-import com.octo.gwt.test.GwtTestBase;
+import com.octo.gwt.test.GwtTest;
 import com.octo.gwt.test.csv.runner.CsvRunner;
 import com.octo.gwt.test.csv.runner.Node;
 import com.octo.gwt.test.csv.tools.DefaultWidgetVisitor;
@@ -48,7 +48,7 @@ import com.octo.gwt.test.utils.events.Browser;
 import com.octo.gwt.test.utils.events.EventBuilder;
 import com.octo.gwt.test.utils.events.EventUtils;
 
-public abstract class GwtCsvTest extends GwtTestBase {
+public abstract class GwtCsvTest extends GwtTest {
 
 	protected CsvRunner csvRunner;
 

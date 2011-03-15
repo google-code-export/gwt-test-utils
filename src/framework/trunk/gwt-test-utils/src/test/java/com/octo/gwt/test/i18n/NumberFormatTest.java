@@ -7,7 +7,7 @@ import org.junit.Test;
 
 import com.google.gwt.i18n.client.NumberFormat;
 import com.octo.gwt.test.GwtTest;
-import com.octo.gwt.test.GwtConfig;
+import com.octo.gwt.test.internal.GwtConfig;
 
 public class NumberFormatTest extends GwtTest {
 

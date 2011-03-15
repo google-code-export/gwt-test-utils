@@ -14,7 +14,7 @@ import com.google.gwt.i18n.client.Messages;
 import com.google.gwt.i18n.client.impl.CldrImpl;
 import com.google.gwt.i18n.client.impl.cldr.DateTimeFormatInfoImpl;
 import com.octo.gwt.test.GwtCreateHandler;
-import com.octo.gwt.test.GwtConfig;
+import com.octo.gwt.test.internal.GwtConfig;
 
 public class LocalizableCreateHandler implements GwtCreateHandler {
 

@@ -1,9 +1,10 @@
-package com.octo.gwt.test;
+package com.octo.gwt.test.internal;
 
 import java.util.List;
 import java.util.Locale;
 
-import com.octo.gwt.test.internal.ModuleData;
+import com.octo.gwt.test.GwtLogHandler;
+import com.octo.gwt.test.GwtTest;
 
 public class GwtConfig {
 
@@ -75,7 +76,7 @@ public class GwtConfig {
 		default:
 			throw new RuntimeException(
 					"You have declared more than one 'module-file' in your META-INF/gwt-test-utils.properties files. Please override the "
-							+ GwtTestBase.class.getSimpleName() + ".getModuleName() method to tell which module is currently tested");
+							+ GwtTest.class.getSimpleName() + ".getModuleName() method to tell which module is currently tested");
 		}
 
 	}

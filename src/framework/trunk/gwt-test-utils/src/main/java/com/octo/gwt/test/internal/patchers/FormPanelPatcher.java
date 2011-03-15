@@ -1,9 +1,10 @@
 package com.octo.gwt.test.internal.patchers;
 
+import java.lang.reflect.Constructor;
+
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
-import com.google.gwt.user.client.ui.OverrideSubmitCompleteEvent;
 import com.google.gwt.user.client.ui.impl.FormPanelImpl;
 import com.octo.gwt.test.patchers.AutomaticPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
@@ -27,7 +28,12 @@ public class FormPanelPatcher extends AutomaticPatcher {
 	}
 
 	private static SubmitCompleteEvent createCompleteSubmitEvent(String resultsHtml) {
-		return new OverrideSubmitCompleteEvent(resultsHtml);
+		try {
+			Constructor<SubmitCompleteEvent> ctor = SubmitCompleteEvent.class.getDeclaredConstructor(String.class);
+			return GwtReflectionUtils.instantiateClass(ctor, resultsHtml);
+		} catch (Exception e) {
+			throw new RuntimeException("Error while trying to instanciate " + SubmitCompleteEvent.class.getName() + " class", e);
+		}
 	}
 
 }

@@ -10,6 +10,7 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.Widget;
+import com.octo.gwt.test.utils.events.Browser;
 
 @SuppressWarnings("deprecation")
 public class FlexTableTest extends GwtTest {
@@ -58,7 +59,7 @@ public class FlexTableTest extends GwtTest {
 
 		Assert.assertEquals(false, clicked);
 		//simule the click
-		click(t.getWidget(0, 0));
+		Browser.click(t.getWidget(0, 0));
 
 		Assert.assertEquals(true, clicked);
 	}
@@ -82,7 +83,7 @@ public class FlexTableTest extends GwtTest {
 
 		Assert.assertEquals(false, clicked);
 		//simule the click
-		click(t.getWidget(0, 0));
+		Browser.click(t.getWidget(0, 0));
 
 		Assert.assertEquals(true, clicked);
 	}

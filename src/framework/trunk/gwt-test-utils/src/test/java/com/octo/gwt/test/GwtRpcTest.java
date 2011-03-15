@@ -7,7 +7,7 @@ import org.junit.Test;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
-public class GwtRpcTest extends GwtTestWithEasyMock {
+public class GwtRpcTest extends GwtTestWithMocks {
 
 	static class MyGwtClass {
 

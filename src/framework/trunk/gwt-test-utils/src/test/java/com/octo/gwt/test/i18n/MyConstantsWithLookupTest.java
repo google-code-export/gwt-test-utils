@@ -9,7 +9,7 @@ import org.junit.Test;
 
 import com.google.gwt.core.client.GWT;
 import com.octo.gwt.test.GwtTest;
-import com.octo.gwt.test.GwtConfig;
+import com.octo.gwt.test.internal.GwtConfig;
 
 public class MyConstantsWithLookupTest extends GwtTest {
 

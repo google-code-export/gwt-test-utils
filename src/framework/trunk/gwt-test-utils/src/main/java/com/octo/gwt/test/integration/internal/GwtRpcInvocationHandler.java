@@ -10,8 +10,8 @@ import org.slf4j.LoggerFactory;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.StatusCodeException;
-import com.octo.gwt.test.integration.IGwtRpcExceptionHandler;
-import com.octo.gwt.test.integration.IGwtRpcSerializerHandler;
+import com.octo.gwt.test.integration.GwtRpcExceptionHandler;
+import com.octo.gwt.test.integration.GwtRpcSerializerHandler;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 public class GwtRpcInvocationHandler implements InvocationHandler {
@@ -19,12 +19,12 @@ public class GwtRpcInvocationHandler implements InvocationHandler {
 	private static final Logger logger = LoggerFactory.getLogger(GwtRpcInvocationHandler.class);
 
 	private Object target;
-	private IGwtRpcExceptionHandler exceptionHandler;
-	private IGwtRpcSerializerHandler serializerHander;
+	private GwtRpcExceptionHandler exceptionHandler;
+	private GwtRpcSerializerHandler serializerHander;
 	private HashMap<Method, Method> methodTable;
 
-	public GwtRpcInvocationHandler(Class<?> asyncClazz, Object target, IGwtRpcExceptionHandler exceptionHandler,
-			IGwtRpcSerializerHandler serializerHandler) {
+	public GwtRpcInvocationHandler(Class<?> asyncClazz, Object target, GwtRpcExceptionHandler exceptionHandler,
+			GwtRpcSerializerHandler serializerHandler) {
 		this.target = target;
 		this.exceptionHandler = exceptionHandler;
 		this.serializerHander = serializerHandler;

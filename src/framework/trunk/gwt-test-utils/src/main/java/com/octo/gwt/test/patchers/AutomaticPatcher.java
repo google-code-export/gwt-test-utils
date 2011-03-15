@@ -13,11 +13,11 @@ import javassist.CtConstructor;
 import javassist.CtMethod;
 import javassist.NotFoundException;
 
-import com.octo.gwt.test.IPatcher;
-import com.octo.gwt.test.internal.utils.GwtPatcherHelper;
+import com.octo.gwt.test.Patcher;
+import com.octo.gwt.test.internal.utils.GwtPatcherUtils;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
-public class AutomaticPatcher implements IPatcher {
+public class AutomaticPatcher implements Patcher {
 
 	public static final String INSERT_BEFORE = "INSERT_BEFORE";
 	public static final String INSERT_AFTER = "INSERT_AFTER";
@@ -200,7 +200,7 @@ public class AutomaticPatcher implements IPatcher {
 	}
 
 	protected CtConstructor findConstructor(CtClass ctClass, Class<?>... argsClasses) throws NotFoundException {
-		return GwtPatcherHelper.get().findConstructor(ctClass, argsClasses);
+		return GwtPatcherUtils.findConstructor(ctClass, argsClasses);
 	}
 
 }

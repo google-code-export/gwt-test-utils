@@ -7,6 +7,7 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Hyperlink;
+import com.octo.gwt.test.utils.events.Browser;
 
 public class HyperlinkTest extends GwtTest {
 
@@ -71,7 +72,7 @@ public class HyperlinkTest extends GwtTest {
 
 		//simule the mouse click
 		Assert.assertEquals(false, bool);
-		click(link);
+		Browser.click(link);
 
 		Assert.assertEquals(true, bool);
 	}

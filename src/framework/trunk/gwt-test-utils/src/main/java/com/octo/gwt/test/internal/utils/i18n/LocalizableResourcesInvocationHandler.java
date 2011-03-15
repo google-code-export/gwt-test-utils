@@ -7,7 +7,7 @@ import java.util.Properties;
 
 import com.google.gwt.i18n.client.LocalizableResource;
 import com.google.gwt.i18n.client.LocalizableResource.DefaultLocale;
-import com.octo.gwt.test.GwtConfig;
+import com.octo.gwt.test.internal.GwtConfig;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 public abstract class LocalizableResourcesInvocationHandler implements InvocationHandler {

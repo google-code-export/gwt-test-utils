@@ -13,9 +13,9 @@ import javassist.Translator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.octo.gwt.test.IPatcher;
+import com.octo.gwt.test.Patcher;
 import com.octo.gwt.test.internal.modifiers.JavaClassModifier;
-import com.octo.gwt.test.internal.utils.GwtPatcherHelper;
+import com.octo.gwt.test.internal.utils.GwtPatcherUtils;
 
 public class GwtTranslator implements Translator {
 
@@ -23,20 +23,20 @@ public class GwtTranslator implements Translator {
 
 	private static final Pattern TEST_PATTERN = Pattern.compile("^.*[T|t][E|e][S|s][T|t].*$");
 
-	private Map<String, IPatcher> map = new HashMap<String, IPatcher>();
+	private Map<String, Patcher> map = new HashMap<String, Patcher>();
 
-	public GwtTranslator(Map<String, IPatcher> map) {
+	public GwtTranslator(Map<String, Patcher> map) {
 		this.map = map;
 	}
 
 	public void onLoad(ClassPool pool, String className) throws NotFoundException, CannotCompileException {
 		try {
-			IPatcher patcher = map.get(className);
+			Patcher patcher = map.get(className);
 			if (patcher != null) {
 				logger.debug("Load class " + className + ", use patcher " + patcher.getClass().getCanonicalName());
 				CtClass clazz = pool.get(className);
 				logger.debug("Patch class " + className);
-				GwtPatcherHelper.get().patch(clazz, patcher);
+				GwtPatcherUtils.patch(clazz, patcher);
 				logger.debug("Class loaded & patched " + className);
 			} else {
 				logger.debug("Load class " + className + ", no patch");

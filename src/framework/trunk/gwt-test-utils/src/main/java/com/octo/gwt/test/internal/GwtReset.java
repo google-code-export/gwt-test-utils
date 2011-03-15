@@ -7,8 +7,7 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.impl.HistoryImpl;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.octo.gwt.test.GwtConfig;
-import com.octo.gwt.test.GwtTestClassLoader;
+import com.octo.gwt.test.GwtClassLoader;
 import com.octo.gwt.test.internal.patchers.CurrencyListPatcher;
 import com.octo.gwt.test.internal.patchers.HistoryImplPatcher;
 import com.octo.gwt.test.internal.patchers.TimerPatcher;
@@ -24,7 +23,7 @@ public class GwtReset {
 		GwtPropertiesHelper.get().reset();
 		CurrencyListPatcher.reset();
 		HistoryImplPatcher.reset();
-		GwtTestClassLoader.reset();
+		GwtClassLoader.reset();
 		TimerPatcher.reset();
 		GwtCreateHandlerManager.get().reset();
 

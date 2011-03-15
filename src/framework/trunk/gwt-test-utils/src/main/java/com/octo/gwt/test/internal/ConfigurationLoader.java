@@ -20,7 +20,7 @@ import java.util.jar.JarFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.octo.gwt.test.IPatcher;
+import com.octo.gwt.test.Patcher;
 import com.octo.gwt.test.internal.modifiers.ClassSubstituer;
 import com.octo.gwt.test.internal.modifiers.JavaClassModifier;
 import com.octo.gwt.test.internal.modifiers.MethodRemover;
@@ -56,7 +56,7 @@ public class ConfigurationLoader {
 	private ClassLoader classLoader;
 	private List<String> delegateList;
 	private Set<String> scanPackageSet;
-	private Map<String, IPatcher> patchers;
+	private Map<String, Patcher> patchers;
 	private List<JavaClassModifier> javaClassModifierList;
 	private MethodRemover methodRemover;
 
@@ -71,12 +71,12 @@ public class ConfigurationLoader {
 		readFiles();
 	}
 
-	public Map<String, IPatcher> getPatchers() {
+	public Map<String, Patcher> getPatchers() {
 		if (patchers == null) {
 			try {
 				loadPatchers();
 			} catch (Exception e) {
-				throw new RuntimeException("Error while loading " + IPatcher.class.getSimpleName() + " instances", e);
+				throw new RuntimeException("Error while loading " + Patcher.class.getSimpleName() + " instances", e);
 			}
 		}
 
@@ -191,7 +191,7 @@ public class ConfigurationLoader {
 	}
 
 	private void loadPatchers() throws Exception {
-		patchers = new HashMap<String, IPatcher>();
+		patchers = new HashMap<String, Patcher>();
 		List<String> classList = findScannedClasses();
 		for (String className : classList) {
 			Class<?> clazz = Class.forName(className, true, classLoader);
@@ -202,12 +202,12 @@ public class ConfigurationLoader {
 				continue;
 			}
 
-			if (!IPatcher.class.isAssignableFrom(clazz) || !hasDefaultConstructor(clazz)) {
+			if (!Patcher.class.isAssignableFrom(clazz) || !hasDefaultConstructor(clazz)) {
 				throw new RuntimeException("The @" + PatchClass.class.getSimpleName() + " annotated class '" + clazz.getName() + "' must implements "
-						+ IPatcher.class.getSimpleName() + " interface and provide an empty constructor");
+						+ Patcher.class.getSimpleName() + " interface and provide an empty constructor");
 			}
 
-			IPatcher patcher = (IPatcher) GwtReflectionUtils.instantiateClass(clazz);
+			Patcher patcher = (Patcher) GwtReflectionUtils.instantiateClass(clazz);
 
 			for (Class<?> c : patchClass.value()) {
 				String targetName = c.isMemberClass() ? c.getDeclaringClass().getCanonicalName() + "$" + c.getSimpleName() : c.getCanonicalName();

@@ -11,12 +11,23 @@ import org.junit.runner.manipulation.Sortable;
 import org.junit.runner.manipulation.Sorter;
 import org.junit.runner.notification.RunNotifier;
 
+/**
+ * <p>
+ * The base gwt-test-utils test {@link Runner}. It provide a mecanism to wrap
+ * another JUnit Runner which will be loaded by the {@link GwtClassLoader}. This
+ * way, all classes referenced by the current test class will be loaded by the
+ * custom classloader.
+ * </p>
+ * 
+ * @author Gael Lazzari
+ * 
+ */
 public abstract class GwtRunnerBase extends Runner implements Filterable, Sortable {
 
 	private Runner runner;
 
 	public GwtRunnerBase(Class<?> clazz) throws Exception {
-		Class<?> runnerClass = GwtTestClassLoader.get().loadClass(getClassRunnerClassName());
+		Class<?> runnerClass = GwtClassLoader.get().loadClass(getClassRunnerClassName());
 
 		if (!Runner.class.isAssignableFrom(runnerClass)) {
 			throw new RuntimeException("Cannot create a valid JUnit " + Runner.class.getSimpleName() + " : class '" + getClassRunnerClassName()
@@ -25,7 +36,7 @@ public abstract class GwtRunnerBase extends Runner implements Filterable, Sortab
 
 		Constructor<?> cons = runnerClass.getConstructor(Class.class);
 
-		runner = (Runner) cons.newInstance(GwtTestClassLoader.get().loadClass(clazz.getCanonicalName()));
+		runner = (Runner) cons.newInstance(GwtClassLoader.get().loadClass(clazz.getCanonicalName()));
 	}
 
 	protected abstract String getClassRunnerClassName();

@@ -45,7 +45,7 @@ import com.google.gwt.dom.client.TextAreaElement;
 import com.google.gwt.dom.client.TitleElement;
 import com.google.gwt.dom.client.UListElement;
 import com.octo.gwt.test.internal.GwtClassPool;
-import com.octo.gwt.test.internal.utils.GwtPatcherHelper;
+import com.octo.gwt.test.internal.utils.GwtPatcherUtils;
 import com.octo.gwt.test.internal.utils.PropertyContainer;
 import com.octo.gwt.test.internal.utils.PropertyContainerAware;
 import com.octo.gwt.test.internal.utils.PropertyContainerHelper;
@@ -90,7 +90,7 @@ public class AutomaticPropertyContainerPatcher extends AutomaticPatcher {
 			return superNewBody;
 		}
 		if (Modifier.isNative(m.getModifiers())) {
-			String fieldName = GwtPatcherHelper.get().getPropertyName(m);
+			String fieldName = GwtPatcherUtils.getPropertyName(m);
 			if (fieldName != null) {
 				if (m.getName().startsWith("set")) {
 					return PropertyContainerHelper.getCodeSetProperty("this", fieldName, "$1");

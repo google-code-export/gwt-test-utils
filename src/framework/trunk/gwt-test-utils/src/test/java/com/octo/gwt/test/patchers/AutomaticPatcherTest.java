@@ -8,7 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.octo.gwt.test.internal.GwtClassPool;
-import com.octo.gwt.test.internal.utils.GwtPatcherHelper;
+import com.octo.gwt.test.internal.utils.GwtPatcherUtils;
 import com.octo.gwt.test.patchers.MyClassToPatch.MyInnerClass;
 
 public class AutomaticPatcherTest {
@@ -29,7 +29,7 @@ public class AutomaticPatcherTest {
 		MyInnerClass innerObject = new MyInnerClass("innerOjbectForUnitTest");
 
 		// Test
-		GwtPatcherHelper.get().patch(ctClass, patcher);
+		GwtPatcherUtils.patch(ctClass, patcher);
 
 		//Assert
 		Class<?> clazz = ctClass.toClass();

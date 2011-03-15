@@ -11,6 +11,9 @@ import java.io.ObjectOutputStream;
  * is printed to System.err and null is returned. Depending on your specific
  * application, it might make more sense to have copy(...) re-throw the
  * exception.
+ * 
+ * @see FastByteArrayInputStream
+ * @see FastByteArrayOutputStream
  */
 public class DeepCopy {
 

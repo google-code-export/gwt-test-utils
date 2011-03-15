@@ -33,16 +33,19 @@ import com.octo.gwt.test.utils.GwtReflectionUtils.MethodCallback;
  * 
  * <p>
  * Mock objects can then be manipulated using the standard EasyMock API, or with
- * the methods provided by AbstractGwtEasyMockTest.
+ * the helper methods provided by GwtTestWithMocks.
  * </p>
+ * 
+ * 
+ * @author Bertrand Paquet
  */
-public abstract class GwtTestWithEasyMock extends GwtTest {
+public abstract class GwtTestWithMocks extends GwtTest {
 
 	private Map<Class<?>, Object> mockObjects = new HashMap<Class<?>, Object>();
 	private List<Class<?>> mockedClasses = new ArrayList<Class<?>>();
 	private Set<Field> annotatedFieldToInject;
 
-	public GwtTestWithEasyMock() {
+	public GwtTestWithMocks() {
 		GwtCreateHandlerManager.get().setMockCreateHandler(new MockCreateHandler(mockObjects));
 		annotatedFieldToInject = GwtReflectionUtils.getAnnotatedField(this.getClass(), Mock.class);
 		for (Field f : annotatedFieldToInject) {
@@ -156,15 +159,15 @@ public abstract class GwtTestWithEasyMock extends GwtTest {
 		return o;
 	}
 
-	/**
+/**
 	 * Adds a mock object to the list of mocks used in the context of this test
 	 * class.
 	 * 
 	 * You can use this method if you want to use AbstractGwtEasyMockTest's mock
-	 * handling methods ({@link GwtTestWithEasyMock#replay()},
-	 * {@link GwtTestWithEasyMock#verify()},
-	 * {@link GwtTestWithEasyMock#reset()}...) for a mock that you created
-	 * without using the framework's {@link Mock @Mock} annotation.
+	 * handling methods ({@link GwtTestWithMocks#replay()},
+	 * {@link GwtTestWithMocks#verify()}, {@link GwtTestWithMocks#reset()}...)
+	 * for a mock that you created without using the framework's {@link Mock
+	 * @Mock} annotation.
 	 * 
 	 * @param clazz
 	 *            The class for which a mock object is being defined

@@ -60,9 +60,9 @@ import com.google.gwt.dom.client.Text;
 import com.google.gwt.dom.client.TextAreaElement;
 import com.google.gwt.dom.client.TitleElement;
 import com.google.gwt.dom.client.UListElement;
-import com.octo.gwt.test.GwtTestBase;
-import com.octo.gwt.test.GwtTestClassLoader;
-import com.octo.gwt.test.GwtConfig;
+import com.octo.gwt.test.GwtClassLoader;
+import com.octo.gwt.test.GwtTest;
+import com.octo.gwt.test.internal.GwtConfig;
 import com.octo.gwt.test.internal.GwtHtmlParser;
 import com.octo.gwt.test.internal.utils.PropertyContainer;
 import com.octo.gwt.test.internal.utils.PropertyContainerHelper;
@@ -217,7 +217,7 @@ public class NodeFactory {
 		InputStream is = NodeFactory.class.getClassLoader().getResourceAsStream(hostPagePath);
 		if (is == null) {
 			throw new RuntimeException("Cannot find file '" + hostPagePath + "', please override "
-					+ GwtTestBase.class.getSimpleName() + ".getHostPagePath() method correctly (see "
+					+ GwtTest.class.getSimpleName() + ".getHostPagePath() method correctly (see "
 					+ ClassLoader.class.getSimpleName() + ".getResourceAsStream(string name))");
 		}
 		BufferedReader br = null;
@@ -285,7 +285,7 @@ public class NodeFactory {
 
 	private static Class<?> loadClass(String className) {
 		try {
-			return GwtTestClassLoader.get().loadClass(className);
+			return GwtClassLoader.get().loadClass(className);
 		} catch (ClassNotFoundException e) {
 			return null;
 		}

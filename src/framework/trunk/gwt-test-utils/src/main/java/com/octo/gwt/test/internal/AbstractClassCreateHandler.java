@@ -7,9 +7,9 @@ import java.util.Map;
 import javassist.CtClass;
 import javassist.CtMethod;
 
+import com.octo.gwt.test.GwtClassLoader;
 import com.octo.gwt.test.GwtCreateHandler;
-import com.octo.gwt.test.GwtTestClassLoader;
-import com.octo.gwt.test.internal.utils.GwtPatcherHelper;
+import com.octo.gwt.test.internal.utils.GwtPatcherUtils;
 
 public class AbstractClassCreateHandler implements GwtCreateHandler {
 
@@ -41,9 +41,9 @@ public class AbstractClassCreateHandler implements GwtCreateHandler {
 			}
 		}
 
-		GwtPatcherHelper.get().patch(subClass, null);
+		GwtPatcherUtils.patch(subClass, null);
 
-		newClass = subClass.toClass(GwtTestClassLoader.get(), null);
+		newClass = subClass.toClass(GwtClassLoader.get(), null);
 		cache.put(classLiteral, newClass);
 
 		return newClass.newInstance();

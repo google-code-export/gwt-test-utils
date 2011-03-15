@@ -5,6 +5,12 @@ import org.easymock.IArgumentMatcher;
 
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 
+/**
+ * 
+ * @author Bertrand Paquet
+ * 
+ * @param <T>
+ */
 public class ValueChangeEventMatcher<T> implements IArgumentMatcher {
 
 	private T expectedValue;

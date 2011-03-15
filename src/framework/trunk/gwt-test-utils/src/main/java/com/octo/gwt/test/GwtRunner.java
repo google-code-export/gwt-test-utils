@@ -1,26 +1,33 @@
 package com.octo.gwt.test;
 
 import org.junit.runners.BlockJUnit4ClassRunner;
-import org.junit.runners.model.InitializationError;
 
 /**
  * <p>
- * GwtTestRunner is a JUnit test runner allowing to run tests classes which
- * reference, directly or indirectly, GWT components.
+ * The JUnit Runner allowing to run tests classes which reference, directly or
+ * indirectly, GWT components.
  * </p>
  * 
  * <p>
- * To achieve this, it uses a specific class loader ({@link GwtTestClassLoader}
- * ), which aim is to provide JVM-compliant versions of classes referenced in
- * those test classes. To obtain JVM-compliant code, the class loader rely on a
- * set of class patchers (implementing {@link IPatcher}) which can be configured
- * using the META-INF\gwt-test-utils.properties file of your application.
+ * Since it wraps a {@link BlockJUnit4ClassRunner}, It is designed to work with
+ * JUnit 4.5 or higher. If you are using JUnit 4.4 or any previous version, you
+ * should specify your test classes to be runned with
+ * {@link OldJunitVersionGwtRunner} with the @RunWith JUnit annotation.
  * </p>
+ * 
+ * @author Gael Lazzari
  */
-public class GwtRunner extends BlockJUnit4ClassRunner {
+public class GwtRunner extends GwtRunnerBase {
 
-	public GwtRunner(Class<?> clazz) throws InitializationError, ClassNotFoundException {
-		super(GwtTestClassLoader.get().loadClass(clazz.getName()));
+	private static final String classRunnerName = "org.junit.runners.BlockJUnit4ClassRunner";
+
+	public GwtRunner(Class<?> clazz) throws Exception {
+		super(clazz);
+	}
+
+	@Override
+	protected String getClassRunnerClassName() {
+		return classRunnerName;
 	}
 
 }

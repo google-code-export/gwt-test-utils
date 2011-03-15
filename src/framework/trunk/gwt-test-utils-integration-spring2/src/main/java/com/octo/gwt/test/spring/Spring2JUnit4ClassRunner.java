@@ -15,7 +15,7 @@ import org.junit.internal.runners.InitializationError;
 import org.junit.internal.runners.TestClass;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.octo.gwt.test.GwtTestClassLoader;
+import com.octo.gwt.test.GwtClassLoader;
 import com.octo.gwt.test.csv.tools.DirectoryTestReader;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
@@ -24,7 +24,7 @@ public class Spring2JUnit4ClassRunner extends SpringJUnit4ClassRunner {
 	private DirectoryTestReader reader;
 
 	public Spring2JUnit4ClassRunner(Class<?> clazz) throws InitializationError, ClassNotFoundException {
-		super(GwtTestClassLoader.get().loadClass(clazz.getCanonicalName()));
+		super(GwtClassLoader.get().loadClass(clazz.getCanonicalName()));
 	}
 
 	@Override
