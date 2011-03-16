@@ -1,0 +1,353 @@
+#summary This page explains how to write integration tests with gwt-test-utils
+#sidebar TableOfContents
+
+= Introduction =
+
+Coding complex user senario can be boring and... complex, depending on the used Web technology. 
+
+That's why *gwt-test-utils* comes with features to make it easy for GWT : it provides a CSV human-readable grammar to simule user browser actions and to validate results.
+It also enable to connect real server backends to do real integration tests.
+
+= Samples = 
+
+== Common configuration ==
+
+To write integration tests with *gwt-test-utils* CSV grammar, you will need to add the *gwt-test-utils-integration* JAR file in the test classpath, just like explained in the [http://code.google.com/p/gwt-test-utils/wiki/HowToUse How to use] page.
+
+== A basic scenario ==
+
+First, let's write a combinaison of browser actions on a simple UI, with no server call.
+
+The main {{{EntryPoint}}} for our simple GWT module : 
+
+{{{
+public class MyApp implements EntryPoint {
+	
+   private SimpleComposite c1;
+
+   public void onModuleLoad() {
+      c1 = new SimpleComposite();
+      RootPanel.get().add(c1);
+   }
+}
+}}}
+
+And the added GWT composite : 
+
+{{{
+public class SimpleComposite extends Composite {
+
+   private Label label;
+   private Image img;
+
+   public SimpleComposite() {
+		
+      label = new Label();
+      img = new Image("img/logo.PNG");
+
+      // The wrapper panel
+      VerticalPanel vPanel = new VerticalPanel();
+      vPanel.setWidth("100%");
+      vPanel.setHorizontalAlignment(VerticalPanel.ALIGN_CENTER);
+      vPanel.add(img);
+      vPanel.add(label);
+
+      // All composites must call initWidget() in their constructors.
+      initWidget(vPanel);
+
+      VerticalPanel dialogVPanel = new VerticalPanel();
+      dialogVPanel.setWidth("100%");
+      dialogVPanel.setHorizontalAlignment(VerticalPanel.ALIGN_CENTER);
+
+      // Add mouse move handler to the image
+      img.addMouseMoveHandler(new MouseMoveHandler() {
+
+         public void onMouseMove(MouseMoveEvent event) {
+            label.setText("mouse moved on picture !");
+         }
+
+      });
+
+   }
+}
+}}}
+
+The UI comportement is straightforward : moving the mouse on the logo image will display the message _"mouse moved on picture !"_ in the label.
+
+To run tests, we need a Run class which can told were to find CSV files to run and how to start the GWT UI without the GWT Hosted Mode.
+{{{AbstractGwtIntegrationShell}}} is the base class to do it :
+{{{
+@CsvDirectory(value = "functional-tests", extension = ".csv")
+@RunWith(StandardJUnit4CsvRunner.class)
+public class MyTestShell extends AbstractGwtIntegrationShell {
+
+   private MyApp myApp = new MyApp();
+
+   @CsvMethod
+   public void initApp() {
+      myApp.onModuleLoad();
+   }
+
+   @Override
+   protected NodeObjectFinder getNodeObjectFinder(String prefix) {
+      if ("myApp".equals(prefix)) {
+         return new NodeObjectFinder() {
+
+            public Object find(CsvRunner csvRunner, Node node) {
+               return csvRunner.getNodeValue(myApp, node);
+            }
+
+         };
+      } else if ("simpleComposite".equals(prefix)) {
+         return new NodeObjectFinder() {
+
+            public Object find(CsvRunner csvRunner, Node node) {
+               return csvRunner.getNodeValue(RootPanel.get().getWidget(0), node);
+            }
+         };
+      } 
+
+      return super.getNodeObjectFinder(prefix);
+   }
+}}}
+
+The {{{@CsvDirectory}}} class annotation tells *gwt-test-utils* where to find CSV files. In this case, all files with the extension _*.csv*_ in the project folder _functional-tests_ will be loaded. The _extension_ property is optional and equals "*.csv*" by default.
+
+We also write a simple {{{initApp}}} method which initialize the application. This method is annoted with a markup annotation : {{{@CsvMethod}}}, which tells the framework {{{initApp}}} can be used directly in CSV tests.
+
+Finally, we overrided the {{{AbstractGwtIntegrationShell.getNodeObjectFinder(String prefix)}}} to provide a cool way to access the UI components.
+
+
+Now, we can write the corresponding CSV senario and assertions which will use {{{MyTestShell}}} functionalities : 
+
+{{{
+start
+initApp
+assertNotExist;/simpleComposite/label/text
+mouseMove;/simpleComposite/img
+assertExact;mouse moved on picture !;/simpleComposite/label/text
+assertExact;mouse moved on picture !;/root/widget(0)/label/text
+assertExact;mouse moved on picture !;/myApp/c1/label/text
+}}}
+
+First, we had to start the script with the instruction {{{start}}}.
+Than, we called the {{{@CsvMethod MyTestShell.initApp()}}} method to instanciate the GWT application.
+
+Since the application is initialized, we can do some actions. So, let's explain the line {{{assertNotExist;/simpleComposite/label/text}}} : 
+
+ * The first CSV cell desribe the action to do. Each action *must* have a corresponding {{{@CsvMethod}}} in the run test class (or any of its superclass), which can be retrieved by name. {{{AbstractGwtIntegrationShell}}} provides some generic test statements, such as {{{assertNotExist}}}, {{{assertExact}}}, {{{assertNumberExact}}}, {{{assertContains}}} and so on.
+ * Other cells are the action arguments. In that case, the {{{AbstractGwtIntegrationShell.assertNotExist(String... params)}}} requiers one only argument, the object localisation in the UI.
+
+Object localization strings used to retrived objects in the UI use a _XPath-like_ syntax which is very easy to understand : {{{/simpleComposite/label/text}}} will retrieve the object binded to the "simpleComposite" prefix we defined by overriding {{{AbstractGwtIntegrationShell.getNodeObjectFinder(String prefix)}}} method.
+It assumes this object have an inner property called "label" which have a method "getText" with *no argument*.
+So this line just assert the label of the text of our {{{SimpleComposite}}} is null when the application just has been initialized. 
+
+Then, we can simule the browser event on the image : {{{mouseMove;/simpleComposite/img}}}.
+
+In addition to assertion method, {{{AbstractGwtIntegrationShell}}} provides a lot {{{@CsvMethod}}} to launch events on a widget : "click", "blur", "change", "mouseDown", "mouseUp" and so on.
+
+Finally, we have to assert that the label is correctly filled : 
+
+{{{
+assertExact;mouse moved on picture !;/simpleComposite/label/text
+assertExact;mouse moved on picture !;/root/widget(0)/label/text
+assertExact;mouse moved on picture !;/myApp/c1/label/text
+}}}
+
+Those 3 lines do exactly the same thing with 3 different prefix processors : 
+ * *simpleComposite* refers to the {{{SimpleComposite}}} instance we added in the {{{RootPanel}}} in {{{MyApp.onModuleLoad()}}}
+ * *root* refers to the {{{RootPanel}}} itself. The corresponding {{{NodeObjectFinder}}} is registered in the {{{AbstractGwtIntegrationShell.getNodeObjectFinder(prefix)}}} we called after overriding it.
+ * *myApp* refers to the custom {{{EntryPoint}}} instance we initialize though the {{{MyTestShell.initApp()}}} method.
+
+
+By the way, this scenario could have been written simply with the GWT API just like we did to write [http://code.google.com/p/gwt-test-utils/wiki/HowToWriteUnitTests UI unit tests]. But it would have been a lot more verbose (by using reflection tools explicitly, etc).
+
+Now that you know how to do it with the CSV grammar and understand its basics, let's write a more complex scenario.
+
+== Scenario with server calls ==
+
+First, we have to enhance your GWT application to make some server calls. To do so, we will simply reuse the {{{RCPComposite}}} and {{{RCPService}}} classes we developped for [http://code.google.com/p/gwt-test-utils/wiki/HowToWriteUnitTests#Tests_with_a_GWT_RPC_call How to write unit tests] page.
+
+{{{
+public class MyApp implements EntryPoint {
+	
+   private SimpleComposite c1;
+   private RPCComposite c2;
+   
+   public void onModuleLoad() {
+
+      c1 = new SimpleComposite();
+      RootPanel.get().add(c1);
+      c2 = new RPCComposite();
+      RootPanel.get().add(c2);
+   }
+}
+}}}
+
+We also have to modify the test class to provide some glue to connect the GWT UI with a real server backend.
+
+{{{
+@CsvDirectory(value = "functional-tests", extension = ".csv")
+@RunWith(StandardJUnit4CsvRunner.class)
+public class MyTestShell extends AbstractGwtIntegrationShell {
+
+   private MyApp myApp = new MyApp();
+
+   @CsvMethod
+   public void initApp() {
+      myApp.onModuleLoad();
+   }
+
+   @Override
+   protected NodeObjectFinder getNodeObjectFinder(String prefix) {
+      if ("myApp".equals(prefix)) {
+         return new NodeObjectFinder() {
+
+            public Object find(CsvRunner csvRunner, Node node) {
+               return csvRunner.getNodeValue(myApp, node);
+            }
+
+         };
+      } else if ("simpleComposite".equals(prefix)) {
+         return new NodeObjectFinder() {
+
+            public Object find(CsvRunner csvRunner, Node node) {
+               return csvRunner.getNodeValue(RootPanel.get().getWidget(0), node);
+            }
+         };
+      } else if ("rpcComposite".equals(prefix)) {
+         return new NodeObjectFinder() {
+
+            public Object find(CsvRunner csvRunner, Node node) {
+               return csvRunner.getNodeValue(RootPanel.get().getWidget(2), node);
+            }
+         };
+      } 
+
+      return super.getNodeObjectFinder(prefix);
+   }
+
+   @Before
+   public void setUpMyTestShell() throws Exception {
+      addGwtCreateHandler(createGwtCreateHandler());
+   }
+
+   private GwtCreateHandler createGwtCreateHandler() {
+      return new RemoteServiceCreateHandler() {
+
+         @Override
+         public Object findService(Class<?> remoteServiceClazz) {
+            if (remoteServiceClazz == MyService.class) {
+               return new MyServiceImpl();
+            }
+            return null;
+         }
+      };
+   }
+
+}
+}}}
+
+First, we added a new {{{NodeObjectFinder}}} for string "rpcComposite".
+
+Than, we had to add a custom GwtCreateHandler to handle the {{{MyServiceAsync service = (MyServiceAsync) GWT.create(MyService.class);}}} instruction.
+We used the out-of-the-box {{{RemoteServiceCreateHandler}}} implementation which handle RPC service creation and RPC calls exception. The only thing to do is to implement the abstract function {{{RemoteServiceCreateHandler.findService(Class<?> remoteServiceClazz)}}}.
+In our case, to ask for a {{{MyService}}} service will return an instance of its simple implementation {{{MyServiceImpl}}}.
+
+Now, we can test the composite with a CSV test : 
+
+{{{
+start
+initApp
+assertNotExist;/rpcComposite/label/text
+click;/rpcComposite/button
+assertExact;Hello OCTO !;/rpcComposite/label/text
+}}}
+
+We just passed a full GWT integration test in a standard JVM, with a real service implementation.
+
+Of course, this implementation is quite basic. 
+But you could easily write your {{{findService}}} implementation which will get your service from a [http://www.springsource.org/ Spring] context, or any server backend you could imagine ;-)
+
+
+== Using CSV macros ==
+
+Sometimes, several of your integration test senarios could be quite redundant.
+_gwt_test_utils_ provide a CSV macro mecanism to group same instructions in the same file.
+
+Look at the test examples above : 
+
+ * In {{{TestSimpleComposite.csv}}} :
+
+{{{
+start
+initApp
+assertNotExist;/simpleComposite/label/text
+mouseMove;/simpleComposite/img
+assertExact;mouse moved on picture !;/simpleComposite/label/text
+assertExact;mouse moved on picture !;/root/widget(0)/label/text
+assertExact;mouse moved on picture !;/myApp/c1/label/text
+}}}
+
+ * In {{{TestRPCComposite.csv}}} : 
+
+{{{
+start
+initApp
+assertNotExist;/rpcComposite/label/text
+click;/rpcComposite/button
+assertExact;Hello OCTO !;/rpcComposite/label/text
+}}}
+
+It could be interessting to regroup the "initApp" and the first assertion statements in one common file for the two test cases.
+
+This could be done in {{{macro-init.csv}}} : 
+
+{{{
+macro;InitialisationMacro
+initApp
+assertNotExist;/simpleComposite/label/text
+assertNotExist;/simpleComposite2/textBox/text
+assertNotExist;/rpcComposite/label/text
+endmacro
+}}}
+
+The first line of a macro must be {{{macro;NAME}}} with "NAME" the name of the macro.
+
+Than, just use it in your CSV test files : 
+
+ * In {{{TestSimpleComposite.csv}}} :
+
+{{{
+start
+runmacro;InitialisationMacro
+mouseMove;/simpleComposite/img
+assertExact;mouse moved on picture !;/root/widget(0)/label/text
+assertExact;mouse moved on picture !;/myApp/c1/label/text
+assertExact;mouse moved on picture !;/simpleComposite/label/text
+}}}
+
+ * In {{{TestRPCComposite.csv}}} : 
+
+{{{
+start
+runmacro;InitialisationMacro
+click;/rpcComposite/button
+assertExact;Hello OCTO !;/rpcComposite/label/text
+}}}
+
+Finally, there is one thing left to do : to specify _initMacro.csv_ as a Macro file for *gwt-test-utils* to parse it correctly. It can be done with the {{{@CsvMacros}}} annotation : 
+
+{{{
+@CsvDirectory(value = "functional-tests", extension = ".csv")
+@CsvMacros(value = "functional-tests", pattern = "^macro.*\\.csv$")
+@RunWith(StandardJUnit4CsvRunner.class)
+public class MyTestShell extends AbstractGwtIntegrationShell {
+
+   ...
+}
+}}}
+
+In this case, {{{MyTestShell}}} will load as a CSV macro any file in the project folder _functional-tests_ which name is matching the java regular expression {{{^macro.*\\.csv$}}}. Each file which does not match this expression but ends with '.csv' will be considered has a integration-test scenario to launch.
+
+The {{{pattern}}} parameter is optional. If it's not set, any file in _functional-tests_ would have been loaded as a CSV macro.
