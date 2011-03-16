@@ -5,6 +5,6 @@
   * [Events Using events]
   * [MockingClasses Mocking classes]
   * [MockingRpcServices Mocking RPC services]
- * [HowToWriteIntegrationTests Writing integration tests]
+ * [HowToWriteCsvScenario Writing complete test scenario with the CSV-based synthax]
  * [HowToWriteCustomPatchers Writing custom patchers]
  * [FAQ]
