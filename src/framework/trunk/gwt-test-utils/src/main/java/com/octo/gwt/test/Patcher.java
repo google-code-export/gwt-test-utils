@@ -20,11 +20,11 @@ import javassist.CtMethod;
  * </p>
  * 
  * <p>
- * Although the framework provides generic patchers (which should permit to
- * produce iso-functional, Java compliant code in the majority of cases), it is
- * possible for you to create your own patcher (specifically, if you're writing
- * your own GWT component class) if the default patching mechanisms doesn't suit
- * your needs.
+ * Although the framework provides some generic implementations of this
+ * interface (which should permit to produce iso-functional, Java compliant code
+ * in the majority of cases), it is possible for you to create your own patcher
+ * (specifically, if you're writing your own GWT component class) if the default
+ * patching mechanisms doesn't suit your needs.
  * </p>
  * 
  * <p>
@@ -38,17 +38,36 @@ import javassist.CtMethod;
 public interface Patcher {
 
 	/**
-	 * Initializes patching for the specified class.
+	 * Initializes patching for the specified class. If you want to add some
+	 * member to a class, or modify any existing constructor, you should do it
+	 * during this initialization phase.
+	 * 
+	 * @param c
+	 *            the javassist representation for the current class to patch.
+	 * @throws Exception
+	 *             If any error occurs during the initialization.
 	 */
 	public void initClass(CtClass c) throws Exception;
 
 	/**
 	 * Returns the new body for the specified method.
+	 * 
+	 * @param m
+	 *            the method to patch
+	 * @return the new java code of the method, or null if the method should not
+	 *         be modified.
+	 * @throws Exception
+	 *             If any error occurs when getting the new java code.
 	 */
 	public String getNewBody(CtMethod m) throws Exception;
 
 	/**
-	 * Finalizes patching for the specified class.
+	 * Finalizes the patching mechanism for the specified class.
+	 * 
+	 * @param c
+	 *            the javassist representation for the current class to patch.
+	 * @throws Exception
+	 *             If any error occurs during the finalization.
 	 */
 	public void finalizeClass(CtClass c) throws Exception;
 

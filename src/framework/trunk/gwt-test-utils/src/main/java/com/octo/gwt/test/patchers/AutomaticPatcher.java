@@ -15,8 +15,21 @@ import javassist.NotFoundException;
 
 import com.octo.gwt.test.Patcher;
 import com.octo.gwt.test.internal.utils.GwtPatcherUtils;
+import com.octo.gwt.test.patchers.PatchMethod.Type;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
+/**
+ * <p>
+ * The base class for implementing {@link Patcher} methods. It relies on the
+ * convenient annotation {@link PatchMethod} which marks a method to be a
+ * substitution for another one following a simple convention (which can be
+ * overriden by configuration).
+ * </p>
+ * 
+ * @author Bertrand Paquet
+ * @author Gael Lazzari
+ * 
+ */
 public class AutomaticPatcher implements Patcher {
 
 	public static final String INSERT_BEFORE = "INSERT_BEFORE";
@@ -37,13 +50,13 @@ public class AutomaticPatcher implements Patcher {
 	private Entry<Method, PatchMethod> findAnnotatedMethod(CtMethod m) throws Exception {
 		for (Entry<Method, PatchMethod> entry : annotatedMethods.entrySet()) {
 			String methodName = entry.getKey().getName();
-			if (entry.getValue().methodName().length() > 0) {
-				methodName = entry.getValue().methodName();
+			if (entry.getValue().value().length() > 0) {
+				methodName = entry.getValue().value();
 			}
 			if (m.getName().equals(methodName)) {
 				if (entry.getValue().args().length == 1 && entry.getValue().args()[0] == PatchMethod.class
 				// Either this is a new method or it has to have a compatible signature
-						&& (entry.getValue().value() != PatchType.STATIC_CALL || hasCompatibleSignature(m, entry.getKey()))) {
+						&& (entry.getValue().type() != Type.STATIC_CALL || hasCompatibleSignature(m, entry.getKey()))) {
 					return entry;
 				} else {
 					if (hasSameSignature(m, entry.getValue().args(), m.getParameterTypes())) {
@@ -133,7 +146,7 @@ public class AutomaticPatcher implements Patcher {
 				throw new RuntimeException("Method " + annotatedMethod + " have to be static");
 			}
 
-			switch (e.getValue().value()) {
+			switch (e.getValue().type()) {
 			case INSERT_CODE_BEFORE:
 				newBody = INSERT_BEFORE + treatMethod(annotatedMethod);
 				break;

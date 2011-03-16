@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.Set;
 import java.util.TreeSet;
 
-import com.octo.gwt.test.internal.utils.PropertyContainerHelper;
+import com.octo.gwt.test.internal.utils.PropertyContainerUtils;
 import com.octo.gwt.test.patchers.AutomaticPropertyContainerPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
@@ -17,10 +17,10 @@ public class PrefixTreePatcher extends AutomaticPropertyContainerPatcher {
 
 	@PatchMethod
 	public static boolean add(Object prefixTree, String s) {
-		Set<String> set = PropertyContainerHelper.getProperty(prefixTree, PREFIXES_SET);
+		Set<String> set = PropertyContainerUtils.getProperty(prefixTree, PREFIXES_SET);
 		if (set == null) {
 			set = new TreeSet<String>();
-			PropertyContainerHelper.setProperty(prefixTree, PREFIXES_SET, set);
+			PropertyContainerUtils.setProperty(prefixTree, PREFIXES_SET, set);
 		}
 
 		return set.add(s);
@@ -29,7 +29,7 @@ public class PrefixTreePatcher extends AutomaticPropertyContainerPatcher {
 	@PatchMethod
 	public static void suggestImpl(Object prefixTree, String search, String prefix, Collection<String> output, int limit) {
 
-		Set<String> set = PropertyContainerHelper.getProperty(prefixTree, PREFIXES_SET);
+		Set<String> set = PropertyContainerUtils.getProperty(prefixTree, PREFIXES_SET);
 		if (set == null)
 			return;
 

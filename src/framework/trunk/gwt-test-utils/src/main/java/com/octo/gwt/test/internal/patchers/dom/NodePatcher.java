@@ -13,7 +13,7 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Text;
 import com.octo.gwt.test.internal.overrides.OverrideNodeList;
 import com.octo.gwt.test.internal.utils.PropertyContainer;
-import com.octo.gwt.test.internal.utils.PropertyContainerHelper;
+import com.octo.gwt.test.internal.utils.PropertyContainerUtils;
 import com.octo.gwt.test.patchers.AutomaticPropertyContainerPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
@@ -29,7 +29,7 @@ public class NodePatcher extends AutomaticPropertyContainerPatcher {
 		super.initClass(c);
 		CtConstructor cons = findConstructor(c);
 
-		cons.insertAfter(PropertyContainerHelper.getCodeSetProperty("this", NodePatcher.NODE_LIST_FIELD,
+		cons.insertAfter(PropertyContainerUtils.getCodeSetProperty("this", NodePatcher.NODE_LIST_FIELD,
 				"new " + OverrideNodeList.class.getCanonicalName() + "()")
 				+ ";");
 	}
@@ -225,7 +225,7 @@ public class NodePatcher extends AutomaticPropertyContainerPatcher {
 
 	@PatchMethod
 	public static Node cloneNode(Node node, boolean deep) {
-		PropertyContainer propertyContainer = PropertyContainerHelper.cast(node).getProperties();
+		PropertyContainer propertyContainer = PropertyContainerUtils.cast(node).getProperties();
 
 		Node newNode;
 		switch (node.getNodeType()) {
@@ -246,7 +246,7 @@ public class NodePatcher extends AutomaticPropertyContainerPatcher {
 			throw new RuntimeException("Cannot create a Node of type [" + node.getClass().getCanonicalName() + "]");
 		}
 
-		PropertyContainer propertyContainer2 = PropertyContainerHelper.cast(newNode).getProperties();
+		PropertyContainer propertyContainer2 = PropertyContainerUtils.cast(newNode).getProperties();
 
 		propertyContainer2.clear();
 
@@ -293,7 +293,7 @@ public class NodePatcher extends AutomaticPropertyContainerPatcher {
 		}
 
 		// Manage getParentNode() 
-		PropertyContainerHelper.setProperty(newChild, PARENT_NODE_FIELD, parent);
+		PropertyContainerUtils.setProperty(newChild, PARENT_NODE_FIELD, parent);
 
 		return newChild;
 	}
@@ -312,8 +312,8 @@ public class NodePatcher extends AutomaticPropertyContainerPatcher {
 			} else if (entry.getValue() instanceof Style) {
 				// The propertyContainerAware have to be an instance of Element since Style requiers Element in its constructor with gwt-test-utils
 				Style newStyle = NodeFactory.createStyle((Element) n.getOwner());
-				PropertyContainer o = PropertyContainerHelper.cast(entry.getValue()).getProperties();
-				PropertyContainer nn = PropertyContainerHelper.cast(newStyle).getProperties();
+				PropertyContainer o = PropertyContainerUtils.cast(entry.getValue()).getProperties();
+				PropertyContainer nn = PropertyContainerUtils.cast(newStyle).getProperties();
 				nn.clear();
 
 				fillNewPropertyContainer(nn, o);
@@ -331,6 +331,6 @@ public class NodePatcher extends AutomaticPropertyContainerPatcher {
 	}
 
 	private static OverrideNodeList<Node> getChildNodeList(Node node) {
-		return PropertyContainerHelper.getProperty(node, NODE_LIST_FIELD);
+		return PropertyContainerUtils.getProperty(node, NODE_LIST_FIELD);
 	}
 }

@@ -16,7 +16,7 @@ import com.google.gwt.user.client.Event;
 import com.octo.gwt.test.internal.overrides.OverrideEvent;
 import com.octo.gwt.test.internal.overrides.OverrideNodeList;
 import com.octo.gwt.test.internal.utils.PropertyContainer;
-import com.octo.gwt.test.internal.utils.PropertyContainerHelper;
+import com.octo.gwt.test.internal.utils.PropertyContainerUtils;
 import com.octo.gwt.test.internal.utils.TagAware;
 import com.octo.gwt.test.patchers.AutomaticPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
@@ -55,7 +55,7 @@ public class DOMImplPatcher extends AutomaticPatcher {
 	@PatchMethod
 	public static ButtonElement createButtonElement(Object domImpl, Document doc, String type) {
 		ButtonElement e = (ButtonElement) doc.createElement("button");
-		PropertyContainerHelper.setProperty(e, "Type", type);
+		PropertyContainerUtils.setProperty(e, "Type", type);
 		return e;
 	}
 
@@ -66,7 +66,7 @@ public class DOMImplPatcher extends AutomaticPatcher {
 
 	@PatchMethod
 	public static String getAttribute(Object domImpl, Element elem, String name) {
-		PropertyContainer propertyContainer = PropertyContainerHelper.getProperty(elem, ElementPatcher.PROPERTY_MAP_FIELD);
+		PropertyContainer propertyContainer = PropertyContainerUtils.getProperty(elem, ElementPatcher.PROPERTY_MAP_FIELD);
 		String attribute = (String) propertyContainer.get(name);
 
 		return attribute == null ? "" : attribute;
@@ -81,13 +81,13 @@ public class DOMImplPatcher extends AutomaticPatcher {
 			return ((TagAware) elem).getTag();
 		}
 
-		String tagName = PropertyContainerHelper.getProperty(elem, TAG_NAME);
+		String tagName = PropertyContainerUtils.getProperty(elem, TAG_NAME);
 		return (tagName != null) ? tagName : (String) GwtReflectionUtils.getStaticFieldValue(elem.getClass(), "TAG");
 	}
 
 	@PatchMethod
 	public static String getInnerHTML(Object domImpl, Element elem) {
-		return PropertyContainerHelper.getPropertyString(elem, INNER_HTML);
+		return PropertyContainerUtils.getPropertyString(elem, INNER_HTML);
 	}
 
 	@PatchMethod
@@ -126,17 +126,17 @@ public class DOMImplPatcher extends AutomaticPatcher {
 
 	@PatchMethod
 	public static int getAbsoluteLeft(Object domImpl, Element elem) {
-		return PropertyContainerHelper.getPropertyInteger(elem, ABSOLUTE_LEFT);
+		return PropertyContainerUtils.getPropertyInteger(elem, ABSOLUTE_LEFT);
 	}
 
 	@PatchMethod
 	public static int getAbsoluteTop(Object domImpl, Element elem) {
-		return PropertyContainerHelper.getPropertyInteger(elem, ABSOLUTE_TOP);
+		return PropertyContainerUtils.getPropertyInteger(elem, ABSOLUTE_TOP);
 	}
 
 	@PatchMethod
 	public static int getTabIndex(Object domImpl, Element elem) {
-		return PropertyContainerHelper.getPropertyInteger(elem, TAB_INDEX);
+		return PropertyContainerUtils.getPropertyInteger(elem, TAB_INDEX);
 	}
 
 	@PatchMethod
@@ -188,12 +188,12 @@ public class DOMImplPatcher extends AutomaticPatcher {
 
 	@PatchMethod
 	public static void setScrollLeft(Object domImpl, Element elem, int left) {
-		PropertyContainerHelper.setProperty(elem, SCROLL_LEFT, left);
+		PropertyContainerUtils.setProperty(elem, SCROLL_LEFT, left);
 	}
 
 	@PatchMethod
 	public static int getScrollLeft(Object domImpl, Element elem) {
-		return PropertyContainerHelper.getPropertyInteger(elem, SCROLL_LEFT);
+		return PropertyContainerUtils.getPropertyInteger(elem, SCROLL_LEFT);
 	}
 
 	@PatchMethod
@@ -239,12 +239,12 @@ public class DOMImplPatcher extends AutomaticPatcher {
 
 	@PatchMethod
 	public static String imgGetSrc(Object domImpl, Element img) {
-		return PropertyContainerHelper.getProperty(img, SRC);
+		return PropertyContainerUtils.getProperty(img, SRC);
 	}
 
 	@PatchMethod
 	public static void imgSetSrc(Object domImpl, Element img, String src) {
-		PropertyContainerHelper.setProperty(img, SRC, src);
+		PropertyContainerUtils.setProperty(img, SRC, src);
 	}
 
 	@PatchMethod
@@ -296,15 +296,15 @@ public class DOMImplPatcher extends AutomaticPatcher {
 	}
 
 	private static OverrideNodeList<Node> getChildNodeList(Node node) {
-		return PropertyContainerHelper.getProperty(node, NODE_LIST_FIELD);
+		return PropertyContainerUtils.getProperty(node, NODE_LIST_FIELD);
 	}
 
 	public static InputElement createInputElement(Document doc, String type, String name) {
 		InputElement e = (InputElement) doc.createElement("input");
-		PropertyContainerHelper.setProperty(e, "Type", type);
+		PropertyContainerUtils.setProperty(e, "Type", type);
 
 		if (name != null) {
-			PropertyContainerHelper.setProperty(e, "Name", name);
+			PropertyContainerUtils.setProperty(e, "Name", name);
 		}
 
 		return e;

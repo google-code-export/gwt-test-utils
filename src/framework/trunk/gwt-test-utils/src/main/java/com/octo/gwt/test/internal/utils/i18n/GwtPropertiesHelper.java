@@ -7,7 +7,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 
-import com.octo.gwt.test.internal.utils.LoadPropertiesHelper;
+import com.octo.gwt.test.internal.utils.GwtPropertiesUtils;
 
 public class GwtPropertiesHelper {
 
@@ -40,7 +40,7 @@ public class GwtPropertiesHelper {
 		try {
 			properties = new Properties();
 			InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
-			LoadPropertiesHelper.load(properties, inputStreamReader);
+			GwtPropertiesUtils.load(properties, inputStreamReader);
 			cachedProperties.put(path, properties);
 			return properties;
 		} catch (Exception e) {

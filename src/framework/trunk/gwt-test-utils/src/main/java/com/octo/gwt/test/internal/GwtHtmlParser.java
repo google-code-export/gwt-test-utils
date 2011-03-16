@@ -18,7 +18,7 @@ import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
 import com.octo.gwt.test.internal.overrides.OverrideNodeList;
 import com.octo.gwt.test.internal.patchers.dom.NodeFactory;
-import com.octo.gwt.test.internal.utils.StyleHelper;
+import com.octo.gwt.test.internal.utils.StyleUtils;
 
 public class GwtHtmlParser {
 
@@ -72,7 +72,7 @@ public class GwtHtmlParser {
 				if ("id".equalsIgnoreCase(a.getName())) {
 					e.setId(a.getValue());
 				} else if ("style".equalsIgnoreCase(a.getName())) {
-					StyleHelper.setStyle(e.getStyle(), a.getValue());
+					StyleUtils.setStyle(e.getStyle(), a.getValue());
 				} else if ("class".equalsIgnoreCase(a.getName())) {
 					e.setClassName(a.getValue());
 				} else if (!a.isEmpty() && !a.isWhitespace() && a.isValued()) {

@@ -14,8 +14,8 @@ import com.google.gwt.dom.client.Style.Unit;
 import com.octo.gwt.test.internal.GwtClassPool;
 import com.octo.gwt.test.internal.utils.GwtStringUtils;
 import com.octo.gwt.test.internal.utils.PropertyContainer;
-import com.octo.gwt.test.internal.utils.PropertyContainerHelper;
-import com.octo.gwt.test.internal.utils.StyleHelper;
+import com.octo.gwt.test.internal.utils.PropertyContainerUtils;
+import com.octo.gwt.test.internal.utils.StyleUtils;
 import com.octo.gwt.test.patchers.AutomaticPropertyContainerPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
@@ -36,7 +36,7 @@ public class StylePatcher extends AutomaticPropertyContainerPatcher {
 		StringBuilder sb = new StringBuilder();
 		sb.append("{");
 		sb.append("this." + TARGET_ELEMENT + " = $1;");
-		sb.append(PropertyContainerHelper.getCodeSetProperty("this", "whiteSpace", "\"nowrap\"") + ";");
+		sb.append(PropertyContainerUtils.getCodeSetProperty("this", "whiteSpace", "\"nowrap\"") + ";");
 		sb.append("}");
 		constructor.setBody(sb.toString());
 		c.addConstructor(constructor);
@@ -44,7 +44,7 @@ public class StylePatcher extends AutomaticPropertyContainerPatcher {
 
 	@PatchMethod
 	public static void setBorderWidth(Style style, double value, Unit unit) {
-		PropertyContainer pc = PropertyContainerHelper.cast(style).getProperties();
+		PropertyContainer pc = PropertyContainerUtils.cast(style).getProperties();
 		double modulo = value % 1;
 		String completeValue = (modulo == 0) ? Integer.toString((int) value) + unit.getType() : Double.toString(value) + unit.getType();
 		pc.put("border-top-width", completeValue);
@@ -55,13 +55,13 @@ public class StylePatcher extends AutomaticPropertyContainerPatcher {
 
 	@PatchMethod
 	public static String getBorderWidth(Style style) {
-		String borderWidth = PropertyContainerHelper.getProperty(style, "border-top-width");
+		String borderWidth = PropertyContainerUtils.getProperty(style, "border-top-width");
 		return (borderWidth != null) ? borderWidth : "";
 	}
 
 	@PatchMethod
 	public static void clearBorderWidth(Style style) {
-		PropertyContainer pc = PropertyContainerHelper.cast(style).getProperties();
+		PropertyContainer pc = PropertyContainerUtils.cast(style).getProperties();
 		pc.put("border-top-width", "");
 		pc.put("border-right-width", "");
 		pc.put("border-bottom-width", "");
@@ -80,7 +80,7 @@ public class StylePatcher extends AutomaticPropertyContainerPatcher {
 
 	@PatchMethod
 	public static String getPropertyImpl(Style style, String propertyName) {
-		String propertyValue = PropertyContainerHelper.getProperty(style, propertyName);
+		String propertyValue = PropertyContainerUtils.getProperty(style, propertyName);
 		return (propertyValue != null) ? propertyValue : "";
 	}
 
@@ -89,12 +89,12 @@ public class StylePatcher extends AutomaticPropertyContainerPatcher {
 		// treat case when propertyValue = "250.0px" => "250px" instead
 		propertyValue = GwtStringUtils.treatDoubleValue(propertyValue);
 
-		PropertyContainerHelper.setProperty(style, propertyName, propertyValue);
+		PropertyContainerUtils.setProperty(style, propertyName, propertyValue);
 
-		Element owner = StyleHelper.getOwnerElement(style);
+		Element owner = StyleUtils.getOwnerElement(style);
 		String styleAttribute = owner.getAttribute("style");
 
-		LinkedHashMap<String, String> styleProperties = StyleHelper.getStyleProperties(styleAttribute);
+		LinkedHashMap<String, String> styleProperties = StyleUtils.getStyleProperties(styleAttribute);
 
 		String cssProperyName = GwtStringUtils.hyphenize(propertyName);
 

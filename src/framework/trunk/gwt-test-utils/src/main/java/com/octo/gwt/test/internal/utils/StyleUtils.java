@@ -10,11 +10,11 @@ import com.google.gwt.dom.client.Style;
 import com.octo.gwt.test.internal.patchers.dom.StylePatcher;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
-public class StyleHelper {
+public class StyleUtils {
 
 	private static Pattern STYLE_PATTERN = Pattern.compile("(.+):(.+)");
 
-	private StyleHelper() {
+	private StyleUtils() {
 
 	}
 

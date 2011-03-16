@@ -7,7 +7,7 @@ import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Text;
 import com.octo.gwt.test.internal.overrides.OverrideNodeList;
-import com.octo.gwt.test.internal.utils.PropertyContainerHelper;
+import com.octo.gwt.test.internal.utils.PropertyContainerUtils;
 import com.octo.gwt.test.patchers.AutomaticPropertyContainerPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
@@ -99,7 +99,7 @@ public class DocumentPatcher extends AutomaticPropertyContainerPatcher {
 	}
 
 	private static OverrideNodeList<Node> getChildNodeList(Node node) {
-		return PropertyContainerHelper.getProperty(node, "ChildNodes");
+		return PropertyContainerUtils.getProperty(node, "ChildNodes");
 	}
 
 }

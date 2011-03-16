@@ -48,8 +48,14 @@ import com.octo.gwt.test.internal.GwtClassPool;
 import com.octo.gwt.test.internal.utils.GwtPatcherUtils;
 import com.octo.gwt.test.internal.utils.PropertyContainer;
 import com.octo.gwt.test.internal.utils.PropertyContainerAware;
-import com.octo.gwt.test.internal.utils.PropertyContainerHelper;
+import com.octo.gwt.test.internal.utils.PropertyContainerUtils;
 
+/**
+ * 
+ * @author Bertrand Paquet
+ * @author Gael Lazzari
+ * 
+ */
 @PatchClass({ Text.class, AnchorElement.class, AreaElement.class, BaseElement.class, BodyElement.class, BRElement.class, ButtonElement.class,
 		DivElement.class, DListElement.class, FieldSetElement.class, FrameElement.class, FrameSetElement.class, FormElement.class, HeadElement.class,
 		HRElement.class, IFrameElement.class, ImageElement.class, LIElement.class, LabelElement.class, LegendElement.class, LinkElement.class,
@@ -75,7 +81,7 @@ public class AutomaticPropertyContainerPatcher extends AutomaticPatcher {
 		StringBuffer stringBuffer = new StringBuffer();
 		stringBuffer.append("{");
 		stringBuffer.append("if (" + PROPERTIES + " == null) {");
-		stringBuffer.append(PROPERTIES + " = " + PropertyContainerHelper.getConstructionCode() + ";");
+		stringBuffer.append(PROPERTIES + " = " + PropertyContainerUtils.getConstructionCode() + ";");
 		stringBuffer.append("}");
 		stringBuffer.append("return " + PROPERTIES + ";");
 		stringBuffer.append("}");
@@ -93,9 +99,9 @@ public class AutomaticPropertyContainerPatcher extends AutomaticPatcher {
 			String fieldName = GwtPatcherUtils.getPropertyName(m);
 			if (fieldName != null) {
 				if (m.getName().startsWith("set")) {
-					return PropertyContainerHelper.getCodeSetProperty("this", fieldName, "$1");
+					return PropertyContainerUtils.getCodeSetProperty("this", fieldName, "$1");
 				} else {
-					return "return " + PropertyContainerHelper.getCodeGetProperty("this", fieldName, m.getReturnType());
+					return "return " + PropertyContainerUtils.getCodeGetProperty("this", fieldName, m.getReturnType());
 				}
 			}
 		}

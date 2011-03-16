@@ -6,7 +6,7 @@ import javassist.CtConstructor;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.SelectElement;
 import com.google.gwt.user.client.ui.UIObject;
-import com.octo.gwt.test.internal.utils.PropertyContainerHelper;
+import com.octo.gwt.test.internal.utils.PropertyContainerUtils;
 import com.octo.gwt.test.patchers.AutomaticPropertyContainerPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
@@ -21,7 +21,7 @@ public class SelectElementPatcher extends AutomaticPropertyContainerPatcher {
 		super.initClass(c);
 		CtConstructor cons = findConstructor(c);
 
-		cons.insertAfter(PropertyContainerHelper.getCodeSetProperty("this", SELECTED_INDEX_FIELD, "-1") + ";");
+		cons.insertAfter(PropertyContainerUtils.getCodeSetProperty("this", SELECTED_INDEX_FIELD, "-1") + ";");
 	}
 
 	@PatchMethod

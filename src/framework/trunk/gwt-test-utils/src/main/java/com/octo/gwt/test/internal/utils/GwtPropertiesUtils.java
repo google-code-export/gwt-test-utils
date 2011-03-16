@@ -7,9 +7,9 @@ import java.util.Properties;
 
 import com.octo.gwt.test.internal.PropertiesStringModifier;
 
-public class LoadPropertiesHelper {
+public class GwtPropertiesUtils {
 
-	private LoadPropertiesHelper() {
+	private GwtPropertiesUtils() {
 
 	}
 

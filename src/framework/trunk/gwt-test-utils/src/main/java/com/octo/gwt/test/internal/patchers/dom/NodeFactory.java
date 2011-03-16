@@ -65,7 +65,7 @@ import com.octo.gwt.test.GwtTest;
 import com.octo.gwt.test.internal.GwtConfig;
 import com.octo.gwt.test.internal.GwtHtmlParser;
 import com.octo.gwt.test.internal.utils.PropertyContainer;
-import com.octo.gwt.test.internal.utils.PropertyContainerHelper;
+import com.octo.gwt.test.internal.utils.PropertyContainerUtils;
 import com.octo.gwt.test.internal.utils.TagAware;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
@@ -143,10 +143,10 @@ public class NodeFactory {
 
 	public static void reset() {
 		if (DOCUMENT != null) {
-			PropertyContainer bodyPc = PropertyContainerHelper.cast(DOCUMENT.getBody()).getProperties();
+			PropertyContainer bodyPc = PropertyContainerUtils.cast(DOCUMENT.getBody()).getProperties();
 			bodyPc.clear();
 
-			PropertyContainer documentPc = PropertyContainerHelper.cast(DOCUMENT).getProperties();
+			PropertyContainer documentPc = PropertyContainerUtils.cast(DOCUMENT).getProperties();
 			documentPc.clear();
 			DOCUMENT = null;
 		}
@@ -158,7 +158,7 @@ public class NodeFactory {
 				DOCUMENT = (Document) loadClass(Document.class.getName()).newInstance();
 				Element e = parseHTMLElement();
 				DOCUMENT.appendChild(e);
-				PropertyContainerHelper.setProperty(DOCUMENT, "DocumentElement", e);
+				PropertyContainerUtils.setProperty(DOCUMENT, "DocumentElement", e);
 			} catch (Exception e) {
 				throw new RuntimeException("Unable to create Document", e);
 			}
@@ -247,8 +247,8 @@ public class NodeFactory {
 	private static Element createNewHTMLElement() {
 		Element e = createElement("html");
 
-		PropertyContainerHelper.setProperty(e, "NodeName", "HTML");
-		PropertyContainerHelper.setProperty(e, "TagName", "HTML");
+		PropertyContainerUtils.setProperty(e, "NodeName", "HTML");
+		PropertyContainerUtils.setProperty(e, "TagName", "HTML");
 
 		BodyElement bodyElement = (BodyElement) createElement("body");
 		e.appendChild(bodyElement);
@@ -264,8 +264,8 @@ public class NodeFactory {
 
 			if (tag.equalsIgnoreCase("html")) {
 				elem = (Element) loadClass(Element.class.getName()).newInstance();
-				PropertyContainerHelper.setProperty(elem, "NodeName", "HTML");
-				PropertyContainerHelper.setProperty(elem, "TagName", "HTML");
+				PropertyContainerUtils.setProperty(elem, "NodeName", "HTML");
+				PropertyContainerUtils.setProperty(elem, "TagName", "HTML");
 			} else if (elemClassName != null) {
 				elem = (Element) GwtReflectionUtils.instantiateClass(loadClass(elemClassName));
 			} else if (elemClassNameWithTag != null) {

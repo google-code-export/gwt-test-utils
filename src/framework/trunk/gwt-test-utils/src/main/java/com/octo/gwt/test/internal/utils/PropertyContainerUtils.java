@@ -5,7 +5,7 @@ import javassist.NotFoundException;
 
 import com.octo.gwt.test.internal.GwtClassPool;
 
-public class PropertyContainerHelper {
+public class PropertyContainerUtils {
 
 	public static CtClass STRING_TYPE;
 
@@ -18,7 +18,7 @@ public class PropertyContainerHelper {
 		}
 	}
 
-	private PropertyContainerHelper() {
+	private PropertyContainerUtils() {
 
 	}
 
@@ -51,7 +51,7 @@ public class PropertyContainerHelper {
 	}
 
 	public static String getCodeSetProperty(String object, String propertyName, String propertyValue) {
-		return PropertyContainerHelper.class.getCanonicalName() + ".setProperty(" + object + ", \"" + propertyName + "\", " + propertyValue + ")";
+		return PropertyContainerUtils.class.getCanonicalName() + ".setProperty(" + object + ", \"" + propertyName + "\", " + propertyValue + ")";
 	}
 
 	public static PropertyContainerAware cast(Object o) {
@@ -93,15 +93,15 @@ public class PropertyContainerHelper {
 
 	public static String getCodeGetProperty(String object, String fieldName, CtClass returnType) {
 		if (returnType == CtClass.booleanType) {
-			return PropertyContainerHelper.class.getCanonicalName() + ".getPropertyBoolean(" + object + ", \"" + fieldName + "\")";
+			return PropertyContainerUtils.class.getCanonicalName() + ".getPropertyBoolean(" + object + ", \"" + fieldName + "\")";
 		} else if (returnType == CtClass.intType) {
-			return PropertyContainerHelper.class.getCanonicalName() + ".getPropertyInteger(" + object + ", \"" + fieldName + "\")";
+			return PropertyContainerUtils.class.getCanonicalName() + ".getPropertyInteger(" + object + ", \"" + fieldName + "\")";
 		} else if (returnType == CtClass.doubleType) {
-			return PropertyContainerHelper.class.getCanonicalName() + ".getPropertyDouble(" + object + ", \"" + fieldName + "\")";
+			return PropertyContainerUtils.class.getCanonicalName() + ".getPropertyDouble(" + object + ", \"" + fieldName + "\")";
 		} else if (returnType == STRING_TYPE) {
-			return PropertyContainerHelper.class.getCanonicalName() + ".getPropertyString(" + object + ", \"" + fieldName + "\")";
+			return PropertyContainerUtils.class.getCanonicalName() + ".getPropertyString(" + object + ", \"" + fieldName + "\")";
 		}
-		return "(" + returnType.getName() + ") " + PropertyContainerHelper.class.getCanonicalName() + ".getProperty(" + object + ", \"" + fieldName
+		return "(" + returnType.getName() + ") " + PropertyContainerUtils.class.getCanonicalName() + ".getProperty(" + object + ", \"" + fieldName
 				+ "\")";
 	}
 
