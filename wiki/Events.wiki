@@ -15,13 +15,13 @@ In this example, we want to test that something occurs when the user clicks on a
    @Test
    public void checkClick() {
       // With this helper method, we can get private Widget in the composite
-      Button button = GwtTestReflectionUtils.getPrivateFieldValue(composite, "button");
-      Label label = GwtTestReflectionUtils.getPrivateFieldValue(composite, "label");
+      Button button = GwtReflectionUtils.getPrivateFieldValue(composite, "button");
+      Label label = GwtReflectionUtils.getPrivateFieldValue(composite, "label");
 		
       // ensure label is empty
       Assert.assertEquals(null, label.getText());
 		
-      // simule the click event with AbstractGwtTest method
+      // simule the click event
       Browser.click(button);
 		
       // assert the label has been filled
@@ -40,8 +40,8 @@ For such a case, you can simulate this kind of event by using an {{{EventBuilder
    @Test
    public void checkClick() {
       // With this helper method, we can get private Widget in the composite
-      Button button = GwtTestReflectionUtils.getPrivateFieldValue(composite, "button");
-      Label label = GwtTestReflectionUtils.getPrivateFieldValue(composite, "label");
+      Button button = GwtReflectionUtils.getPrivateFieldValue(composite, "button");
+      Label label = GwtReflectionUtils.getPrivateFieldValue(composite, "label");
 		
       // ensure label is empty
       Assert.assertEquals(null, label.getText());
