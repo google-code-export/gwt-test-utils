@@ -109,9 +109,10 @@ Then, just open a new JUnit Run configuration, and specify in the "JVM Arguments
 
 To run your GWT unit tests without Maven, just add the *gwt-test-utils-x.jar* to the classpath :-)
 
-*gwt-test-utils* jars are available through [http://forge.octo.com/nexus/content/repositories/releases/com/octo/gwt/test/ gwt-test-utils releases repository] or through [http://forge.octo.com/nexus/content/repositories/snapshots/com/octo/gwt/test/ gwt-test-utils snapshots repository].
+*gwt-test-utils* jars are available under the [http://code.google.com/p/gwt-test-utils/downloads/list Download section. 
+Lastest Snapshot can be downloaded through [http://forge.octo.com/nexus/content/repositories/snapshots/com/octo/gwt/test/ gwt-test-utils snapshots repository].
 
-List of third-party jars required by *gwt-test-utils* :
+==== List of third-party jars required by {{{gwt-test-utils}}} ====
 
  * cglib-nodep-2.2.jar
  * commons-lang-2.5.jar
@@ -126,30 +127,30 @@ List of third-party jars required by *gwt-test-utils* :
  * slf4j-api-1.6.1.jar (with the adapter of your choice)
 
 
-List of third-party jars required by *gwt-test-utils-csv* :
+==== List of third-party jars required by {{{gwt-test-utils-csv}}} ====
 
-Same dependencies as *gwt-test-utils* plus :
+Same dependencies as *gwt-test-utils* module  plus :
 
  * antlr-runtime-3.1.1.jar
 
 
-List of third-party jars required by *gwt-test-utils-gxt* :
+==== List of third-party jars required by gwt-test-utils-gxt ====
 
-Same dependencies as *gwt-test-utils* plus :
+Same dependencies as *gwt-test-utils* module plus :
 
  * gwt-css-selector-x.jar (with x the version of *gwt-test-utils* you're using)
  * gxt-2.2.0.jar
 
 
-List of third-party jars required by *gwt-test-utils-spring2* an:
+==== List of third-party jars required by gwt-test-utils-spring2 ====
 
-Same dependencies as *gwt-test-utils* plus :
+Same dependencies as *gwt-test-utils* module plus :
 
  * spring-2.5.x.jar
 
 
-List of third-party jars required by *gwt-test-utils-spring3* an:
+==== List of third-party jars required by *gwt-test-utils-spring3 ====
 
-Same dependencies as *gwt-test-utils* plus :
+Same dependencies as *gwt-test-utils* module plus :
 
  * spring-3.0.x.jar
