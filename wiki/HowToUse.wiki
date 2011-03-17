@@ -28,9 +28,9 @@ The framework provides some other module to match your needs :
 
  * *gwt-test-utils-gxt* : use this module if you want to test UI designed with the popular third-party components librairy [http://www.sencha.com/products/extgwt/ ext-GWT]
 
-* *gwt-test-utils-spring2* : use this module if you want to test a GWT application which is connected to a Spring2-based backend
+ * *gwt-test-utils-spring2* : use this module if you want to test a GWT application which is connected to a Spring2-based backend
 
-* *gwt-test-utils-spring3* : use this module if you want to test a GWT application which is connected to a Spring3-based backend
+ * *gwt-test-utils-spring3* : use this module if you want to test a GWT application which is connected to a Spring3-based backend
 
 Note that those modules all directly depend on *gwt-test-utils* and can be combined in your project {{{pom.xml}}}. However It is recommanded to use the same version.
 
