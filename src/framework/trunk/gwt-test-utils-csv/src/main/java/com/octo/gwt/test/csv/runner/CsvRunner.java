@@ -16,8 +16,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.gwt.event.shared.UmbrellaException;
-import com.octo.gwt.test.csv.GwtCsvTest;
 import com.octo.gwt.test.csv.CsvMethod;
+import com.octo.gwt.test.csv.GwtCsvTest;
 import com.octo.gwt.test.csv.tools.ObjectFinder;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 

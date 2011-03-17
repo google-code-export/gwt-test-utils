@@ -7,15 +7,15 @@
 	<name>GWT Tests Utils Parent</name>
 
 	<properties>
-		<antlr.runtime.version>3.0.1</antlr.runtime.version>
+		<antlr.runtime.version>3.1.1</antlr.runtime.version>
 		<asm.version>3.3.1</asm.version>
-		<commons-lang.version>2.4</commons-lang.version>
+		<commons-lang.version>2.5</commons-lang.version>
 		<easymock.version>3.0</easymock.version>
 		<gwt.version>2.1.1</gwt.version>
 		<gxt.version>2.2.0</gxt.version>
 		<htmlparser.version>1.6</htmlparser.version>
-		<javassist.version>3.8.0.GA</javassist.version>
-		<junit.version>4.8.1</junit.version>
+		<javassist.version>3.12.1.GA</javassist.version>
+		<junit.version>4.8.2</junit.version>
 		<slf4j.version>1.6.1</slf4j.version>
 		<spring2.version>2.5.6</spring2.version>
 		<spring3.version>3.0.5.RELEASE</spring3.version>

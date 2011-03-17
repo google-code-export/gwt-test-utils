@@ -4,8 +4,6 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import com.octo.gwt.test.csv.runner.Node;
-
 public class XPathTest {
 
 	@Test
@@ -78,28 +76,28 @@ public class XPathTest {
 		Assert.assertNotNull(processString("/view/configurationGrid/parametersGrid/widgetMap/widgetList[text=portal.contrats.OC00000002048]"));
 	}
 
-	@Test
-	public void testErrorA() {
-		Assert.assertNull(processString("toto"));
-	}
+	//	@Test
+	//	public void testErrorA() {
+	//		Assert.assertNull(processString("toto"));
+	//	}
 
 	@Test
-	public void testErrorB() {
+	public void testErrorA() {
 		Assert.assertNull(processString("/toto("));
 	}
 
 	@Test
-	public void testErrorC() {
+	public void testErrorB() {
 		Assert.assertNull(processString("/toto(a,)"));
 	}
 
 	@Test
-	public void testErrorD() {
+	public void testErrorC() {
 		Assert.assertNull(processString("/toto/"));
 	}
 
 	@Test
-	public void testErrorE() {
+	public void testErrorD() {
 		Assert.assertNull(processString("/toto//"));
 	}
 

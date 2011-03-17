@@ -1,4 +1,4 @@
-// $ANTLR 3.0.1 E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g 2010-07-08 15:37:10
+// $ANTLR 3.1.1 D:\\gwt-test-utils\\gwt-test-utils-csv\\src\\main\\resources\\com\\octo\\gwt\\test\\csv\\runner\\XPath.g 2011-03-17 10:41:29
 package com.octo.gwt.test.csv.runner;
 
 import org.antlr.runtime.BaseRecognizer;
@@ -7,6 +7,7 @@ import org.antlr.runtime.DFA;
 import org.antlr.runtime.Lexer;
 import org.antlr.runtime.MismatchedSetException;
 import org.antlr.runtime.RecognitionException;
+import org.antlr.runtime.RecognizerSharedState;
 
 public class XPathLexer extends Lexer {
 	public static final int SLASH = 4;
@@ -18,153 +19,175 @@ public class XPathLexer extends Lexer {
 	public static final int IN_COND = 9;
 	public static final int VALUE = 11;
 	public static final int EQ = 12;
-	public static final int Tokens = 13;
 	public static final int EOF = -1;
+
+	// delegates
+	// delegators
 
 	public XPathLexer() {
 		;
 	}
 
 	public XPathLexer(CharStream input) {
-		super(input);
+		this(input, new RecognizerSharedState());
+	}
+
+	public XPathLexer(CharStream input, RecognizerSharedState state) {
+		super(input, state);
+
 	}
 
 	public String getGrammarFileName() {
-		return "/me/workspace/gwt-test/git/gwt-test-utils-integration/src/main/resources/com/octo/gwt/test/integ/csvrunner/XPath.g";
+		return "D:\\gwt-test-utils\\gwt-test-utils-csv\\src\\main\\resources\\com\\octo\\gwt\\test\\csv\\runner\\XPath.g";
 	}
 
-	// $ANTLR start SLASH
+	// $ANTLR start "SLASH"
 	public final void mSLASH() throws RecognitionException {
 		try {
 			int _type = SLASH;
-			// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:67:7: ( '/' )
-			// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:67:9: '/'
+			int _channel = DEFAULT_TOKEN_CHANNEL;
+			// D:\\gwt-test-utils\\gwt-test-utils-csv\\src\\main\\resources\\com\\octo\\gwt\\test\\csv\\runner\\XPath.g:67:7: ( '/' )
+			// D:\\gwt-test-utils\\gwt-test-utils-csv\\src\\main\\resources\\com\\octo\\gwt\\test\\csv\\runner\\XPath.g:67:9: '/'
 			{
 				match('/');
 
 			}
 
-			this.type = _type;
+			state.type = _type;
+			state.channel = _channel;
 		} finally {
 		}
 	}
 
-	// $ANTLR end SLASH
+	// $ANTLR end "SLASH"
 
-	// $ANTLR start IN
+	// $ANTLR start "IN"
 	public final void mIN() throws RecognitionException {
 		try {
 			int _type = IN;
-			// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:68:4: ( '(' )
-			// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:68:6: '('
+			int _channel = DEFAULT_TOKEN_CHANNEL;
+			// D:\\gwt-test-utils\\gwt-test-utils-csv\\src\\main\\resources\\com\\octo\\gwt\\test\\csv\\runner\\XPath.g:68:4: ( '(' )
+			// D:\\gwt-test-utils\\gwt-test-utils-csv\\src\\main\\resources\\com\\octo\\gwt\\test\\csv\\runner\\XPath.g:68:6: '('
 			{
 				match('(');
 
 			}
 
-			this.type = _type;
+			state.type = _type;
+			state.channel = _channel;
 		} finally {
 		}
 	}
 
-	// $ANTLR end IN
+	// $ANTLR end "IN"
 
-	// $ANTLR start OUT
+	// $ANTLR start "OUT"
 	public final void mOUT() throws RecognitionException {
 		try {
 			int _type = OUT;
-			// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:69:5: ( ')' )
-			// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:69:7: ')'
+			int _channel = DEFAULT_TOKEN_CHANNEL;
+			// D:\\gwt-test-utils\\gwt-test-utils-csv\\src\\main\\resources\\com\\octo\\gwt\\test\\csv\\runner\\XPath.g:69:5: ( ')' )
+			// D:\\gwt-test-utils\\gwt-test-utils-csv\\src\\main\\resources\\com\\octo\\gwt\\test\\csv\\runner\\XPath.g:69:7: ')'
 			{
 				match(')');
 
 			}
 
-			this.type = _type;
+			state.type = _type;
+			state.channel = _channel;
 		} finally {
 		}
 	}
 
-	// $ANTLR end OUT
+	// $ANTLR end "OUT"
 
-	// $ANTLR start IN_COND
+	// $ANTLR start "IN_COND"
 	public final void mIN_COND() throws RecognitionException {
 		try {
 			int _type = IN_COND;
-			// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:70:9: ( '[' )
-			// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:70:11: '['
+			int _channel = DEFAULT_TOKEN_CHANNEL;
+			// D:\\gwt-test-utils\\gwt-test-utils-csv\\src\\main\\resources\\com\\octo\\gwt\\test\\csv\\runner\\XPath.g:70:9: ( '[' )
+			// D:\\gwt-test-utils\\gwt-test-utils-csv\\src\\main\\resources\\com\\octo\\gwt\\test\\csv\\runner\\XPath.g:70:11: '['
 			{
 				match('[');
 
 			}
 
-			this.type = _type;
+			state.type = _type;
+			state.channel = _channel;
 		} finally {
 		}
 	}
 
-	// $ANTLR end IN_COND
+	// $ANTLR end "IN_COND"
 
-	// $ANTLR start OUT_COND
+	// $ANTLR start "OUT_COND"
 	public final void mOUT_COND() throws RecognitionException {
 		try {
 			int _type = OUT_COND;
-			// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:71:10: ( ']' )
-			// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:71:12: ']'
+			int _channel = DEFAULT_TOKEN_CHANNEL;
+			// D:\\gwt-test-utils\\gwt-test-utils-csv\\src\\main\\resources\\com\\octo\\gwt\\test\\csv\\runner\\XPath.g:71:10: ( ']' )
+			// D:\\gwt-test-utils\\gwt-test-utils-csv\\src\\main\\resources\\com\\octo\\gwt\\test\\csv\\runner\\XPath.g:71:12: ']'
 			{
 				match(']');
 
 			}
 
-			this.type = _type;
+			state.type = _type;
+			state.channel = _channel;
 		} finally {
 		}
 	}
 
-	// $ANTLR end OUT_COND
+	// $ANTLR end "OUT_COND"
 
-	// $ANTLR start VIRG
+	// $ANTLR start "VIRG"
 	public final void mVIRG() throws RecognitionException {
 		try {
 			int _type = VIRG;
-			// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:72:6: ( ',' )
-			// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:72:8: ','
+			int _channel = DEFAULT_TOKEN_CHANNEL;
+			// D:\\gwt-test-utils\\gwt-test-utils-csv\\src\\main\\resources\\com\\octo\\gwt\\test\\csv\\runner\\XPath.g:72:6: ( ',' )
+			// D:\\gwt-test-utils\\gwt-test-utils-csv\\src\\main\\resources\\com\\octo\\gwt\\test\\csv\\runner\\XPath.g:72:8: ','
 			{
 				match(',');
 
 			}
 
-			this.type = _type;
+			state.type = _type;
+			state.channel = _channel;
 		} finally {
 		}
 	}
 
-	// $ANTLR end VIRG
+	// $ANTLR end "VIRG"
 
-	// $ANTLR start EQ
+	// $ANTLR start "EQ"
 	public final void mEQ() throws RecognitionException {
 		try {
 			int _type = EQ;
-			// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:73:4: ( '=' )
-			// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:73:6: '='
+			int _channel = DEFAULT_TOKEN_CHANNEL;
+			// D:\\gwt-test-utils\\gwt-test-utils-csv\\src\\main\\resources\\com\\octo\\gwt\\test\\csv\\runner\\XPath.g:73:4: ( '=' )
+			// D:\\gwt-test-utils\\gwt-test-utils-csv\\src\\main\\resources\\com\\octo\\gwt\\test\\csv\\runner\\XPath.g:73:6: '='
 			{
 				match('=');
 
 			}
 
-			this.type = _type;
+			state.type = _type;
+			state.channel = _channel;
 		} finally {
 		}
 	}
 
-	// $ANTLR end EQ
+	// $ANTLR end "EQ"
 
-	// $ANTLR start LABEL
+	// $ANTLR start "LABEL"
 	public final void mLABEL() throws RecognitionException {
 		try {
 			int _type = LABEL;
-			// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:74:7: ( ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' ) ( ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '_' | ' ' ) )* )
-			// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:74:9: ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' ) ( ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '_' | ' ' ) )*
+			int _channel = DEFAULT_TOKEN_CHANNEL;
+			// D:\\gwt-test-utils\\gwt-test-utils-csv\\src\\main\\resources\\com\\octo\\gwt\\test\\csv\\runner\\XPath.g:74:7: ( ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' ) ( ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '_' | ' ' ) )* )
+			// D:\\gwt-test-utils\\gwt-test-utils-csv\\src\\main\\resources\\com\\octo\\gwt\\test\\csv\\runner\\XPath.g:74:9: ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' ) ( ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '_' | ' ' ) )*
 			{
 				if ((input.LA(1) >= '0' && input.LA(1) <= '9') || (input.LA(1) >= 'A' && input.LA(1) <= 'Z')
 						|| (input.LA(1) >= 'a' && input.LA(1) <= 'z')) {
@@ -176,7 +199,7 @@ public class XPathLexer extends Lexer {
 					throw mse;
 				}
 
-				// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:74:43: ( ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '_' | ' ' ) )*
+				// D:\\gwt-test-utils\\gwt-test-utils-csv\\src\\main\\resources\\com\\octo\\gwt\\test\\csv\\runner\\XPath.g:74:43: ( ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '_' | ' ' ) )*
 				loop1: do {
 					int alt1 = 2;
 					int LA1_0 = input.LA(1);
@@ -187,7 +210,7 @@ public class XPathLexer extends Lexer {
 
 					switch (alt1) {
 					case 1:
-						// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:74:44: ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '_' | ' ' )
+						// D:\\gwt-test-utils\\gwt-test-utils-csv\\src\\main\\resources\\com\\octo\\gwt\\test\\csv\\runner\\XPath.g:74:44: ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '_' | ' ' )
 					{
 						if (input.LA(1) == ' ' || (input.LA(1) >= '0' && input.LA(1) <= '9') || (input.LA(1) >= 'A' && input.LA(1) <= 'Z')
 								|| input.LA(1) == '_' || (input.LA(1) >= 'a' && input.LA(1) <= 'z')) {
@@ -209,19 +232,21 @@ public class XPathLexer extends Lexer {
 
 			}
 
-			this.type = _type;
+			state.type = _type;
+			state.channel = _channel;
 		} finally {
 		}
 	}
 
-	// $ANTLR end LABEL
+	// $ANTLR end "LABEL"
 
-	// $ANTLR start VALUE
+	// $ANTLR start "VALUE"
 	public final void mVALUE() throws RecognitionException {
 		try {
 			int _type = VALUE;
-			// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:75:7: ( ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '\\u00E0' | '\\u00E8' | '\\u00E9' | '\\u00EA' | '.' ) ( ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '\\u00E0' | '\\u00E8' | '\\u00E9' | '\\u00EA' | '.' | '?' | '-' | ' ' | '_' ) )* )
-			// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:75:9: ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '\\u00E0' | '\\u00E8' | '\\u00E9' | '\\u00EA' | '.' ) ( ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '\\u00E0' | '\\u00E8' | '\\u00E9' | '\\u00EA' | '.' | '?' | '-' | ' ' | '_' ) )*
+			int _channel = DEFAULT_TOKEN_CHANNEL;
+			// D:\\gwt-test-utils\\gwt-test-utils-csv\\src\\main\\resources\\com\\octo\\gwt\\test\\csv\\runner\\XPath.g:75:7: ( ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '\\u00E0' | '\\u00E8' | '\\u00E9' | '\\u00EA' | '.' ) ( ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '\\u00E0' | '\\u00E8' | '\\u00E9' | '\\u00EA' | '.' | '?' | '-' | ' ' | '_' ) )* )
+			// D:\\gwt-test-utils\\gwt-test-utils-csv\\src\\main\\resources\\com\\octo\\gwt\\test\\csv\\runner\\XPath.g:75:9: ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '\\u00E0' | '\\u00E8' | '\\u00E9' | '\\u00EA' | '.' ) ( ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '\\u00E0' | '\\u00E8' | '\\u00E9' | '\\u00EA' | '.' | '?' | '-' | ' ' | '_' ) )*
 			{
 				if (input.LA(1) == '.' || (input.LA(1) >= '0' && input.LA(1) <= '9') || (input.LA(1) >= 'A' && input.LA(1) <= 'Z')
 						|| (input.LA(1) >= 'a' && input.LA(1) <= 'z') || input.LA(1) == '\u00E0'
@@ -234,7 +259,7 @@ public class XPathLexer extends Lexer {
 					throw mse;
 				}
 
-				// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:75:93: ( ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '\\u00E0' | '\\u00E8' | '\\u00E9' | '\\u00EA' | '.' | '?' | '-' | ' ' | '_' ) )*
+				// D:\\gwt-test-utils\\gwt-test-utils-csv\\src\\main\\resources\\com\\octo\\gwt\\test\\csv\\runner\\XPath.g:75:93: ( ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '\\u00E0' | '\\u00E8' | '\\u00E9' | '\\u00EA' | '.' | '?' | '-' | ' ' | '_' ) )*
 				loop2: do {
 					int alt2 = 2;
 					int LA2_0 = input.LA(1);
@@ -246,7 +271,7 @@ public class XPathLexer extends Lexer {
 
 					switch (alt2) {
 					case 1:
-						// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:75:94: ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '\\u00E0' | '\\u00E8' | '\\u00E9' | '\\u00EA' | '.' | '?' | '-' | ' ' | '_' )
+						// D:\\gwt-test-utils\\gwt-test-utils-csv\\src\\main\\resources\\com\\octo\\gwt\\test\\csv\\runner\\XPath.g:75:94: ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '\\u00E0' | '\\u00E8' | '\\u00E9' | '\\u00EA' | '.' | '?' | '-' | ' ' | '_' )
 					{
 						if (input.LA(1) == ' ' || (input.LA(1) >= '-' && input.LA(1) <= '.') || (input.LA(1) >= '0' && input.LA(1) <= '9')
 								|| input.LA(1) == '?' || (input.LA(1) >= 'A' && input.LA(1) <= 'Z') || input.LA(1) == '_'
@@ -270,76 +295,77 @@ public class XPathLexer extends Lexer {
 
 			}
 
-			this.type = _type;
+			state.type = _type;
+			state.channel = _channel;
 		} finally {
 		}
 	}
 
-	// $ANTLR end VALUE
+	// $ANTLR end "VALUE"
 
 	public void mTokens() throws RecognitionException {
-		// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:1:8: ( SLASH | IN | OUT | IN_COND | OUT_COND | VIRG | EQ | LABEL | VALUE )
+		// D:\\gwt-test-utils\\gwt-test-utils-csv\\src\\main\\resources\\com\\octo\\gwt\\test\\csv\\runner\\XPath.g:1:8: ( SLASH | IN | OUT | IN_COND | OUT_COND | VIRG | EQ | LABEL | VALUE )
 		int alt3 = 9;
 		alt3 = dfa3.predict(input);
 		switch (alt3) {
 		case 1:
-			// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:1:10: SLASH
+			// D:\\gwt-test-utils\\gwt-test-utils-csv\\src\\main\\resources\\com\\octo\\gwt\\test\\csv\\runner\\XPath.g:1:10: SLASH
 		{
 			mSLASH();
 
 		}
 			break;
 		case 2:
-			// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:1:16: IN
+			// D:\\gwt-test-utils\\gwt-test-utils-csv\\src\\main\\resources\\com\\octo\\gwt\\test\\csv\\runner\\XPath.g:1:16: IN
 		{
 			mIN();
 
 		}
 			break;
 		case 3:
-			// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:1:19: OUT
+			// D:\\gwt-test-utils\\gwt-test-utils-csv\\src\\main\\resources\\com\\octo\\gwt\\test\\csv\\runner\\XPath.g:1:19: OUT
 		{
 			mOUT();
 
 		}
 			break;
 		case 4:
-			// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:1:23: IN_COND
+			// D:\\gwt-test-utils\\gwt-test-utils-csv\\src\\main\\resources\\com\\octo\\gwt\\test\\csv\\runner\\XPath.g:1:23: IN_COND
 		{
 			mIN_COND();
 
 		}
 			break;
 		case 5:
-			// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:1:31: OUT_COND
+			// D:\\gwt-test-utils\\gwt-test-utils-csv\\src\\main\\resources\\com\\octo\\gwt\\test\\csv\\runner\\XPath.g:1:31: OUT_COND
 		{
 			mOUT_COND();
 
 		}
 			break;
 		case 6:
-			// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:1:40: VIRG
+			// D:\\gwt-test-utils\\gwt-test-utils-csv\\src\\main\\resources\\com\\octo\\gwt\\test\\csv\\runner\\XPath.g:1:40: VIRG
 		{
 			mVIRG();
 
 		}
 			break;
 		case 7:
-			// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:1:45: EQ
+			// D:\\gwt-test-utils\\gwt-test-utils-csv\\src\\main\\resources\\com\\octo\\gwt\\test\\csv\\runner\\XPath.g:1:45: EQ
 		{
 			mEQ();
 
 		}
 			break;
 		case 8:
-			// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:1:48: LABEL
+			// D:\\gwt-test-utils\\gwt-test-utils-csv\\src\\main\\resources\\com\\octo\\gwt\\test\\csv\\runner\\XPath.g:1:48: LABEL
 		{
 			mLABEL();
 
 		}
 			break;
 		case 9:
-			// E:\\KNCF6659\\Data\\gwt-test-utils\\gwt-test-utils-integration\\src\\main\\resources\\com\\octo\\gwt\\test\\integ\\csvrunner\\XPath.g:1:54: VALUE
+			// D:\\gwt-test-utils\\gwt-test-utils-csv\\src\\main\\resources\\com\\octo\\gwt\\test\\csv\\runner\\XPath.g:1:54: VALUE
 		{
 			mVALUE();
 
@@ -360,8 +386,8 @@ public class XPathLexer extends Lexer {
 	static final String[] DFA3_transitionS = {
 			"\1\2\1\3\2\uffff\1\6\1\uffff\1\11\1\1\12\10\3\uffff\1\7\3\uffff" + "\32\10\1\4\1\uffff\1\5\3\uffff\32\10\145\uffff\1\11\7\uffff"
 					+ "\3\11", "", "", "", "", "", "", "",
-			"\1\12\14\uffff\2\11\1\uffff\12\12\5\uffff\1\11\1\uffff\32\12" + "\4\uffff\1\12\1\uffff\32\12\145\uffff\1\11\7\uffff\3\11", "",
-			"\1\12\14\uffff\2\11\1\uffff\12\12\5\uffff\1\11\1\uffff\32\12" + "\4\uffff\1\12\1\uffff\32\12\145\uffff\1\11\7\uffff\3\11", "" };
+			"\1\12\14\uffff\2\11\1\uffff\12\12\5\uffff\1\11\1\uffff\32" + "\12\4\uffff\1\12\1\uffff\32\12\145\uffff\1\11\7\uffff\3\11", "",
+			"\1\12\14\uffff\2\11\1\uffff\12\12\5\uffff\1\11\1\uffff\32" + "\12\4\uffff\1\12\1\uffff\32\12\145\uffff\1\11\7\uffff\3\11", "" };
 
 	static final short[] DFA3_eot = DFA.unpackEncodedString(DFA3_eotS);
 	static final short[] DFA3_eof = DFA.unpackEncodedString(DFA3_eofS);

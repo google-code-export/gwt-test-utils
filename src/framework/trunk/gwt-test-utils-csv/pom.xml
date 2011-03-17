@@ -20,6 +20,12 @@
 			<groupId>org.antlr</groupId>
 			<artifactId>antlr-runtime</artifactId>
 			<version>${antlr.runtime.version}</version>
+			<exclusions>
+			<exclusion>
+			<groupId>org.antlr</groupId>
+			<artifactId>stringtemplate</artifactId>
+			</exclusion>
+			</exclusions>
 		</dependency>
 	</dependencies>
 
@@ -43,9 +49,9 @@
 			<build>
 				<plugins>
 					<plugin>
-						<groupId>org.codehaus.mojo</groupId>
+						<groupId>org.antlr</groupId>
 						<artifactId>antlr3-maven-plugin</artifactId>
-						<version>1.0</version>
+						<version>${antlr.runtime.version}</version>
 						<executions>
 							<execution>
 								<id>generate</id>
@@ -55,8 +61,8 @@
 							</execution>
 						</executions>
 						<configuration>
-							<sourceDirectory>${basedir}/src/main/resources/com/octo/gwt/test/integ/csvrunner</sourceDirectory>
-							<outputDirectory>${basedir}/src/main/java/com/octo/gwt/test/integ/csvrunner</outputDirectory>
+							<sourceDirectory>${basedir}/src/main/resources/com/octo/gwt/test/csv/runner</sourceDirectory>
+							<outputDirectory>${basedir}/src/main/java/com/octo/gwt/test/csv/runner</outputDirectory>
 						</configuration>
 					</plugin>
 				</plugins>
