@@ -46,7 +46,7 @@ When the button is clicked, the label displays "_The button was clicked !_". Thi
 Now, we want to write a unit test to ensure that clicking the button will always display "_The button was clicked !_" in the label :
 
 {{{
-public class SimpleCompositeTest extends AbstractGwtTest {
+public class SimpleCompositeTest extends GwtTest {
 
    // the tested composite
    private SimpleComposite composite;
@@ -60,8 +60,8 @@ public class SimpleCompositeTest extends AbstractGwtTest {
    @Test
    public void checkClick() {
       // With this helper method, we can get private Widget in the composite
-      Button button = GwtTestReflectionUtils.getPrivateFieldValue(composite, "button");
-      Label label = GwtTestReflectionUtils.getPrivateFieldValue(composite, "label");
+      Button button = GwtReflectionUtils.getPrivateFieldValue(composite, "button");
+      Label label = GwtReflectionUtils.getPrivateFieldValue(composite, "label");
 		
       // ensure label is empty
       Assert.assertEquals(null, label.getText());
@@ -75,6 +75,6 @@ public class SimpleCompositeTest extends AbstractGwtTest {
 }
 }}}
 
-Note that the test class *must* extends {{{AbstractGwtTest}}}, which provides the mecanism to allow the instanciation of GWT component in the JVM.
+Note that the test class *must* extends {{{GwtTest}}}, which provides the mecanism to allow the instanciation of GWT component in the JVM.
 
 The {{{Browser}}} class provides some helpful methods to simulate user events, such as click, double-click, blur, etc.
