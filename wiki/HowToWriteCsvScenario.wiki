@@ -75,11 +75,11 @@ public class SimpleComposite extends Composite {
 The UI comportement is straightforward : moving the mouse on the logo image will display the message _"mouse moved on picture !"_ in the label.
 
 To run tests, we need a Run class which can told were to find CSV files to run and how to start the GWT UI without the GWT Hosted Mode.
-{{{AbstractGwtIntegrationShell}}} is the base class to do it :
+{{{GwtCsvTest}}} is the base class to do it :
 {{{
 @CsvDirectory(value = "functional-tests", extension = ".csv")
 @RunWith(StandardJUnit4CsvRunner.class)
-public class MyTestShell extends AbstractGwtIntegrationShell {
+public class MyTestShell extends GwtCsvTest {
 
    private MyApp myApp = new MyApp();
 
@@ -115,7 +115,7 @@ The {{{@CsvDirectory}}} class annotation tells *gwt-test-utils* where to find CS
 
 We also write a simple {{{initApp}}} method which initialize the application. This method is annoted with a markup annotation : {{{@CsvMethod}}}, which tells the framework {{{initApp}}} can be used directly in CSV tests.
 
-Finally, we overrided the {{{AbstractGwtIntegrationShell.getNodeObjectFinder(String prefix)}}} to provide a cool way to access the UI components.
+Finally, we overrided the {{{GwtCsvTest.getNodeObjectFinder(String prefix)}}} to provide a cool way to access the UI components.
 
 
 Now, we can write the corresponding CSV senario and assertions which will use {{{MyTestShell}}} functionalities : 
@@ -135,16 +135,16 @@ Than, we called the {{{@CsvMethod MyTestShell.initApp()}}} method to instanciate
 
 Since the application is initialized, we can do some actions. So, let's explain the line {{{assertNotExist;/simpleComposite/label/text}}} : 
 
- * The first CSV cell desribe the action to do. Each action *must* have a corresponding {{{@CsvMethod}}} in the run test class (or any of its superclass), which can be retrieved by name. {{{AbstractGwtIntegrationShell}}} provides some generic test statements, such as {{{assertNotExist}}}, {{{assertExact}}}, {{{assertNumberExact}}}, {{{assertContains}}} and so on.
- * Other cells are the action arguments. In that case, the {{{AbstractGwtIntegrationShell.assertNotExist(String... params)}}} requiers one only argument, the object localisation in the UI.
+ * The first CSV cell desribe the action to do. Each action *must* have a corresponding {{{@CsvMethod}}} in the run test class (or any of its superclass), which can be retrieved by name. {{{GwtCsvTest}}} provides some generic test statements, such as {{{assertNotExist}}}, {{{assertExact}}}, {{{assertNumberExact}}}, {{{assertContains}}} and so on.
+ * Other cells are the action arguments. In that case, the {{{GwtCsvTest.assertNotExist(String... params)}}} requiers one only argument, the object localisation in the UI.
 
-Object localization strings used to retrived objects in the UI use a _XPath-like_ syntax which is very easy to understand : {{{/simpleComposite/label/text}}} will retrieve the object binded to the "simpleComposite" prefix we defined by overriding {{{AbstractGwtIntegrationShell.getNodeObjectFinder(String prefix)}}} method.
+Object localization strings used to retrived objects in the UI use a _XPath-like_ syntax which is very easy to understand : {{{/simpleComposite/label/text}}} will retrieve the object binded to the "simpleComposite" prefix we defined by overriding {{{GwtCsvTest.getNodeObjectFinder(String prefix)}}} method.
 It assumes this object have an inner property called "label" which have a method "getText" with *no argument*.
 So this line just assert the label of the text of our {{{SimpleComposite}}} is null when the application just has been initialized. 
 
 Then, we can simule the browser event on the image : {{{mouseMove;/simpleComposite/img}}}.
 
-In addition to assertion method, {{{AbstractGwtIntegrationShell}}} provides a lot {{{@CsvMethod}}} to launch events on a widget : "click", "blur", "change", "mouseDown", "mouseUp" and so on.
+In addition to assertion method, {{{GwtCsvTest}}} provides a lot {{{@CsvMethod}}} to launch events on a widget : "click", "blur", "change", "mouseDown", "mouseUp" and so on.
 
 Finally, we have to assert that the label is correctly filled : 
 
@@ -156,7 +156,7 @@ assertExact;mouse moved on picture !;/myApp/c1/label/text
 
 Those 3 lines do exactly the same thing with 3 different prefix processors : 
  * *simpleComposite* refers to the {{{SimpleComposite}}} instance we added in the {{{RootPanel}}} in {{{MyApp.onModuleLoad()}}}
- * *root* refers to the {{{RootPanel}}} itself. The corresponding {{{NodeObjectFinder}}} is registered in the {{{AbstractGwtIntegrationShell.getNodeObjectFinder(prefix)}}} we called after overriding it.
+ * *root* refers to the {{{RootPanel}}} itself. The corresponding {{{NodeObjectFinder}}} is registered in the {{{GwtCsvTest.getNodeObjectFinder(prefix)}}} we called after overriding it.
  * *myApp* refers to the custom {{{EntryPoint}}} instance we initialize though the {{{MyTestShell.initApp()}}} method.
 
 
@@ -189,7 +189,7 @@ We also have to modify the test class to provide some glue to connect the GWT UI
 {{{
 @CsvDirectory(value = "functional-tests", extension = ".csv")
 @RunWith(StandardJUnit4CsvRunner.class)
-public class MyTestShell extends AbstractGwtIntegrationShell {
+public class MyTestShell extends GwtCsvTest {
 
    private MyApp myApp = new MyApp();
 
@@ -342,7 +342,7 @@ Finally, there is one thing left to do : to specify _initMacro.csv_ as a Macro f
 @CsvDirectory(value = "functional-tests", extension = ".csv")
 @CsvMacros(value = "functional-tests", pattern = "^macro.*\\.csv$")
 @RunWith(StandardJUnit4CsvRunner.class)
-public class MyTestShell extends AbstractGwtIntegrationShell {
+public class MyTestShell extends GwtCsvTest {
 
    ...
 }
