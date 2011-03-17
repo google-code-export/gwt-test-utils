@@ -5,10 +5,10 @@
 
 Sometimes, you may be writing unit tests for a class that has dependencies to other classes, and that interact with them via method calls. In this case, you might want to use mock objets instead of real objects for these classes : they allow you to test that the right method calls were made, instead of testing the actual behavior of the objects.
 
-gwt-test-utils allow you to write unit tests that use mock objects, using the [http://easymock.org/ EasyMock] mocking framework.  Those tests need to extend  {{{AbstractGwtEasyMockTest}}}.
+gwt-test-utils allow you to write unit tests that use mock objects, using the [http://easymock.org/ EasyMock] mocking framework.  Those tests need to extend  {{{GwtTestWithMocks}}}.
 
 {{{
-public class MyUnitTestWithMocks extends AbstractGwtEasyMockTest {
+public class MyUnitTestWithMocks extends GwtTestWithMocks {
 
    @Mock
    private Foo fooMock;
@@ -24,8 +24,8 @@ public class MyUnitTestWithMocks extends AbstractGwtEasyMockTest {
    @Test
    public void checkCallingFoo() {
       //Setup
-      Button button = GwtTestReflectionUtils.getPrivateFieldValue(composite, "button");
-      Label label = GwtTestReflectionUtils.getPrivateFieldValue(composite, "label");
+      Button button = GwtReflectionUtils.getPrivateFieldValue(composite, "button");
+      Label label = GwtReflectionUtils.getPrivateFieldValue(composite, "label");
 
       fooMock.sayHello(EasyMock.eq("OCTO"));
       EasyMock.expectLastCall().andReturn("mocked call");
