@@ -5,7 +5,7 @@
 = Introduction =
 
 Frequently, your presentation layer will call remote services using GWT-RPC.
-In unit tests, you will need to mock the server calls. *gwt-test-utils* provides an elegant way to do it, using {{{AbstractGwtEasyMockTest}}} and the [http://easymock.org/ EasyMock] mocking framework.
+In unit tests, you will need to mock the server calls. *gwt-test-utils* provides an elegant way to do it, using {{{GwtTestWithMocks}}} and the [http://easymock.org/ EasyMock] mocking framework.
 
 Mocking RPC services is much like mocking any other classes (see [MockingClasses Mocking classes]), with a few specificities, like asynchronous callback handling. 
 
@@ -100,7 +100,7 @@ Clicking the button will make a server call, to say hello to "OCTO". As a result
 Let's create unit tests to simule the two possibilities :
 
 {{{
-public class RPCCompositeTest extends AbstractGwtEasyMockTest {
+public class RPCCompositeTest extends GwtTestWithMocks {
 
    @Mock
    private RCPServiceAsync service;
@@ -116,8 +116,8 @@ public class RPCCompositeTest extends AbstractGwtEasyMockTest {
    @Test
    public void checkRPCCallSuccess() {
       //Setup
-      Button button = GwtTestReflectionUtils.getPrivateFieldValue(composite, "button");
-      Label label = GwtTestReflectionUtils.getPrivateFieldValue(composite, "label");
+      Button button = GwtReflectionUtils.getPrivateFieldValue(composite, "button");
+      Label label = GwtReflectionUtils.getPrivateFieldValue(composite, "label");
 
       service.sayHello(EasyMock.eq("OCTO"), EasyMock.isA(AsyncCallback.class));
 
@@ -138,8 +138,8 @@ public class RPCCompositeTest extends AbstractGwtEasyMockTest {
    @Test
    public void checkRPCCallFailure() {
       //Setup
-      Button button = GwtTestReflectionUtils.getPrivateFieldValue(composite, "button");
-      Label label = GwtTestReflectionUtils.getPrivateFieldValue(composite, "label");
+      Button button = GwtReflectionUtils.getPrivateFieldValue(composite, "button");
+      Label label = GwtReflectionUtils.getPrivateFieldValue(composite, "label");
 
       service.sayHello(EasyMock.eq("OCTO"), EasyMock.isA(AsyncCallback.class));
 
@@ -159,7 +159,7 @@ public class RPCCompositeTest extends AbstractGwtEasyMockTest {
 }
 }}}
 
-This time, we extended {{{AbstractGwtEasyMockTest}}}, a subclass of {{{AbstractGwtTest}}} which provides some helpful methods to inject mock objects and use them :
+This time, we extended {{{GwtTestWithMocks}}}, a subclass of {{{GwtTest}}} which provides some helpful methods to inject mock objects and use them :
 
 *{{{@Mock}}}* tell *gwt-test-utils* to create a mock object
 
