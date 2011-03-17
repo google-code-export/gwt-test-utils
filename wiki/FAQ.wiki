@@ -28,11 +28,3 @@ This exception will be thrown whenever you use a widget fonctionnality which cal
 If the widget is custom (e.g. not in GWT standard API), you will have to [http://code.google.com/p/gwt-test-utils/wiki/HowToWriteCustomPatchers write your own Patcher class] to simulate your component behaviour in any standard JVM.
 
 Otherwise, make sure you are using the lastest version of *gwt-test-utils*. If you are already up-to-date, please report an issue !
-
-== How to simule browser event on widget ? ==
-
-{{{AbstractGWTTest}}} comes with some helpfull methods to simule a large panel of browser event, such as "onClick", "onBlur", mouseMouve" etc.
-
-In case the method you need is not available, just try with :
-
-{{{yourWidget.onBrowserEvent(new OverrideEvent(Event.ONXXXX))}}}, where XXX is the GWT event you want to submit to your widget.
