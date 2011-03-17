@@ -13,31 +13,28 @@ First, you have to setup the required dependency in the _pom.xml_ :
    <dependency>
       <groupId>com.octo.gwt.test</groupId>
       <artifactId>gwt-test-utils</artifactId>
-      <version>0.24</version>
+      <version>0.25</version>
       <scope>test</scope>
    </dependency>
    ...
 </dependencies>   
 }}}
 
-If you want to run integration tests with *gwt-test-utils* scenario writer feature, you would have to setup another dependency : 
+*gwt-test-utils* is the core module of gwt-test-utils. It enables to execute GWT client classes in a standalone JVM.
 
-{{{
-<dependencies>
-   ...
-   <dependency>
-      <groupId>com.octo.gwt.test</groupId>
-      <artifactId>gwt-test-utils-integration</artifactId>
-      <version>0.24</version>
-      <scope>test</scope>
-   </dependency>
-   ...
-</dependencies>   
-}}}
+The framework provides some other module to match your needs :
 
-Note that *gwt-test-utils-integration* module directly depends on *gwt-test-utils*, so you don't need to declare the first dependency in your {{{pom.xml}}}.
+ * *gwt-test-utils-csv* : use this module if you want [http://code.google.com/p/gwt-test-utils/wiki/HowToWriteCsvScenario to write complexe test scenario easily]
 
-In the two cases, you will also have to specify the *gwt-test-utils* Maven repository :
+ * *gwt-test-utils-gxt* : use this module if you want to test UI designed with the popular third-party components librairy [http://www.sencha.com/products/extgwt/ ext-GWT]
+
+* *gwt-test-utils-spring2* : use this module if you want to test a GWT application which is connected to a Spring2-based backend
+
+* *gwt-test-utils-spring3* : use this module if you want to test a GWT application which is connected to a Spring3-based backend
+
+Note that those modules all directly depend on *gwt-test-utils* and can be combined in your project {{{pom.xml}}}. However It is recommanded to use the same version.
+
+All those modules are hosted on a custom Maven repository, which is provided by [http://www.octo.com/ Octo Technology] :
 
 {{{
 <repositories>
@@ -77,7 +74,7 @@ Sometimes, it could be helpfull to get the lastest snapshot. It's done with the 
    <dependency>
       <groupId>com.octo.gwt.test</groupId>
       <artifactId>gwt-test-utils-integration</artifactId>
-      <version>0.25-SNAPSHOT</version>
+      <version>0.26-SNAPSHOT</version>
       <scope>test</scope>
    </dependency>
    ...
@@ -112,26 +109,47 @@ Then, just open a new JUnit Run configuration, and specify in the "JVM Arguments
 
 To run your GWT unit tests without Maven, just add the *gwt-test-utils-x.jar* to the classpath :-)
 
-*gwt-test-utils* jars are available through [http://forge.octo.com/nexus/content/repositories/releases/com/octo/gwt/test/ gwt-test-utils releases repository] or through [http://forge.octo.com/nexus/content/repositories/snapshots/com/octo/gwt/test/ gwt-test-utils snapshots repository], which are provided by Octo Technology.
+*gwt-test-utils* jars are available through [http://forge.octo.com/nexus/content/repositories/releases/com/octo/gwt/test/ gwt-test-utils releases repository] or through [http://forge.octo.com/nexus/content/repositories/snapshots/com/octo/gwt/test/ gwt-test-utils snapshots repository].
 
-List of third-party jars requiered by *gwt-test-utils* :
+List of third-party jars required by *gwt-test-utils* :
 
  * cglib-nodep-2.2.jar
- * commons-lang-2.4.jar
+ * commons-lang-2.5.jar
  * easymock-3.0.jar
- * gwt-servlet-2.0.4.jar
- * gwt-user-2.0.4.jar
+ * gwt-dev-2.1.1.jar
+ * gwt-servlet-2.1.1.jar
+ * gwt-user-2.1.1.jar
  * htmlparser-1.6.jar
- * javassist-3.8.0.GA.jar
- * junit-4.8.1.jar
+ * javassist-3.12.1.GA.jar
+ * junit-4.8.2.jar
  * objenesis-1.2.jar
  * slf4j-api-1.6.1.jar (with the adapter of your choice)
 
 
-
-List of third-party jars requiered by *gwt-test-utils-integration* :
+List of third-party jars required by *gwt-test-utils-csv* :
 
 Same dependencies as *gwt-test-utils* plus :
 
- * antlr-runtime-3.0.1.jar
- * stringtemplate-3.1-b1.jar
+ * antlr-runtime-3.1.1.jar
+
+
+List of third-party jars required by *gwt-test-utils-gxt* :
+
+Same dependencies as *gwt-test-utils* plus :
+
+ * gwt-css-selector-x.jar (with x the version of *gwt-test-utils* you're using)
+ * gxt-2.2.0.jar
+
+
+List of third-party jars required by *gwt-test-utils-spring2* an:
+
+Same dependencies as *gwt-test-utils* plus :
+
+ * spring-2.5.x.jar
+
+
+List of third-party jars required by *gwt-test-utils-spring3* an:
+
+Same dependencies as *gwt-test-utils* plus :
+
+ * spring-3.0.x.jar
