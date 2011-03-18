@@ -10,23 +10,23 @@ For the 0.25 release of *gwt-test-utils*, the public API has changed to be more 
 1) gwt-test-utils third-party dependencies have been updated.
 => So, if you're not using maven, you first will have to update [http://code.google.com/p/gwt-test-utils/wiki/HowToUse#Without_Maven gwt-test-utils dependencies].
 
-2) Some classes of *gwt-test-utils-integration* module, which was used to provide with CSV-based synthax for complex integration scenario, have been merged with the gwt-test-utils module : you can now bind your RPC service implementation to your client side code without gwt-test-utils-integration module.
+2) Some classes of *gwt-test-utils-integration* module, which was used to provide with CSV-based synthax for complex integration scenario, have been moved to *gwt-test-utils* core module. Now, you will be able to bind your RPC service implementation to your client side code without *gwt-test-utils-integration* module.
 
-Since it just deals with CSV synthax feature, it has been renamed to "gwt-test-utils-csv".
+Since it just deals with CSV synthax feature, it has been renamed to "{{{gwt-test-utils-csv}}}".
 
-=> So, if you're using maven and have a dependency to the old *gwt-test-utils-integration* module, you would have to replace it by the new *gwt-test*utils-csv* artifactId.
+=> So, if you're using maven and have a dependency to the old *gwt-test-utils-integration* module, you would have to replace it by the new *gwt-test-utils-csv* artifactId.
 
 3) Some classes has been renamed for gwt-test-utils. Here is the list.
 
-=== In {{{gwt-test-utils}}} ===
+==== In {{{gwt-test-utils}}} ====
 
- * {{{AbstractGwtTest}}} => {{{GwtTest}}}
- * {{{AbstractGwtEasyMockTest}}} => {{{GwtTestWithMocks}}}
- * {{{GwtTestReflectionUtils}}} => {{{GwtReflectionUtils}}}
+|| {{{AbstractGwtTest}}} || => || {{{GwtTest}}} ||
+|| {{{AbstractGwtEasyMockTest}}} || => || {{{GwtTestWithMocks}}} ||
+|| {{{GwtTestReflectionUtils}}} || => ||  {{{GwtReflectionUtils}}} ||
 
-=== In {{{gwt-test-utils-csv}}} (used to be {{{gwt-test-utils-integration}}}) ===
+==== In {{{gwt-test-utils-csv}}} (used to be {{{gwt-test-utils-integration}}}) ====
 
- * {{{AbstractGwtIntegrationShell}}} => {{{GwtCsvTest}}}
+|| {{{AbstractGwtIntegrationShell}}} || => || {{{GwtCsvTest}}} ||
 
 
 4) Some deprecated methods have now been removed :
