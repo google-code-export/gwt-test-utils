@@ -17,9 +17,12 @@ import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+import javassist.CtClass;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.gwt.core.client.JavaScriptObject;
 import com.octo.gwt.test.Patcher;
 import com.octo.gwt.test.internal.modifiers.ClassSubstituer;
 import com.octo.gwt.test.internal.modifiers.JavaClassModifier;
@@ -32,6 +35,8 @@ public class ConfigurationLoader {
 	private static final Logger logger = LoggerFactory.getLogger(ConfigurationLoader.class);
 
 	private static final String CONFIG_FILENAME = "META-INF/gwt-test-utils.properties";
+
+	private static final String JSO_CLASSNAME = "com.google.gwt.core.client.JavaScriptObject";
 
 	private static ConfigurationLoader INSTANCE;
 
@@ -56,6 +61,7 @@ public class ConfigurationLoader {
 	private ClassLoader classLoader;
 	private List<String> delegateList;
 	private Set<String> scanPackageSet;
+	private Set<String> jsoSubClasses;
 	private Map<String, Patcher> patchers;
 	private List<JavaClassModifier> javaClassModifierList;
 	private MethodRemover methodRemover;
@@ -69,18 +75,20 @@ public class ConfigurationLoader {
 		javaClassModifierList.add(methodRemover);
 
 		readFiles();
+		try {
+			loadPatchersAndJavaScriptObjects();
+		} catch (Exception e) {
+			throw new RuntimeException("Error while loading " + JavaScriptObject.class.getSimpleName() + " subclass and "
+					+ Patcher.class.getSimpleName() + " instances");
+		}
 	}
 
 	public Map<String, Patcher> getPatchers() {
-		if (patchers == null) {
-			try {
-				loadPatchers();
-			} catch (Exception e) {
-				throw new RuntimeException("Error while loading " + Patcher.class.getSimpleName() + " instances", e);
-			}
-		}
-
 		return patchers;
+	}
+
+	public Set<String> getJSOSubClasses() {
+		return jsoSubClasses;
 	}
 
 	public List<JavaClassModifier> getJavaClassModifierList() {
@@ -190,42 +198,49 @@ public class ConfigurationLoader {
 		}
 	}
 
-	private void loadPatchers() throws Exception {
+	private void loadPatchersAndJavaScriptObjects() throws Exception {
+		jsoSubClasses = new HashSet<String>();
 		patchers = new HashMap<String, Patcher>();
 		List<String> classList = findScannedClasses();
+		CtClass jsoCtClass = GwtClassPool.get().get(JSO_CLASSNAME);
 		for (String className : classList) {
-			Class<?> clazz = Class.forName(className, true, classLoader);
+			CtClass ctClass = GwtClassPool.get().get(className);
+			if (ctClass.subclassOf(jsoCtClass) && !ctClass.equals(jsoCtClass)) {
+				jsoSubClasses.add(className);
+			} else if (ctClass.hasAnnotation(PatchClass.class)) {
 
-			PatchClass patchClass = GwtReflectionUtils.getAnnotation(clazz, PatchClass.class);
-
-			if (patchClass == null) {
-				continue;
+				treatPatchClass(ctClass);
 			}
+		}
+	}
 
-			if (!Patcher.class.isAssignableFrom(clazz) || !hasDefaultConstructor(clazz)) {
-				throw new RuntimeException("The @" + PatchClass.class.getSimpleName() + " annotated class '" + clazz.getName() + "' must implements "
-						+ Patcher.class.getSimpleName() + " interface and provide an empty constructor");
-			}
+	private void treatPatchClass(CtClass patchCtClass) throws ClassNotFoundException {
+		Class<?> clazz = Class.forName(patchCtClass.getName(), true, classLoader);
+		PatchClass patchClass = GwtReflectionUtils.getAnnotation(clazz, PatchClass.class);
 
-			Patcher patcher = (Patcher) GwtReflectionUtils.instantiateClass(clazz);
+		if (!Patcher.class.isAssignableFrom(clazz) || !hasDefaultConstructor(clazz)) {
+			throw new RuntimeException("The @" + PatchClass.class.getSimpleName() + " annotated class '" + clazz.getName() + "' must implements "
+					+ Patcher.class.getSimpleName() + " interface and provide an empty constructor");
+		}
 
-			for (Class<?> c : patchClass.value()) {
-				String targetName = c.isMemberClass() ? c.getDeclaringClass().getCanonicalName() + "$" + c.getSimpleName() : c.getCanonicalName();
-				if (patchers.get(targetName) != null) {
-					logger.error("Two patches for same class " + targetName);
-					throw new RuntimeException("Two patches for same class " + targetName);
-				}
-				patchers.put(targetName, patcher);
-				logger.debug("Add patch for class " + targetName + " : " + clazz.getCanonicalName());
+		Patcher patcher = (Patcher) GwtReflectionUtils.instantiateClass(clazz);
+
+		for (Class<?> c : patchClass.value()) {
+			String targetName = c.isMemberClass() ? c.getDeclaringClass().getCanonicalName() + "$" + c.getSimpleName() : c.getCanonicalName();
+			if (patchers.get(targetName) != null) {
+				logger.error("Two patches for same class " + targetName);
+				throw new RuntimeException("Two patches for same class " + targetName);
 			}
-			for (String s : patchClass.classes()) {
-				if (patchers.get(s) != null) {
-					logger.error("Two patches for same class " + s);
-					throw new RuntimeException("Two patches for same class " + s);
-				}
-				patchers.put(s, patcher);
-				logger.debug("Add patch for class " + s + " : " + clazz.getCanonicalName());
+			patchers.put(targetName, patcher);
+			logger.debug("Add patch for class " + targetName + " : " + clazz.getCanonicalName());
+		}
+		for (String s : patchClass.classes()) {
+			if (patchers.get(s) != null) {
+				logger.error("Two patches for same class " + s);
+				throw new RuntimeException("Two patches for same class " + s);
 			}
+			patchers.put(s, patcher);
+			logger.debug("Add patch for class " + s + " : " + clazz.getCanonicalName());
 		}
 	}
 

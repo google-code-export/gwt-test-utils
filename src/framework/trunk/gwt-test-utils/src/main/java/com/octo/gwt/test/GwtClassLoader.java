@@ -77,7 +77,7 @@ public class GwtClassLoader extends Loader {
 			delegateLoadingOf(s);
 		}
 
-		translator = new GwtTranslator(configurationLoader.getPatchers());
+		translator = new GwtTranslator(configurationLoader.getPatchers(), configurationLoader.getJSOSubClasses());
 
 		addTranslator(GwtClassPool.get(), translator);
 	}
