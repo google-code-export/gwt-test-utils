@@ -271,6 +271,11 @@ public class DOMImplPatcher extends AutomaticPatcher {
 	}
 
 	@PatchMethod
+	public static int selectGetLength(Object domImpl, SelectElement select) {
+		return selectGetOptions(domImpl, select).getLength();
+	}
+
+	@PatchMethod
 	public static void selectClear(Object domImpl, SelectElement select) {
 		OverrideNodeList<Node> childNodes = (OverrideNodeList<Node>) select.getChildNodes();
 		childNodes.getList().clear();

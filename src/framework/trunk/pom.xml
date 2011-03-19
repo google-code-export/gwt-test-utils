@@ -8,12 +8,13 @@
 
 	<properties>
 		<antlr.runtime.version>3.1.1</antlr.runtime.version>
-		<asm.version>3.3.1</asm.version>
 		<commons-lang.version>2.5</commons-lang.version>
 		<easymock.version>3.0</easymock.version>
-		<gwt.version>2.1.1</gwt.version>
+		<encoding>UTF-8</encoding>
+		<gwt.version>2.2.0</gwt.version>
 		<gxt.version>2.2.0</gxt.version>
 		<htmlparser.version>1.6</htmlparser.version>
+		<java.version>1.5</java.version>
 		<javassist.version>3.12.1.GA</javassist.version>
 		<junit.version>4.8.2</junit.version>
 		<slf4j.version>1.6.1</slf4j.version>
@@ -76,9 +77,9 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
-					<encoding>UTF-8</encoding>
-					<source>1.5</source>
-					<target>1.5</target>
+					<encoding>${encoding}</encoding>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -86,7 +87,7 @@
 				<artifactId>maven-resources-plugin</artifactId>
 				<version>2.4.1</version>
 				<configuration>
-					<encoding>UTF-8</encoding>
+					<encoding>${encoding}</encoding>
 				</configuration>
 			</plugin>
 		</plugins>
