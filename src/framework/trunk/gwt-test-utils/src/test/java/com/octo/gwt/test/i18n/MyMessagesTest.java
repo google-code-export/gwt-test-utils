@@ -100,6 +100,72 @@ public class MyMessagesTest extends GwtTest {
 		Assert.assertEquals("Vous avez 2 widgets", result2);
 	}
 
+	//	@Test
+	//	public void checkAlternateMessageWithSelect_default_en() {
+	//		// Test
+	//		String resultFEMALE = messages.alternateMessageWithSelect("Jenny", Gender.FEMALE);
+	//		String resultMALE = messages.alternateMessageWithSelect("Brian", Gender.MALE);
+	//		String resultUNKNOWN = messages.alternateMessageWithSelect("Gloups", Gender.UNKNOWN);
+	//
+	//		// Assert
+	//		Assert.assertEquals("Jenny likes her widgets.", resultFEMALE);
+	//		Assert.assertEquals("Brian likes his widgets.", resultMALE);
+	//		Assert.assertEquals("Gloups likes their widgets.", resultUNKNOWN);
+	//	}
+	//
+	//	@Test
+	//	public void checkAlternateMessageWithSelect_fr() {
+	//		// Setup 
+	//		GwtConfig.get().setLocale(Locale.FRANCE);
+	//
+	//		// Test
+	//		String resultFEMALE = messages.alternateMessageWithSelect("Jenny", Gender.FEMALE);
+	//		String resultMALE = messages.alternateMessageWithSelect("Brian", Gender.MALE);
+	//		String resultUNKNOWN = messages.alternateMessageWithSelect("Gloups", Gender.UNKNOWN);
+	//
+	//		// Assert
+	//		Assert.assertEquals("Jenny aime sa poupée", resultFEMALE);
+	//		Assert.assertEquals("Brian aime son dinosaure", resultMALE);
+	//		Assert.assertEquals("Gloups aime son nonosse", resultUNKNOWN);
+	//	}
+	//
+	//	@Test
+	//	public void checkAlternateMessageWithSelectAndPluralCount_default_en() {
+	//		// Test
+	//		String resultFEMALE_ONE = messages.alternateMessageWithSelectAndPluralCount("Jenny", Gender.FEMALE, 1);
+	//		String resultFEMALE_MANY = messages.alternateMessageWithSelectAndPluralCount("Jenny", Gender.FEMALE, 4);
+	//		String resultMALE_ONE = messages.alternateMessageWithSelectAndPluralCount("Brian", Gender.MALE, 1);
+	//		String resultMALE_MANY = messages.alternateMessageWithSelectAndPluralCount("Brian", Gender.MALE, 2);
+	//		String resultUNKNOWN = messages.alternateMessageWithSelectAndPluralCount("Gloups", Gender.UNKNOWN, 0);
+	//
+	//		// Assert
+	//		Assert.assertEquals("Jenny gave away her widget", resultFEMALE_ONE);
+	//		Assert.assertEquals("Jenny gave away her 4 widgets", resultFEMALE_MANY);
+	//		Assert.assertEquals("Brian gave away his widget", resultMALE_ONE);
+	//		Assert.assertEquals("Brian gave away his 2 widgets", resultMALE_MANY);
+	//		Assert.assertEquals("Gloups gave away their 0 widgets", resultUNKNOWN);
+	//	}
+	//
+	//	@Test
+	//	public void checkAlternateMessageWithSelectAndPluralCount_fr() {
+	//		// Setup 
+	//		GwtConfig.get().setLocale(Locale.FRANCE);
+	//
+	//		// Test
+	//		String resultFEMALE_ONE = messages.alternateMessageWithSelectAndPluralCount("Jenny", Gender.FEMALE, 1);
+	//		String resultFEMALE_MANY = messages.alternateMessageWithSelectAndPluralCount("Jenny", Gender.FEMALE, 4);
+	//		String resultMALE_ONE = messages.alternateMessageWithSelectAndPluralCount("Brian", Gender.MALE, 1);
+	//		String resultMALE_MANY = messages.alternateMessageWithSelectAndPluralCount("Brian", Gender.MALE, 2);
+	//		String resultUNKNOWN = messages.alternateMessageWithSelectAndPluralCount("Gloups", Gender.UNKNOWN, 0);
+	//
+	//		// Assert
+	//		Assert.assertEquals("Jenny aime sa poupée", resultFEMALE_ONE);
+	//		Assert.assertEquals("Jenny aime ses 4 poupées", resultFEMALE_MANY);
+	//		Assert.assertEquals("Brian aime son dinosaure", resultMALE_ONE);
+	//		Assert.assertEquals("Brian aime ses 2 dinosaures", resultMALE_MANY);
+	//		Assert.assertEquals("Gloups gave away their 0 widgets", resultUNKNOWN);
+	//	}
+
 	@Test
 	public void checkTotalAmount() {
 		// Setup 1
