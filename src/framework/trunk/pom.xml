@@ -4,7 +4,7 @@
 	<artifactId>gwt-test-utils-parent</artifactId>
 	<packaging>pom</packaging>
 	<version>0.26-SNAPSHOT</version>
-	<name>GWT Tests Utils Parent</name>
+	<name>${project.artifactId}</name>
 
 	<properties>
 		<antlr.runtime.version>3.1.1</antlr.runtime.version>

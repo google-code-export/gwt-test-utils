@@ -4,7 +4,7 @@
 	<groupId>se.fishtank</groupId>
 	<artifactId>gwt-css-selectors</artifactId>
 	<packaging>jar</packaging>
-	<name>GWT adaptation of css-selectors</name>
+	<name>${project.artifactId}</name>
 	<url>http://www.fishtank.se</url>
 
 	<parent>
