@@ -13,7 +13,7 @@ First, you have to setup the required dependency in the _pom.xml_ :
    <dependency>
       <groupId>com.octo.gwt.test</groupId>
       <artifactId>gwt-test-utils</artifactId>
-      <version>0.25</version>
+      <version>0.26</version>
       <scope>test</scope>
    </dependency>
    ...
