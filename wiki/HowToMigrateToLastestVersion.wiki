@@ -33,7 +33,7 @@ Since it just deals with CSV synthax feature, it has been renamed to "{{{gwt-tes
 
  * Gwt.click(), Gwt.blur()... => you will have to use {{{Browser.click()}}}, {{{Browser.blur()}}}, etc...
 
- 5) Configuring your META-INF/gwt-test-utils.properties
+ ====5) Configuring your META-INF/gwt-test-utils.properties ====
  
  Since *gwt-test-utils* must know which class will be compiled in JavaScript code, you have to tell it through a simple properties file.
  This is quite simple : if it doesn't exist yet, add a file named *gwt-test-utils.properties* in the *META-INF* folder of your test classpath (for maven users : {{{src/test/resources/META-INF/gwt-test-utils.properties}}}).
