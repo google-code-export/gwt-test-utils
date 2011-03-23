@@ -50,7 +50,7 @@ If your declared modules are inherting GWT modules from third-party jars (for ex
 Finally, if your application is multi-module, you would have to tell *gwt-test-utils* which module your {{{GwtTest}}} class is testing.
 This is done by overrding {{{GwtTest.getModuleName()}}} method. Example :
 
-}}}
+{{{
   @Override
   protected String getModuleName() {
       // we want to test "Module1", which is corresponding to com/mycompany/gwtmodule1/Module1.gwt.xml
