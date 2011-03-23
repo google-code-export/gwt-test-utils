@@ -32,3 +32,28 @@ Since it just deals with CSV synthax feature, it has been renamed to "{{{gwt-tes
 4) Some deprecated methods have now been removed :
 
  * Gwt.click(), Gwt.blur()... => you will have to use {{{Browser.click()}}}, {{{Browser.blur()}}}, etc...
+
+ 5) Configuring your META-INF/gwt-test-utils.properties
+ 
+ Since *gwt-test-utils* must know which class will be compiled in JavaScript code, you have to tell it through a simple properties file.
+ This is quite simple : if it doesn't exist yet, add a file named *gwt-test-utils.properties* in the *META-INF* folder of your test classpath (for maven users : {{{src/test/resources/META-INF/gwt-test-utils.properties}}}).
+ 
+In this file, you have to declare any GWT module configuration file you've created in your application this way :
+
+{{{
+com/mycompany/gwtmodule1/Module1.gwt.xml =  module-file
+com/mycompany/gwtmodule2/Module2.gwt.xml = module-file
+}}}
+
+If your declared modules are inherting GWT modules from third-party jars (for example : {{{com.google.gwt.user.User}}}), you would not have to declare this parent module in your {{{gwt-test-utils.properties}}} file : the framework handle it for you.
+
+Finally, if your application is multi-module, you would have to tell *gwt-test-utils* which module your {{{GwtTest}}} class is testing.
+This is done by overrding {{{GwtTest.getModuleName()}}} method. Example :
+
+}}}
+  @Override
+  protected String getModuleName() {
+      // we want to test "Module1", which is corresponding to com/mycompany/gwtmodule1/Module1.gwt.xml
+      return "Module1";
+  }
+}}}
