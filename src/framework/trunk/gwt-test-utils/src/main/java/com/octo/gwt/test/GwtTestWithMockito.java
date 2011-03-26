@@ -1,0 +1,90 @@
+package com.octo.gwt.test;
+
+import java.lang.reflect.Field;
+
+import org.junit.Before;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
+import org.mockito.stubbing.Stubber;
+
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.octo.gwt.test.utils.GwtReflectionUtils;
+
+/**
+ * <p>
+ * Base class for test classes which use the {@link org.mockito.Mockito Mockito}
+ * ) mocking framework.
+ * </p>
+ * 
+ * @author Eric Therond
+ */
+public abstract class GwtTestWithMockito extends GwtTestWithMocks {
+
+	@Before
+	public void setupGwtTestWithMockito() {
+		MockitoAnnotations.initMocks(this);
+		for (Field f : mockFields) {
+			GwtReflectionUtils.makeAccessible(f);
+			try {
+				addMockedObject(f.getType(), f.get(this));
+			} catch (Exception e) {
+				throw new RuntimeException("Could not register Mockito mocks declared in test class", e);
+			}
+		}
+	}
+	
+	/**
+	 * Prepares a Mockito stubber that simulates a remote service failure by
+	 * calling the onFailure() method of the corresponding AsyncCallback object.
+	 */
+	public <T> Stubber doFailureCallback(final Throwable exception) {
+		return Mockito.doAnswer(new FailureAnswer<Object>(exception));
+	}
+
+	/**
+	 * Prepares a Mockito stubber that simulates a remote service success by
+	 * calling the onSuccess() method of the corresponding AsyncCallback object.
+	 */
+	public <T> Stubber doSuccessCallback(final T object) {
+		return Mockito.doAnswer(new SuccessAnswer<Object>(object));
+	}
+
+	private static class FailureAnswer<T> implements Answer<T> {
+
+		private Throwable result;
+
+		public FailureAnswer(Throwable result) {
+			this.result = result;
+		}
+
+		@SuppressWarnings("unchecked")
+		public T answer(InvocationOnMock invocation) {
+			Object[] arguments = invocation.getArguments();
+			AsyncCallback<Object> callback = (AsyncCallback<Object>) arguments[arguments.length - 1];
+			callback.onFailure(result);
+			return null;
+		}
+
+	}
+
+	private static class SuccessAnswer<T> implements Answer<T> {
+
+		private T result;
+
+		public SuccessAnswer(T result) {
+			this.result = result;
+		}
+
+		@SuppressWarnings("unchecked")
+		public T answer(InvocationOnMock invocation) {
+			Object[] arguments = invocation.getArguments();
+			AsyncCallback<Object> callback = (AsyncCallback<Object>) arguments[arguments.length - 1];
+			callback.onSuccess(result);
+			return null;
+		}
+
+	}
+
+}

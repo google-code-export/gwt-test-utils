@@ -1,13 +1,13 @@
 package com.octo.gwt.test;
 
-import org.easymock.EasyMock;
 import org.junit.Assert;
 import org.junit.Test;
+import static org.mockito.Mockito.*;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
-public class GwtRpcTest extends GwtTestWithMocks {
+public class GwtRpcWithMockitoTest extends GwtTestWithMockito {
 
 	static class MyGwtClass {
 
@@ -30,19 +30,16 @@ public class GwtRpcTest extends GwtTestWithMocks {
 		}
 	}
 
-	@Mock
+	@org.mockito.Mock
 	private MyRemoteServiceAsync mockedService;
 
 	@SuppressWarnings("unchecked")
 	@Test
 	public void checkGwtRpcOk() {
 		// Setup
-
+		
 		// mock future remote call
-		mockedService.myMethod(EasyMock.eq("myParamValue"), EasyMock.isA(AsyncCallback.class));
-		expectServiceAndCallbackOnSuccess("returnValue");
-
-		replay();
+		doSuccessCallback("returnValue").when(mockedService).myMethod(eq("myParamValue"), any(AsyncCallback.class));
 
 		// Test
 		MyGwtClass gwtClass = new MyGwtClass();
@@ -51,7 +48,7 @@ public class GwtRpcTest extends GwtTestWithMocks {
 		gwtClass.run();
 
 		// Assert
-		verify();
+		verify(mockedService).myMethod(eq("myParamValue"), any(AsyncCallback.class));
 
 		Assert.assertEquals("returnValue", gwtClass.myValue);
 	}
@@ -62,10 +59,7 @@ public class GwtRpcTest extends GwtTestWithMocks {
 		// Setup
 
 		// mock future remote call
-		mockedService.myMethod(EasyMock.eq("myParamValue"), EasyMock.isA(AsyncCallback.class));
-		expectServiceAndCallbackOnFailure(new Exception());
-
-		replay();
+		doFailureCallback(new Exception()).when(mockedService).myMethod(eq("myParamValue"), any(AsyncCallback.class));
 
 		// Test
 		MyGwtClass gwtClass = new MyGwtClass();
@@ -74,8 +68,6 @@ public class GwtRpcTest extends GwtTestWithMocks {
 		gwtClass.run();
 
 		// Assert
-		verify();
-
 		Assert.assertEquals("error", gwtClass.myValue);
 	}
 

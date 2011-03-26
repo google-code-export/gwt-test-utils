@@ -8,13 +8,13 @@ import org.junit.Test;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Label;
-import com.octo.gwt.test.GwtTestWithMocks;
+import com.octo.gwt.test.GwtTestWithEasyMock;
 import com.octo.gwt.test.Mock;
 import com.octo.gwt.test.demo.beans.FooBean;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 import com.octo.gwt.test.utils.events.Browser;
 
-public class RPCCompositeTest extends GwtTestWithMocks {
+public class RPCCompositeWithEasyMockTest extends GwtTestWithEasyMock {
 
 	@Mock
 	private MyServiceAsync service;

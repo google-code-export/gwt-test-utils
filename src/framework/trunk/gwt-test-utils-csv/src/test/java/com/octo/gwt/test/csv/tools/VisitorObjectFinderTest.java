@@ -11,17 +11,15 @@ import com.google.gwt.user.client.ui.HasName;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
-import com.octo.gwt.test.GwtTestWithMocks;
+import com.octo.gwt.test.GwtTestWithEasyMock;
 import com.octo.gwt.test.Mock;
 import com.octo.gwt.test.csv.data.MyBeautifulApp;
 import com.octo.gwt.test.csv.data.MyComposite;
 import com.octo.gwt.test.csv.runner.CsvRunner;
-import com.octo.gwt.test.csv.tools.VisitorObjectFinder;
-import com.octo.gwt.test.csv.tools.WidgetVisitor;
 import com.octo.gwt.test.csv.tools.VisitorObjectFinder.WidgetRepository;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
-public class VisitorObjectFinderTest extends GwtTestWithMocks {
+public class VisitorObjectFinderTest extends GwtTestWithEasyMock {
 
 	private MyBeautifulApp app;
 	private VisitorObjectFinder finder;

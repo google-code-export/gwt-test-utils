@@ -6,7 +6,7 @@ import org.junit.Test;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 
-public class RootPanelTest extends GwtTestWithMocks {
+public class RootPanelTest extends GwtTestWithEasyMock {
 
 	//	@Mock
 	//	private Widget myWidget;

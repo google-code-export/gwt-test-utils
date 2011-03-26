@@ -12,13 +12,13 @@ import java.lang.annotation.Target;
  * </p>
  * 
  * <p>
- * The class declaring such a field must extend {@link GwtTestWithMocks} in
+ * The class declaring such a field must extend {@link GwtTestWithEasyMock} in
  * order to make the mock injection possible.
  * </p>
  * 
  * <p>
  * Mock objects initialized using this annotation will be replayed, verified and
- * reseted when calling the corresponding methods of {@link GwtTestWithMocks}.
+ * reseted when calling the corresponding methods of {@link GwtTestWithEasyMock}.
  * </p>
  * 
  * @author Bertrand Paquet

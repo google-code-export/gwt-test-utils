@@ -10,7 +10,7 @@ import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.HistoryListener;
 
 @SuppressWarnings("deprecation")
-public class HistoryTest extends GwtTestWithMocks {
+public class HistoryTest extends GwtTestWithEasyMock {
 
 	@Mock
 	private HistoryListener listener;

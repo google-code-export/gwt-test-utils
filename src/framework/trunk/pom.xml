@@ -10,6 +10,7 @@
 		<antlr.runtime.version>3.1.1</antlr.runtime.version>
 		<commons-lang.version>2.5</commons-lang.version>
 		<easymock.version>3.0</easymock.version>
+		<mockito.version>1.8.5</mockito.version>
 		<encoding>UTF-8</encoding>
 		<gwt.version>2.2.0</gwt.version>
 		<gxt.version>2.2.0</gxt.version>
