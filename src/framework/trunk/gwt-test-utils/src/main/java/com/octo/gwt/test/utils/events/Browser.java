@@ -2,7 +2,6 @@ package com.octo.gwt.test.utils.events;
 
 import org.junit.Assert;
 
-import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.ComplexPanel;
@@ -108,18 +107,21 @@ public class Browser {
 		}
 
 		for (int i = 0; i < value.length(); i++) {
-			hasTextWidget.setText(value.substring(0, i + 1));
 
 			int keyCode = (int) value.charAt(i);
+			Event keyDownEvent = EventBuilder.create(Event.ONKEYDOWN).setKeyCode(keyCode).build();
 			Event keyPressEvent = EventBuilder.create(Event.ONKEYPRESS).setKeyCode(keyCode).build();
-			Event changeEvent = EventBuilder.create(Event.ONCHANGE).build();
+			Event keyUpEvent = EventBuilder.create(Event.ONKEYUP).setKeyCode(keyCode).build();
 
-			dispatchEvent((Widget) hasTextWidget, keyPressEvent, changeEvent);
+			dispatchEvent((Widget) hasTextWidget, keyDownEvent, keyPressEvent, keyUpEvent);
+
+			hasTextWidget.setText(value.substring(0, i + 1));
 		}
 
-		Event keyUpEvent = EventBuilder.create(Event.ONKEYUP).setKeyCode(KeyCodes.KEY_ENTER).build();
-		dispatchEventInternal((Widget) hasTextWidget, keyUpEvent);
+		// don't have to check if the event can be dispatch since it's check before
 		dispatchEventInternal((Widget) hasTextWidget, EventBuilder.create(Event.ONBLUR).build());
+		dispatchEventInternal((Widget) hasTextWidget, EventBuilder.create(Event.ONCHANGE).build());
+
 	}
 
 	/**
