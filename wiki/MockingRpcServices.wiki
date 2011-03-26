@@ -5,11 +5,11 @@
 = Introduction =
 
 Frequently, your presentation layer will call remote services using GWT-RPC.
-In unit tests, you will need to mock the server calls. *gwt-test-utils* provides an elegant way to do it, using {{{GwtTestWithMocks}}} and the [http://easymock.org/ EasyMock] mocking framework.
+In unit tests, you will need to mock the server calls. *gwt-test-utils* provides an elegant way to do it, using either the [http://easymock.org/ EasyMock] or the [http://mockito.org/ Mockito] mocking framework.
 
 Mocking RPC services is much like mocking any other classes (see [MockingClasses Mocking classes]), with a few specificities, like asynchronous callback handling. 
 
-= Mocking RPC services =
+= Our application code =
 
 First, the service exposed : 
 
@@ -97,10 +97,12 @@ public class RPCComposite extends Composite {
 
 Clicking the button will make a server call, to say hello to "OCTO". As a result, the label is supposed to print "Hello OCTO !" if the server call succeeded, or the error message in case the of a failure. 
 
-Let's create unit tests to simule the two possibilities :
+= Unit tests using EasyMock =
+
+Let's create unit tests to simulate the two scenarios, using EasyMock for RPC service mocking :
 
 {{{
-public class RPCCompositeTest extends GwtTestWithMocks {
+public class RPCCompositeTest extends GwtTestWithEasyMock {
 
    @Mock
    private RCPServiceAsync service;
@@ -159,13 +161,84 @@ public class RPCCompositeTest extends GwtTestWithMocks {
 }
 }}}
 
-This time, we extended {{{GwtTestWithMocks}}}, a subclass of {{{GwtTest}}} which provides some helpful methods to inject mock objects and use them :
+*{{{@Mock}}}* tells *gwt-test-utils* to create a mock object using EasyMock.
 
-*{{{@Mock}}}* tell *gwt-test-utils* to create a mock object
+*{{{expectServiceAndCallbackOnSuccess(Object result)}}}* tells to make the mocked object return the "result" object as a success response to the last call.
 
-*{{{expectServiceAndCallbackOnSuccess(Object result)}}}* tell easymock to make the mocked object return the "result" object as a sucess response to the call.
+*{{{expectServiceAndCallbackOnFailure(Throwable t)}}}* tells to make the mocked object return the "t" exception as a failure response to the last call.
 
-*{{{expectServiceAndCallbackOnFailure(Throwable t)}}}* tell easymock to make the mocked object return the "t" exception as a failure response to the call.
+*{{{replay()}}}* will call {{{EasyMock.replay(..)}}} on each declared {{{@Mock}}} in the test class.
+
+*{{{verify()}}}* will call {{{EasyMock.verify(..)}}} on each declared {{{@Mock}}} in the test class.
+
+= Unit tests using Mockito =
+
+Now, let's see how we can achieve the same thing using Mockito.
+
+Things are quite similar, but this time, of course, with a Mockito-like syntax :
+
+{{{
+public class RPCCompositeTest extends GwtTestWithMockito {
+
+   @Mock
+   private RCPServiceAsync service;
+
+   private RPCComposite composite;
+
+   @Before
+   public void init() throws Exception {
+      composite = new RPCComposite();
+   }
+
+   @SuppressWarnings("unchecked")
+   @Test
+   public void checkRPCCallSuccess() {
+      //Setup
+      Button button = GwtReflectionUtils.getPrivateFieldValue(composite, "button");
+      Label label = GwtReflectionUtils.getPrivateFieldValue(composite, "label");
+
+      doSuccessCallback("mocked call").when(service).sayHello(eq("OCTO"), any(AsyncCallback.class));
+
+      // Test
+      Assert.assertEquals(null, label.getText());
+
+      // click to call server back
+      Browser.click(button);
+
+      // Assert
+      verify(service).sayHello(eq("OCTO"), any(AsyncCallback.class));
+      Assert.assertEquals("mocked call", label.getText());
+   }
+
+   @SuppressWarnings("unchecked")
+   @Test
+   public void checkRPCCallFailure() {
+      //Setup
+      Button button = GwtReflectionUtils.getPrivateFieldValue(composite, "button");
+      Label label = GwtReflectionUtils.getPrivateFieldValue(composite, "label");
+
+      service.sayHello(EasyMock.eq("OCTO"), EasyMock.isA(AsyncCallback.class));
+
+      doFailureCallback(new Exception("Mocked exception")).when(service).sayHello(eq("OCTO"), any(AsyncCallback.class));
+
+      Assert.assertEquals(null, label.getText());
+
+      // Test
+      // click to call server back
+      Browser.click(button);
+
+      // Assert
+      verify(service).sayHello(eq("OCTO"), any(AsyncCallback.class));
+      Assert.assertEquals("Failure : Mocked exception", label.getText());
+   }
+}
+}}}
+
+*{{{@Mock}}}* tells *gwt-test-utils* to create a mock object using Mokcito.
+
+*{{{doFailureSuccess(Object result)}}}* tells to make the mocked object return the "result" object as a success response to the last call.
+
+*{{{expectServiceAndCallbackOnFailure(Throwable t)}}}* tells to make the mocked object return the "t" exception as a failure response to the last call.
 
 *{{{replay()}}}* will call {{{EasyMock.replay(..)}}} on each declared {{{@Mock}}} in the test class.
 
