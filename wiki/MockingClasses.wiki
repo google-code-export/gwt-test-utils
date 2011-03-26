@@ -8,9 +8,10 @@ Sometimes, you may be writing unit tests for a class that has dependencies to ot
 gwt-test-utils allows you to write unit tests that use mock objects, using either the [http://easymock.org/ EasyMock] or the [http://mockito.org/ Mockito] mocking framework.
 
 Mocking support in gwt-test-utils consists in three main features :
-- *Obtaining mock objets when calling GWT.create()* : when declaring mock objects in your test class, you're telling gwt-test-utils that GWT.create(MyClass) calls made in your application code should return the mock object of the corresponding type, declared in test test class.
-- *RPC calls/callbacks stubbing* : shortcut methods that ease the mocking of RPC calls and the handling of callbacks in tests
-- *Helper methods* : a few methods to ease some mocking operations, particularly when using EasyMock
+
+  * *Obtaining mock objets when calling GWT.create()* : when declaring mock objects in your test class, you're telling gwt-test-utils that GWT.create(MyClass) calls made in your application code should return the mock object of the corresponding type, declared in test test class.
+  * *RPC calls/callbacks stubbing* : shortcut methods that ease the mocking of RPC calls and the handling of callbacks in tests
+  * *Helper methods* : a few methods to ease some mocking operations, particularly when using EasyMock
 
 = Using EasyMock =
 
