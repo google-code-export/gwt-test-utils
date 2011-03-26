@@ -236,4 +236,4 @@ public class RPCCompositeTest extends GwtTestWithMockito {
 
 *{{{doFailureCallback(Throwable t)}}}* tells to make the mocked object return the "t" exception as a failure response.
 
-*{{{verify()}}}* is a Mockito static method to check a method was actually call with expected parameters.
+*{{{verify(Object mock)}}}* is a Mockito static method to check a method was actually call with expected parameters.
