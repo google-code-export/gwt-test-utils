@@ -15,8 +15,15 @@ import com.octo.gwt.test.utils.GwtReflectionUtils;
 /**
  * <p>
  * Base class for test classes which use the {@link org.mockito.Mockito Mockito}
- * ) mocking framework.
+ * mocking framework.
  * </p>
+ * 
+ * Test classes can declare mock objects using fields annotated with Mockito's
+ * {@link org.mockito.Mock Mock} annotation. Mock objects not declared using
+ * this annotation (e.g. objects instantiated by the {@link
+ * org.mockito.Mockito#mock(Class<?>) Mockito.mock()} method) should be added to
+ * the test context using the {@link
+ * GwtTestWithMocks#addMockedObject(Class<?>,Object) addMockedObject} method.
  * 
  * @author Eric Therond
  */
@@ -34,10 +41,16 @@ public abstract class GwtTestWithMockito extends GwtTestWithMocks {
 			}
 		}
 	}
-	
+
 	/**
 	 * Prepares a Mockito stubber that simulates a remote service failure by
 	 * calling the onFailure() method of the corresponding AsyncCallback object.
+	 * 
+	 * @param exception
+	 *            The exception thrown by the stubbed remote service and passed
+	 *            to the callback onFailure() method
+	 * 
+	 * @return a Mockito stubber which will call the callback onFailure() method
 	 */
 	public <T> Stubber doFailureCallback(final Throwable exception) {
 		return Mockito.doAnswer(new FailureAnswer<Object>(exception));
@@ -46,6 +59,12 @@ public abstract class GwtTestWithMockito extends GwtTestWithMocks {
 	/**
 	 * Prepares a Mockito stubber that simulates a remote service success by
 	 * calling the onSuccess() method of the corresponding AsyncCallback object.
+	 * 
+	 * @param object
+	 *            The object returned by the stubbed remote service and passed
+	 *            to the callback onSuccess() method
+	 * 
+	 * @return a Mockito stubber which will call the callback onFailure() method
 	 */
 	public <T> Stubber doSuccessCallback(final T object) {
 		return Mockito.doAnswer(new SuccessAnswer<Object>(object));

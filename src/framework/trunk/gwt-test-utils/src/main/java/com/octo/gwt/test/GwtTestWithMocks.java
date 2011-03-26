@@ -17,21 +17,18 @@ import com.octo.gwt.test.utils.GwtReflectionUtils;
  * <p>
  * Base class for test classes which make use of a mocking framework, such as
  * {@link org.easymock.EasyMock EasyMock} or {@link org.mockito.Mockito Mockito}
+ * .
  * </p>
  * 
  * <p>
  * This class provides methods to register mock objects into the context of a
  * test class. This is required so that application calls to
- * GWT.Create(MyClassToMock) will return the corresponding mock object of type
+ * {@link com.google.gwt.core.client.GWT#create(Class)
+ * GWT.Create(MyClassToMock)} will return the corresponding mock object of type
  * MyClassToMock.
  * </p>
  * 
- * <p>
- * Mock objects can then be manipulated using the standard EasyMock API, or with
- * the helper methods provided by GwtTestWithMocks.
- * </p>
- * 
- * @author Bertrand Paquet
+ * @author Eric Therond
  */
 public abstract class GwtTestWithMocks extends GwtTest {
 
@@ -59,7 +56,7 @@ public abstract class GwtTestWithMocks extends GwtTest {
 	public Object addMockedObject(Class<?> createClass, Object mock) {
 		return mockObjects.put(createClass, mock);
 	}
-	
+
 	@After
 	public void teardownGwtTestWithMocks() {
 		mockObjects.clear();

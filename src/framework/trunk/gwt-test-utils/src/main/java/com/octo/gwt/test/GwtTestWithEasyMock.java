@@ -23,6 +23,12 @@ import com.octo.gwt.test.utils.GwtReflectionUtils.MethodCallback;
  * <p>
  * Those classes can declare fields annotated with {@link Mock @Mock}, which
  * will result in the injection of mock objects of the corresponding type.
+ * 
+ * Mock objects not declared using this annotation (e.g. objects instantiated by
+ * calling directly the {@link org.easymock.EasyMock#createMock(Class)
+ * EasyMock.createMock()} method) should be added to the test context using the
+ * {@link GwtTestWithMocks#addMockedObject(Class<?>,Object) addMockedObject}
+ * method.
  * </p>
  * 
  * <p>
@@ -82,6 +88,10 @@ public abstract class GwtTestWithEasyMock extends GwtTestWithMocks {
 	/**
 	 * Records a call to an asynchronous service and simulates a failure by
 	 * calling the onFailure() method of the corresponding AsyncCallback object.
+	 * 
+	 * @param exception
+	 *            The exception thrown by the stubbed remote service and passed
+	 *            to the callback onFailure() method
 	 */
 	public void expectServiceAndCallbackOnFailure(final Throwable exception) {
 		IAnswer<Object> answer = new FailureAnswer<Object>(exception);
@@ -91,6 +101,10 @@ public abstract class GwtTestWithEasyMock extends GwtTestWithMocks {
 	/**
 	 * Records a call to an asynchronous service and simulates a success by
 	 * calling the onSuccess() method of the corresponding AsyncCallback object.
+	 * 
+	 * @param object
+	 *            The object returned by the stubbed remote service and passed
+	 *            to the callback onSuccess() method
 	 */
 	@SuppressWarnings("unchecked")
 	public <T> void expectServiceAndCallbackOnSuccess(final T object) {

@@ -29,16 +29,16 @@ public class RPCCompositeWithEasyMockTest extends GwtTestWithEasyMock {
 	@SuppressWarnings("unchecked")
 	@Test
 	public void checkRPCCallSuccess() {
-		//Setup
+		// Setup
 		Button button = GwtReflectionUtils.getPrivateFieldValue(composite, "button");
 		Label label = GwtReflectionUtils.getPrivateFieldValue(composite, "label");
 
 		service.createBean(EasyMock.eq("OCTO"), EasyMock.isA(AsyncCallback.class));
 
-		FooBean excepted = new FooBean();
-		excepted.setName("mocked");
+		FooBean expected = new FooBean();
+		expected.setName("mocked");
 
-		expectServiceAndCallbackOnSuccess(excepted);
+		expectServiceAndCallbackOnSuccess(expected);
 
 		// replay all @Mock objects
 		replay();
@@ -58,7 +58,7 @@ public class RPCCompositeWithEasyMockTest extends GwtTestWithEasyMock {
 	@SuppressWarnings("unchecked")
 	@Test
 	public void checkRPCCallFailure() {
-		//Setup
+		// Setup
 		Button button = GwtReflectionUtils.getPrivateFieldValue(composite, "button");
 		Label label = GwtReflectionUtils.getPrivateFieldValue(composite, "label");
 
