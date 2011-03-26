@@ -236,9 +236,9 @@ public class RPCCompositeTest extends GwtTestWithMockito {
 
 *{{{@Mock}}}* tells *gwt-test-utils* to create a mock object using Mokcito.
 
-*{{{doFailureSuccess(Object result)}}}* tells to make the mocked object return the "result" object as a success response to the last call.
+*{{{doSuccessCallback(Object result)}}}* tells to make the mocked object return the "result" object as a success response.
 
-*{{{expectServiceAndCallbackOnFailure(Throwable t)}}}* tells to make the mocked object return the "t" exception as a failure response to the last call.
+*{{{doFailureCallback(Throwable t)}}}* tells to make the mocked object return the "t" exception as a failure response.
 
 *{{{replay()}}}* will call {{{EasyMock.replay(..)}}} on each declared {{{@Mock}}} in the test class.
 
