@@ -114,7 +114,6 @@ public class RPCCompositeTest extends GwtTestWithEasyMock {
       composite = new RPCComposite();
    }
 
-   @SuppressWarnings("unchecked")
    @Test
    public void checkRPCCallSuccess() {
       //Setup
@@ -136,7 +135,6 @@ public class RPCCompositeTest extends GwtTestWithEasyMock {
       Assert.assertEquals("mocked call", label.getText());
    }
 
-   @SuppressWarnings("unchecked")
    @Test
    public void checkRPCCallFailure() {
       //Setup
@@ -190,7 +188,6 @@ public class RPCCompositeTest extends GwtTestWithMockito {
       composite = new RPCComposite();
    }
 
-   @SuppressWarnings("unchecked")
    @Test
    public void checkRPCCallSuccess() {
       //Setup
@@ -210,7 +207,6 @@ public class RPCCompositeTest extends GwtTestWithMockito {
       Assert.assertEquals("mocked call", label.getText());
    }
 
-   @SuppressWarnings("unchecked")
    @Test
    public void checkRPCCallFailure() {
       //Setup
@@ -234,12 +230,10 @@ public class RPCCompositeTest extends GwtTestWithMockito {
 }
 }}}
 
-*{{{@Mock}}}* tells *gwt-test-utils* to create a mock object using Mokcito.
+*{{{@Mock}}}* tells *gwt-test-utils* to create a mock object using Mockito. Both gwt-test-utils or Mockito annotation can be used.
 
 *{{{doSuccessCallback(Object result)}}}* tells to make the mocked object return the "result" object as a success response.
 
 *{{{doFailureCallback(Throwable t)}}}* tells to make the mocked object return the "t" exception as a failure response.
 
-*{{{replay()}}}* will call {{{EasyMock.replay(..)}}} on each declared {{{@Mock}}} in the test class.
-
-*{{{verify()}}}* will call {{{EasyMock.verify(..)}}} on each declared {{{@Mock}}} in the test class.
+*{{{verify()}}}* is a Mockito static method to check a method was actually call with expected parameters.
