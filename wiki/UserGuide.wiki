@@ -3,7 +3,7 @@
 
 = Introduction =
 
-gwt-test-utils is a Java testing framework for GWT 2.1+ applications. It provides a simple way to test your GWT User Interfaces without GWTTestCase, running in a standard JVM and using standard testing tools : JUnit, Easymock, reflection, ... 
+gwt-test-utils is a Java testing framework for GWT 2.1+ applications. It provides a simple way to test your GWT User Interfaces without GWTTestCase, running in a standard JVM and using standard testing tools : JUnit, Easymock, Mockito, reflection, ... 
 
 = Summary =
 
