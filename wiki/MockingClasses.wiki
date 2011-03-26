@@ -5,10 +5,21 @@
 
 Sometimes, you may be writing unit tests for a class that has dependencies to other classes, and that interact with them via method calls. In this case, you might want to use mock objets instead of real objects for these classes : they allow you to test that the right method calls were made, instead of testing the actual behavior of the objects.
 
-gwt-test-utils allow you to write unit tests that use mock objects, using the [http://easymock.org/ EasyMock] mocking framework.  Those tests need to extend  {{{GwtTestWithMocks}}}.
+gwt-test-utils allows you to write unit tests that use mock objects, using either the [http://easymock.org/ EasyMock] or the [http://mockito.org/ Mockito] mocking framework.
+
+Mocking support in gwt-test-utils consists in three main features :
+- *Obtaining mock objets when calling GWT.create()* : when declaring mock objects in your test class, you're telling gwt-test-utils that GWT.create(MyClass) calls made in your application code should return the mock object of the corresponding type, declared in test test class.
+- *RPC calls/callbacks stubbing* : shortcut methods that ease the mocking of RPC calls and the handling of callbacks in tests
+- *Helper methods* : a few methods to ease some mocking operations, particularly when using EasyMock
+
+= Using EasyMock =
+
+In order to use the EasyMock mocking framework, your tests need to extend  {{{GwtTestWithEasyMock}}}.
+
+Then, declare your mock objets using *gwt-test-utils's own @Mock annotation*.
 
 {{{
-public class MyUnitTestWithMocks extends GwtTestWithMocks {
+public class MyUnitTestWithMocks extends GwtTestWithEasyMock {
 
    @Mock
    private Foo fooMock;
@@ -45,9 +56,56 @@ public class MyUnitTestWithMocks extends GwtTestWithMocks {
 }
 }}}
 
-
-*{{{@Mock}}}* tell *gwt-test-utils* to create a mock object
+*{{{@Mock}}}* tells *gwt-test-utils* to create a mock object using EasyMock.
 
 *{{{replay()}}}* will call {{{EasyMock.replay(..)}}} on each declared {{{@Mock}}} in the test class.
 
 *{{{verify()}}}* will call {{{EasyMock.verify(..)}}} on each declared {{{@Mock}}} in the test class.
+
+Of course, you can also use the EasyMock API rather than methods provided by GwtTestWithEasyMock.
+
+*Warning* :  mock objects not declared using the @Mock annotation (e.g. objects instantiated by calling directly the {{{EasyMock.createMock()}}} method) should be added to the test context using the  {{{GwtTestWithMocks#addMockedObject()}}} method.
+
+= Using Mockito =
+
+In order to use the Mockito mocking framework, your tests need to extend  {{{GwtTestWithMockito}}}.
+And then, things are really straightforward : declare your mock objects using the *standard Mockito @Mock annotation*, and you're good to go !
+
+{{{
+public class MyUnitTestWithMocks extends GwtTestWithMockito {
+
+   @Mock
+   private Foo fooMock;
+
+   private MyComposite composite;
+
+   @Before
+   public void init() throws Exception {
+      composite = new Composite();
+   }
+
+   @SuppressWarnings("unchecked")
+   @Test
+   public void checkCallingFoo() {
+      //Setup
+      Button button = GwtReflectionUtils.getPrivateFieldValue(composite, "button");
+      Label label = GwtReflectionUtils.getPrivateFieldValue(composite, "label");
+
+      when(fooMock).sayHello("OCTO").thenReturn("mocked call");
+
+      // Precondition
+      Assert.assertEquals(null, label.getText());
+
+      // test call to mock object
+      Browser.click(button);
+
+      // Assert
+      verify(fooMock).sayHello("OCTO");
+      Assert.assertEquals("mocked call", label.getText());
+   }
+
+}
+}}}
+
+
+*Warning* :  mock objects not declared using the @Mock annotation (e.g. objects instantiated by calling directly the {{{Mockito.mock()}}} method) should be added to the test context using the  {{{GwtTestWithMocks#addMockedObject()}}} method.
