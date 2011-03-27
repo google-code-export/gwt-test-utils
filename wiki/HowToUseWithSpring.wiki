@@ -3,7 +3,7 @@
 
 = Introduction =
 
-Since a GWT application usually deals with a backend server, you may be interested in using spring to manage your RPC services. A lot of simple framework, like [http://code.google.com/p/gwtrpc-spring/ gwtrpc-spring] will handle the glue code beetwen spring and GWT for you.
+Since a GWT application usually deals with a backend server, you may be interested in using spring to manage your RPC services. A lot of simple frameworks, like [http://code.google.com/p/gwtrpc-spring/ gwtrpc-spring] will handle the glue code beetwen spring and GWT remote services for you.
 
 But you also might want to test your entire stack. That's why *gwt-test-utils* comes with some classes to do it very easily.
 
@@ -11,7 +11,7 @@ But you also might want to test your entire stack. That's why *gwt-test-utils* c
 
 *gwt-test-utils* provides 2 different modules respectively designed to work with [http://static.springframework.org/spring/docs/2.5.x/reference/index.html Spring 2] and [http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html Spring3].
 
-==== For spring2 ====
+==== For spring2 : ====
 
 {{{
    <dependency>
@@ -23,7 +23,7 @@ But you also might want to test your entire stack. That's why *gwt-test-utils* c
 }}}
 
 
-==== For spring3 ==== 
+==== For spring3 : ==== 
 
 {{{
    <dependency>
