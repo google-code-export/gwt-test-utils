@@ -27,6 +27,10 @@ public class StyleUtils {
 	public static LinkedHashMap<String, String> getStyleProperties(String style) {
 		LinkedHashMap<String, String> result = new LinkedHashMap<String, String>();
 
+		if (style == null || style.trim().length() == 0) {
+			return result;
+		}
+
 		String[] styles = style.split("\\s*;\\s*");
 		for (String property : styles) {
 			Matcher m = STYLE_PATTERN.matcher(property);
