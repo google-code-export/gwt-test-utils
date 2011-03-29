@@ -16,60 +16,63 @@ import com.octo.gwt.test.utils.GwtReflectionUtils;
 @PatchClass(El.class)
 public class ElPatcher extends AutomaticPatcher {
 
-	private static Pattern UNIT_PATTERN = Pattern.compile("^(\\d+)[(px|em|%|en|ex|pt|in|cm|mm|pc)]{0,1}$");
+  private static Pattern UNIT_PATTERN = Pattern.compile("^(\\d+)[(px|em|%|en|ex|pt|in|cm|mm|pc)]{0,1}$");
 
-	@PatchMethod
-	public static El removeStyleName(El el, String styleName) {
-		Element elem = getWrappedElement(el);
-		elem.removeClassName(styleName);
+  @PatchMethod
+  public static String addUnits(String v, String defaultUnit) {
+    if (v == null)
+      return "";
 
-		return el;
-	}
+    v = v.replaceAll(" ", "");
 
-	@PatchMethod
-	public static El applyStyles(El el, String styles) {
-		Element elem = getWrappedElement(el);
-		LinkedHashMap<String, String> styleProperties = StyleUtils.getStyleProperties(elem.getAttribute("style"));
+    if ("undefined".equals(v))
+      return "";
 
-		for (Map.Entry<String, String> entry : styleProperties.entrySet()) {
-			elem.getStyle().setProperty(entry.getKey(), entry.getValue());
-		}
+    Matcher m = UNIT_PATTERN.matcher(v);
+    if (m.matches()) {
+      String unit = (m.groupCount() == 3) ? m.group(2)
+          : (defaultUnit != null && !"".equals(defaultUnit)) ? defaultUnit
+              : "px";
 
-		return el;
-	}
+      return m.group(1) + unit;
+    }
 
-	@PatchMethod
-	public static String addUnits(String v, String defaultUnit) {
-		if (v == null)
-			return "";
+    return v;
+  }
 
-		v = v.replaceAll(" ", "");
+  @PatchMethod
+  public static El applyStyles(El el, String styles) {
+    Element elem = getWrappedElement(el);
+    LinkedHashMap<String, String> styleProperties = StyleUtils.getStyleProperties(elem.getAttribute("style"));
 
-		if ("undefined".equals(v))
-			return "";
+    for (Map.Entry<String, String> entry : styleProperties.entrySet()) {
+      elem.getStyle().setProperty(entry.getKey(), entry.getValue());
+    }
 
-		Matcher m = UNIT_PATTERN.matcher(v);
-		if (m.matches()) {
-			String unit = (m.groupCount() == 3) ? m.group(2) : (defaultUnit != null && !"".equals(defaultUnit)) ? defaultUnit : "px";
+    return el;
+  }
 
-			return m.group(1) + unit;
-		}
+  @PatchMethod
+  public static void disableTextSelectInternal(
+      com.google.gwt.user.client.Element e, boolean disable) {
 
-		return v;
-	}
+  }
 
-	@PatchMethod
-	public static boolean isLeftorRight(El el, String s) {
-		return s != null && (s.contains("Left") || s.contains("Right"));
-	}
+  @PatchMethod
+  public static boolean isLeftorRight(El el, String s) {
+    return s != null && (s.contains("Left") || s.contains("Right"));
+  }
 
-	@PatchMethod
-	public static void disableTextSelectInternal(com.google.gwt.user.client.Element e, boolean disable) {
+  @PatchMethod
+  public static El removeStyleName(El el, String styleName) {
+    Element elem = getWrappedElement(el);
+    elem.removeClassName(styleName);
 
-	}
+    return el;
+  }
 
-	private static Element getWrappedElement(El el) {
-		return GwtReflectionUtils.getPrivateFieldValue(el, "dom");
-	}
+  private static Element getWrappedElement(El el) {
+    return GwtReflectionUtils.getPrivateFieldValue(el, "dom");
+  }
 
 }

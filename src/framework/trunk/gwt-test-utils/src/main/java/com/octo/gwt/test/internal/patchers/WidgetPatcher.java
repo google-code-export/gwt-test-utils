@@ -10,10 +10,10 @@ import com.octo.gwt.test.patchers.PatchMethod;
 @PatchClass(Widget.class)
 public class WidgetPatcher extends AutomaticPatcher {
 
-	// TODO : remove this when cast() will be patched
-	@PatchMethod
-	public static void onBrowserEvent(Widget widget, Event event) {
-		DomEvent.fireNativeEvent(event, widget, widget.getElement());
-	}
+  // TODO : remove this when cast() will be patched
+  @PatchMethod
+  public static void onBrowserEvent(Widget widget, Event event) {
+    DomEvent.fireNativeEvent(event, widget, widget.getElement());
+  }
 
 }

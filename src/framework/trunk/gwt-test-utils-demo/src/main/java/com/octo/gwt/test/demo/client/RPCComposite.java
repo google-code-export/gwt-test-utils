@@ -12,51 +12,51 @@ import com.octo.gwt.test.demo.beans.FooBean;
 
 public class RPCComposite extends Composite {
 
-	private Button button;
-	private Label label;
+  private Button button;
+  private Label label;
 
-	private MyServiceAsync service = GWT.create(MyService.class);
+  private MyServiceAsync service = GWT.create(MyService.class);
 
-	public RPCComposite() {
-		button = new Button();
-		button.setText("Create a FooBean");
+  public RPCComposite() {
+    button = new Button();
+    button.setText("Create a FooBean");
 
-		// We can add style names
-		button.addStyleName("pc-template-btn");
+    // We can add style names
+    button.addStyleName("pc-template-btn");
 
-		//the wrapper panel
-		FlowPanel panel = new FlowPanel();
-		panel.getElement().setClassName("composite");
-		panel.add(button);
+    // the wrapper panel
+    FlowPanel panel = new FlowPanel();
+    panel.getElement().setClassName("composite");
+    panel.add(button);
 
-		label = new Label();
-		label.getElement().setId("labelId");
-		panel.add(label);
+    label = new Label();
+    label.getElement().setId("labelId");
+    panel.add(label);
 
-		button.addClickHandler(new ClickHandler() {
+    button.addClickHandler(new ClickHandler() {
 
-			public void onClick(ClickEvent event) {
-				// Create an asynchronous callback to handle the result.
-				AsyncCallback<FooBean> callback = new AsyncCallback<FooBean>() {
+      public void onClick(ClickEvent event) {
+        // Create an asynchronous callback to handle the result.
+        AsyncCallback<FooBean> callback = new AsyncCallback<FooBean>() {
 
-					public void onSuccess(FooBean result) {
-						label.setText("Bean \"" + result.getName() + "\" has been created");
-					}
+          public void onFailure(Throwable caught) {
+            // Show the RPC error message to the user
+            label.setText("Failure : " + caught.getMessage());
+          }
 
-					public void onFailure(Throwable caught) {
-						// Show the RPC error message to the user
-						label.setText("Failure : " + caught.getMessage());
-					}
-				};
+          public void onSuccess(FooBean result) {
+            label.setText("Bean \"" + result.getName() + "\" has been created");
+          }
+        };
 
-				// Make the call. Control flow will continue immediately and later
-				// 'callback' will be invoked when the RPC completes.
-				service.createBean("OCTO", callback);
-			}
-		});
+        // Make the call. Control flow will continue immediately and later
+        // 'callback' will be invoked when the RPC completes.
+        service.createBean("OCTO", callback);
+      }
+    });
 
-		// All composites must call initWidget() in their constructors.
-		initWidget(panel);
-	}
+    // All composites must call initWidget() in their constructors.
+    initWidget(panel);
+  }
 
 }

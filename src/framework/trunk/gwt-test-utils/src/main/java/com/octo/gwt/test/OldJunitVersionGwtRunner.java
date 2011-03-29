@@ -15,15 +15,15 @@ import org.junit.internal.runners.JUnit4ClassRunner;
 @SuppressWarnings("deprecation")
 public class OldJunitVersionGwtRunner extends GwtRunnerBase {
 
-	private static final String classRunnerName = "org.junit.internal.runners.JUnit4ClassRunner";
+  private static final String classRunnerName = "org.junit.internal.runners.JUnit4ClassRunner";
 
-	public OldJunitVersionGwtRunner(Class<?> clazz) throws Exception {
-		super(clazz);
-	}
+  public OldJunitVersionGwtRunner(Class<?> clazz) throws Exception {
+    super(clazz);
+  }
 
-	@Override
-	protected String getClassRunnerClassName() {
-		return classRunnerName;
-	}
+  @Override
+  protected String getClassRunnerClassName() {
+    return classRunnerName;
+  }
 
 }

@@ -16,7 +16,7 @@ import java.lang.annotation.Target;
 @Inherited
 public @interface CsvDirectory {
 
-	String value();
+  String extension() default ".csv";
 
-	String extension() default ".csv";
+  String value();
 }

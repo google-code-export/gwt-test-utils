@@ -10,32 +10,32 @@ import com.octo.gwt.test.utils.events.Browser;
 
 public class PushButtonTest extends GwtTest {
 
-	private boolean clicked;
+  private boolean clicked;
 
-	@Test
-	public void checkClick() {
+  @Test
+  public void checkClick() {
 
-		// Setup
-		clicked = false;
+    // Setup
+    clicked = false;
 
-		final PushButton b = new PushButton("Up", "Down");
+    final PushButton b = new PushButton("Up", "Down");
 
-		b.addClickHandler(new ClickHandler() {
+    b.addClickHandler(new ClickHandler() {
 
-			public void onClick(ClickEvent event) {
-				clicked = true;
-			}
-		});
+      public void onClick(ClickEvent event) {
+        clicked = true;
+      }
+    });
 
-		// Pre-Assert
-		Assert.assertEquals("Up", b.getText());
+    // Pre-Assert
+    Assert.assertEquals("Up", b.getText());
 
-		// Test
-		Browser.click(b);
+    // Test
+    Browser.click(b);
 
-		// Assert
-		Assert.assertTrue("PushedButton onClick was not triggered", clicked);
-		Assert.assertEquals("Up", b.getText());
-	}
+    // Assert
+    Assert.assertTrue("PushedButton onClick was not triggered", clicked);
+    Assert.assertEquals("Up", b.getText());
+  }
 
 }

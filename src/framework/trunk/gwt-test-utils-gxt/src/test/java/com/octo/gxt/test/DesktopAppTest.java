@@ -8,19 +8,19 @@ import com.octo.gwt.test.GwtTest;
 
 public class DesktopAppTest extends GwtTest {
 
-	@Override
-	protected String getModuleName() {
-		return "com.extjs.gxt.samples.desktop.DesktopApp";
-	}
+  @Test
+  public void checkOnModuleLoad() {
+    // Setup
+    DesktopApp app = GWT.create(DesktopApp.class);
 
-	@Test
-	public void checkOnModuleLoad() {
-		// Setup
-		DesktopApp app = GWT.create(DesktopApp.class);
+    // Test
+    app.onModuleLoad();
 
-		// Test
-		app.onModuleLoad();
+    // Assert
+  }
 
-		// Assert
-	}
+  @Override
+  protected String getModuleName() {
+    return "com.extjs.gxt.samples.desktop.DesktopApp";
+  }
 }

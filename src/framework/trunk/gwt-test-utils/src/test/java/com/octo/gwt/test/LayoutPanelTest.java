@@ -15,66 +15,66 @@ import com.google.gwt.user.client.ui.RootPanel;
 
 public class LayoutPanelTest extends GwtTest {
 
-	private LayoutPanel panel;
+  private boolean onAnimationComplete;
 
-	private boolean onAnimationComplete;
+  private LayoutPanel panel;
 
-	@Before
-	public void setUpLayoutPanel() {
-		onAnimationComplete = false;
+  @Test
+  public void checkAdd() {
+    // Setup
+    Button b = new Button();
+    Assert.assertFalse(b.isAttached());
 
-		panel = new LayoutPanel();
-		Assert.assertFalse(panel.isAttached());
-		RootPanel.get().add(panel);
-		Assert.assertTrue(panel.isAttached());
-		Assert.assertEquals(0, panel.getWidgetCount());
-	}
+    // Test
+    panel.add(b);
 
-	@Test
-	public void checkAdd() {
-		// Setup
-		Button b = new Button();
-		Assert.assertFalse(b.isAttached());
+    // Assert
+    Assert.assertEquals(1, panel.getWidgetCount());
+    Assert.assertEquals(b, panel.getWidget(0));
+    Assert.assertTrue(b.isAttached());
+  }
 
-		// Test
-		panel.add(b);
+  @Test
+  public void checkAnimateWithCallback() {
+    AnimationCallback callback = new AnimationCallback() {
 
-		// Assert
-		Assert.assertEquals(1, panel.getWidgetCount());
-		Assert.assertEquals(b, panel.getWidget(0));
-		Assert.assertTrue(b.isAttached());
-	}
+      public void onAnimationComplete() {
+        onAnimationComplete = true;
+      }
 
-	@Test
-	public void checkAnimateWithCallback() {
-		AnimationCallback callback = new AnimationCallback() {
+      public void onLayout(Layer layer, double progress) {
+        // never called in gwt-test-utils
+      }
+    };
 
-			public void onLayout(Layer layer, double progress) {
-				// never called in gwt-test-utils
-			}
+    panel.animate(4, callback);
 
-			public void onAnimationComplete() {
-				onAnimationComplete = true;
-			}
-		};
+    Assert.assertTrue(onAnimationComplete);
+  }
 
-		panel.animate(4, callback);
+  @Test
+  public void checkGetWidgetContainerElement() {
+    // Setup
+    FlowPanel fp1 = new FlowPanel();
+    panel.add(fp1);
+    Element fp1Element = fp1.getElement();
 
-		Assert.assertTrue(onAnimationComplete);
-	}
+    // Test
+    Element fp1Container = panel.getWidgetContainerElement(fp1);
 
-	@Test
-	public void checkGetWidgetContainerElement() {
-		// Setup
-		FlowPanel fp1 = new FlowPanel();
-		panel.add(fp1);
-		Element fp1Element = fp1.getElement();
+    // Assert
+    Assert.assertEquals(fp1Element, fp1Container.getFirstChildElement());
+  }
 
-		// Test
-		Element fp1Container = panel.getWidgetContainerElement(fp1);
+  @Before
+  public void setUpLayoutPanel() {
+    onAnimationComplete = false;
 
-		// Assert
-		Assert.assertEquals(fp1Element, fp1Container.getFirstChildElement());
-	}
+    panel = new LayoutPanel();
+    Assert.assertFalse(panel.isAttached());
+    RootPanel.get().add(panel);
+    Assert.assertTrue(panel.isAttached());
+    Assert.assertEquals(0, panel.getWidgetCount());
+  }
 
 }

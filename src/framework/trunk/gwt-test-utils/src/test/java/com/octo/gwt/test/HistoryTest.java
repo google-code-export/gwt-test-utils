@@ -12,111 +12,111 @@ import com.google.gwt.user.client.HistoryListener;
 @SuppressWarnings("deprecation")
 public class HistoryTest extends GwtTestWithEasyMock {
 
-	@Mock
-	private HistoryListener listener;
+  private static class ValueChangeEventMatcher<T> implements IArgumentMatcher {
 
-	@Mock
-	private ValueChangeHandler<String> listener2;
+    public static <X> ValueChangeEvent<X> eq(X expectedValue) {
+      EasyMock.reportMatcher(new ValueChangeEventMatcher<X>(expectedValue));
+      return null;
+    }
 
-	@Test
-	public void checkHistoryOldSchool() {
-		// Setup
+    private T expectedValue;
 
-		listener.onHistoryChanged(EasyMock.eq("init"));
-		EasyMock.expectLastCall();
+    private ValueChangeEventMatcher(T expectedValue) {
+      this.expectedValue = expectedValue;
+    }
 
-		listener.onHistoryChanged(EasyMock.eq("myToken"));
-		EasyMock.expectLastCall();
+    public void appendTo(StringBuffer buffer) {
+      buffer.append(expectedValue.toString());
+    }
 
-		replay();
-		// Test
-		History.addHistoryListener(listener);
+    public boolean matches(Object argument) {
+      if (argument instanceof ValueChangeEvent<?>) {
+        ValueChangeEvent<?> valueChangeEvent = (ValueChangeEvent<?>) argument;
+        return expectedValue.equals(valueChangeEvent.getValue());
+      }
+      return false;
+    }
 
-		History.newItem("init");
-		History.newItem("myToken");
+  }
 
-		// Assert
-		verify();
+  @Mock
+  private HistoryListener listener;
 
-		reset();
+  @Mock
+  private ValueChangeHandler<String> listener2;
 
-		// Setup
+  @Test
+  public void checkHistory() {
+    // Setup
 
-		listener.onHistoryChanged(EasyMock.eq("init"));
-		EasyMock.expectLastCall();
+    listener2.onValueChange(ValueChangeEventMatcher.eq("init"));
+    EasyMock.expectLastCall();
 
-		replay();
-		// Test
-		History.back();
+    listener2.onValueChange(ValueChangeEventMatcher.eq("myToken"));
+    EasyMock.expectLastCall();
 
-		History.removeHistoryListener(listener);
+    replay();
+    // Test
+    History.addValueChangeHandler(listener2);
 
-		History.newItem("myToken2");
+    History.newItem("init");
+    History.newItem("myToken");
 
-		// Assert
-		verify();
-	}
+    // Assert
+    verify();
 
-	@Test
-	public void checkHistory() {
-		// Setup
+    reset();
 
-		listener2.onValueChange(ValueChangeEventMatcher.eq("init"));
-		EasyMock.expectLastCall();
+    // Setup
 
-		listener2.onValueChange(ValueChangeEventMatcher.eq("myToken"));
-		EasyMock.expectLastCall();
+    listener2.onValueChange(ValueChangeEventMatcher.eq("init"));
+    EasyMock.expectLastCall();
 
-		replay();
-		// Test
-		History.addValueChangeHandler(listener2);
+    replay();
+    // Test
+    History.back();
 
-		History.newItem("init");
-		History.newItem("myToken");
+    // Assert
+    verify();
+  }
 
-		// Assert
-		verify();
+  @Test
+  public void checkHistoryOldSchool() {
+    // Setup
 
-		reset();
+    listener.onHistoryChanged(EasyMock.eq("init"));
+    EasyMock.expectLastCall();
 
-		// Setup
+    listener.onHistoryChanged(EasyMock.eq("myToken"));
+    EasyMock.expectLastCall();
 
-		listener2.onValueChange(ValueChangeEventMatcher.eq("init"));
-		EasyMock.expectLastCall();
+    replay();
+    // Test
+    History.addHistoryListener(listener);
 
-		replay();
-		// Test
-		History.back();
+    History.newItem("init");
+    History.newItem("myToken");
 
-		// Assert
-		verify();
-	}
+    // Assert
+    verify();
 
-	private static class ValueChangeEventMatcher<T> implements IArgumentMatcher {
+    reset();
 
-		private T expectedValue;
+    // Setup
 
-		private ValueChangeEventMatcher(T expectedValue) {
-			this.expectedValue = expectedValue;
-		}
+    listener.onHistoryChanged(EasyMock.eq("init"));
+    EasyMock.expectLastCall();
 
-		public void appendTo(StringBuffer buffer) {
-			buffer.append(expectedValue.toString());
-		}
+    replay();
+    // Test
+    History.back();
 
-		public boolean matches(Object argument) {
-			if (argument instanceof ValueChangeEvent<?>) {
-				ValueChangeEvent<?> valueChangeEvent = (ValueChangeEvent<?>) argument;
-				return expectedValue.equals(valueChangeEvent.getValue());
-			}
-			return false;
-		}
+    History.removeHistoryListener(listener);
 
-		public static <X> ValueChangeEvent<X> eq(X expectedValue) {
-			EasyMock.reportMatcher(new ValueChangeEventMatcher<X>(expectedValue));
-			return null;
-		}
+    History.newItem("myToken2");
 
-	}
+    // Assert
+    verify();
+  }
 
 }

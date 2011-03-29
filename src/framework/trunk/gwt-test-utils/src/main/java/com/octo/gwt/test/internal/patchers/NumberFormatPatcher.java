@@ -10,9 +10,9 @@ import com.octo.gwt.test.patchers.PatchMethod;
 @PatchClass(NumberFormat.class)
 public class NumberFormatPatcher extends AutomaticPatcher {
 
-	@PatchMethod
-	public static String toPrecision(double d, int digits) {
-		return new BigDecimal(d).setScale(digits, BigDecimal.ROUND_DOWN).toString();
-	}
+  @PatchMethod
+  public static String toPrecision(double d, int digits) {
+    return new BigDecimal(d).setScale(digits, BigDecimal.ROUND_DOWN).toString();
+  }
 
 }

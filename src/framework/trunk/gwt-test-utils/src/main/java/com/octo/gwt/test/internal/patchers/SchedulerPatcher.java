@@ -9,9 +9,9 @@ import com.octo.gwt.test.patchers.PatchMethod;
 @PatchClass(Scheduler.class)
 public class SchedulerPatcher extends AutomaticPatcher {
 
-	@PatchMethod
-	public static Scheduler get() {
-		return OverrideScheduler.get();
-	}
+  @PatchMethod
+  public static Scheduler get() {
+    return OverrideScheduler.get();
+  }
 
 }

@@ -29,57 +29,58 @@ import com.octo.gwt.test.internal.GwtTranslator;
  */
 public class GwtClassLoader extends Loader {
 
-	private static GwtClassLoader INSTANCE;
+  private static GwtClassLoader INSTANCE;
 
-	/**
-	 * Bind a static instance of the classloader to the current thread and
-	 * return it.
-	 * 
-	 * @return the static classloader instance.
-	 * 
-	 * @see Thread#currentThread()
-	 * @see Thread#setContextClassLoader(ClassLoader)
-	 */
-	public static GwtClassLoader get() {
-		if (INSTANCE == null) {
-			try {
-				INSTANCE = new GwtClassLoader();
-			} catch (Exception e) {
-				if (e instanceof RuntimeException) {
-					throw (RuntimeException) e;
-				} else {
-					throw new RuntimeException(e);
-				}
-			}
-		}
+  /**
+   * Bind a static instance of the classloader to the current thread and return
+   * it.
+   * 
+   * @return the static classloader instance.
+   * 
+   * @see Thread#currentThread()
+   * @see Thread#setContextClassLoader(ClassLoader)
+   */
+  public static GwtClassLoader get() {
+    if (INSTANCE == null) {
+      try {
+        INSTANCE = new GwtClassLoader();
+      } catch (Exception e) {
+        if (e instanceof RuntimeException) {
+          throw (RuntimeException) e;
+        } else {
+          throw new RuntimeException(e);
+        }
+      }
+    }
 
-		Thread.currentThread().setContextClassLoader(INSTANCE);
+    Thread.currentThread().setContextClassLoader(INSTANCE);
 
-		return INSTANCE;
-	}
+    return INSTANCE;
+  }
 
-	/**
-	 * Unbind the static classloader instance from the current thread by binding
-	 * the system classloader instead.
-	 */
-	public static void reset() {
-		Thread.currentThread().setContextClassLoader(INSTANCE.getParent());
-	}
+  /**
+   * Unbind the static classloader instance from the current thread by binding
+   * the system classloader instead.
+   */
+  public static void reset() {
+    Thread.currentThread().setContextClassLoader(INSTANCE.getParent());
+  }
 
-	private GwtTranslator translator;
+  private GwtTranslator translator;
 
-	private GwtClassLoader() throws NotFoundException, CannotCompileException {
-		super(GwtClassPool.get());
+  private GwtClassLoader() throws NotFoundException, CannotCompileException {
+    super(GwtClassPool.get());
 
-		ConfigurationLoader configurationLoader = ConfigurationLoader.createInstance(this.getParent());
+    ConfigurationLoader configurationLoader = ConfigurationLoader.createInstance(this.getParent());
 
-		for (String s : configurationLoader.getDelegateList()) {
-			delegateLoadingOf(s);
-		}
+    for (String s : configurationLoader.getDelegateList()) {
+      delegateLoadingOf(s);
+    }
 
-		translator = new GwtTranslator(configurationLoader.getPatchers(), configurationLoader.getJSOSubClasses());
+    translator = new GwtTranslator(configurationLoader.getPatchers(),
+        configurationLoader.getJSOSubClasses());
 
-		addTranslator(GwtClassPool.get(), translator);
-	}
+    addTranslator(GwtClassPool.get(), translator);
+  }
 
 }

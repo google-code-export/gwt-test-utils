@@ -11,36 +11,41 @@ import com.octo.gwt.test.utils.events.Browser;
 
 public class ToggleButtonTest extends GwtTest {
 
-	private boolean clicked;
+  private boolean clicked;
 
-	@Test
-	public void checkClick() {
-		// Setup
-		final ToggleButton toggleButton = new ToggleButton("Up", "Down");
-		clicked = false;
+  @Test
+  public void checkClick() {
+    // Setup
+    final ToggleButton toggleButton = new ToggleButton("Up", "Down");
+    clicked = false;
 
-		toggleButton.addClickHandler(new ClickHandler() {
-			public void onClick(ClickEvent event) {
-				clicked = true;
-			}
-		});
+    toggleButton.addClickHandler(new ClickHandler() {
+      public void onClick(ClickEvent event) {
+        clicked = true;
+      }
+    });
 
-		// Pre-Assert
-		Assert.assertFalse("ToggleButton should not be toggled by default", toggleButton.isDown());
-		Assert.assertEquals("Up", toggleButton.getText());
+    // Pre-Assert
+    Assert.assertFalse("ToggleButton should not be toggled by default",
+        toggleButton.isDown());
+    Assert.assertEquals("Up", toggleButton.getText());
 
-		// Test
-		Browser.click(toggleButton);
+    // Test
+    Browser.click(toggleButton);
 
-		// Assert
-		Assert.assertTrue("ToggleButton onClick was not triggered", clicked);
-		Assert.assertTrue("ToggleButton should be toggled after being clicked once", toggleButton.isDown());
-		Assert.assertEquals("Down", toggleButton.getText());
+    // Assert
+    Assert.assertTrue("ToggleButton onClick was not triggered", clicked);
+    Assert.assertTrue(
+        "ToggleButton should be toggled after being clicked once",
+        toggleButton.isDown());
+    Assert.assertEquals("Down", toggleButton.getText());
 
-		// Test 2
-		Browser.click(toggleButton);
-		Assert.assertFalse("ToggleButton should not be toggled after being clicked twice", toggleButton.isDown());
-		Assert.assertEquals("Up", toggleButton.getText());
-	}
+    // Test 2
+    Browser.click(toggleButton);
+    Assert.assertFalse(
+        "ToggleButton should not be toggled after being clicked twice",
+        toggleButton.isDown());
+    Assert.assertEquals("Up", toggleButton.getText());
+  }
 
 }

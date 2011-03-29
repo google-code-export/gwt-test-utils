@@ -10,15 +10,15 @@ import com.octo.gwt.test.patchers.PatchMethod;
 @PatchClass(Event.class)
 public class EventPatcher extends AutomaticPatcher {
 
-	@PatchMethod
-	public static final Element getTarget(Event event) {
-		OverrideEvent overrideEvent = event.cast();
-		return overrideEvent.getOverrideTargetElement();
-	}
+  @PatchMethod
+  public static final Element getRelatedTarget(Event event) {
+    return getTarget(event);
+  }
 
-	@PatchMethod
-	public static final Element getRelatedTarget(Event event) {
-		return getTarget(event);
-	}
+  @PatchMethod
+  public static final Element getTarget(Event event) {
+    OverrideEvent overrideEvent = event.cast();
+    return overrideEvent.getOverrideTargetElement();
+  }
 
 }

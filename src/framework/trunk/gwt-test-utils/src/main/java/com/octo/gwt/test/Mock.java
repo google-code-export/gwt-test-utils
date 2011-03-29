@@ -18,7 +18,8 @@ import java.lang.annotation.Target;
  * 
  * <p>
  * Mock objects initialized using this annotation will be replayed, verified and
- * reseted when calling the corresponding methods of {@link GwtTestWithEasyMock}.
+ * reseted when calling the corresponding methods of {@link GwtTestWithEasyMock}
+ * .
  * </p>
  * 
  * @author Bertrand Paquet

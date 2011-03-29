@@ -13,11 +13,12 @@ import com.octo.gwt.test.patchers.PatchClass;
 @PatchClass(ValueBoxBase.class)
 public class ValueBoxBasePatcher extends AutomaticPatcher {
 
-	public void initClass(CtClass c) throws Exception {
-		super.initClass(c);
+  public void initClass(CtClass c) throws Exception {
+    super.initClass(c);
 
-		CtConstructor cons = findConstructor(c, Element.class, Renderer.class, Parser.class);
-		cons.insertAfter("setText(\"\");");
-	}
+    CtConstructor cons = findConstructor(c, Element.class, Renderer.class,
+        Parser.class);
+    cons.insertAfter("setText(\"\");");
+  }
 
 }

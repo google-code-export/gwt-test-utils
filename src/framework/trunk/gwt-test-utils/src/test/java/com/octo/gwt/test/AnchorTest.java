@@ -8,100 +8,100 @@ import com.google.gwt.user.client.ui.Anchor;
 
 public class AnchorTest extends GwtTest {
 
-	@Test
-	public void checkTarget() {
-		Anchor a = new Anchor();
-		a.setFocus(true);
+  @Test
+  public void checkAbsoluteLeft() {
+    Anchor a = new Anchor();
 
-		a.setTarget("myTarget");
-		Assert.assertEquals("myTarget", a.getTarget());
-	}
+    Assert.assertEquals(0, a.getAbsoluteLeft());
+  }
 
-	@Test
-	public void checkText() {
-		Anchor a = new Anchor("foo");
-		Assert.assertEquals("foo", a.getText());
-		a.setText("toto");
-		a.setFocus(true);
+  @Test
+  public void checkAbsoluteTop() {
+    Anchor a = new Anchor();
 
-		Assert.assertEquals("toto", a.getText());
-	}
+    Assert.assertEquals(0, a.getAbsoluteTop());
+  }
 
-	@Test
-	public void checkName() {
-		Anchor a = new Anchor();
-		a.setName("toto");
+  @Test
+  public void checkHref() {
+    Anchor a = new Anchor("toto", "href");
+    a.setFocus(true);
+    a.setAccessKey('k');
 
-		Assert.assertEquals("toto", a.getName());
-	}
+    Assert.assertEquals("toto", a.getText());
+    Assert.assertEquals("href", a.getHref());
+  }
 
-	@Test
-	public void checkVisible() {
-		Anchor a = new Anchor();
-		Assert.assertEquals(true, a.isVisible());
-		a.setVisible(false);
-		Assert.assertEquals(false, a.isVisible());
-	}
+  @Test
+  public void checkHTML() {
+    Anchor a = new Anchor("<h1>foo</h1>", true);
+    Assert.assertEquals("<h1>foo</h1>", a.getHTML());
 
-	@Test
-	public void checkHref() {
-		Anchor a = new Anchor("toto", "href");
-		a.setFocus(true);
-		a.setAccessKey('k');
+    a.setHTML("<h1>test</h1>");
 
-		Assert.assertEquals("toto", a.getText());
-		Assert.assertEquals("href", a.getHref());
-	}
+    Assert.assertEquals("<h1>test</h1>", a.getHTML());
+    Assert.assertEquals(1, a.getElement().getChildCount());
+    Element h1 = (Element) a.getElement().getChild(0);
+    Assert.assertEquals("H1", h1.getTagName());
+    Assert.assertEquals("test", h1.getInnerText());
+  }
 
-	@Test
-	public void checkAbsoluteLeft() {
-		Anchor a = new Anchor();
+  @Test
+  public void checkName() {
+    Anchor a = new Anchor();
+    a.setName("toto");
 
-		Assert.assertEquals(0, a.getAbsoluteLeft());
-	}
+    Assert.assertEquals("toto", a.getName());
+  }
 
-	@Test
-	public void checkAbsoluteTop() {
-		Anchor a = new Anchor();
+  @Test
+  public void checkTabIndex() {
+    Anchor a = new Anchor();
+    a.setTabIndex(1);
 
-		Assert.assertEquals(0, a.getAbsoluteTop());
-	}
+    Assert.assertEquals(1, a.getTabIndex());
+  }
 
-	@Test
-	public void checkTitle() {
-		Anchor a = new Anchor();
-		a.setTitle("title");
+  @Test
+  public void checkTagName() {
+    Anchor a = new Anchor();
 
-		Assert.assertEquals("title", a.getTitle());
-	}
+    Assert.assertEquals("a", a.getElement().getTagName());
+  }
 
-	@Test
-	public void checkTabIndex() {
-		Anchor a = new Anchor();
-		a.setTabIndex(1);
+  @Test
+  public void checkTarget() {
+    Anchor a = new Anchor();
+    a.setFocus(true);
 
-		Assert.assertEquals(1, a.getTabIndex());
-	}
+    a.setTarget("myTarget");
+    Assert.assertEquals("myTarget", a.getTarget());
+  }
 
-	@Test
-	public void checkHTML() {
-		Anchor a = new Anchor("<h1>foo</h1>", true);
-		Assert.assertEquals("<h1>foo</h1>", a.getHTML());
+  @Test
+  public void checkText() {
+    Anchor a = new Anchor("foo");
+    Assert.assertEquals("foo", a.getText());
+    a.setText("toto");
+    a.setFocus(true);
 
-		a.setHTML("<h1>test</h1>");
+    Assert.assertEquals("toto", a.getText());
+  }
 
-		Assert.assertEquals("<h1>test</h1>", a.getHTML());
-		Assert.assertEquals(1, a.getElement().getChildCount());
-		Element h1 = (Element) a.getElement().getChild(0);
-		Assert.assertEquals("H1", h1.getTagName());
-		Assert.assertEquals("test", h1.getInnerText());
-	}
+  @Test
+  public void checkTitle() {
+    Anchor a = new Anchor();
+    a.setTitle("title");
 
-	@Test
-	public void checkTagName() {
-		Anchor a = new Anchor();
+    Assert.assertEquals("title", a.getTitle());
+  }
 
-		Assert.assertEquals("a", a.getElement().getTagName());
-	}
+  @Test
+  public void checkVisible() {
+    Anchor a = new Anchor();
+    Assert.assertEquals(true, a.isVisible());
+    a.setVisible(false);
+    Assert.assertEquals(false, a.isVisible());
+  }
 
 }

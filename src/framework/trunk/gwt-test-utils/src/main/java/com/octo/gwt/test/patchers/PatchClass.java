@@ -15,19 +15,19 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 public @interface PatchClass {
 
-	/**
-	 * Classes to patch.
-	 * 
-	 * @return An array containing the classes to patch.
-	 */
-	Class<?>[] value() default {};
+  /**
+   * Name of the classes to patch, in case some of the class to patch are
+   * internal.
+   * 
+   * @return An array containing the name of classes to patch.
+   */
+  String[] classes() default {};
 
-	/**
-	 * Name of the classes to patch, in case some of the class to patch are
-	 * internal.
-	 * 
-	 * @return An array containing the name of classes to patch.
-	 */
-	String[] classes() default {};
+  /**
+   * Classes to patch.
+   * 
+   * @return An array containing the classes to patch.
+   */
+  Class<?>[] value() default {};
 
 }

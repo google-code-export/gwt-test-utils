@@ -16,68 +16,68 @@ import com.octo.gwt.test.utils.events.Browser;
 
 public class RPCCompositeWithEasyMockTest extends GwtTestWithEasyMock {
 
-	@Mock
-	private MyServiceAsync service;
+  private RPCComposite composite;
 
-	private RPCComposite composite;
+  @Mock
+  private MyServiceAsync service;
 
-	@Before
-	public void init() throws Exception {
-		composite = new RPCComposite();
-	}
+  @SuppressWarnings("unchecked")
+  @Test
+  public void checkRPCCallFailure() {
+    // Setup
+    Button button = GwtReflectionUtils.getPrivateFieldValue(composite, "button");
+    Label label = GwtReflectionUtils.getPrivateFieldValue(composite, "label");
 
-	@SuppressWarnings("unchecked")
-	@Test
-	public void checkRPCCallSuccess() {
-		// Setup
-		Button button = GwtReflectionUtils.getPrivateFieldValue(composite, "button");
-		Label label = GwtReflectionUtils.getPrivateFieldValue(composite, "label");
+    service.createBean(EasyMock.eq("OCTO"), EasyMock.isA(AsyncCallback.class));
 
-		service.createBean(EasyMock.eq("OCTO"), EasyMock.isA(AsyncCallback.class));
+    expectServiceAndCallbackOnFailure(new Exception("Mocked exception"));
 
-		FooBean expected = new FooBean();
-		expected.setName("mocked");
+    // replay all @Mock objects
+    replay();
 
-		expectServiceAndCallbackOnSuccess(expected);
+    Assert.assertEquals("", label.getText());
 
-		// replay all @Mock objects
-		replay();
+    // Test
+    Browser.click(button);
 
-		Assert.assertEquals("", label.getText());
+    // Assert
+    // verify all @Mock objects
+    verify();
+    Assert.assertEquals("Failure : Mocked exception", label.getText());
+  }
 
-		// Test
-		Browser.click(button);
+  @SuppressWarnings("unchecked")
+  @Test
+  public void checkRPCCallSuccess() {
+    // Setup
+    Button button = GwtReflectionUtils.getPrivateFieldValue(composite, "button");
+    Label label = GwtReflectionUtils.getPrivateFieldValue(composite, "label");
 
-		// Assert
-		// verify all @Mock objects
-		verify();
+    service.createBean(EasyMock.eq("OCTO"), EasyMock.isA(AsyncCallback.class));
 
-		Assert.assertEquals("Bean \"mocked\" has been created", label.getText());
-	}
+    FooBean expected = new FooBean();
+    expected.setName("mocked");
 
-	@SuppressWarnings("unchecked")
-	@Test
-	public void checkRPCCallFailure() {
-		// Setup
-		Button button = GwtReflectionUtils.getPrivateFieldValue(composite, "button");
-		Label label = GwtReflectionUtils.getPrivateFieldValue(composite, "label");
+    expectServiceAndCallbackOnSuccess(expected);
 
-		service.createBean(EasyMock.eq("OCTO"), EasyMock.isA(AsyncCallback.class));
+    // replay all @Mock objects
+    replay();
 
-		expectServiceAndCallbackOnFailure(new Exception("Mocked exception"));
+    Assert.assertEquals("", label.getText());
 
-		// replay all @Mock objects
-		replay();
+    // Test
+    Browser.click(button);
 
-		Assert.assertEquals("", label.getText());
+    // Assert
+    // verify all @Mock objects
+    verify();
 
-		// Test
-		Browser.click(button);
+    Assert.assertEquals("Bean \"mocked\" has been created", label.getText());
+  }
 
-		// Assert
-		// verify all @Mock objects
-		verify();
-		Assert.assertEquals("Failure : Mocked exception", label.getText());
-	}
+  @Before
+  public void init() throws Exception {
+    composite = new RPCComposite();
+  }
 
 }

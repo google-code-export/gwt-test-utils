@@ -21,69 +21,78 @@ import com.octo.gwt.test.integration.RemoteServiceCreateHandler;
 @RunWith(GwtCsvRunner.class)
 public class MyTestShell extends GwtCsvTest {
 
-	private Application application = new Application();
+  private Application application = new Application();
 
-	@Before
-	public void setUpMyTestShell() throws Exception {
-		addGwtCreateHandler(createGwtCreateHandler());
-	}
+  @CsvMethod
+  public void initApp() {
+    application.onModuleLoad();
+  }
 
-	@Override
-	protected String getHostPagePath() {
-		return "com/octo/gwt/test/demo/public/Application.html";
-	}
+  @Before
+  public void setUpMyTestShell() throws Exception {
+    addGwtCreateHandler(createGwtCreateHandler());
+  }
 
-	@CsvMethod
-	public void initApp() {
-		application.onModuleLoad();
-	}
+  private GwtCreateHandler createGwtCreateHandler() {
+    return new RemoteServiceCreateHandler() {
 
-	private GwtCreateHandler createGwtCreateHandler() {
-		return new RemoteServiceCreateHandler() {
+      @Override
+      public Object findService(Class<?> remoteServiceClass,
+          String remoteServiceRelativePath) {
+        if (remoteServiceClass == MyService.class
+            && "myService".equals(remoteServiceRelativePath)) {
+          return new MyServiceImpl();
+        }
+        return null;
+      }
+    };
+  }
 
-			@Override
-			public Object findService(Class<?> remoteServiceClass, String remoteServiceRelativePath) {
-				if (remoteServiceClass == MyService.class && "myService".equals(remoteServiceRelativePath)) {
-					return new MyServiceImpl();
-				}
-				return null;
-			}
-		};
-	}
+  @Override
+  protected String getHostPagePath() {
+    return "com/octo/gwt/test/demo/public/Application.html";
+  }
 
-	@Override
-	protected NodeObjectFinder getNodeObjectFinder(String prefix) {
-		if ("myApp".equals(prefix)) {
-			return new NodeObjectFinder() {
+  @Override
+  protected NodeObjectFinder getNodeObjectFinder(String prefix) {
+    if ("myApp".equals(prefix)) {
+      return new NodeObjectFinder() {
 
-				public Object find(CsvRunner csvRunner, Node node) {
-					return csvRunner.getNodeValue(application, node);
-				}
+        @Override
+        public Object find(CsvRunner csvRunner, Node node) {
+          return csvRunner.getNodeValue(application, node);
+        }
 
-			};
-		} else if ("simpleComposite".equals(prefix)) {
-			return new NodeObjectFinder() {
+      };
+    } else if ("simpleComposite".equals(prefix)) {
+      return new NodeObjectFinder() {
 
-				public Object find(CsvRunner csvRunner, Node node) {
-					return csvRunner.getNodeValue(RootPanel.get("main").getWidget(0), node);
-				}
-			};
-		} else if ("simpleComposite2".equals(prefix)) {
-			return new NodeObjectFinder() {
+        @Override
+        public Object find(CsvRunner csvRunner, Node node) {
+          return csvRunner.getNodeValue(RootPanel.get("main").getWidget(0),
+              node);
+        }
+      };
+    } else if ("simpleComposite2".equals(prefix)) {
+      return new NodeObjectFinder() {
 
-				public Object find(CsvRunner csvRunner, Node node) {
-					return csvRunner.getNodeValue(RootPanel.get("main").getWidget(1), node);
-				}
-			};
-		} else if ("rpcComposite".equals(prefix)) {
-			return new NodeObjectFinder() {
+        @Override
+        public Object find(CsvRunner csvRunner, Node node) {
+          return csvRunner.getNodeValue(RootPanel.get("main").getWidget(1),
+              node);
+        }
+      };
+    } else if ("rpcComposite".equals(prefix)) {
+      return new NodeObjectFinder() {
 
-				public Object find(CsvRunner csvRunner, Node node) {
-					return csvRunner.getNodeValue(RootPanel.get("main").getWidget(2), node);
-				}
-			};
-		}
+        @Override
+        public Object find(CsvRunner csvRunner, Node node) {
+          return csvRunner.getNodeValue(RootPanel.get("main").getWidget(2),
+              node);
+        }
+      };
+    }
 
-		return super.getNodeObjectFinder(prefix);
-	}
+    return super.getNodeObjectFinder(prefix);
+  }
 }

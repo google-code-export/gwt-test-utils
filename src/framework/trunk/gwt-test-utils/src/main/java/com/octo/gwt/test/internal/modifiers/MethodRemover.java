@@ -10,50 +10,53 @@ import javassist.CtMethod;
 
 public class MethodRemover implements JavaClassModifier {
 
-	private Map<String, List<RemovedMethod>> toRemoveByClass = new HashMap<String, List<RemovedMethod>>();
+  public static class RemovedMethod {
+    private String className;
+    private String methodName;
+    private String signature;
 
-	public void removeMethod(String methodClass, String methodName, String methodSignature) {
-		RemovedMethod m = new RemovedMethod(methodClass, methodName, methodSignature);
-		List<RemovedMethod> methods = toRemoveByClass.get(methodClass);
-		if (methods == null) {
-			methods = new ArrayList<RemovedMethod>();
-			toRemoveByClass.put(methodClass, methods);
-		}
-		methods.add(m);
-	}
+    private RemovedMethod(String clsName, String methodName, String signature) {
+      this.className = clsName;
+      this.methodName = methodName;
+      this.signature = signature;
+    }
 
-	public void modify(CtClass classToModify) throws Exception {
-		List<RemovedMethod> list = toRemoveByClass.get(classToModify.getName());
-		if (list != null) {
-			for (RemovedMethod r : list) {
-				CtMethod toRemove = classToModify.getMethod(r.getMethodName(), r.getSignature());
-				classToModify.removeMethod(toRemove);
-			}
-		}
-	}
+    public String getClassName() {
+      return className;
+    }
 
-	public static class RemovedMethod {
-		private String className;
-		private String methodName;
-		private String signature;
+    public String getMethodName() {
+      return methodName;
+    }
 
-		private RemovedMethod(String clsName, String methodName, String signature) {
-			this.className = clsName;
-			this.methodName = methodName;
-			this.signature = signature;
-		}
+    public String getSignature() {
+      return signature;
+    }
+  }
 
-		public String getClassName() {
-			return className;
-		}
+  private Map<String, List<RemovedMethod>> toRemoveByClass = new HashMap<String, List<RemovedMethod>>();
 
-		public String getMethodName() {
-			return methodName;
-		}
+  public void modify(CtClass classToModify) throws Exception {
+    List<RemovedMethod> list = toRemoveByClass.get(classToModify.getName());
+    if (list != null) {
+      for (RemovedMethod r : list) {
+        CtMethod toRemove = classToModify.getMethod(r.getMethodName(),
+            r.getSignature());
+        classToModify.removeMethod(toRemove);
+      }
+    }
+  }
 
-		public String getSignature() {
-			return signature;
-		}
-	}
+  public void removeMethod(String methodClass, String methodName,
+      String methodSignature) {
+    RemovedMethod m = new RemovedMethod(methodClass, methodName,
+        methodSignature);
+    List<RemovedMethod> methods = toRemoveByClass.get(methodClass);
+    if (methods == null) {
+      methods = new ArrayList<RemovedMethod>();
+      toRemoveByClass.put(methodClass, methods);
+    }
+    methods.add(m);
+  }
 
 }

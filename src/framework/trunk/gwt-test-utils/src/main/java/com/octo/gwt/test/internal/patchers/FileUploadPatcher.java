@@ -13,25 +13,26 @@ import com.octo.gwt.test.patchers.PatchMethod.Type;
 @PatchClass(FileUpload.class)
 public class FileUploadPatcher extends AutomaticPatcher {
 
-	@Override
-	public void initClass(CtClass c) throws Exception {
-		super.initClass(c);
-		CtConstructor cons = findConstructor(c);
+  @PatchMethod(type = Type.NEW_CODE_AS_STRING)
+  public static String onBrowserEvent() {
+    return "return super.onBrowserEvent($1)";
+  }
 
-		StringBuilder sb = new StringBuilder();
-		sb.append("{");
-		sb.append("super();");
-		sb.append("setElement(").append(Document.class.getName()).append(".get().createFileInputElement());");
-		sb.append("setStyleName(\"gwt-FileUpload\");");
-		sb.append("}");
+  @Override
+  public void initClass(CtClass c) throws Exception {
+    super.initClass(c);
+    CtConstructor cons = findConstructor(c);
 
-		cons.setBody(sb.toString());
+    StringBuilder sb = new StringBuilder();
+    sb.append("{");
+    sb.append("super();");
+    sb.append("setElement(").append(Document.class.getName()).append(
+        ".get().createFileInputElement());");
+    sb.append("setStyleName(\"gwt-FileUpload\");");
+    sb.append("}");
 
-	}
+    cons.setBody(sb.toString());
 
-	@PatchMethod(type = Type.NEW_CODE_AS_STRING)
-	public static String onBrowserEvent() {
-		return "return super.onBrowserEvent($1)";
-	}
+  }
 
 }

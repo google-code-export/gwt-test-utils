@@ -9,9 +9,9 @@ import com.octo.gwt.test.patchers.PatchMethod;
 @PatchClass(RowFormatter.class)
 public class HTMLTableRowFormatterPatcher extends AutomaticPatcher {
 
-	@PatchMethod
-	public static Element getRow(RowFormatter rowFormatter, Element elem, int row) {
-		return elem.getChildNodes().getItem(row).cast();
-	}
+  @PatchMethod
+  public static Element getRow(RowFormatter rowFormatter, Element elem, int row) {
+    return elem.getChildNodes().getItem(row).cast();
+  }
 
 }

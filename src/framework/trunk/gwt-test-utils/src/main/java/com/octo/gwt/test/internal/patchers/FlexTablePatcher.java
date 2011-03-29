@@ -11,15 +11,15 @@ import com.octo.gwt.test.patchers.PatchMethod;
 @PatchClass(FlexTable.class)
 public class FlexTablePatcher extends AutomaticPatcher {
 
-	@PatchMethod
-	public static void addCells(Element table, int row, int num) {
-		TableRowElement trCell = getCellElement(table, row);
-		for (int i = 0; i < num; i++) {
-			trCell.appendChild(Document.get().createTDElement());
-		}
-	}
+  @PatchMethod
+  public static void addCells(Element table, int row, int num) {
+    TableRowElement trCell = getCellElement(table, row);
+    for (int i = 0; i < num; i++) {
+      trCell.appendChild(Document.get().createTDElement());
+    }
+  }
 
-	private static TableRowElement getCellElement(Element tableElement, int row) {
-		return (TableRowElement) tableElement.getChildNodes().getItem(row);
-	}
+  private static TableRowElement getCellElement(Element tableElement, int row) {
+    return (TableRowElement) tableElement.getChildNodes().getItem(row);
+  }
 }

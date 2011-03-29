@@ -1,6 +1,6 @@
 @def testConstant constant-value
 
-.testStyle{
+.testStyle {
 	margin-top: 2px;
 	color: green;
 }

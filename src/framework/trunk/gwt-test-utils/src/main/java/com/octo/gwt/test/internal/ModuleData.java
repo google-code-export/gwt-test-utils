@@ -15,166 +15,182 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-
 public class ModuleData {
 
-	private static ModuleData INSTANCE;
+  private static ModuleData INSTANCE;
 
-	public static ModuleData get() {
-		if (INSTANCE == null) {
-			INSTANCE = new ModuleData();
-		}
+  public static ModuleData get() {
+    if (INSTANCE == null) {
+      INSTANCE = new ModuleData();
+    }
 
-		return INSTANCE;
-	}
+    return INSTANCE;
+  }
 
-	private List<String> moduleNames;
-	private List<String> clientPaths;
-	private List<String> clientExclusions;
+  private List<String> clientExclusions;
+  private List<String> clientPaths;
+  private List<String> moduleNames;
 
-	private ModuleData() {
-		moduleNames = new ArrayList<String>();
+  private ModuleData() {
+    moduleNames = new ArrayList<String>();
 
-		clientPaths = new ArrayList<String>();
-		clientPaths.add("com.google.gwt.");
-		clientPaths.add("com.octo.gwt.");
-		clientPaths.add("com.extjs.gxt.");
+    clientPaths = new ArrayList<String>();
+    clientPaths.add("com.google.gwt.");
+    clientPaths.add("com.octo.gwt.");
+    clientPaths.add("com.extjs.gxt.");
 
-		clientExclusions = new ArrayList<String>();
-	}
+    clientExclusions = new ArrayList<String>();
+  }
 
-	public List<String> getModuleNames() {
-		return moduleNames;
-	}
+  public List<String> getClientExclusions() {
+    return clientExclusions;
+  }
 
-	public List<String> getClientPaths() {
-		return clientPaths;
-	}
+  public List<String> getClientPaths() {
+    return clientPaths;
+  }
 
-	public List<String> getClientExclusions() {
-		return clientExclusions;
-	}
+  public List<String> getModuleNames() {
+    return moduleNames;
+  }
 
-	public void parseModule(String moduleFilePath) {
-		try {
-			Document document = createDocument(moduleFilePath);
-			XPath xpath = XPathFactory.newInstance().newXPath();
+  public void parseModule(String moduleFilePath) {
+    try {
+      Document document = createDocument(moduleFilePath);
+      XPath xpath = XPathFactory.newInstance().newXPath();
 
-			moduleNames.add(getModuleName(document, xpath, moduleFilePath));
-			// parse .gwt.xml file to get the client package in the module and in the inherited modules
-			parseModuleFile(moduleFilePath, document, xpath);
+      moduleNames.add(getModuleName(document, xpath, moduleFilePath));
+      // parse .gwt.xml file to get the client package in the module and in the
+      // inherited modules
+      parseModuleFile(moduleFilePath, document, xpath);
 
-		} catch (Exception e) {
-			if (e instanceof RuntimeException) {
-				throw (RuntimeException) e;
-			} else {
-				throw new RuntimeException(e);
-			}
-		}
-	}
+    } catch (Exception e) {
+      if (e instanceof RuntimeException) {
+        throw (RuntimeException) e;
+      } else {
+        throw new RuntimeException(e);
+      }
+    }
+  }
 
-	private String getModuleName(Document document, XPath xpath, String moduleFilePath) throws XPathExpressionException {
-		String moduleName = xpath.evaluate("/module/@rename-to", document).trim();
+  private Document createDocument(String moduleFilePath) throws Exception {
 
-		if (moduleName.length() < 1)
-			moduleName = moduleFilePath.substring(0, moduleFilePath.toLowerCase().indexOf(".gwt.xml")).replaceAll("/", ".");
+    InputStream is = GwtConfig.class.getClassLoader().getResourceAsStream(
+        moduleFilePath);
 
-		return moduleName;
-	}
+    if (is == null) {
+      throw new IllegalArgumentException(
+          "Cannot find GWT module configuration file '" + moduleFilePath
+              + "', please see the " + ClassLoader.class.getSimpleName()
+              + ".getResourceAsStream(String path) method for more information");
+    }
 
-	private Document createDocument(String moduleFilePath) throws Exception {
+    try {
+      DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+      return builder.parse(is);
+    } finally {
+      // close the stream
+      try {
+        is.close();
+      } catch (Exception ioException) {
+        // nothing to do
+      }
+    }
+  }
 
-		InputStream is = GwtConfig.class.getClassLoader().getResourceAsStream(moduleFilePath);
+  private String getModuleName(Document document, XPath xpath,
+      String moduleFilePath) throws XPathExpressionException {
+    String moduleName = xpath.evaluate("/module/@rename-to", document).trim();
 
-		if (is == null) {
-			throw new IllegalArgumentException("Cannot find GWT module configuration file '" + moduleFilePath + "', please see the "
-					+ ClassLoader.class.getSimpleName() + ".getResourceAsStream(String path) method for more information");
-		}
+    if (moduleName.length() < 1)
+      moduleName = moduleFilePath.substring(0,
+          moduleFilePath.toLowerCase().indexOf(".gwt.xml")).replaceAll("/", ".");
 
-		try {
-			DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-			return builder.parse(is);
-		} finally {
-			// close the stream
-			try {
-				is.close();
-			} catch (Exception ioException) {
-				// nothing to do
-			}
-		}
-	}
+    return moduleName;
+  }
 
-	private void parseModuleFile(String moduleFilePath, Document document, XPath xpath) throws Exception {
+  private String getModulePackage(String moduleFilePath) {
+    return moduleFilePath.substring(0, moduleFilePath.lastIndexOf("/") + 1).replaceAll(
+        "/", ".");
+  }
 
-		String modulePackage = getModulePackage(moduleFilePath);
-		initializeClientPaths(modulePackage, document, xpath);
+  private void initializeClientPaths(String modulePackage, Document document,
+      XPath xpath) throws XPathExpressionException {
+    NodeList sources = (NodeList) xpath.evaluate("/module/source", document,
+        XPathConstants.NODESET);
 
-		initializeInherits(document, xpath);
-	}
+    for (int i = 0; i < sources.getLength(); i++) {
+      Node source = sources.item(i);
+      String sourcePath = xpath.evaluate("@path", source).trim().replaceAll(
+          "/", ".");
 
-	private String getModulePackage(String moduleFilePath) {
-		return moduleFilePath.substring(0, moduleFilePath.lastIndexOf("/") + 1).replaceAll("/", ".");
-	}
+      if (sourcePath.length() < 1)
+        continue;
 
-	private void initializeInherits(Document document, XPath xpath) throws Exception {
-		NodeList inherits = (NodeList) xpath.evaluate("/module/inherits", document, XPathConstants.NODESET);
+      sourcePath = sourcePath.endsWith(".") ? modulePackage + sourcePath
+          : modulePackage + sourcePath + ".";
+      clientPaths.add(sourcePath);
 
-		for (int i = 0; i < inherits.getLength(); i++) {
-			Node inherit = inherits.item(i);
-			String inheritName = xpath.evaluate("@name", inherit).trim();
+      initializeExclusionPaths(xpath, source, sourcePath);
 
-			if (inheritName.length() < 1 || isAlreadyParsed(inheritName))
-				continue;
+    }
+  }
 
-			String inheritModuleFilePath = inheritName.replaceAll("\\.", "/") + ".gwt.xml";
+  private void initializeExclusionPaths(XPath xpath, Node source,
+      String sourcePath) throws XPathExpressionException {
+    NodeList exclusionNodes = (NodeList) xpath.evaluate("exclude", source,
+        XPathConstants.NODESET);
 
-			Document inheritModuleDocument = createDocument(inheritModuleFilePath);
-			parseModuleFile(inheritModuleFilePath, inheritModuleDocument, xpath);
-		}
-	}
+    for (int j = 0; j < exclusionNodes.getLength(); j++) {
+      Node exclusion = exclusionNodes.item(j);
+      String exclusionName = xpath.evaluate("@name", exclusion).trim();
+      int extensionToken = (exclusionName.toLowerCase().indexOf(".java"));
+      if (extensionToken > -1) {
+        exclusionName = exclusionName.substring(0, extensionToken).trim();
+      }
+      if (exclusionName.length() > 0) {
+        clientExclusions.add(sourcePath + exclusionName);
+      }
+    }
+  }
 
-	private boolean isAlreadyParsed(String inheritName) {
-		for (String clientPath : clientPaths) {
-			if (inheritName.startsWith(clientPath)) {
-				return true;
-			}
-		}
+  private void initializeInherits(Document document, XPath xpath)
+      throws Exception {
+    NodeList inherits = (NodeList) xpath.evaluate("/module/inherits", document,
+        XPathConstants.NODESET);
 
-		return false;
-	}
+    for (int i = 0; i < inherits.getLength(); i++) {
+      Node inherit = inherits.item(i);
+      String inheritName = xpath.evaluate("@name", inherit).trim();
 
-	private void initializeClientPaths(String modulePackage, Document document, XPath xpath) throws XPathExpressionException {
-		NodeList sources = (NodeList) xpath.evaluate("/module/source", document, XPathConstants.NODESET);
+      if (inheritName.length() < 1 || isAlreadyParsed(inheritName))
+        continue;
 
-		for (int i = 0; i < sources.getLength(); i++) {
-			Node source = sources.item(i);
-			String sourcePath = xpath.evaluate("@path", source).trim().replaceAll("/", ".");
+      String inheritModuleFilePath = inheritName.replaceAll("\\.", "/")
+          + ".gwt.xml";
 
-			if (sourcePath.length() < 1)
-				continue;
+      Document inheritModuleDocument = createDocument(inheritModuleFilePath);
+      parseModuleFile(inheritModuleFilePath, inheritModuleDocument, xpath);
+    }
+  }
 
-			sourcePath = sourcePath.endsWith(".") ? modulePackage + sourcePath : modulePackage + sourcePath + ".";
-			clientPaths.add(sourcePath);
+  private boolean isAlreadyParsed(String inheritName) {
+    for (String clientPath : clientPaths) {
+      if (inheritName.startsWith(clientPath)) {
+        return true;
+      }
+    }
 
-			initializeExclusionPaths(xpath, source, sourcePath);
+    return false;
+  }
 
-		}
-	}
+  private void parseModuleFile(String moduleFilePath, Document document,
+      XPath xpath) throws Exception {
 
-	private void initializeExclusionPaths(XPath xpath, Node source, String sourcePath) throws XPathExpressionException {
-		NodeList exclusionNodes = (NodeList) xpath.evaluate("exclude", source, XPathConstants.NODESET);
+    String modulePackage = getModulePackage(moduleFilePath);
+    initializeClientPaths(modulePackage, document, xpath);
 
-		for (int j = 0; j < exclusionNodes.getLength(); j++) {
-			Node exclusion = exclusionNodes.item(j);
-			String exclusionName = xpath.evaluate("@name", exclusion).trim();
-			int extensionToken = (exclusionName.toLowerCase().indexOf(".java"));
-			if (extensionToken > -1) {
-				exclusionName = exclusionName.substring(0, extensionToken).trim();
-			}
-			if (exclusionName.length() > 0) {
-				clientExclusions.add(sourcePath + exclusionName);
-			}
-		}
-	}
+    initializeInherits(document, xpath);
+  }
 
 }

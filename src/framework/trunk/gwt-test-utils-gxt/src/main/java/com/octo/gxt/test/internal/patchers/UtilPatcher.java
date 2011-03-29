@@ -9,9 +9,9 @@ import com.octo.gwt.test.patchers.PatchMethod;
 @PatchClass(Util.class)
 public class UtilPatcher extends AutomaticPatcher {
 
-	@PatchMethod
-	public static int parseInt(String value, int defaultValue) {
-		return GwtStringUtils.parseInt(value, defaultValue);
-	}
+  @PatchMethod
+  public static int parseInt(String value, int defaultValue) {
+    return GwtStringUtils.parseInt(value, defaultValue);
+  }
 
 }

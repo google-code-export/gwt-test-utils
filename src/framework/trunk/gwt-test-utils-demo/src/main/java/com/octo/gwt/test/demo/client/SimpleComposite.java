@@ -9,34 +9,34 @@ import com.google.gwt.user.client.ui.Label;
 
 public class SimpleComposite extends Composite {
 
-	private Label label;
-	private Image img;
+  private Image img;
+  private Label label;
 
-	public SimpleComposite() {
+  public SimpleComposite() {
 
-		label = new Label();
+    label = new Label();
 
-		img = new Image("img/logo.PNG");
-		img.getElement().setId("pc-template-img");
+    img = new Image("img/logo.PNG");
+    img.getElement().setId("pc-template-img");
 
-		// The wrapper panel
-		FlowPanel panel = new FlowPanel();
-		panel.getElement().setClassName("composite");
-		panel.add(img);
-		panel.add(label);
+    // The wrapper panel
+    FlowPanel panel = new FlowPanel();
+    panel.getElement().setClassName("composite");
+    panel.add(img);
+    panel.add(label);
 
-		// All composites must call initWidget() in their constructors.
-		initWidget(panel);
+    // All composites must call initWidget() in their constructors.
+    initWidget(panel);
 
-		// Add mouse move handler to the image
-		img.addMouseMoveHandler(new MouseMoveHandler() {
+    // Add mouse move handler to the image
+    img.addMouseMoveHandler(new MouseMoveHandler() {
 
-			public void onMouseMove(MouseMoveEvent event) {
-				label.setText("mouse moved on picture !");
+      public void onMouseMove(MouseMoveEvent event) {
+        label.setText("mouse moved on picture !");
 
-			}
-		});
+      }
+    });
 
-	}
+  }
 
 }

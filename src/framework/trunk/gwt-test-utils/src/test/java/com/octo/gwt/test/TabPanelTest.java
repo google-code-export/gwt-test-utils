@@ -11,80 +11,80 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class TabPanelTest extends GwtTest {
 
-	int selectedTabIndex = -1;
+  int selectedTabIndex = -1;
 
-	@Test
-	public void checkTitle() {
-		TabPanel tp = new TabPanel();
-		tp.setTitle("title");
-		Assert.assertEquals("title", tp.getTitle());
-	}
+  @Test
+  public void checkDeck() {
+    TabPanel tp = createTabPanel();
 
-	@Test
-	public void checkVisible() {
-		TabPanel tp = new TabPanel();
-		Assert.assertEquals(true, tp.isVisible());
-		tp.setVisible(false);
-		Assert.assertEquals(false, tp.isVisible());
-	}
+    // Show the 'bar' tab initially.
+    tp.selectTab(2);
 
-	@Test
-	public void checkTabPanel() {
-		TabPanel tp = createTabPanel();
+    Assert.assertEquals(2, tp.getDeckPanel().getVisibleWidget());
+  }
 
-		Widget w = tp.getWidget(1);
+  @Test
+  public void checkSelection() {
+    TabPanel tp = createTabPanel();
 
-		Assert.assertTrue(w instanceof HTML);
-		HTML html = (HTML) w;
+    tp.addSelectionHandler(new SelectionHandler<Integer>() {
 
-		Assert.assertEquals("Bar", html.getHTML());
-	}
+      public void onSelection(SelectionEvent<Integer> event) {
+        selectedTabIndex = event.getSelectedItem();
+      }
+    });
 
-	@Test
-	public void checkWidgetIndex() {
-		TabPanel tp = new TabPanel();
-		Widget widget0 = new HTML("Foo");
-		tp.add(widget0, "foo");
-		Widget widget1 = new HTML("Bar");
-		tp.add(widget1, "bar");
+    Assert.assertEquals(-1, selectedTabIndex);
 
-		Assert.assertEquals(1, tp.getWidgetIndex(widget1));
-	}
+    tp.selectTab(1);
+    Assert.assertEquals(1, selectedTabIndex);
+  }
 
-	@Test
-	public void checkDeck() {
-		TabPanel tp = createTabPanel();
+  @Test
+  public void checkTabPanel() {
+    TabPanel tp = createTabPanel();
 
-		// Show the 'bar' tab initially.
-		tp.selectTab(2);
+    Widget w = tp.getWidget(1);
 
-		Assert.assertEquals(2, tp.getDeckPanel().getVisibleWidget());
-	}
+    Assert.assertTrue(w instanceof HTML);
+    HTML html = (HTML) w;
 
-	@Test
-	public void checkSelection() {
-		TabPanel tp = createTabPanel();
+    Assert.assertEquals("Bar", html.getHTML());
+  }
 
-		tp.addSelectionHandler(new SelectionHandler<Integer>() {
+  @Test
+  public void checkTitle() {
+    TabPanel tp = new TabPanel();
+    tp.setTitle("title");
+    Assert.assertEquals("title", tp.getTitle());
+  }
 
-			public void onSelection(SelectionEvent<Integer> event) {
-				selectedTabIndex = event.getSelectedItem();
-			}
-		});
+  @Test
+  public void checkVisible() {
+    TabPanel tp = new TabPanel();
+    Assert.assertEquals(true, tp.isVisible());
+    tp.setVisible(false);
+    Assert.assertEquals(false, tp.isVisible());
+  }
 
-		Assert.assertEquals(-1, selectedTabIndex);
+  @Test
+  public void checkWidgetIndex() {
+    TabPanel tp = new TabPanel();
+    Widget widget0 = new HTML("Foo");
+    tp.add(widget0, "foo");
+    Widget widget1 = new HTML("Bar");
+    tp.add(widget1, "bar");
 
-		tp.selectTab(1);
-		Assert.assertEquals(1, selectedTabIndex);
-	}
+    Assert.assertEquals(1, tp.getWidgetIndex(widget1));
+  }
 
-	private TabPanel createTabPanel() {
-		TabPanel tp = new TabPanel();
-		tp.add(new HTML("Foo"), "foo");
-		tp.add(new HTML("Bar"), "bar");
-		tp.add(new HTML("Baz"), "baz");
+  private TabPanel createTabPanel() {
+    TabPanel tp = new TabPanel();
+    tp.add(new HTML("Foo"), "foo");
+    tp.add(new HTML("Bar"), "bar");
+    tp.add(new HTML("Baz"), "baz");
 
-		return tp;
-	}
+    return tp;
+  }
 
 }

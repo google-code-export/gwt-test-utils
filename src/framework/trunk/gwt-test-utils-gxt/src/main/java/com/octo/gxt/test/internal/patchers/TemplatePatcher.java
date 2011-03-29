@@ -10,48 +10,50 @@ import com.octo.gwt.test.patchers.PatchMethod;
 @PatchClass(Template.class)
 public class TemplatePatcher extends AutomaticPatcher {
 
-	@PatchMethod
-	public static Element appendInternal(JavaScriptObject t, Element el, JavaScriptObject values) {
-		TemplateJSO tjso = t.cast();
-		el.setInnerHTML(tjso.html);
+  public static class TemplateJSO extends JavaScriptObject {
 
-		return el;
+    private String html;
 
-	}
+    public TemplateJSO(String html) {
+      this.html = html;
+    }
+  }
 
-	@PatchMethod
-	public static String applyInternal(JavaScriptObject t, JavaScriptObject values) {
-		TemplateJSO tjso = t.cast();
-		return tjso.html;
-	}
+  @PatchMethod
+  public static Element appendInternal(JavaScriptObject t, Element el,
+      JavaScriptObject values) {
+    TemplateJSO tjso = t.cast();
+    el.setInnerHTML(tjso.html);
 
-	@PatchMethod
-	public static JavaScriptObject create(String html) {
-		return new TemplateJSO(html);
-	}
+    return el;
 
-	@PatchMethod
-	public static String getHtml(JavaScriptObject t) {
-		TemplateJSO tjso = t.cast();
-		return tjso.html;
+  }
 
-	}
+  @PatchMethod
+  public static String applyInternal(JavaScriptObject t, JavaScriptObject values) {
+    TemplateJSO tjso = t.cast();
+    return tjso.html;
+  }
 
-	@PatchMethod
-	public static Element insertInternal(String method, JavaScriptObject t, Element el, JavaScriptObject values) {
-		TemplateJSO tjso = t.cast();
-		el.setInnerHTML(tjso.html);
+  @PatchMethod
+  public static JavaScriptObject create(String html) {
+    return new TemplateJSO(html);
+  }
 
-		return el;
-	}
+  @PatchMethod
+  public static String getHtml(JavaScriptObject t) {
+    TemplateJSO tjso = t.cast();
+    return tjso.html;
 
-	public static class TemplateJSO extends JavaScriptObject {
+  }
 
-		private String html;
+  @PatchMethod
+  public static Element insertInternal(String method, JavaScriptObject t,
+      Element el, JavaScriptObject values) {
+    TemplateJSO tjso = t.cast();
+    el.setInnerHTML(tjso.html);
 
-		public TemplateJSO(String html) {
-			this.html = html;
-		}
-	}
+    return el;
+  }
 
 }

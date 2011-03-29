@@ -9,49 +9,49 @@ import com.google.gwt.user.client.ui.SimplePanel;
 
 public class SimplePanelTest extends GwtTest {
 
-	@Test
-	public void checkTitle() {
-		SimplePanel sp = new SimplePanel();
-		sp.setTitle("title");
-		Assert.assertEquals("title", sp.getTitle());
-	}
+  @Test
+  public void checkAdd() {
+    // Setup
+    SimplePanel panel = new SimplePanel();
+    RootPanel.get().add(panel);
+    Assert.assertTrue(panel.isAttached());
+    Assert.assertNull(panel.getWidget());
+    Button b1 = new Button();
+    Assert.assertFalse(b1.isAttached());
+    Assert.assertNull(b1.getParent());
 
-	@Test
-	public void checkVisible() {
-		SimplePanel sp = new SimplePanel();
-		Assert.assertEquals(true, sp.isVisible());
-		sp.setVisible(false);
-		Assert.assertEquals(false, sp.isVisible());
-	}
+    // Test
+    panel.add(b1);
 
-	@Test
-	public void checkAdd() {
-		// Setup
-		SimplePanel panel = new SimplePanel();
-		RootPanel.get().add(panel);
-		Assert.assertTrue(panel.isAttached());
-		Assert.assertNull(panel.getWidget());
-		Button b1 = new Button();
-		Assert.assertFalse(b1.isAttached());
-		Assert.assertNull(b1.getParent());
+    // Assert
+    Assert.assertTrue(b1.isAttached());
+    Assert.assertEquals(panel, b1.getParent());
+    Assert.assertEquals(b1, panel.getWidget());
+  }
 
-		// Test
-		panel.add(b1);
+  @Test
+  public void checkRemove() {
+    SimplePanel panel = new SimplePanel();
 
-		// Assert
-		Assert.assertTrue(b1.isAttached());
-		Assert.assertEquals(panel, b1.getParent());
-		Assert.assertEquals(b1, panel.getWidget());
-	}
+    Button b = new Button();
+    panel.add(b);
 
-	@Test
-	public void checkRemove() {
-		SimplePanel panel = new SimplePanel();
+    Assert.assertTrue(panel.remove(b));
+  }
 
-		Button b = new Button();
-		panel.add(b);
+  @Test
+  public void checkTitle() {
+    SimplePanel sp = new SimplePanel();
+    sp.setTitle("title");
+    Assert.assertEquals("title", sp.getTitle());
+  }
 
-		Assert.assertTrue(panel.remove(b));
-	}
+  @Test
+  public void checkVisible() {
+    SimplePanel sp = new SimplePanel();
+    Assert.assertEquals(true, sp.isVisible());
+    sp.setVisible(false);
+    Assert.assertEquals(false, sp.isVisible());
+  }
 
 }

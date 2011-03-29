@@ -57,8 +57,8 @@ import com.octo.gwt.test.integration.internal.SerializableModifier;
  */
 public class DefaultGwtRpcSerializerHandler implements GwtRpcSerializerHandler {
 
-	public <T> T serializeUnserialize(T o) throws Exception {
-		return DeepCopy.copy(o);
-	}
+  public <T> T serializeUnserialize(T o) throws Exception {
+    return DeepCopy.copy(o);
+  }
 
 }

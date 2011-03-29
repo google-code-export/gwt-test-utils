@@ -8,9 +8,9 @@ import com.octo.gwt.test.patchers.PatchMethod;
 @PatchClass(Duration.class)
 public class DurationPatcher extends AutomaticPatcher {
 
-	@PatchMethod
-	public static double currentTimeMillis() {
-		return System.currentTimeMillis();
-	}
+  @PatchMethod
+  public static double currentTimeMillis() {
+    return System.currentTimeMillis();
+  }
 
 }

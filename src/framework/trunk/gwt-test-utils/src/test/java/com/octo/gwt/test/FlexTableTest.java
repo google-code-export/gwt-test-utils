@@ -15,111 +15,111 @@ import com.octo.gwt.test.utils.events.Browser;
 @SuppressWarnings("deprecation")
 public class FlexTableTest extends GwtTest {
 
-	private boolean clicked = false;
+  private boolean clicked = false;
 
-	@Test
-	public void checkFlexTable() {
+  @Test
+  public void checkClickHandlerNestedWidget() {
 
-		// Tables have no explicit size -- they resize automatically on demand.
-		FlexTable t = new FlexTable();
+    clicked = false;
+    FlexTable t = new FlexTable();
 
-		// Put some text at the table's extremes. This forces the table to be
-		// 3 by 3.
-		t.setText(0, 0, "upper-left corner");
-		t.setText(2, 2, "bottom-right corner");
+    Button b = new Button("Wide Button");
+    b.addClickHandler(new ClickHandler() {
 
-		// Let's put a button in the middle...
-		Button b = new Button("Wide Button");
-		t.setWidget(1, 0, b);
+      public void onClick(ClickEvent event) {
+        clicked = !clicked;
 
-		// ...and set it's column span so that it takes up the whole row.
-		t.getFlexCellFormatter().setColSpan(1, 0, 3);
+      }
+    });
+    // add the button
+    t.setWidget(0, 0, b);
 
-		Assert.assertEquals(3, t.getRowCount());
-		Assert.assertEquals("bottom-right corner", t.getText(2, 2));
-		Assert.assertEquals(b, t.getWidget(1, 0));
-	}
+    Assert.assertEquals(false, clicked);
+    // simule the click
+    Browser.click(t.getWidget(0, 0));
 
-	@Test
-	public void checkClickListenerNestedWidget() {
+    Assert.assertEquals(true, clicked);
+  }
 
-		clicked = false;
-		FlexTable t = new FlexTable();
+  @Test
+  public void checkClickListenerNestedWidget() {
 
-		Button b = new Button("Wide Button");
-		b.addClickListener(new ClickListener() {
+    clicked = false;
+    FlexTable t = new FlexTable();
 
-			public void onClick(Widget sender) {
-				clicked = !clicked;
+    Button b = new Button("Wide Button");
+    b.addClickListener(new ClickListener() {
 
-			}
-		});
-		//add the button
-		t.setWidget(0, 0, b);
+      public void onClick(Widget sender) {
+        clicked = !clicked;
 
-		Assert.assertEquals(false, clicked);
-		//simule the click
-		Browser.click(t.getWidget(0, 0));
+      }
+    });
+    // add the button
+    t.setWidget(0, 0, b);
 
-		Assert.assertEquals(true, clicked);
-	}
+    Assert.assertEquals(false, clicked);
+    // simule the click
+    Browser.click(t.getWidget(0, 0));
 
-	@Test
-	public void checkClickHandlerNestedWidget() {
+    Assert.assertEquals(true, clicked);
+  }
 
-		clicked = false;
-		FlexTable t = new FlexTable();
+  @Test
+  public void checkFlexTable() {
 
-		Button b = new Button("Wide Button");
-		b.addClickHandler(new ClickHandler() {
+    // Tables have no explicit size -- they resize automatically on demand.
+    FlexTable t = new FlexTable();
 
-			public void onClick(ClickEvent event) {
-				clicked = !clicked;
+    // Put some text at the table's extremes. This forces the table to be
+    // 3 by 3.
+    t.setText(0, 0, "upper-left corner");
+    t.setText(2, 2, "bottom-right corner");
 
-			}
-		});
-		//add the button
-		t.setWidget(0, 0, b);
+    // Let's put a button in the middle...
+    Button b = new Button("Wide Button");
+    t.setWidget(1, 0, b);
 
-		Assert.assertEquals(false, clicked);
-		//simule the click
-		Browser.click(t.getWidget(0, 0));
+    // ...and set it's column span so that it takes up the whole row.
+    t.getFlexCellFormatter().setColSpan(1, 0, 3);
 
-		Assert.assertEquals(true, clicked);
-	}
+    Assert.assertEquals(3, t.getRowCount());
+    Assert.assertEquals("bottom-right corner", t.getText(2, 2));
+    Assert.assertEquals(b, t.getWidget(1, 0));
+  }
 
-	@Test
-	public void checkText() {
-		FlexTable t = new FlexTable();
-		t.setText(1, 1, "text");
-		Assert.assertEquals("text", t.getText(1, 1));
-	}
+  @Test
+  public void checkHTML() {
+    FlexTable t = new FlexTable();
+    t.setHTML(1, 1, "<h1>test</h1>");
+    Assert.assertEquals("<h1>test</h1>", t.getHTML(1, 1));
+    Element e = t.getCellFormatter().getElement(1, 1);
+    Assert.assertEquals(1, e.getChildCount());
+    Element h1 = (Element) e.getChild(0);
+    Assert.assertEquals("H1", h1.getTagName());
+    Assert.assertEquals("test", h1.getInnerText());
+  }
 
-	@Test
-	public void checkTitle() {
-		FlexTable t = new FlexTable();
-		t.setTitle("title");
-		Assert.assertEquals("title", t.getTitle());
-	}
+  @Test
+  public void checkText() {
+    FlexTable t = new FlexTable();
+    t.setText(1, 1, "text");
+    Assert.assertEquals("text", t.getText(1, 1));
+  }
 
-	@Test
-	public void checkHTML() {
-		FlexTable t = new FlexTable();
-		t.setHTML(1, 1, "<h1>test</h1>");
-		Assert.assertEquals("<h1>test</h1>", t.getHTML(1, 1));
-		Element e = t.getCellFormatter().getElement(1, 1);
-		Assert.assertEquals(1, e.getChildCount());
-		Element h1 = (Element) e.getChild(0);
-		Assert.assertEquals("H1", h1.getTagName());
-		Assert.assertEquals("test", h1.getInnerText());
-	}
+  @Test
+  public void checkTitle() {
+    FlexTable t = new FlexTable();
+    t.setTitle("title");
+    Assert.assertEquals("title", t.getTitle());
+  }
 
-	@Test
-	public void checkVisible() {
-		FlexTable t = new FlexTable();
-		Assert.assertEquals(true, t.isVisible());
-		t.setVisible(false);
-		Assert.assertEquals(false, t.isVisible());
-	}
+  @Test
+  public void checkVisible() {
+    FlexTable t = new FlexTable();
+    Assert.assertEquals(true, t.isVisible());
+    t.setVisible(false);
+    Assert.assertEquals(false, t.isVisible());
+  }
 
 }

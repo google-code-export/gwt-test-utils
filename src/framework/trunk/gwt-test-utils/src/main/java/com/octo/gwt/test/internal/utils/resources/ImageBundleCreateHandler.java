@@ -12,42 +12,46 @@ import com.octo.gwt.test.GwtCreateHandler;
 @SuppressWarnings("deprecation")
 public class ImageBundleCreateHandler implements GwtCreateHandler {
 
-	public Object create(Class<?> classLiteral) throws Exception {
-		if (!ImageBundle.class.isAssignableFrom(classLiteral)) {
-			return null;
-		}
+  private static class OverrideImagePrototype extends AbstractImagePrototype {
 
-		return generateImageWrapper(classLiteral);
-	}
+    public void applyTo(Image arg0) {
+    }
 
-	private Object generateImageWrapper(Class<?> clazz) {
-		InvocationHandler ih = new InvocationHandler() {
+    public Image createImage() {
+      Image image = new Image();
+      return image;
+    }
 
-			public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-				if (method.getReturnType() == AbstractImagePrototype.class) {
-					return new OverrideImagePrototype();
-				}
-				throw new RuntimeException("Not managed return type for image bundle : " + method.getReturnType().getSimpleName());
-			}
+    public String getHTML() {
+      return "<img/>";
+    }
 
-		};
-		return Proxy.newProxyInstance(clazz.getClassLoader(), new Class<?>[] { clazz }, ih);
-	}
+  }
 
-	private static class OverrideImagePrototype extends AbstractImagePrototype {
+  public Object create(Class<?> classLiteral) throws Exception {
+    if (!ImageBundle.class.isAssignableFrom(classLiteral)) {
+      return null;
+    }
 
-		public void applyTo(Image arg0) {
-		}
+    return generateImageWrapper(classLiteral);
+  }
 
-		public Image createImage() {
-			Image image = new Image();
-			return image;
-		}
+  private Object generateImageWrapper(Class<?> clazz) {
+    InvocationHandler ih = new InvocationHandler() {
 
-		public String getHTML() {
-			return "<img/>";
-		}
+      public Object invoke(Object proxy, Method method, Object[] args)
+          throws Throwable {
+        if (method.getReturnType() == AbstractImagePrototype.class) {
+          return new OverrideImagePrototype();
+        }
+        throw new RuntimeException(
+            "Not managed return type for image bundle : "
+                + method.getReturnType().getSimpleName());
+      }
 
-	}
+    };
+    return Proxy.newProxyInstance(clazz.getClassLoader(),
+        new Class<?>[]{clazz}, ih);
+  }
 
 }

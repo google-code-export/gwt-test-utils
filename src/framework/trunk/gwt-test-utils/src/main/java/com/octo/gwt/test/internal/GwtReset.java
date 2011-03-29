@@ -17,37 +17,46 @@ import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 public class GwtReset {
 
-	public static void reset() throws Exception {
-		NodeFactory.reset();
-		GwtConfig.get().reset();
-		GwtPropertiesHelper.get().reset();
-		CurrencyListPatcher.reset();
-		HistoryImplPatcher.reset();
-		GwtClassLoader.reset();
-		TimerPatcher.reset();
-		GwtCreateHandlerManager.get().reset();
+  public static void reset() throws Exception {
+    NodeFactory.reset();
+    GwtConfig.get().reset();
+    GwtPropertiesHelper.get().reset();
+    CurrencyListPatcher.reset();
+    HistoryImplPatcher.reset();
+    GwtClassLoader.reset();
+    TimerPatcher.reset();
+    GwtCreateHandlerManager.get().reset();
 
-		GwtReflectionUtils.getStaticAndCallClear(Timer.class, "timers");
-		GwtReflectionUtils.getStaticAndCallClear(RootPanel.class, "rootPanels");
-		GwtReflectionUtils.getStaticAndCallClear(RootPanel.class, "widgetsToDetach");
+    GwtReflectionUtils.getStaticAndCallClear(Timer.class, "timers");
+    GwtReflectionUtils.getStaticAndCallClear(RootPanel.class, "rootPanels");
+    GwtReflectionUtils.getStaticAndCallClear(RootPanel.class, "widgetsToDetach");
 
-		Object commandExecutor = GwtReflectionUtils.getStaticFieldValue(Class.forName("com.google.gwt.user.client.DeferredCommand"),
-				"commandExecutor");
-		GwtReflectionUtils.callPrivateMethod(GwtReflectionUtils.getPrivateFieldValue(commandExecutor, "commands"), "clear");
+    Object commandExecutor = GwtReflectionUtils.getStaticFieldValue(
+        Class.forName("com.google.gwt.user.client.DeferredCommand"),
+        "commandExecutor");
+    GwtReflectionUtils.callPrivateMethod(
+        GwtReflectionUtils.getPrivateFieldValue(commandExecutor, "commands"),
+        "clear");
 
-		HistoryImpl historyImpl = GwtReflectionUtils.getStaticFieldValue(History.class, "impl");
-		GwtReflectionUtils
-				.callPrivateMethod(
-						GwtReflectionUtils.getPrivateFieldValue(GwtReflectionUtils.getPrivateFieldValue(
-								GwtReflectionUtils.getPrivateFieldValue(historyImpl, "handlers"), "eventBus"), "map"), "clear");
+    HistoryImpl historyImpl = GwtReflectionUtils.getStaticFieldValue(
+        History.class, "impl");
+    GwtReflectionUtils.callPrivateMethod(
+        GwtReflectionUtils.getPrivateFieldValue(
+            GwtReflectionUtils.getPrivateFieldValue(
+                GwtReflectionUtils.getPrivateFieldValue(historyImpl, "handlers"),
+                "eventBus"), "map"), "clear");
 
-		GwtReflectionUtils.setStaticField(NumberFormat.class, "cachedDecimalFormat", null);
-		GwtReflectionUtils.setStaticField(NumberFormat.class, "cachedScientificFormat", null);
-		GwtReflectionUtils.setStaticField(NumberFormat.class, "cachedPercentFormat", null);
-		GwtReflectionUtils.setStaticField(NumberFormat.class, "cachedCurrencyFormat", null);
+    GwtReflectionUtils.setStaticField(NumberFormat.class,
+        "cachedDecimalFormat", null);
+    GwtReflectionUtils.setStaticField(NumberFormat.class,
+        "cachedScientificFormat", null);
+    GwtReflectionUtils.setStaticField(NumberFormat.class,
+        "cachedPercentFormat", null);
+    GwtReflectionUtils.setStaticField(NumberFormat.class,
+        "cachedCurrencyFormat", null);
 
-		GwtReflectionUtils.setStaticField(Window.class, "handlers", null);
-		GwtReflectionUtils.setStaticField(Event.class, "handlers", null);
-	}
+    GwtReflectionUtils.setStaticField(Window.class, "handlers", null);
+    GwtReflectionUtils.setStaticField(Event.class, "handlers", null);
+  }
 
 }

@@ -20,34 +20,40 @@ import com.octo.gwt.test.internal.utils.TagAware;
  * @author Gael Lazzari
  * 
  */
-@PatchClass({ HeadingElement.class, ModElement.class, QuoteElement.class, TableColElement.class, TableSectionElement.class })
-public class AutomaticSpecificTagElementPatcher extends AutomaticPropertyContainerPatcher {
+@PatchClass({
+    HeadingElement.class, ModElement.class, QuoteElement.class,
+    TableColElement.class, TableSectionElement.class})
+public class AutomaticSpecificTagElementPatcher extends
+    AutomaticPropertyContainerPatcher {
 
-	private static final String OVERRIDE_TAG = "overrideTag";
+  private static final String OVERRIDE_TAG = "overrideTag";
 
-	@Override
-	public void initClass(CtClass c) throws Exception {
-		super.initClass(c);
+  @Override
+  public void initClass(CtClass c) throws Exception {
+    super.initClass(c);
 
-		ClassPool cp = GwtClassPool.get();
+    ClassPool cp = GwtClassPool.get();
 
-		c.addInterface(cp.get(TagAware.class.getName()));
+    c.addInterface(cp.get(TagAware.class.getName()));
 
-		CtField tagField = new CtField(cp.get(String.class.getName()), OVERRIDE_TAG, c);
-		c.addField(tagField);
+    CtField tagField = new CtField(cp.get(String.class.getName()),
+        OVERRIDE_TAG, c);
+    c.addField(tagField);
 
-		CtConstructor constructor = new CtConstructor(new CtClass[] { cp.get(String.class.getName()) }, c);
-		StringBuilder sb = new StringBuilder();
-		sb.append("{");
-		sb.append("super();");
-		sb.append("this." + OVERRIDE_TAG + " = $1;");
-		sb.append("}");
-		constructor.setBody(sb.toString());
-		c.addConstructor(constructor);
+    CtConstructor constructor = new CtConstructor(
+        new CtClass[]{cp.get(String.class.getName())}, c);
+    StringBuilder sb = new StringBuilder();
+    sb.append("{");
+    sb.append("super();");
+    sb.append("this." + OVERRIDE_TAG + " = $1;");
+    sb.append("}");
+    constructor.setBody(sb.toString());
+    c.addConstructor(constructor);
 
-		CtMethod getTag = new CtMethod(cp.get(String.class.getName()), "getTag", new CtClass[] {}, c);
-		getTag.setBody("return " + OVERRIDE_TAG + ";");
-		c.addMethod(getTag);
-	}
+    CtMethod getTag = new CtMethod(cp.get(String.class.getName()), "getTag",
+        new CtClass[]{}, c);
+    getTag.setBody("return " + OVERRIDE_TAG + ";");
+    c.addMethod(getTag);
+  }
 
 }

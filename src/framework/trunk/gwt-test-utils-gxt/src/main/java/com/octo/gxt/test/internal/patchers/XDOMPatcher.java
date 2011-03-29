@@ -10,19 +10,19 @@ import com.octo.gwt.test.patchers.PatchMethod;
 @PatchClass(XDOM.class)
 public class XDOMPatcher extends AutomaticPatcher {
 
-	@PatchMethod
-	public static Element getDocument() {
-		return Document.get().getDocumentElement().cast();
-	}
+  @PatchMethod
+  public static Element getBody() {
+    return Document.get().getBody().cast();
+  }
 
-	@PatchMethod
-	public static Element getBody() {
-		return Document.get().getBody().cast();
-	}
+  @PatchMethod
+  public static String getComputedStyle(Element e, String style) {
+    return "";
+  }
 
-	@PatchMethod
-	public static String getComputedStyle(Element e, String style) {
-		return "";
-	}
+  @PatchMethod
+  public static Element getDocument() {
+    return Document.get().getDocumentElement().cast();
+  }
 
 }

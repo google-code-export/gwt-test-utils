@@ -11,87 +11,87 @@ import com.octo.gwt.test.GwtTest;
 
 public class AreaElementTest extends GwtTest {
 
-	private AreaElement a;
+  private AreaElement a;
 
-	@Before
-	public void initDocument() {
-		a = Document.get().createAreaElement();
-	}
+  @Test
+  public void checkAccessKey() {
+    Assert.assertEquals("", a.getAccessKey());
+    // Set up
+    a.setAccessKey("k");
 
-	@Test
-	public void checkAs() {
-		AreaElement asElement = AreaElement.as(a);
-		Assert.assertEquals(a, asElement);
-	}
+    // Assert
+    Assert.assertEquals("k", a.getAccessKey());
+  }
 
-	@Test
-	public void checkAccessKey() {
-		Assert.assertEquals("", a.getAccessKey());
-		// Set up
-		a.setAccessKey("k");
+  @Test
+  public void checkAlt() {
+    Assert.assertEquals("", a.getAlt());
+    // Set up
+    a.setAlt("Alt");
 
-		// Assert
-		Assert.assertEquals("k", a.getAccessKey());
-	}
+    // Assert
+    Assert.assertEquals("Alt", a.getAlt());
+  }
 
-	@Test
-	public void checkAlt() {
-		Assert.assertEquals("", a.getAlt());
-		// Set up
-		a.setAlt("Alt");
+  @Test
+  public void checkAs() {
+    AreaElement asElement = AreaElement.as(a);
+    Assert.assertEquals(a, asElement);
+  }
 
-		// Assert
-		Assert.assertEquals("Alt", a.getAlt());
-	}
+  @Test
+  public void checkCoords() {
+    Assert.assertEquals("", a.getCoords());
+    // Set up
+    a.setCoords("Coords");
 
-	@Test
-	public void checkCoords() {
-		Assert.assertEquals("", a.getCoords());
-		// Set up
-		a.setCoords("Coords");
+    // Assert
+    Assert.assertEquals("Coords", a.getCoords());
+  }
 
-		// Assert
-		Assert.assertEquals("Coords", a.getCoords());
-	}
+  @Test
+  public void checkHref() {
+    Assert.assertEquals("", a.getHref());
+    // Set up
+    a.setHref("Href");
 
-	@Test
-	public void checkHref() {
-		Assert.assertEquals("", a.getHref());
-		// Set up
-		a.setHref("Href");
+    // Assert
+    Assert.assertEquals("Href", a.getHref());
+  }
 
-		// Assert
-		Assert.assertEquals("Href", a.getHref());
-	}
+  @Test
+  public void checkShape() {
+    Assert.assertEquals("", a.getShape());
+    // Set up
+    a.setShape("Shape");
 
-	@Test
-	public void checkShape() {
-		Assert.assertEquals("", a.getShape());
-		// Set up
-		a.setShape("Shape");
+    // Assert
+    Assert.assertEquals("Shape", a.getShape());
+  }
 
-		// Assert
-		Assert.assertEquals("Shape", a.getShape());
-	}
+  @Test
+  public void checkTabIndex() {
+    Assert.assertEquals(0, a.getTabIndex());
+    // Set up
+    a.setTabIndex(4);
 
-	@Test
-	public void checkTabIndex() {
-		Assert.assertEquals(0, a.getTabIndex());
-		// Set up
-		a.setTabIndex(4);
+    // Assert
+    Assert.assertEquals(4, a.getTabIndex());
+  }
 
-		// Assert
-		Assert.assertEquals(4, a.getTabIndex());
-	}
+  @Test
+  public void checkTarget() {
+    Assert.assertEquals("", a.getTarget());
+    // Set up
+    a.setTarget("Target");
 
-	@Test
-	public void checkTarget() {
-		Assert.assertEquals("", a.getTarget());
-		// Set up
-		a.setTarget("Target");
+    // Assert
+    Assert.assertEquals("Target", a.getTarget());
+  }
 
-		// Assert
-		Assert.assertEquals("Target", a.getTarget());
-	}
+  @Before
+  public void initDocument() {
+    a = Document.get().createAreaElement();
+  }
 
 }

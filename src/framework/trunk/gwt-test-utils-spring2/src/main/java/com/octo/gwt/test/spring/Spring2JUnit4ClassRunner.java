@@ -21,98 +21,107 @@ import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 public class Spring2JUnit4ClassRunner extends SpringJUnit4ClassRunner {
 
-	private DirectoryTestReader reader;
+  class CsvMethodValidator {
+    private final List<Throwable> fErrors = new ArrayList<Throwable>();
 
-	public Spring2JUnit4ClassRunner(Class<?> clazz) throws InitializationError, ClassNotFoundException {
-		super(GwtClassLoader.get().loadClass(clazz.getCanonicalName()));
-	}
+    private TestClass fTestClass;
 
-	@Override
-	protected List<Method> getTestMethods() {
-		if (reader == null) {
-			reader = new DirectoryTestReader(getTestClass().getJavaClass());
-		}
-		return reader.getTestMethods();
-	}
+    public CsvMethodValidator(TestClass testClass) {
+      fTestClass = testClass;
+    }
 
-	class CsvMethodValidator {
-		private final List<Throwable> fErrors = new ArrayList<Throwable>();
+    public void assertValid() throws InitializationError {
+      if (!fErrors.isEmpty())
+        throw new InitializationError(fErrors);
+    }
 
-		private TestClass fTestClass;
+    public void validateInstanceMethods() {
+      validateTestMethods(After.class, false);
+      validateTestMethods(Before.class, false);
+      validateTestMethods(Test.class, false);
 
-		public CsvMethodValidator(TestClass testClass) {
-			fTestClass = testClass;
-		}
+      List<Method> methods = reader.getTestMethods();
+      if (methods.size() == 0)
+        fErrors.add(new Exception("No runnable methods"));
+    }
 
-		public void validateInstanceMethods() {
-			validateTestMethods(After.class, false);
-			validateTestMethods(Before.class, false);
-			validateTestMethods(Test.class, false);
+    public List<Throwable> validateMethodsForDefaultRunner() {
+      validateNoArgConstructor();
+      validateStaticMethods();
+      validateInstanceMethods();
+      return fErrors;
+    }
 
-			List<Method> methods = reader.getTestMethods();
-			if (methods.size() == 0)
-				fErrors.add(new Exception("No runnable methods"));
-		}
+    public void validateNoArgConstructor() {
+      try {
+        fTestClass.getConstructor();
+      } catch (Exception e) {
+        fErrors.add(new Exception(
+            "Test class should have public zero-argument constructor", e));
+      }
+    }
 
-		public void validateStaticMethods() {
-			validateTestMethods(BeforeClass.class, true);
-			validateTestMethods(AfterClass.class, true);
-		}
+    public void validateStaticMethods() {
+      validateTestMethods(BeforeClass.class, true);
+      validateTestMethods(AfterClass.class, true);
+    }
 
-		public List<Throwable> validateMethodsForDefaultRunner() {
-			validateNoArgConstructor();
-			validateStaticMethods();
-			validateInstanceMethods();
-			return fErrors;
-		}
+    private void validateTestMethods(Class<? extends Annotation> annotation,
+        boolean isStatic) {
+      List<Method> methods = fTestClass.getAnnotatedMethods(annotation);
 
-		public void assertValid() throws InitializationError {
-			if (!fErrors.isEmpty())
-				throw new InitializationError(fErrors);
-		}
+      for (Method each : methods) {
+        if (Modifier.isStatic(each.getModifiers()) != isStatic) {
+          String state = isStatic ? "should" : "should not";
+          fErrors.add(new Exception("Method " + each.getName() + "() " + state
+              + " be static"));
+        }
+        if (!Modifier.isPublic(each.getDeclaringClass().getModifiers()))
+          fErrors.add(new Exception("Class "
+              + each.getDeclaringClass().getName() + " should be public"));
+        if (!Modifier.isPublic(each.getModifiers()))
+          fErrors.add(new Exception("Method " + each.getName()
+              + " should be public"));
+        if (each.getReturnType() != Void.TYPE)
+          fErrors.add(new Exception("Method " + each.getName()
+              + " should be void"));
+        if (each.getParameterTypes().length != 0)
+          fErrors.add(new Exception("Method " + each.getName()
+              + " should have no parameters"));
+      }
+    }
+  }
 
-		public void validateNoArgConstructor() {
-			try {
-				fTestClass.getConstructor();
-			} catch (Exception e) {
-				fErrors.add(new Exception("Test class should have public zero-argument constructor", e));
-			}
-		}
+  private DirectoryTestReader reader;
 
-		private void validateTestMethods(Class<? extends Annotation> annotation, boolean isStatic) {
-			List<Method> methods = fTestClass.getAnnotatedMethods(annotation);
+  public Spring2JUnit4ClassRunner(Class<?> clazz) throws InitializationError,
+      ClassNotFoundException {
+    super(GwtClassLoader.get().loadClass(clazz.getCanonicalName()));
+  }
 
-			for (Method each : methods) {
-				if (Modifier.isStatic(each.getModifiers()) != isStatic) {
-					String state = isStatic ? "should" : "should not";
-					fErrors.add(new Exception("Method " + each.getName() + "() " + state + " be static"));
-				}
-				if (!Modifier.isPublic(each.getDeclaringClass().getModifiers()))
-					fErrors.add(new Exception("Class " + each.getDeclaringClass().getName() + " should be public"));
-				if (!Modifier.isPublic(each.getModifiers()))
-					fErrors.add(new Exception("Method " + each.getName() + " should be public"));
-				if (each.getReturnType() != Void.TYPE)
-					fErrors.add(new Exception("Method " + each.getName() + " should be void"));
-				if (each.getParameterTypes().length != 0)
-					fErrors.add(new Exception("Method " + each.getName() + " should have no parameters"));
-			}
-		}
-	}
+  @Override
+  protected Object createTest() throws Exception {
+    Object testInstance = reader.createObject();
+    Method m = GwtReflectionUtils.findMethod(testInstance.getClass(),
+        "setReader");
+    m.invoke(testInstance, reader);
+    getTestContextManager().prepareTestInstance(testInstance);
+    return testInstance;
+  }
 
-	@Override
-	protected void validate() throws InitializationError {
-		CsvMethodValidator methodValidator = new CsvMethodValidator(getTestClass());
-		methodValidator.validateMethodsForDefaultRunner();
-		methodValidator.assertValid();
-	}
+  @Override
+  protected List<Method> getTestMethods() {
+    if (reader == null) {
+      reader = new DirectoryTestReader(getTestClass().getJavaClass());
+    }
+    return reader.getTestMethods();
+  }
 
-	@Override
-	protected Object createTest() throws Exception {
-		Object testInstance = reader.createObject();
-		Method m = GwtReflectionUtils.findMethod(testInstance.getClass(), "setReader");
-		m.invoke(testInstance, reader);
-		getTestContextManager().prepareTestInstance(testInstance);
-		return testInstance;
-	}
+  @Override
+  protected void validate() throws InitializationError {
+    CsvMethodValidator methodValidator = new CsvMethodValidator(getTestClass());
+    methodValidator.validateMethodsForDefaultRunner();
+    methodValidator.assertValid();
+  }
 
 }

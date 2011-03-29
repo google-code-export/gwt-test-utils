@@ -32,41 +32,42 @@ import com.octo.gwt.test.utils.GwtReflectionUtils;
  */
 public abstract class GwtTestWithMocks extends GwtTest {
 
-	protected Map<Class<?>, Object> mockObjects = new HashMap<Class<?>, Object>();
-	protected List<Class<?>> mockedClasses = new ArrayList<Class<?>>();
-	protected Set<Field> mockFields;
+  protected List<Class<?>> mockedClasses = new ArrayList<Class<?>>();
+  protected Set<Field> mockFields;
+  protected Map<Class<?>, Object> mockObjects = new HashMap<Class<?>, Object>();
 
-	public GwtTestWithMocks() {
-		GwtCreateHandlerManager.get().setMockCreateHandler(new MockCreateHandler(mockObjects));
-		mockFields = getMockFields();
-		for (Field f : mockFields) {
-			mockedClasses.add(f.getType());
-		}
-	}
+  public GwtTestWithMocks() {
+    GwtCreateHandlerManager.get().setMockCreateHandler(
+        new MockCreateHandler(mockObjects));
+    mockFields = getMockFields();
+    for (Field f : mockFields) {
+      mockedClasses.add(f.getType());
+    }
+  }
 
-	/**
-	 * Adds a mock object to the list of mocks used in the context of this test
-	 * class.
-	 * 
-	 * @param clazz
-	 *            The class for which a mock object is being defined
-	 * @param mock
-	 *            the mock instance
-	 */
-	public Object addMockedObject(Class<?> createClass, Object mock) {
-		return mockObjects.put(createClass, mock);
-	}
+  /**
+   * Adds a mock object to the list of mocks used in the context of this test
+   * class.
+   * 
+   * @param clazz The class for which a mock object is being defined
+   * @param mock the mock instance
+   */
+  public Object addMockedObject(Class<?> createClass, Object mock) {
+    return mockObjects.put(createClass, mock);
+  }
 
-	@After
-	public void teardownGwtTestWithMocks() {
-		mockObjects.clear();
-	}
+  @After
+  public void teardownGwtTestWithMocks() {
+    mockObjects.clear();
+  }
 
-	private Set<Field> getMockFields() {
-		Set<Field> frameworkMockFields = GwtReflectionUtils.getAnnotatedField(this.getClass(), com.octo.gwt.test.Mock.class);
-		Set<Field> mockitoMockFields = GwtReflectionUtils.getAnnotatedField(this.getClass(), org.mockito.Mock.class);
-		frameworkMockFields.addAll(mockitoMockFields);
-		return frameworkMockFields;
-	}
+  private Set<Field> getMockFields() {
+    Set<Field> frameworkMockFields = GwtReflectionUtils.getAnnotatedField(
+        this.getClass(), com.octo.gwt.test.Mock.class);
+    Set<Field> mockitoMockFields = GwtReflectionUtils.getAnnotatedField(
+        this.getClass(), org.mockito.Mock.class);
+    frameworkMockFields.addAll(mockitoMockFields);
+    return frameworkMockFields;
+  }
 
 }

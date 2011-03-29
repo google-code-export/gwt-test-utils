@@ -34,66 +34,67 @@ import com.octo.gwt.test.internal.GwtReset;
 @RunWith(GwtRunner.class)
 public abstract class GwtTest {
 
-	@Before
-	public void setUpGwtTest() throws Exception {
-		GwtConfig.get().setLocale(getLocale());
-		GwtConfig.get().setLogHandler(getLogHandler());
-		GwtConfig.get().setHostPagePath(getHostPagePath());
+  @Before
+  public void setUpGwtTest() throws Exception {
+    GwtConfig.get().setLocale(getLocale());
+    GwtConfig.get().setLogHandler(getLogHandler());
+    GwtConfig.get().setHostPagePath(getHostPagePath());
 
-		String moduleName = getModuleName();
-		if (moduleName == null) {
-			if (getCurrentTestedModuleFile() != null) {
-				moduleName = getCurrentTestedModuleFile().substring(0, getCurrentTestedModuleFile().toLowerCase().indexOf(".gwt.xml")).replaceAll(
-						"/", ".");
-			}
-		}
+    String moduleName = getModuleName();
+    if (moduleName == null) {
+      if (getCurrentTestedModuleFile() != null) {
+        moduleName = getCurrentTestedModuleFile().substring(0,
+            getCurrentTestedModuleFile().toLowerCase().indexOf(".gwt.xml")).replaceAll(
+            "/", ".");
+      }
+    }
 
-		GwtConfig.get().setModuleName(moduleName);
-	}
+    GwtConfig.get().setModuleName(moduleName);
+  }
 
-	@After
-	public void tearDownGwtTest() throws Exception {
-		resetPatchGwt();
-	}
+  @After
+  public void tearDownGwtTest() throws Exception {
+    resetPatchGwt();
+  }
 
-	protected String getModuleName() {
-		// this method can be overrided by subclass
-		return null;
-	}
+  protected boolean addGwtCreateHandler(GwtCreateHandler gwtCreateHandler) {
+    return GwtCreateHandlerManager.get().addGwtCreateHandler(gwtCreateHandler);
+  }
 
-	@Deprecated
-	protected String getCurrentTestedModuleFile() {
-		// this method can be overrided by subclass
-		return null;
-	}
+  @Deprecated
+  protected String getCurrentTestedModuleFile() {
+    // this method can be overrided by subclass
+    return null;
+  }
 
-	protected GwtLogHandler getLogHandler() {
-		// this method can be overrided by subclass
-		return null;
-	}
+  protected String getHostPagePath() {
+    // this method can be overrided by subclass
+    return null;
+  }
 
-	protected Locale getLocale() {
-		// this method can be overrided by subclass
-		return null;
-	}
+  protected Locale getLocale() {
+    // this method can be overrided by subclass
+    return null;
+  }
 
-	protected String getHostPagePath() {
-		// this method can be overrided by subclass
-		return null;
-	}
+  protected GwtLogHandler getLogHandler() {
+    // this method can be overrided by subclass
+    return null;
+  }
 
-	protected void resetPatchGwt() throws Exception {
-		// reinit GWT
-		GwtReset.reset();
-	}
+  protected String getModuleName() {
+    // this method can be overrided by subclass
+    return null;
+  }
 
-	protected boolean addGwtCreateHandler(GwtCreateHandler gwtCreateHandler) {
-		return GwtCreateHandlerManager.get().addGwtCreateHandler(gwtCreateHandler);
-	}
+  protected void resetPatchGwt() throws Exception {
+    // reinit GWT
+    GwtReset.reset();
+  }
 
-	@Deprecated
-	protected void setGwtCreateHandler(GwtCreateHandler gwtCreateHandler) {
-		addGwtCreateHandler(gwtCreateHandler);
-	}
+  @Deprecated
+  protected void setGwtCreateHandler(GwtCreateHandler gwtCreateHandler) {
+    addGwtCreateHandler(gwtCreateHandler);
+  }
 
 }

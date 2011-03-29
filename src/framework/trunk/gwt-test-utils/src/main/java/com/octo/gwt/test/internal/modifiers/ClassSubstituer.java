@@ -4,20 +4,20 @@ import javassist.CtClass;
 
 public class ClassSubstituer implements JavaClassModifier {
 
-	private String substitutionClass;
-	private String originalClass;
+  private String originalClass;
+  private String substitutionClass;
 
-	public ClassSubstituer(String originalClass, String substitionClass) {
-		this.originalClass = originalClass;
-		this.substitutionClass = substitionClass;
-	}
+  public ClassSubstituer(String originalClass, String substitionClass) {
+    this.originalClass = originalClass;
+    this.substitutionClass = substitionClass;
+  }
 
-	public void modify(CtClass classToModify) {
-		if (classToModify.getName().equals(originalClass)) {
-			return;
-		}
+  public void modify(CtClass classToModify) {
+    if (classToModify.getName().equals(originalClass)) {
+      return;
+    }
 
-		classToModify.getClassFile().renameClass(originalClass, substitutionClass);
-	}
+    classToModify.getClassFile().renameClass(originalClass, substitutionClass);
+  }
 
 }

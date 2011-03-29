@@ -18,83 +18,96 @@ import com.octo.gwt.test.internal.GwtConfig;
 
 public class LocalizableCreateHandler implements GwtCreateHandler {
 
-	@SuppressWarnings("unchecked")
-	public Object create(Class<?> classLiteral) throws Exception {
-		if (LocalizableResource.class.isAssignableFrom(classLiteral)) {
-			return LocalizableResourceProxyFactory.getFactory((Class<? extends LocalizableResource>) classLiteral).createProxy();
-		} else if (CldrImpl.class == classLiteral) {
-			return getLocalizedClassImpl(CldrImpl.class, CldrImpl.class);
-		} else if (DateTimeFormatInfoImpl.class == classLiteral) {
-			return getLocalizedClassImpl(DateTimeFormatInfoImpl.class, DefaultDateTimeFormatInfo.class);
-		}
+  private static class LocalizableResourceProxyFactory {
 
-		return null;
+    private static Map<String, LocalizableResourceProxyFactory> factoryMap = new HashMap<String, LocalizableResourceProxyFactory>();
 
-	}
+    public static <T extends LocalizableResource> LocalizableResourceProxyFactory getFactory(
+        Class<T> clazz) {
+      LocalizableResourceProxyFactory factory = factoryMap.get(clazz.getName());
+      if (factory == null) {
+        factory = new LocalizableResourceProxyFactory(clazz);
+        factoryMap.put(clazz.getName(), factory);
+      }
 
-	private Object getLocalizedClassImpl(Class<?> localizedClass, Class<?> defaultImpl) throws Exception {
-		Locale locale = GwtConfig.get().getLocale();
-		if (locale == null) {
-			return defaultImpl.newInstance();
-		}
+      return factory;
+    }
 
-		Class<?> implementationClass;
-		try {
-			implementationClass = Class.forName(localizedClass.getName() + "_" + locale.getLanguage());
-		} catch (ClassNotFoundException e) {
-			try {
-				implementationClass = Class.forName(localizedClass.getName() + "_" + locale.getCountry());
-			} catch (ClassNotFoundException e2) {
-				implementationClass = null;
-			}
-		}
+    private Class<? extends LocalizableResource> proxiedClass;
 
-		if (implementationClass == null) {
-			implementationClass = defaultImpl;
-		}
+    private LocalizableResourceProxyFactory(
+        Class<? extends LocalizableResource> proxiedClass) {
+      this.proxiedClass = proxiedClass;
+    }
 
-		return implementationClass.newInstance();
-	}
+    @SuppressWarnings("unchecked")
+    public <T extends LocalizableResource> T createProxy() {
+      InvocationHandler ih = createInvocationHandler(proxiedClass);
+      return (T) Proxy.newProxyInstance(proxiedClass.getClassLoader(),
+          new Class<?>[]{proxiedClass}, ih);
+    }
 
-	private static class LocalizableResourceProxyFactory {
+    @SuppressWarnings("unchecked")
+    private InvocationHandler createInvocationHandler(
+        Class<? extends LocalizableResource> clazz) {
+      if (ConstantsWithLookup.class.isAssignableFrom(clazz)) {
+        return new ConstantsWithLookupInvocationHandler(
+            (Class<? extends ConstantsWithLookup>) clazz);
+      }
+      if (Constants.class.isAssignableFrom(clazz)) {
+        return new ConstantsInvocationHandler(
+            (Class<? extends Constants>) clazz);
+      } else if (Messages.class.isAssignableFrom(clazz)) {
+        return new MessagesInvocationHandler((Class<? extends Messages>) clazz);
+      } else {
+        throw new RuntimeException(
+            "Not managed GWT i18n interface for testing : "
+                + clazz.getSimpleName());
+      }
+    }
+  }
 
-		private static Map<String, LocalizableResourceProxyFactory> factoryMap = new HashMap<String, LocalizableResourceProxyFactory>();
+  @SuppressWarnings("unchecked")
+  public Object create(Class<?> classLiteral) throws Exception {
+    if (LocalizableResource.class.isAssignableFrom(classLiteral)) {
+      return LocalizableResourceProxyFactory.getFactory(
+          (Class<? extends LocalizableResource>) classLiteral).createProxy();
+    } else if (CldrImpl.class == classLiteral) {
+      return getLocalizedClassImpl(CldrImpl.class, CldrImpl.class);
+    } else if (DateTimeFormatInfoImpl.class == classLiteral) {
+      return getLocalizedClassImpl(DateTimeFormatInfoImpl.class,
+          DefaultDateTimeFormatInfo.class);
+    }
 
-		private Class<? extends LocalizableResource> proxiedClass;
+    return null;
 
-		private LocalizableResourceProxyFactory(Class<? extends LocalizableResource> proxiedClass) {
-			this.proxiedClass = proxiedClass;
-		}
+  }
 
-		public static <T extends LocalizableResource> LocalizableResourceProxyFactory getFactory(Class<T> clazz) {
-			LocalizableResourceProxyFactory factory = factoryMap.get(clazz.getName());
-			if (factory == null) {
-				factory = new LocalizableResourceProxyFactory(clazz);
-				factoryMap.put(clazz.getName(), factory);
-			}
+  private Object getLocalizedClassImpl(Class<?> localizedClass,
+      Class<?> defaultImpl) throws Exception {
+    Locale locale = GwtConfig.get().getLocale();
+    if (locale == null) {
+      return defaultImpl.newInstance();
+    }
 
-			return factory;
-		}
+    Class<?> implementationClass;
+    try {
+      implementationClass = Class.forName(localizedClass.getName() + "_"
+          + locale.getLanguage());
+    } catch (ClassNotFoundException e) {
+      try {
+        implementationClass = Class.forName(localizedClass.getName() + "_"
+            + locale.getCountry());
+      } catch (ClassNotFoundException e2) {
+        implementationClass = null;
+      }
+    }
 
-		@SuppressWarnings("unchecked")
-		public <T extends LocalizableResource> T createProxy() {
-			InvocationHandler ih = createInvocationHandler(proxiedClass);
-			return (T) Proxy.newProxyInstance(proxiedClass.getClassLoader(), new Class<?>[] { proxiedClass }, ih);
-		}
+    if (implementationClass == null) {
+      implementationClass = defaultImpl;
+    }
 
-		@SuppressWarnings("unchecked")
-		private InvocationHandler createInvocationHandler(Class<? extends LocalizableResource> clazz) {
-			if (ConstantsWithLookup.class.isAssignableFrom(clazz)) {
-				return new ConstantsWithLookupInvocationHandler((Class<? extends ConstantsWithLookup>) clazz);
-			}
-			if (Constants.class.isAssignableFrom(clazz)) {
-				return new ConstantsInvocationHandler((Class<? extends Constants>) clazz);
-			} else if (Messages.class.isAssignableFrom(clazz)) {
-				return new MessagesInvocationHandler((Class<? extends Messages>) clazz);
-			} else {
-				throw new RuntimeException("Not managed GWT i18n interface for testing : " + clazz.getSimpleName());
-			}
-		}
-	}
+    return implementationClass.newInstance();
+  }
 
 }

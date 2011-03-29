@@ -9,9 +9,9 @@ import com.octo.gwt.test.patchers.PatchMethod;
 @PatchClass(Component.class)
 public class ComponentPatcher extends AutomaticPatcher {
 
-	@PatchMethod
-	public static void setParent(Component component, Widget parent) {
-		parent.getElement().appendChild(component.getElement());
-	}
+  @PatchMethod
+  public static void setParent(Component component, Widget parent) {
+    parent.getElement().appendChild(component.getElement());
+  }
 
 }

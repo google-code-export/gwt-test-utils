@@ -7,55 +7,57 @@ import com.google.gwt.user.client.ui.PopupPanel;
 
 public class PopupPanelTest extends GwtTest {
 
-	@Test
-	public void checkAutoHideEnabled() {
-		PopupPanel popupPanel = new PopupPanel(true);
-		Assert.assertTrue(popupPanel.isAutoHideEnabled());
+  @Test
+  public void chechShow() {
+    // Setup
+    PopupPanel popup = new PopupPanel();
+    Assert.assertFalse(popup.isShowing());
 
-		popupPanel.setAutoHideEnabled(false);
-		Assert.assertFalse(popupPanel.isAutoHideEnabled());
-	}
+    // Test
+    popup.show();
 
-	@Test
-	public void chechVisible() {
-		// Setup
-		PopupPanel popup = new PopupPanel();
-		Assert.assertFalse(popup.isVisible());
-		Assert.assertEquals("hidden", popup.getElement().getStyle().getProperty("visibility"));
+    // Assert
+    Assert.assertTrue(popup.isShowing());
+  }
 
-		// Test
-		popup.setVisible(true);
+  @Test
+  public void chechShowGlass() {
+    // Setup
+    PopupPanel popup = new PopupPanel();
+    popup.setGlassEnabled(true);
+    Assert.assertFalse(popup.isShowing());
 
-		// Assert
-		Assert.assertTrue(popup.isVisible());
-		Assert.assertEquals("visible", popup.getElement().getStyle().getProperty("visibility"));
-	}
+    // Test
+    popup.show();
 
-	@Test
-	public void chechShow() {
-		// Setup
-		PopupPanel popup = new PopupPanel();
-		Assert.assertFalse(popup.isShowing());
+    // Assert
+    Assert.assertTrue(popup.isShowing());
+  }
 
-		// Test
-		popup.show();
+  @Test
+  public void chechVisible() {
+    // Setup
+    PopupPanel popup = new PopupPanel();
+    Assert.assertFalse(popup.isVisible());
+    Assert.assertEquals("hidden",
+        popup.getElement().getStyle().getProperty("visibility"));
 
-		// Assert
-		Assert.assertTrue(popup.isShowing());
-	}
+    // Test
+    popup.setVisible(true);
 
-	@Test
-	public void chechShowGlass() {
-		// Setup
-		PopupPanel popup = new PopupPanel();
-		popup.setGlassEnabled(true);
-		Assert.assertFalse(popup.isShowing());
+    // Assert
+    Assert.assertTrue(popup.isVisible());
+    Assert.assertEquals("visible",
+        popup.getElement().getStyle().getProperty("visibility"));
+  }
 
-		// Test
-		popup.show();
+  @Test
+  public void checkAutoHideEnabled() {
+    PopupPanel popupPanel = new PopupPanel(true);
+    Assert.assertTrue(popupPanel.isAutoHideEnabled());
 
-		// Assert
-		Assert.assertTrue(popup.isShowing());
-	}
+    popupPanel.setAutoHideEnabled(false);
+    Assert.assertFalse(popupPanel.isAutoHideEnabled());
+  }
 
 }

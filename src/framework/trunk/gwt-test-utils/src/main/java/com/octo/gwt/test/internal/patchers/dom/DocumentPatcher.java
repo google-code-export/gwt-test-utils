@@ -15,91 +15,93 @@ import com.octo.gwt.test.patchers.PatchMethod;
 @PatchClass(Document.class)
 public class DocumentPatcher extends AutomaticPropertyContainerPatcher {
 
-	private static int ID = 0;
+  private static int ID = 0;
 
-	@PatchMethod
-	public static String getCompatMode(Document document) {
-		return "toto";
-	}
+  @PatchMethod
+  public static Text createTextNode(Document document, String data) {
+    return NodeFactory.createTextNode(data);
+  }
 
-	@PatchMethod
-	public static Document get() {
-		return NodeFactory.getDocument();
-	}
+  @PatchMethod
+  public static String createUniqueId(Document document) {
+    ID++;
+    return "elem_" + Long.toString(ID);
+  }
 
-	@PatchMethod
-	public static Text createTextNode(Document document, String data) {
-		return NodeFactory.createTextNode(data);
-	}
+  @PatchMethod
+  public static Document get() {
+    return NodeFactory.getDocument();
+  }
 
-	@PatchMethod
-	public static BodyElement getBody(Document document) {
-		NodeList<Element> bodyList = getElementsByTagName(document, "body");
-		if (bodyList.getLength() < 1)
-			return null;
-		else
-			return bodyList.getItem(0).cast();
-	}
+  @PatchMethod
+  public static BodyElement getBody(Document document) {
+    NodeList<Element> bodyList = getElementsByTagName(document, "body");
+    if (bodyList.getLength() < 1)
+      return null;
+    else
+      return bodyList.getItem(0).cast();
+  }
 
-	@PatchMethod
-	public static String getDomain(Document document) {
-		return null;
-	}
+  @PatchMethod
+  public static String getCompatMode(Document document) {
+    return "toto";
+  }
 
-	@PatchMethod
-	public static String getReferrer(Document document) {
-		return "";
-	}
+  @PatchMethod
+  public static String getDomain(Document document) {
+    return null;
+  }
 
-	@PatchMethod
-	public static String createUniqueId(Document document) {
-		ID++;
-		return "elem_" + Long.toString(ID);
-	}
+  @PatchMethod
+  public static Element getElementById(Node document, String elementId) {
+    OverrideNodeList<Node> childs = getChildNodeList(document);
+    for (Node n : childs.getList()) {
+      if (Node.ELEMENT_NODE == n.getNodeType()) {
+        Element currentElement = n.cast();
+        if (elementId.equals(currentElement.getId())) {
+          return currentElement;
+        }
+      }
+      Element result = getElementById(n, elementId);
+      if (result != null) {
+        return result;
+      }
+    }
 
-	@PatchMethod
-	public static Element getElementById(Node document, String elementId) {
-		OverrideNodeList<Node> childs = getChildNodeList(document);
-		for (Node n : childs.getList()) {
-			if (Node.ELEMENT_NODE == n.getNodeType()) {
-				Element currentElement = n.cast();
-				if (elementId.equals(currentElement.getId())) {
-					return currentElement;
-				}
-			}
-			Element result = getElementById(n, elementId);
-			if (result != null) {
-				return result;
-			}
-		}
+    return null;
+  }
 
-		return null;
-	}
+  @PatchMethod
+  public static NodeList<Element> getElementsByTagName(Node node, String tagName) {
+    OverrideNodeList<Element> result = new OverrideNodeList<Element>();
 
-	@PatchMethod
-	public static NodeList<Element> getElementsByTagName(Node node, String tagName) {
-		OverrideNodeList<Element> result = new OverrideNodeList<Element>();
+    inspectDomForTag(node, tagName, result);
 
-		inspectDomForTag(node, tagName, result);
+    return result;
+  }
 
-		return result;
-	}
+  @PatchMethod
+  public static String getReferrer(Document document) {
+    return "";
+  }
 
-	private static void inspectDomForTag(Node node, String tagName, OverrideNodeList<Element> result) {
-		OverrideNodeList<Node> childs = getChildNodeList(node);
-		for (Node n : childs.getList()) {
-			if (Node.ELEMENT_NODE == n.getNodeType()) {
-				Element childElem = n.cast();
-				if ("*".equals(tagName) || tagName.equalsIgnoreCase(childElem.getTagName())) {
-					result.getList().add((Element) n);
-				}
-			}
-			inspectDomForTag(n, tagName, result);
-		}
-	}
+  private static OverrideNodeList<Node> getChildNodeList(Node node) {
+    return PropertyContainerUtils.getProperty(node, "ChildNodes");
+  }
 
-	private static OverrideNodeList<Node> getChildNodeList(Node node) {
-		return PropertyContainerUtils.getProperty(node, "ChildNodes");
-	}
+  private static void inspectDomForTag(Node node, String tagName,
+      OverrideNodeList<Element> result) {
+    OverrideNodeList<Node> childs = getChildNodeList(node);
+    for (Node n : childs.getList()) {
+      if (Node.ELEMENT_NODE == n.getNodeType()) {
+        Element childElem = n.cast();
+        if ("*".equals(tagName)
+            || tagName.equalsIgnoreCase(childElem.getTagName())) {
+          result.getList().add((Element) n);
+        }
+      }
+      inspectDomForTag(n, tagName, result);
+    }
+  }
 
 }

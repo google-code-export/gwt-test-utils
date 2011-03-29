@@ -22,50 +22,55 @@ import org.junit.runner.notification.RunNotifier;
  * @author Gael Lazzari
  * 
  */
-public abstract class GwtRunnerBase extends Runner implements Filterable, Sortable {
+public abstract class GwtRunnerBase extends Runner implements Filterable,
+    Sortable {
 
-	private Runner runner;
+  private Runner runner;
 
-	public GwtRunnerBase(Class<?> clazz) throws Exception {
-		Class<?> runnerClass = GwtClassLoader.get().loadClass(getClassRunnerClassName());
+  public GwtRunnerBase(Class<?> clazz) throws Exception {
+    Class<?> runnerClass = GwtClassLoader.get().loadClass(
+        getClassRunnerClassName());
 
-		if (!Runner.class.isAssignableFrom(runnerClass)) {
-			throw new RuntimeException("Cannot create a valid JUnit " + Runner.class.getSimpleName() + " : class '" + getClassRunnerClassName()
-					+ "' does not extend '" + Runner.class.getName() + "'");
-		}
+    if (!Runner.class.isAssignableFrom(runnerClass)) {
+      throw new RuntimeException("Cannot create a valid JUnit "
+          + Runner.class.getSimpleName() + " : class '"
+          + getClassRunnerClassName() + "' does not extend '"
+          + Runner.class.getName() + "'");
+    }
 
-		Constructor<?> cons = runnerClass.getConstructor(Class.class);
+    Constructor<?> cons = runnerClass.getConstructor(Class.class);
 
-		runner = (Runner) cons.newInstance(GwtClassLoader.get().loadClass(clazz.getCanonicalName()));
-	}
+    runner = (Runner) cons.newInstance(GwtClassLoader.get().loadClass(
+        clazz.getCanonicalName()));
+  }
 
-	protected abstract String getClassRunnerClassName();
+  public void filter(Filter filter) throws NoTestsRemainException {
+    if (Filterable.class.isInstance(runner)) {
+      ((Filterable) runner).filter(filter);
+    }
+  }
 
-	@Override
-	public Description getDescription() {
-		return runner.getDescription();
-	}
+  @Override
+  public Description getDescription() {
+    return runner.getDescription();
+  }
 
-	@Override
-	public void run(RunNotifier notifier) {
-		runner.run(notifier);
-	}
+  @Override
+  public void run(RunNotifier notifier) {
+    runner.run(notifier);
+  }
 
-	@Override
-	public int testCount() {
-		return runner.testCount();
-	}
+  public void sort(Sorter sorter) {
+    if (Sortable.class.isInstance(runner)) {
+      ((Sortable) runner).sort(sorter);
+    }
+  }
 
-	public void sort(Sorter sorter) {
-		if (Sortable.class.isInstance(runner)) {
-			((Sortable) runner).sort(sorter);
-		}
-	}
+  @Override
+  public int testCount() {
+    return runner.testCount();
+  }
 
-	public void filter(Filter filter) throws NoTestsRemainException {
-		if (Filterable.class.isInstance(runner)) {
-			((Filterable) runner).filter(filter);
-		}
-	}
+  protected abstract String getClassRunnerClassName();
 
 }

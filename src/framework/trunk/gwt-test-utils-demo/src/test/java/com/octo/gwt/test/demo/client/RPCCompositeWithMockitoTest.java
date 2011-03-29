@@ -19,60 +19,62 @@ import com.octo.gwt.test.utils.events.Browser;
 
 public class RPCCompositeWithMockitoTest extends GwtTestWithMockito {
 
-	@Mock
-	private MyServiceAsync service;
+  private RPCComposite composite;
 
-	private RPCComposite composite;
+  @Mock
+  private MyServiceAsync service;
 
-	@Before
-	public void init() throws Exception {
-		composite = new RPCComposite();
-	}
+  @SuppressWarnings("unchecked")
+  @Test
+  public void checkRPCCallFailure() {
+    // Setup
+    Button button = GwtReflectionUtils.getPrivateFieldValue(composite, "button");
+    Label label = GwtReflectionUtils.getPrivateFieldValue(composite, "label");
 
-	@SuppressWarnings("unchecked")
-	@Test
-	public void checkRPCCallSuccess() {
-		// Setup
-		Button button = GwtReflectionUtils.getPrivateFieldValue(composite, "button");
-		Label label = GwtReflectionUtils.getPrivateFieldValue(composite, "label");
+    // Stub remote service invocation and failure notification
+    doFailureCallback(new Exception("Mocked exception")).when(service).createBean(
+        eq("OCTO"), any(AsyncCallback.class));
 
-		FooBean expected = new FooBean();
-		expected.setName("mocked");
-		
-		// Stub remote service invocation and success notification
-		doSuccessCallback(expected).when(service).createBean(eq("OCTO"), any(AsyncCallback.class));
+    Assert.assertEquals("", label.getText());
 
-		Assert.assertEquals("", label.getText());
+    // Test
+    Browser.click(button);
 
-		// Test
-		Browser.click(button);
+    // Assert
+    // verify service invocation
+    verify(service).createBean(eq("OCTO"), any(AsyncCallback.class));
+    Assert.assertEquals("Failure : Mocked exception", label.getText());
+  }
 
-		// Assert
-		// verify service invocation
-		verify(service).createBean(eq("OCTO"), any(AsyncCallback.class));
+  @SuppressWarnings("unchecked")
+  @Test
+  public void checkRPCCallSuccess() {
+    // Setup
+    Button button = GwtReflectionUtils.getPrivateFieldValue(composite, "button");
+    Label label = GwtReflectionUtils.getPrivateFieldValue(composite, "label");
 
-		Assert.assertEquals("Bean \"mocked\" has been created", label.getText());
-	}
+    FooBean expected = new FooBean();
+    expected.setName("mocked");
 
-	@SuppressWarnings("unchecked")
-	@Test
-	public void checkRPCCallFailure() {
-		// Setup
-		Button button = GwtReflectionUtils.getPrivateFieldValue(composite, "button");
-		Label label = GwtReflectionUtils.getPrivateFieldValue(composite, "label");
+    // Stub remote service invocation and success notification
+    doSuccessCallback(expected).when(service).createBean(eq("OCTO"),
+        any(AsyncCallback.class));
 
-		// Stub remote service invocation and failure notification
-		doFailureCallback(new Exception("Mocked exception")).when(service).createBean(eq("OCTO"), any(AsyncCallback.class));
+    Assert.assertEquals("", label.getText());
 
-		Assert.assertEquals("", label.getText());
+    // Test
+    Browser.click(button);
 
-		// Test
-		Browser.click(button);
+    // Assert
+    // verify service invocation
+    verify(service).createBean(eq("OCTO"), any(AsyncCallback.class));
 
-		// Assert
-		// verify service invocation
-		verify(service).createBean(eq("OCTO"), any(AsyncCallback.class));
-		Assert.assertEquals("Failure : Mocked exception", label.getText());
-	}
+    Assert.assertEquals("Bean \"mocked\" has been created", label.getText());
+  }
+
+  @Before
+  public void init() throws Exception {
+    composite = new RPCComposite();
+  }
 
 }

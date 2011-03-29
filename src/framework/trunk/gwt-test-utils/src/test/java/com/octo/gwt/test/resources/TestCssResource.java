@@ -4,16 +4,16 @@ import com.google.gwt.resources.client.CssResource;
 
 public interface TestCssResource extends CssResource {
 
-	public String testConstant();
+  public String notAvailableStyle();
 
-	public String testStyle();
+  public String testConstant();
 
-	public String testStyleWithHover();
+  public String testStyle();
 
-	public String testStyleOnSpecificElement();
+  public String testStyleOnSpecificElement();
 
-	public String testStyleOnSpecificStyle();
+  public String testStyleOnSpecificStyle();
 
-	public String notAvailableStyle();
+  public String testStyleWithHover();
 
 }

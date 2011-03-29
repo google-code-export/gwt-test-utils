@@ -9,9 +9,9 @@ import com.octo.gwt.test.patchers.PatchMethod;
 @PatchClass(GXT.class)
 public class GXTPatcher extends AutomaticPatcher {
 
-	@PatchMethod
-	public static String getUserAgent() {
-		return Navigator.getUserAgent();
-	}
+  @PatchMethod
+  public static String getUserAgent() {
+    return Navigator.getUserAgent();
+  }
 
 }

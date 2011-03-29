@@ -12,41 +12,44 @@ import com.octo.gwt.test.utils.GwtReflectionUtils;
 @PatchClass(Cookies.class)
 public class CookiesPatcher extends AutomaticPatcher {
 
-	@PatchMethod
-	public static String uriEncode(String s) {
-		return s;
-	}
+  @PatchMethod
+  public static void loadCookies(HashMap<String, String> m) {
+  }
 
-	@PatchMethod
-	public static void setCookieImpl(String name, String value, double expires, String domain, String path, boolean secure) {
+  @PatchMethod
+  public static boolean needsRefresh() {
+    return false;
+  }
 
-		Map<String, String> cachedCookies = getCookiesMap();
-		if (cachedCookies == null) {
-			cachedCookies = new HashMap<String, String>();
-			GwtReflectionUtils.setStaticField(Cookies.class, "cachedCookies", cachedCookies);
-		}
+  @PatchMethod
+  public static void removeCookieNative(String name) {
+    Map<String, String> cachedCookies = getCookiesMap();
+    cachedCookies.remove(name);
+  }
 
-		cachedCookies.put(name, value);
-	}
+  @PatchMethod
+  public static void setCookieImpl(String name, String value, double expires,
+      String domain, String path, boolean secure) {
 
-	@PatchMethod
-	public static boolean needsRefresh() {
-		return false;
-	}
+    Map<String, String> cachedCookies = getCookiesMap();
+    if (cachedCookies == null) {
+      cachedCookies = new HashMap<String, String>();
+      GwtReflectionUtils.setStaticField(Cookies.class, "cachedCookies",
+          cachedCookies);
+    }
 
-	@PatchMethod
-	public static void removeCookieNative(String name) {
-		Map<String, String> cachedCookies = getCookiesMap();
-		cachedCookies.remove(name);
-	}
+    cachedCookies.put(name, value);
+  }
 
-	@PatchMethod
-	public static void loadCookies(HashMap<String, String> m) {
-	}
+  @PatchMethod
+  public static String uriEncode(String s) {
+    return s;
+  }
 
-	private static Map<String, String> getCookiesMap() {
-		Map<String, String> cachedCookies = GwtReflectionUtils.getStaticFieldValue(Cookies.class, "cachedCookies");
-		return cachedCookies;
-	}
+  private static Map<String, String> getCookiesMap() {
+    Map<String, String> cachedCookies = GwtReflectionUtils.getStaticFieldValue(
+        Cookies.class, "cachedCookies");
+    return cachedCookies;
+  }
 
 }

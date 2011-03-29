@@ -11,52 +11,55 @@ import com.octo.gwt.test.internal.utils.GwtPropertiesUtils;
 
 public class GwtPropertiesHelper {
 
-	private static GwtPropertiesHelper INSTANCE;
+  private static GwtPropertiesHelper INSTANCE;
 
-	public static GwtPropertiesHelper get() {
-		if (INSTANCE == null) {
-			INSTANCE = new GwtPropertiesHelper();
-		}
+  public static GwtPropertiesHelper get() {
+    if (INSTANCE == null) {
+      INSTANCE = new GwtPropertiesHelper();
+    }
 
-		return INSTANCE;
-	}
+    return INSTANCE;
+  }
 
-	private Map<String, Properties> cachedProperties = new HashMap<String, Properties>();
+  private Map<String, Properties> cachedProperties = new HashMap<String, Properties>();
 
-	private GwtPropertiesHelper() {
-	}
+  private GwtPropertiesHelper() {
+  }
 
-	public Properties getProperties(String path) {
-		Properties properties = cachedProperties.get(path);
+  public Properties getLocalizedProperties(String prefix, Locale locale) {
+    if (locale != null) {
+      prefix += ("_" + locale.toString());
+    }
+    return getProperties(prefix);
+  }
 
-		if (properties != null) {
-			return properties;
-		}
-		String propertiesNameFile = "/" + path + ".properties";
-		InputStream inputStream = path.getClass().getResourceAsStream(propertiesNameFile);
-		if (inputStream == null) {
-			return null;
-		}
-		try {
-			properties = new Properties();
-			InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
-			GwtPropertiesUtils.load(properties, inputStreamReader);
-			cachedProperties.put(path, properties);
-			return properties;
-		} catch (Exception e) {
-			throw new RuntimeException("Unable to load property file [" + path + "]", e);
-		}
-	}
+  public Properties getProperties(String path) {
+    Properties properties = cachedProperties.get(path);
 
-	public Properties getLocalizedProperties(String prefix, Locale locale) {
-		if (locale != null) {
-			prefix += ("_" + locale.toString());
-		}
-		return getProperties(prefix);
-	}
+    if (properties != null) {
+      return properties;
+    }
+    String propertiesNameFile = "/" + path + ".properties";
+    InputStream inputStream = path.getClass().getResourceAsStream(
+        propertiesNameFile);
+    if (inputStream == null) {
+      return null;
+    }
+    try {
+      properties = new Properties();
+      InputStreamReader inputStreamReader = new InputStreamReader(inputStream,
+          "UTF-8");
+      GwtPropertiesUtils.load(properties, inputStreamReader);
+      cachedProperties.put(path, properties);
+      return properties;
+    } catch (Exception e) {
+      throw new RuntimeException("Unable to load property file [" + path + "]",
+          e);
+    }
+  }
 
-	public void reset() {
-		cachedProperties.clear();
-	}
+  public void reset() {
+    cachedProperties.clear();
+  }
 
 }

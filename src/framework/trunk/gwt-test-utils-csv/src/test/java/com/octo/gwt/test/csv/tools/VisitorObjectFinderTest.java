@@ -21,65 +21,68 @@ import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 public class VisitorObjectFinderTest extends GwtTestWithEasyMock {
 
-	private MyBeautifulApp app;
-	private VisitorObjectFinder finder;
+  private MyBeautifulApp app;
+  @Mock
+  private CsvRunner csvRunner;
 
-	@Mock
-	private CsvRunner csvRunner;
+  private VisitorObjectFinder finder;
 
-	@Before
-	public void setupVisitorObjectFinder() {
-		app = new MyBeautifulApp();
-		app.onModuleLoad();
+  @Test
+  public void checkFind() {
+    // Setup
+    Button expectedB1 = GwtReflectionUtils.getPrivateFieldValue(app, "b1");
+    Button expectedB2 = GwtReflectionUtils.getPrivateFieldValue(app, "b2");
+    MyComposite myComposite = GwtReflectionUtils.getPrivateFieldValue(app,
+        "myComposite");
+    Label expectedCompositeLabel = GwtReflectionUtils.getPrivateFieldValue(
+        myComposite, "compositeLabel");
 
-		WidgetVisitor myVisitor = new WidgetVisitor() {
+    replay();
 
-			public void visitHasText(HasText hasTextWidget, WidgetRepository repository) {
-				repository.addAlias(hasTextWidget.getText(), (Widget) hasTextWidget);
-			}
+    // Test
+    Widget b1 = (Widget) finder.find(csvRunner, "Button1's HTML");
+    Widget b2 = (Widget) finder.find(csvRunner, "Button2's HTML");
+    Label compositeLabel = (Label) finder.find(csvRunner, "myComposite Label");
 
-			public void visitHasHTML(HasHTML hasHTML, WidgetRepository repository) {
-				repository.addAlias(hasHTML.getText(), hasHTML);
-				repository.addAlias(hasHTML.getHTML(), hasHTML);
-			}
+    // Assert
+    verify();
+    Assert.assertNotNull(b1);
+    Assert.assertEquals(expectedB1, b1);
+    Assert.assertNotNull(b2);
+    Assert.assertEquals(expectedB2, b2);
+    Assert.assertNotNull(compositeLabel);
+    Assert.assertEquals(expectedCompositeLabel, compositeLabel);
+  }
 
-			public void visitHasName(HasName hasName, WidgetRepository repository) {
-				repository.addAlias(hasName.getName(), hasName);
+  @Before
+  public void setupVisitorObjectFinder() {
+    app = new MyBeautifulApp();
+    app.onModuleLoad();
 
-			}
+    WidgetVisitor myVisitor = new WidgetVisitor() {
 
-			public void visitWidget(Widget widget, WidgetRepository repository) {
-				repository.addAlias(widget.getElement().getId(), widget);
+      public void visitHasHTML(HasHTML hasHTML, WidgetRepository repository) {
+        repository.addAlias(hasHTML.getText(), hasHTML);
+        repository.addAlias(hasHTML.getHTML(), hasHTML);
+      }
 
-			}
-		};
+      public void visitHasName(HasName hasName, WidgetRepository repository) {
+        repository.addAlias(hasName.getName(), hasName);
 
-		finder = new VisitorObjectFinder(myVisitor);
-	}
+      }
 
-	@Test
-	public void checkFind() {
-		// Setup
-		Button expectedB1 = GwtReflectionUtils.getPrivateFieldValue(app, "b1");
-		Button expectedB2 = GwtReflectionUtils.getPrivateFieldValue(app, "b2");
-		MyComposite myComposite = GwtReflectionUtils.getPrivateFieldValue(app, "myComposite");
-		Label expectedCompositeLabel = GwtReflectionUtils.getPrivateFieldValue(myComposite, "compositeLabel");
+      public void visitHasText(HasText hasTextWidget,
+          WidgetRepository repository) {
+        repository.addAlias(hasTextWidget.getText(), (Widget) hasTextWidget);
+      }
 
-		replay();
+      public void visitWidget(Widget widget, WidgetRepository repository) {
+        repository.addAlias(widget.getElement().getId(), widget);
 
-		// Test
-		Widget b1 = (Widget) finder.find(csvRunner, "Button1's HTML");
-		Widget b2 = (Widget) finder.find(csvRunner, "Button2's HTML");
-		Label compositeLabel = (Label) finder.find(csvRunner, "myComposite Label");
+      }
+    };
 
-		// Assert
-		verify();
-		Assert.assertNotNull(b1);
-		Assert.assertEquals(expectedB1, b1);
-		Assert.assertNotNull(b2);
-		Assert.assertEquals(expectedB2, b2);
-		Assert.assertNotNull(compositeLabel);
-		Assert.assertEquals(expectedCompositeLabel, compositeLabel);
-	}
+    finder = new VisitorObjectFinder(myVisitor);
+  }
 
 }

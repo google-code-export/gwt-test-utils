@@ -6,8 +6,8 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 @RemoteServiceRelativePath("myService")
 public interface MyService extends RemoteService {
 
-	MyObject update(MyObject object);
+  void someCallWithException();
 
-	void someCallWithException();
+  MyObject update(MyObject object);
 
 }

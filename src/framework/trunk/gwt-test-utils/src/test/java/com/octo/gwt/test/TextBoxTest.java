@@ -14,97 +14,97 @@ import com.octo.gwt.test.utils.events.Browser;
 
 public class TextBoxTest extends GwtTest {
 
-	@Test
-	public void checkName() {
-		TextBox t = new TextBox();
-		t.setName("name");
-		Assert.assertEquals("name", t.getName());
-	}
+  private class KeyPressEventData {
 
-	@Test
-	public void checkText() {
-		TextBox t = new TextBox();
-		t.setText("text");
-		Assert.assertEquals("text", t.getText());
-	}
+    public char charCode;
+    public int keyCode;
+  }
 
-	@Test
-	public void checkTitle() {
-		TextBox t = new TextBox();
-		t.setTitle("title");
-		Assert.assertEquals("title", t.getTitle());
-	}
+  @Test
+  public void checkGetCursorPos() {
+    // Set up
+    TextBox t = new TextBox();
+    t.setText("myText");
+    GwtReflectionUtils.setPrivateFieldValue(t, "attached", true);
 
-	@Test
-	public void checkVisible() {
-		TextBox t = new TextBox();
-		Assert.assertEquals(true, t.isVisible());
-		t.setVisible(false);
-		Assert.assertEquals(false, t.isVisible());
-	}
+    // Test
+    t.setCursorPos(2);
 
-	@Test
-	public void checkMaxLength() {
-		TextBox t = new TextBox();
-		t.setMaxLength(10);
+    Assert.assertEquals(2, t.getCursorPos());
+  }
 
-		Assert.assertEquals(10, t.getMaxLength());
-	}
+  @Test
+  public void checkMaxLength() {
+    TextBox t = new TextBox();
+    t.setMaxLength(10);
 
-	@Test
-	public void checkGetCursorPos() {
-		// Set up
-		TextBox t = new TextBox();
-		t.setText("myText");
-		GwtReflectionUtils.setPrivateFieldValue(t, "attached", true);
+    Assert.assertEquals(10, t.getMaxLength());
+  }
 
-		// Test
-		t.setCursorPos(2);
+  @Test
+  public void checkName() {
+    TextBox t = new TextBox();
+    t.setName("name");
+    Assert.assertEquals("name", t.getName());
+  }
 
-		Assert.assertEquals(2, t.getCursorPos());
-	}
+  @Test
+  public void checkPressKey() {
+    // Setup
+    final List<KeyPressEventData> events = new ArrayList<KeyPressEventData>();
+    TextBox tb = new TextBox();
 
-	@Test
-	public void checkValue() {
-		TextBox t = new TextBox();
-		Assert.assertEquals("", t.getValue());
-	}
+    tb.addKeyPressHandler(new KeyPressHandler() {
 
-	@Test
-	public void checkPressKey() {
-		// Setup
-		final List<KeyPressEventData> events = new ArrayList<KeyPressEventData>();
-		TextBox tb = new TextBox();
+      public void onKeyPress(KeyPressEvent event) {
+        KeyPressEventData data = new KeyPressEventData();
+        data.keyCode = event.getNativeEvent().getKeyCode();
+        data.charCode = event.getCharCode();
+        events.add(data);
+      }
+    });
 
-		tb.addKeyPressHandler(new KeyPressHandler() {
+    // Test
+    Browser.fillText(tb, "gael");
 
-			public void onKeyPress(KeyPressEvent event) {
-				KeyPressEventData data = new KeyPressEventData();
-				data.keyCode = event.getNativeEvent().getKeyCode();
-				data.charCode = event.getCharCode();
-				events.add(data);
-			}
-		});
+    // Assert
+    Assert.assertEquals("gael", tb.getValue());
+    Assert.assertEquals(4, events.size());
+    Assert.assertEquals('g', events.get(0).charCode);
+    Assert.assertEquals(103, events.get(0).keyCode);
+    Assert.assertEquals('a', events.get(1).charCode);
+    Assert.assertEquals(97, events.get(1).keyCode);
+    Assert.assertEquals('e', events.get(2).charCode);
+    Assert.assertEquals(101, events.get(2).keyCode);
+    Assert.assertEquals('l', events.get(3).charCode);
+    Assert.assertEquals(108, events.get(3).keyCode);
+  }
 
-		// Test
-		Browser.fillText(tb, "gael");
+  @Test
+  public void checkText() {
+    TextBox t = new TextBox();
+    t.setText("text");
+    Assert.assertEquals("text", t.getText());
+  }
 
-		// Assert
-		Assert.assertEquals("gael", tb.getValue());
-		Assert.assertEquals(4, events.size());
-		Assert.assertEquals('g', events.get(0).charCode);
-		Assert.assertEquals(103, events.get(0).keyCode);
-		Assert.assertEquals('a', events.get(1).charCode);
-		Assert.assertEquals(97, events.get(1).keyCode);
-		Assert.assertEquals('e', events.get(2).charCode);
-		Assert.assertEquals(101, events.get(2).keyCode);
-		Assert.assertEquals('l', events.get(3).charCode);
-		Assert.assertEquals(108, events.get(3).keyCode);
-	}
+  @Test
+  public void checkTitle() {
+    TextBox t = new TextBox();
+    t.setTitle("title");
+    Assert.assertEquals("title", t.getTitle());
+  }
 
-	private class KeyPressEventData {
+  @Test
+  public void checkValue() {
+    TextBox t = new TextBox();
+    Assert.assertEquals("", t.getValue());
+  }
 
-		public int keyCode;
-		public char charCode;
-	}
+  @Test
+  public void checkVisible() {
+    TextBox t = new TextBox();
+    Assert.assertEquals(true, t.isVisible());
+    t.setVisible(false);
+    Assert.assertEquals(false, t.isVisible());
+  }
 }

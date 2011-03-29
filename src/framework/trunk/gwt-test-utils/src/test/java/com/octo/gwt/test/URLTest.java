@@ -7,11 +7,11 @@ import com.google.gwt.http.client.URL;
 
 public class URLTest extends GwtTest {
 
-	@Test
-	public void checkEncodeComponent() {
-		String stringToEncode = "test";
+  @Test
+  public void checkEncodeComponent() {
+    String stringToEncode = "test";
 
-		Assert.assertEquals(stringToEncode, URL.encodeQueryString(stringToEncode));
-	}
+    Assert.assertEquals(stringToEncode, URL.encodeQueryString(stringToEncode));
+  }
 
 }

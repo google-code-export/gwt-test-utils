@@ -37,88 +37,94 @@ import com.octo.gwt.test.internal.GwtClassPool;
  */
 public abstract class RemoteServiceCreateHandler implements GwtCreateHandler {
 
-	private static final Logger logger = LoggerFactory.getLogger(RemoteServiceCreateHandler.class);
+  private static final Logger logger = LoggerFactory.getLogger(RemoteServiceCreateHandler.class);
 
-	private GwtRpcExceptionHandler exceptionHandler;
-	private GwtRpcSerializerHandler serializerHander;
+  private GwtRpcExceptionHandler exceptionHandler;
+  private GwtRpcSerializerHandler serializerHander;
 
-	public RemoteServiceCreateHandler() {
-		exceptionHandler = getExceptionHandler();
-		serializerHander = getSerializerHandler();
-	}
+  public RemoteServiceCreateHandler() {
+    exceptionHandler = getExceptionHandler();
+    serializerHander = getSerializerHandler();
+  }
 
-	@SuppressWarnings("unchecked")
-	public Object create(Class<?> classLiteral) throws Exception {
+  @SuppressWarnings("unchecked")
+  public Object create(Class<?> classLiteral) throws Exception {
 
-		if (!RemoteService.class.isAssignableFrom(classLiteral)) {
-			return null;
-		}
+    if (!RemoteService.class.isAssignableFrom(classLiteral)) {
+      return null;
+    }
 
-		String className = classLiteral.getName();
-		logger.debug("Try to create Remote service class " + className);
+    String className = classLiteral.getName();
+    logger.debug("Try to create Remote service class " + className);
 
-		String asyncName = className + "Async";
-		String relativePath = getRemoveServiceRelativePath(classLiteral);
-		Class<?> asyncClazz = Class.forName(asyncName);
-		if (asyncClazz == null) {
-			throw new Exception("Remote serivce Async class not found : " + asyncName);
-		}
-		logger.debug("Searching remote service implementing " + className);
-		Object service = findService((Class<? extends RemoteService>) classLiteral, relativePath);
-		if (service == null) {
-			logger.error("Remote service not found " + className);
-			throw new RuntimeException("Remote service not found " + className);
-		}
+    String asyncName = className + "Async";
+    String relativePath = getRemoveServiceRelativePath(classLiteral);
+    Class<?> asyncClazz = Class.forName(asyncName);
+    if (asyncClazz == null) {
+      throw new Exception("Remote serivce Async class not found : " + asyncName);
+    }
+    logger.debug("Searching remote service implementing " + className);
+    Object service = findService((Class<? extends RemoteService>) classLiteral,
+        relativePath);
+    if (service == null) {
+      logger.error("Remote service not found " + className);
+      throw new RuntimeException("Remote service not found " + className);
+    }
 
-		GwtRpcInvocationHandler handler = new GwtRpcInvocationHandler(asyncClazz, service, exceptionHandler, serializerHander);
+    GwtRpcInvocationHandler handler = new GwtRpcInvocationHandler(asyncClazz,
+        service, exceptionHandler, serializerHander);
 
-		return Proxy.newProxyInstance(getClass().getClassLoader(), new Class[] { asyncClazz }, handler);
-	}
+    return Proxy.newProxyInstance(getClass().getClassLoader(),
+        new Class[]{asyncClazz}, handler);
+  }
 
-	/**
-	 * Specify the handler to use to simulate the GWT-RPC serialization
-	 * 
-	 * @return The handler to use to simulate the GWT-RPC serialization.
-	 */
-	protected GwtRpcSerializerHandler getSerializerHandler() {
-		return new DefaultGwtRpcSerializerHandler();
-	}
+  private String getRemoveServiceRelativePath(Class<?> clazz) {
+    CtClass ctClass = GwtClassPool.getCtClass((clazz));
+    Object[] annotations = ctClass.getAvailableAnnotations();
+    for (Object o : annotations) {
+      if (Proxy.isProxyClass(o.getClass())) {
+        AnnotationImpl annotation = (AnnotationImpl) Proxy.getInvocationHandler(o);
+        if (annotation.getTypeName().equals(
+            RemoteServiceRelativePath.class.getName())) {
+          return ((StringMemberValue) annotation.getAnnotation().getMemberValue(
+              "value")).getValue();
+        }
+      }
+    }
+    throw new RuntimeException("Cannot find the '@"
+        + RemoteServiceRelativePath.class.getSimpleName()
+        + "' annotation on RemoteService interface '" + clazz.getName() + "'");
+  }
 
-	/**
-	 * Specify the handler to use to handle GWT-RPC errors.
-	 * 
-	 * @return The handler to use to handle GWT-RPC errors.
-	 */
-	protected GwtRpcExceptionHandler getExceptionHandler() {
-		return new DefaultGwtRpcExceptionHandler();
-	}
+  /**
+   * Method which actually is responsible for getting the {@link RemoteService}
+   * sub-interface implementation.
+   * 
+   * @param remoteServiceClass {@link RemoteService} sub-interface to get an
+   *          implementation.
+   * @param remoteServiceRelativePath the associated relative path, which is
+   *          provided in {@link RemoteServiceRelativePath} annotation.
+   * @return The corresponding remote service implementation.
+   */
+  protected abstract Object findService(Class<?> remoteServiceClass,
+      String remoteServiceRelativePath);
 
-	/**
-	 * Method which actually is responsible for getting the
-	 * {@link RemoteService} sub-interface implementation.
-	 * 
-	 * @param remoteServiceClass
-	 *            {@link RemoteService} sub-interface to get an implementation.
-	 * @param remoteServiceRelativePath
-	 *            the associated relative path, which is provided in
-	 *            {@link RemoteServiceRelativePath} annotation.
-	 * @return The corresponding remote service implementation.
-	 */
-	protected abstract Object findService(Class<?> remoteServiceClass, String remoteServiceRelativePath);
+  /**
+   * Specify the handler to use to handle GWT-RPC errors.
+   * 
+   * @return The handler to use to handle GWT-RPC errors.
+   */
+  protected GwtRpcExceptionHandler getExceptionHandler() {
+    return new DefaultGwtRpcExceptionHandler();
+  }
 
-	private String getRemoveServiceRelativePath(Class<?> clazz) {
-		CtClass ctClass = GwtClassPool.getCtClass((clazz));
-		Object[] annotations = ctClass.getAvailableAnnotations();
-		for (Object o : annotations) {
-			if (Proxy.isProxyClass(o.getClass())) {
-				AnnotationImpl annotation = (AnnotationImpl) Proxy.getInvocationHandler(o);
-				if (annotation.getTypeName().equals(RemoteServiceRelativePath.class.getName())) {
-					return ((StringMemberValue) annotation.getAnnotation().getMemberValue("value")).getValue();
-				}
-			}
-		}
-		throw new RuntimeException("Cannot find the '@" + RemoteServiceRelativePath.class.getSimpleName()
-				+ "' annotation on RemoteService interface '" + clazz.getName() + "'");
-	}
+  /**
+   * Specify the handler to use to simulate the GWT-RPC serialization
+   * 
+   * @return The handler to use to simulate the GWT-RPC serialization.
+   */
+  protected GwtRpcSerializerHandler getSerializerHandler() {
+    return new DefaultGwtRpcSerializerHandler();
+  }
 
 }

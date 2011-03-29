@@ -17,31 +17,31 @@ import java.io.ObjectOutputStream;
  */
 public class DeepCopy {
 
-	/**
-	 * Returns a copy of the object, or null if the object cannot be serialized.
-	 */
-	@SuppressWarnings("unchecked")
-	public static <T> T copy(T orig) throws Exception {
-		ObjectOutputStream out = null;
-		ObjectInputStream in = null;
-		try {
-			// Write the object out to a byte array
-			FastByteArrayOutputStream fbos = new FastByteArrayOutputStream();
-			out = new ObjectOutputStream(fbos);
-			out.writeObject(orig);
-			out.flush();
-			out.close();
+  /**
+   * Returns a copy of the object, or null if the object cannot be serialized.
+   */
+  @SuppressWarnings("unchecked")
+  public static <T> T copy(T orig) throws Exception {
+    ObjectOutputStream out = null;
+    ObjectInputStream in = null;
+    try {
+      // Write the object out to a byte array
+      FastByteArrayOutputStream fbos = new FastByteArrayOutputStream();
+      out = new ObjectOutputStream(fbos);
+      out.writeObject(orig);
+      out.flush();
+      out.close();
 
-			// Retrieve an input stream from the byte array and read
-			// a copy of the object back in.
-			in = new ObjectInputStream(fbos.getInputStream());
-			return (T) in.readObject();
-		} finally {
-			if (out != null)
-				out.close();
+      // Retrieve an input stream from the byte array and read
+      // a copy of the object back in.
+      in = new ObjectInputStream(fbos.getInputStream());
+      return (T) in.readObject();
+    } finally {
+      if (out != null)
+        out.close();
 
-			if (in != null)
-				in.close();
-		}
-	}
+      if (in != null)
+        in.close();
+    }
+  }
 }

@@ -21,316 +21,328 @@ import com.octo.gwt.test.patchers.PatchMethod;
 @PatchClass(Node.class)
 public class NodePatcher extends AutomaticPropertyContainerPatcher {
 
-	public static final String NODE_LIST_FIELD = "ChildNodes";
-	public static final String PARENT_NODE_FIELD = "ParentNode";
+  public static final String NODE_LIST_FIELD = "ChildNodes";
+  public static final String PARENT_NODE_FIELD = "ParentNode";
 
-	@Override
-	public void initClass(CtClass c) throws Exception {
-		super.initClass(c);
-		CtConstructor cons = findConstructor(c);
+  @PatchMethod
+  public static Node appendChild(Node parent, Node newChild) {
+    return insertAtIndex(parent, newChild, -1);
+  }
 
-		cons.insertAfter(PropertyContainerUtils.getCodeSetProperty("this", NodePatcher.NODE_LIST_FIELD,
-				"new " + OverrideNodeList.class.getCanonicalName() + "()")
-				+ ";");
-	}
+  @PatchMethod
+  public static Node cloneNode(Node node, boolean deep) {
+    PropertyContainer propertyContainer = PropertyContainerUtils.cast(node).getProperties();
 
-	@PatchMethod
-	public static Document getOwnerDocument(Node node) {
-		return NodeFactory.getDocument();
-	}
+    Node newNode;
+    switch (node.getNodeType()) {
+      case Node.ELEMENT_NODE:
+        try {
+          newNode = NodeFactory.createElement(((Element) node).getTagName());
+        } catch (Exception e) {
+          throw new RuntimeException(
+              "Error while creating an element of type ["
+                  + node.getClass().getName() + "]");
+        }
+        break;
+      case Node.DOCUMENT_NODE:
+        newNode = NodeFactory.getDocument();
+        break;
+      case Node.TEXT_NODE:
+        newNode = NodeFactory.createTextNode(((Text) node).getData());
+        break;
+      default:
+        throw new RuntimeException("Cannot create a Node of type ["
+            + node.getClass().getCanonicalName() + "]");
+    }
 
-	@PatchMethod
-	public static boolean is(JavaScriptObject object) {
-		if (object == null || !(object instanceof Node)) {
-			return false;
-		}
+    PropertyContainer propertyContainer2 = PropertyContainerUtils.cast(newNode).getProperties();
 
-		return true;
-	}
+    propertyContainer2.clear();
 
-	@PatchMethod
-	public static short getNodeType(Node node) {
-		if (node instanceof Document) {
-			return Node.DOCUMENT_NODE;
-		} else if (node instanceof Text) {
-			return Node.TEXT_NODE;
-		} else if (node instanceof Element) {
-			return Node.ELEMENT_NODE;
-		}
+    fillNewPropertyContainer(propertyContainer2, propertyContainer);
 
-		return (short) -1;
-	}
+    OverrideNodeList<Node> newChilds = new OverrideNodeList<Node>();
+    propertyContainer2.put(NODE_LIST_FIELD, newChilds);
 
-	@PatchMethod
-	public static String getNodeName(Node node) {
-		switch (node.getNodeType()) {
-		case Node.DOCUMENT_NODE:
-			return "#document";
-		case Node.ELEMENT_NODE:
-			Element e = node.cast();
-			return e.getTagName();
-		case Node.TEXT_NODE:
-			return "#text";
-		default:
-			throw new RuntimeException("Invalid Node type (not a Document / Element / Text : " + node.getNodeType());
-		}
-	}
+    OverrideNodeList<Node> childs = getChildNodeList(node);
+    if (deep) {
+      // copy all child nodes
+      for (Node child : childs.getList()) {
+        appendChild(newNode, cloneNode(child, true));
+      }
+    } else {
+      // only copy the TextNode if exists
+      for (Node child : childs.getList()) {
+        if (Node.TEXT_NODE == child.getNodeType()) {
+          appendChild(newNode,
+              Document.get().createTextNode(child.getNodeValue()));
+          break;
+        }
+      }
+    }
+    return newNode;
+  }
 
-	@PatchMethod
-	public static String getNodeValue(Node node) {
-		switch (node.getNodeType()) {
-		case Node.DOCUMENT_NODE:
-			return null;
-		case Node.ELEMENT_NODE:
-			return null;
-		case Node.TEXT_NODE:
-			Text text = node.cast();
-			return text.getData();
-		default:
-			throw new RuntimeException("Invalid Node type (not a Document / Element / Text : " + node.getNodeType());
-		}
-	}
+  @PatchMethod
+  public static Node getFirstChild(Node node) {
+    OverrideNodeList<Node> list = getChildNodeList(node);
 
-	@PatchMethod
-	public static void setNodeValue(Node node, String nodeValue) {
-		switch (node.getNodeType()) {
-		case Node.DOCUMENT_NODE:
-			// nothing to do
-			break;
-		case Node.ELEMENT_NODE:
-			// nothing to do
-			break;
-		case Node.TEXT_NODE:
-			Text text = node.cast();
-			text.setData(nodeValue);
-			break;
-		}
-	}
+    if (list.getLength() == 0) {
+      return null;
+    }
 
-	@PatchMethod
-	public static Node appendChild(Node parent, Node newChild) {
-		return insertAtIndex(parent, newChild, -1);
-	}
+    return list.getItem(0);
+  }
 
-	@PatchMethod
-	public static Node removeChild(Node oldParent, Node oldChild) {
-		OverrideNodeList<Node> list = getChildNodeList(oldParent);
+  @PatchMethod
+  public static Node getLastChild(Node node) {
+    OverrideNodeList<Node> list = getChildNodeList(node);
 
-		if (list.getList().remove(oldChild)) {
-			return oldChild;
-		} else {
-			return null;
-		}
-	}
+    if (list.getLength() == 0) {
+      return null;
+    }
 
-	@PatchMethod
-	public static Node getFirstChild(Node node) {
-		OverrideNodeList<Node> list = getChildNodeList(node);
+    return list.getItem(list.getLength() - 1);
+  }
 
-		if (list.getLength() == 0) {
-			return null;
-		}
+  @PatchMethod
+  public static Node getNextSibling(Node node) {
+    Node parent = node.getParentNode();
+    if (parent == null)
+      return null;
 
-		return list.getItem(0);
-	}
+    OverrideNodeList<Node> list = getChildNodeList(parent);
 
-	@PatchMethod
-	public static Node getLastChild(Node node) {
-		OverrideNodeList<Node> list = getChildNodeList(node);
+    for (int i = 0; i < list.getLength(); i++) {
+      Node current = list.getItem(i);
+      if (current.equals(node) && i < list.getLength() - 1) {
+        return list.getItem(i + 1);
+      }
+    }
 
-		if (list.getLength() == 0) {
-			return null;
-		}
+    return null;
+  }
 
-		return list.getItem(list.getLength() - 1);
-	}
+  @PatchMethod
+  public static String getNodeName(Node node) {
+    switch (node.getNodeType()) {
+      case Node.DOCUMENT_NODE:
+        return "#document";
+      case Node.ELEMENT_NODE:
+        Element e = node.cast();
+        return e.getTagName();
+      case Node.TEXT_NODE:
+        return "#text";
+      default:
+        throw new RuntimeException(
+            "Invalid Node type (not a Document / Element / Text : "
+                + node.getNodeType());
+    }
+  }
 
-	@PatchMethod
-	public static boolean hasChildNodes(Node node) {
-		return getChildNodeList(node).getLength() > 0;
-	}
+  @PatchMethod
+  public static short getNodeType(Node node) {
+    if (node instanceof Document) {
+      return Node.DOCUMENT_NODE;
+    } else if (node instanceof Text) {
+      return Node.TEXT_NODE;
+    } else if (node instanceof Element) {
+      return Node.ELEMENT_NODE;
+    }
 
-	@PatchMethod
-	public static Node getNextSibling(Node node) {
-		Node parent = node.getParentNode();
-		if (parent == null)
-			return null;
+    return (short) -1;
+  }
 
-		OverrideNodeList<Node> list = getChildNodeList(parent);
+  @PatchMethod
+  public static String getNodeValue(Node node) {
+    switch (node.getNodeType()) {
+      case Node.DOCUMENT_NODE:
+        return null;
+      case Node.ELEMENT_NODE:
+        return null;
+      case Node.TEXT_NODE:
+        Text text = node.cast();
+        return text.getData();
+      default:
+        throw new RuntimeException(
+            "Invalid Node type (not a Document / Element / Text : "
+                + node.getNodeType());
+    }
+  }
 
-		for (int i = 0; i < list.getLength(); i++) {
-			Node current = list.getItem(i);
-			if (current.equals(node) && i < list.getLength() - 1) {
-				return list.getItem(i + 1);
-			}
-		}
+  @PatchMethod
+  public static Document getOwnerDocument(Node node) {
+    return NodeFactory.getDocument();
+  }
 
-		return null;
-	}
+  @PatchMethod
+  public static Node getPreviousSibling(Node node) {
+    Node parent = node.getParentNode();
+    if (parent == null)
+      return null;
 
-	@PatchMethod
-	public static Node getPreviousSibling(Node node) {
-		Node parent = node.getParentNode();
-		if (parent == null)
-			return null;
+    OverrideNodeList<Node> list = getChildNodeList(parent);
 
-		OverrideNodeList<Node> list = getChildNodeList(parent);
+    for (int i = 0; i < list.getLength(); i++) {
+      Node current = list.getItem(i);
+      if (current.equals(node) && i > 0) {
+        return list.getItem(i - 1);
+      }
+    }
 
-		for (int i = 0; i < list.getLength(); i++) {
-			Node current = list.getItem(i);
-			if (current.equals(node) && i > 0) {
-				return list.getItem(i - 1);
-			}
-		}
+    return null;
+  }
 
-		return null;
-	}
+  @PatchMethod
+  public static boolean hasChildNodes(Node node) {
+    return getChildNodeList(node).getLength() > 0;
+  }
 
-	@PatchMethod
-	public static Node insertBefore(Node parent, Node newChild, Node refChild) {
-		OverrideNodeList<Node> list = getChildNodeList(parent);
+  public static Node insertAtIndex(Node parent, Node newChild, int index) {
+    OverrideNodeList<Node> list = getChildNodeList(parent);
 
-		// get the index of refChild
-		int index = -1;
-		if (refChild != null) {
-			int i = 0;
-			while (index == -1 && i < list.getLength()) {
-				if (list.getItem(i).equals(refChild)) {
-					index = i;
-				}
-				i++;
-			}
-		}
+    // First, remove from old parent
+    Node oldParent = newChild.getParentNode();
+    if (oldParent != null) {
+      oldParent.removeChild(newChild);
+    }
 
-		// Then insert by index
-		return insertAtIndex(parent, newChild, index);
-	}
+    // Then, check parent doesn't contain newChild and remove it if necessary
+    list.getList().remove(newChild);
 
-	@PatchMethod
-	public static Node replaceChild(Node parent, Node newChild, Node oldChild) {
-		if (oldChild != null) {
-			OverrideNodeList<Node> list = getChildNodeList(parent);
+    // Finally, add
+    if (index == -1 || index >= list.getLength()) {
+      list.getList().add(newChild);
+    } else {
+      list.getList().add(index, newChild);
+    }
 
-			for (int i = 0; i < list.getLength(); i++) {
-				if (list.getItem(i).equals(oldChild)) {
-					list.getList().add(i, newChild);
-					list.getList().remove(oldChild);
-					return oldChild;
-				}
-			}
-		}
-		// if oldChild is null or was not found
-		return null;
-	}
+    // Manage getParentNode()
+    PropertyContainerUtils.setProperty(newChild, PARENT_NODE_FIELD, parent);
 
-	@PatchMethod
-	public static Node cloneNode(Node node, boolean deep) {
-		PropertyContainer propertyContainer = PropertyContainerUtils.cast(node).getProperties();
+    return newChild;
+  }
 
-		Node newNode;
-		switch (node.getNodeType()) {
-		case Node.ELEMENT_NODE:
-			try {
-				newNode = NodeFactory.createElement(((Element) node).getTagName());
-			} catch (Exception e) {
-				throw new RuntimeException("Error while creating an element of type [" + node.getClass().getName() + "]");
-			}
-			break;
-		case Node.DOCUMENT_NODE:
-			newNode = NodeFactory.getDocument();
-			break;
-		case Node.TEXT_NODE:
-			newNode = NodeFactory.createTextNode(((Text) node).getData());
-			break;
-		default:
-			throw new RuntimeException("Cannot create a Node of type [" + node.getClass().getCanonicalName() + "]");
-		}
+  @PatchMethod
+  public static Node insertBefore(Node parent, Node newChild, Node refChild) {
+    OverrideNodeList<Node> list = getChildNodeList(parent);
 
-		PropertyContainer propertyContainer2 = PropertyContainerUtils.cast(newNode).getProperties();
+    // get the index of refChild
+    int index = -1;
+    if (refChild != null) {
+      int i = 0;
+      while (index == -1 && i < list.getLength()) {
+        if (list.getItem(i).equals(refChild)) {
+          index = i;
+        }
+        i++;
+      }
+    }
 
-		propertyContainer2.clear();
+    // Then insert by index
+    return insertAtIndex(parent, newChild, index);
+  }
 
-		fillNewPropertyContainer(propertyContainer2, propertyContainer);
+  @PatchMethod
+  public static boolean is(JavaScriptObject object) {
+    if (object == null || !(object instanceof Node)) {
+      return false;
+    }
 
-		OverrideNodeList<Node> newChilds = new OverrideNodeList<Node>();
-		propertyContainer2.put(NODE_LIST_FIELD, newChilds);
+    return true;
+  }
 
-		OverrideNodeList<Node> childs = getChildNodeList(node);
-		if (deep) {
-			// copy all child nodes
-			for (Node child : childs.getList()) {
-				appendChild(newNode, cloneNode(child, true));
-			}
-		} else {
-			// only copy the TextNode if exists
-			for (Node child : childs.getList()) {
-				if (Node.TEXT_NODE == child.getNodeType()) {
-					appendChild(newNode, Document.get().createTextNode(child.getNodeValue()));
-					break;
-				}
-			}
-		}
-		return newNode;
-	}
+  @PatchMethod
+  public static Node removeChild(Node oldParent, Node oldChild) {
+    OverrideNodeList<Node> list = getChildNodeList(oldParent);
 
-	public static Node insertAtIndex(Node parent, Node newChild, int index) {
-		OverrideNodeList<Node> list = getChildNodeList(parent);
+    if (list.getList().remove(oldChild)) {
+      return oldChild;
+    } else {
+      return null;
+    }
+  }
 
-		// First, remove from old parent
-		Node oldParent = newChild.getParentNode();
-		if (oldParent != null) {
-			oldParent.removeChild(newChild);
-		}
+  @PatchMethod
+  public static Node replaceChild(Node parent, Node newChild, Node oldChild) {
+    if (oldChild != null) {
+      OverrideNodeList<Node> list = getChildNodeList(parent);
 
-		// Then, check parent doesn't contain newChild and remove it if necessary
-		list.getList().remove(newChild);
+      for (int i = 0; i < list.getLength(); i++) {
+        if (list.getItem(i).equals(oldChild)) {
+          list.getList().add(i, newChild);
+          list.getList().remove(oldChild);
+          return oldChild;
+        }
+      }
+    }
+    // if oldChild is null or was not found
+    return null;
+  }
 
-		// Finally, add
-		if (index == -1 || index >= list.getLength()) {
-			list.getList().add(newChild);
-		} else {
-			list.getList().add(index, newChild);
-		}
+  @PatchMethod
+  public static void setNodeValue(Node node, String nodeValue) {
+    switch (node.getNodeType()) {
+      case Node.DOCUMENT_NODE:
+        // nothing to do
+        break;
+      case Node.ELEMENT_NODE:
+        // nothing to do
+        break;
+      case Node.TEXT_NODE:
+        Text text = node.cast();
+        text.setData(nodeValue);
+        break;
+    }
+  }
 
-		// Manage getParentNode() 
-		PropertyContainerUtils.setProperty(newChild, PARENT_NODE_FIELD, parent);
+  private static void fillNewPropertyContainer(PropertyContainer n,
+      PropertyContainer old) {
+    for (Entry<String, Object> entry : old.entrySet()) {
+      if (PARENT_NODE_FIELD.equals(entry.getKey())) {
+      } else if (entry.getValue() instanceof String) {
+        n.put(entry.getKey(), new String((String) entry.getValue()));
+      } else if (entry.getValue() instanceof Integer) {
+        n.put(entry.getKey(), new Integer((Integer) entry.getValue()));
+      } else if (entry.getValue() instanceof Double) {
+        n.put(entry.getKey(), new Double((Double) entry.getValue()));
+      } else if (entry.getValue() instanceof Boolean) {
+        n.put(entry.getKey(), new Boolean((Boolean) entry.getValue()));
+      } else if (entry.getValue() instanceof Style) {
+        // The propertyContainerAware have to be an instance of Element since
+        // Style requiers Element in its constructor with gwt-test-utils
+        Style newStyle = NodeFactory.createStyle((Element) n.getOwner());
+        PropertyContainer o = PropertyContainerUtils.cast(entry.getValue()).getProperties();
+        PropertyContainer nn = PropertyContainerUtils.cast(newStyle).getProperties();
+        nn.clear();
 
-		return newChild;
-	}
+        fillNewPropertyContainer(nn, o);
+        n.put(entry.getKey(), newStyle);
+      } else if (entry.getValue() instanceof OverrideNodeList<?>) {
+      } else if (entry.getValue() instanceof PropertyContainer) {
+        PropertyContainer toCopy = (PropertyContainer) entry.getValue();
+        PropertyContainer nn = new PropertyContainer(toCopy.getOwner());
+        fillNewPropertyContainer(nn, toCopy);
+        n.put(entry.getKey(), nn);
+      } else {
+        throw new RuntimeException("Not managed type "
+            + entry.getValue().getClass() + ", value " + entry.getKey());
+      }
+    }
+  }
 
-	private static void fillNewPropertyContainer(PropertyContainer n, PropertyContainer old) {
-		for (Entry<String, Object> entry : old.entrySet()) {
-			if (PARENT_NODE_FIELD.equals(entry.getKey())) {
-			} else if (entry.getValue() instanceof String) {
-				n.put(entry.getKey(), new String((String) entry.getValue()));
-			} else if (entry.getValue() instanceof Integer) {
-				n.put(entry.getKey(), new Integer((Integer) entry.getValue()));
-			} else if (entry.getValue() instanceof Double) {
-				n.put(entry.getKey(), new Double((Double) entry.getValue()));
-			} else if (entry.getValue() instanceof Boolean) {
-				n.put(entry.getKey(), new Boolean((Boolean) entry.getValue()));
-			} else if (entry.getValue() instanceof Style) {
-				// The propertyContainerAware have to be an instance of Element since Style requiers Element in its constructor with gwt-test-utils
-				Style newStyle = NodeFactory.createStyle((Element) n.getOwner());
-				PropertyContainer o = PropertyContainerUtils.cast(entry.getValue()).getProperties();
-				PropertyContainer nn = PropertyContainerUtils.cast(newStyle).getProperties();
-				nn.clear();
+  private static OverrideNodeList<Node> getChildNodeList(Node node) {
+    return PropertyContainerUtils.getProperty(node, NODE_LIST_FIELD);
+  }
 
-				fillNewPropertyContainer(nn, o);
-				n.put(entry.getKey(), newStyle);
-			} else if (entry.getValue() instanceof OverrideNodeList<?>) {
-			} else if (entry.getValue() instanceof PropertyContainer) {
-				PropertyContainer toCopy = (PropertyContainer) entry.getValue();
-				PropertyContainer nn = new PropertyContainer(toCopy.getOwner());
-				fillNewPropertyContainer(nn, toCopy);
-				n.put(entry.getKey(), nn);
-			} else {
-				throw new RuntimeException("Not managed type " + entry.getValue().getClass() + ", value " + entry.getKey());
-			}
-		}
-	}
+  @Override
+  public void initClass(CtClass c) throws Exception {
+    super.initClass(c);
+    CtConstructor cons = findConstructor(c);
 
-	private static OverrideNodeList<Node> getChildNodeList(Node node) {
-		return PropertyContainerUtils.getProperty(node, NODE_LIST_FIELD);
-	}
+    cons.insertAfter(PropertyContainerUtils.getCodeSetProperty("this",
+        NodePatcher.NODE_LIST_FIELD,
+        "new " + OverrideNodeList.class.getCanonicalName() + "()")
+        + ";");
+  }
 }

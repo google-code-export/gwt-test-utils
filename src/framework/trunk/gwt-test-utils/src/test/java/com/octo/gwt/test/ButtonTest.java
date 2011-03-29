@@ -15,133 +15,134 @@ import com.octo.gwt.test.utils.events.Browser;
 @SuppressWarnings("deprecation")
 public class ButtonTest extends GwtTest {
 
-	@Test
-	public void checkWrap() {
-		// Set up
+  @Test
+  public void checkClickWithHander() {
 
-		ButtonElement element = Document.get().createButtonElement();
-		element.setTabIndex(3);
+    // create the button in a standard JVM
+    final Button b = new Button();
+    // add a handler to test the click
+    b.addClickHandler(new ClickHandler() {
 
-		// Test
-		Button b = Button.wrap(element);
+      public void onClick(ClickEvent event) {
+        b.setHTML("clicked");
+      }
 
-		// Assert 1
-		Assert.assertEquals(3, b.getTabIndex());
+    });
 
-		// Test 2
-		b.setTabIndex(1);
+    Assert.assertEquals("", b.getHTML());
 
-		// Assert 2
-		Assert.assertEquals(1, element.getTabIndex());
+    // simulate click
+    Browser.click(b);
 
-	}
+    // assert that the "AbstractGWTTest.click(Widget)" method trigger the
+    // "onClick" handler's method
+    Assert.assertEquals("clicked", b.getHTML());
+  }
 
-	@Test
-	public void checkTitle() {
-		Button b = new Button();
-		b.setTitle("title");
+  @Test
+  public void checkClickWithListener() {
+    final Button b = new Button();
 
-		Assert.assertEquals("title", b.getTitle());
-	}
+    b.addClickListener(new ClickListener() {
 
-	@Test
-	public void checkText() {
-		Button b = new Button();
-		b.setText("toto");
+      public void onClick(Widget sender) {
+        b.setHTML("clicked");
 
-		Assert.assertEquals("toto", b.getText());
-	}
+      }
+    });
 
-	@Test
-	public void checkHTML() {
-		Button b = new Button("test");
-		Assert.assertEquals("test", b.getHTML());
+    Assert.assertEquals("", b.getHTML());
 
-		b.setHTML("test-html");
+    // simulate click
+    Browser.click(b);
 
-		Assert.assertEquals("test-html", b.getHTML());
-	}
+    Assert.assertEquals("clicked", b.getHTML());
+  }
 
-	@Test
-	public void checkEnable() {
-		Button b = new Button();
-		Assert.assertEquals(true, b.isEnabled());
+  @Test
+  public void checkEnable() {
+    Button b = new Button();
+    Assert.assertEquals(true, b.isEnabled());
 
-		b.setEnabled(false);
+    b.setEnabled(false);
 
-		Assert.assertEquals(false, b.isEnabled());
-	}
+    Assert.assertEquals(false, b.isEnabled());
+  }
 
-	@Test
-	public void checkVisible() {
-		Button b = new Button();
-		Assert.assertEquals(true, b.isVisible());
+  @Test
+  public void checkHTML() {
+    Button b = new Button("test");
+    Assert.assertEquals("test", b.getHTML());
 
-		b.setVisible(false);
+    b.setHTML("test-html");
 
-		Assert.assertEquals(false, b.isVisible());
-	}
+    Assert.assertEquals("test-html", b.getHTML());
+  }
 
-	@Test
-	public void checkStyleName() {
-		Button b = new Button();
-		Assert.assertEquals("gwt-Button", b.getStyleName());
+  @Test
+  public void checkStyleName() {
+    Button b = new Button();
+    Assert.assertEquals("gwt-Button", b.getStyleName());
 
-		b.setStyleName("test-button-style");
+    b.setStyleName("test-button-style");
 
-		Assert.assertEquals("test-button-style", b.getStyleName());
-	}
+    Assert.assertEquals("test-button-style", b.getStyleName());
+  }
 
-	@Test
-	public void checkStylePrimaryName() {
-		Button b = new Button();
+  @Test
+  public void checkStylePrimaryName() {
+    Button b = new Button();
 
-		b.setStylePrimaryName("test-button-styleP");
+    b.setStylePrimaryName("test-button-styleP");
 
-		Assert.assertEquals("test-button-styleP", b.getStylePrimaryName());
-	}
+    Assert.assertEquals("test-button-styleP", b.getStylePrimaryName());
+  }
 
-	@Test
-	public void checkClickWithHander() {
+  @Test
+  public void checkText() {
+    Button b = new Button();
+    b.setText("toto");
 
-		//create the button in a standard JVM
-		final Button b = new Button();
-		// add a handler to test the click
-		b.addClickHandler(new ClickHandler() {
+    Assert.assertEquals("toto", b.getText());
+  }
 
-			public void onClick(ClickEvent event) {
-				b.setHTML("clicked");
-			}
+  @Test
+  public void checkTitle() {
+    Button b = new Button();
+    b.setTitle("title");
 
-		});
+    Assert.assertEquals("title", b.getTitle());
+  }
 
-		Assert.assertEquals("", b.getHTML());
+  @Test
+  public void checkVisible() {
+    Button b = new Button();
+    Assert.assertEquals(true, b.isVisible());
 
-		// simulate click
-		Browser.click(b);
+    b.setVisible(false);
 
-		// assert that the "AbstractGWTTest.click(Widget)" method trigger the "onClick" handler's method
-		Assert.assertEquals("clicked", b.getHTML());
-	}
+    Assert.assertEquals(false, b.isVisible());
+  }
 
-	@Test
-	public void checkClickWithListener() {
-		final Button b = new Button();
+  @Test
+  public void checkWrap() {
+    // Set up
 
-		b.addClickListener(new ClickListener() {
+    ButtonElement element = Document.get().createButtonElement();
+    element.setTabIndex(3);
 
-			public void onClick(Widget sender) {
-				b.setHTML("clicked");
+    // Test
+    Button b = Button.wrap(element);
 
-			}
-		});
+    // Assert 1
+    Assert.assertEquals(3, b.getTabIndex());
 
-		Assert.assertEquals("", b.getHTML());
+    // Test 2
+    b.setTabIndex(1);
 
-		// simulate click
-		Browser.click(b);
+    // Assert 2
+    Assert.assertEquals(1, element.getTabIndex());
 
-		Assert.assertEquals("clicked", b.getHTML());
-	}
+  }
 
 }

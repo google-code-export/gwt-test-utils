@@ -11,44 +11,45 @@ import com.google.gwt.user.client.ui.TextBox;
 
 public class SimpleComposite2 extends Composite {
 
-	private Button button;
-	private TextBox textBox;
-	private Label label;
-	private ListBox listBox;
+  private Button button;
+  private Label label;
+  private ListBox listBox;
+  private TextBox textBox;
 
-	public SimpleComposite2() {
+  public SimpleComposite2() {
 
-		button = new Button();
-		button.setHTML("Go");
-		button.addStyleName("pc-template-btn");
+    button = new Button();
+    button.setHTML("Go");
+    button.addStyleName("pc-template-btn");
 
-		textBox = new TextBox();
-		label = new Label("this label will be updated");
-		listBox = new ListBox();
+    textBox = new TextBox();
+    label = new Label("this label will be updated");
+    listBox = new ListBox();
 
-		listBox.addItem("Hello");
-		listBox.addItem("Good morning");
-		listBox.addItem("Good bye");
+    listBox.addItem("Hello");
+    listBox.addItem("Good morning");
+    listBox.addItem("Good bye");
 
-		// The wrapper panel
-		FlowPanel panel = new FlowPanel();
-		panel.getElement().setClassName("composite");
-		panel.add(listBox);
-		panel.add(textBox);
-		panel.add(button);
-		panel.add(label);
+    // The wrapper panel
+    FlowPanel panel = new FlowPanel();
+    panel.getElement().setClassName("composite");
+    panel.add(listBox);
+    panel.add(textBox);
+    panel.add(button);
+    panel.add(label);
 
-		// All composites must call initWidget() in their constructors.
-		initWidget(panel);
+    // All composites must call initWidget() in their constructors.
+    initWidget(panel);
 
-		// Add click handlers to the button
-		button.addClickHandler(new ClickHandler() {
+    // Add click handlers to the button
+    button.addClickHandler(new ClickHandler() {
 
-			public void onClick(ClickEvent event) {
-				label.setText(listBox.getItemText(listBox.getSelectedIndex()) + " " + textBox.getText());
-			}
-		});
+      public void onClick(ClickEvent event) {
+        label.setText(listBox.getItemText(listBox.getSelectedIndex()) + " "
+            + textBox.getText());
+      }
+    });
 
-	}
+  }
 
 }

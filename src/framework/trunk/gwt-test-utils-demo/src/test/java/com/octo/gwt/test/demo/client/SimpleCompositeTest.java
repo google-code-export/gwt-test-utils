@@ -12,26 +12,26 @@ import com.octo.gwt.test.utils.events.Browser;
 
 public class SimpleCompositeTest extends GwtTest {
 
-	private SimpleComposite composite;
+  private SimpleComposite composite;
 
-	@Before
-	public void init() throws Exception {
-		composite = new SimpleComposite();
-	}
+  @Test
+  public void checkMouseMoveOnPicture() {
+    // Setup
+    Image img = GwtReflectionUtils.getPrivateFieldValue(composite, "img");
+    Label label = GwtReflectionUtils.getPrivateFieldValue(composite, "label");
 
-	@Test
-	public void checkMouseMoveOnPicture() {
-		// Setup
-		Image img = GwtReflectionUtils.getPrivateFieldValue(composite, "img");
-		Label label = GwtReflectionUtils.getPrivateFieldValue(composite, "label");
+    Assert.assertEquals("", label.getText());
 
-		Assert.assertEquals("", label.getText());
+    // Test
+    Browser.mouseMove(img);
 
-		// Test
-		Browser.mouseMove(img);
+    // Assert
+    Assert.assertEquals("mouse moved on picture !", label.getText());
+  }
 
-		// Assert
-		Assert.assertEquals("mouse moved on picture !", label.getText());
-	}
+  @Before
+  public void init() throws Exception {
+    composite = new SimpleComposite();
+  }
 
 }

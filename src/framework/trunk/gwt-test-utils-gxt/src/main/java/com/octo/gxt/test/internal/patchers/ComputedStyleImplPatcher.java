@@ -15,24 +15,25 @@ import com.octo.gwt.test.patchers.PatchMethod;
 @PatchClass(ComputedStyleImpl.class)
 public class ComputedStyleImplPatcher extends AutomaticPatcher {
 
-	@PatchMethod
-	public static FastMap<String> getComputedStyle(ComputedStyleImpl impl, Element elem, List<String> orginalNames, List<String> hyphenizedNames,
-			List<String> camelizedNames, String pseudo) {
+  @PatchMethod
+  public static FastMap<String> getComputedStyle(ComputedStyleImpl impl,
+      Element elem, List<String> orginalNames, List<String> hyphenizedNames,
+      List<String> camelizedNames, String pseudo) {
 
-		FastMap<String> result = new FastMap<String>();
+    FastMap<String> result = new FastMap<String>();
 
-		LinkedHashMap<String, String> styleProperties = StyleUtils.getStyleProperties(elem.getAttribute("style"));
+    LinkedHashMap<String, String> styleProperties = StyleUtils.getStyleProperties(elem.getAttribute("style"));
 
-		for (String name : orginalNames) {
-			String value = styleProperties.get(GwtStringUtils.hyphenize(name));
-			if (value == null) {
-				value = "";
-			}
+    for (String name : orginalNames) {
+      String value = styleProperties.get(GwtStringUtils.hyphenize(name));
+      if (value == null) {
+        value = "";
+      }
 
-			result.put(name, value);
-		}
+      result.put(name, value);
+    }
 
-		return result;
-	}
+    return result;
+  }
 
 }

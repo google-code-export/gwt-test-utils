@@ -6,127 +6,127 @@ import com.google.gwt.user.client.Event;
 
 public class OverrideEvent extends Event {
 
-	private int overrideType;
+  private boolean overrideAltKey;
 
-	private boolean overrideMetaKey;
+  /**
+   * A bit-field, defined by {@link NativeEvent#BUTTON_LEFT},
+   * {@link NativeEvent#BUTTON_MIDDLE}, and {@link NativeEvent#BUTTON_RIGHT}
+   */
+  private int overrideButton;
 
-	private boolean overrideCtrlKey;
+  private boolean overrideCtrlKey;
 
-	private boolean overrideShiftKey;
+  private int overrideKeyCode;
 
-	private boolean overrideAltKey;
+  private boolean overrideMetaKey;
 
-	private int overrideKeyCode;
+  private boolean overrideShiftKey;
 
-	private boolean preventDefault;
+  private Element overrideTargetElement;
 
-	/**
-	 * A bit-field, defined by {@link NativeEvent#BUTTON_LEFT},
-	 * {@link NativeEvent#BUTTON_MIDDLE}, and {@link NativeEvent#BUTTON_RIGHT}
-	 */
-	private int overrideButton;
+  private int overrideType;
 
-	private Element overrideTargetElement;
+  private boolean preventDefault;
 
-	public OverrideEvent(int type) {
-		this(type, NativeEvent.BUTTON_LEFT);
-	}
+  public OverrideEvent(int type) {
+    this(type, NativeEvent.BUTTON_LEFT);
+  }
 
-	protected OverrideEvent(int type, int button) {
-		this.overrideType = type;
-		this.overrideButton = button;
-		this.overrideMetaKey = false;
-		this.overrideCtrlKey = false;
-		this.overrideShiftKey = false;
-		this.overrideAltKey = false;
-		this.overrideKeyCode = 0;
-	}
+  protected OverrideEvent(int type, Element targetElement) {
+    this.overrideTargetElement = targetElement;
+    this.overrideType = type;
+    this.overrideMetaKey = false;
+    this.overrideCtrlKey = false;
+    this.overrideShiftKey = false;
+    this.overrideAltKey = false;
+    this.overrideKeyCode = 0;
+  }
 
-	protected OverrideEvent(int type, Element targetElement) {
-		this.overrideTargetElement = targetElement;
-		this.overrideType = type;
-		this.overrideMetaKey = false;
-		this.overrideCtrlKey = false;
-		this.overrideShiftKey = false;
-		this.overrideAltKey = false;
-		this.overrideKeyCode = 0;
-	}
+  protected OverrideEvent(int type, int button) {
+    this.overrideType = type;
+    this.overrideButton = button;
+    this.overrideMetaKey = false;
+    this.overrideCtrlKey = false;
+    this.overrideShiftKey = false;
+    this.overrideAltKey = false;
+    this.overrideKeyCode = 0;
+  }
 
-	public int getOverrideType() {
-		return overrideType;
-	}
+  public int getOverrideButton() {
+    return overrideButton;
+  }
 
-	public OverrideEvent setOverrideType(int overrideType) {
-		this.overrideType = overrideType;
-		return this;
-	}
+  public int getOverrideKeyCode() {
+    return overrideKeyCode;
+  }
 
-	public boolean isOverrideMetaKey() {
-		return overrideMetaKey;
-	}
+  public Element getOverrideTargetElement() {
+    return overrideTargetElement;
+  }
 
-	public OverrideEvent setOverrideMetaKey(boolean overrideMetaKey) {
-		this.overrideMetaKey = overrideMetaKey;
-		return this;
-	}
+  public int getOverrideType() {
+    return overrideType;
+  }
 
-	public boolean isOverrideCtrlKey() {
-		return overrideCtrlKey;
-	}
+  public boolean isOverrideAltKey() {
+    return overrideAltKey;
+  }
 
-	public OverrideEvent setOverrideCtrlKey(boolean overrideCtrlKey) {
-		this.overrideCtrlKey = overrideCtrlKey;
-		return this;
-	}
+  public boolean isOverrideCtrlKey() {
+    return overrideCtrlKey;
+  }
 
-	public boolean isOverrideShiftKey() {
-		return overrideShiftKey;
-	}
+  public boolean isOverrideMetaKey() {
+    return overrideMetaKey;
+  }
 
-	public OverrideEvent setOverrideShiftKey(boolean overrideShiftKey) {
-		this.overrideShiftKey = overrideShiftKey;
-		return this;
-	}
+  public boolean isOverrideShiftKey() {
+    return overrideShiftKey;
+  }
 
-	public boolean isOverrideAltKey() {
-		return overrideAltKey;
-	}
+  public boolean isPreventDefault() {
+    return preventDefault;
+  }
 
-	public OverrideEvent setOverrideAltKey(boolean overrideAltKey) {
-		this.overrideAltKey = overrideAltKey;
-		return this;
-	}
+  public OverrideEvent setOverrideAltKey(boolean overrideAltKey) {
+    this.overrideAltKey = overrideAltKey;
+    return this;
+  }
 
-	public int getOverrideKeyCode() {
-		return overrideKeyCode;
-	}
+  public void setOverrideButton(int overrideButton) {
+    this.overrideButton = overrideButton;
+  }
 
-	public OverrideEvent setOverrideKeyCode(int overrideKeyCode) {
-		this.overrideKeyCode = overrideKeyCode;
-		return this;
-	}
+  public OverrideEvent setOverrideCtrlKey(boolean overrideCtrlKey) {
+    this.overrideCtrlKey = overrideCtrlKey;
+    return this;
+  }
 
-	public Element getOverrideTargetElement() {
-		return overrideTargetElement;
-	}
+  public OverrideEvent setOverrideKeyCode(int overrideKeyCode) {
+    this.overrideKeyCode = overrideKeyCode;
+    return this;
+  }
 
-	public void setOverrideTargetElement(Element overrideTargetElement) {
-		this.overrideTargetElement = overrideTargetElement;
-	}
+  public OverrideEvent setOverrideMetaKey(boolean overrideMetaKey) {
+    this.overrideMetaKey = overrideMetaKey;
+    return this;
+  }
 
-	public int getOverrideButton() {
-		return overrideButton;
-	}
+  public OverrideEvent setOverrideShiftKey(boolean overrideShiftKey) {
+    this.overrideShiftKey = overrideShiftKey;
+    return this;
+  }
 
-	public void setOverrideButton(int overrideButton) {
-		this.overrideButton = overrideButton;
-	}
+  public void setOverrideTargetElement(Element overrideTargetElement) {
+    this.overrideTargetElement = overrideTargetElement;
+  }
 
-	public boolean isPreventDefault() {
-		return preventDefault;
-	}
+  public OverrideEvent setOverrideType(int overrideType) {
+    this.overrideType = overrideType;
+    return this;
+  }
 
-	public void setPreventDefault(boolean preventDefault) {
-		this.preventDefault = preventDefault;
-	}
+  public void setPreventDefault(boolean preventDefault) {
+    this.preventDefault = preventDefault;
+  }
 }

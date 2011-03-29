@@ -11,14 +11,14 @@ import com.octo.gwt.test.patchers.PatchMethod;
 @PatchClass(DeferredCommand.class)
 public class DeferredCommandPatcher extends AutomaticPatcher {
 
-	@PatchMethod
-	public static void addCommand(Command command) {
-		command.execute();
-	}
+  @PatchMethod
+  public static void addCommand(Command command) {
+    command.execute();
+  }
 
-	@PatchMethod
-	public static void addCommand(IncrementalCommand command) {
-		command.execute();
-	}
+  @PatchMethod
+  public static void addCommand(IncrementalCommand command) {
+    command.execute();
+  }
 
 }

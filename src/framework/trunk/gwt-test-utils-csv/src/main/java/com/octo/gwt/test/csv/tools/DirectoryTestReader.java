@@ -27,127 +27,140 @@ import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 public class DirectoryTestReader {
 
-	private Class<?> generatedClazz;
+  private static <T> T getAnnotation(Class<?> clazz, Class<T> annotationClass) {
+    T annotation = GwtReflectionUtils.getAnnotation(clazz, annotationClass);
+    if (annotation == null) {
+      throw new RuntimeException("Missing annotation \'@"
+          + annotationClass.getSimpleName() + "\' on class ["
+          + clazz.getCanonicalName() + "]");
+    }
 
-	private Map<String, List<List<String>>> tests;
+    return annotation;
+  }
 
-	private Map<String, List<List<String>>> macros;
+  private static File getDirectory(String path) throws IOException {
+    File directory = new File(path);
+    if (!directory.exists()) {
+      throw new FileNotFoundException("Directory [" + path + "] does not exist");
+    } else if (!directory.isDirectory()) {
+      throw new IOException("A directory was expected for path [" + path
+          + "] but a file has been found");
+    }
 
-	private List<Method> testMethods;
+    return directory;
+  }
 
-	public DirectoryTestReader(Class<?> clazz) {
-		try {
-			CsvDirectory csvDirectoryAnnotation = getAnnotation(clazz, CsvDirectory.class);
-			CsvMacros csvMacrosAnnotation = getAnnotation(clazz, CsvMacros.class);
+  private Class<?> generatedClazz;
 
-			initCsvTests(csvDirectoryAnnotation);
-			initCsvMacros(csvMacrosAnnotation);
-			initTestMethods(clazz, csvDirectoryAnnotation);
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
+  private Map<String, List<List<String>>> macros;
 
-	private void initCsvTests(CsvDirectory csvDirectory) throws FileNotFoundException, IOException {
-		File directory = getDirectory(csvDirectory.value());
+  private List<Method> testMethods;
 
-		testMethods = new ArrayList<Method>();
+  private Map<String, List<List<String>>> tests;
 
-		tests = new HashMap<String, List<List<String>>>();
-		for (File f : directory.listFiles()) {
-			if (f.getName().endsWith(csvDirectory.extension())) {
-				String s = f.getName();
-				s = s.substring(0, s.length() - 4);
-				tests.put(s, CsvReader.readCsv(new FileReader(f)));
-			}
-		}
-	}
+  public DirectoryTestReader(Class<?> clazz) {
+    try {
+      CsvDirectory csvDirectoryAnnotation = getAnnotation(clazz,
+          CsvDirectory.class);
+      CsvMacros csvMacrosAnnotation = getAnnotation(clazz, CsvMacros.class);
 
-	private void initCsvMacros(CsvMacros csvMacros) throws FileNotFoundException, IOException {
-		Pattern macroNamePattern = (csvMacros.pattern() != null) ? Pattern.compile(csvMacros.pattern()) : null;
-		File macrosDirectory = getDirectory(csvMacros.value());
+      initCsvTests(csvDirectoryAnnotation);
+      initCsvMacros(csvMacrosAnnotation);
+      initTestMethods(clazz, csvDirectoryAnnotation);
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+  }
 
-		macros = new HashMap<String, List<List<String>>>();
-		for (File file : macrosDirectory.listFiles()) {
-			String fileName = file.getName();
-			if (macroNamePattern == null || macroNamePattern.matcher(file.getName()).matches()) {
-				FileReader reader = new FileReader(file);
-				List<List<String>> sheet = CsvReader.readCsv(reader);
-				macros.put(fileName, sheet);
-			}
-		}
-	}
+  public Object createObject() throws InstantiationException,
+      IllegalAccessException {
+    return generatedClazz.newInstance();
+  }
 
-	private void initTestMethods(Class<?> clazz, CsvDirectory csvDirectory) throws Exception {
-		testMethods = new ArrayList<Method>();
-		String csvShortName = csvDirectory.value().substring(csvDirectory.value().lastIndexOf('/') + 1);
+  public List<List<String>> getMacroFile(String macroName) {
+    return macros.get(macroName);
+  }
 
-		CtClass newClazz = GwtClassPool.get().makeClass(clazz.getName() + ".generated" + System.nanoTime());
-		newClazz.setSuperclass(GwtClassPool.getCtClass(clazz));
-		List<String> methodList = new ArrayList<String>();
-		for (Entry<String, List<List<String>>> entry : tests.entrySet()) {
-			String methodName = csvShortName + "_" + entry.getKey();
-			CtMethod m = new CtMethod(CtClass.voidType, methodName, new CtClass[0], newClazz);
-			methodList.add(methodName);
-			m.setBody("launchTest(\"" + entry.getKey() + "\");");
-			newClazz.addMethod(m);
-		}
-		generatedClazz = newClazz.toClass(GwtClassLoader.get(), null);
-		for (String methodName : methodList) {
-			Method m = generatedClazz.getMethod(methodName);
-			testMethods.add(m);
-		}
-	}
+  public Set<String> getMacroFileList() {
+    return Collections.unmodifiableSet(macros.keySet());
+  }
 
-	private static <T> T getAnnotation(Class<?> clazz, Class<T> annotationClass) {
-		T annotation = GwtReflectionUtils.getAnnotation(clazz, annotationClass);
-		if (annotation == null) {
-			throw new RuntimeException("Missing annotation \'@" + annotationClass.getSimpleName() + "\' on class [" + clazz.getCanonicalName() + "]");
-		}
+  public List<List<String>> getTest(String testName) {
+    return tests.get(testName);
+  }
 
-		return annotation;
-	}
+  public Set<String> getTestList() {
+    return Collections.unmodifiableSet(tests.keySet());
+  }
 
-	private static File getDirectory(String path) throws IOException {
-		File directory = new File(path);
-		if (!directory.exists()) {
-			throw new FileNotFoundException("Directory [" + path + "] does not exist");
-		} else if (!directory.isDirectory()) {
-			throw new IOException("A directory was expected for path [" + path + "] but a file has been found");
-		}
+  public List<Method> getTestMethods() {
+    Collections.sort(testMethods, new Comparator<Method>() {
 
-		return directory;
-	}
+      public int compare(Method o1, Method o2) {
+        return o1.getName().compareTo(o2.getName());
+      }
+    });
 
-	public List<Method> getTestMethods() {
-		Collections.sort(testMethods, new Comparator<Method>() {
+    return testMethods;
+  }
 
-			public int compare(Method o1, Method o2) {
-				return o1.getName().compareTo(o2.getName());
-			}
-		});
+  private void initCsvMacros(CsvMacros csvMacros) throws FileNotFoundException,
+      IOException {
+    Pattern macroNamePattern = (csvMacros.pattern() != null)
+        ? Pattern.compile(csvMacros.pattern()) : null;
+    File macrosDirectory = getDirectory(csvMacros.value());
 
-		return testMethods;
-	}
+    macros = new HashMap<String, List<List<String>>>();
+    for (File file : macrosDirectory.listFiles()) {
+      String fileName = file.getName();
+      if (macroNamePattern == null
+          || macroNamePattern.matcher(file.getName()).matches()) {
+        FileReader reader = new FileReader(file);
+        List<List<String>> sheet = CsvReader.readCsv(reader);
+        macros.put(fileName, sheet);
+      }
+    }
+  }
 
-	public Set<String> getTestList() {
-		return Collections.unmodifiableSet(tests.keySet());
-	}
+  private void initCsvTests(CsvDirectory csvDirectory)
+      throws FileNotFoundException, IOException {
+    File directory = getDirectory(csvDirectory.value());
 
-	public Set<String> getMacroFileList() {
-		return Collections.unmodifiableSet(macros.keySet());
-	}
+    testMethods = new ArrayList<Method>();
 
-	public List<List<String>> getTest(String testName) {
-		return tests.get(testName);
-	}
+    tests = new HashMap<String, List<List<String>>>();
+    for (File f : directory.listFiles()) {
+      if (f.getName().endsWith(csvDirectory.extension())) {
+        String s = f.getName();
+        s = s.substring(0, s.length() - 4);
+        tests.put(s, CsvReader.readCsv(new FileReader(f)));
+      }
+    }
+  }
 
-	public List<List<String>> getMacroFile(String macroName) {
-		return macros.get(macroName);
-	}
+  private void initTestMethods(Class<?> clazz, CsvDirectory csvDirectory)
+      throws Exception {
+    testMethods = new ArrayList<Method>();
+    String csvShortName = csvDirectory.value().substring(
+        csvDirectory.value().lastIndexOf('/') + 1);
 
-	public Object createObject() throws InstantiationException, IllegalAccessException {
-		return generatedClazz.newInstance();
-	}
+    CtClass newClazz = GwtClassPool.get().makeClass(
+        clazz.getName() + ".generated" + System.nanoTime());
+    newClazz.setSuperclass(GwtClassPool.getCtClass(clazz));
+    List<String> methodList = new ArrayList<String>();
+    for (Entry<String, List<List<String>>> entry : tests.entrySet()) {
+      String methodName = csvShortName + "_" + entry.getKey();
+      CtMethod m = new CtMethod(CtClass.voidType, methodName, new CtClass[0],
+          newClazz);
+      methodList.add(methodName);
+      m.setBody("launchTest(\"" + entry.getKey() + "\");");
+      newClazz.addMethod(m);
+    }
+    generatedClazz = newClazz.toClass(GwtClassLoader.get(), null);
+    for (String methodName : methodList) {
+      Method m = generatedClazz.getMethod(methodName);
+      testMethods.add(m);
+    }
+  }
 
 }

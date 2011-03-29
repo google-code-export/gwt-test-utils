@@ -19,48 +19,51 @@ import com.octo.gwt.test.patchers.PatchMethod;
 @PatchClass(Image.class)
 public class ImagePatcher extends AutomaticPatcher {
 
-	private static final Pattern PATTERN = Pattern.compile("^(\\d+).*$");
+  private static final Pattern PATTERN = Pattern.compile("^(\\d+).*$");
 
-	@Override
-	public void initClass(CtClass c) throws Exception {
-		super.initClass(c);
+  public static int getDim(Image image, String dim) {
+    ImageElement elem = image.getElement().cast();
+    String width = elem.getStyle().getProperty(dim);
+    if (width == null)
+      return 0;
+    Matcher m = PATTERN.matcher(width);
+    if (m.matches()) {
+      return Integer.parseInt(m.group(1));
+    }
+    return 0;
+  }
 
-		List<CtConstructor> constructors = getConstructorsToModify(c);
+  @PatchMethod
+  public static int getHeight(Image image) {
+    return getDim(image, "height");
+  }
 
-		for (CtConstructor cons : constructors) {
-			cons.insertBeforeBody("setElement(" + Document.class.getName() + ".get().createImageElement());");
-		}
-	}
+  @PatchMethod
+  public static int getWidth(Image image) {
+    return getDim(image, "width");
+  }
 
-	private List<CtConstructor> getConstructorsToModify(CtClass c) throws NotFoundException {
-		List<CtConstructor> result = new ArrayList<CtConstructor>();
-		result.add(findConstructor(c));
-		result.add(findConstructor(c, String.class));
-		result.add(findConstructor(c, String.class, Integer.TYPE, Integer.TYPE, Integer.TYPE, Integer.TYPE));
+  @Override
+  public void initClass(CtClass c) throws Exception {
+    super.initClass(c);
 
-		return result;
-	}
+    List<CtConstructor> constructors = getConstructorsToModify(c);
 
-	@PatchMethod
-	public static int getWidth(Image image) {
-		return getDim(image, "width");
-	}
+    for (CtConstructor cons : constructors) {
+      cons.insertBeforeBody("setElement(" + Document.class.getName()
+          + ".get().createImageElement());");
+    }
+  }
 
-	@PatchMethod
-	public static int getHeight(Image image) {
-		return getDim(image, "height");
-	}
+  private List<CtConstructor> getConstructorsToModify(CtClass c)
+      throws NotFoundException {
+    List<CtConstructor> result = new ArrayList<CtConstructor>();
+    result.add(findConstructor(c));
+    result.add(findConstructor(c, String.class));
+    result.add(findConstructor(c, String.class, Integer.TYPE, Integer.TYPE,
+        Integer.TYPE, Integer.TYPE));
 
-	public static int getDim(Image image, String dim) {
-		ImageElement elem = image.getElement().cast();
-		String width = elem.getStyle().getProperty(dim);
-		if (width == null)
-			return 0;
-		Matcher m = PATTERN.matcher(width);
-		if (m.matches()) {
-			return Integer.parseInt(m.group(1));
-		}
-		return 0;
-	}
+    return result;
+  }
 
 }

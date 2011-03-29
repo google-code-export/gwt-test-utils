@@ -9,84 +9,84 @@ import com.octo.gwt.test.GwtTest;
 
 public class ElTest extends GwtTest {
 
-	@Test
-	public void checkAddUnitsComplete() {
-		// Test
-		String result = El.addUnits("350em", "%");
+  @Test
+  public void checkAddUnitsAuto() {
+    // Test
+    String result = El.addUnits("auto", "px");
 
-		//Assert
-		Assert.assertEquals("350em", result);
-	}
+    // Assert
+    Assert.assertEquals("auto", result);
+  }
 
-	@Test
-	public void checkAddUnitsWithWhitespaces() {
-		// Test
-		String result = El.addUnits(" 350 em ", "pt");
+  @Test
+  public void checkAddUnitsComplete() {
+    // Test
+    String result = El.addUnits("350em", "%");
 
-		//Assert
-		Assert.assertEquals("350em", result);
-	}
+    // Assert
+    Assert.assertEquals("350em", result);
+  }
 
-	@Test
-	public void checkAddUnitsAuto() {
-		// Test
-		String result = El.addUnits("auto", "px");
+  @Test
+  public void checkAddUnitsEmpty() {
+    // Test
+    String result = El.addUnits("", "px");
 
-		//Assert
-		Assert.assertEquals("auto", result);
-	}
+    // Assert
+    Assert.assertEquals("", result);
+  }
 
-	@Test
-	public void checkAddUnitsNull() {
-		// Test
-		String result = El.addUnits(null, "px");
+  @Test
+  public void checkAddUnitsNoUnit() {
+    // Test
+    String result = El.addUnits("200", "em");
 
-		//Assert
-		Assert.assertEquals("", result);
-	}
+    // Assert
+    Assert.assertEquals("200em", result);
+  }
 
-	@Test
-	public void checkAddUnitsEmpty() {
-		// Test
-		String result = El.addUnits("", "px");
+  @Test
+  public void checkAddUnitsNoUnitAndEmptyDefault() {
+    // Test
+    String result = El.addUnits("250", "");
 
-		//Assert
-		Assert.assertEquals("", result);
-	}
+    // Assert
+    Assert.assertEquals("250px", result);
+  }
 
-	@Test
-	public void checkAddUnitsUndefined() {
-		// Test
-		String result = El.addUnits("undefined", "px");
+  @Test
+  public void checkAddUnitsNoUnitAndNoDefault() {
+    // Test
+    String result = El.addUnits("250", null);
 
-		//Assert
-		Assert.assertEquals("", result);
-	}
+    // Assert
+    Assert.assertEquals("250px", result);
+  }
 
-	@Test
-	public void checkAddUnitsNoUnit() {
-		// Test
-		String result = El.addUnits("200", "em");
+  @Test
+  public void checkAddUnitsNull() {
+    // Test
+    String result = El.addUnits(null, "px");
 
-		//Assert
-		Assert.assertEquals("200em", result);
-	}
+    // Assert
+    Assert.assertEquals("", result);
+  }
 
-	@Test
-	public void checkAddUnitsNoUnitAndNoDefault() {
-		// Test
-		String result = El.addUnits("250", null);
+  @Test
+  public void checkAddUnitsUndefined() {
+    // Test
+    String result = El.addUnits("undefined", "px");
 
-		//Assert
-		Assert.assertEquals("250px", result);
-	}
+    // Assert
+    Assert.assertEquals("", result);
+  }
 
-	@Test
-	public void checkAddUnitsNoUnitAndEmptyDefault() {
-		// Test
-		String result = El.addUnits("250", "");
+  @Test
+  public void checkAddUnitsWithWhitespaces() {
+    // Test
+    String result = El.addUnits(" 350 em ", "pt");
 
-		//Assert
-		Assert.assertEquals("250px", result);
-	}
+    // Assert
+    Assert.assertEquals("350em", result);
+  }
 }

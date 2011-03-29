@@ -11,17 +11,17 @@ import com.octo.gwt.test.GwtTest;
 
 public class BRElementTest extends GwtTest {
 
-	private BRElement b;
+  private BRElement b;
 
-	@Before
-	public void initDocument() {
-		b = Document.get().createBRElement();
-	}
+  @Test
+  public void checkAs() {
+    BRElement asElement = BRElement.as(b);
+    Assert.assertEquals(b, asElement);
+  }
 
-	@Test
-	public void checkAs() {
-		BRElement asElement = BRElement.as(b);
-		Assert.assertEquals(b, asElement);
-	}
+  @Before
+  public void initDocument() {
+    b = Document.get().createBRElement();
+  }
 
 }

@@ -11,39 +11,39 @@ import com.google.gwt.user.client.ui.impl.FocusImpl;
 
 public class FocusImplTest extends GwtTest {
 
-	private FocusImpl focusImpl = FocusImpl.getFocusImplForWidget();
-	private Element e;
+  private Element e;
+  private FocusImpl focusImpl = FocusImpl.getFocusImplForWidget();
 
-	@Before
-	public void setUpFocusImplTest() {
-		e = Document.get().createAnchorElement().cast();
-	}
+  @Test
+  public void checkBlur() {
+    // just check blur(element) does not throw any exception
+    focusImpl.blur(e);
+  }
 
-	@Test
-	public void checkBlur() {
-		// just check blur(element) does not throw any exception
-		focusImpl.blur(e);
-	}
+  @Test
+  public void checkCreateFocusable() {
+    // Test
+    Element elem = focusImpl.createFocusable();
 
-	@Test
-	public void checkFocus() {
-		// just check focus(element) does not throw any exception
-		focusImpl.focus(e);
-	}
+    // Assert
+    Assert.assertEquals("div", elem.getTagName());
+  }
 
-	@Test
-	public void checkTabIndex() {
-		focusImpl.setTabIndex(e, 3);
-		Assert.assertEquals(3, focusImpl.getTabIndex(e));
-	}
+  @Test
+  public void checkFocus() {
+    // just check focus(element) does not throw any exception
+    focusImpl.focus(e);
+  }
 
-	@Test
-	public void checkCreateFocusable() {
-		// Test
-		Element elem = focusImpl.createFocusable();
+  @Test
+  public void checkTabIndex() {
+    focusImpl.setTabIndex(e, 3);
+    Assert.assertEquals(3, focusImpl.getTabIndex(e));
+  }
 
-		// Assert
-		Assert.assertEquals("div", elem.getTagName());
-	}
+  @Before
+  public void setUpFocusImplTest() {
+    e = Document.get().createAnchorElement().cast();
+  }
 
 }

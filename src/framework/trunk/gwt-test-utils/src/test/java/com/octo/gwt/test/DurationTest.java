@@ -7,10 +7,11 @@ import com.google.gwt.core.client.Duration;
 
 public class DurationTest extends GwtTest {
 
-	@Test
-	public void checkCurrentTimeMillis() {
+  @Test
+  public void checkCurrentTimeMillis() {
 
-		Assert.assertTrue("Duration should be greater than 0", Duration.currentTimeMillis() > 0);
-	}
+    Assert.assertTrue("Duration should be greater than 0",
+        Duration.currentTimeMillis() > 0);
+  }
 
 }

@@ -16,38 +16,38 @@ import com.octo.gwt.test.patchers.PatchMethod;
 @PatchClass(TableRowElement.class)
 public class TableRowElementPatcher extends AutomaticPropertyContainerPatcher {
 
-	@PatchMethod
-	public static int getSectionRowIndex(TableRowElement element) {
-		if (element == null) {
-			return -1;
-		}
-		Element parent = element.getParentElement();
-		if (parent == null) {
-			return -1;
-		}
+  @PatchMethod
+  public static NodeList<TableCellElement> getCells(TableRowElement element) {
+    List<TableCellElement> cells = new ArrayList<TableCellElement>();
 
-		for (int i = 0; i < parent.getChildNodes().getLength(); i++) {
-			if (element.equals(parent.getChildNodes().getItem(i))) {
-				return i;
-			}
-		}
+    for (int i = 0; i < element.getChildCount(); i++) {
+      Node child = element.getChild(i);
+      if (TableCellElement.class.isInstance(child)) {
+        cells.add((TableCellElement) child);
+      }
+    }
 
-		return -1;
+    return new OverrideNodeList<TableCellElement>(cells);
+  }
 
-	}
+  @PatchMethod
+  public static int getSectionRowIndex(TableRowElement element) {
+    if (element == null) {
+      return -1;
+    }
+    Element parent = element.getParentElement();
+    if (parent == null) {
+      return -1;
+    }
 
-	@PatchMethod
-	public static NodeList<TableCellElement> getCells(TableRowElement element) {
-		List<TableCellElement> cells = new ArrayList<TableCellElement>();
+    for (int i = 0; i < parent.getChildNodes().getLength(); i++) {
+      if (element.equals(parent.getChildNodes().getItem(i))) {
+        return i;
+      }
+    }
 
-		for (int i = 0; i < element.getChildCount(); i++) {
-			Node child = element.getChild(i);
-			if (TableCellElement.class.isInstance(child)) {
-				cells.add((TableCellElement) child);
-			}
-		}
+    return -1;
 
-		return new OverrideNodeList<TableCellElement>(cells);
-	}
+  }
 
 }

@@ -13,26 +13,28 @@ import com.octo.gwt.test.patchers.PatchMethod.Type;
 @PatchClass(InputElement.class)
 public class InputElementPatcher extends AutomaticPropertyContainerPatcher {
 
-	@PatchMethod
-	public static void click(InputElement inputElement) {
+  @PatchMethod
+  public static void click(InputElement inputElement) {
 
-	}
+  }
 
-	@PatchMethod
-	public static void select(InputElement inputElement) {
+  @PatchMethod
+  public static String getValue(InputElement inputElement) {
+    PropertyContainer attributes = PropertyContainerUtils.getProperty(
+        inputElement, ElementPatcher.PROPERTY_MAP_FIELD);
+    String value = (String) attributes.get("value");
+    return (value != null) ? value : "";
+  }
 
-	}
+  @PatchMethod
+  public static void select(InputElement inputElement) {
 
-	@PatchMethod(type = Type.NEW_CODE_AS_STRING)
-	public static String useMap() {
-		return PropertyContainerUtils.getCodeGetProperty("this", "UserMap", CtClass.booleanType);
-	}
+  }
 
-	@PatchMethod
-	public static String getValue(InputElement inputElement) {
-		PropertyContainer attributes = PropertyContainerUtils.getProperty(inputElement, ElementPatcher.PROPERTY_MAP_FIELD);
-		String value = (String) attributes.get("value");
-		return (value != null) ? value : "";
-	}
+  @PatchMethod(type = Type.NEW_CODE_AS_STRING)
+  public static String useMap() {
+    return PropertyContainerUtils.getCodeGetProperty("this", "UserMap",
+        CtClass.booleanType);
+  }
 
 }

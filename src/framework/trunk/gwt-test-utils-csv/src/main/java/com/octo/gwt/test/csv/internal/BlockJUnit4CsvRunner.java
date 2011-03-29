@@ -14,30 +14,32 @@ import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 public class BlockJUnit4CsvRunner extends BlockJUnit4ClassRunner {
 
-	private DirectoryTestReader reader;
+  private DirectoryTestReader reader;
 
-	public BlockJUnit4CsvRunner(Class<?> clazz) throws InitializationError, ClassNotFoundException {
-		super(GwtClassLoader.get().loadClass(clazz.getName()));
-	}
+  public BlockJUnit4CsvRunner(Class<?> clazz) throws InitializationError,
+      ClassNotFoundException {
+    super(GwtClassLoader.get().loadClass(clazz.getName()));
+  }
 
-	@Override
-	protected List<FrameworkMethod> computeTestMethods() {
-		if (reader == null) {
-			reader = new DirectoryTestReader(getTestClass().getJavaClass());
-		}
-		List<FrameworkMethod> frameworkMethods = new ArrayList<FrameworkMethod>();
-		for (Method m : reader.getTestMethods()) {
-			frameworkMethods.add(new FrameworkMethod(m));
-		}
-		return frameworkMethods;
-	}
+  @Override
+  protected List<FrameworkMethod> computeTestMethods() {
+    if (reader == null) {
+      reader = new DirectoryTestReader(getTestClass().getJavaClass());
+    }
+    List<FrameworkMethod> frameworkMethods = new ArrayList<FrameworkMethod>();
+    for (Method m : reader.getTestMethods()) {
+      frameworkMethods.add(new FrameworkMethod(m));
+    }
+    return frameworkMethods;
+  }
 
-	@Override
-	protected Object createTest() throws Exception {
-		Object testInstance = reader.createObject();
-		Method m = GwtReflectionUtils.findMethod(testInstance.getClass(), "setReader");
-		m.invoke(testInstance, reader);
-		return testInstance;
-	}
+  @Override
+  protected Object createTest() throws Exception {
+    Object testInstance = reader.createObject();
+    Method m = GwtReflectionUtils.findMethod(testInstance.getClass(),
+        "setReader");
+    m.invoke(testInstance, reader);
+    return testInstance;
+  }
 
 }

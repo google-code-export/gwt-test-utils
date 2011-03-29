@@ -10,17 +10,17 @@ import com.octo.gwt.test.patchers.PatchClass;
 @PatchClass(PopupPanel.class)
 public class PopupPanelPatcher extends AutomaticPatcher {
 
-	@Override
-	public void initClass(CtClass c) throws Exception {
-		super.initClass(c);
-		CtConstructor cons = findConstructor(c);
+  @Override
+  public void initClass(CtClass c) throws Exception {
+    super.initClass(c);
+    CtConstructor cons = findConstructor(c);
 
-		cons.insertAfter("getElement().getStyle().setProperty(\"visibility\", \"hidden\");");
-	}
-	//
-	//	@PatchMethod
-	//	public static Element getStyleElement(PopupPanel panel) {
-	//		return ElementUtils.castToUserElement(panel.getElement());
-	//	}
+    cons.insertAfter("getElement().getStyle().setProperty(\"visibility\", \"hidden\");");
+  }
+  //
+  // @PatchMethod
+  // public static Element getStyleElement(PopupPanel panel) {
+  // return ElementUtils.castToUserElement(panel.getElement());
+  // }
 
 }

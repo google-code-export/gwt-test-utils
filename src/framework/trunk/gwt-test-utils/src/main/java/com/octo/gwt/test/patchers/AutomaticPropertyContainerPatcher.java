@@ -56,56 +56,68 @@ import com.octo.gwt.test.internal.utils.PropertyContainerUtils;
  * @author Gael Lazzari
  * 
  */
-@PatchClass({ Text.class, AnchorElement.class, AreaElement.class, BaseElement.class, BodyElement.class, BRElement.class, ButtonElement.class,
-		DivElement.class, DListElement.class, FieldSetElement.class, FrameElement.class, FrameSetElement.class, FormElement.class, HeadElement.class,
-		HRElement.class, IFrameElement.class, ImageElement.class, LIElement.class, LabelElement.class, LegendElement.class, LinkElement.class,
-		MapElement.class, MetaElement.class, ObjectElement.class, OptionElement.class, OListElement.class, OptGroupElement.class,
-		ParagraphElement.class, ParamElement.class, PreElement.class, ScriptElement.class, StyleElement.class, SpanElement.class,
-		TableCaptionElement.class, TableElement.class, TextAreaElement.class, TitleElement.class, UListElement.class })
+@PatchClass({
+    Text.class, AnchorElement.class, AreaElement.class, BaseElement.class,
+    BodyElement.class, BRElement.class, ButtonElement.class, DivElement.class,
+    DListElement.class, FieldSetElement.class, FrameElement.class,
+    FrameSetElement.class, FormElement.class, HeadElement.class,
+    HRElement.class, IFrameElement.class, ImageElement.class, LIElement.class,
+    LabelElement.class, LegendElement.class, LinkElement.class,
+    MapElement.class, MetaElement.class, ObjectElement.class,
+    OptionElement.class, OListElement.class, OptGroupElement.class,
+    ParagraphElement.class, ParamElement.class, PreElement.class,
+    ScriptElement.class, StyleElement.class, SpanElement.class,
+    TableCaptionElement.class, TableElement.class, TextAreaElement.class,
+    TitleElement.class, UListElement.class})
 public class AutomaticPropertyContainerPatcher extends AutomaticPatcher {
 
-	private static final String PROPERTIES = "__PROPERTIES__";
+  private static final String PROPERTIES = "__PROPERTIES__";
 
-	@Override
-	public void initClass(CtClass c) throws Exception {
-		super.initClass(c);
+  public String getNewBody(CtMethod m) throws Exception {
+    String superNewBody = super.getNewBody(m);
+    if (superNewBody != null) {
+      return superNewBody;
+    }
+    if (Modifier.isNative(m.getModifiers())) {
+      String fieldName = GwtPatcherUtils.getPropertyName(m);
+      if (fieldName != null) {
+        if (m.getName().startsWith("set")) {
+          return PropertyContainerUtils.getCodeSetProperty("this", fieldName,
+              "$1");
+        } else {
+          return "return "
+              + PropertyContainerUtils.getCodeGetProperty("this", fieldName,
+                  m.getReturnType());
+        }
+      }
+    }
+    return null;
+  }
 
-		CtClass pcType = GwtClassPool.getCtClass(PropertyContainer.class);
-		CtField field = new CtField(pcType, PROPERTIES, c);
-		field.setModifiers(Modifier.PRIVATE);
-		c.addField(field);
+  @Override
+  public void initClass(CtClass c) throws Exception {
+    super.initClass(c);
 
-		c.addInterface(GwtClassPool.getCtClass(PropertyContainerAware.class));
+    CtClass pcType = GwtClassPool.getCtClass(PropertyContainer.class);
+    CtField field = new CtField(pcType, PROPERTIES, c);
+    field.setModifiers(Modifier.PRIVATE);
+    c.addField(field);
 
-		CtMethod getProperties = new CtMethod(pcType, "getProperties", new CtClass[] {}, c);
-		StringBuffer stringBuffer = new StringBuffer();
-		stringBuffer.append("{");
-		stringBuffer.append("if (" + PROPERTIES + " == null) {");
-		stringBuffer.append(PROPERTIES + " = " + PropertyContainerUtils.getConstructionCode() + ";");
-		stringBuffer.append("}");
-		stringBuffer.append("return " + PROPERTIES + ";");
-		stringBuffer.append("}");
-		getProperties.setBody(stringBuffer.toString());
-		c.addMethod(getProperties);
+    c.addInterface(GwtClassPool.getCtClass(PropertyContainerAware.class));
 
-	}
+    CtMethod getProperties = new CtMethod(pcType, "getProperties",
+        new CtClass[]{}, c);
+    StringBuffer stringBuffer = new StringBuffer();
+    stringBuffer.append("{");
+    stringBuffer.append("if (" + PROPERTIES + " == null) {");
+    stringBuffer.append(PROPERTIES + " = "
+        + PropertyContainerUtils.getConstructionCode() + ";");
+    stringBuffer.append("}");
+    stringBuffer.append("return " + PROPERTIES + ";");
+    stringBuffer.append("}");
+    getProperties.setBody(stringBuffer.toString());
+    c.addMethod(getProperties);
 
-	public String getNewBody(CtMethod m) throws Exception {
-		String superNewBody = super.getNewBody(m);
-		if (superNewBody != null) {
-			return superNewBody;
-		}
-		if (Modifier.isNative(m.getModifiers())) {
-			String fieldName = GwtPatcherUtils.getPropertyName(m);
-			if (fieldName != null) {
-				if (m.getName().startsWith("set")) {
-					return PropertyContainerUtils.getCodeSetProperty("this", fieldName, "$1");
-				} else {
-					return "return " + PropertyContainerUtils.getCodeGetProperty("this", fieldName, m.getReturnType());
-				}
-			}
-		}
-		return null;
-	}
+  }
 
 }

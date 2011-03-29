@@ -22,139 +22,152 @@ import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 public class SerializableModifier implements JavaClassModifier {
 
-	private static final String DEFAULT_CONS_METHOD_NAME = "DEFAULT_CONS_METHOD";
+  private static final String DEFAULT_CONS_METHOD_NAME = "DEFAULT_CONS_METHOD";
 
-	public void modify(CtClass classToModify) throws Exception {
+  public static void readObject(Serializable ex, ObjectInputStream ois)
+      throws ClassNotFoundException, IOException {
+    try {
+      // call the default read method
+      ois.defaultReadObject();
 
-		if (classToModify.isInterface() || classToModify.isPrimitive() || classToModify.isEnum() || classToModify.isArray()
-				|| classToModify.isAnnotation() || Modifier.isAbstract(classToModify.getModifiers())) {
-			return;
-		}
+      // keep non transient/static/final value somhere
+      Map<Field, Object> buffer = getFieldValues(ex);
 
-		CtClass charSequenceCtClass = GwtClassPool.getCtClass(CharSequence.class);
-		if (classToModify.subtypeOf(charSequenceCtClass)) {
-			return;
-		}
+      // call the exported default constructor to reinitialise triansient field
+      // values
+      // which are not expected to be null
+      GwtReflectionUtils.callPrivateMethod(ex, DEFAULT_CONS_METHOD_NAME);
 
-		// Externalizable object which is not serialized by GWT RPC
-		CtClass externalizableCtClass = GwtClassPool.getCtClass(Externalizable.class);
-		if (classToModify.subtypeOf(externalizableCtClass)) {
-			return;
-		}
+      // set the kept field values
+      for (Map.Entry<Field, Object> entry : buffer.entrySet()) {
+        entry.getKey().set(ex, entry.getValue());
+      }
 
-		CtClass serializableCtClass = GwtClassPool.getCtClass(Serializable.class);
-		if (!classToModify.subtypeOf(serializableCtClass)) {
-			return;
-		}
+    } catch (Exception e) {
+      throw new RuntimeException("Error during deserialization of object "
+          + ex.getClass().getName(), e);
+    }
 
-		if (getReadObjectMethod(classToModify) != null) {
-			// this class should never be serialized by GWT RPC
-			return;
-		}
+  }
 
-		// GWT RPC Serializable objects should have an empty constructor
-		CtConstructor defaultCons = getDefaultConstructor(classToModify);
-		if (defaultCons == null) {
-			return;
-		}
+  private static Map<Field, Object> getFieldValues(Serializable o)
+      throws IllegalArgumentException, IllegalAccessException {
+    Map<Field, Object> result = new HashMap<Field, Object>();
 
-		CtMethod defaultConstMethod = defaultCons.toMethod(DEFAULT_CONS_METHOD_NAME, classToModify);
-		defaultConstMethod.setModifiers(Modifier.PUBLIC);
+    for (Field field : GwtReflectionUtils.getFields(o.getClass())) {
+      int fieldModifier = field.getModifiers();
+      if (!Modifier.isFinal(fieldModifier) && !Modifier.isStatic(fieldModifier)
+          && !Modifier.isTransient(fieldModifier)) {
+        result.put(field, field.get(o));
+      }
+    }
 
-		if (hasDefaultConstMethod(classToModify.getSuperclass())) {
-			defaultConstMethod.insertBefore("super." + DEFAULT_CONS_METHOD_NAME + "();");
-		}
-		classToModify.addMethod(defaultConstMethod);
+    return result;
+  }
 
-		overrideReadObject(classToModify);
-	}
+  public void modify(CtClass classToModify) throws Exception {
 
-	private boolean hasDefaultConstMethod(CtClass ctClass) {
-		try {
-			CtMethod m = ctClass.getMethod(DEFAULT_CONS_METHOD_NAME, Descriptor.ofMethod(CtClass.voidType, new CtClass[0]));
-			return m != null;
-		} catch (NotFoundException e) {
-			return false;
-		}
-	}
+    if (classToModify.isInterface() || classToModify.isPrimitive()
+        || classToModify.isEnum() || classToModify.isArray()
+        || classToModify.isAnnotation()
+        || Modifier.isAbstract(classToModify.getModifiers())) {
+      return;
+    }
 
-	private CtConstructor getDefaultConstructor(CtClass ctClass) {
-		try {
-			return ctClass.getConstructor(Descriptor.ofConstructor(new CtClass[0]));
-		} catch (NotFoundException e) {
-			return null;
-		}
-	}
+    CtClass charSequenceCtClass = GwtClassPool.getCtClass(CharSequence.class);
+    if (classToModify.subtypeOf(charSequenceCtClass)) {
+      return;
+    }
 
-	private CtMethod getReadObjectMethod(CtClass ctClass) {
-		CtClass[] paramTypes = new CtClass[] { GwtClassPool.getCtClass(ObjectInputStream.class) };
-		try {
-			return ctClass.getDeclaredMethod("readObject", paramTypes);
-		} catch (NotFoundException e) {
-			return null;
-		}
+    // Externalizable object which is not serialized by GWT RPC
+    CtClass externalizableCtClass = GwtClassPool.getCtClass(Externalizable.class);
+    if (classToModify.subtypeOf(externalizableCtClass)) {
+      return;
+    }
 
-	}
+    CtClass serializableCtClass = GwtClassPool.getCtClass(Serializable.class);
+    if (!classToModify.subtypeOf(serializableCtClass)) {
+      return;
+    }
 
-	private void overrideReadObject(CtClass classToModify) throws NotFoundException, CannotCompileException {
-		CtClass[] paramTypes = new CtClass[] { GwtClassPool.getCtClass(ObjectInputStream.class) };
-		CtMethod readObjectMethod = new CtMethod(CtClass.voidType, "readObject", paramTypes, classToModify);
-		readObjectMethod.setModifiers(Modifier.PRIVATE);
+    if (getReadObjectMethod(classToModify) != null) {
+      // this class should never be serialized by GWT RPC
+      return;
+    }
 
-		// add exception types
-		CtClass classNotFoundException = GwtClassPool.getCtClass(ClassNotFoundException.class);
-		CtClass ioException = GwtClassPool.getCtClass(IOException.class);
-		readObjectMethod.setExceptionTypes(new CtClass[] { classNotFoundException, ioException });
+    // GWT RPC Serializable objects should have an empty constructor
+    CtConstructor defaultCons = getDefaultConstructor(classToModify);
+    if (defaultCons == null) {
+      return;
+    }
 
-		// set body (call static readObject(Serializable, ObjectInputStream)
-		readObjectMethod.setBody(callStaticReadObject());
+    CtMethod defaultConstMethod = defaultCons.toMethod(
+        DEFAULT_CONS_METHOD_NAME, classToModify);
+    defaultConstMethod.setModifiers(Modifier.PUBLIC);
 
-		classToModify.addMethod(readObjectMethod);
-	}
+    if (hasDefaultConstMethod(classToModify.getSuperclass())) {
+      defaultConstMethod.insertBefore("super." + DEFAULT_CONS_METHOD_NAME
+          + "();");
+    }
+    classToModify.addMethod(defaultConstMethod);
 
-	private String callStaticReadObject() {
-		StringBuilder buffer = new StringBuilder();
-		buffer.append("{");
-		buffer.append(this.getClass().getName() + ".readObject(");
-		buffer.append("(").append(Serializable.class.getName()).append(")");
-		buffer.append(" this, $1);}");
+    overrideReadObject(classToModify);
+  }
 
-		return buffer.toString();
-	}
+  private String callStaticReadObject() {
+    StringBuilder buffer = new StringBuilder();
+    buffer.append("{");
+    buffer.append(this.getClass().getName() + ".readObject(");
+    buffer.append("(").append(Serializable.class.getName()).append(")");
+    buffer.append(" this, $1);}");
 
-	public static void readObject(Serializable ex, ObjectInputStream ois) throws ClassNotFoundException, IOException {
-		try {
-			// call the default read method
-			ois.defaultReadObject();
+    return buffer.toString();
+  }
 
-			// keep non transient/static/final value somhere
-			Map<Field, Object> buffer = getFieldValues(ex);
+  private CtConstructor getDefaultConstructor(CtClass ctClass) {
+    try {
+      return ctClass.getConstructor(Descriptor.ofConstructor(new CtClass[0]));
+    } catch (NotFoundException e) {
+      return null;
+    }
+  }
 
-			// call the exported default constructor to reinitialise triansient field values
-			// which are not expected to be null
-			GwtReflectionUtils.callPrivateMethod(ex, DEFAULT_CONS_METHOD_NAME);
+  private CtMethod getReadObjectMethod(CtClass ctClass) {
+    CtClass[] paramTypes = new CtClass[]{GwtClassPool.getCtClass(ObjectInputStream.class)};
+    try {
+      return ctClass.getDeclaredMethod("readObject", paramTypes);
+    } catch (NotFoundException e) {
+      return null;
+    }
 
-			// set the kept field values
-			for (Map.Entry<Field, Object> entry : buffer.entrySet()) {
-				entry.getKey().set(ex, entry.getValue());
-			}
+  }
 
-		} catch (Exception e) {
-			throw new RuntimeException("Error during deserialization of object " + ex.getClass().getName(), e);
-		}
+  private boolean hasDefaultConstMethod(CtClass ctClass) {
+    try {
+      CtMethod m = ctClass.getMethod(DEFAULT_CONS_METHOD_NAME,
+          Descriptor.ofMethod(CtClass.voidType, new CtClass[0]));
+      return m != null;
+    } catch (NotFoundException e) {
+      return false;
+    }
+  }
 
-	}
+  private void overrideReadObject(CtClass classToModify)
+      throws NotFoundException, CannotCompileException {
+    CtClass[] paramTypes = new CtClass[]{GwtClassPool.getCtClass(ObjectInputStream.class)};
+    CtMethod readObjectMethod = new CtMethod(CtClass.voidType, "readObject",
+        paramTypes, classToModify);
+    readObjectMethod.setModifiers(Modifier.PRIVATE);
 
-	private static Map<Field, Object> getFieldValues(Serializable o) throws IllegalArgumentException, IllegalAccessException {
-		Map<Field, Object> result = new HashMap<Field, Object>();
+    // add exception types
+    CtClass classNotFoundException = GwtClassPool.getCtClass(ClassNotFoundException.class);
+    CtClass ioException = GwtClassPool.getCtClass(IOException.class);
+    readObjectMethod.setExceptionTypes(new CtClass[]{
+        classNotFoundException, ioException});
 
-		for (Field field : GwtReflectionUtils.getFields(o.getClass())) {
-			int fieldModifier = field.getModifiers();
-			if (!Modifier.isFinal(fieldModifier) && !Modifier.isStatic(fieldModifier) && !Modifier.isTransient(fieldModifier)) {
-				result.put(field, field.get(o));
-			}
-		}
+    // set body (call static readObject(Serializable, ObjectInputStream)
+    readObjectMethod.setBody(callStaticReadObject());
 
-		return result;
-	}
+    classToModify.addMethod(readObjectMethod);
+  }
 }

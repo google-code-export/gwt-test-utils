@@ -11,17 +11,17 @@ import com.octo.gwt.test.GwtTest;
 
 public class BodyElementTest extends GwtTest {
 
-	private BodyElement b;
+  private BodyElement b;
 
-	@Before
-	public void initDocument() {
-		b = (BodyElement) Document.get().createElement("body");
-	}
+  @Test
+  public void checkAs() {
+    BodyElement asElement = BodyElement.as(b);
+    Assert.assertEquals(b, asElement);
+  }
 
-	@Test
-	public void checkAs() {
-		BodyElement asElement = BodyElement.as(b);
-		Assert.assertEquals(b, asElement);
-	}
+  @Before
+  public void initDocument() {
+    b = (BodyElement) Document.get().createElement("body");
+  }
 
 }

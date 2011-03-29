@@ -8,20 +8,20 @@ import com.google.gwt.user.client.ui.RootPanel;
  */
 public class Application implements EntryPoint {
 
-	private SimpleComposite c1;
-	private SimpleComposite2 c2;
-	private RPCComposite c3;
+  private SimpleComposite c1;
+  private SimpleComposite2 c2;
+  private RPCComposite c3;
 
-	/**
-	 * This is the entry point method.
-	 */
-	public void onModuleLoad() {
+  /**
+   * This is the entry point method.
+   */
+  public void onModuleLoad() {
 
-		c1 = new SimpleComposite();
-		RootPanel.get("main").add(c1);
-		c2 = new SimpleComposite2();
-		RootPanel.get("main").add(c2);
-		c3 = new RPCComposite();
-		RootPanel.get("main").add(c3);
-	}
+    c1 = new SimpleComposite();
+    RootPanel.get("main").add(c1);
+    c2 = new SimpleComposite2();
+    RootPanel.get("main").add(c2);
+    c3 = new RPCComposite();
+    RootPanel.get("main").add(c3);
+  }
 }

@@ -11,78 +11,92 @@ import com.octo.gwt.test.GwtTest;
 
 public class RemoteServiceTest extends GwtTest {
 
-	private boolean success;
-	private boolean failure;
+  private boolean failure;
+  private boolean success;
 
-	@Before
-	public void setupRemoteServiceTest() {
-		addGwtCreateHandler(new RemoteServiceCreateHandler() {
+  @Test
+  public void checkRemoteServiceCallWithException() {
+    // Setup
+    MyServiceAsync myService = GWT.create(MyService.class);
 
-			@Override
-			protected Object findService(Class<?> remoteServiceClass, String remoteServiceRelativePath) {
-				if (remoteServiceClass == MyService.class)
-					return new MyServiceImpl();
+    // test
+    myService.someCallWithException(new AsyncCallback<Void>() {
 
-				return null;
-			}
-		});
+      public void onFailure(Throwable caught) {
 
-		success = false;
-		failure = false;
-	}
+        Assert.assertEquals("Server side thrown exception !!",
+            caught.getMessage());
+        failure = true;
+      }
 
-	@Test
-	public void checkRemoteServiceCallWithSuccess() {
-		// Setup
-		MyObject object = new MyObject("my field initialized during test setup");
+      public void onSuccess(Void result) {
+        success = true;
+      }
+    });
 
-		MyServiceAsync myService = GWT.create(MyService.class);
+    Assert.assertTrue(
+        "The service callback should have been call in a synchronised way",
+        failure);
+    Assert.assertFalse(success);
+  }
 
-		// test
-		myService.update(object, new AsyncCallback<MyObject>() {
+  @Test
+  public void checkRemoteServiceCallWithSuccess() {
+    // Setup
+    MyObject object = new MyObject("my field initialized during test setup");
 
-			public void onSuccess(MyObject result) {
-				Assert.assertEquals("updated field by server side code", result.getMyField());
-				Assert.assertEquals("transient field", result.getMyTransientField());
+    MyServiceAsync myService = GWT.create(MyService.class);
 
-				Assert.assertEquals("A single child object should have been instanciate in server code", 1, result.getMyChildObjects().size());
-				Assert.assertEquals("this is a child !", result.getMyChildObjects().get(0).getMyChildField());
-				Assert.assertEquals("child object transient field", result.getMyChildObjects().get(0).getMyChildTransientField());
+    // test
+    myService.update(object, new AsyncCallback<MyObject>() {
 
-				Assert.assertEquals("the field inherited from the parent has been updated !", result.getMyChildObjects().get(0).getMyField());
-				Assert.assertEquals("transient field", result.getMyChildObjects().get(0).getMyTransientField());
-				success = true;
-			}
+      public void onFailure(Throwable caught) {
+        failure = true;
+      }
 
-			public void onFailure(Throwable caught) {
-				failure = true;
-			}
-		});
+      public void onSuccess(MyObject result) {
+        Assert.assertEquals("updated field by server side code",
+            result.getMyField());
+        Assert.assertEquals("transient field", result.getMyTransientField());
 
-		Assert.assertTrue("The service callback should have been call in a synchronised way", success);
-		Assert.assertFalse(failure);
-	}
+        Assert.assertEquals(
+            "A single child object should have been instanciate in server code",
+            1, result.getMyChildObjects().size());
+        Assert.assertEquals("this is a child !",
+            result.getMyChildObjects().get(0).getMyChildField());
+        Assert.assertEquals("child object transient field",
+            result.getMyChildObjects().get(0).getMyChildTransientField());
 
-	@Test
-	public void checkRemoteServiceCallWithException() {
-		// Setup
-		MyServiceAsync myService = GWT.create(MyService.class);
+        Assert.assertEquals(
+            "the field inherited from the parent has been updated !",
+            result.getMyChildObjects().get(0).getMyField());
+        Assert.assertEquals("transient field",
+            result.getMyChildObjects().get(0).getMyTransientField());
+        success = true;
+      }
+    });
 
-		// test
-		myService.someCallWithException(new AsyncCallback<Void>() {
+    Assert.assertTrue(
+        "The service callback should have been call in a synchronised way",
+        success);
+    Assert.assertFalse(failure);
+  }
 
-			public void onFailure(Throwable caught) {
+  @Before
+  public void setupRemoteServiceTest() {
+    addGwtCreateHandler(new RemoteServiceCreateHandler() {
 
-				Assert.assertEquals("Server side thrown exception !!", caught.getMessage());
-				failure = true;
-			}
+      @Override
+      protected Object findService(Class<?> remoteServiceClass,
+          String remoteServiceRelativePath) {
+        if (remoteServiceClass == MyService.class)
+          return new MyServiceImpl();
 
-			public void onSuccess(Void result) {
-				success = true;
-			}
-		});
+        return null;
+      }
+    });
 
-		Assert.assertTrue("The service callback should have been call in a synchronised way", failure);
-		Assert.assertFalse(success);
-	}
+    success = false;
+    failure = false;
+  }
 }

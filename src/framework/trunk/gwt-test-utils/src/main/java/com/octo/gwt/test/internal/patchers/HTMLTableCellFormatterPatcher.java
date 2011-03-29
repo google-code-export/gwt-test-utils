@@ -10,10 +10,12 @@ import com.octo.gwt.test.patchers.PatchMethod;
 @PatchClass(CellFormatter.class)
 public class HTMLTableCellFormatterPatcher extends AutomaticPatcher {
 
-	@PatchMethod
-	public static Element getCellElement(CellFormatter cellFormatter, Element table, int row, int col) {
-		TableRowElement rowElement = (TableRowElement) table.getChildNodes().getItem(row);
-		return rowElement.getChildNodes().getItem(col).cast();
-	}
+  @PatchMethod
+  public static Element getCellElement(CellFormatter cellFormatter,
+      Element table, int row, int col) {
+    TableRowElement rowElement = (TableRowElement) table.getChildNodes().getItem(
+        row);
+    return rowElement.getChildNodes().getItem(col).cast();
+  }
 
 }

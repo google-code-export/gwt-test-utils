@@ -18,20 +18,21 @@ import com.octo.gwt.test.patchers.PatchMethod;
 @PatchClass(DomQuery.class)
 public class DomQueryPatcher extends AutomaticPatcher {
 
-	@PatchMethod
-	public static JavaScriptObject internalSelect(String selector) {
-		Element body = Document.get().getBody().cast();
-		return internalSelect(selector, body);
-	}
+  @PatchMethod
+  public static JavaScriptObject internalSelect(String selector) {
+    Element body = Document.get().getBody().cast();
+    return internalSelect(selector, body);
+  }
 
-	@PatchMethod
-	public static JavaScriptObject internalSelect(String selector, Element root) {
-		try {
-			Set<Node> nodeSet = new DOMNodeSelector(root).querySelectorAll(selector);
-			return new OverrideNodeList<Node>(nodeSet);
-		} catch (NodeSelectorException e) {
-			throw new RuntimeException("Error while trying to find GWT nodes matching '" + selector + "'");
-		}
-	}
+  @PatchMethod
+  public static JavaScriptObject internalSelect(String selector, Element root) {
+    try {
+      Set<Node> nodeSet = new DOMNodeSelector(root).querySelectorAll(selector);
+      return new OverrideNodeList<Node>(nodeSet);
+    } catch (NodeSelectorException e) {
+      throw new RuntimeException(
+          "Error while trying to find GWT nodes matching '" + selector + "'");
+    }
+  }
 
 }

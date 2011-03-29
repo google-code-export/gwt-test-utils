@@ -10,12 +10,13 @@ import com.octo.gwt.test.utils.GwtReflectionUtils;
 @PatchClass(History.class)
 public class HistoryPatcher extends AutomaticPatcher {
 
-	@PatchMethod
-	public static void back() {
-		HistoryImplPatcher.stack.pop();
-		String token = HistoryImplPatcher.stack.pop();
-		HistoryImpl impl = GwtReflectionUtils.getStaticFieldValue(History.class, "impl");
-		impl.fireHistoryChangedImpl(token);
-	}
+  @PatchMethod
+  public static void back() {
+    HistoryImplPatcher.stack.pop();
+    String token = HistoryImplPatcher.stack.pop();
+    HistoryImpl impl = GwtReflectionUtils.getStaticFieldValue(History.class,
+        "impl");
+    impl.fireHistoryChangedImpl(token);
+  }
 
 }

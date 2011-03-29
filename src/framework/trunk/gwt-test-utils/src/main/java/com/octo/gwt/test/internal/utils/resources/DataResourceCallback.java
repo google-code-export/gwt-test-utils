@@ -7,20 +7,22 @@ import com.google.gwt.resources.client.ClientBundle;
 
 public class DataResourceCallback extends AbstractClientBundleCallback {
 
-	private String url;
+  private String url;
 
-	protected DataResourceCallback(Class<? extends ClientBundle> wrappedClass, URL resourceURL, Class<? extends ClientBundle> proxiedClass) {
-		super(wrappedClass, resourceURL);
-		url = computeUrl(resourceURL, proxiedClass);
-	}
+  protected DataResourceCallback(Class<? extends ClientBundle> wrappedClass,
+      URL resourceURL, Class<? extends ClientBundle> proxiedClass) {
+    super(wrappedClass, resourceURL);
+    url = computeUrl(resourceURL, proxiedClass);
+  }
 
-	public Object call(Object proxy, Method method, Object[] args) throws Exception {
-		if (method.getName().equals("getUrl")) {
-			return url;
-		}
+  public Object call(Object proxy, Method method, Object[] args)
+      throws Exception {
+    if (method.getName().equals("getUrl")) {
+      return url;
+    }
 
-		return null;
+    return null;
 
-	}
+  }
 
 }

@@ -14,62 +14,64 @@ import java.util.regex.Pattern;
 
 public class CssResourceReader {
 
-	private static Map<URL, CssParsingResult> cache;
+  public static class CssParsingResult {
 
-	public static CssParsingResult readCss(URL url) throws UnsupportedEncodingException, IOException {
-		if (cache == null) {
-			cache = new HashMap<URL, CssParsingResult>();
-		}
+    private Map<String, String> constants;
 
-		if (!cache.containsKey(url)) {
+    private CssParsingResult(Map<String, String> constants, Set<String> styles) {
+      this.constants = constants;
+    }
 
-			Map<String, String> constants = new HashMap<String, String>();
-			Set<String> styles = new HashSet<String>();
+    public Map<String, String> getConstants() {
+      return constants;
+    }
+  }
 
-			Pattern constantPattern = Pattern.compile("^\\s*@def (\\S+)\\s+(\\S+)\\s*$");
+  private static Map<URL, CssParsingResult> cache;
 
-			BufferedReader reader = null;
+  public static CssParsingResult readCss(URL url)
+      throws UnsupportedEncodingException, IOException {
+    if (cache == null) {
+      cache = new HashMap<URL, CssParsingResult>();
+    }
 
-			try {
-				reader = new BufferedReader(new InputStreamReader(url.openStream(), "UTF-8"));
+    if (!cache.containsKey(url)) {
 
-				String line;
-				Matcher m;
-				while ((line = reader.readLine()) != null) {
-					m = constantPattern.matcher(line);
-					if (m.matches()) {
-						constants.put(m.group(1), m.group(2));
-					}
+      Map<String, String> constants = new HashMap<String, String>();
+      Set<String> styles = new HashSet<String>();
 
-				}
+      Pattern constantPattern = Pattern.compile("^\\s*@def (\\S+)\\s+(\\S+)\\s*$");
 
-				cache.put(url, new CssParsingResult(constants, styles));
+      BufferedReader reader = null;
 
-			} finally {
-				if (reader != null) {
-					reader.close();
-				}
-			}
-		}
+      try {
+        reader = new BufferedReader(new InputStreamReader(url.openStream(),
+            "UTF-8"));
 
-		return cache.get(url);
-	}
+        String line;
+        Matcher m;
+        while ((line = reader.readLine()) != null) {
+          m = constantPattern.matcher(line);
+          if (m.matches()) {
+            constants.put(m.group(1), m.group(2));
+          }
 
-	public static void reset() {
-		cache.clear();
-	}
+        }
 
-	public static class CssParsingResult {
+        cache.put(url, new CssParsingResult(constants, styles));
 
-		private Map<String, String> constants;
+      } finally {
+        if (reader != null) {
+          reader.close();
+        }
+      }
+    }
 
-		private CssParsingResult(Map<String, String> constants, Set<String> styles) {
-			this.constants = constants;
-		}
+    return cache.get(url);
+  }
 
-		public Map<String, String> getConstants() {
-			return constants;
-		}
-	}
+  public static void reset() {
+    cache.clear();
+  }
 
 }

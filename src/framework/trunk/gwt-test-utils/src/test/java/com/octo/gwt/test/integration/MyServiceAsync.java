@@ -4,8 +4,8 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public interface MyServiceAsync {
 
-	void update(MyObject object, AsyncCallback<MyObject> callback);
+  void someCallWithException(AsyncCallback<Void> callback);
 
-	void someCallWithException(AsyncCallback<Void> callback);
+  void update(MyObject object, AsyncCallback<MyObject> callback);
 
 }

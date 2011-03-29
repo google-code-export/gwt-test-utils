@@ -5,22 +5,22 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 @RemoteServiceRelativePath("myService")
 public class MyServiceImpl implements MyService {
 
-	public MyObject update(MyObject object) {
-		object.setMyField("updated field by server side code");
-		object.setMyTransientField("this will not be serialized");
+  public void someCallWithException() {
+    throw new RuntimeException("Server side thrown exception !!");
+  }
 
-		MyChildObject childObject = new MyChildObject("this is a child !");
-		childObject.setMyChildTransientField("this will not be serialized too");
-		childObject.setMyField("the field inherited from the parent has been updated !");
-		childObject.setMyTransientField("this field is not expected to be serialized too");
+  public MyObject update(MyObject object) {
+    object.setMyField("updated field by server side code");
+    object.setMyTransientField("this will not be serialized");
 
-		object.getMyChildObjects().add(childObject);
+    MyChildObject childObject = new MyChildObject("this is a child !");
+    childObject.setMyChildTransientField("this will not be serialized too");
+    childObject.setMyField("the field inherited from the parent has been updated !");
+    childObject.setMyTransientField("this field is not expected to be serialized too");
 
-		return object;
-	}
+    object.getMyChildObjects().add(childObject);
 
-	public void someCallWithException() {
-		throw new RuntimeException("Server side thrown exception !!");
-	}
+    return object;
+  }
 
 }

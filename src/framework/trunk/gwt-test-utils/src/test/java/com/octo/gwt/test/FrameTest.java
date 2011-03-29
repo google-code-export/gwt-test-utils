@@ -8,23 +8,23 @@ import com.google.gwt.user.client.ui.Frame;
 
 public class FrameTest extends GwtTest {
 
-	@Test
-	public void checkTitle() {
-		Frame f = new Frame();
-		f.setTitle("title");
+  @Test
+  public void checkTitle() {
+    Frame f = new Frame();
+    f.setTitle("title");
 
-		Assert.assertEquals("title", f.getTitle());
-	}
+    Assert.assertEquals("title", f.getTitle());
+  }
 
-	@Test
-	public void checkUrl() {
-		Frame f = new Frame("url");
+  @Test
+  public void checkUrl() {
+    Frame f = new Frame("url");
 
-		Assert.assertEquals("url", f.getUrl());
+    Assert.assertEquals("url", f.getUrl());
 
-		f.setUrl("newURL");
+    f.setUrl("newURL");
 
-		Assert.assertEquals("newURL", f.getUrl());
-	}
+    Assert.assertEquals("newURL", f.getUrl());
+  }
 
 }

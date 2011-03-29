@@ -10,64 +10,64 @@ import com.google.gwt.user.client.ui.Label;
 
 public class LabelTest extends GwtTest {
 
-	@Test
-	public void checkText() {
-		Label label = new Label("foo");
-		Assert.assertEquals("foo", label.getText());
-		label.setText("text");
-		Assert.assertEquals("text", label.getText());
-	}
+  @SuppressWarnings("deprecation")
+  @Test
+  public void checkDirection() {
+    Label label = new Label();
 
-	@Test
-	public void checkTitle() {
-		Label label = new Label();
-		label.setTitle("title");
-		Assert.assertEquals("title", label.getTitle());
-	}
+    Assert.assertEquals(Direction.DEFAULT, label.getDirection());
+    label.setDirection(Direction.RTL);
 
-	@Test
-	public void checkVisible() {
-		Label label = new Label();
-		Assert.assertEquals(true, label.isVisible());
-		label.setVisible(false);
-		Assert.assertEquals(false, label.isVisible());
-	}
+    Assert.assertEquals(Direction.RTL, label.getDirection());
+  }
 
-	@SuppressWarnings("deprecation")
-	@Test
-	public void checkDirection() {
-		Label label = new Label();
+  @Test
+  public void checkText() {
+    Label label = new Label("foo");
+    Assert.assertEquals("foo", label.getText());
+    label.setText("text");
+    Assert.assertEquals("text", label.getText());
+  }
 
-		Assert.assertEquals(Direction.DEFAULT, label.getDirection());
-		label.setDirection(Direction.RTL);
+  @Test
+  public void checkTitle() {
+    Label label = new Label();
+    label.setTitle("title");
+    Assert.assertEquals("title", label.getTitle());
+  }
 
-		Assert.assertEquals(Direction.RTL, label.getDirection());
-	}
+  @Test
+  public void checkVisible() {
+    Label label = new Label();
+    Assert.assertEquals(true, label.isVisible());
+    label.setVisible(false);
+    Assert.assertEquals(false, label.isVisible());
+  }
 
-	@Test
-	public void checkWordWrap() {
-		Label label = new Label();
-		Assert.assertFalse(label.getWordWrap());
+  @Test
+  public void checkWordWrap() {
+    Label label = new Label();
+    Assert.assertFalse(label.getWordWrap());
 
-		label.setWordWrap(true);
+    label.setWordWrap(true);
 
-		Assert.assertEquals(true, label.getWordWrap());
-	}
+    Assert.assertEquals(true, label.getWordWrap());
+  }
 
-	@Test
-	public void checkWrapLabel() {
-		// Setup
-		// Element.setInnerHTML & Document.get().getElementById are supposed to work
-		Document.get().getBody().setInnerHTML("<div id=\"anId\"></div>");
-		DivElement div = (DivElement) Document.get().getElementById("anId");
+  @Test
+  public void checkWrapLabel() {
+    // Setup
+    // Element.setInnerHTML & Document.get().getElementById are supposed to work
+    Document.get().getBody().setInnerHTML("<div id=\"anId\"></div>");
+    DivElement div = (DivElement) Document.get().getElementById("anId");
 
-		// Test
-		Label label = Label.wrap(Document.get().getElementById("anId"));
-		label.setText("My wrapped label !");
+    // Test
+    Label label = Label.wrap(Document.get().getElementById("anId"));
+    label.setText("My wrapped label !");
 
-		// Assert
-		Assert.assertEquals(div, label.getElement());
-		Assert.assertEquals("My wrapped label !", div.getInnerText());
-	}
+    // Assert
+    Assert.assertEquals(div, label.getElement());
+    Assert.assertEquals("My wrapped label !", div.getInnerText());
+  }
 
 }

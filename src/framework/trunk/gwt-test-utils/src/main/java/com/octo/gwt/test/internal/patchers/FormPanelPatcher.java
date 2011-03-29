@@ -14,26 +14,30 @@ import com.octo.gwt.test.utils.GwtReflectionUtils;
 @PatchClass(FormPanel.class)
 public class FormPanelPatcher extends AutomaticPatcher {
 
-	@PatchMethod
-	public static void submit(FormPanel formPanel) {
-		FormPanel.SubmitEvent event = new FormPanel.SubmitEvent();
-		formPanel.fireEvent(event);
-		if (!event.isCanceled()) {
-			FormPanelImpl impl = GwtReflectionUtils.getPrivateFieldValue(formPanel, "impl");
-			Element synthesizedFrame = GwtReflectionUtils.getPrivateFieldValue(formPanel, "synthesizedFrame");
-			FormPanel.SubmitCompleteEvent completeEvent = createCompleteSubmitEvent(impl.getContents(synthesizedFrame));
-			formPanel.fireEvent(completeEvent);
-		}
+  @PatchMethod
+  public static void submit(FormPanel formPanel) {
+    FormPanel.SubmitEvent event = new FormPanel.SubmitEvent();
+    formPanel.fireEvent(event);
+    if (!event.isCanceled()) {
+      FormPanelImpl impl = GwtReflectionUtils.getPrivateFieldValue(formPanel,
+          "impl");
+      Element synthesizedFrame = GwtReflectionUtils.getPrivateFieldValue(
+          formPanel, "synthesizedFrame");
+      FormPanel.SubmitCompleteEvent completeEvent = createCompleteSubmitEvent(impl.getContents(synthesizedFrame));
+      formPanel.fireEvent(completeEvent);
+    }
 
-	}
+  }
 
-	private static SubmitCompleteEvent createCompleteSubmitEvent(String resultsHtml) {
-		try {
-			Constructor<SubmitCompleteEvent> ctor = SubmitCompleteEvent.class.getDeclaredConstructor(String.class);
-			return GwtReflectionUtils.instantiateClass(ctor, resultsHtml);
-		} catch (Exception e) {
-			throw new RuntimeException("Error while trying to instanciate " + SubmitCompleteEvent.class.getName() + " class", e);
-		}
-	}
+  private static SubmitCompleteEvent createCompleteSubmitEvent(
+      String resultsHtml) {
+    try {
+      Constructor<SubmitCompleteEvent> ctor = SubmitCompleteEvent.class.getDeclaredConstructor(String.class);
+      return GwtReflectionUtils.instantiateClass(ctor, resultsHtml);
+    } catch (Exception e) {
+      throw new RuntimeException("Error while trying to instanciate "
+          + SubmitCompleteEvent.class.getName() + " class", e);
+    }
+  }
 
 }

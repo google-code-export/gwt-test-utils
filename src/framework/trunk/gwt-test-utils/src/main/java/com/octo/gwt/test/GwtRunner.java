@@ -19,15 +19,15 @@ import org.junit.runners.BlockJUnit4ClassRunner;
  */
 public class GwtRunner extends GwtRunnerBase {
 
-	private static final String classRunnerName = "org.junit.runners.BlockJUnit4ClassRunner";
+  private static final String classRunnerName = "org.junit.runners.BlockJUnit4ClassRunner";
 
-	public GwtRunner(Class<?> clazz) throws Exception {
-		super(clazz);
-	}
+  public GwtRunner(Class<?> clazz) throws Exception {
+    super(clazz);
+  }
 
-	@Override
-	protected String getClassRunnerClassName() {
-		return classRunnerName;
-	}
+  @Override
+  protected String getClassRunnerClassName() {
+    return classRunnerName;
+  }
 
 }

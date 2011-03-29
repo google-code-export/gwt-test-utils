@@ -4,6 +4,6 @@ import javassist.CtClass;
 
 public interface JavaClassModifier {
 
-	public void modify(CtClass classToModify) throws Exception;
+  public void modify(CtClass classToModify) throws Exception;
 
 }

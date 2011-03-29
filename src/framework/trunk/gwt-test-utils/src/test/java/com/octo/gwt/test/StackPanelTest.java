@@ -11,59 +11,60 @@ import com.octo.gwt.test.utils.events.Browser;
 
 public class StackPanelTest extends GwtTest {
 
-	private int index = -1;
+  private int index = -1;
 
-	@Test
-	public void checkTitle() {
-		StackPanel sp = new StackPanel();
-		sp.setTitle("title");
-		Assert.assertEquals("title", sp.getTitle());
-	}
+  @Test
+  public void checkClick() {
 
-	@Test
-	public void checkVisible() {
-		StackPanel sp = new StackPanel();
-		Assert.assertEquals(true, sp.isVisible());
-		sp.setVisible(false);
-		Assert.assertEquals(false, sp.isVisible());
-	}
+    // Set up
+    index = -1;
+    StackPanel panel = new StackPanel() {
 
-	@Test
-	public void checkStackPanel() {
-		StackPanel panel = new StackPanel();
-		panel.add(new Label("Foo"), "foo");
+      @Override
+      public void showStack(int index) {
+        StackPanelTest.this.index = index;
+      };
+    };
 
-		Label label = new Label("Bar");
-		panel.add(label, "bar");
+    panel.add(new Anchor());
+    panel.add(new Anchor());
 
-		panel.add(new Label("Baz"), "baz");
+    // Test
+    Browser.click(panel, 1);
 
-		Assert.assertEquals(3, panel.getWidgetCount());
-		Assert.assertEquals(label, panel.getWidget(1));
-		Assert.assertEquals(1, panel.getWidgetIndex(label));
-	}
+    // Assert that the "AbstractGWTTest.click(ComplexPanel, index)" method
+    // trigger the "showStack" method
+    Assert.assertEquals(1, index);
+  }
 
-	@Test
-	public void checkClick() {
+  @Test
+  public void checkStackPanel() {
+    StackPanel panel = new StackPanel();
+    panel.add(new Label("Foo"), "foo");
 
-		// Set up
-		index = -1;
-		StackPanel panel = new StackPanel() {
+    Label label = new Label("Bar");
+    panel.add(label, "bar");
 
-			@Override
-			public void showStack(int index) {
-				StackPanelTest.this.index = index;
-			};
-		};
+    panel.add(new Label("Baz"), "baz");
 
-		panel.add(new Anchor());
-		panel.add(new Anchor());
+    Assert.assertEquals(3, panel.getWidgetCount());
+    Assert.assertEquals(label, panel.getWidget(1));
+    Assert.assertEquals(1, panel.getWidgetIndex(label));
+  }
 
-		// Test
-		Browser.click(panel, 1);
+  @Test
+  public void checkTitle() {
+    StackPanel sp = new StackPanel();
+    sp.setTitle("title");
+    Assert.assertEquals("title", sp.getTitle());
+  }
 
-		// Assert that the "AbstractGWTTest.click(ComplexPanel, index)" method trigger the "showStack" method
-		Assert.assertEquals(1, index);
-	}
+  @Test
+  public void checkVisible() {
+    StackPanel sp = new StackPanel();
+    Assert.assertEquals(true, sp.isVisible());
+    sp.setVisible(false);
+    Assert.assertEquals(false, sp.isVisible());
+  }
 
 }

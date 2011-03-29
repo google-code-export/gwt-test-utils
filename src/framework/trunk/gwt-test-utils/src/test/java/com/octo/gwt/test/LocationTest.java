@@ -7,10 +7,10 @@ import com.google.gwt.user.client.Window.Location;
 
 public class LocationTest extends GwtTest {
 
-	@Test
-	public void checkLocationInformations() {
-		Assert.assertEquals("http", Location.getProtocol());
-		Assert.assertEquals("80", Location.getPort());
-	}
+  @Test
+  public void checkLocationInformations() {
+    Assert.assertEquals("http", Location.getProtocol());
+    Assert.assertEquals("80", Location.getPort());
+  }
 
 }

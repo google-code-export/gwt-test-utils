@@ -14,119 +14,120 @@ import org.antlr.runtime.RecognitionException;
 
 public class Node {
 
-	private Node next;
+  static class TokenException extends RuntimeException {
 
-	private String label;
+    private static final long serialVersionUID = 7666850302524423170L;
 
-	private String map;
+  }
 
-	private Node map_eq;
+  public static Node parse(String s) {
+    try {
+      CharStream is = new ANTLRStringStream(s);
+      XPathLexer lexer = new XPathLexer(is) {
 
-	private List<String> paramList;
+        public void recover(RecognitionException re) {
+          throw new TokenException();
+        }
 
-	public Node(String label) {
-		this.label = label;
-	}
+      };
+      CommonTokenStream stream = new CommonTokenStream(lexer);
+      XPathParser parser = new XPathParser(stream) {
 
-	public Node() {
-	}
+        protected void mismatch(IntStream input, int ttype, BitSet follow)
+            throws RecognitionException {
+          throw new MismatchedTokenException(ttype, input);
+        }
 
-	public void setLabel(String label) {
-		this.label = label;
-	}
+      };
+      parser.expr();
+      return parser.root;
+    } catch (RecognitionException e) {
+      return null;
+    } catch (TokenException e) {
+      return null;
+    }
 
-	public String getLabel() {
-		return label;
-	}
+  }
 
-	public Node getNext() {
-		return next;
-	}
+  private String label;
 
-	public void setNext(Node next) {
-		this.next = next;
-	}
+  private String map;
 
-	public void insertParam(String param) {
-		if (this.paramList == null) {
-			this.paramList = new ArrayList<String>();
-		}
-		this.paramList.add(0, param);
-	}
+  private Node map_eq;
 
-	public List<String> getParams() {
-		return paramList == null ? null : Collections.unmodifiableList(paramList);
-	}
+  private Node next;
 
-	public void setMap(String map) {
-		this.map = map;
-	}
+  private List<String> paramList;
 
-	public String getMap() {
-		return map;
-	}
+  public Node() {
+  }
 
-	public void setMapEq(Node n) {
-		this.map_eq = n;
-	}
+  public Node(String label) {
+    this.label = label;
+  }
 
-	public Node getMapEq() {
-		return map_eq;
-	}
+  public String getLabel() {
+    return label;
+  }
 
-	public String toString() {
-		String s = "/" + label;
-		if (paramList != null) {
-			s += "(";
-			for (String p : paramList) {
-				s += p + ",";
-			}
-			s += ")";
-		}
-		if (map_eq == null && map != null) {
-			s += "{" + map + "}";
-		}
-		if (map_eq != null && map != null) {
-			s += "[" + map_eq.toString() + "=" + map + "]";
-		}
+  public String getMap() {
+    return map;
+  }
 
-		if (next != null) {
-			s += next.toString();
-		}
-		return s;
-	}
+  public Node getMapEq() {
+    return map_eq;
+  }
 
-	static class TokenException extends RuntimeException {
+  public Node getNext() {
+    return next;
+  }
 
-		private static final long serialVersionUID = 7666850302524423170L;
+  public List<String> getParams() {
+    return paramList == null ? null : Collections.unmodifiableList(paramList);
+  }
 
-	}
+  public void insertParam(String param) {
+    if (this.paramList == null) {
+      this.paramList = new ArrayList<String>();
+    }
+    this.paramList.add(0, param);
+  }
 
-	public static Node parse(String s) {
-		try {
-			CharStream is = new ANTLRStringStream(s);
-			XPathLexer lexer = new XPathLexer(is) {
+  public void setLabel(String label) {
+    this.label = label;
+  }
 
-				public void recover(RecognitionException re) {
-					throw new TokenException();
-				}
+  public void setMap(String map) {
+    this.map = map;
+  }
 
-			};
-			CommonTokenStream stream = new CommonTokenStream(lexer);
-			XPathParser parser = new XPathParser(stream) {
+  public void setMapEq(Node n) {
+    this.map_eq = n;
+  }
 
-				protected void mismatch(IntStream input, int ttype, BitSet follow) throws RecognitionException {
-					throw new MismatchedTokenException(ttype, input);
-				}
+  public void setNext(Node next) {
+    this.next = next;
+  }
 
-			};
-			parser.expr();
-			return parser.root;
-		} catch (RecognitionException e) {
-			return null;
-		} catch (TokenException e) {
-			return null;
-		}
+  public String toString() {
+    String s = "/" + label;
+    if (paramList != null) {
+      s += "(";
+      for (String p : paramList) {
+        s += p + ",";
+      }
+      s += ")";
+    }
+    if (map_eq == null && map != null) {
+      s += "{" + map + "}";
+    }
+    if (map_eq != null && map != null) {
+      s += "[" + map_eq.toString() + "=" + map + "]";
+    }
 
-	}
+    if (next != null) {
+      s += next.toString();
+    }
+    return s;
+  }
 }

@@ -5,56 +5,56 @@ import java.util.List;
 
 public class PropertiesStringModifier {
 
-	private static PropertiesStringModifier INSTANCE;
+  private static class SequenceReplacement {
 
-	public static PropertiesStringModifier get() {
-		if (INSTANCE == null) {
-			INSTANCE = new PropertiesStringModifier();
-		}
+    private String regex;
 
-		return INSTANCE;
-	}
+    private String to;
 
-	private List<SequenceReplacement> sequenceReplacements;
+    public SequenceReplacement(String regex, String to) {
+      this.regex = regex;
+      this.to = to;
+    }
 
-	private PropertiesStringModifier() {
-		sequenceReplacements = new ArrayList<SequenceReplacement>();
-		reset();
-	}
+    public String treat(String s) {
+      return s.replaceAll(regex, to);
+    }
 
-	public void replaceSequence(String regex, String to) {
-		sequenceReplacements.add(new SequenceReplacement(regex, to));
-	}
+  }
 
-	public String treatString(String string) {
-		for (SequenceReplacement sequenceReplacement : sequenceReplacements) {
-			string = sequenceReplacement.treat(string);
-		}
+  private static PropertiesStringModifier INSTANCE;
 
-		return string;
-	}
+  public static PropertiesStringModifier get() {
+    if (INSTANCE == null) {
+      INSTANCE = new PropertiesStringModifier();
+    }
 
-	public void reset() {
-		sequenceReplacements.clear();
-		// hardcoded to fix gwt "bug"
-		sequenceReplacements.add(new SequenceReplacement("\\u00A0", " "));
-	}
+    return INSTANCE;
+  }
 
-	private static class SequenceReplacement {
+  private List<SequenceReplacement> sequenceReplacements;
 
-		private String regex;
+  private PropertiesStringModifier() {
+    sequenceReplacements = new ArrayList<SequenceReplacement>();
+    reset();
+  }
 
-		private String to;
+  public void replaceSequence(String regex, String to) {
+    sequenceReplacements.add(new SequenceReplacement(regex, to));
+  }
 
-		public String treat(String s) {
-			return s.replaceAll(regex, to);
-		}
+  public void reset() {
+    sequenceReplacements.clear();
+    // hardcoded to fix gwt "bug"
+    sequenceReplacements.add(new SequenceReplacement("\\u00A0", " "));
+  }
 
-		public SequenceReplacement(String regex, String to) {
-			this.regex = regex;
-			this.to = to;
-		}
+  public String treatString(String string) {
+    for (SequenceReplacement sequenceReplacement : sequenceReplacements) {
+      string = sequenceReplacement.treat(string);
+    }
 
-	}
+    return string;
+  }
 
 }

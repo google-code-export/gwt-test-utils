@@ -10,39 +10,42 @@ import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
-@PatchClass(classes = { "com.google.gwt.user.client.ui.PrefixTree" })
+@PatchClass(classes = {"com.google.gwt.user.client.ui.PrefixTree"})
 public class PrefixTreePatcher extends AutomaticPropertyContainerPatcher {
 
-	private static final String PREFIXES_SET = "PREFIXES_SET";
+  private static final String PREFIXES_SET = "PREFIXES_SET";
 
-	@PatchMethod
-	public static boolean add(Object prefixTree, String s) {
-		Set<String> set = PropertyContainerUtils.getProperty(prefixTree, PREFIXES_SET);
-		if (set == null) {
-			set = new TreeSet<String>();
-			PropertyContainerUtils.setProperty(prefixTree, PREFIXES_SET, set);
-		}
+  @PatchMethod
+  public static boolean add(Object prefixTree, String s) {
+    Set<String> set = PropertyContainerUtils.getProperty(prefixTree,
+        PREFIXES_SET);
+    if (set == null) {
+      set = new TreeSet<String>();
+      PropertyContainerUtils.setProperty(prefixTree, PREFIXES_SET, set);
+    }
 
-		return set.add(s);
-	}
+    return set.add(s);
+  }
 
-	@PatchMethod
-	public static void suggestImpl(Object prefixTree, String search, String prefix, Collection<String> output, int limit) {
+  @PatchMethod
+  public static void clear(Object prefixTree) {
+    GwtReflectionUtils.setPrivateFieldValue(prefixTree, "size", 0);
+  }
 
-		Set<String> set = PropertyContainerUtils.getProperty(prefixTree, PREFIXES_SET);
-		if (set == null)
-			return;
+  @PatchMethod
+  public static void suggestImpl(Object prefixTree, String search,
+      String prefix, Collection<String> output, int limit) {
 
-		for (String record : set) {
-			if (search == null || record.contains(search.trim().toLowerCase())) {
-				output.add(record);
-			}
-		}
-	}
+    Set<String> set = PropertyContainerUtils.getProperty(prefixTree,
+        PREFIXES_SET);
+    if (set == null)
+      return;
 
-	@PatchMethod
-	public static void clear(Object prefixTree) {
-		GwtReflectionUtils.setPrivateFieldValue(prefixTree, "size", 0);
-	}
+    for (String record : set) {
+      if (search == null || record.contains(search.trim().toLowerCase())) {
+        output.add(record);
+      }
+    }
+  }
 
 }

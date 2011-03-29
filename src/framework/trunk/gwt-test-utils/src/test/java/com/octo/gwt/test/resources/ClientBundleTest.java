@@ -13,150 +13,156 @@ import com.octo.gwt.test.GwtTest;
 
 public class ClientBundleTest extends GwtTest {
 
-	@Override
-	public String getModuleName() {
-		return "gwt_test_utils_module";
-	}
+  @Test
+  public void checkCssResource() {
+    // Setup
+    TestCssResource testCssResource = MyClientBundle.INSTANCE.testCssResource();
 
-	@Test
-	public void checkTextResourceTxt() {
-		// Setup
-		TextResource textResource = MyClientBundle.INSTANCE.textResourceTxt();
-		String expectedText = "Hello gwt-test-utils !\r\nThis is a test with a simple text file";
+    // Test
+    String name = testCssResource.getName();
+    String testStyle = testCssResource.testStyle();
+    String testStyleWithHover = testCssResource.testStyleWithHover();
+    String testStyleOnSpecificElement = testCssResource.testStyleOnSpecificElement();
+    String testStyleOnSpecificStyle = testCssResource.testStyleOnSpecificStyle();
+    String constantValue = testCssResource.testConstant();
 
-		// Test
-		String name = textResource.getName();
-		String text = textResource.getText();
+    // Assert
+    Assert.assertEquals("testCssResource", name);
+    Assert.assertEquals("testStyle", testStyle);
+    Assert.assertEquals("testStyleWithHover", testStyleWithHover);
+    Assert.assertEquals("testStyleOnSpecificElement",
+        testStyleOnSpecificElement);
+    Assert.assertEquals("testStyleOnSpecificStyle", testStyleOnSpecificStyle);
+    Assert.assertEquals("constant-value", constantValue);
+  }
 
-		// Assert
-		Assert.assertEquals("textResourceTxt", name);
-		Assert.assertEquals(expectedText, text);
-	}
+  @Test
+  public void checkCssResourceEnsureInjected() {
+    // Setup
+    TestCssResource testCssResource = MyClientBundle.INSTANCE.testCssResource();
 
-	@Test
-	public void checkTResourceXml() {
-		// Setup
-		TextResource textResource = MyClientBundle.INSTANCE.textResourceXml();
-		String expectedText = "<gwt-test-utils>\r\n\t<test>this is a test</test>\r\n</gwt-test-utils>";
+    // Tests & Assert
+    Assert.assertTrue(testCssResource.ensureInjected());
+    Assert.assertFalse(testCssResource.ensureInjected());
+  }
 
-		// Test
-		String name = textResource.getName();
-		String text = textResource.getText();
+  @Test
+  public void checkDataResource() {
+    // Setup
+    DataResource testDataResource = MyClientBundle.INSTANCE.testDataResource();
 
-		// Assert
-		Assert.assertEquals("textResourceXml", name);
-		Assert.assertEquals(expectedText, text);
-	}
+    // Test
+    String name = testDataResource.getName();
+    String url = testDataResource.getUrl();
 
-	@Test
-	public void checkCssResource() {
-		// Setup
-		TestCssResource testCssResource = MyClientBundle.INSTANCE.testCssResource();
+    // Assert
+    Assert.assertEquals("testDataResource", name);
+    Assert.assertEquals(
+        "http://127.0.0.1:8888/gwt_test_utils_module/com/octo/gwt/test/resources/textResourceXml.xml",
+        url);
+  }
 
-		// Test
-		String name = testCssResource.getName();
-		String testStyle = testCssResource.testStyle();
-		String testStyleWithHover = testCssResource.testStyleWithHover();
-		String testStyleOnSpecificElement = testCssResource.testStyleOnSpecificElement();
-		String testStyleOnSpecificStyle = testCssResource.testStyleOnSpecificStyle();
-		String constantValue = testCssResource.testConstant();
+  @Test
+  public void checkGetExternalResourceText() {
+    // Setup
+    com.google.gwt.user.client.impl.WindowImplIE.Resources treeResources = GWT.create(com.google.gwt.user.client.impl.WindowImplIE.Resources.class);
 
-		// Assert
-		Assert.assertEquals("testCssResource", name);
-		Assert.assertEquals("testStyle", testStyle);
-		Assert.assertEquals("testStyleWithHover", testStyleWithHover);
-		Assert.assertEquals("testStyleOnSpecificElement", testStyleOnSpecificElement);
-		Assert.assertEquals("testStyleOnSpecificStyle", testStyleOnSpecificStyle);
-		Assert.assertEquals("constant-value", constantValue);
-	}
+    // Test
+    String name = treeResources.initWindowCloseHandler().getName();
+    String text = treeResources.initWindowCloseHandler().getText();
 
-	@Test
-	public void checkCssResourceEnsureInjected() {
-		// Setup
-		TestCssResource testCssResource = MyClientBundle.INSTANCE.testCssResource();
+    // Assert
+    Assert.assertEquals("initWindowCloseHandler", name);
+    Assert.assertTrue(text.startsWith("function __gwt_initWindowCloseHandler(beforeunload, unload) {"));
+  }
 
-		// Tests & Assert
-		Assert.assertTrue(testCssResource.ensureInjected());
-		Assert.assertFalse(testCssResource.ensureInjected());
-	}
+  @Test
+  public void checkGetExternalResourceUrl() {
+    // Setup
+    Resources treeResources = GWT.create(Resources.class);
 
-	@Test
-	public void checkDataResource() {
-		// Setup
-		DataResource testDataResource = MyClientBundle.INSTANCE.testDataResource();
+    // Test
+    String name = treeResources.treeOpen().getName();
+    String url = treeResources.treeLeaf().getURL();
 
-		// Test
-		String name = testDataResource.getName();
-		String url = testDataResource.getUrl();
+    // Assert
+    Assert.assertEquals("treeOpen", name);
+    Assert.assertEquals(
+        "http://127.0.0.1:8888/gwt_test_utils_module/com/google/gwt/user/client/ui/treeLeaf.gif",
+        url);
+  }
 
-		// Assert
-		Assert.assertEquals("testDataResource", name);
-		Assert.assertEquals("http://127.0.0.1:8888/gwt_test_utils_module/com/octo/gwt/test/resources/textResourceXml.xml", url);
-	}
+  @Test
+  public void checkImageResource() {
+    // Setup
+    ImageResource testImageResource = MyClientBundle.INSTANCE.testImageResource();
 
-	@Test
-	public void checkImageResource() {
-		// Setup
-		ImageResource testImageResource = MyClientBundle.INSTANCE.testImageResource();
+    // Test
+    String name = testImageResource.getName();
+    String url = testImageResource.getURL();
+    int heigh = testImageResource.getHeight();
+    int left = testImageResource.getLeft();
+    int width = testImageResource.getWidth();
+    int top = testImageResource.getTop();
 
-		// Test
-		String name = testImageResource.getName();
-		String url = testImageResource.getURL();
-		int heigh = testImageResource.getHeight();
-		int left = testImageResource.getLeft();
-		int width = testImageResource.getWidth();
-		int top = testImageResource.getTop();
+    // Assert
+    Assert.assertEquals("testImageResource", name);
+    Assert.assertEquals(
+        "http://127.0.0.1:8888/gwt_test_utils_module/com/octo/gwt/test/resources/testImageResource.gif",
+        url);
+    Assert.assertEquals(0, heigh);
+    Assert.assertEquals(0, left);
+    Assert.assertEquals(0, width);
+    Assert.assertEquals(0, top);
+  }
 
-		// Assert
-		Assert.assertEquals("testImageResource", name);
-		Assert.assertEquals("http://127.0.0.1:8888/gwt_test_utils_module/com/octo/gwt/test/resources/testImageResource.gif", url);
-		Assert.assertEquals(0, heigh);
-		Assert.assertEquals(0, left);
-		Assert.assertEquals(0, width);
-		Assert.assertEquals(0, top);
-	}
+  @Test
+  public void checkImageResourceShouldThrowExceptionWhenMultipleMatchingResourceFile() {
+    // Setup
+    String expectedMessage = "Too many resource files found for method MyClientBundle.doubleShouldThrowException()";
+    try {
+      // Test
+      MyClientBundle.INSTANCE.doubleShouldThrowException();
+      Assert.fail("An exception should have been thrown since there are multiple matching file for the tested ClientBundle method");
+    } catch (Exception e) {
+      // Assert
+      Assert.assertEquals(expectedMessage, e.getMessage());
+    }
 
-	@Test
-	public void checkImageResourceShouldThrowExceptionWhenMultipleMatchingResourceFile() {
-		// Setup
-		String expectedMessage = "Too many resource files found for method MyClientBundle.doubleShouldThrowException()";
-		try {
-			// Test
-			MyClientBundle.INSTANCE.doubleShouldThrowException();
-			Assert.fail("An exception should have been thrown since there are multiple matching file for the tested ClientBundle method");
-		} catch (Exception e) {
-			// Assert
-			Assert.assertEquals(expectedMessage, e.getMessage());
-		}
+  }
 
-	}
+  @Test
+  public void checkTextResourceTxt() {
+    // Setup
+    TextResource textResource = MyClientBundle.INSTANCE.textResourceTxt();
+    String expectedText = "Hello gwt-test-utils !\r\nThis is a test with a simple text file";
 
-	@Test
-	public void checkGetExternalResourceUrl() {
-		// Setup
-		Resources treeResources = GWT.create(Resources.class);
+    // Test
+    String name = textResource.getName();
+    String text = textResource.getText();
 
-		// Test
-		String name = treeResources.treeOpen().getName();
-		String url = treeResources.treeLeaf().getURL();
+    // Assert
+    Assert.assertEquals("textResourceTxt", name);
+    Assert.assertEquals(expectedText, text);
+  }
 
-		// Assert
-		Assert.assertEquals("treeOpen", name);
-		Assert.assertEquals("http://127.0.0.1:8888/gwt_test_utils_module/com/google/gwt/user/client/ui/treeLeaf.gif", url);
-	}
+  @Test
+  public void checkTResourceXml() {
+    // Setup
+    TextResource textResource = MyClientBundle.INSTANCE.textResourceXml();
+    String expectedText = "<gwt-test-utils>\r\n\t<test>this is a test</test>\r\n</gwt-test-utils>";
 
-	@Test
-	public void checkGetExternalResourceText() {
-		// Setup
-		com.google.gwt.user.client.impl.WindowImplIE.Resources treeResources = GWT
-				.create(com.google.gwt.user.client.impl.WindowImplIE.Resources.class);
+    // Test
+    String name = textResource.getName();
+    String text = textResource.getText();
 
-		// Test
-		String name = treeResources.initWindowCloseHandler().getName();
-		String text = treeResources.initWindowCloseHandler().getText();
+    // Assert
+    Assert.assertEquals("textResourceXml", name);
+    Assert.assertEquals(expectedText, text);
+  }
 
-		// Assert
-		Assert.assertEquals("initWindowCloseHandler", name);
-		Assert.assertTrue(text.startsWith("function __gwt_initWindowCloseHandler(beforeunload, unload) {"));
-	}
+  @Override
+  public String getModuleName() {
+    return "gwt_test_utils_module";
+  }
 }

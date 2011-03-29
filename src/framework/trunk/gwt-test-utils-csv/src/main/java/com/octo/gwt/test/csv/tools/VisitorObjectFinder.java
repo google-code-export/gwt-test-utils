@@ -21,124 +21,129 @@ import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 public class VisitorObjectFinder implements ObjectFinder {
 
-	private Map<Object, WidgetRepository> repositories = new HashMap<Object, WidgetRepository>();
-	private WidgetVisitor visitor;
+  public static class WidgetRepository {
 
-	public VisitorObjectFinder(WidgetVisitor visitor) {
-		this.visitor = visitor;
-	}
+    private Map<String, Object> map = new HashMap<String, Object>();
 
-	public boolean accept(String... params) {
-		return params.length == 1 && !params[0].trim().startsWith("/");
-	}
+    public Object addAlias(String alias, Object widget) {
+      return map.put(alias, widget);
+    }
 
-	public Object find(CsvRunner csvRunner, String... params) {
-		Object result;
-		Collection<RootPanel> roots = getRootPanels();
+    public void clear() {
+      map.clear();
+    }
 
-		for (Panel root : roots) {
-			WidgetRepository repository = repositories.get(root);
+    public Object getAlias(String alias) {
+      return map.get(alias);
+    }
 
-			if (repository == null) {
-				repository = new WidgetRepository();
-				inspectObject(root, repository, new HashSet<Object>());
-				repositories.put(root, repository);
-				result = repository.getAlias(params[0]);
-			} else {
-				result = repository.getAlias(params[0]);
-				if (result == null) {
-					// try another time since code could have instanciate new widget after the last inspection
-					repository.clear();
-					inspectObject(root, repository, new HashSet<Object>());
-					result = repository.getAlias(params[0]);
-				}
-			}
+    public Object removeAlias(String alias) {
+      return map.remove(alias);
+    }
+  }
+  private Map<Object, WidgetRepository> repositories = new HashMap<Object, WidgetRepository>();
 
-			if (result != null) {
-				return result;
-			}
-		}
+  private WidgetVisitor visitor;
 
-		return null;
+  public VisitorObjectFinder(WidgetVisitor visitor) {
+    this.visitor = visitor;
+  }
 
-	}
+  public boolean accept(String... params) {
+    return params.length == 1 && !params[0].trim().startsWith("/");
+  }
 
-	protected Collection<RootPanel> getRootPanels() {
-		// initialize the default rootPanel if not initialized yet
-		RootPanel.get();
-		Map<String, RootPanel> rootPanels = GwtReflectionUtils.getStaticFieldValue(RootPanel.class, "rootPanels");
+  public Object find(CsvRunner csvRunner, String... params) {
+    Object result;
+    Collection<RootPanel> roots = getRootPanels();
 
-		return rootPanels.values();
-	}
+    for (Panel root : roots) {
+      WidgetRepository repository = repositories.get(root);
 
-	private void inspectObject(Object inspected, WidgetRepository repository, Set<Object> alreadyInspectedObjects) {
-		if (inspected == null || alreadyInspectedObjects.contains(inspected)) {
-			return;
-		} else {
-			alreadyInspectedObjects.add(inspected);
-		}
+      if (repository == null) {
+        repository = new WidgetRepository();
+        inspectObject(root, repository, new HashSet<Object>());
+        repositories.put(root, repository);
+        result = repository.getAlias(params[0]);
+      } else {
+        result = repository.getAlias(params[0]);
+        if (result == null) {
+          // try another time since code could have instanciate new widget after
+          // the last inspection
+          repository.clear();
+          inspectObject(root, repository, new HashSet<Object>());
+          result = repository.getAlias(params[0]);
+        }
+      }
 
-		if (UIObject.class.isInstance(inspected) && !((UIObject) inspected).isVisible()) {
-			if (Widget.class.isInstance(inspected)) {
-				// add the not visible widget but don't inspect its child
-				Widget widget = (Widget) inspected;
-				visitor.visitWidget(widget, repository);
-			}
+      if (result != null) {
+        return result;
+      }
+    }
 
-			return;
-		}
+    return null;
 
-		if (HasWidgets.class.isInstance(inspected)) {
-			Iterator<Widget> it = ((HasWidgets) inspected).iterator();
-			while (it.hasNext()) {
-				inspectObject(it.next(), repository, alreadyInspectedObjects);
-			}
-		} else if (Composite.class.isInstance(inspected)) {
-			Widget widget = GwtReflectionUtils.callPrivateMethod(inspected, "getWidget");
-			inspectObject(widget, repository, alreadyInspectedObjects);
-		}
+  }
 
-		if (HasHTML.class.isInstance(inspected)) {
-			HasHTML hasHTMLWidget = (HasHTML) inspected;
-			visitor.visitHasHTML(hasHTMLWidget, repository);
-		}
+  private void inspectObject(Object inspected, WidgetRepository repository,
+      Set<Object> alreadyInspectedObjects) {
+    if (inspected == null || alreadyInspectedObjects.contains(inspected)) {
+      return;
+    } else {
+      alreadyInspectedObjects.add(inspected);
+    }
 
-		if (HasText.class.isInstance(inspected)) {
-			HasText hasTextWidget = (HasText) inspected;
-			visitor.visitHasText(hasTextWidget, repository);
-		}
+    if (UIObject.class.isInstance(inspected)
+        && !((UIObject) inspected).isVisible()) {
+      if (Widget.class.isInstance(inspected)) {
+        // add the not visible widget but don't inspect its child
+        Widget widget = (Widget) inspected;
+        visitor.visitWidget(widget, repository);
+      }
 
-		if (HasName.class.isInstance(inspected)) {
-			HasName hasNameWidget = (HasName) inspected;
-			visitor.visitHasName(hasNameWidget, repository);
-		}
+      return;
+    }
 
-		if (Widget.class.isInstance(inspected)) {
-			// add the not visible widget but don't inspect its child
-			Widget widget = (Widget) inspected;
-			visitor.visitWidget(widget, repository);
-		}
-	}
+    if (HasWidgets.class.isInstance(inspected)) {
+      Iterator<Widget> it = ((HasWidgets) inspected).iterator();
+      while (it.hasNext()) {
+        inspectObject(it.next(), repository, alreadyInspectedObjects);
+      }
+    } else if (Composite.class.isInstance(inspected)) {
+      Widget widget = GwtReflectionUtils.callPrivateMethod(inspected,
+          "getWidget");
+      inspectObject(widget, repository, alreadyInspectedObjects);
+    }
 
-	public static class WidgetRepository {
+    if (HasHTML.class.isInstance(inspected)) {
+      HasHTML hasHTMLWidget = (HasHTML) inspected;
+      visitor.visitHasHTML(hasHTMLWidget, repository);
+    }
 
-		private Map<String, Object> map = new HashMap<String, Object>();
+    if (HasText.class.isInstance(inspected)) {
+      HasText hasTextWidget = (HasText) inspected;
+      visitor.visitHasText(hasTextWidget, repository);
+    }
 
-		public Object addAlias(String alias, Object widget) {
-			return map.put(alias, widget);
-		}
+    if (HasName.class.isInstance(inspected)) {
+      HasName hasNameWidget = (HasName) inspected;
+      visitor.visitHasName(hasNameWidget, repository);
+    }
 
-		public Object getAlias(String alias) {
-			return map.get(alias);
-		}
+    if (Widget.class.isInstance(inspected)) {
+      // add the not visible widget but don't inspect its child
+      Widget widget = (Widget) inspected;
+      visitor.visitWidget(widget, repository);
+    }
+  }
 
-		public Object removeAlias(String alias) {
-			return map.remove(alias);
-		}
+  protected Collection<RootPanel> getRootPanels() {
+    // initialize the default rootPanel if not initialized yet
+    RootPanel.get();
+    Map<String, RootPanel> rootPanels = GwtReflectionUtils.getStaticFieldValue(
+        RootPanel.class, "rootPanels");
 
-		public void clear() {
-			map.clear();
-		}
-	}
+    return rootPanels.values();
+  }
 
 }
