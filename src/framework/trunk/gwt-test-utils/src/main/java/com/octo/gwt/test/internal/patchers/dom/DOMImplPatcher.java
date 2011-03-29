@@ -203,37 +203,37 @@ public class DOMImplPatcher extends AutomaticPatcher {
 
 	@PatchMethod
 	public static int eventGetKeyCode(Object domImpl, NativeEvent evt) {
-		OverrideEvent event = (OverrideEvent) evt;
+		OverrideEvent event = evt.cast();
 		return event.getOverrideKeyCode();
 	}
 
 	@PatchMethod
 	public static int eventGetButton(Object domImpl, NativeEvent evt) {
-		OverrideEvent event = (OverrideEvent) evt;
+		OverrideEvent event = evt.cast();
 		return event.getOverrideButton();
 	}
 
 	@PatchMethod
 	public static boolean eventGetAltKey(Object domImpl, NativeEvent evt) {
-		OverrideEvent event = (OverrideEvent) evt;
+		OverrideEvent event = evt.cast();
 		return event.isOverrideAltKey();
 	}
 
 	@PatchMethod
 	public static boolean eventGetCtrlKey(Object domImpl, NativeEvent evt) {
-		OverrideEvent event = (OverrideEvent) evt;
+		OverrideEvent event = evt.cast();
 		return event.isOverrideCtrlKey();
 	}
 
 	@PatchMethod
 	public static boolean eventGetMetaKey(Object domImpl, NativeEvent evt) {
-		OverrideEvent event = (OverrideEvent) evt;
+		OverrideEvent event = evt.cast();
 		return event.isOverrideMetaKey();
 	}
 
 	@PatchMethod
 	public static boolean eventGetShiftKey(Object domImpl, NativeEvent evt) {
-		OverrideEvent event = (OverrideEvent) evt;
+		OverrideEvent event = evt.cast();
 		return event.isOverrideShiftKey();
 	}
 
@@ -344,7 +344,8 @@ public class DOMImplPatcher extends AutomaticPatcher {
 
 	@PatchMethod
 	public static void eventPreventDefault(Object domImpl, NativeEvent evt) {
-
+		OverrideEvent event = evt.cast();
+		event.setPreventDefault(true);
 	}
 
 	@PatchMethod

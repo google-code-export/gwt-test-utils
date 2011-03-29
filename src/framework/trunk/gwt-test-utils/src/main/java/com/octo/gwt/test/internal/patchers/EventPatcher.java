@@ -12,7 +12,8 @@ public class EventPatcher extends AutomaticPatcher {
 
 	@PatchMethod
 	public static final Element getTarget(Event event) {
-		return ((OverrideEvent) event).getOverrideTargetElement();
+		OverrideEvent overrideEvent = event.cast();
+		return overrideEvent.getOverrideTargetElement();
 	}
 
 	@PatchMethod

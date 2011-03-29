@@ -2,6 +2,7 @@ package com.octo.gwt.test.utils.events;
 
 import org.junit.Assert;
 
+import com.google.gwt.event.shared.UmbrellaException;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.ComplexPanel;
@@ -14,6 +15,7 @@ import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
+import com.octo.gwt.test.internal.overrides.OverrideEvent;
 import com.octo.gwt.test.utils.WidgetUtils;
 
 /**
@@ -106,22 +108,29 @@ public class Browser {
 			return;
 		}
 
+		boolean changed = false;
+
 		for (int i = 0; i < value.length(); i++) {
 
 			int keyCode = (int) value.charAt(i);
-			Event keyDownEvent = EventBuilder.create(Event.ONKEYDOWN).setKeyCode(keyCode).build();
-			Event keyPressEvent = EventBuilder.create(Event.ONKEYPRESS).setKeyCode(keyCode).build();
-			Event keyUpEvent = EventBuilder.create(Event.ONKEYUP).setKeyCode(keyCode).build();
+			OverrideEvent keyDownEvent = EventBuilder.create(Event.ONKEYDOWN).setKeyCode(keyCode).build().cast();
+			OverrideEvent keyPressEvent = EventBuilder.create(Event.ONKEYPRESS).setKeyCode(keyCode).build().cast();
+			OverrideEvent keyUpEvent = EventBuilder.create(Event.ONKEYUP).setKeyCode(keyCode).build().cast();
 
 			dispatchEvent((Widget) hasTextWidget, keyDownEvent, keyPressEvent, keyUpEvent);
 
-			hasTextWidget.setText(value.substring(0, i + 1));
+			if (!keyDownEvent.isPreventDefault() && !keyPressEvent.isPreventDefault()) {
+				hasTextWidget.setText(value.substring(0, i + 1));
+				changed = true;
+			}
 		}
 
 		// don't have to check if the event can be dispatch since it's check before
 		dispatchEventInternal((Widget) hasTextWidget, EventBuilder.create(Event.ONBLUR).build());
-		dispatchEventInternal((Widget) hasTextWidget, EventBuilder.create(Event.ONCHANGE).build());
 
+		if (changed) {
+			dispatchEventInternal((Widget) hasTextWidget, EventBuilder.create(Event.ONCHANGE).build());
+		}
 	}
 
 	/**
@@ -223,16 +232,24 @@ public class Browser {
 	}
 
 	private static void dispatchEventInternal(Widget target, Event... events) {
-		for (Event event : events) {
-			if (CheckBox.class.isInstance(target) && event.getTypeInt() == Event.ONCLICK) {
-				CheckBox checkBox = (CheckBox) target;
-				if (RadioButton.class.isInstance(target)) {
-					checkBox.setValue(true);
-				} else {
-					checkBox.setValue(!checkBox.getValue());
+		try {
+			for (Event event : events) {
+				if (CheckBox.class.isInstance(target) && event.getTypeInt() == Event.ONCLICK) {
+					CheckBox checkBox = (CheckBox) target;
+					if (RadioButton.class.isInstance(target)) {
+						checkBox.setValue(true);
+					} else {
+						checkBox.setValue(!checkBox.getValue());
+					}
 				}
+				target.onBrowserEvent(event);
 			}
-			target.onBrowserEvent(event);
+		} catch (UmbrellaException e) {
+			if (AssertionError.class.isInstance(e.getCause())) {
+				throw (AssertionError) e.getCause();
+			} else {
+				throw e;
+			}
 		}
 	}
 

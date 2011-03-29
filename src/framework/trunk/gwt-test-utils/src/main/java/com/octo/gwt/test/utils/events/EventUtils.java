@@ -55,7 +55,7 @@ public class EventUtils {
 	}
 
 	public static String getEventTypeString(NativeEvent nativeEvent) {
-		OverrideEvent event = OverrideEvent.overrideCast(nativeEvent);
+		OverrideEvent event = nativeEvent.cast();
 		return getEventTypeString(event.getOverrideType());
 	}
 

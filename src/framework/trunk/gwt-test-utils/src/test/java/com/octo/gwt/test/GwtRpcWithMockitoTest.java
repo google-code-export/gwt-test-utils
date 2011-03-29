@@ -1,8 +1,11 @@
 package com.octo.gwt.test;
 
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.verify;
+
 import org.junit.Assert;
 import org.junit.Test;
-import static org.mockito.Mockito.*;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -36,9 +39,7 @@ public class GwtRpcWithMockitoTest extends GwtTestWithMockito {
 	@SuppressWarnings("unchecked")
 	@Test
 	public void checkGwtRpcOk() {
-		// Setup
-		
-		// mock future remote call
+		// Setup : mock future remote call
 		doSuccessCallback("returnValue").when(mockedService).myMethod(eq("myParamValue"), any(AsyncCallback.class));
 
 		// Test

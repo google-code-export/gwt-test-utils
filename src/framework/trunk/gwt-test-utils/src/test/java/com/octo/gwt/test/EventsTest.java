@@ -434,6 +434,246 @@ public class EventsTest extends GwtTest {
 		Assert.assertTrue(onChangeTriggered);
 	}
 
+	@Test
+	public void checkFillText_Does_Not_Update_When_KeyDown_PreventDefault() {
+		// Setup
+		onChangeTriggered = false;
+		onBlurTriggered = false;
+		String initialText = "intial text";
+		String textToFill = "some text which will not be filled";
+
+		final List<Character> keyUpChars = new ArrayList<Character>();
+		final List<Character> keyDownChars = new ArrayList<Character>();
+		final List<Character> keyPressChars = new ArrayList<Character>();
+
+		final TextBox tb = new TextBox();
+		tb.setText(initialText);
+
+		tb.addChangeHandler(new ChangeHandler() {
+
+			public void onChange(ChangeEvent event) {
+				onChangeTriggered = true;
+			}
+		});
+
+		tb.addBlurHandler(new BlurHandler() {
+
+			public void onBlur(BlurEvent event) {
+				onBlurTriggered = true;
+			}
+		});
+
+		tb.addKeyPressHandler(new KeyPressHandler() {
+
+			public void onKeyPress(KeyPressEvent event) {
+				// Assert that onKeyPress is triggered before onKeyUp and after onKeyDown
+				Assert.assertEquals(keyPressChars.size(), keyUpChars.size());
+				Assert.assertEquals(keyPressChars.size() + 1, keyDownChars.size());
+
+				keyPressChars.add(event.getCharCode());
+			}
+		});
+
+		tb.addKeyUpHandler(new KeyUpHandler() {
+
+			public void onKeyUp(KeyUpEvent event) {
+				// Assert that onKeyUp is triggered after onKeyDown and onKeyPress
+				Assert.assertEquals(keyUpChars.size() + 1, keyDownChars.size());
+				Assert.assertEquals(keyUpChars.size() + 1, keyPressChars.size());
+
+				keyUpChars.add((char) event.getNativeKeyCode());
+			}
+		});
+
+		tb.addKeyDownHandler(new KeyDownHandler() {
+
+			public void onKeyDown(KeyDownEvent event) {
+				// Assert that onKeyDown is triggered before onKeyPress and onKeyUp
+				Assert.assertEquals(keyDownChars.size(), keyPressChars.size());
+				Assert.assertEquals(keyDownChars.size(), keyUpChars.size());
+
+				keyDownChars.add((char) event.getNativeKeyCode());
+
+				// prevent the keydown event : the textbox value should not be updated
+				event.preventDefault();
+			}
+		});
+
+		// Test
+		Browser.fillText(tb, textToFill);
+
+		// Asserts
+		// the textbox value should not be updated
+		Assert.assertEquals(initialText, tb.getText());
+		Assert.assertEquals(initialText, tb.getValue());
+		Assert.assertFalse(onChangeTriggered);
+
+		assertTextFilledCorrectly(textToFill, keyDownChars);
+		assertTextFilledCorrectly(textToFill, keyPressChars);
+		assertTextFilledCorrectly(textToFill, keyUpChars);
+		Assert.assertTrue(onBlurTriggered);
+	}
+
+	@Test
+	public void checkFillText_Does_Not_Update_When_KeyPress_PreventDefault() {
+		// Setup
+		onChangeTriggered = false;
+		onBlurTriggered = false;
+		String initialText = "intial text";
+		String textToFill = "some text which will not be filled";
+
+		final List<Character> keyUpChars = new ArrayList<Character>();
+		final List<Character> keyDownChars = new ArrayList<Character>();
+		final List<Character> keyPressChars = new ArrayList<Character>();
+
+		final TextBox tb = new TextBox();
+		tb.setText(initialText);
+
+		tb.addChangeHandler(new ChangeHandler() {
+
+			public void onChange(ChangeEvent event) {
+				onChangeTriggered = true;
+			}
+		});
+
+		tb.addBlurHandler(new BlurHandler() {
+
+			public void onBlur(BlurEvent event) {
+				onBlurTriggered = true;
+			}
+		});
+
+		tb.addKeyPressHandler(new KeyPressHandler() {
+
+			public void onKeyPress(KeyPressEvent event) {
+				// Assert that onKeyPress is triggered before onKeyUp and after onKeyDown
+				Assert.assertEquals(keyPressChars.size(), keyUpChars.size());
+				Assert.assertEquals(keyPressChars.size() + 1, keyDownChars.size());
+
+				keyPressChars.add(event.getCharCode());
+
+				// prevent the keyPress event : the textbox value should not be updated
+				event.preventDefault();
+			}
+		});
+
+		tb.addKeyUpHandler(new KeyUpHandler() {
+
+			public void onKeyUp(KeyUpEvent event) {
+				// Assert that onKeyUp is triggered after onKeyDown and onKeyPress
+				Assert.assertEquals(keyUpChars.size() + 1, keyDownChars.size());
+				Assert.assertEquals(keyUpChars.size() + 1, keyPressChars.size());
+
+				keyUpChars.add((char) event.getNativeKeyCode());
+			}
+		});
+
+		tb.addKeyDownHandler(new KeyDownHandler() {
+
+			public void onKeyDown(KeyDownEvent event) {
+				// Assert that onKeyDown is triggered before onKeyPress and onKeyUp
+				Assert.assertEquals(keyDownChars.size(), keyPressChars.size());
+				Assert.assertEquals(keyDownChars.size(), keyUpChars.size());
+
+				keyDownChars.add((char) event.getNativeKeyCode());
+			}
+		});
+
+		// Test
+		Browser.fillText(tb, textToFill);
+
+		// Asserts
+		// the textbox value should not be updated
+		Assert.assertEquals(initialText, tb.getText());
+		Assert.assertEquals(initialText, tb.getValue());
+		Assert.assertFalse(onChangeTriggered);
+
+		assertTextFilledCorrectly(textToFill, keyDownChars);
+		assertTextFilledCorrectly(textToFill, keyPressChars);
+		assertTextFilledCorrectly(textToFill, keyUpChars);
+		Assert.assertTrue(onBlurTriggered);
+	}
+
+	@Test
+	public void checkFillText_Still_Update_When_KeyUp_PreventDefault() {
+		// Setup
+		onChangeTriggered = false;
+		onBlurTriggered = false;
+		String initialText = "intial text";
+		String textToFill = "some text which will not be filled";
+
+		final List<Character> keyUpChars = new ArrayList<Character>();
+		final List<Character> keyDownChars = new ArrayList<Character>();
+		final List<Character> keyPressChars = new ArrayList<Character>();
+
+		final TextBox tb = new TextBox();
+		tb.setText(initialText);
+
+		tb.addChangeHandler(new ChangeHandler() {
+
+			public void onChange(ChangeEvent event) {
+				onChangeTriggered = true;
+			}
+		});
+
+		tb.addBlurHandler(new BlurHandler() {
+
+			public void onBlur(BlurEvent event) {
+				onBlurTriggered = true;
+			}
+		});
+
+		tb.addKeyPressHandler(new KeyPressHandler() {
+
+			public void onKeyPress(KeyPressEvent event) {
+				// Assert that onKeyPress is triggered before onKeyUp and after onKeyDown
+				Assert.assertEquals(keyPressChars.size(), keyUpChars.size());
+				Assert.assertEquals(keyPressChars.size() + 1, keyDownChars.size());
+
+				keyPressChars.add(event.getCharCode());
+			}
+		});
+
+		tb.addKeyUpHandler(new KeyUpHandler() {
+
+			public void onKeyUp(KeyUpEvent event) {
+				// Assert that onKeyUp is triggered after onKeyDown and onKeyPress
+				Assert.assertEquals(keyUpChars.size() + 1, keyDownChars.size());
+				Assert.assertEquals(keyUpChars.size() + 1, keyPressChars.size());
+
+				keyUpChars.add((char) event.getNativeKeyCode());
+
+				// prevent the keyUp event : the textbox value should be updated
+				event.preventDefault();
+			}
+		});
+
+		tb.addKeyDownHandler(new KeyDownHandler() {
+
+			public void onKeyDown(KeyDownEvent event) {
+				// Assert that onKeyDown is triggered before onKeyPress and onKeyUp
+				Assert.assertEquals(keyDownChars.size(), keyPressChars.size());
+				Assert.assertEquals(keyDownChars.size(), keyUpChars.size());
+
+				keyDownChars.add((char) event.getNativeKeyCode());
+			}
+		});
+
+		// Test
+		Browser.fillText(tb, textToFill);
+
+		// Asserts
+		// the textbox value should be updated
+		Assert.assertEquals(textToFill, tb.getText());
+		Assert.assertEquals(textToFill, tb.getValue());
+		Assert.assertTrue(onChangeTriggered);
+
+		assertTextFilledCorrectly(textToFill, keyDownChars);
+		assertTextFilledCorrectly(textToFill, keyPressChars);
+		assertTextFilledCorrectly(textToFill, keyUpChars);
+		Assert.assertTrue(onBlurTriggered);
+	}
+
 	private void assertTextFilledCorrectly(String filledText, List<Character> typedChars) {
 
 		Assert.assertEquals(filledText.length(), typedChars.size());

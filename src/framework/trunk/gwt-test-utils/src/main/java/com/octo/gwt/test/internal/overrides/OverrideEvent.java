@@ -18,6 +18,8 @@ public class OverrideEvent extends Event {
 
 	private int overrideKeyCode;
 
+	private boolean preventDefault;
+
 	/**
 	 * A bit-field, defined by {@link NativeEvent#BUTTON_LEFT},
 	 * {@link NativeEvent#BUTTON_MIDDLE}, and {@link NativeEvent#BUTTON_RIGHT}
@@ -120,12 +122,11 @@ public class OverrideEvent extends Event {
 		this.overrideButton = overrideButton;
 	}
 
-	public static OverrideEvent overrideCast(Object o) {
-		if (o instanceof OverrideEvent) {
-			OverrideEvent e = (OverrideEvent) o;
-			return e;
-		}
-		throw new RuntimeException("Unable to cast class " + o.getClass().getCanonicalName());
+	public boolean isPreventDefault() {
+		return preventDefault;
 	}
 
+	public void setPreventDefault(boolean preventDefault) {
+		this.preventDefault = preventDefault;
+	}
 }
