@@ -1,4 +1,4 @@
-#summary This page explains how to migrate to gwt-test-utils-0.25
+#summary This page explains how to migrate to gwt-test-utils-0.27
 
 = Purpose =
 
@@ -30,7 +30,7 @@ Some classes has been renamed for gwt-test-utils. Here is the list.
 ===== In {{{gwt-test-utils}}} =====
 
 || {{{AbstractGwtTest}}} || => || {{{GwtTest}}} ||
-|| {{{AbstractGwtEasyMockTest}}} || => || {{{GwtTestWithMocks}}} ||
+|| {{{AbstractGwtEasyMockTest}}} || => || {{{GwtTestWithEasyMock}}} ||
 || {{{GwtTestReflectionUtils}}} || => ||  {{{GwtReflectionUtils}}} ||
 
 ===== In {{{gwt-test-utils-csv}}} (used to be {{{gwt-test-utils-integration}}}) =====
