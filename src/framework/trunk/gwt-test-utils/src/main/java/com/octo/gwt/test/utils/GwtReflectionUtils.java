@@ -29,7 +29,7 @@ public class GwtReflectionUtils {
   }
   private static class DoubleMap<A, B, C> {
 
-    private Map<A, Map<B, C>> map;
+    private final Map<A, Map<B, C>> map;
 
     public DoubleMap() {
       map = new HashMap<A, Map<B, C>>();
@@ -47,6 +47,7 @@ public class GwtReflectionUtils {
       map.get(a).put(b, c);
     }
   }
+
   private static DoubleMap<Class<?>, Class<?>, Set<Field>> cacheAnnotatedField = new DoubleMap<Class<?>, Class<?>, Set<Field>>();
   private static DoubleMap<Class<?>, Class<?>, Map<Method, ?>> cacheAnnotatedMethod = new DoubleMap<Class<?>, Class<?>, Map<Method, ?>>();
   private static DoubleMap<Class<?>, Class<?>, Object> cacheAnnotation = new DoubleMap<Class<?>, Class<?>, Object>();
@@ -60,19 +61,28 @@ public class GwtReflectionUtils {
   @SuppressWarnings("unchecked")
   public static <T> T callPrivateMethod(Object target, String methodName,
       Object... args) {
-    Class<?>[] l = new Class[args.length];
-    for (int i = 0; i < args.length; i++) {
-      l[i] = args[i].getClass();
-    }
     try {
-      Method m = findMethod(target.getClass(), methodName, l);
+      Method m = findMethod(target.getClass(), methodName, args);
       m.setAccessible(true);
       Object res = m.invoke(target, args);
       return (T) res;
     } catch (Exception e) {
-      e.printStackTrace();
       throw new RuntimeException("Unable to call method \""
           + target.getClass().getSimpleName() + "." + methodName + "\"", e);
+    }
+  }
+
+  @SuppressWarnings("unchecked")
+  public static <T> T callStaticMethod(Class<?> clazz, String methodName,
+      Object... args) {
+    try {
+      Method m = findMethod(clazz, methodName, args);
+      m.setAccessible(true);
+      Object res = m.invoke(null, args);
+      return (T) res;
+    } catch (Exception e) {
+      throw new RuntimeException("Unable to call static method \""
+          + clazz.getSimpleName() + "." + methodName + "\"", e);
     }
   }
 
@@ -384,6 +394,15 @@ public class GwtReflectionUtils {
           + " Unable to set field, class " + fieldName + ", fieldClass "
           + clazz);
     }
+  }
+
+  private static Method findMethod(Class<?> clazz, String methodName,
+      Object... args) {
+    Class<?>[] l = new Class[args.length];
+    for (int i = 0; i < args.length; i++) {
+      l[i] = args[i].getClass();
+    }
+    return findMethod(clazz, methodName, l);
   }
 
   private static Field getUniqueFieldByName(Class<?> clazz, String fieldName) {
