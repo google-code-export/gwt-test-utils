@@ -9,7 +9,7 @@ gwt-test-utils allows you to write unit tests that use mock objects, using eithe
 
 Mocking support in gwt-test-utils consists in three main features :
 
-  * *Obtaining mock objets when calling GWT.create()* : when declaring mock objects in your test class, you're telling gwt-test-utils that GWT.create(MyClass) calls made in your application code should return the mock object of the corresponding type, declared in test class.
+  * *Obtaining mock objets when using deferred binding* : when declaring mock objects in your test class, you're telling gwt-test-utils that {{{GWT.create(Class clazz)}}} calls made in your application code should return the mock object of the corresponding type, declared in test class.
   * *RPC calls/callbacks stubbing* : shortcut methods that ease the mocking of RPC calls and the handling of callbacks in tests
   * *Helper methods* : a few methods to ease some mocking operations, particularly when using EasyMock
 
