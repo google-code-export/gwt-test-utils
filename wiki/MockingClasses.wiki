@@ -15,6 +15,17 @@ Mocking support in gwt-test-utils consists in three main features :
 
 = Using EasyMock =
 
+First, you have to add the easymock maven dependency :
+
+{{{
+<dependency>
+   <groupId>org.easymock</groupId>
+   <artifactId>easymock</artifactId>
+   <version>3.0</version>
+   <scope>test</scope>
+</dependency>
+}}}
+
 In order to use the EasyMock mocking framework, your tests need to extend  {{{GwtTestWithEasyMock}}}.
 
 Then, declare your mock objets using *gwt-test-utils's own @Mock annotation*.
@@ -68,6 +79,17 @@ Of course, you can also use the EasyMock API rather than methods provided by Gwt
 *Warning* :  mock objects not declared using the @Mock annotation (e.g. objects instantiated by calling directly the {{{EasyMock.createMock()}}} method) should be added to the test context using the  {{{GwtTestWithMocks#addMockedObject()}}} method.
 
 = Using Mockito =
+
+First, you have to add the mockito maven dependency :
+
+{{{
+<dependency>
+   <groupId>org.mockito</groupId>
+   <artifactId>mockito-core</artifactId>
+   <version>1.8.5</version>
+   <scope>test</scope>
+</dependency>
+}}}
 
 In order to use the Mockito mocking framework, your tests need to extend  {{{GwtTestWithMockito}}}.
 And then, things are really straightforward : declare your mock objects using the *standard Mockito @Mock annotation*, and you're good to go !
