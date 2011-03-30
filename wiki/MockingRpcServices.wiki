@@ -99,7 +99,18 @@ Clicking the button will make a server call, to say hello to "OCTO". As a result
 
 = Unit tests using EasyMock =
 
-Let's create unit tests to simulate the two scenarios, using EasyMock for RPC service mocking :
+First, you have to add the easymock maven dependency :
+
+{{{
+<dependency>
+   <groupId>org.easymock</groupId>
+   <artifactId>easymock</artifactId>
+   <version>3.0</version>
+   <scope>test</scope>
+</dependency>
+}}}
+
+Now, you're able to create unit tests to simulate the two scenarios, using EasyMock for RPC service mocking :
 
 {{{
 public class RPCCompositeTest extends GwtTestWithEasyMock {
@@ -172,6 +183,17 @@ public class RPCCompositeTest extends GwtTestWithEasyMock {
 = Unit tests using Mockito =
 
 Now, let's see how we can achieve the same thing using Mockito.
+
+First, you have to add the mockito maven dependency :
+
+{{{
+<dependency>
+   <groupId>org.mockito</groupId>
+   <artifactId>mockito-core</artifactId>
+   <version>1.8.5</version>
+   <scope>test</scope>
+</dependency>
+}}}
 
 Things are quite similar, but this time, of course, with a Mockito-like syntax :
 
