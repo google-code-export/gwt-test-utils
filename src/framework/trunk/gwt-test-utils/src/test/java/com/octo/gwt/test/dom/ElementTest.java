@@ -11,6 +11,7 @@ import com.google.gwt.dom.client.AnchorElement;
 import com.google.gwt.dom.client.ButtonElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.HeadingElement;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
 import com.octo.gwt.test.GwtTest;
@@ -242,7 +243,7 @@ public class ElementTest extends GwtTest {
 
     Assert.assertEquals("<h1>test</h1>", e.getInnerHTML());
     Assert.assertEquals(1, e.getChildCount());
-    Element h1 = (Element) e.getChild(0);
+    HeadingElement h1 = e.getChild(0).cast();
     Assert.assertEquals("H1", h1.getTagName());
     Assert.assertEquals("test", h1.getInnerText());
   }

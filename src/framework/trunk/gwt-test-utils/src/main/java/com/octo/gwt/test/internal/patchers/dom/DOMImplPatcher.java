@@ -328,9 +328,10 @@ public class DOMImplPatcher extends AutomaticPatcher {
     OverrideNodeList<OptionElement> list = new OverrideNodeList<OptionElement>();
 
     for (int i = 0; i < select.getChildNodes().getLength(); i++) {
-      Element e = (Element) select.getChildNodes().getItem(i).cast();
-      if (e instanceof OptionElement) {
-        list.getList().add((OptionElement) e);
+      Element e = select.getChildNodes().getItem(i).cast();
+      if ("option".equals(e.getTagName())) {
+        OptionElement option = e.cast();
+        list.getList().add(option);
       }
     }
 

@@ -97,7 +97,7 @@ public class DocumentPatcher extends AutomaticPropertyContainerPatcher {
         Element childElem = n.cast();
         if ("*".equals(tagName)
             || tagName.equalsIgnoreCase(childElem.getTagName())) {
-          result.getList().add((Element) n);
+          result.getList().add(childElem);
         }
       }
       inspectDomForTag(n, tagName, result);

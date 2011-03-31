@@ -3,7 +3,7 @@ package com.octo.gwt.test;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.HeadingElement;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.octo.gwt.test.utils.events.Browser;
 
@@ -54,7 +54,7 @@ public class CheckBoxTest extends GwtTest {
     Assert.assertEquals("<h1>test</h1>", cb.getHTML());
     // Assert the labelElem value
     Assert.assertEquals(1, cb.getElement().getChild(1).getChildCount());
-    Element h1 = (Element) cb.getElement().getChild(1).getChild(0);
+    HeadingElement h1 = cb.getElement().getChild(1).getChild(0).cast();
     Assert.assertEquals("H1", h1.getTagName());
     Assert.assertEquals("test", h1.getInnerText());
   }

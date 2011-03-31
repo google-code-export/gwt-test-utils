@@ -125,9 +125,11 @@ public class TagChecker extends NodeTraversalChecker {
     for (Node node : nodes) {
       NodeList<Element> nl;
       if (node.getNodeType() == Node.DOCUMENT_NODE) {
-        nl = ((Document) node).getElementsByTagName(selector.getTagName());
+        Document document = node.cast();
+        nl = document.getElementsByTagName(selector.getTagName());
       } else if (node.getNodeType() == Node.ELEMENT_NODE) {
-        nl = ((Element) node).getElementsByTagName(selector.getTagName());
+        Element element = node.cast();
+        nl = element.getElementsByTagName(selector.getTagName());
       } else {
         throw new NodeSelectorException(
             "Only document and element nodes allowed!");

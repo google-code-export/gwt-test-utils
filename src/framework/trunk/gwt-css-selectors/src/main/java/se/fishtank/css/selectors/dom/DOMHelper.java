@@ -22,7 +22,7 @@ public class DOMHelper {
     NodeList<Node> children = node.getChildNodes();
     for (int i = 0; i < children.getLength(); i++) {
       if (children.getItem(i).getNodeType() == Node.ELEMENT_NODE) {
-        return (Element) children.getItem(i);
+        return children.getItem(i).cast();
       }
     }
 
@@ -41,7 +41,7 @@ public class DOMHelper {
       n = n.getNextSibling();
     }
 
-    return (Element) n;
+    return n.cast();
   }
 
   /**
@@ -56,7 +56,7 @@ public class DOMHelper {
       n = n.getPreviousSibling();
     }
 
-    return (Element) n;
+    return n.cast();
   }
 
   /**

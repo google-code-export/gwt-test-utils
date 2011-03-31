@@ -37,7 +37,8 @@ public class NodePatcher extends AutomaticPropertyContainerPatcher {
     switch (node.getNodeType()) {
       case Node.ELEMENT_NODE:
         try {
-          newNode = NodeFactory.createElement(((Element) node).getTagName());
+          Element elem = node.cast();
+          newNode = NodeFactory.createElement((elem).getTagName());
         } catch (Exception e) {
           throw new RuntimeException(
               "Error while creating an element of type ["

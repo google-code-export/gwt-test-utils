@@ -3,7 +3,7 @@ package com.octo.gwt.test;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.HeadingElement;
 import com.google.gwt.user.client.ui.Anchor;
 
 public class AnchorTest extends GwtTest {
@@ -41,7 +41,7 @@ public class AnchorTest extends GwtTest {
 
     Assert.assertEquals("<h1>test</h1>", a.getHTML());
     Assert.assertEquals(1, a.getElement().getChildCount());
-    Element h1 = (Element) a.getElement().getChild(0);
+    HeadingElement h1 = a.getElement().getChild(0).cast();
     Assert.assertEquals("H1", h1.getTagName());
     Assert.assertEquals("test", h1.getInnerText());
   }
