@@ -4,6 +4,8 @@ import javassist.CannotCompileException;
 import javassist.Loader;
 import javassist.NotFoundException;
 
+import com.octo.gwt.test.exceptions.GwtTestException;
+import com.octo.gwt.test.exceptions.GwtTestPatchException;
 import com.octo.gwt.test.internal.ConfigurationLoader;
 import com.octo.gwt.test.internal.GwtClassPool;
 import com.octo.gwt.test.internal.GwtTranslator;
@@ -35,10 +37,10 @@ public class GwtClassLoader extends Loader {
     try {
       INSTANCE = new GwtClassLoader();
     } catch (Exception e) {
-      if (e instanceof RuntimeException) {
-        throw (RuntimeException) e;
+      if (GwtTestException.class.isInstance(e)) {
+        throw (GwtTestException) e;
       } else {
-        throw new RuntimeException(e);
+        throw new GwtTestPatchException(e);
       }
     }
   }

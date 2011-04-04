@@ -66,6 +66,8 @@ import com.google.gwt.dom.client.UListElement;
 import com.octo.gwt.test.GwtClassLoader;
 import com.octo.gwt.test.GwtTest;
 import com.octo.gwt.test.exceptions.GwtTestConfigurationException;
+import com.octo.gwt.test.exceptions.GwtTestDomException;
+import com.octo.gwt.test.exceptions.GwtTestException;
 import com.octo.gwt.test.internal.GwtConfig;
 import com.octo.gwt.test.internal.GwtHtmlParser;
 import com.octo.gwt.test.internal.utils.PropertyContainer;
@@ -181,8 +183,8 @@ public class NodeFactory {
 
       return elem;
     } catch (Exception e) {
-      throw new RuntimeException("Cannot create element for tag <" + tag + ">",
-          e);
+      throw new GwtTestDomException("Cannot create element for tag <" + tag
+          + ">", e);
     }
   }
 
@@ -191,7 +193,7 @@ public class NodeFactory {
       return (Style) loadClass(Style.class.getName()).getConstructor(
           Element.class).newInstance(owner);
     } catch (Exception e) {
-      throw new RuntimeException("Unable to create style for element <"
+      throw new GwtTestDomException("Unable to create style for element <"
           + owner.getTagName() + ">" + e);
     }
   }
@@ -203,7 +205,7 @@ public class NodeFactory {
 
       return text;
     } catch (Exception e) {
-      throw new RuntimeException("Unable to create text " + e);
+      throw new GwtTestDomException("Unable to create text " + e);
     }
   }
 
@@ -215,10 +217,11 @@ public class NodeFactory {
         DOCUMENT.appendChild(e);
         PropertyContainerUtils.setProperty(DOCUMENT, "DocumentElement", e);
       } catch (Exception e) {
-        if (RuntimeException.class.isInstance(e)) {
-          throw (RuntimeException) e;
+        if (GwtTestException.class.isInstance(e)) {
+          throw (GwtTestException) e;
+        } else {
+          throw new GwtTestDomException("Unable to create Document", e);
         }
-        throw new RuntimeException("Unable to create Document", e);
       }
     }
     return DOCUMENT;
@@ -248,7 +251,7 @@ public class NodeFactory {
       }
       i++;
     }
-    throw new RuntimeException("Cannot find a root HTML element in file '"
+    throw new GwtTestDomException("Cannot find a root <html> element in file '"
         + hostPagePath + "'");
   }
 
@@ -265,8 +268,9 @@ public class NodeFactory {
       }
     }
     if (is == null) {
-      throw new RuntimeException("Cannot find file '" + hostPagePath
-          + "', please override " + GwtTest.class.getSimpleName()
+      throw new GwtTestConfigurationException("Cannot find file '"
+          + hostPagePath + "', please override "
+          + GwtTest.class.getSimpleName()
           + ".getHostPagePath() method correctly (see "
           + ClassLoader.class.getSimpleName()
           + ".getResourceAsStream(string name))");
@@ -282,14 +286,14 @@ public class NodeFactory {
 
       return sb.toString();
     } catch (IOException e) {
-      throw new RuntimeException("Error while reading module HTML host page '"
-          + hostPagePath + "'", e);
+      throw new GwtTestConfigurationException(
+          "Error while reading module HTML host page '" + hostPagePath + "'", e);
     } finally {
       if (br != null) {
         try {
           br.close();
         } catch (IOException e) {
-          throw new RuntimeException(e);
+          // don't care
         }
       }
     }

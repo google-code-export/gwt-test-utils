@@ -10,6 +10,7 @@ import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.user.client.Element;
+import com.octo.gwt.test.exceptions.GwtTestPatchException;
 import com.octo.gwt.test.internal.overrides.OverrideNodeList;
 import com.octo.gwt.test.patchers.AutomaticPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
@@ -30,8 +31,8 @@ public class DomQueryPatcher extends AutomaticPatcher {
       Set<Node> nodeSet = new DOMNodeSelector(root).querySelectorAll(selector);
       return new OverrideNodeList<Node>(nodeSet);
     } catch (NodeSelectorException e) {
-      throw new RuntimeException(
-          "Error while trying to find GWT nodes matching '" + selector + "'");
+      throw new GwtTestPatchException(
+          "Error while trying to find GWT nodes matching '" + selector + "'", e);
     }
   }
 

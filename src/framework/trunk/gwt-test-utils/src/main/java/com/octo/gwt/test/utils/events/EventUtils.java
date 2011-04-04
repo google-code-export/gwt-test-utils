@@ -2,6 +2,7 @@ package com.octo.gwt.test.utils.events;
 
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.user.client.Event;
+import com.octo.gwt.test.exceptions.GwtTestDomException;
 import com.octo.gwt.test.internal.overrides.OverrideEvent;
 
 public class EventUtils {
@@ -47,7 +48,7 @@ public class EventUtils {
       return Event.ONCONTEXTMENU;
     }
 
-    throw new RuntimeException("Unable to convert DOM Event \"" + type
+    throw new GwtTestDomException("Unable to convert DOM Event \"" + type
         + "\" to an integer");
   }
 
@@ -92,7 +93,7 @@ public class EventUtils {
       case Event.ONCONTEXTMENU:
         return "contextmenu";
       default:
-        throw new RuntimeException(
+        throw new GwtTestDomException(
             "Cannot get the String type of event with code [" + eventTypeInt
                 + "]");
     }

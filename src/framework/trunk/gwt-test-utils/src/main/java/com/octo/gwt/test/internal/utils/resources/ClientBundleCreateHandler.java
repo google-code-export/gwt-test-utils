@@ -21,6 +21,7 @@ import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.resources.client.TextResource;
 import com.google.gwt.resources.ext.DefaultExtensions;
 import com.octo.gwt.test.GwtCreateHandler;
+import com.octo.gwt.test.exceptions.GwtTestResourcesException;
 import com.octo.gwt.test.internal.GwtClassPool;
 import com.octo.gwt.test.internal.patchers.GwtPatcher;
 
@@ -33,24 +34,26 @@ public class ClientBundleCreateHandler implements GwtCreateHandler {
 
       private static class ResourceFileEntry {
 
-        private Method resourceMethod;
+        private final Method resourceMethod;
 
-        private String resourceName;
+        private final String resourceName;
+
         public ResourceFileEntry(String resourceName, Method resourceMethod) {
           this.resourceName = resourceName;
           this.resourceMethod = resourceMethod;
         }
       }
+
       private CtClass ctClass;
 
-      private Map<Method, URL> resourceURLs = new HashMap<Method, URL>();
+      private final Map<Method, URL> resourceURLs = new HashMap<Method, URL>();
 
       public ClientBundleMethodsRegistry(Class<? extends ClientBundle> clazz) {
         try {
           ctClass = GwtClassPool.get().get(clazz.getName());
         } catch (NotFoundException e) {
-          throw new RuntimeException("Unable to find class [" + clazz.getName()
-              + "]", e);
+          throw new GwtTestResourcesException("Unable to find class ["
+              + clazz.getName() + "]", e);
         }
       }
 
@@ -131,10 +134,11 @@ public class ClientBundleCreateHandler implements GwtCreateHandler {
         }
 
         if (existingFiles.isEmpty()) {
-          throw new RuntimeException("No resource file found for method "
-              + ctClass.getSimpleName() + "." + method.getName() + "()");
+          throw new GwtTestResourcesException(
+              "No resource file found for method " + ctClass.getSimpleName()
+                  + "." + method.getName() + "()");
         } else if (existingFiles.size() > 1) {
-          throw new RuntimeException(
+          throw new GwtTestResourcesException(
               "Too many resource files found for method "
                   + ctClass.getSimpleName() + "." + method.getName() + "()");
         }
@@ -147,7 +151,7 @@ public class ClientBundleCreateHandler implements GwtCreateHandler {
         DefaultExtensions annotation = method.getReturnType().getAnnotation(
             DefaultExtensions.class);
         if (annotation == null) {
-          throw new RuntimeException(
+          throw new GwtTestResourcesException(
               method.getReturnType().getSimpleName()
                   + " does not define a default extension for resource file. You should use a correct @"
                   + Source.class.getSimpleName() + " annotation on "
@@ -161,6 +165,7 @@ public class ClientBundleCreateHandler implements GwtCreateHandler {
     }
 
     private static Map<String, ClientBundleProxyFactory> factoryMap = new HashMap<String, ClientBundleProxyFactory>();
+
     private static Object generateInvocationHandler(
         final IClientBundleCallback callback,
         final String clientBundleFunctionName) {
@@ -176,8 +181,9 @@ public class ClientBundleCreateHandler implements GwtCreateHandler {
               return result;
             }
           }
-          throw new RuntimeException("Not managed method \"" + method.getName()
-              + "\" for generated " + clazz.getSimpleName() + " proxy");
+          throw new GwtTestResourcesException("Not managed method \""
+              + method.getName() + "\" for generated " + clazz.getSimpleName()
+              + " proxy");
         }
       };
 
@@ -196,9 +202,9 @@ public class ClientBundleCreateHandler implements GwtCreateHandler {
       return factory;
     }
 
-    private ClientBundleMethodsRegistry methodRegistry;
+    private final ClientBundleMethodsRegistry methodRegistry;
 
-    private Class<? extends ClientBundle> proxiedClass;
+    private final Class<? extends ClientBundle> proxiedClass;
 
     private ClientBundleProxyFactory(Class<? extends ClientBundle> proxiedClass) {
       this.proxiedClass = proxiedClass;
@@ -228,7 +234,7 @@ public class ClientBundleCreateHandler implements GwtCreateHandler {
             return generateInvocationHandler(new ImageResourceCallback(clazz,
                 resourceFile, proxiedClass), method.getName());
           }
-          throw new RuntimeException(
+          throw new GwtTestResourcesException(
               "Not managed return type for ClientBundle : "
                   + method.getReturnType().getSimpleName());
         }

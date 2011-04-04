@@ -10,6 +10,8 @@ import org.easymock.IAnswer;
 import org.junit.Before;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.octo.gwt.test.exceptions.GwtTestException;
+import com.octo.gwt.test.exceptions.ReflectionException;
 import com.octo.gwt.test.internal.utils.ArrayUtils;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 import com.octo.gwt.test.utils.GwtReflectionUtils.MethodCallback;
@@ -42,7 +44,7 @@ public abstract class GwtTestWithEasyMock extends GwtTestWithMocks {
 
   private static class FailureAnswer<T> implements IAnswer<T> {
 
-    private Throwable result;
+    private final Throwable result;
 
     public FailureAnswer(Throwable result) {
       this.result = result;
@@ -60,7 +62,7 @@ public abstract class GwtTestWithEasyMock extends GwtTestWithMocks {
 
   private static class SuccessAnswer<T> implements IAnswer<T> {
 
-    private T result;
+    private final T result;
 
     public SuccessAnswer(T result) {
       this.result = result;
@@ -137,7 +139,7 @@ public abstract class GwtTestWithEasyMock extends GwtTestWithMocks {
   @SuppressWarnings("unchecked")
   public <T> void expectServiceAndCallbackOnSuccess(final T object) {
     IAnswer<T> answer = new SuccessAnswer<T>(object);
-    EasyMock.expectLastCall().andAnswer((IAnswer<Object>) answer);
+    EasyMock.expectLastCall().andAnswer(answer);
   }
 
   /**
@@ -171,8 +173,12 @@ public abstract class GwtTestWithEasyMock extends GwtTestWithMocks {
         f.set(this, mock);
       }
     } catch (Exception e) {
-      throw new RuntimeException("Error during gwt-test-utils @Mock creation",
-          e);
+      if (GwtTestException.class.isInstance(e)) {
+        throw (GwtTestException) e;
+      } else {
+        throw new ReflectionException(
+            "Error during gwt-test-utils @Mock creation", e);
+      }
     }
   }
 

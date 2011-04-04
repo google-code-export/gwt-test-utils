@@ -3,6 +3,7 @@ package com.octo.gwt.test.internal.utils;
 import javassist.CtClass;
 import javassist.NotFoundException;
 
+import com.octo.gwt.test.exceptions.GwtTestPatchException;
 import com.octo.gwt.test.internal.GwtClassPool;
 
 public class PropertyContainerUtils {
@@ -14,7 +15,7 @@ public class PropertyContainerUtils {
       STRING_TYPE = GwtClassPool.get().get(String.class.getName());
     } catch (NotFoundException e) {
       // Never append
-      throw new RuntimeException(e);
+      throw new GwtTestPatchException(e);
     }
   }
 
@@ -26,7 +27,7 @@ public class PropertyContainerUtils {
       PropertyContainerAware pca = (PropertyContainerAware) o;
       return pca;
     } else {
-      throw new RuntimeException("Not "
+      throw new GwtTestPatchException("Not "
           + PropertyContainerAware.class.getSimpleName()
           + " for getProperty on object : " + o);
     }
@@ -106,7 +107,7 @@ public class PropertyContainerUtils {
       Object propertyValue) {
     PropertyContainerAware pca = cast(o);
     if (pca == null) {
-      throw new RuntimeException("Call setProperty on null object");
+      throw new GwtTestPatchException("Call setProperty on null object");
     }
     pca.getProperties().put(propertyName, propertyValue);
   }

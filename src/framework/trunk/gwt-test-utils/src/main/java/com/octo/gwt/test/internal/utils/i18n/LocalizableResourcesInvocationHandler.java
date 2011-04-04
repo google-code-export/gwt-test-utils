@@ -7,13 +7,14 @@ import java.util.Properties;
 
 import com.google.gwt.i18n.client.LocalizableResource;
 import com.google.gwt.i18n.client.LocalizableResource.DefaultLocale;
+import com.octo.gwt.test.exceptions.GwtTestI18NException;
 import com.octo.gwt.test.internal.GwtConfig;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 public abstract class LocalizableResourcesInvocationHandler implements
     InvocationHandler {
 
-  private Class<? extends LocalizableResource> proxiedClass;
+  private final Class<? extends LocalizableResource> proxiedClass;
 
   public LocalizableResourcesInvocationHandler(
       Class<? extends LocalizableResource> proxiedClass) {
@@ -45,7 +46,7 @@ public abstract class LocalizableResourcesInvocationHandler implements
       return result;
     }
 
-    throw new RuntimeException(
+    throw new GwtTestI18NException(
         "Unable to find a Locale specific resource file to bind with i18n interface '"
             + proxiedClass.getName()
             + "' and there is no @DefaultXXXValue annotation on '"
@@ -67,7 +68,7 @@ public abstract class LocalizableResourcesInvocationHandler implements
         case 2:
           return new Locale(localeCodes[0], localeCodes[1]);
         default:
-          throw new RuntimeException(
+          throw new GwtTestI18NException(
               "Cannot parse Locale value in annoted class ["
                   + clazz.getSimpleName() + "] : @"
                   + DefaultLocale.class.getSimpleName() + "("

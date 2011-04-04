@@ -14,6 +14,7 @@ import javassist.CtMethod;
 import javassist.NotFoundException;
 
 import com.octo.gwt.test.Patcher;
+import com.octo.gwt.test.exceptions.GwtTestPatchException;
 import com.octo.gwt.test.internal.utils.GwtPatcherUtils;
 import com.octo.gwt.test.patchers.PatchMethod.Type;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
@@ -44,7 +45,7 @@ public class AutomaticPatcher implements Patcher {
   public void finalizeClass(CtClass c) throws Exception {
     for (Method m : annotatedMethods.keySet()) {
       if (!processedMethods.contains(m)) {
-        throw new RuntimeException("@PatchMethod not used : " + m);
+        throw new GwtTestPatchException("@PatchMethod not used : " + m);
       }
     }
 
@@ -56,7 +57,7 @@ public class AutomaticPatcher implements Patcher {
     if (e != null) {
       Method annotatedMethod = e.getKey();
       if (!Modifier.isStatic(annotatedMethod.getModifiers())) {
-        throw new RuntimeException("Method " + annotatedMethod
+        throw new GwtTestPatchException("Method " + annotatedMethod
             + " have to be static");
       }
 
@@ -217,12 +218,12 @@ public class AutomaticPatcher implements Patcher {
       if (clazz == CtClass.class) {
         params.add(c);
       } else {
-        throw new RuntimeException("Not managed param " + clazz
+        throw new GwtTestPatchException("Not managed param " + clazz
             + " for method " + annotatedMethod);
       }
     }
     if (annotatedMethod.getReturnType() != String.class) {
-      throw new RuntimeException("Wrong return type "
+      throw new GwtTestPatchException("Wrong return type "
           + annotatedMethod.getReturnType() + " for method " + annotatedMethod);
     }
     return (String) annotatedMethod.invoke(null, params.toArray());

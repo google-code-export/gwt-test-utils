@@ -11,6 +11,7 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Text;
+import com.octo.gwt.test.exceptions.GwtTestDomException;
 import com.octo.gwt.test.internal.overrides.OverrideNodeList;
 import com.octo.gwt.test.internal.utils.PropertyContainer;
 import com.octo.gwt.test.internal.utils.PropertyContainerUtils;
@@ -36,14 +37,8 @@ public class NodePatcher extends AutomaticPropertyContainerPatcher {
     Node newNode;
     switch (node.getNodeType()) {
       case Node.ELEMENT_NODE:
-        try {
-          Element elem = node.cast();
-          newNode = NodeFactory.createElement((elem).getTagName());
-        } catch (Exception e) {
-          throw new RuntimeException(
-              "Error while creating an element of type ["
-                  + node.getClass().getName() + "]");
-        }
+        Element elem = node.cast();
+        newNode = NodeFactory.createElement((elem).getTagName());
         break;
       case Node.DOCUMENT_NODE:
         newNode = NodeFactory.getDocument();
@@ -52,8 +47,8 @@ public class NodePatcher extends AutomaticPropertyContainerPatcher {
         newNode = NodeFactory.createTextNode(((Text) node).getData());
         break;
       default:
-        throw new RuntimeException("Cannot create a Node of type ["
-            + node.getClass().getCanonicalName() + "]");
+        throw new GwtTestDomException("Cannot create a Node of type ["
+            + node.getClass().getName() + "]");
     }
 
     PropertyContainer propertyContainer2 = PropertyContainerUtils.cast(newNode).getProperties();
@@ -135,7 +130,7 @@ public class NodePatcher extends AutomaticPropertyContainerPatcher {
       case Node.TEXT_NODE:
         return "#text";
       default:
-        throw new RuntimeException(
+        throw new GwtTestDomException(
             "Invalid Node type (not a Document / Element / Text : "
                 + node.getNodeType());
     }
@@ -165,7 +160,7 @@ public class NodePatcher extends AutomaticPropertyContainerPatcher {
         Text text = node.cast();
         return text.getData();
       default:
-        throw new RuntimeException(
+        throw new GwtTestDomException(
             "Invalid Node type (not a Document / Element / Text : "
                 + node.getNodeType());
     }
@@ -326,7 +321,7 @@ public class NodePatcher extends AutomaticPropertyContainerPatcher {
         fillNewPropertyContainer(nn, toCopy);
         n.put(entry.getKey(), nn);
       } else {
-        throw new RuntimeException("Not managed type "
+        throw new GwtTestDomException("Not managed type "
             + entry.getValue().getClass() + ", value " + entry.getKey());
       }
     }

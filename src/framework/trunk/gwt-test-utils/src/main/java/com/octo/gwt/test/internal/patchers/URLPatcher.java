@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
 import com.google.gwt.http.client.URL;
+import com.octo.gwt.test.exceptions.GwtTestPatchException;
 import com.octo.gwt.test.patchers.AutomaticPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
@@ -16,7 +17,7 @@ public class URLPatcher extends AutomaticPatcher {
     try {
       return URLEncoder.encode(decodedURLComponent, "UTF-8");
     } catch (UnsupportedEncodingException e) {
-      throw new RuntimeException(e);
+      throw new GwtTestPatchException(e);
     }
   }
 

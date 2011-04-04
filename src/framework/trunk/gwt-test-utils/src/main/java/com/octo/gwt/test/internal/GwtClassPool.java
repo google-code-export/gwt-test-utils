@@ -4,6 +4,8 @@ import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.NotFoundException;
 
+import com.octo.gwt.test.exceptions.GwtTestPatchException;
+
 public class GwtClassPool {
 
   private static ClassPool classPool = ClassPool.getDefault();
@@ -16,7 +18,7 @@ public class GwtClassPool {
     try {
       return GwtClassPool.get().get(className);
     } catch (NotFoundException e) {
-      throw new RuntimeException("Cannot find class in the classpath : '"
+      throw new GwtTestPatchException("Cannot find class in the classpath : '"
           + className + "'");
     }
   }

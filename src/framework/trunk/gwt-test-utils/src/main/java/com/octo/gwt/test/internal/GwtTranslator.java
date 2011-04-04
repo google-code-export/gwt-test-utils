@@ -4,7 +4,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-import javassist.CannotCompileException;
 import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.NotFoundException;
@@ -14,6 +13,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.octo.gwt.test.Patcher;
+import com.octo.gwt.test.exceptions.GwtTestException;
+import com.octo.gwt.test.exceptions.GwtTestPatchException;
 import com.octo.gwt.test.internal.modifiers.JavaClassModifier;
 import com.octo.gwt.test.internal.utils.GwtPatcherUtils;
 
@@ -23,42 +24,37 @@ public class GwtTranslator implements Translator {
 
   private static final Pattern TEST_PATTERN = Pattern.compile("^.*[T|t][E|e][S|s][T|t].*$");
 
-  private Set<String> jsoSubTypes;
-  private Map<String, Patcher> patchers;
+  private final Set<String> jsoSubTypes;
+  private final Map<String, Patcher> patchers;
 
   public GwtTranslator(Map<String, Patcher> patchers, Set<String> jsoSubTypes) {
     this.patchers = patchers;
     this.jsoSubTypes = jsoSubTypes;
   }
 
-  public void onLoad(ClassPool pool, String className)
-      throws NotFoundException, CannotCompileException {
+  public void onLoad(ClassPool pool, String className) throws NotFoundException {
     if (!jsoSubTypes.contains(className)) {
       patchClass(pool.get(className));
     }
   }
 
-  public void start(ClassPool pool) throws NotFoundException,
-      CannotCompileException {
+  public void start(ClassPool pool) throws NotFoundException {
     for (String jsoSubType : jsoSubTypes) {
       patchClass(pool.get(jsoSubType));
     }
   }
 
-  private void applyJavaClassModifier(CtClass ctClass)
-      throws CannotCompileException {
+  private void applyJavaClassModifier(CtClass ctClass) {
     for (JavaClassModifier modifier : ConfigurationLoader.get().getJavaClassModifierList()) {
       logger.debug("Apply '" + modifier.getClass().getName() + "' to class '"
           + ctClass.getName() + "'");
       try {
         modifier.modify(ctClass);
       } catch (Exception e) {
-        if (CannotCompileException.class.isInstance(e)) {
-          throw (CannotCompileException) e;
-        } else if (RuntimeException.class.isInstance(e)) {
-          throw (RuntimeException) e;
+        if (GwtTestException.class.isInstance(e)) {
+          throw (GwtTestException) e;
         } else {
-          throw new CannotCompileException(e);
+          throw new GwtTestPatchException(e);
         }
       }
     }
@@ -72,15 +68,14 @@ public class GwtTranslator implements Translator {
       try {
         GwtPatcherUtils.patch(classToModify, patcher);
       } catch (Exception e) {
-        throw new RuntimeException("Error while patching class '"
+        throw new GwtTestPatchException("Error while patching class '"
             + classToModify.getName() + "' with patcher '"
             + patcher.getClass().getName() + "'");
       }
     }
   }
 
-  private void modifiyClass(CtClass classToModify)
-      throws CannotCompileException {
+  private void modifiyClass(CtClass classToModify) {
 
     for (String exclusion : ModuleData.get().getClientExclusions()) {
       if (classToModify.getName().equals(exclusion)) {
@@ -102,8 +97,7 @@ public class GwtTranslator implements Translator {
     }
   }
 
-  private void patchClass(CtClass classToModify) throws NotFoundException,
-      CannotCompileException {
+  private void patchClass(CtClass classToModify) {
     logger.debug("Load class '" + classToModify.getName() + "'");
     applyPatcher(classToModify);
     modifiyClass(classToModify);

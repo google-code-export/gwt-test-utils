@@ -10,6 +10,7 @@ import org.mockito.stubbing.Answer;
 import org.mockito.stubbing.Stubber;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.octo.gwt.test.exceptions.ReflectionException;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 /**
@@ -31,7 +32,7 @@ public abstract class GwtTestWithMockito extends GwtTestWithMocks {
 
   private static class FailureAnswer<T> implements Answer<T> {
 
-    private Throwable result;
+    private final Throwable result;
 
     public FailureAnswer(Throwable result) {
       this.result = result;
@@ -49,7 +50,7 @@ public abstract class GwtTestWithMockito extends GwtTestWithMocks {
 
   private static class SuccessAnswer<T> implements Answer<T> {
 
-    private T result;
+    private final T result;
 
     public SuccessAnswer(T result) {
       this.result = result;
@@ -99,7 +100,7 @@ public abstract class GwtTestWithMockito extends GwtTestWithMocks {
       try {
         addMockedObject(f.getType(), f.get(this));
       } catch (Exception e) {
-        throw new RuntimeException(
+        throw new ReflectionException(
             "Could not register Mockito mocks declared in test class", e);
       }
     }

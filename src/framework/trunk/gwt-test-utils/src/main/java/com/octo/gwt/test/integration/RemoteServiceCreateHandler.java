@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import com.octo.gwt.test.GwtCreateHandler;
+import com.octo.gwt.test.exceptions.GwtTestRpcException;
 import com.octo.gwt.test.integration.internal.GwtRpcInvocationHandler;
 import com.octo.gwt.test.internal.GwtClassPool;
 
@@ -39,8 +40,8 @@ public abstract class RemoteServiceCreateHandler implements GwtCreateHandler {
 
   private static final Logger logger = LoggerFactory.getLogger(RemoteServiceCreateHandler.class);
 
-  private GwtRpcExceptionHandler exceptionHandler;
-  private GwtRpcSerializerHandler serializerHander;
+  private final GwtRpcExceptionHandler exceptionHandler;
+  private final GwtRpcSerializerHandler serializerHander;
 
   public RemoteServiceCreateHandler() {
     exceptionHandler = getExceptionHandler();
@@ -64,11 +65,10 @@ public abstract class RemoteServiceCreateHandler implements GwtCreateHandler {
       throw new Exception("Remote serivce Async class not found : " + asyncName);
     }
     logger.debug("Searching remote service implementing " + className);
-    Object service = findService((Class<? extends RemoteService>) classLiteral,
-        relativePath);
+    Object service = findService(classLiteral, relativePath);
     if (service == null) {
       logger.error("Remote service not found " + className);
-      throw new RuntimeException("Remote service not found " + className);
+      throw new GwtTestRpcException("Remote service not found " + className);
     }
 
     GwtRpcInvocationHandler handler = new GwtRpcInvocationHandler(asyncClazz,
@@ -91,7 +91,7 @@ public abstract class RemoteServiceCreateHandler implements GwtCreateHandler {
         }
       }
     }
-    throw new RuntimeException("Cannot find the '@"
+    throw new GwtTestRpcException("Cannot find the '@"
         + RemoteServiceRelativePath.class.getSimpleName()
         + "' annotation on RemoteService interface '" + clazz.getName() + "'");
   }

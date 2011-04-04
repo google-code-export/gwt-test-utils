@@ -4,6 +4,7 @@ import java.net.URL;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ClientBundle;
+import com.octo.gwt.test.exceptions.GwtTestResourcesException;
 
 public abstract class AbstractClientBundleCallback implements
     IClientBundleCallback {
@@ -38,7 +39,7 @@ public abstract class AbstractClientBundleCallback implements
         return computeUrl(resourceURL,
             (Class<? extends ClientBundle>) proxiedClass.getInterfaces()[0]);
       } else {
-        throw new RuntimeException(
+        throw new GwtTestResourcesException(
             "Cannot compute the relative URL of resource '" + resourceURL + "'");
       }
     }

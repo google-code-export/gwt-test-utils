@@ -20,6 +20,7 @@ import org.w3c.dom.NodeList;
 
 import com.octo.gwt.test.GwtClassLoader;
 import com.octo.gwt.test.exceptions.GwtTestConfigurationException;
+import com.octo.gwt.test.exceptions.GwtTestException;
 
 public class ModuleData {
 
@@ -94,10 +95,10 @@ public class ModuleData {
       parseModuleFile(moduleFilePath, document, xpath);
 
     } catch (Exception e) {
-      if (e instanceof RuntimeException) {
-        throw (RuntimeException) e;
+      if (GwtTestException.class.isInstance(e)) {
+        throw (GwtTestException) e;
       } else {
-        throw new RuntimeException(e);
+        throw new GwtTestConfigurationException(e);
       }
     }
   }

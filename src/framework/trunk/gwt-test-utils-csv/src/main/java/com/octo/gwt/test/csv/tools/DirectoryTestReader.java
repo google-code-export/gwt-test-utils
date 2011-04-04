@@ -21,7 +21,9 @@ import javassist.CtMethod;
 import com.octo.gwt.test.GwtClassLoader;
 import com.octo.gwt.test.csv.CsvDirectory;
 import com.octo.gwt.test.csv.CsvMacros;
+import com.octo.gwt.test.csv.GwtTestCsvException;
 import com.octo.gwt.test.csv.runner.CsvReader;
+import com.octo.gwt.test.exceptions.GwtTestException;
 import com.octo.gwt.test.internal.GwtClassPool;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
@@ -30,7 +32,7 @@ public class DirectoryTestReader {
   private static <T> T getAnnotation(Class<?> clazz, Class<T> annotationClass) {
     T annotation = GwtReflectionUtils.getAnnotation(clazz, annotationClass);
     if (annotation == null) {
-      throw new RuntimeException("Missing annotation \'@"
+      throw new GwtTestCsvException("Missing annotation \'@"
           + annotationClass.getSimpleName() + "\' on class ["
           + clazz.getCanonicalName() + "]");
     }
@@ -68,7 +70,11 @@ public class DirectoryTestReader {
       initCsvMacros(csvMacrosAnnotation);
       initTestMethods(clazz, csvDirectoryAnnotation);
     } catch (Exception e) {
-      throw new RuntimeException(e);
+      if (GwtTestException.class.isInstance(e)) {
+        throw (GwtTestException) e;
+      } else {
+        throw new GwtTestCsvException(e);
+      }
     }
   }
 

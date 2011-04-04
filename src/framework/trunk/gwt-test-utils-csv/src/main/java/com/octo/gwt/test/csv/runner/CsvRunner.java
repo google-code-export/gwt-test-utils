@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import com.google.gwt.event.shared.UmbrellaException;
 import com.octo.gwt.test.csv.CsvMethod;
 import com.octo.gwt.test.csv.GwtCsvTest;
+import com.octo.gwt.test.csv.GwtTestCsvException;
 import com.octo.gwt.test.csv.tools.ObjectFinder;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
@@ -31,7 +32,7 @@ public class CsvRunner {
 
   private int lineNumber = -1;
 
-  private List<ObjectFinder> objectFinders = new ArrayList<ObjectFinder>();
+  private final List<ObjectFinder> objectFinders = new ArrayList<ObjectFinder>();
 
   public void addObjectFinder(ObjectFinder objectFinder) {
     objectFinders.add(objectFinder);
@@ -333,7 +334,7 @@ public class CsvRunner {
             try {
               return m.invoke(current, counter++);
             } catch (Exception e) {
-              throw new RuntimeException("Iterator exception", e);
+              throw new GwtTestCsvException("Iterator exception", e);
             }
           }
 

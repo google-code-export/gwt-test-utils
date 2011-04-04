@@ -16,6 +16,7 @@ import javassist.Modifier;
 import javassist.NotFoundException;
 import javassist.bytecode.Descriptor;
 
+import com.octo.gwt.test.exceptions.GwtTestRpcException;
 import com.octo.gwt.test.internal.GwtClassPool;
 import com.octo.gwt.test.internal.modifiers.JavaClassModifier;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
@@ -24,8 +25,7 @@ public class SerializableModifier implements JavaClassModifier {
 
   private static final String DEFAULT_CONS_METHOD_NAME = "DEFAULT_CONS_METHOD";
 
-  public static void readObject(Serializable ex, ObjectInputStream ois)
-      throws ClassNotFoundException, IOException {
+  public static void readObject(Serializable ex, ObjectInputStream ois) {
     try {
       // call the default read method
       ois.defaultReadObject();
@@ -44,7 +44,7 @@ public class SerializableModifier implements JavaClassModifier {
       }
 
     } catch (Exception e) {
-      throw new RuntimeException("Error during deserialization of object "
+      throw new GwtTestRpcException("Error during deserialization of object "
           + ex.getClass().getName(), e);
     }
 

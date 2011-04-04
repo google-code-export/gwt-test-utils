@@ -11,6 +11,8 @@ import org.junit.runner.manipulation.Sortable;
 import org.junit.runner.manipulation.Sorter;
 import org.junit.runner.notification.RunNotifier;
 
+import com.octo.gwt.test.exceptions.GwtTestConfigurationException;
+
 /**
  * <p>
  * The base gwt-test-utils test {@link Runner}. It provide a mecanism to wrap
@@ -25,14 +27,14 @@ import org.junit.runner.notification.RunNotifier;
 public abstract class GwtRunnerBase extends Runner implements Filterable,
     Sortable {
 
-  private Runner runner;
+  private final Runner runner;
 
   public GwtRunnerBase(Class<?> clazz) throws Exception {
     Class<?> runnerClass = GwtClassLoader.get().loadClass(
         getClassRunnerClassName());
 
     if (!Runner.class.isAssignableFrom(runnerClass)) {
-      throw new RuntimeException("Cannot create a valid JUnit "
+      throw new GwtTestConfigurationException("Cannot create a valid JUnit "
           + Runner.class.getSimpleName() + " : class '"
           + getClassRunnerClassName() + "' does not extend '"
           + Runner.class.getName() + "'");

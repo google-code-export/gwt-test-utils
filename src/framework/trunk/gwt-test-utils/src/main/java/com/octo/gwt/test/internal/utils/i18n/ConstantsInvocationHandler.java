@@ -15,6 +15,7 @@ import com.google.gwt.i18n.client.Constants.DefaultStringArrayValue;
 import com.google.gwt.i18n.client.Constants.DefaultStringMapValue;
 import com.google.gwt.i18n.client.Constants.DefaultStringValue;
 import com.google.gwt.i18n.client.LocalizableResource;
+import com.octo.gwt.test.exceptions.GwtTestI18NException;
 import com.octo.gwt.test.internal.PropertiesStringModifier;
 
 public class ConstantsInvocationHandler extends
@@ -29,8 +30,9 @@ public class ConstantsInvocationHandler extends
       Class<T> defaultAnnotation) {
     T v = method.getAnnotation(defaultAnnotation);
     if (v == null) {
-      throw new RuntimeException("No matching property \"" + method.getName()
-          + "\" for Constants class [" + getProxiedClass().getCanonicalName()
+      throw new GwtTestI18NException("No matching property \""
+          + method.getName() + "\" for Constants class ["
+          + getProxiedClass().getCanonicalName()
           + "]. Please check the corresponding properties file or use @"
           + defaultAnnotation.getSimpleName());
     }
@@ -68,10 +70,10 @@ public class ConstantsInvocationHandler extends
         String methodName = v[i];
         Method correspondingKeyMethod = getProxiedClass().getMethod(methodName);
         if (correspondingKeyMethod == null) {
-          throw new RuntimeException("Cannot find method '" + methodName
+          throw new GwtTestI18NException("Cannot find method '" + methodName
               + "' in class [" + getProxiedClass().getName() + "]");
         } else if (correspondingKeyMethod.getReturnType() != String.class) {
-          throw new RuntimeException("Method '"
+          throw new GwtTestI18NException("Method '"
               + getProxiedClass().getSimpleName() + "." + methodName
               + "()' should return a String");
         }
@@ -98,9 +100,10 @@ public class ConstantsInvocationHandler extends
       return a.value();
     }
 
-    throw new RuntimeException("The return type (" + returnType.getSimpleName()
-        + ") of i18n '" + getProxiedClass().getSimpleName() + "."
-        + method.getName() + "()' is not managed");
+    throw new GwtTestI18NException("The return type ("
+        + returnType.getSimpleName() + ") of i18n '"
+        + getProxiedClass().getSimpleName() + "." + method.getName()
+        + "()' is not managed");
 
   }
 
@@ -129,7 +132,7 @@ public class ConstantsInvocationHandler extends
         String methodName = v[i];
         Method correspondingKeyMethod = clazz.getMethod(methodName);
         if (correspondingKeyMethod == null) {
-          throw new RuntimeException("Cannot find method '" + methodName
+          throw new GwtTestI18NException("Cannot find method '" + methodName
               + "' in class [" + clazz.getName() + "]");
         }
 
@@ -147,9 +150,10 @@ public class ConstantsInvocationHandler extends
       return Boolean.parseBoolean(line);
     }
 
-    throw new RuntimeException("The return type (" + returnType.getSimpleName()
-        + ") of i18n '" + method.getDeclaringClass().getSimpleName() + "."
-        + method.getName() + "()' is not managed");
+    throw new GwtTestI18NException("The return type ("
+        + returnType.getSimpleName() + ") of i18n '"
+        + method.getDeclaringClass().getSimpleName() + "." + method.getName()
+        + "()' is not managed");
 
   }
 }

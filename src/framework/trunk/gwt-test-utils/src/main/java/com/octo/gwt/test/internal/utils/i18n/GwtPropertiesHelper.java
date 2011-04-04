@@ -7,6 +7,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 
+import com.octo.gwt.test.exceptions.GwtTestI18NException;
 import com.octo.gwt.test.internal.utils.GwtPropertiesUtils;
 
 public class GwtPropertiesHelper {
@@ -49,8 +50,8 @@ public class GwtPropertiesHelper {
       cachedProperties.put(path, properties);
       return properties;
     } catch (Exception e) {
-      throw new RuntimeException("Unable to load property file [" + path + "]",
-          e);
+      throw new GwtTestI18NException("Unable to load property file [" + path
+          + "]", e);
     }
   }
 

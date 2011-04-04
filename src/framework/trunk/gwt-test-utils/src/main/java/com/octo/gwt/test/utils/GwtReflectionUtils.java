@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.octo.gwt.test.exceptions.GwtTestException;
+import com.octo.gwt.test.exceptions.ReflectionException;
 
 public class GwtReflectionUtils {
 
@@ -69,7 +70,7 @@ public class GwtReflectionUtils {
       Object res = m.invoke(target, args);
       return (T) res;
     } catch (Exception e) {
-      throw new RuntimeException("Unable to call method \""
+      throw new ReflectionException("Unable to call method \""
           + target.getClass().getSimpleName() + "." + methodName + "\"", e);
     }
   }
@@ -83,7 +84,7 @@ public class GwtReflectionUtils {
       Object res = m.invoke(null, args);
       return (T) res;
     } catch (Exception e) {
-      throw new RuntimeException("Unable to call static method \""
+      throw new ReflectionException("Unable to call static method \""
           + clazz.getSimpleName() + "." + methodName + "\"", e);
     }
   }
@@ -230,7 +231,7 @@ public class GwtReflectionUtils {
       return (T) field.get(target);
     } catch (Exception e) {
       e.printStackTrace();
-      throw new RuntimeException(e.getMessage()
+      throw new ReflectionException(e.getMessage()
           + " Unable to get field, class " + fieldName + ", fieldClass "
           + target.getClass());
     }
@@ -247,7 +248,7 @@ public class GwtReflectionUtils {
       return (T) field.get(null);
     } catch (Exception e) {
       e.printStackTrace();
-      throw new RuntimeException(e.getMessage()
+      throw new ReflectionException(e.getMessage()
           + " Unable to get static field, class " + fieldName + ", fieldClass "
           + clazz);
     }
@@ -270,13 +271,13 @@ public class GwtReflectionUtils {
       throw new IllegalArgumentException("Class must not be null");
     }
     if (clazz.isInterface()) {
-      throw new RuntimeException("Error during instanciation of '"
+      throw new ReflectionException("Error during instanciation of '"
           + clazz.getName() + "'. Specified class is an interface");
     }
     try {
       return instantiateClass(clazz.getDeclaredConstructor());
     } catch (NoSuchMethodException ex) {
-      throw new RuntimeException("Error during instanciation of '"
+      throw new ReflectionException("Error during instanciation of '"
           + clazz.getName() + "'. No default constructor found", ex);
     }
   }
@@ -303,17 +304,17 @@ public class GwtReflectionUtils {
       makeAccessible(ctor);
       return ctor.newInstance(args);
     } catch (InstantiationException ex) {
-      throw new RuntimeException("Error during instanciation of '"
+      throw new ReflectionException("Error during instanciation of '"
           + ctor.getDeclaringClass().getName() + "'. Is it an abstract class?",
           ex);
     } catch (IllegalAccessException ex) {
-      throw new RuntimeException(
+      throw new ReflectionException(
           "Error during instanciation of '"
               + ctor.getDeclaringClass().getName()
               + "'. Has the class definition changed? Is the constructor accessible?",
           ex);
     } catch (IllegalArgumentException ex) {
-      throw new RuntimeException("Error during instanciation of '"
+      throw new ReflectionException("Error during instanciation of '"
           + ctor.getDeclaringClass().getName()
           + "'. Illegal arguments for constructor", ex);
     } catch (InvocationTargetException ex) {
@@ -322,7 +323,7 @@ public class GwtReflectionUtils {
       } else if (GwtTestException.class.isInstance(ex.getTargetException().getCause())) {
         throw (GwtTestException) ex.getTargetException().getCause();
       } else {
-        throw new RuntimeException("Error during instanciation of '"
+        throw new ReflectionException("Error during instanciation of '"
             + ctor.getDeclaringClass().getName()
             + "'. Constructor threw exception", ex.getTargetException());
       }
@@ -385,7 +386,7 @@ public class GwtReflectionUtils {
       field.set(target, value);
     } catch (Exception e) {
       e.printStackTrace();
-      throw new RuntimeException(e.getMessage()
+      throw new ReflectionException(e.getMessage()
           + " Unable to set field, class " + fieldName + ", fieldClass "
           + target.getClass());
     }
@@ -398,7 +399,7 @@ public class GwtReflectionUtils {
       field.set(null, value);
     } catch (Exception e) {
       e.printStackTrace();
-      throw new RuntimeException(e.getMessage()
+      throw new ReflectionException(e.getMessage()
           + " Unable to set field, class " + fieldName + ", fieldClass "
           + clazz);
     }
@@ -429,11 +430,11 @@ public class GwtReflectionUtils {
     }
 
     if (result.size() == 0) {
-      throw new RuntimeException("Unable to find field, class '" + clazz
+      throw new ReflectionException("Unable to find field, class '" + clazz
           + "', fieldName '" + fieldName + "'");
     }
     if (result.size() > 1) {
-      throw new RuntimeException("Unable to choose field, '" + clazz
+      throw new ReflectionException("Unable to choose field, '" + clazz
           + "', fieldName '" + fieldName + "'");
     }
     Field field = result.iterator().next();

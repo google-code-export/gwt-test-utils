@@ -11,6 +11,7 @@ import javassist.Modifier;
 import javassist.NotFoundException;
 
 import com.octo.gwt.test.Patcher;
+import com.octo.gwt.test.exceptions.GwtTestPatchException;
 import com.octo.gwt.test.patchers.AutomaticPatcher;
 
 public class GwtPatcherUtils {
@@ -47,11 +48,11 @@ public class GwtPatcherUtils {
       return l.get(0);
     }
     if (l.size() == 0) {
-      throw new RuntimeException(
+      throw new GwtTestPatchException(
           "Unable to find a constructor with the specifed parameter types in class "
               + ctClass.getName());
     }
-    throw new RuntimeException("Multiple constructor in class "
+    throw new GwtTestPatchException("Multiple constructor in class "
         + ctClass.getName()
         + ", you have to set parameter types discriminators");
   }
@@ -177,7 +178,7 @@ public class GwtPatcherUtils {
       try {
         m.setBody(src);
       } catch (CannotCompileException e) {
-        throw new RuntimeException("Unable to compile body " + src, e);
+        throw new GwtTestPatchException("Unable to compile body " + src, e);
       }
     }
   }

@@ -5,6 +5,7 @@ import java.util.Locale;
 import java.util.Properties;
 
 import com.google.gwt.i18n.client.LocalizableResource;
+import com.octo.gwt.test.exceptions.GwtTestI18NException;
 
 public class ConstantsWithLookupInvocationHandler extends
     ConstantsInvocationHandler {
@@ -20,7 +21,7 @@ public class ConstantsWithLookupInvocationHandler extends
       try {
         return getProxiedClass().getMethod(methodName);
       } catch (Exception e) {
-        throw new RuntimeException("i18n method '"
+        throw new GwtTestI18NException("i18n method '"
             + getProxiedClass().getCanonicalName() + "." + methodName
             + "()' does not exist");
       }

@@ -16,6 +16,7 @@ import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
+import com.octo.gwt.test.exceptions.GwtTestDomException;
 import com.octo.gwt.test.internal.overrides.OverrideNodeList;
 import com.octo.gwt.test.internal.patchers.dom.NodeFactory;
 import com.octo.gwt.test.internal.utils.StyleUtils;
@@ -26,7 +27,7 @@ public class GwtHtmlParser {
 
     public List<Node> visitedNodes;
 
-    private Map<org.htmlparser.Node, Element> map = new HashMap<org.htmlparser.Node, Element>();
+    private final Map<org.htmlparser.Node, Element> map = new HashMap<org.htmlparser.Node, Element>();
 
     private GwtNodeVisitor() {
       super(true);
@@ -89,7 +90,7 @@ public class GwtHtmlParser {
 
       return new OverrideNodeList<Node>(visitor.visitedNodes);
     } catch (ParserException e) {
-      throw new RuntimeException("error while parsing HTML : " + html, e);
+      throw new GwtTestDomException("error while parsing HTML : " + html, e);
     }
   }
 

@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.StatusCodeException;
+import com.octo.gwt.test.exceptions.GwtTestRpcException;
 import com.octo.gwt.test.integration.GwtRpcExceptionHandler;
 import com.octo.gwt.test.integration.GwtRpcSerializerHandler;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
@@ -18,10 +19,10 @@ public class GwtRpcInvocationHandler implements InvocationHandler {
 
   private static final Logger logger = LoggerFactory.getLogger(GwtRpcInvocationHandler.class);
 
-  private GwtRpcExceptionHandler exceptionHandler;
-  private HashMap<Method, Method> methodTable;
-  private GwtRpcSerializerHandler serializerHander;
-  private Object target;
+  private final GwtRpcExceptionHandler exceptionHandler;
+  private final HashMap<Method, Method> methodTable;
+  private final GwtRpcSerializerHandler serializerHander;
+  private final Object target;
 
   public GwtRpcInvocationHandler(Class<?> asyncClazz, Object target,
       GwtRpcExceptionHandler exceptionHandler,
@@ -64,7 +65,7 @@ public class GwtRpcInvocationHandler implements InvocationHandler {
         try {
           serializedArgs[i] = serializerHander.serializeUnserialize(subArgs[i]);
         } catch (Exception e) {
-          throw new RuntimeException("Error while serializing argument " + i
+          throw new GwtTestRpcException("Error while serializing argument " + i
               + " of type " + subArgs[i].getClass().getName() + " in method "
               + method.getDeclaringClass().getSimpleName() + "."
               + method.getName() + "(..)", e);
@@ -76,7 +77,7 @@ public class GwtRpcInvocationHandler implements InvocationHandler {
       try {
         returnObject = serializerHander.serializeUnserialize(resultObject);
       } catch (Exception e) {
-        throw new RuntimeException("Error while serializing object of type "
+        throw new GwtTestRpcException("Error while serializing object of type "
             + resultObject.getClass().getName()
             + " which was returned from RPC Service "
             + method.getDeclaringClass().getSimpleName() + "."

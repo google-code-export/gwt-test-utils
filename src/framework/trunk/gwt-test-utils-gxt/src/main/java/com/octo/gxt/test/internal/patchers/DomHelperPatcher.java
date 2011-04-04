@@ -4,6 +4,7 @@ import com.extjs.gxt.ui.client.core.DomHelper;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.user.client.Element;
+import com.octo.gwt.test.exceptions.GwtTestPatchException;
 import com.octo.gwt.test.internal.GwtHtmlParser;
 import com.octo.gwt.test.patchers.AutomaticPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
@@ -83,8 +84,8 @@ public class DomHelperPatcher extends AutomaticPatcher {
     } else if ("afterEnd".equals(where)) {
       return insertAfter(el, html);
     } else {
-      throw new RuntimeException(
-          "cannot insert html at position '"
+      throw new GwtTestPatchException(
+          "Cannot insert html at position '"
               + where
               + "', the only allowed values are ' beforeBegin / afterBegin / beforeEnd / afterEnd '");
     }

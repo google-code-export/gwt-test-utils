@@ -16,6 +16,7 @@ import com.google.gwt.i18n.client.Messages.PluralText;
 import com.google.gwt.i18n.client.Messages.Select;
 import com.google.gwt.i18n.client.PluralRule;
 import com.google.gwt.i18n.client.impl.plurals.DefaultRule;
+import com.octo.gwt.test.exceptions.GwtTestI18NException;
 
 @SuppressWarnings("deprecation")
 public class MessagesInvocationHandler extends
@@ -65,16 +66,19 @@ public class MessagesInvocationHandler extends
                 "|");
 
           } catch (ClassNotFoundException e) {
-            throw new RuntimeException("Cannot find PluralRule for method '"
-                + method.getDeclaringClass().getSimpleName() + "."
-                + method.getName() + "()'. Expected PluralRule : '"
-                + pluralRuleClassName + "'");
+            throw new GwtTestI18NException(
+                "Cannot find PluralRule for method '"
+                    + method.getDeclaringClass().getSimpleName() + "."
+                    + method.getName() + "()'. Expected PluralRule : '"
+                    + pluralRuleClassName + "'");
           } catch (InstantiationException e) {
-            throw new RuntimeException("Error during instanciation of class '"
-                + pluralRuleClassName + "'");
+            throw new GwtTestI18NException(
+                "Error during instanciation of class '" + pluralRuleClassName
+                    + "'", e);
           } catch (IllegalAccessException e) {
-            throw new RuntimeException("Error during instanciation of class '"
-                + pluralRuleClassName + "'");
+            throw new GwtTestI18NException(
+                "Error during instanciation of class '" + pluralRuleClassName
+                    + "'", e);
           }
         } else if (Select.class.isAssignableFrom(childArray[j].getClass())) {
           sb.append(args[i]).append("|");
@@ -83,7 +87,7 @@ public class MessagesInvocationHandler extends
     }
 
     if (sb.length() == 0) {
-      throw new RuntimeException("Bad configuration of '"
+      throw new GwtTestI18NException("Bad configuration of '"
           + method.getDeclaringClass() + "." + method.getName() + "' : a @"
           + messageAnnotation.getClass().getSimpleName()
           + " is declared but no @" + PluralCount.class.getSimpleName()

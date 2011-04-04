@@ -8,6 +8,7 @@ import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.ImageBundle;
 import com.octo.gwt.test.GwtCreateHandler;
+import com.octo.gwt.test.exceptions.GwtTestResourcesException;
 
 @SuppressWarnings("deprecation")
 public class ImageBundleCreateHandler implements GwtCreateHandler {
@@ -44,7 +45,7 @@ public class ImageBundleCreateHandler implements GwtCreateHandler {
         if (method.getReturnType() == AbstractImagePrototype.class) {
           return new OverrideImagePrototype();
         }
-        throw new RuntimeException(
+        throw new GwtTestResourcesException(
             "Not managed return type for image bundle : "
                 + method.getReturnType().getSimpleName());
       }

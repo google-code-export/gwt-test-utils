@@ -14,6 +14,7 @@ import com.google.gwt.i18n.client.Messages;
 import com.google.gwt.i18n.client.impl.CldrImpl;
 import com.google.gwt.i18n.client.impl.cldr.DateTimeFormatInfoImpl;
 import com.octo.gwt.test.GwtCreateHandler;
+import com.octo.gwt.test.exceptions.GwtTestI18NException;
 import com.octo.gwt.test.internal.GwtConfig;
 
 public class LocalizableCreateHandler implements GwtCreateHandler {
@@ -33,7 +34,7 @@ public class LocalizableCreateHandler implements GwtCreateHandler {
       return factory;
     }
 
-    private Class<? extends LocalizableResource> proxiedClass;
+    private final Class<? extends LocalizableResource> proxiedClass;
 
     private LocalizableResourceProxyFactory(
         Class<? extends LocalizableResource> proxiedClass) {
@@ -47,20 +48,17 @@ public class LocalizableCreateHandler implements GwtCreateHandler {
           new Class<?>[]{proxiedClass}, ih);
     }
 
-    @SuppressWarnings("unchecked")
     private InvocationHandler createInvocationHandler(
         Class<? extends LocalizableResource> clazz) {
       if (ConstantsWithLookup.class.isAssignableFrom(clazz)) {
-        return new ConstantsWithLookupInvocationHandler(
-            (Class<? extends ConstantsWithLookup>) clazz);
+        return new ConstantsWithLookupInvocationHandler(clazz);
       }
       if (Constants.class.isAssignableFrom(clazz)) {
-        return new ConstantsInvocationHandler(
-            (Class<? extends Constants>) clazz);
+        return new ConstantsInvocationHandler(clazz);
       } else if (Messages.class.isAssignableFrom(clazz)) {
-        return new MessagesInvocationHandler((Class<? extends Messages>) clazz);
+        return new MessagesInvocationHandler(clazz);
       } else {
-        throw new RuntimeException(
+        throw new GwtTestI18NException(
             "Not managed GWT i18n interface for testing : "
                 + clazz.getSimpleName());
       }
