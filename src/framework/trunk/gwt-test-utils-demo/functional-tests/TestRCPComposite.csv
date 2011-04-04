@@ -1,4 +1,0 @@
-start
-runmacro;InitialisationMacro
-click;/rpcComposite/button
-assertExact;Bean "OCTO" has been created;/rpcComposite/label/text
