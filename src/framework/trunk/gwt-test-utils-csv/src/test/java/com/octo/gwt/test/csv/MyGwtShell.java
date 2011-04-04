@@ -22,6 +22,11 @@ public abstract class MyGwtShell extends GwtCsvTest {
     MyStringStore.appender += s;
   }
 
+  @Override
+  public String getModuleName() {
+    return "com.octo.gwt.test.csv.GwtCsvTest";
+  }
+
   @CsvMethod
   public void initApp() {
     app = new MyBeautifulApp();
@@ -47,6 +52,11 @@ public abstract class MyGwtShell extends GwtCsvTest {
     addGwtCreateHandler(remoteServiceCreateHandler);
 
     MyStringStore.appender = "";
+  }
+
+  @Override
+  protected String getHostPagePath(String moduleFullQualifiedName) {
+    return "test.html";
   }
 
   @Override

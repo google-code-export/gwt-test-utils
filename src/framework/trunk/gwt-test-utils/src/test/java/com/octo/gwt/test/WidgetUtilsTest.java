@@ -16,7 +16,7 @@ import com.google.gwt.user.client.ui.SuggestBox.SuggestionDisplay;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 import com.octo.gwt.test.utils.WidgetUtils;
 
-public class WidgetUtilsTest extends GwtTest {
+public class WidgetUtilsTest extends GwtTestTest {
 
   @Test
   public void checkAssertListBoxDataDoNotMatchDifferentElement() {
@@ -179,11 +179,6 @@ public class WidgetUtilsTest extends GwtTest {
 
     // Assert
     Assert.assertFalse(isVisible);
-  }
-
-  @Override
-  public String getCurrentTestedModuleFile() {
-    return "com/octo/gwt/test/test-config.gwt.xml";
   }
 
 }

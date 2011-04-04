@@ -7,9 +7,9 @@ import org.junit.Test;
 
 import com.google.gwt.dom.client.AreaElement;
 import com.google.gwt.dom.client.Document;
-import com.octo.gwt.test.GwtTest;
+import com.octo.gwt.test.GwtTestTest;
 
-public class AreaElementTest extends GwtTest {
+public class AreaElementTest extends GwtTestTest {
 
   private AreaElement a;
 

@@ -9,9 +9,9 @@ import com.google.gwt.resources.client.DataResource;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.resources.client.TextResource;
 import com.google.gwt.user.client.ui.Tree.Resources;
-import com.octo.gwt.test.GwtTest;
+import com.octo.gwt.test.GwtTestTest;
 
-public class ClientBundleTest extends GwtTest {
+public class ClientBundleTest extends GwtTestTest {
 
   @Test
   public void checkCssResource() {
@@ -161,8 +161,4 @@ public class ClientBundleTest extends GwtTest {
     Assert.assertEquals(expectedText, text);
   }
 
-  @Override
-  public String getModuleName() {
-    return "gwt_test_utils_module";
-  }
 }

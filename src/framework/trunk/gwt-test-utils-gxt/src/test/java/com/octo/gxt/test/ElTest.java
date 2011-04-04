@@ -5,9 +5,8 @@ import junit.framework.Assert;
 import org.junit.Test;
 
 import com.extjs.gxt.ui.client.core.El;
-import com.octo.gwt.test.GwtTest;
 
-public class ElTest extends GwtTest {
+public class ElTest extends GwtGxtTest {
 
   @Test
   public void checkAddUnitsAuto() {

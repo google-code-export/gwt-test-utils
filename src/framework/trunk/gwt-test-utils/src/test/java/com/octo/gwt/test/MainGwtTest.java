@@ -19,7 +19,7 @@ import com.google.gwt.user.client.ui.Button;
 import com.octo.gwt.test.internal.GwtConfig;
 import com.octo.gwt.test.utils.events.Browser;
 
-public class MainGwtTest extends GwtTest {
+public class MainGwtTest extends GwtTestTest {
 
   private String sToday;
   private boolean success;
@@ -88,11 +88,6 @@ public class MainGwtTest extends GwtTest {
   @Test
   public void checkThatGwtInitialiseOccursBeforeTheJUnitInitialisationOfTheClass() {
     assertEquals("mer. 24 nov.", sToday);
-  }
-
-  @Override
-  public String getModuleName() {
-    return "gwt_test_utils_module";
   }
 
   @Before

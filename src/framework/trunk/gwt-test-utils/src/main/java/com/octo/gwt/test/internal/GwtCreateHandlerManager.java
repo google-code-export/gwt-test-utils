@@ -5,29 +5,27 @@ import java.util.Collections;
 import java.util.List;
 
 import com.octo.gwt.test.GwtCreateHandler;
+import com.octo.gwt.test.integration.internal.TestRemoteServiceCreateHandler;
 import com.octo.gwt.test.internal.utils.i18n.LocalizableCreateHandler;
 import com.octo.gwt.test.internal.utils.resources.ClientBundleCreateHandler;
 import com.octo.gwt.test.internal.utils.resources.ImageBundleCreateHandler;
 
 public class GwtCreateHandlerManager {
 
-  private static GwtCreateHandlerManager INSTANCE;
+  private static final GwtCreateHandlerManager INSTANCE = new GwtCreateHandlerManager();
 
   public static GwtCreateHandlerManager get() {
-    if (INSTANCE == null) {
-      INSTANCE = new GwtCreateHandlerManager();
-    }
-
     return INSTANCE;
   }
 
-  private GwtCreateHandler abstractClassCreateHandler;
-  private List<GwtCreateHandler> addedHandlers;
-  private GwtCreateHandler clientBundleCreateHander;
-  private GwtCreateHandler defaultGwtCreateHandler;
-  private GwtCreateHandler imageBundleCreateHandler;
-  private GwtCreateHandler localizableResourceHandler;
+  private final GwtCreateHandler abstractClassCreateHandler;
+  private final List<GwtCreateHandler> addedHandlers;
+  private final GwtCreateHandler clientBundleCreateHander;
+  private final GwtCreateHandler defaultGwtCreateHandler;
+  private final GwtCreateHandler imageBundleCreateHandler;
+  private final GwtCreateHandler localizableResourceHandler;
   private GwtCreateHandler mockCreateHandler;
+  private final TestRemoteServiceCreateHandler testRemoteServiceCreateHandler = TestRemoteServiceCreateHandler.get();
 
   private GwtCreateHandlerManager() {
     addedHandlers = new ArrayList<GwtCreateHandler>();
@@ -57,6 +55,7 @@ public class GwtCreateHandlerManager {
     list.add(localizableResourceHandler);
     list.add(clientBundleCreateHander);
     list.add(imageBundleCreateHandler);
+    list.add(testRemoteServiceCreateHandler);
     list.add(defaultGwtCreateHandler);
     list.add(abstractClassCreateHandler);
 
@@ -65,6 +64,7 @@ public class GwtCreateHandlerManager {
 
   public void reset() {
     addedHandlers.clear();
+    testRemoteServiceCreateHandler.reset();
   }
 
   public void setMockCreateHandler(GwtCreateHandler mockCreateHandler) {

@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import com.google.gwt.user.client.Cookies;
 
-public class CookiesTest extends GwtTest {
+public class CookiesTest extends GwtTestTest {
 
   @Test
   public void testCookies() {

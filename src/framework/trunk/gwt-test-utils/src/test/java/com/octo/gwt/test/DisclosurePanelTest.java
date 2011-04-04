@@ -5,7 +5,7 @@ import org.junit.Test;
 
 import com.google.gwt.user.client.ui.DisclosurePanel;
 
-public class DisclosurePanelTest extends GwtTest {
+public class DisclosurePanelTest extends GwtTestTest {
 
   @Test
   public void checkStyle() {

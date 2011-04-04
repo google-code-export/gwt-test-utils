@@ -12,11 +12,16 @@ public class GwtClassPool {
     return classPool;
   }
 
-  public static CtClass getCtClass(Class<?> clazz) {
+  public static CtClass getClass(String className) {
     try {
-      return classPool.get(clazz.getName());
+      return GwtClassPool.get().get(className);
     } catch (NotFoundException e) {
-      throw new RuntimeException("Cannot find class '" + clazz.getName() + "'");
+      throw new RuntimeException("Cannot find class in the classpath : '"
+          + className + "'");
     }
+  }
+
+  public static CtClass getCtClass(Class<?> clazz) {
+    return getClass(clazz.getName());
   }
 }

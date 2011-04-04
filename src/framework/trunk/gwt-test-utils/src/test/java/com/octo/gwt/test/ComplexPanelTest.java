@@ -8,7 +8,7 @@ import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 
-public class ComplexPanelTest extends GwtTest {
+public class ComplexPanelTest extends GwtTestTest {
 
   @Test
   public void checkAdd() {

@@ -12,6 +12,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import com.octo.gwt.test.exceptions.GwtTestException;
+
 public class GwtReflectionUtils {
 
   /**
@@ -315,11 +317,17 @@ public class GwtReflectionUtils {
           + ctor.getDeclaringClass().getName()
           + "'. Illegal arguments for constructor", ex);
     } catch (InvocationTargetException ex) {
-      ex.printStackTrace();
-      throw new RuntimeException("Error during instanciation of '"
-          + ctor.getDeclaringClass().getName()
-          + "'. Constructor threw exception", ex.getTargetException());
+      if (GwtTestException.class.isInstance(ex.getTargetException())) {
+        throw (GwtTestException) ex.getTargetException();
+      } else if (GwtTestException.class.isInstance(ex.getTargetException().getCause())) {
+        throw (GwtTestException) ex.getTargetException().getCause();
+      } else {
+        throw new RuntimeException("Error during instanciation of '"
+            + ctor.getDeclaringClass().getName()
+            + "'. Constructor threw exception", ex.getTargetException());
+      }
     }
+
   }
 
   /**

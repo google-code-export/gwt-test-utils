@@ -5,7 +5,7 @@ import org.junit.Test;
 
 import com.google.gwt.user.client.ui.ListBox;
 
-public class ListBoxTest extends GwtTest {
+public class ListBoxTest extends GwtTestTest {
 
   @Test
   public void checkClear() {

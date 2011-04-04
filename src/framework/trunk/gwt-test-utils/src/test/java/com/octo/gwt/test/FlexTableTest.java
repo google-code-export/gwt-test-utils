@@ -14,7 +14,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.octo.gwt.test.utils.events.Browser;
 
 @SuppressWarnings("deprecation")
-public class FlexTableTest extends GwtTest {
+public class FlexTableTest extends GwtTestTest {
 
   private boolean clicked = false;
 

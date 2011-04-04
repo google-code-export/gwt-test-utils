@@ -22,6 +22,7 @@ import com.octo.gwt.test.utils.GwtReflectionUtils;
 public class VisitorObjectFinderTest extends GwtTestWithEasyMock {
 
   private MyBeautifulApp app;
+
   @Mock
   private CsvRunner csvRunner;
 
@@ -54,6 +55,11 @@ public class VisitorObjectFinderTest extends GwtTestWithEasyMock {
     Assert.assertEquals(expectedCompositeLabel, compositeLabel);
   }
 
+  @Override
+  public String getModuleName() {
+    return "com.octo.gwt.test.csv.GwtCsvTest";
+  }
+
   @Before
   public void setupVisitorObjectFinder() {
     app = new MyBeautifulApp();
@@ -73,7 +79,7 @@ public class VisitorObjectFinderTest extends GwtTestWithEasyMock {
 
       public void visitHasText(HasText hasTextWidget,
           WidgetRepository repository) {
-        repository.addAlias(hasTextWidget.getText(), (Widget) hasTextWidget);
+        repository.addAlias(hasTextWidget.getText(), hasTextWidget);
       }
 
       public void visitWidget(Widget widget, WidgetRepository repository) {
@@ -83,6 +89,11 @@ public class VisitorObjectFinderTest extends GwtTestWithEasyMock {
     };
 
     finder = new VisitorObjectFinder(myVisitor);
+  }
+
+  @Override
+  protected String getHostPagePath(String moduleFullQualifiedName) {
+    return "test.html";
   }
 
 }

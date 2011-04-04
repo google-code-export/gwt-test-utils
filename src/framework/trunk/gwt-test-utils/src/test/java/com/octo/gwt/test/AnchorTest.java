@@ -6,7 +6,7 @@ import org.junit.Test;
 import com.google.gwt.dom.client.HeadingElement;
 import com.google.gwt.user.client.ui.Anchor;
 
-public class AnchorTest extends GwtTest {
+public class AnchorTest extends GwtTestTest {
 
   @Test
   public void checkAbsoluteLeft() {

@@ -74,4 +74,14 @@ public class GwtRpcWithMockitoTest extends GwtTestWithMockito {
     Assert.assertEquals("returnValue", gwtClass.myValue);
   }
 
+  @Override
+  public String getModuleName() {
+    return "com.octo.gwt.test.GwtTestUtils";
+  }
+
+  @Override
+  protected String getHostPagePath(String moduleFullQualifiedName) {
+    return "test.html";
+  }
+
 }

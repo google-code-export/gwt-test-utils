@@ -7,9 +7,9 @@ public class PropertiesStringModifier {
 
   private static class SequenceReplacement {
 
-    private String regex;
+    private final String regex;
 
-    private String to;
+    private final String to;
 
     public SequenceReplacement(String regex, String to) {
       this.regex = regex;
@@ -22,17 +22,13 @@ public class PropertiesStringModifier {
 
   }
 
-  private static PropertiesStringModifier INSTANCE;
+  private static final PropertiesStringModifier INSTANCE = new PropertiesStringModifier();
 
   public static PropertiesStringModifier get() {
-    if (INSTANCE == null) {
-      INSTANCE = new PropertiesStringModifier();
-    }
-
     return INSTANCE;
   }
 
-  private List<SequenceReplacement> sequenceReplacements;
+  private final List<SequenceReplacement> sequenceReplacements;
 
   private PropertiesStringModifier() {
     sequenceReplacements = new ArrayList<SequenceReplacement>();

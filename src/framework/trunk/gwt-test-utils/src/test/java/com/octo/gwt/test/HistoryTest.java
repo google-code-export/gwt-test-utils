@@ -19,7 +19,7 @@ public class HistoryTest extends GwtTestWithEasyMock {
       return null;
     }
 
-    private T expectedValue;
+    private final T expectedValue;
 
     private ValueChangeEventMatcher(T expectedValue) {
       this.expectedValue = expectedValue;
@@ -117,6 +117,16 @@ public class HistoryTest extends GwtTestWithEasyMock {
 
     // Assert
     verify();
+  }
+
+  @Override
+  public String getModuleName() {
+    return "com.octo.gwt.test.GwtTestUtils";
+  }
+
+  @Override
+  protected String getHostPagePath(String moduleFullQualifiedName) {
+    return "test.html";
   }
 
 }

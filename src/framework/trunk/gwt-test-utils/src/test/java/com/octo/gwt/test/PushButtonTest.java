@@ -8,7 +8,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.PushButton;
 import com.octo.gwt.test.utils.events.Browser;
 
-public class PushButtonTest extends GwtTest {
+public class PushButtonTest extends GwtTestTest {
 
   private boolean clicked;
 

@@ -11,17 +11,13 @@ import com.octo.gwt.test.internal.utils.GwtPropertiesUtils;
 
 public class GwtPropertiesHelper {
 
-  private static GwtPropertiesHelper INSTANCE;
+  private static final GwtPropertiesHelper INSTANCE = new GwtPropertiesHelper();
 
   public static GwtPropertiesHelper get() {
-    if (INSTANCE == null) {
-      INSTANCE = new GwtPropertiesHelper();
-    }
-
     return INSTANCE;
   }
 
-  private Map<String, Properties> cachedProperties = new HashMap<String, Properties>();
+  private final Map<String, Properties> cachedProperties = new HashMap<String, Properties>();
 
   private GwtPropertiesHelper() {
   }

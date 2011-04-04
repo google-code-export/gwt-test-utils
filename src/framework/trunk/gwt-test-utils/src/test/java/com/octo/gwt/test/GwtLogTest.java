@@ -6,7 +6,7 @@ import org.junit.Test;
 import com.google.gwt.core.client.GWT;
 import com.octo.gwt.test.internal.GwtConfig;
 
-public class GwtLogTest extends GwtTest {
+public class GwtLogTest extends GwtTestTest {
 
   private String message;
 

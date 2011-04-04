@@ -8,10 +8,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.google.gwt.core.client.GWT;
-import com.octo.gwt.test.GwtTest;
+import com.octo.gwt.test.GwtTestTest;
 import com.octo.gwt.test.internal.GwtConfig;
 
-public class MyConstantsTest extends GwtTest {
+public class MyConstantsTest extends GwtTestTest {
 
   private MyConstants constants;
 

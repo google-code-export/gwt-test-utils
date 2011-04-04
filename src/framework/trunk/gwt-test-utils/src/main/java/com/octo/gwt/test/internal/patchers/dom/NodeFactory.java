@@ -1,6 +1,8 @@
 package com.octo.gwt.test.internal.patchers.dom;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -8,6 +10,7 @@ import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.AnchorElement;
 import com.google.gwt.dom.client.AreaElement;
 import com.google.gwt.dom.client.BRElement;
@@ -62,6 +65,7 @@ import com.google.gwt.dom.client.TitleElement;
 import com.google.gwt.dom.client.UListElement;
 import com.octo.gwt.test.GwtClassLoader;
 import com.octo.gwt.test.GwtTest;
+import com.octo.gwt.test.exceptions.GwtTestConfigurationException;
 import com.octo.gwt.test.internal.GwtConfig;
 import com.octo.gwt.test.internal.GwtHtmlParser;
 import com.octo.gwt.test.internal.utils.PropertyContainer;
@@ -73,7 +77,7 @@ public class NodeFactory {
 
   private static class SpecificElement extends Element implements TagAware {
 
-    private String tag;
+    private final String tag;
 
     public SpecificElement(String tag) {
       this.tag = tag;
@@ -84,6 +88,7 @@ public class NodeFactory {
     }
 
   }
+
   public static Document DOCUMENT;
 
   private static Map<String, String> elementMap = new HashMap<String, String>();
@@ -210,6 +215,9 @@ public class NodeFactory {
         DOCUMENT.appendChild(e);
         PropertyContainerUtils.setProperty(DOCUMENT, "DocumentElement", e);
       } catch (Exception e) {
+        if (RuntimeException.class.isInstance(e)) {
+          throw (RuntimeException) e;
+        }
         throw new RuntimeException("Unable to create Document", e);
       }
     }
@@ -225,18 +233,6 @@ public class NodeFactory {
       documentPc.clear();
       DOCUMENT = null;
     }
-  }
-
-  private static Element createNewHTMLElement() {
-    Element e = createElement("html");
-
-    PropertyContainerUtils.setProperty(e, "NodeName", "HTML");
-    PropertyContainerUtils.setProperty(e, "TagName", "HTML");
-
-    BodyElement bodyElement = (BodyElement) createElement("body");
-    e.appendChild(bodyElement);
-
-    return e;
   }
 
   private static Element findHTMLElement(String hostPagePath,
@@ -260,6 +256,14 @@ public class NodeFactory {
 
     InputStream is = NodeFactory.class.getClassLoader().getResourceAsStream(
         hostPagePath);
+
+    if (is == null) {
+      try {
+        is = new FileInputStream(hostPagePath);
+      } catch (FileNotFoundException e) {
+        // handle just after
+      }
+    }
     if (is == null) {
       throw new RuntimeException("Cannot find file '" + hostPagePath
           + "', please override " + GwtTest.class.getSimpleName()
@@ -302,14 +306,20 @@ public class NodeFactory {
 
   private static Element parseHTMLElement() {
     String hostPagePath = GwtConfig.get().getHostPagePath();
-    if (hostPagePath != null) {
-      // parsing of the host page
-      String html = getHostPageHTML(hostPagePath);
-      NodeList<Node> nodes = GwtHtmlParser.parse(html);
-      return findHTMLElement(hostPagePath, nodes);
-    } else {
-      return createNewHTMLElement();
+
+    if (hostPagePath == null) {
+      throw new GwtTestConfigurationException(
+          "Cannot find the actual HTML host page for module '"
+              + GWT.getModuleName()
+              + "'. You should override "
+              + GwtTest.class.getName()
+              + ".getHostPagePath(String moduleFullQualifiedName) method to specify it.");
     }
+
+    // parsing of the host page
+    String html = getHostPageHTML(hostPagePath);
+    NodeList<Node> nodes = GwtHtmlParser.parse(html);
+    return findHTMLElement(hostPagePath, nodes);
   }
 
   private NodeFactory() {

@@ -15,7 +15,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
-public class FormPanelTest extends GwtTest {
+public class FormPanelTest extends GwtTestTest {
 
   private boolean completeSubmitted;
   private FormPanel form;
@@ -212,11 +212,6 @@ public class FormPanelTest extends GwtTest {
       }
     });
 
-  }
-
-  @Override
-  protected String getCurrentTestedModuleFile() {
-    return "com/octo/gwt/test/test-config.gwt.xml";
   }
 
 }

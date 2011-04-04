@@ -29,7 +29,19 @@ import com.octo.gwt.test.internal.GwtTranslator;
  */
 public class GwtClassLoader extends Loader {
 
-  private static GwtClassLoader INSTANCE;
+  private static final GwtClassLoader INSTANCE;
+
+  static {
+    try {
+      INSTANCE = new GwtClassLoader();
+    } catch (Exception e) {
+      if (e instanceof RuntimeException) {
+        throw (RuntimeException) e;
+      } else {
+        throw new RuntimeException(e);
+      }
+    }
+  }
 
   /**
    * Bind a static instance of the classloader to the current thread and return
@@ -41,18 +53,6 @@ public class GwtClassLoader extends Loader {
    * @see Thread#setContextClassLoader(ClassLoader)
    */
   public static GwtClassLoader get() {
-    if (INSTANCE == null) {
-      try {
-        INSTANCE = new GwtClassLoader();
-      } catch (Exception e) {
-        if (e instanceof RuntimeException) {
-          throw (RuntimeException) e;
-        } else {
-          throw new RuntimeException(e);
-        }
-      }
-    }
-
     Thread.currentThread().setContextClassLoader(INSTANCE);
 
     return INSTANCE;
@@ -66,7 +66,7 @@ public class GwtClassLoader extends Loader {
     Thread.currentThread().setContextClassLoader(INSTANCE.getParent());
   }
 
-  private GwtTranslator translator;
+  private final GwtTranslator translator;
 
   private GwtClassLoader() throws NotFoundException, CannotCompileException {
     super(GwtClassPool.get());

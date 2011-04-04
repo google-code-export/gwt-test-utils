@@ -7,9 +7,9 @@ import org.junit.Test;
 import com.google.gwt.resources.client.DataResource;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.resources.client.TextResource;
-import com.octo.gwt.test.GwtTest;
+import com.octo.gwt.test.GwtTestTest;
 
-public class MyOverridedClientBundleTest extends GwtTest {
+public class MyOverridedClientBundleTest extends GwtTestTest {
 
   @Test
   public void checkChildNoOverride() {
@@ -64,11 +64,6 @@ public class MyOverridedClientBundleTest extends GwtTest {
     // Assert
     Assert.assertEquals("textResourceTxt", name);
     Assert.assertEquals(expectedText, text);
-  }
-
-  @Override
-  public String getModuleName() {
-    return "gwt_test_utils_module";
   }
 
 }

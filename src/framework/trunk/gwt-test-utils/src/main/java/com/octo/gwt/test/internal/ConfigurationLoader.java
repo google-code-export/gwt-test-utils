@@ -1,6 +1,7 @@
 package com.octo.gwt.test.internal;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLDecoder;
@@ -22,8 +23,9 @@ import javassist.CtClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.gwt.core.client.JavaScriptObject;
 import com.octo.gwt.test.Patcher;
+import com.octo.gwt.test.exceptions.GwtTestConfigurationException;
+import com.octo.gwt.test.exceptions.GwtTestPatchException;
 import com.octo.gwt.test.internal.modifiers.ClassSubstituer;
 import com.octo.gwt.test.internal.modifiers.JavaClassModifier;
 import com.octo.gwt.test.internal.modifiers.MethodRemover;
@@ -40,10 +42,12 @@ public class ConfigurationLoader {
 
   private static final Logger logger = LoggerFactory.getLogger(ConfigurationLoader.class);
 
-  public static final ConfigurationLoader createInstance(ClassLoader classLoader) {
+  public static synchronized final ConfigurationLoader createInstance(
+      ClassLoader classLoader) {
     if (INSTANCE != null) {
-      throw new RuntimeException(ConfigurationLoader.class.getSimpleName()
-          + " instance has already been initialized");
+      throw new GwtTestConfigurationException(
+          ConfigurationLoader.class.getSimpleName()
+              + " instance has already been initialized");
     }
 
     INSTANCE = new ConfigurationLoader(classLoader);
@@ -51,21 +55,24 @@ public class ConfigurationLoader {
     return INSTANCE;
   }
 
-  public static ConfigurationLoader get() {
+  public static synchronized ConfigurationLoader get() {
     if (INSTANCE == null) {
-      throw new RuntimeException(ConfigurationLoader.class.getSimpleName()
-          + " instance has not been initialized yet");
+      throw new GwtTestConfigurationException(
+          ConfigurationLoader.class.getSimpleName()
+              + " instance has not been initialized yet");
     }
 
     return INSTANCE;
   }
 
   private final ClassLoader classLoader;
+
   private final List<String> delegateList;
   private final List<JavaClassModifier> javaClassModifierList;
   private Set<String> jsoSubClasses;
   private final MethodRemover methodRemover;
   private Map<String, Patcher> patchers;
+  private boolean processedModuleFile = false;
   private final Set<String> scanPackageSet;
 
   private ConfigurationLoader(ClassLoader classLoader) {
@@ -77,13 +84,7 @@ public class ConfigurationLoader {
     javaClassModifierList.add(methodRemover);
 
     readFiles();
-    try {
-      loadPatchersAndJavaScriptObjects();
-    } catch (Exception e) {
-      throw new RuntimeException("Error while loading "
-          + JavaScriptObject.class.getSimpleName() + " subclass and "
-          + Patcher.class.getSimpleName() + " instances");
-    }
+    loadPatchersAndJavaScriptObjects();
   }
 
   public List<String> getDelegateList() {
@@ -102,25 +103,31 @@ public class ConfigurationLoader {
     return patchers;
   }
 
-  private List<String> findScannedClasses() throws Exception {
+  private List<String> findScannedClasses() {
     List<String> classList = new ArrayList<String>();
     for (String s : scanPackageSet) {
       String path = s.replaceAll("\\.", "/");
       logger.debug("Scan package " + s);
-      Enumeration<URL> l = classLoader.getResources(path);
-      while (l.hasMoreElements()) {
-        URL url = l.nextElement();
-        String u = url.toExternalForm();
-        if (u.startsWith("file:")) {
-          String directoryName = u.substring("file:".length());
-          directoryName = URLDecoder.decode(directoryName, "UTF-8");
-          loadClassesFromDirectory(new File(directoryName), s, classList);
-        } else if (u.startsWith("jar:file:")) {
-          loadClassesFromJarFile(u.substring("jar:file:".length()), s,
-              classList);
-        } else {
-          throw new RuntimeException("Not managed class container " + u);
+      try {
+        Enumeration<URL> l = classLoader.getResources(path);
+        while (l.hasMoreElements()) {
+          URL url = l.nextElement();
+          String u = url.toExternalForm();
+          if (u.startsWith("file:")) {
+            String directoryName = u.substring("file:".length());
+            directoryName = URLDecoder.decode(directoryName, "UTF-8");
+            loadClassesFromDirectory(new File(directoryName), s, classList);
+          } else if (u.startsWith("jar:file:")) {
+            loadClassesFromJarFile(u.substring("jar:file:".length()), s,
+                classList);
+          } else {
+            throw new IllegalArgumentException("Not managed class container "
+                + u);
+          }
         }
+      } catch (Exception e) {
+        throw new GwtTestConfigurationException(
+            "Error while scanning class from package '" + s + "'", e);
       }
     }
     return classList;
@@ -176,13 +183,13 @@ public class ConfigurationLoader {
     logger.debug("Classes loaded from jar " + jarName);
   }
 
-  private void loadPatchersAndJavaScriptObjects() throws Exception {
+  private void loadPatchersAndJavaScriptObjects() {
     jsoSubClasses = new HashSet<String>();
     patchers = new HashMap<String, Patcher>();
     List<String> classList = findScannedClasses();
-    CtClass jsoCtClass = GwtClassPool.get().get(JSO_CLASSNAME);
+    CtClass jsoCtClass = GwtClassPool.getClass(JSO_CLASSNAME);
     for (String className : classList) {
-      CtClass ctClass = GwtClassPool.get().get(className);
+      CtClass ctClass = GwtClassPool.getClass(className);
       if (ctClass.subclassOf(jsoCtClass) && !ctClass.equals(jsoCtClass)) {
         jsoSubClasses.add(className);
       } else if (ctClass.hasAnnotation(PatchClass.class)) {
@@ -198,7 +205,7 @@ public class ConfigurationLoader {
       String value = (String) entry.getValue();
       if ("scan-package".equals(value)) {
         if (!scanPackageSet.add(key)) {
-          throw new RuntimeException(
+          throw new GwtTestConfigurationException(
               "'scan-package' mechanism is used to scan the same package twice : '"
                   + key + "'");
         }
@@ -212,8 +219,9 @@ public class ConfigurationLoader {
         processClassModifier(key, url);
       } else if ("module-file".equals(value)) {
         processModuleFile(key, url);
+        processedModuleFile = true;
       } else {
-        throw new RuntimeException("Error in '" + url.getPath()
+        throw new GwtTestConfigurationException("Error in '" + url.getPath()
             + "' : unknown value '" + value + "'");
       }
     }
@@ -226,15 +234,17 @@ public class ConfigurationLoader {
     try {
       clazz = Class.forName(key);
     } catch (ClassNotFoundException e) {
-      throw new RuntimeException("Invalid 'class-modifier' property : " + key
-          + " class cannot be found");
+      throw new GwtTestConfigurationException(
+          "Invalid 'class-modifier' property : " + key
+              + " class cannot be found");
     }
 
     // check it implements JavaClassModifier
     if (!JavaClassModifier.class.isAssignableFrom(clazz)) {
-      throw new RuntimeException("Invalid 'class-modifier' property : " + key
-          + " is not implementing " + JavaClassModifier.class.getSimpleName()
-          + " interface");
+      throw new GwtTestConfigurationException(
+          "Invalid 'class-modifier' property : " + key
+              + " is not implementing "
+              + JavaClassModifier.class.getSimpleName() + " interface");
     }
 
     // Instanciate it and add it to the list of JavaClassModifier
@@ -242,7 +252,7 @@ public class ConfigurationLoader {
       JavaClassModifier modifier = (JavaClassModifier) clazz.newInstance();
       javaClassModifierList.add(modifier);
     } catch (Exception e) {
-      throw new RuntimeException("Error while instanciating " + key
+      throw new GwtTestPatchException("Error while instanciating " + key
           + " through the default constructor", e);
     }
   }
@@ -254,7 +264,7 @@ public class ConfigurationLoader {
   private void processRemoveMethod(String key, URL url) {
     String[] array = key.split("\\s*,\\s*");
     if (array.length != 3) {
-      throw new RuntimeException(
+      throw new GwtTestConfigurationException(
           "Invalid 'remove-method' property format for value '" + key
               + "' in file '" + url.getPath() + "'");
     }
@@ -269,7 +279,7 @@ public class ConfigurationLoader {
   private void processSubstituteClass(String key, URL url) {
     String[] array = key.split("\\s*,\\s*");
     if (array.length != 2) {
-      throw new RuntimeException(
+      throw new GwtTestConfigurationException(
           "Invalid 'substitute-class' property format for value '" + key
               + "' in file '" + url.getPath() + "'");
     }
@@ -294,24 +304,34 @@ public class ConfigurationLoader {
         process(p, url);
         logger.debug("File loaded and processed " + url.toString());
       }
-    } catch (Exception e) {
-      if (e instanceof RuntimeException) {
-        throw (RuntimeException) e;
-      }
-      throw new RuntimeException("Error while reading '" + CONFIG_FILENAME
-          + "' files", e);
+    } catch (IOException e) {
+      throw new GwtTestConfigurationException("Error while reading '"
+          + CONFIG_FILENAME + "' files", e);
+    }
+
+    // check that at least one module file has been processed
+    if (!processedModuleFile) {
+      throw new GwtTestConfigurationException(
+          "Cannot find any 'module-file' setup in configuration file 'META-INF/gwt-test-utils.properties'");
     }
   }
 
-  private void treatPatchClass(CtClass patchCtClass)
-      throws ClassNotFoundException {
-    Class<?> clazz = Class.forName(patchCtClass.getName(), true, classLoader);
+  private void treatPatchClass(CtClass patchCtClass) {
+    Class<?> clazz = null;
+    try {
+      clazz = Class.forName(patchCtClass.getName(), true, classLoader);
+    } catch (ClassNotFoundException e) {
+      throw new GwtTestConfigurationException(
+          "Cannot find class in the classpath : '" + patchCtClass.getName()
+              + "'");
+    }
     PatchClass patchClass = GwtReflectionUtils.getAnnotation(clazz,
         PatchClass.class);
 
     if (!Patcher.class.isAssignableFrom(clazz) || !hasDefaultConstructor(clazz)) {
-      throw new RuntimeException("The @" + PatchClass.class.getSimpleName()
-          + " annotated class '" + clazz.getName() + "' must implements "
+      throw new GwtTestConfigurationException("The @"
+          + PatchClass.class.getSimpleName() + " annotated class '"
+          + clazz.getName() + "' must implements "
           + Patcher.class.getSimpleName()
           + " interface and provide an empty constructor");
     }
@@ -324,7 +344,8 @@ public class ConfigurationLoader {
           : c.getCanonicalName();
       if (patchers.get(targetName) != null) {
         logger.error("Two patches for same class " + targetName);
-        throw new RuntimeException("Two patches for same class " + targetName);
+        throw new GwtTestConfigurationException("Two patches for same class "
+            + targetName);
       }
       patchers.put(targetName, patcher);
       logger.debug("Add patch for class " + targetName + " : "
@@ -333,7 +354,8 @@ public class ConfigurationLoader {
     for (String s : patchClass.classes()) {
       if (patchers.get(s) != null) {
         logger.error("Two patches for same class " + s);
-        throw new RuntimeException("Two patches for same class " + s);
+        throw new GwtTestConfigurationException("Two patches for same class "
+            + s);
       }
       patchers.put(s, patcher);
       logger.debug("Add patch for class " + s + " : "

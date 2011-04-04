@@ -51,7 +51,7 @@ import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.octo.gwt.test.utils.events.Browser;
 
-public class EventsTest extends GwtTest {
+public class EventsTest extends GwtTestTest {
 
   private int counter;
   private boolean onBlurTriggered;
@@ -602,6 +602,7 @@ public class EventsTest extends GwtTest {
 
     Assert.assertTrue("onMouseDown event was not triggered", tested);
   }
+
   @Test
   public void checkMouseMoveEvent() {
     tested = false;
@@ -690,11 +691,6 @@ public class EventsTest extends GwtTest {
     Browser.mouseWheel(b);
 
     Assert.assertTrue("onMouseWheel event was not triggered", tested);
-  }
-
-  @Override
-  public String getCurrentTestedModuleFile() {
-    return "com/octo/gwt/test/test-config.gwt.xml";
   }
 
   private void assertTextFilledCorrectly(String filledText,

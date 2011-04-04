@@ -7,7 +7,7 @@ import com.google.gwt.dom.client.HeadingElement;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.octo.gwt.test.utils.events.Browser;
 
-public class CheckBoxTest extends GwtTest {
+public class CheckBoxTest extends GwtTestTest {
 
   @Test
   public void checkCheckBoxClick() {

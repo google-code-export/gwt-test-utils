@@ -4,9 +4,8 @@ import org.junit.Test;
 
 import com.extjs.gxt.samples.desktop.client.DesktopApp;
 import com.google.gwt.core.client.GWT;
-import com.octo.gwt.test.GwtTest;
 
-public class DesktopAppTest extends GwtTest {
+public class DesktopAppTest extends GwtGxtTest {
 
   @Test
   public void checkOnModuleLoad() {
@@ -19,8 +18,4 @@ public class DesktopAppTest extends GwtTest {
     // Assert
   }
 
-  @Override
-  protected String getModuleName() {
-    return "com.extjs.gxt.samples.desktop.DesktopApp";
-  }
 }

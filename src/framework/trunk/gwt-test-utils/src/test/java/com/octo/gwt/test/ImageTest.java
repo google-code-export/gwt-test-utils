@@ -9,7 +9,7 @@ import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.Image;
 import com.octo.gwt.test.resources.MyClientBundle;
 
-public class ImageTest extends GwtTest {
+public class ImageTest extends GwtTestTest {
 
   @Test
   public void checkGetImageElement() {
@@ -117,11 +117,6 @@ public class ImageTest extends GwtTest {
     Image i = new Image();
     i.setWidth("20px");
     Assert.assertEquals(20, i.getWidth());
-  }
-
-  @Override
-  public String getModuleName() {
-    return "gwt_test_utils_module";
   }
 
 }

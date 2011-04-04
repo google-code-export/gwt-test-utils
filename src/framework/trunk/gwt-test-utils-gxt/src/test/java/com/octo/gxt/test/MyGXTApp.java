@@ -10,6 +10,7 @@ public class MyGXTApp implements EntryPoint {
   public void onModuleLoad() {
     ContentPanel cp = new ContentPanel();
     cp.setHeading("Folder Contents");
+    cp.setTitle("my title");
     cp.setSize(250, 140);
     cp.setPosition(10, 10);
     cp.setCollapsible(true);

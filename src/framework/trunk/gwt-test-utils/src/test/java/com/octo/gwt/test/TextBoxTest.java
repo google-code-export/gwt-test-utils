@@ -12,7 +12,7 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 import com.octo.gwt.test.utils.events.Browser;
 
-public class TextBoxTest extends GwtTest {
+public class TextBoxTest extends GwtTestTest {
 
   private class KeyPressEventData {
 

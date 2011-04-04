@@ -6,9 +6,8 @@ import org.junit.Test;
 import com.extjs.gxt.ui.client.widget.ContentPanel;
 import com.extjs.gxt.ui.client.widget.button.ToolButton;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.octo.gwt.test.GwtTest;
 
-public class MyGXTAppTest extends GwtTest {
+public class MyGXTAppTest extends GwtGxtTest {
 
   @Test
   public void checkOnModuleLoad() {
@@ -22,7 +21,7 @@ public class MyGXTAppTest extends GwtTest {
     ContentPanel cp = (ContentPanel) RootPanel.get().getWidget(0);
     Assert.assertEquals(10, cp.getPosition(true).x);
     Assert.assertEquals(10, cp.getPosition(true).y);
-
+    Assert.assertEquals("my title", cp.getTitle());
     Assert.assertEquals(250, cp.getSize().width);
     // Assert.assertEquals(140, cp.getSize().height);
     Assert.assertTrue(cp.getCollapsible());
@@ -41,11 +40,6 @@ public class MyGXTAppTest extends GwtTest {
     ToolButton tool2 = (ToolButton) cp.getHeader().getTool(2);
     Assert.assertEquals("x-nodrag x-tool-toggle x-tool x-component",
         tool2.getStyleName());
-  }
-
-  @Override
-  protected String getModuleName() {
-    return "fake";
   }
 
 }

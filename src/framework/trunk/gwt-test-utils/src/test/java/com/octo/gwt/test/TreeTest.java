@@ -11,7 +11,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.TreeItem;
 
-public class TreeTest extends GwtTest {
+public class TreeTest extends GwtTestTest {
 
   private TreeItem clickedTreeItem;
   private TreeItem item0;
@@ -115,11 +115,6 @@ public class TreeTest extends GwtTest {
     Assert.assertEquals(true, tree.isVisible());
     tree.setVisible(false);
     Assert.assertEquals(false, tree.isVisible());
-  }
-
-  @Override
-  public String getCurrentTestedModuleFile() {
-    return "com/octo/gwt/test/test-config.gwt.xml";
   }
 
   @Before

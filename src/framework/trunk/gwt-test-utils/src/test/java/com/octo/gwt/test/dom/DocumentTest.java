@@ -13,9 +13,9 @@ import com.google.gwt.dom.client.InputElement;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Text;
-import com.octo.gwt.test.GwtTest;
+import com.octo.gwt.test.GwtTestTest;
 
-public class DocumentTest extends GwtTest {
+public class DocumentTest extends GwtTestTest {
 
   private Document d;
 

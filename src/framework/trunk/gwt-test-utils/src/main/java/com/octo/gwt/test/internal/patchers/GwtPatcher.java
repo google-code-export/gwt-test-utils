@@ -4,6 +4,7 @@ import com.google.gwt.core.client.GWT;
 import com.octo.gwt.test.GwtCreateHandler;
 import com.octo.gwt.test.GwtLogHandler;
 import com.octo.gwt.test.Mock;
+import com.octo.gwt.test.exceptions.GwtTestException;
 import com.octo.gwt.test.internal.GwtConfig;
 import com.octo.gwt.test.internal.GwtCreateHandlerManager;
 import com.octo.gwt.test.patchers.AutomaticPatcher;
@@ -22,9 +23,13 @@ public class GwtPatcher extends AutomaticPatcher {
           return o;
         }
       } catch (Exception e) {
-        throw new RuntimeException("Error while creation instance of '"
-            + classLiteral.getName() + "' through '"
-            + gwtCreateHandler.getClass().getName() + "' instance", e);
+        if (GwtTestException.class.isInstance(e)) {
+          throw (GwtTestException) e;
+        } else {
+          throw new RuntimeException("Error while creation instance of '"
+              + classLiteral.getName() + "' through '"
+              + gwtCreateHandler.getClass().getName() + "' instance", e);
+        }
       }
     }
 

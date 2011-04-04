@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import com.google.gwt.user.client.ui.HTMLPanel;
 
-public class HTMLPanelTest extends GwtTest {
+public class HTMLPanelTest extends GwtTestTest {
 
   @Test
   public void checkInstanciation() {

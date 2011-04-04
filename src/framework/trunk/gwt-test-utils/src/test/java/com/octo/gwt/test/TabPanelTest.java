@@ -9,7 +9,7 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.TabPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-public class TabPanelTest extends GwtTest {
+public class TabPanelTest extends GwtTestTest {
 
   int selectedTabIndex = -1;
 

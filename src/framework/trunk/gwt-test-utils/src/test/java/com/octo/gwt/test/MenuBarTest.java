@@ -9,7 +9,7 @@ import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.MenuItemSeparator;
 import com.octo.gwt.test.utils.events.Browser;
 
-public class MenuBarTest extends GwtTest {
+public class MenuBarTest extends GwtTestTest {
 
   private boolean called = false;
 
@@ -112,11 +112,6 @@ public class MenuBarTest extends GwtTest {
     Assert.assertEquals(true, bar.isVisible());
     bar.setVisible(false);
     Assert.assertEquals(false, bar.isVisible());
-  }
-
-  @Override
-  public String getCurrentTestedModuleFile() {
-    return "com/octo/gwt/test/test-config.gwt.xml";
   }
 
 }

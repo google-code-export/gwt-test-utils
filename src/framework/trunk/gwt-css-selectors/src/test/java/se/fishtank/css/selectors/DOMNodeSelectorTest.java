@@ -102,13 +102,18 @@ public class DOMNodeSelectorTest extends GwtTest {
     }
   }
 
+  @Override
+  public String getModuleName() {
+    return "se.fishtank.css.selectors.CssSelectorTest";
+  }
+
   @Before
   public void setupDOMNodeSelectorTest() throws Exception {
     nodeSelector = new DOMNodeSelector(Document.get());
   }
 
   @Override
-  protected String getHostPagePath() {
+  protected String getHostPagePath(String moduleFullQualifiedName) {
     return "test.html";
   }
 
