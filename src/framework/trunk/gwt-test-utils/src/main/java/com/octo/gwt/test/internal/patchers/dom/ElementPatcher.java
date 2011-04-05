@@ -12,12 +12,12 @@ import com.octo.gwt.test.internal.overrides.OverrideNodeList;
 import com.octo.gwt.test.internal.utils.GwtStringUtils;
 import com.octo.gwt.test.internal.utils.PropertyContainer;
 import com.octo.gwt.test.internal.utils.PropertyContainerUtils;
-import com.octo.gwt.test.patchers.AutomaticPropertyContainerPatcher;
+import com.octo.gwt.test.patchers.OverlayPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
 @PatchClass(Element.class)
-public class ElementPatcher extends AutomaticPropertyContainerPatcher {
+public class ElementPatcher extends OverlayPatcher {
 
   public static final String CLASSNAME_FIELD = "ClassName";
   public static final String PROPERTY_MAP_FIELD = "propertyMap";

@@ -23,8 +23,7 @@ import com.octo.gwt.test.internal.utils.TagAware;
 @PatchClass({
     HeadingElement.class, ModElement.class, QuoteElement.class,
     TableColElement.class, TableSectionElement.class})
-public class AutomaticSpecificTagElementPatcher extends
-    AutomaticPropertyContainerPatcher {
+public class AutomaticSpecificTagElementPatcher extends OverlayPatcher {
 
   private static final String OVERRIDE_TAG = "overrideTag";
 

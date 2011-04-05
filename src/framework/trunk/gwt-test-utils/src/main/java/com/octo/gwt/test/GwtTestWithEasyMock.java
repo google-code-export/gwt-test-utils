@@ -136,7 +136,6 @@ public abstract class GwtTestWithEasyMock extends GwtTestWithMocks {
    * @param object The object returned by the stubbed remote service and passed
    *          to the callback onSuccess() method
    */
-  @SuppressWarnings("unchecked")
   public <T> void expectServiceAndCallbackOnSuccess(final T object) {
     IAnswer<T> answer = new SuccessAnswer<T>(object);
     EasyMock.expectLastCall().andAnswer(answer);

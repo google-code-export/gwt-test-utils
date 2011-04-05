@@ -7,12 +7,12 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.SelectElement;
 import com.google.gwt.user.client.ui.UIObject;
 import com.octo.gwt.test.internal.utils.PropertyContainerUtils;
-import com.octo.gwt.test.patchers.AutomaticPropertyContainerPatcher;
+import com.octo.gwt.test.patchers.OverlayPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
 @PatchClass(SelectElement.class)
-public class SelectElementPatcher extends AutomaticPropertyContainerPatcher {
+public class SelectElementPatcher extends OverlayPatcher {
 
   private static final String SELECTED_INDEX_FIELD = "SelectedIndex";
 

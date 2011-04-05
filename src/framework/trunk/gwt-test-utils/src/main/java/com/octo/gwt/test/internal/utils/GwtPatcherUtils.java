@@ -57,21 +57,6 @@ public class GwtPatcherUtils {
         + ", you have to set parameter types discriminators");
   }
 
-  public static String getPropertyName(CtMethod m) throws Exception {
-    String fieldName = null;
-    if (m.getName().startsWith("get") && m.getParameterTypes().length == 0) {
-      fieldName = m.getName().substring(3);
-    } else if (m.getName().startsWith("is")
-        && m.getParameterTypes().length == 0) {
-      fieldName = m.getName().substring(2);
-    } else if (m.getName().startsWith("set")
-        && m.getParameterTypes().length == 1) {
-      fieldName = m.getName().substring(3);
-    }
-
-    return fieldName;
-  }
-
   public static void patch(CtClass c, Patcher patcher) throws Exception {
     treatClassToPatch(c);
 

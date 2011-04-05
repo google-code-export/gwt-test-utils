@@ -48,7 +48,6 @@ public abstract class RemoteServiceCreateHandler implements GwtCreateHandler {
     serializerHander = getSerializerHandler();
   }
 
-  @SuppressWarnings("unchecked")
   public Object create(Class<?> classLiteral) throws Exception {
 
     if (!RemoteService.class.isAssignableFrom(classLiteral)) {

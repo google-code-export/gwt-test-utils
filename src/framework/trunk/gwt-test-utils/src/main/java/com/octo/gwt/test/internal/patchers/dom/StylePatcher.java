@@ -16,12 +16,12 @@ import com.octo.gwt.test.internal.utils.GwtStringUtils;
 import com.octo.gwt.test.internal.utils.PropertyContainer;
 import com.octo.gwt.test.internal.utils.PropertyContainerUtils;
 import com.octo.gwt.test.internal.utils.StyleUtils;
-import com.octo.gwt.test.patchers.AutomaticPropertyContainerPatcher;
+import com.octo.gwt.test.patchers.OverlayPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
 @PatchClass(Style.class)
-public class StylePatcher extends AutomaticPropertyContainerPatcher {
+public class StylePatcher extends OverlayPatcher {
 
   public static final String TARGET_ELEMENT = "TARGET_ELEMENT";
 

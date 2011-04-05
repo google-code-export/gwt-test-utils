@@ -36,27 +36,27 @@ public class PropertyContainerUtils {
   public static String getCodeGetProperty(String object, String fieldName,
       CtClass returnType) {
     if (returnType == CtClass.booleanType) {
-      return PropertyContainerUtils.class.getCanonicalName()
-          + ".getPropertyBoolean(" + object + ", \"" + fieldName + "\")";
+      return PropertyContainerUtils.class.getName() + ".getPropertyBoolean("
+          + object + ", \"" + fieldName + "\")";
     } else if (returnType == CtClass.intType) {
-      return PropertyContainerUtils.class.getCanonicalName()
-          + ".getPropertyInteger(" + object + ", \"" + fieldName + "\")";
+      return PropertyContainerUtils.class.getName() + ".getPropertyInteger("
+          + object + ", \"" + fieldName + "\")";
     } else if (returnType == CtClass.doubleType) {
-      return PropertyContainerUtils.class.getCanonicalName()
-          + ".getPropertyDouble(" + object + ", \"" + fieldName + "\")";
+      return PropertyContainerUtils.class.getName() + ".getPropertyDouble("
+          + object + ", \"" + fieldName + "\")";
     } else if (returnType == STRING_TYPE) {
-      return PropertyContainerUtils.class.getCanonicalName()
-          + ".getPropertyString(" + object + ", \"" + fieldName + "\")";
+      return PropertyContainerUtils.class.getName() + ".getPropertyString("
+          + object + ", \"" + fieldName + "\")";
     }
     return "(" + returnType.getName() + ") "
-        + PropertyContainerUtils.class.getCanonicalName() + ".getProperty("
-        + object + ", \"" + fieldName + "\")";
+        + PropertyContainerUtils.class.getName() + ".getProperty(" + object
+        + ", \"" + fieldName + "\")";
   }
 
   public static String getCodeSetProperty(String object, String propertyName,
       String propertyValue) {
-    return PropertyContainerUtils.class.getCanonicalName() + ".setProperty("
-        + object + ", \"" + propertyName + "\", " + propertyValue + ")";
+    return PropertyContainerUtils.class.getName() + ".setProperty(" + object
+        + ", \"" + propertyName + "\", " + propertyValue + ")";
   }
 
   public static String getConstructionCode() {

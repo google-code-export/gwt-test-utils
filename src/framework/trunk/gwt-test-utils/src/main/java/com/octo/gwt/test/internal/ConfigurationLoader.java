@@ -38,19 +38,17 @@ public class ConfigurationLoader {
 
   private static ConfigurationLoader INSTANCE;
 
-  private static final String JSO_CLASSNAME = "com.google.gwt.core.client.JavaScriptObject";
-
   private static final Logger logger = LoggerFactory.getLogger(ConfigurationLoader.class);
 
   public static synchronized final ConfigurationLoader createInstance(
-      ClassLoader classLoader) {
+      ClassLoader classLoader, String jsoClassName) {
     if (INSTANCE != null) {
       throw new GwtTestConfigurationException(
           ConfigurationLoader.class.getSimpleName()
               + " instance has already been initialized");
     }
 
-    INSTANCE = new ConfigurationLoader(classLoader);
+    INSTANCE = new ConfigurationLoader(classLoader, jsoClassName);
 
     return INSTANCE;
   }
@@ -68,20 +66,25 @@ public class ConfigurationLoader {
   private final ClassLoader classLoader;
 
   private final List<String> delegateList;
+
   private final List<JavaClassModifier> javaClassModifierList;
-  private Set<String> jsoSubClasses;
+  private final String jsoClassName;
+  private final Set<String> jsoSubClasses;
   private final MethodRemover methodRemover;
-  private Map<String, Patcher> patchers;
+  private final Map<String, Patcher> patchers;
   private boolean processedModuleFile = false;
   private final Set<String> scanPackageSet;
 
-  private ConfigurationLoader(ClassLoader classLoader) {
+  private ConfigurationLoader(ClassLoader classLoader, String jsoClassName) {
     this.classLoader = classLoader;
-    delegateList = new ArrayList<String>();
-    scanPackageSet = new HashSet<String>();
-    javaClassModifierList = new ArrayList<JavaClassModifier>();
-    methodRemover = new MethodRemover();
-    javaClassModifierList.add(methodRemover);
+    this.jsoClassName = jsoClassName;
+    this.jsoSubClasses = new HashSet<String>();
+    this.delegateList = new ArrayList<String>();
+    this.scanPackageSet = new HashSet<String>();
+    this.javaClassModifierList = new ArrayList<JavaClassModifier>();
+    this.methodRemover = new MethodRemover();
+    this.patchers = new HashMap<String, Patcher>();
+    this.javaClassModifierList.add(methodRemover);
 
     readFiles();
     loadPatchersAndJavaScriptObjects();
@@ -184,10 +187,8 @@ public class ConfigurationLoader {
   }
 
   private void loadPatchersAndJavaScriptObjects() {
-    jsoSubClasses = new HashSet<String>();
-    patchers = new HashMap<String, Patcher>();
     List<String> classList = findScannedClasses();
-    CtClass jsoCtClass = GwtClassPool.getClass(JSO_CLASSNAME);
+    CtClass jsoCtClass = GwtClassPool.getClass(jsoClassName);
     for (String className : classList) {
       CtClass ctClass = GwtClassPool.getClass(className);
       if (ctClass.subclassOf(jsoCtClass) && !ctClass.equals(jsoCtClass)) {

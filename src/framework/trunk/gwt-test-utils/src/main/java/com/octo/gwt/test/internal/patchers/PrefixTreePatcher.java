@@ -1,30 +1,27 @@
 package com.octo.gwt.test.internal.patchers;
 
+import java.lang.reflect.Modifier;
 import java.util.Collection;
 import java.util.Set;
 import java.util.TreeSet;
 
-import com.octo.gwt.test.internal.utils.PropertyContainerUtils;
-import com.octo.gwt.test.patchers.AutomaticPropertyContainerPatcher;
+import javassist.CtClass;
+import javassist.CtField;
+
+import com.octo.gwt.test.internal.GwtClassPool;
+import com.octo.gwt.test.patchers.OverlayPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 @PatchClass(classes = {"com.google.gwt.user.client.ui.PrefixTree"})
-public class PrefixTreePatcher extends AutomaticPropertyContainerPatcher {
+public class PrefixTreePatcher extends OverlayPatcher {
 
-  private static final String PREFIXES_SET = "PREFIXES_SET";
+  private static final String PREFIXES_SET_PROPERTY = "PREFIXES_SET";
 
   @PatchMethod
   public static boolean add(Object prefixTree, String s) {
-    Set<String> set = PropertyContainerUtils.getProperty(prefixTree,
-        PREFIXES_SET);
-    if (set == null) {
-      set = new TreeSet<String>();
-      PropertyContainerUtils.setProperty(prefixTree, PREFIXES_SET, set);
-    }
-
-    return set.add(s);
+    return getPrefixSet(prefixTree).add(s);
   }
 
   @PatchMethod
@@ -36,16 +33,33 @@ public class PrefixTreePatcher extends AutomaticPropertyContainerPatcher {
   public static void suggestImpl(Object prefixTree, String search,
       String prefix, Collection<String> output, int limit) {
 
-    Set<String> set = PropertyContainerUtils.getProperty(prefixTree,
-        PREFIXES_SET);
-    if (set == null)
-      return;
-
-    for (String record : set) {
+    for (String record : getPrefixSet(prefixTree)) {
       if (search == null || record.contains(search.trim().toLowerCase())) {
         output.add(record);
       }
     }
+  }
+
+  private static Set<String> getPrefixSet(Object prefixTree) {
+    Set<String> set = GwtReflectionUtils.getPrivateFieldValue(prefixTree,
+        PREFIXES_SET_PROPERTY);
+    if (set == null) {
+      set = new TreeSet<String>();
+      GwtReflectionUtils.setPrivateFieldValue(prefixTree,
+          PREFIXES_SET_PROPERTY, set);
+    }
+    return set;
+  }
+
+  @Override
+  public void initClass(CtClass c) throws Exception {
+    super.initClass(c);
+
+    // add field "private Set<?> PREFIXES_SET;"
+    CtClass pcType = GwtClassPool.getCtClass(Set.class);
+    CtField field = new CtField(pcType, PREFIXES_SET_PROPERTY, c);
+    field.setModifiers(Modifier.PRIVATE);
+    c.addField(field);
   }
 
 }

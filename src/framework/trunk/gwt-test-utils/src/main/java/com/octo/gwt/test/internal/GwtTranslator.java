@@ -17,6 +17,7 @@ import com.octo.gwt.test.exceptions.GwtTestException;
 import com.octo.gwt.test.exceptions.GwtTestPatchException;
 import com.octo.gwt.test.internal.modifiers.JavaClassModifier;
 import com.octo.gwt.test.internal.utils.GwtPatcherUtils;
+import com.octo.gwt.test.patchers.OverlayPatcher;
 
 public class GwtTranslator implements Translator {
 
@@ -24,24 +25,27 @@ public class GwtTranslator implements Translator {
 
   private static final Pattern TEST_PATTERN = Pattern.compile("^.*[T|t][E|e][S|s][T|t].*$");
 
+  private final String jsoClassName;
   private final Set<String> jsoSubTypes;
+  private final Patcher overlayPatcher = new OverlayPatcher();
   private final Map<String, Patcher> patchers;
 
-  public GwtTranslator(Map<String, Patcher> patchers, Set<String> jsoSubTypes) {
-    this.patchers = patchers;
+  public GwtTranslator(Map<String, Patcher> patchers, String jsoClassName,
+      Set<String> jsoSubTypes) {
+    this.jsoClassName = jsoClassName;
     this.jsoSubTypes = jsoSubTypes;
+    this.patchers = patchers;
   }
 
   public void onLoad(ClassPool pool, String className) throws NotFoundException {
-    if (!jsoSubTypes.contains(className)) {
+    if (!jsoClassName.equals(className)) {
       patchClass(pool.get(className));
     }
   }
 
   public void start(ClassPool pool) throws NotFoundException {
-    for (String jsoSubType : jsoSubTypes) {
-      patchClass(pool.get(jsoSubType));
-    }
+    // patch JavaScriptObject first
+    patchJSO(pool);
   }
 
   private void applyJavaClassModifier(CtClass ctClass) {
@@ -62,15 +66,24 @@ public class GwtTranslator implements Translator {
 
   private void applyPatcher(CtClass classToModify) {
     Patcher patcher = patchers.get(classToModify.getName());
-    if (patcher != null) {
-      logger.debug("Patching '" + classToModify.getName() + "' with patcher '"
-          + patcher.getClass().getName() + "'");
-      try {
-        GwtPatcherUtils.patch(classToModify, patcher);
-      } catch (Exception e) {
+    if (patcher == null && jsoSubTypes.contains(classToModify.getName())) {
+      patcher = overlayPatcher;
+    }
+
+    if (patcher == null) {
+      return;
+    }
+    logger.debug("Patching '" + classToModify.getName() + "' with patcher '"
+        + patcher.getClass().getName() + "'");
+    try {
+      GwtPatcherUtils.patch(classToModify, patcher);
+    } catch (Exception e) {
+      if (GwtTestException.class.isInstance(e)) {
+        throw (GwtTestException) e;
+      } else {
         throw new GwtTestPatchException("Error while patching class '"
             + classToModify.getName() + "' with patcher '"
-            + patcher.getClass().getName() + "'");
+            + patcher.getClass().getName() + "'", e);
       }
     }
   }
@@ -104,4 +117,8 @@ public class GwtTranslator implements Translator {
     logger.debug("Class '" + classToModify.getName() + "' has been loaded");
   }
 
+  private void patchJSO(ClassPool pool) throws NotFoundException {
+    assert jsoSubTypes.size() > 0 : "No JavaScriptObject subtype detected";
+    patchClass(pool.get(jsoClassName));
+  }
 }

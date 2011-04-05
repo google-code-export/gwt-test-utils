@@ -1,17 +1,14 @@
 package com.octo.gwt.test.internal.patchers.dom;
 
-import javassist.CtClass;
-
 import com.google.gwt.dom.client.InputElement;
 import com.octo.gwt.test.internal.utils.PropertyContainer;
 import com.octo.gwt.test.internal.utils.PropertyContainerUtils;
-import com.octo.gwt.test.patchers.AutomaticPropertyContainerPatcher;
+import com.octo.gwt.test.patchers.OverlayPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
-import com.octo.gwt.test.patchers.PatchMethod.Type;
 
 @PatchClass(InputElement.class)
-public class InputElementPatcher extends AutomaticPropertyContainerPatcher {
+public class InputElementPatcher extends OverlayPatcher {
 
   @PatchMethod
   public static void click(InputElement inputElement) {
@@ -29,12 +26,6 @@ public class InputElementPatcher extends AutomaticPropertyContainerPatcher {
   @PatchMethod
   public static void select(InputElement inputElement) {
 
-  }
-
-  @PatchMethod(type = Type.NEW_CODE_AS_STRING)
-  public static String useMap() {
-    return PropertyContainerUtils.getCodeGetProperty("this", "UserMap",
-        CtClass.booleanType);
   }
 
 }

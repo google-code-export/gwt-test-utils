@@ -15,12 +15,12 @@ import com.octo.gwt.test.exceptions.GwtTestDomException;
 import com.octo.gwt.test.internal.overrides.OverrideNodeList;
 import com.octo.gwt.test.internal.utils.PropertyContainer;
 import com.octo.gwt.test.internal.utils.PropertyContainerUtils;
-import com.octo.gwt.test.patchers.AutomaticPropertyContainerPatcher;
+import com.octo.gwt.test.patchers.OverlayPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
 @PatchClass(Node.class)
-public class NodePatcher extends AutomaticPropertyContainerPatcher {
+public class NodePatcher extends OverlayPatcher {
 
   public static final String NODE_LIST_FIELD = "ChildNodes";
   public static final String PARENT_NODE_FIELD = "ParentNode";

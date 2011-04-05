@@ -68,6 +68,7 @@ import com.octo.gwt.test.GwtTest;
 import com.octo.gwt.test.exceptions.GwtTestConfigurationException;
 import com.octo.gwt.test.exceptions.GwtTestDomException;
 import com.octo.gwt.test.exceptions.GwtTestException;
+import com.octo.gwt.test.exceptions.ReflectionException;
 import com.octo.gwt.test.internal.GwtConfig;
 import com.octo.gwt.test.internal.GwtHtmlParser;
 import com.octo.gwt.test.internal.utils.PropertyContainer;
@@ -159,6 +160,14 @@ public class NodeFactory {
     elementMap.put("ul", UListElement.class.getName());
   }
 
+  public static Document createDocument() {
+    try {
+      return (Document) loadClass(Document.class.getName()).newInstance();
+    } catch (Exception e) {
+      throw new ReflectionException("Unable to create Document", e);
+    }
+  }
+
   public static Element createElement(String tag) {
     Element elem = null;
     try {
@@ -212,7 +221,7 @@ public class NodeFactory {
   public static Document getDocument() {
     if (DOCUMENT == null) {
       try {
-        DOCUMENT = (Document) loadClass(Document.class.getName()).newInstance();
+        DOCUMENT = createDocument();
         Element e = parseHTMLElement();
         DOCUMENT.appendChild(e);
         PropertyContainerUtils.setProperty(DOCUMENT, "DocumentElement", e);

@@ -33,6 +33,8 @@ public class GwtClassLoader extends Loader {
 
   private static final GwtClassLoader INSTANCE;
 
+  private static final String JSO_CLASS = "com.google.gwt.core.client.JavaScriptObject";
+
   static {
     try {
       INSTANCE = new GwtClassLoader();
@@ -73,14 +75,15 @@ public class GwtClassLoader extends Loader {
   private GwtClassLoader() throws NotFoundException, CannotCompileException {
     super(GwtClassPool.get());
 
-    ConfigurationLoader configurationLoader = ConfigurationLoader.createInstance(this.getParent());
+    ConfigurationLoader configurationLoader = ConfigurationLoader.createInstance(
+        this.getParent(), JSO_CLASS);
 
     for (String s : configurationLoader.getDelegateList()) {
       delegateLoadingOf(s);
     }
 
     translator = new GwtTranslator(configurationLoader.getPatchers(),
-        configurationLoader.getJSOSubClasses());
+        JSO_CLASS, configurationLoader.getJSOSubClasses());
 
     addTranslator(GwtClassPool.get(), translator);
   }

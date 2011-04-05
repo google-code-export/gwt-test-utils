@@ -9,12 +9,12 @@ import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.TableCellElement;
 import com.google.gwt.dom.client.TableRowElement;
 import com.octo.gwt.test.internal.overrides.OverrideNodeList;
-import com.octo.gwt.test.patchers.AutomaticPropertyContainerPatcher;
+import com.octo.gwt.test.patchers.OverlayPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
 @PatchClass(TableRowElement.class)
-public class TableRowElementPatcher extends AutomaticPropertyContainerPatcher {
+public class TableRowElementPatcher extends OverlayPatcher {
 
   @PatchMethod
   public static NodeList<TableCellElement> getCells(TableRowElement element) {
