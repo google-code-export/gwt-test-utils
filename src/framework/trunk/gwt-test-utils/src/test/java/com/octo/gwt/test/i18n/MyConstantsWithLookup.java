@@ -23,7 +23,7 @@ public interface MyConstantsWithLookup extends ConstantsWithLookup {
   @DefaultStringValue("hello from @DefaultStringValue")
   public String hello();
 
-  @DefaultStringMapValue({"hello"})
+  @DefaultStringMapValue({"map1", "defaultMap1", "map2", "defaultMap2"})
   public Map<String, Object> map();
 
   @DefaultStringValue("no corresponding property in any file, value from @DefaultStringValue")

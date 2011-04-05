@@ -43,7 +43,8 @@ public class MyConstantsWithLookupTest extends GwtTestTest {
     Assert.assertEquals(2, stringArray.length);
     Assert.assertEquals("default0", stringArray[0]);
     Assert.assertEquals("default1", stringArray[1]);
-    Assert.assertEquals("hello from @DefaultStringValue", map.get("hello"));
+    Assert.assertEquals("defaultMap1", map.get("map1"));
+    Assert.assertEquals("defaultMap2", map.get("map2"));
 
     Assert.assertEquals(6, functionInt);
     Assert.assertEquals(6.6, functionDouble, 0);
@@ -109,12 +110,12 @@ public class MyConstantsWithLookupTest extends GwtTestTest {
     Assert.assertEquals("deux", stringArray[1]);
     Assert.assertEquals("trois", stringArray[2]);
 
-    Assert.assertEquals(3, map.size());
+    Assert.assertEquals(4, map.size());
     Assert.assertEquals("Bonjour", map.get("hello"));
     Assert.assertEquals("Au revoir et un caractère qui pue", map.get("goodbye"));
-    Assert.assertEquals(
-        "no corresponding property in any file, value from @DefaultStringValue",
-        map.get("noCorrespondance"));
+    Assert.assertEquals("premiere valeur de la map", map.get("map1"));
+    Assert.assertEquals("seconde valeur de la map", map.get("map2"));
+    Assert.assertNull(map.get("map3"));
 
     Assert.assertEquals(4, functionInt);
     Assert.assertEquals(4.4, functionDouble, 0);

@@ -23,11 +23,10 @@ public interface MyConstants extends Constants {
   @DefaultStringValue("hello from @DefaultStringValue")
   public String hello();
 
-  @DefaultStringMapValue({"hello"})
+  @DefaultStringMapValue({
+      "map1", "default map1 value", "map2", "default map2 value", "map3",
+      "default map3 value"})
   public Map<String, Object> map();
-
-  @DefaultStringValue("no corresponding property in any file, value from @DefaultStringValue")
-  public String noCorrespondance();
 
   @DefaultStringArrayValue({"default0", "default1"})
   public String[] stringArray();

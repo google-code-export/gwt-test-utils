@@ -35,12 +35,12 @@ public class MyConstantsTest extends GwtTestTest {
     Assert.assertEquals("two", stringArray[1]);
     Assert.assertEquals("three", stringArray[2]);
 
-    Assert.assertEquals(3, map.size());
+    Assert.assertEquals(5, map.size());
     Assert.assertEquals("Hello english !", map.get("hello"));
     Assert.assertEquals("Goodbye english !", map.get("goodbye"));
-    // functionFloat key is not present in MyConstants_en.properties : loaded
-    // from @DefaultStringValue
-    Assert.assertEquals((float) 6.66, map.get("functionFloat"));
+    Assert.assertEquals("glad to work with gwt-test-utils", map.get("map1"));
+    Assert.assertEquals("hehe, it roxs !", map.get("map2"));
+    Assert.assertNull(map.get("map3"));
 
     // Test 2
     GwtConfig.get().setLocale(Locale.US);
@@ -60,9 +60,11 @@ public class MyConstantsTest extends GwtTestTest {
     Assert.assertEquals("four", stringArray[3]);
 
     // "map" is not present in MyConstants_en_US.properties : loaded from
-    // @DefaultStringMapValue
-    Assert.assertEquals(1, map.size());
-    Assert.assertEquals("hello from @DefaultStringValue", map.get("hello"));
+    // @DefaultStringMapMapValue
+    Assert.assertEquals(3, map.size());
+    Assert.assertEquals("default map1 value", map.get("map1"));
+    Assert.assertEquals("default map2 value", map.get("map2"));
+    Assert.assertEquals("default map3 value", map.get("map3"));
   }
 
   @Test
@@ -84,7 +86,10 @@ public class MyConstantsTest extends GwtTestTest {
     Assert.assertEquals(2, stringArray.length);
     Assert.assertEquals("default0", stringArray[0]);
     Assert.assertEquals("default1", stringArray[1]);
-    Assert.assertEquals("hello from @DefaultStringValue", map.get("hello"));
+    Assert.assertEquals(3, map.size());
+    Assert.assertEquals("default map1 value", map.get("map1"));
+    Assert.assertEquals("default map2 value", map.get("map2"));
+    Assert.assertEquals("default map3 value", map.get("map3"));
 
     Assert.assertEquals(6, functionInt);
     Assert.assertEquals(6.6, functionDouble, 0);
@@ -124,12 +129,12 @@ public class MyConstantsTest extends GwtTestTest {
     Assert.assertEquals("deux", stringArray[1]);
     Assert.assertEquals("trois", stringArray[2]);
 
-    Assert.assertEquals(3, map.size());
+    Assert.assertEquals(5, map.size());
     Assert.assertEquals("Bonjour", map.get("hello"));
     Assert.assertEquals("Au revoir et un caractère qui pue", map.get("goodbye"));
-    Assert.assertEquals(
-        "no corresponding property in any file, value from @DefaultStringValue",
-        map.get("noCorrespondance"));
+    Assert.assertEquals("je suis content", map.get("map1"));
+    Assert.assertEquals("tout pareil !", map.get("map2"));
+    Assert.assertNull(map.get("map3"));
 
     Assert.assertEquals(4, functionInt);
     Assert.assertEquals(4.4, functionDouble, 0);

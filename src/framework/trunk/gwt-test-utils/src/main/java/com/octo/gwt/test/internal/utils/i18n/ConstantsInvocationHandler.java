@@ -65,24 +65,19 @@ public class ConstantsInvocationHandler extends
       DefaultStringMapValue a = getCheckedAnnotation(method,
           DefaultStringMapValue.class);
       String[] v = a.value();
+      if (v.length % 2 != 0) {
+        throw new GwtTestI18NException("@"
+            + DefaultStringMapValue.class.getSimpleName()
+            + " value incorrect for method "
+            + method.getDeclaringClass().getName() + "." + method.getName()
+            + "() : the array value (key/value pair) should be even");
+      }
       Map<String, String> result = new HashMap<String, String>();
       for (int i = 0; i < v.length; i++) {
-        String methodName = v[i];
-        Method correspondingKeyMethod = getProxiedClass().getMethod(methodName);
-        if (correspondingKeyMethod == null) {
-          throw new GwtTestI18NException("Cannot find method '" + methodName
-              + "' in class [" + getProxiedClass().getName() + "]");
-        } else if (correspondingKeyMethod.getReturnType() != String.class) {
-          throw new GwtTestI18NException("Method '"
-              + getProxiedClass().getSimpleName() + "." + methodName
-              + "()' should return a String");
-        }
-
-        result.put(methodName,
-            (String) extractDefaultValue(correspondingKeyMethod, null, locale));
+        result.put(v[i], treatLine(v[++i]));
       }
-
       return result;
+
     } else if (returnType == Integer.class || returnType == Integer.TYPE) {
       DefaultIntValue a = getCheckedAnnotation(method, DefaultIntValue.class);
       return a.value();
@@ -124,22 +119,14 @@ public class ConstantsInvocationHandler extends
         && returnType.getComponentType() == String.class) {
       return line.split("\\s*,\\s*");
     } else if (returnType == Map.class) {
-      Class<?> clazz = method.getDeclaringClass();
       Map<String, Object> result = new HashMap<String, Object>();
       String[] v = line.split("\\s*,\\s*");
 
-      for (int i = 0; i < v.length; i++) {
-        String methodName = v[i];
-        Method correspondingKeyMethod = clazz.getMethod(methodName);
-        if (correspondingKeyMethod == null) {
-          throw new GwtTestI18NException("Cannot find method '" + methodName
-              + "' in class [" + clazz.getName() + "]");
-        }
-
-        result.put(methodName, invoke(null, correspondingKeyMethod, null));
+      for (String key : v) {
+        result.put(key, properties.get(key));
       }
-
       return result;
+
     } else if (returnType == Integer.class || returnType == Integer.TYPE) {
       return Integer.parseInt(line);
     } else if (returnType == Double.class || returnType == Double.TYPE) {
