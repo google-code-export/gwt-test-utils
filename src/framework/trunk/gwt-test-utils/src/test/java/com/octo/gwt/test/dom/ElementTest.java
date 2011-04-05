@@ -9,6 +9,7 @@ import org.junit.Test;
 
 import com.google.gwt.dom.client.AnchorElement;
 import com.google.gwt.dom.client.ButtonElement;
+import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.HeadingElement;
@@ -30,12 +31,12 @@ public class ElementTest extends GwtTestTest {
 
   @Test
   public void checkCast() {
-    AnchorElement casted = e.cast();
+    DivElement casted = e.cast();
     Assert.assertNotNull(casted);
 
     try {
       ButtonElement notCasted = e.cast();
-      Assert.fail("An [" + AnchorElement.class.getCanonicalName()
+      Assert.fail("A [" + DivElement.class.getCanonicalName()
           + "] should not be cast in an instance of ["
           + notCasted.getClass().getCanonicalName() + "]");
     } catch (Exception e) {
@@ -72,11 +73,11 @@ public class ElementTest extends GwtTestTest {
     e.setTitle("title");
     e.setPropertyBoolean("bool", true);
 
-    AnchorElement child = Document.get().createAnchorElement();
+    Element child = Document.get().createAnchorElement();
     child.setTitle("child");
     e.appendChild(child);
 
-    AnchorElement newNode = (AnchorElement) e.cloneNode(true);
+    DivElement newNode = e.cloneNode(true).cast();
     Assert.assertEquals("title", newNode.getTitle());
     Assert.assertNull("Cloned element's parent should be null",
         newNode.getParentNode());
@@ -96,7 +97,7 @@ public class ElementTest extends GwtTestTest {
     child.setTitle("child");
     e.appendChild(child);
 
-    AnchorElement newNode = (AnchorElement) e.cloneNode(false);
+    DivElement newNode = e.cloneNode(false).cast();
     Assert.assertEquals("title", newNode.getTitle());
     Assert.assertNull("Cloned element's parent should be null",
         newNode.getParentNode());
@@ -104,6 +105,30 @@ public class ElementTest extends GwtTestTest {
     Assert.assertEquals("Not deep cloned element should not have child nodes",
         0, newNode.getChildNodes().getLength());
     Assert.assertEquals(1, e.getChildNodes().getLength());
+  }
+
+  // @Test
+  public void checkCombinaison() {
+    // Pre-Assert
+    Assert.assertEquals("", e.getTitle());
+    Assert.assertEquals("", e.getAttribute("title"));
+    Assert.assertEquals("", e.getAttribute("titLe"));
+    Assert.assertEquals("", e.getPropertyString("title"));
+    Assert.assertNull(e.getPropertyString("titLe"));
+    Assert.assertNull(e.getPropertyObject("title"));
+    Assert.assertNull(e.getPropertyObject("titLe"));
+
+    // Test1
+    e.setTitle("MyTitle");
+
+    // Assert1
+    Assert.assertEquals("MyTitle", e.getTitle());
+    Assert.assertEquals("MyTitle", e.getAttribute("title"));
+    Assert.assertEquals("MyTitle", e.getAttribute("titLe"));
+    Assert.assertEquals("MyTitle", e.getPropertyString("title"));
+    Assert.assertNull(e.getPropertyString("titLe"));
+    Assert.assertEquals("MyTitle", e.getPropertyObject("title"));
+    Assert.assertNull(e.getPropertyObject("titLe"));
   }
 
   @Test
@@ -333,7 +358,7 @@ public class ElementTest extends GwtTestTest {
 
   @Test
   public void checkTagName() {
-    Assert.assertEquals("a", e.getTagName());
+    Assert.assertEquals("div", e.getTagName());
   }
 
   @Test
@@ -344,7 +369,7 @@ public class ElementTest extends GwtTestTest {
 
   @Before
   public void initElement() {
-    e = Document.get().createElement("a");
+    e = Document.get().createDivElement();
   }
 
 }

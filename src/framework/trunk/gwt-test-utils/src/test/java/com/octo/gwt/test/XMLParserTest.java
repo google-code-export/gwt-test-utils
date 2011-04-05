@@ -1,24 +1,49 @@
 package com.octo.gwt.test;
 
-import org.junit.Assert;
+import java.io.InputStream;
+import java.io.StringWriter;
+
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
 import org.junit.Test;
 
+import com.google.gwt.xml.client.Document;
+import com.google.gwt.xml.client.Element;
 import com.google.gwt.xml.client.XMLParser;
 
 public class XMLParserTest extends GwtTestTest {
 
   @Test
-  public void checkParseThrowsException() {
+  public void checkParse() throws Exception {
+    // Setup
+    String xmlContent = convertXMLFileToString("/someXML.xml");
+
+    // Test
+    Document document = XMLParser.parse(xmlContent);
+
+    // Assert
+    Element element = document.getElementById("myElemId");
+    // Assert.assertEquals("myElem", element.getTagName());
+  }
+
+  private String convertXMLFileToString(String fileName) {
     try {
-      XMLParser.parse("any content");
-      Assert.fail("XMLParser.parse(..) is expected to throw an exception since it's not handle by gwt-test-utils");
+      DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+      InputStream inputStream = this.getClass().getResourceAsStream(fileName);
+      org.w3c.dom.Document doc = documentBuilderFactory.newDocumentBuilder().parse(
+          inputStream);
+      StringWriter stw = new StringWriter();
+      Transformer serializer = TransformerFactory.newInstance().newTransformer();
+      serializer.transform(new DOMSource(doc), new StreamResult(stw));
+      return stw.toString();
     } catch (Exception e) {
-      // Assert
-      Assert.assertEquals(UnsupportedOperationException.class, e.getClass());
-      Assert.assertEquals(
-          "Abstract method 'XMLParserImplSubClass.parseImpl()' is not patched by any declared "
-              + Patcher.class.getSimpleName() + " instance", e.getMessage());
+      e.printStackTrace();
     }
+    return null;
   }
 
 }
