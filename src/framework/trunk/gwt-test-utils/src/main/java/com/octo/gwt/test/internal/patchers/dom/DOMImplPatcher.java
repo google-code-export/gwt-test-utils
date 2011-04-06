@@ -15,7 +15,6 @@ import com.google.gwt.dom.client.Text;
 import com.google.gwt.user.client.Event;
 import com.octo.gwt.test.internal.overrides.OverrideEvent;
 import com.octo.gwt.test.internal.overrides.OverrideNodeList;
-import com.octo.gwt.test.internal.utils.PropertyContainer;
 import com.octo.gwt.test.internal.utils.PropertyContainerUtils;
 import com.octo.gwt.test.internal.utils.TagAware;
 import com.octo.gwt.test.patchers.AutomaticPatcher;
@@ -161,9 +160,8 @@ public class DOMImplPatcher extends AutomaticPatcher {
 
   @PatchMethod
   public static String getAttribute(Object domImpl, Element elem, String name) {
-    PropertyContainer propertyContainer = PropertyContainerUtils.getProperty(
-        elem, DOMProperties.PROPERTY_MAP_FIELD);
-    String attribute = (String) propertyContainer.get(name);
+    String attribute = PropertyContainerUtils.getProperty(elem,
+        DOMProperties.get().getPropertyName(name));
 
     return attribute == null ? "" : attribute;
   }

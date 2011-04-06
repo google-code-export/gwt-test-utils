@@ -107,30 +107,6 @@ public class ElementTest extends GwtTestTest {
     Assert.assertEquals(1, e.getChildNodes().getLength());
   }
 
-  // @Test
-  public void checkCombinaison() {
-    // Pre-Assert
-    Assert.assertEquals("", e.getTitle());
-    Assert.assertEquals("", e.getAttribute("title"));
-    Assert.assertEquals("", e.getAttribute("titLe"));
-    Assert.assertEquals("", e.getPropertyString("title"));
-    Assert.assertNull(e.getPropertyString("titLe"));
-    Assert.assertNull(e.getPropertyObject("title"));
-    Assert.assertNull(e.getPropertyObject("titLe"));
-
-    // Test1
-    e.setTitle("MyTitle");
-
-    // Assert1
-    Assert.assertEquals("MyTitle", e.getTitle());
-    Assert.assertEquals("MyTitle", e.getAttribute("title"));
-    Assert.assertEquals("MyTitle", e.getAttribute("titLe"));
-    Assert.assertEquals("MyTitle", e.getPropertyString("title"));
-    Assert.assertNull(e.getPropertyString("titLe"));
-    Assert.assertEquals("MyTitle", e.getPropertyObject("title"));
-    Assert.assertNull(e.getPropertyObject("titLe"));
-  }
-
   @Test
   public void checkDir() {
     e.setDir("dir");
@@ -363,8 +339,26 @@ public class ElementTest extends GwtTestTest {
 
   @Test
   public void checkTitle() {
-    e.setTitle("myTitle");
-    Assert.assertEquals("myTitle", e.getTitle());
+    // Pre-Asserts
+    Assert.assertEquals("", e.getTitle());
+    Assert.assertEquals("", e.getAttribute("title"));
+    Assert.assertEquals("", e.getAttribute("titLe"));
+    Assert.assertEquals("", e.getPropertyString("title"));
+    Assert.assertNull(e.getPropertyString("titLe"));
+    Assert.assertNull(e.getPropertyObject("title"));
+    Assert.assertNull(e.getPropertyObject("titLe"));
+
+    // Test
+    e.setTitle("MyTitle");
+
+    // Asserts
+    Assert.assertEquals("MyTitle", e.getTitle());
+    Assert.assertEquals("MyTitle", e.getAttribute("title"));
+    Assert.assertEquals("MyTitle", e.getAttribute("titLe"));
+    Assert.assertEquals("MyTitle", e.getPropertyString("title"));
+    Assert.assertNull(e.getPropertyString("titLe"));
+    Assert.assertEquals("MyTitle", e.getPropertyObject("title"));
+    Assert.assertNull(e.getPropertyObject("titLe"));
   }
 
   @Before

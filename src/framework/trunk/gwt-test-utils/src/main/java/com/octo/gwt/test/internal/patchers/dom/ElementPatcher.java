@@ -10,7 +10,6 @@ import com.google.gwt.dom.client.Style;
 import com.octo.gwt.test.internal.GwtHtmlParser;
 import com.octo.gwt.test.internal.overrides.OverrideNodeList;
 import com.octo.gwt.test.internal.utils.GwtStringUtils;
-import com.octo.gwt.test.internal.utils.PropertyContainer;
 import com.octo.gwt.test.internal.utils.PropertyContainerUtils;
 import com.octo.gwt.test.patchers.OverlayPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
@@ -75,56 +74,63 @@ public class ElementPatcher extends OverlayPatcher {
 
   @PatchMethod
   public static boolean getPropertyBoolean(Element element, String propertyName) {
-    PropertyContainer propertyContainer = PropertyContainerUtils.getProperty(
-        element, DOMProperties.PROPERTY_MAP_FIELD);
-    return propertyContainer.getBoolean(propertyName);
+    return PropertyContainerUtils.cast(element).getProperties().getBoolean(
+        propertyName);
   }
 
   @PatchMethod
   public static double getPropertyDouble(Element element, String propertyName) {
-    PropertyContainer propertyContainer = PropertyContainerUtils.getProperty(
-        element, DOMProperties.PROPERTY_MAP_FIELD);
-    return propertyContainer.getDouble(propertyName);
+    return PropertyContainerUtils.cast(element).getProperties().getDouble(
+        propertyName);
   }
 
   @PatchMethod
   public static int getPropertyInt(Element element, String propertyName) {
-    PropertyContainer propertyContainer = PropertyContainerUtils.getProperty(
-        element, DOMProperties.PROPERTY_MAP_FIELD);
-    return propertyContainer.getInteger(propertyName);
+    return PropertyContainerUtils.cast(element).getProperties().getInteger(
+        propertyName);
+  }
+
+  @PatchMethod
+  public static Object getPropertyObject(Element element, String propertyName) {
+    if ("tagName".equals(propertyName)) {
+      return element.getTagName();
+    }
+    return PropertyContainerUtils.getProperty(element, propertyName);
   }
 
   @PatchMethod
   public static String getPropertyString(Element element, String propertyName) {
-    if ("tagName".equals(propertyName)) {
-      return element.getTagName();
-    }
-    PropertyContainer propertyContainer = PropertyContainerUtils.getProperty(
-        element, DOMProperties.PROPERTY_MAP_FIELD);
 
-    // null is a possible value here
-    return (String) propertyContainer.get(propertyName);
+    String value = (String) getPropertyObject(element, propertyName);
+
+    // null (javascript undefined) is a possible value here if not a DOM
+    // standard property
+    if (value == null) {
+      String propertyNameCaseSensitive = DOMProperties.get().getPropertyName(
+          propertyName);
+      if (propertyName.equals(propertyNameCaseSensitive)) {
+        value = "";
+      }
+    }
+
+    return value;
   }
 
   @PatchMethod
   public static Style getStyle(Element element) {
     return PropertyContainerUtils.getProperty(element,
-        DOMProperties.STYLE_FIELD);
+        DOMProperties.STYLE_OBJECT_FIELD);
   }
 
   @PatchMethod
   public static void removeAttribute(Element element, String name) {
-    PropertyContainer propertyContainer = PropertyContainerUtils.getProperty(
-        element, DOMProperties.PROPERTY_MAP_FIELD);
-    propertyContainer.remove(name);
+    PropertyContainerUtils.removeProperty(element, name);
   }
 
   @PatchMethod
   public static void setAttribute(Element element, String attributeName,
       String value) {
-    PropertyContainer propertyContainer = PropertyContainerUtils.getProperty(
-        element, DOMProperties.PROPERTY_MAP_FIELD);
-    propertyContainer.put(attributeName, value);
+    PropertyContainerUtils.setProperty(element, attributeName, value);
   }
 
   @PatchMethod
@@ -139,7 +145,7 @@ public class ElementPatcher extends OverlayPatcher {
 
   @PatchMethod
   public static void setInnerHTML(Element element, String html) {
-    OverrideNodeList<Node> list = (OverrideNodeList<Node>) element.getChildNodes();
+    OverrideNodeList<Node> list = element.getChildNodes().cast();
     list.getList().clear();
 
     NodeList<Node> nodes = GwtHtmlParser.parse(html);
@@ -154,33 +160,25 @@ public class ElementPatcher extends OverlayPatcher {
   @PatchMethod
   public static void setPropertyBoolean(Element element, String propertyName,
       boolean value) {
-    PropertyContainer propertyContainer = PropertyContainerUtils.getProperty(
-        element, DOMProperties.PROPERTY_MAP_FIELD);
-    propertyContainer.put(propertyName, value);
+    PropertyContainerUtils.setProperty(element, propertyName, value);
   }
 
   @PatchMethod
   public static void setPropertyDouble(Element element, String propertyName,
       double value) {
-    PropertyContainer propertyContainer = PropertyContainerUtils.getProperty(
-        element, DOMProperties.PROPERTY_MAP_FIELD);
-    propertyContainer.put(propertyName, value);
+    PropertyContainerUtils.setProperty(element, propertyName, value);
   }
 
   @PatchMethod
   public static void setPropertyInt(Element element, String propertyName,
       int value) {
-    PropertyContainer propertyContainer = PropertyContainerUtils.getProperty(
-        element, DOMProperties.PROPERTY_MAP_FIELD);
-    propertyContainer.put(propertyName, value);
+    PropertyContainerUtils.setProperty(element, propertyName, value);
   }
 
   @PatchMethod
   public static void setPropertyString(Element element, String propertyName,
       String value) {
-    PropertyContainer propertyContainer = PropertyContainerUtils.getProperty(
-        element, DOMProperties.PROPERTY_MAP_FIELD);
-    propertyContainer.put(propertyName, value);
+    PropertyContainerUtils.setProperty(element, propertyName, value);
   }
 
   @Override
@@ -189,13 +187,10 @@ public class ElementPatcher extends OverlayPatcher {
     CtConstructor cons = findConstructor(c);
 
     cons.insertAfter(PropertyContainerUtils.getCodeSetProperty("this",
-        DOMProperties.STYLE_FIELD, NodeFactory.class.getCanonicalName()
+        DOMProperties.STYLE_OBJECT_FIELD, NodeFactory.class.getCanonicalName()
             + ".createStyle(this)")
         + ";");
-    cons.insertAfter(PropertyContainerUtils.getCodeSetProperty("this",
-        DOMProperties.PROPERTY_MAP_FIELD,
-        PropertyContainerUtils.getConstructionCode())
-        + ";");
+
     cons.insertAfter(PropertyContainerUtils.getCodeSetProperty("this",
         DOMProperties.CLASSNAME_FIELD, "\"\"") + ";");
   }

@@ -6,6 +6,7 @@ import javassist.CtClass;
 import javassist.CtMethod;
 
 import com.google.gwt.core.client.JavaScriptObject;
+import com.octo.gwt.test.internal.patchers.dom.DOMProperties;
 import com.octo.gwt.test.internal.utils.PropertyContainerUtils;
 
 /**
@@ -24,17 +25,20 @@ public class OverlayPatcher extends AutomaticPatcher {
       return superNewBody;
     }
 
-    String fieldName = getPropertyName(m);
-    if (fieldName == null) {
+    String propertyName = getPropertyName(m);
+    if (propertyName == null) {
       // this method has not been identified as a property
       return null;
     }
 
+    DOMProperties.get().addDOMProperty(propertyName);
+
     if (m.getName().startsWith("set")) {
-      return PropertyContainerUtils.getCodeSetProperty("this", fieldName, "$1");
+      return PropertyContainerUtils.getCodeSetProperty("this", propertyName,
+          "$1");
     } else {
       return "return "
-          + PropertyContainerUtils.getCodeGetProperty("this", fieldName,
+          + PropertyContainerUtils.getCodeGetProperty("this", propertyName,
               m.getReturnType());
     }
   }

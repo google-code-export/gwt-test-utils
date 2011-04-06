@@ -88,6 +88,10 @@ public class PropertyContainerUtils {
     return cast(o).getProperties().getString(propertyName);
   }
 
+  public static Object removeProperty(Object o, String propertyName) {
+    return cast(o).getProperties().remove(propertyName);
+  }
+
   public static void setProperty(Object o, String propertyName,
       boolean propertyValue) {
     setProperty(o, propertyName, (Object) propertyValue);
