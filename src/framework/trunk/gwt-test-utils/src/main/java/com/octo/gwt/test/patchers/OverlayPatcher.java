@@ -41,18 +41,18 @@ public class OverlayPatcher extends AutomaticPatcher {
 
   private String getPropertyName(CtMethod m) throws Exception {
     String fieldName = null;
+    String name = m.getName();
     if (!CtClass.voidType.equals(m.getReturnType())
         && m.getParameterTypes().length == 0) {
-      if (m.getName().startsWith("get")) {
-        fieldName = m.getName().substring(3);
+      if (name.startsWith("get")) {
+        fieldName = Character.toLowerCase(name.charAt(3)) + name.substring(4);
       } else if (m.getName().startsWith("is")) {
-        fieldName = m.getName().substring(2);
+        fieldName = Character.toLowerCase(name.charAt(2)) + name.substring(3);
       } else {
-        fieldName = m.getName();
+        fieldName = name;
       }
-    } else if (m.getName().startsWith("set")
-        && m.getParameterTypes().length == 1) {
-      fieldName = m.getName().substring(3);
+    } else if (name.startsWith("set") && m.getParameterTypes().length == 1) {
+      fieldName = Character.toLowerCase(name.charAt(3)) + name.substring(4);
     }
 
     return fieldName;

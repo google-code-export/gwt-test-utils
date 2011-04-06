@@ -23,8 +23,6 @@ import com.octo.gwt.test.patchers.PatchMethod;
 @PatchClass(Style.class)
 public class StylePatcher extends OverlayPatcher {
 
-  public static final String TARGET_ELEMENT = "TARGET_ELEMENT";
-
   @PatchMethod
   public static void clearBorderWidth(Style style) {
     PropertyContainer pc = PropertyContainerUtils.cast(style).getProperties();
@@ -110,14 +108,15 @@ public class StylePatcher extends OverlayPatcher {
     super.initClass(c);
 
     CtField targetElementField = new CtField(
-        GwtClassPool.getCtClass(Element.class), TARGET_ELEMENT, c);
+        GwtClassPool.getCtClass(Element.class),
+        DOMProperties.STYLE_TARGET_ELEMENT, c);
     c.addField(targetElementField);
 
     CtConstructor constructor = new CtConstructor(
         new CtClass[]{GwtClassPool.getCtClass(Element.class)}, c);
     StringBuilder sb = new StringBuilder();
     sb.append("{");
-    sb.append("this." + TARGET_ELEMENT + " = $1;");
+    sb.append("this." + DOMProperties.STYLE_TARGET_ELEMENT + " = $1;");
     sb.append(PropertyContainerUtils.getCodeSetProperty("this", "whiteSpace",
         "\"nowrap\"") + ";");
     sb.append("}");

@@ -86,7 +86,8 @@ public class DocumentPatcher extends OverlayPatcher {
   }
 
   private static OverrideNodeList<Node> getChildNodeList(Node node) {
-    return PropertyContainerUtils.getProperty(node, "ChildNodes");
+    return PropertyContainerUtils.getProperty(node,
+        DOMProperties.NODE_LIST_FIELD);
   }
 
   private static void inspectDomForTag(Node node, String tagName,

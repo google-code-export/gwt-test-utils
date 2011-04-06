@@ -18,7 +18,7 @@ public class InputElementPatcher extends OverlayPatcher {
   @PatchMethod
   public static String getValue(InputElement inputElement) {
     PropertyContainer attributes = PropertyContainerUtils.getProperty(
-        inputElement, ElementPatcher.PROPERTY_MAP_FIELD);
+        inputElement, DOMProperties.PROPERTY_MAP_FIELD);
     String value = (String) attributes.get("value");
     return (value != null) ? value : "";
   }

@@ -2,6 +2,7 @@ package com.octo.gwt.test.internal.patchers;
 
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.impl.FocusImpl;
+import com.octo.gwt.test.internal.patchers.dom.DOMProperties;
 import com.octo.gwt.test.internal.utils.PropertyContainerUtils;
 import com.octo.gwt.test.patchers.AutomaticPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
@@ -22,12 +23,13 @@ public class FocusImplPatcher extends AutomaticPatcher {
 
   @PatchMethod
   public static int getTabIndex(FocusImpl focusImpl, Element elem) {
-    return PropertyContainerUtils.getPropertyInteger(elem, "TabIndex");
+    return PropertyContainerUtils.getPropertyInteger(elem,
+        DOMProperties.TAB_INDEX);
   }
 
   @PatchMethod
   public static void setTabIndex(FocusImpl focusImpl, Element elem, int index) {
-    PropertyContainerUtils.setProperty(elem, "TabIndex", index);
+    PropertyContainerUtils.setProperty(elem, DOMProperties.TAB_INDEX, index);
   }
 
 }

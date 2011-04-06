@@ -14,8 +14,6 @@ import com.octo.gwt.test.patchers.PatchMethod;
 @PatchClass(SelectElement.class)
 public class SelectElementPatcher extends OverlayPatcher {
 
-  private static final String SELECTED_INDEX_FIELD = "SelectedIndex";
-
   @PatchMethod
   public static int getSize(SelectElement select) {
     int size = 0;
@@ -36,7 +34,7 @@ public class SelectElementPatcher extends OverlayPatcher {
     CtConstructor cons = findConstructor(c);
 
     cons.insertAfter(PropertyContainerUtils.getCodeSetProperty("this",
-        SELECTED_INDEX_FIELD, "-1") + ";");
+        DOMProperties.SELECTED_INDEX_FIELD, "-1") + ";");
   }
 
 }

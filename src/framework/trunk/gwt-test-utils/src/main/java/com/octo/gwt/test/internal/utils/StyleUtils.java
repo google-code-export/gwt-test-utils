@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
-import com.octo.gwt.test.internal.patchers.dom.StylePatcher;
+import com.octo.gwt.test.internal.patchers.dom.DOMProperties;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 public class StyleUtils {
@@ -16,7 +16,7 @@ public class StyleUtils {
 
   public static Element getOwnerElement(Style style) {
     return GwtReflectionUtils.getPrivateFieldValue(style,
-        StylePatcher.TARGET_ELEMENT);
+        DOMProperties.STYLE_TARGET_ELEMENT);
   }
 
   public static LinkedHashMap<String, String> getStyleProperties(String style) {

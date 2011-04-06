@@ -22,9 +22,6 @@ import com.octo.gwt.test.patchers.PatchMethod;
 @PatchClass(Node.class)
 public class NodePatcher extends OverlayPatcher {
 
-  public static final String NODE_LIST_FIELD = "ChildNodes";
-  public static final String PARENT_NODE_FIELD = "ParentNode";
-
   @PatchMethod
   public static Node appendChild(Node parent, Node newChild) {
     return insertAtIndex(parent, newChild, -1);
@@ -58,7 +55,7 @@ public class NodePatcher extends OverlayPatcher {
     fillNewPropertyContainer(propertyContainer2, propertyContainer);
 
     OverrideNodeList<Node> newChilds = new OverrideNodeList<Node>();
-    propertyContainer2.put(NODE_LIST_FIELD, newChilds);
+    propertyContainer2.put(DOMProperties.NODE_LIST_FIELD, newChilds);
 
     OverrideNodeList<Node> childs = getChildNodeList(node);
     if (deep) {
@@ -214,7 +211,8 @@ public class NodePatcher extends OverlayPatcher {
     }
 
     // Manage getParentNode()
-    PropertyContainerUtils.setProperty(newChild, PARENT_NODE_FIELD, parent);
+    PropertyContainerUtils.setProperty(newChild,
+        DOMProperties.PARENT_NODE_FIELD, parent);
 
     return newChild;
   }
@@ -295,7 +293,7 @@ public class NodePatcher extends OverlayPatcher {
   private static void fillNewPropertyContainer(PropertyContainer n,
       PropertyContainer old) {
     for (Entry<String, Object> entry : old.entrySet()) {
-      if (PARENT_NODE_FIELD.equals(entry.getKey())) {
+      if (DOMProperties.PARENT_NODE_FIELD.equals(entry.getKey())) {
       } else if (entry.getValue() instanceof String) {
         n.put(entry.getKey(), new String((String) entry.getValue()));
       } else if (entry.getValue() instanceof Integer) {
@@ -328,7 +326,8 @@ public class NodePatcher extends OverlayPatcher {
   }
 
   private static OverrideNodeList<Node> getChildNodeList(Node node) {
-    return PropertyContainerUtils.getProperty(node, NODE_LIST_FIELD);
+    return PropertyContainerUtils.getProperty(node,
+        DOMProperties.NODE_LIST_FIELD);
   }
 
   @Override
@@ -337,7 +336,7 @@ public class NodePatcher extends OverlayPatcher {
     CtConstructor cons = findConstructor(c);
 
     cons.insertAfter(PropertyContainerUtils.getCodeSetProperty("this",
-        NodePatcher.NODE_LIST_FIELD,
+        DOMProperties.NODE_LIST_FIELD,
         "new " + OverrideNodeList.class.getCanonicalName() + "()")
         + ";");
   }

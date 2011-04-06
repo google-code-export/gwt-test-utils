@@ -19,10 +19,6 @@ import com.octo.gwt.test.patchers.PatchMethod;
 @PatchClass(Element.class)
 public class ElementPatcher extends OverlayPatcher {
 
-  public static final String CLASSNAME_FIELD = "ClassName";
-  public static final String PROPERTY_MAP_FIELD = "propertyMap";
-  public static final String STYLE_FIELD = "Style";
-
   @PatchMethod
   public static void blur(Element element) {
 
@@ -80,21 +76,21 @@ public class ElementPatcher extends OverlayPatcher {
   @PatchMethod
   public static boolean getPropertyBoolean(Element element, String propertyName) {
     PropertyContainer propertyContainer = PropertyContainerUtils.getProperty(
-        element, PROPERTY_MAP_FIELD);
+        element, DOMProperties.PROPERTY_MAP_FIELD);
     return propertyContainer.getBoolean(propertyName);
   }
 
   @PatchMethod
   public static double getPropertyDouble(Element element, String propertyName) {
     PropertyContainer propertyContainer = PropertyContainerUtils.getProperty(
-        element, PROPERTY_MAP_FIELD);
+        element, DOMProperties.PROPERTY_MAP_FIELD);
     return propertyContainer.getDouble(propertyName);
   }
 
   @PatchMethod
   public static int getPropertyInt(Element element, String propertyName) {
     PropertyContainer propertyContainer = PropertyContainerUtils.getProperty(
-        element, PROPERTY_MAP_FIELD);
+        element, DOMProperties.PROPERTY_MAP_FIELD);
     return propertyContainer.getInteger(propertyName);
   }
 
@@ -104,7 +100,7 @@ public class ElementPatcher extends OverlayPatcher {
       return element.getTagName();
     }
     PropertyContainer propertyContainer = PropertyContainerUtils.getProperty(
-        element, PROPERTY_MAP_FIELD);
+        element, DOMProperties.PROPERTY_MAP_FIELD);
 
     // null is a possible value here
     return (String) propertyContainer.get(propertyName);
@@ -112,13 +108,14 @@ public class ElementPatcher extends OverlayPatcher {
 
   @PatchMethod
   public static Style getStyle(Element element) {
-    return PropertyContainerUtils.getProperty(element, STYLE_FIELD);
+    return PropertyContainerUtils.getProperty(element,
+        DOMProperties.STYLE_FIELD);
   }
 
   @PatchMethod
   public static void removeAttribute(Element element, String name) {
     PropertyContainer propertyContainer = PropertyContainerUtils.getProperty(
-        element, PROPERTY_MAP_FIELD);
+        element, DOMProperties.PROPERTY_MAP_FIELD);
     propertyContainer.remove(name);
   }
 
@@ -126,7 +123,7 @@ public class ElementPatcher extends OverlayPatcher {
   public static void setAttribute(Element element, String attributeName,
       String value) {
     PropertyContainer propertyContainer = PropertyContainerUtils.getProperty(
-        element, PROPERTY_MAP_FIELD);
+        element, DOMProperties.PROPERTY_MAP_FIELD);
     propertyContainer.put(attributeName, value);
   }
 
@@ -151,14 +148,14 @@ public class ElementPatcher extends OverlayPatcher {
       list.getList().add(nodes.getItem(i));
     }
 
-    PropertyContainerUtils.setProperty(element, "InnerHTML", html);
+    PropertyContainerUtils.setProperty(element, DOMProperties.INNER_HTML, html);
   }
 
   @PatchMethod
   public static void setPropertyBoolean(Element element, String propertyName,
       boolean value) {
     PropertyContainer propertyContainer = PropertyContainerUtils.getProperty(
-        element, PROPERTY_MAP_FIELD);
+        element, DOMProperties.PROPERTY_MAP_FIELD);
     propertyContainer.put(propertyName, value);
   }
 
@@ -166,7 +163,7 @@ public class ElementPatcher extends OverlayPatcher {
   public static void setPropertyDouble(Element element, String propertyName,
       double value) {
     PropertyContainer propertyContainer = PropertyContainerUtils.getProperty(
-        element, PROPERTY_MAP_FIELD);
+        element, DOMProperties.PROPERTY_MAP_FIELD);
     propertyContainer.put(propertyName, value);
   }
 
@@ -174,7 +171,7 @@ public class ElementPatcher extends OverlayPatcher {
   public static void setPropertyInt(Element element, String propertyName,
       int value) {
     PropertyContainer propertyContainer = PropertyContainerUtils.getProperty(
-        element, PROPERTY_MAP_FIELD);
+        element, DOMProperties.PROPERTY_MAP_FIELD);
     propertyContainer.put(propertyName, value);
   }
 
@@ -182,7 +179,7 @@ public class ElementPatcher extends OverlayPatcher {
   public static void setPropertyString(Element element, String propertyName,
       String value) {
     PropertyContainer propertyContainer = PropertyContainerUtils.getProperty(
-        element, PROPERTY_MAP_FIELD);
+        element, DOMProperties.PROPERTY_MAP_FIELD);
     propertyContainer.put(propertyName, value);
   }
 
@@ -192,13 +189,15 @@ public class ElementPatcher extends OverlayPatcher {
     CtConstructor cons = findConstructor(c);
 
     cons.insertAfter(PropertyContainerUtils.getCodeSetProperty("this",
-        STYLE_FIELD, NodeFactory.class.getCanonicalName()
+        DOMProperties.STYLE_FIELD, NodeFactory.class.getCanonicalName()
             + ".createStyle(this)")
         + ";");
     cons.insertAfter(PropertyContainerUtils.getCodeSetProperty("this",
-        PROPERTY_MAP_FIELD, PropertyContainerUtils.getConstructionCode()) + ";");
+        DOMProperties.PROPERTY_MAP_FIELD,
+        PropertyContainerUtils.getConstructionCode())
+        + ";");
     cons.insertAfter(PropertyContainerUtils.getCodeSetProperty("this",
-        CLASSNAME_FIELD, "\"\"") + ";");
+        DOMProperties.CLASSNAME_FIELD, "\"\"") + ";");
   }
 
 }

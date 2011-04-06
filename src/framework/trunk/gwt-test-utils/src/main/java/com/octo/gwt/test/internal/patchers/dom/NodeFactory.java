@@ -176,8 +176,9 @@ public class NodeFactory {
 
       if (tag.equalsIgnoreCase("html")) {
         elem = (Element) loadClass(Element.class.getName()).newInstance();
-        PropertyContainerUtils.setProperty(elem, "NodeName", "HTML");
-        PropertyContainerUtils.setProperty(elem, "TagName", "HTML");
+        PropertyContainerUtils.setProperty(elem, DOMProperties.NODE_NAME,
+            "HTML");
+        PropertyContainerUtils.setProperty(elem, DOMProperties.TAG_NAME, "HTML");
       } else if (elemClassName != null) {
         elem = (Element) GwtReflectionUtils.instantiateClass(loadClass(elemClassName));
       } else if (elemClassNameWithTag != null) {
@@ -224,7 +225,8 @@ public class NodeFactory {
         DOCUMENT = createDocument();
         Element e = parseHTMLElement();
         DOCUMENT.appendChild(e);
-        PropertyContainerUtils.setProperty(DOCUMENT, "DocumentElement", e);
+        PropertyContainerUtils.setProperty(DOCUMENT,
+            DOMProperties.DOCUMENT_ELEMENT, e);
       } catch (Exception e) {
         if (GwtTestException.class.isInstance(e)) {
           throw (GwtTestException) e;
