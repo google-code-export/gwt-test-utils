@@ -10,10 +10,11 @@ import com.google.gwt.dom.client.ButtonElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
+import com.google.gwt.dom.client.NodeList;
+import com.google.gwt.dom.client.OptionElement;
 import com.google.gwt.dom.client.Text;
 import com.octo.gwt.test.GwtTestTest;
-import com.octo.gwt.test.internal.overrides.OverrideNodeList;
-import com.octo.gwt.test.internal.patchers.dom.NodeFactory;
+import com.octo.gwt.test.internal.patchers.dom.JsoFactory;
 import com.octo.gwt.test.internal.utils.GwtPatcherUtils;
 
 @SuppressWarnings("deprecation")
@@ -215,9 +216,9 @@ public class NodeTest extends GwtTestTest {
 
   @Test
   public void checkIs() {
+    NodeList<OptionElement> list = JsoFactory.createNodeList();
     Assert.assertFalse("null is not a DOM node", Node.is(null));
-    Assert.assertFalse("NodeList is not a DOM node",
-        Node.is(new OverrideNodeList<Node>()));
+    Assert.assertFalse("NodeList is not a DOM node", Node.is(list));
     Assert.assertTrue("AnchorElement is a DOM node",
         Node.is(Document.get().createAnchorElement()));
   }
@@ -229,7 +230,7 @@ public class NodeTest extends GwtTestTest {
         Document.get().getDocumentElement().getNodeName());
     Assert.assertEquals("a", Document.get().createAnchorElement().getNodeName());
     Assert.assertEquals("#text",
-        NodeFactory.createTextNode("test").getNodeName());
+        JsoFactory.createTextNode("test").getNodeName());
   }
 
   @Test
@@ -240,7 +241,7 @@ public class NodeTest extends GwtTestTest {
     Assert.assertEquals(Node.ELEMENT_NODE,
         Document.get().createAnchorElement().getNodeType());
     Assert.assertEquals(Node.TEXT_NODE,
-        NodeFactory.createTextNode("test").getNodeType());
+        JsoFactory.createTextNode("test").getNodeType());
   }
 
   @Test

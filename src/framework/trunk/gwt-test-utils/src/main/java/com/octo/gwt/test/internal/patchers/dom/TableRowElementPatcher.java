@@ -8,7 +8,6 @@ import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.TableCellElement;
 import com.google.gwt.dom.client.TableRowElement;
-import com.octo.gwt.test.internal.overrides.OverrideNodeList;
 import com.octo.gwt.test.patchers.OverlayPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
@@ -27,7 +26,7 @@ public class TableRowElementPatcher extends OverlayPatcher {
       }
     }
 
-    return new OverrideNodeList<TableCellElement>(cells);
+    return JsoFactory.createNodeList(cells);
   }
 
   @PatchMethod

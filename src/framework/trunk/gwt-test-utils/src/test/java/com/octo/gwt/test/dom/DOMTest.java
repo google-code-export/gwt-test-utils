@@ -203,7 +203,7 @@ public class DOMTest extends GwtTestTest {
     OptionElement elem = OptionElement.as(DOM.createOptions());
 
     // Assert
-    Assert.assertEquals("option", elem.getTagName());
+    Assert.assertEquals("options", elem.getTagName());
   }
 
   @Test

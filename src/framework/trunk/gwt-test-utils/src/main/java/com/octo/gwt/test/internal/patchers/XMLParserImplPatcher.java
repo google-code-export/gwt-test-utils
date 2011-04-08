@@ -7,7 +7,7 @@ import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.xml.client.impl.XMLParserImpl;
 import com.octo.gwt.test.internal.GwtHtmlParser;
-import com.octo.gwt.test.internal.patchers.dom.NodeFactory;
+import com.octo.gwt.test.internal.patchers.dom.JsoFactory;
 import com.octo.gwt.test.patchers.AutomaticPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
@@ -38,7 +38,7 @@ public class XMLParserImplPatcher extends AutomaticPatcher {
   public static JavaScriptObject parseImpl(XMLParserImpl xmlParserImpl,
       String contents) {
 
-    Document document = NodeFactory.createDocument();
+    Document document = JsoFactory.createObject(Document.class);
     NodeList<Node> nodes = GwtHtmlParser.parse(contents);
 
     for (int i = 0; i < nodes.getLength(); i++) {

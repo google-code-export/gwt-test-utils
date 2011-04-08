@@ -1,5 +1,6 @@
 package com.octo.gxt.test.internal.patchers;
 
+import java.util.ArrayList;
 import java.util.Set;
 
 import se.fishtank.css.selectors.NodeSelectorException;
@@ -11,7 +12,7 @@ import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.user.client.Element;
 import com.octo.gwt.test.exceptions.GwtTestPatchException;
-import com.octo.gwt.test.internal.overrides.OverrideNodeList;
+import com.octo.gwt.test.internal.patchers.dom.JsoFactory;
 import com.octo.gwt.test.patchers.AutomaticPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
@@ -29,7 +30,7 @@ public class DomQueryPatcher extends AutomaticPatcher {
   public static JavaScriptObject internalSelect(String selector, Element root) {
     try {
       Set<Node> nodeSet = new DOMNodeSelector(root).querySelectorAll(selector);
-      return new OverrideNodeList<Node>(nodeSet);
+      return JsoFactory.createNodeList(new ArrayList<Node>(nodeSet));
     } catch (NodeSelectorException e) {
       throw new GwtTestPatchException(
           "Error while trying to find GWT nodes matching '" + selector + "'", e);

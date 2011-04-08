@@ -5,8 +5,9 @@ import javassist.CtField;
 import javassist.CtMethod;
 
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.JsArrayString;
 import com.octo.gwt.test.internal.GwtClassPool;
-import com.octo.gwt.test.internal.overrides.OverrideJsArrayString;
+import com.octo.gwt.test.internal.patchers.dom.JsoFactory;
 import com.octo.gwt.test.internal.utils.PropertyContainer;
 import com.octo.gwt.test.internal.utils.PropertyContainerAware;
 import com.octo.gwt.test.internal.utils.PropertyContainerUtils;
@@ -21,7 +22,12 @@ public class JavaScriptObjectPatcher extends AutomaticPatcher {
 
   @PatchMethod
   public static JavaScriptObject createArray() {
-    return new OverrideJsArrayString();
+    return JsoFactory.createObject(JsArrayString.class);
+  }
+
+  @PatchMethod
+  public static String toString(JavaScriptObject jso) {
+    return jso.getClass().getSimpleName();
   }
 
   @Override

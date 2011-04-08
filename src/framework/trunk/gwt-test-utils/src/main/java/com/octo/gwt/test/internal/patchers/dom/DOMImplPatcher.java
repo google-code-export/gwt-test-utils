@@ -1,5 +1,8 @@
 package com.octo.gwt.test.internal.patchers.dom;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.google.gwt.dom.client.ButtonElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
@@ -13,10 +16,7 @@ import com.google.gwt.dom.client.SelectElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Text;
 import com.google.gwt.user.client.Event;
-import com.octo.gwt.test.internal.overrides.OverrideEvent;
-import com.octo.gwt.test.internal.overrides.OverrideNodeList;
 import com.octo.gwt.test.internal.utils.PropertyContainerUtils;
-import com.octo.gwt.test.internal.utils.TagAware;
 import com.octo.gwt.test.patchers.AutomaticPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
@@ -37,7 +37,7 @@ public class DOMImplPatcher extends AutomaticPatcher {
 
   @PatchMethod
   public static Element createElement(Object domImpl, Document doc, String tag) {
-    return NodeFactory.createElement(tag);
+    return JsoFactory.createElement(tag);
   }
 
   @PatchMethod
@@ -85,14 +85,14 @@ public class DOMImplPatcher extends AutomaticPatcher {
 
   @PatchMethod
   public static boolean eventGetAltKey(Object domImpl, NativeEvent evt) {
-    OverrideEvent event = evt.cast();
-    return event.isOverrideAltKey();
+    return PropertyContainerUtils.getPropertyBoolean(evt,
+        DOMProperties.EVENT_KEY_ALT);
   }
 
   @PatchMethod
   public static int eventGetButton(Object domImpl, NativeEvent evt) {
-    OverrideEvent event = evt.cast();
-    return event.getOverrideButton();
+    return PropertyContainerUtils.getPropertyInteger(evt,
+        DOMProperties.EVENT_BUTTON);
   }
 
   @PatchMethod
@@ -102,43 +102,46 @@ public class DOMImplPatcher extends AutomaticPatcher {
 
   @PatchMethod
   public static boolean eventGetCtrlKey(Object domImpl, NativeEvent evt) {
-    OverrideEvent event = evt.cast();
-    return event.isOverrideCtrlKey();
+    return PropertyContainerUtils.getPropertyBoolean(evt,
+        DOMProperties.EVENT_KEY_CTRL);
   }
 
   @PatchMethod
   public static int eventGetKeyCode(Object domImpl, NativeEvent evt) {
-    OverrideEvent event = evt.cast();
-    return event.getOverrideKeyCode();
+    return PropertyContainerUtils.getPropertyInteger(evt,
+        DOMProperties.EVENT_KEYCODE);
   }
 
   @PatchMethod
   public static boolean eventGetMetaKey(Object domImpl, NativeEvent evt) {
-    OverrideEvent event = evt.cast();
-    return event.isOverrideMetaKey();
+    return PropertyContainerUtils.getPropertyBoolean(evt,
+        DOMProperties.EVENT_KEY_META);
   }
 
   @PatchMethod
   public static boolean eventGetShiftKey(Object domImpl, NativeEvent evt) {
-    OverrideEvent event = evt.cast();
-    return event.isOverrideShiftKey();
+    return PropertyContainerUtils.getPropertyBoolean(evt,
+        DOMProperties.EVENT_KEY_SHIFT);
   }
 
   @PatchMethod
   public static EventTarget eventGetTarget(Object domImpl,
       NativeEvent nativeEvent) {
-    return null;
+    return PropertyContainerUtils.getProperty(nativeEvent,
+        DOMProperties.EVENT_TARGET);
   }
 
   @PatchMethod
   public static String eventGetType(Object domImpl, NativeEvent nativeEvent) {
-    return EventUtils.getEventTypeString(nativeEvent);
+    int eventType = PropertyContainerUtils.getPropertyInteger(nativeEvent,
+        DOMProperties.EVENT_TYPE);
+    return EventUtils.getEventTypeString(eventType);
   }
 
   @PatchMethod
   public static void eventPreventDefault(Object domImpl, NativeEvent evt) {
-    OverrideEvent event = evt.cast();
-    event.setPreventDefault(true);
+    PropertyContainerUtils.setProperty(evt, DOMProperties.EVENT_PREVENTDEFAULT,
+        true);
   }
 
   @PatchMethod
@@ -212,7 +215,7 @@ public class DOMImplPatcher extends AutomaticPatcher {
     if (parent == null)
       return null;
 
-    OverrideNodeList<Node> list = getChildNodeList(parent);
+    NodeList<Node> list = getChildNodeList(parent);
 
     for (int i = 0; i < list.getLength(); i++) {
       Node current = list.getItem(i);
@@ -256,12 +259,9 @@ public class DOMImplPatcher extends AutomaticPatcher {
     if (elem == null)
       return null;
 
-    if (elem instanceof TagAware) {
-      return ((TagAware) elem).getTag();
-    }
-
     String tagName = PropertyContainerUtils.getProperty(elem,
         DOMProperties.TAG_NAME);
+
     return (tagName != null) ? tagName
         : (String) GwtReflectionUtils.getStaticFieldValue(elem.getClass(),
             "TAG");
@@ -305,8 +305,10 @@ public class DOMImplPatcher extends AutomaticPatcher {
 
   @PatchMethod
   public static void selectClear(Object domImpl, SelectElement select) {
-    OverrideNodeList<Node> childNodes = (OverrideNodeList<Node>) select.getChildNodes();
-    childNodes.getList().clear();
+    List<Node> innerList = PropertyContainerUtils.getProperty(
+        select.getChildNodes(), DOMProperties.NODE_LIST_INNER_LIST);
+
+    innerList.clear();
     select.setSelectedIndex(-1);
   }
 
@@ -320,24 +322,25 @@ public class DOMImplPatcher extends AutomaticPatcher {
   @PatchMethod
   public static NodeList<OptionElement> selectGetOptions(Object domImpl,
       SelectElement select) {
-    OverrideNodeList<OptionElement> list = new OverrideNodeList<OptionElement>();
-
+    List<OptionElement> innerList = new ArrayList<OptionElement>();
     for (int i = 0; i < select.getChildNodes().getLength(); i++) {
       Element e = select.getChildNodes().getItem(i).cast();
       if ("option".equals(e.getTagName())) {
         OptionElement option = e.cast();
-        list.getList().add(option);
+        innerList.add(option);
       }
     }
 
-    return list;
+    return JsoFactory.createNodeList(innerList);
   }
 
   @PatchMethod
   public static void selectRemoveOption(Object domImpl, SelectElement select,
       int index) {
-    OverrideNodeList<Node> childNodes = (OverrideNodeList<Node>) select.getChildNodes();
-    childNodes.getList().remove(index);
+    NodeList<Node> childNodes = select.getChildNodes();
+    List<Node> list = PropertyContainerUtils.getProperty(childNodes,
+        DOMProperties.NODE_LIST_INNER_LIST);
+    list.remove(index);
   }
 
   @PatchMethod
@@ -346,7 +349,7 @@ public class DOMImplPatcher extends AutomaticPatcher {
     if (textNode != null) {
       textNode.setData(text);
     } else {
-      textNode = NodeFactory.createTextNode(text);
+      textNode = JsoFactory.createTextNode(text);
       elem.appendChild(textNode);
     }
   }
@@ -356,7 +359,7 @@ public class DOMImplPatcher extends AutomaticPatcher {
     PropertyContainerUtils.setProperty(elem, DOMProperties.SCROLL_LEFT, left);
   }
 
-  private static OverrideNodeList<Node> getChildNodeList(Node node) {
+  private static NodeList<Node> getChildNodeList(Node node) {
     return PropertyContainerUtils.getProperty(node,
         DOMProperties.NODE_LIST_FIELD);
   }

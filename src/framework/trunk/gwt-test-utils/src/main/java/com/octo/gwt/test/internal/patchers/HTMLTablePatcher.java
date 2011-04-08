@@ -1,11 +1,9 @@
 package com.octo.gwt.test.internal.patchers;
 
-import com.google.gwt.dom.client.Node;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.HTMLTable;
-import com.octo.gwt.test.internal.overrides.OverrideNodeList;
 import com.octo.gwt.test.patchers.AutomaticPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
@@ -21,8 +19,7 @@ public class HTMLTablePatcher extends AutomaticPatcher {
 
   @PatchMethod
   public static int getDOMRowCount(HTMLTable table, Element element) {
-    OverrideNodeList<Node> nodeList = (OverrideNodeList<Node>) element.getChildNodes();
-    return nodeList.getLength();
+    return element.getChildNodes().getLength();
   }
 
   @PatchMethod

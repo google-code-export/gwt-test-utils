@@ -1,5 +1,6 @@
 package com.octo.gwt.test.internal.patchers.dom;
 
+import java.util.List;
 import java.util.Map.Entry;
 
 import javassist.CtClass;
@@ -9,10 +10,10 @@ import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
+import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Text;
 import com.octo.gwt.test.exceptions.GwtTestDomException;
-import com.octo.gwt.test.internal.overrides.OverrideNodeList;
 import com.octo.gwt.test.internal.utils.PropertyContainer;
 import com.octo.gwt.test.internal.utils.PropertyContainerUtils;
 import com.octo.gwt.test.patchers.OverlayPatcher;
@@ -35,13 +36,13 @@ public class NodePatcher extends OverlayPatcher {
     switch (node.getNodeType()) {
       case Node.ELEMENT_NODE:
         Element elem = node.cast();
-        newNode = NodeFactory.createElement((elem).getTagName());
+        newNode = JsoFactory.createElement((elem).getTagName());
         break;
       case Node.DOCUMENT_NODE:
-        newNode = NodeFactory.getDocument();
+        newNode = JsoFactory.getDocument();
         break;
       case Node.TEXT_NODE:
-        newNode = NodeFactory.createTextNode(((Text) node).getData());
+        newNode = JsoFactory.createTextNode(((Text) node).getData());
         break;
       default:
         throw new GwtTestDomException("Cannot create a Node of type ["
@@ -54,18 +55,18 @@ public class NodePatcher extends OverlayPatcher {
 
     fillNewPropertyContainer(propertyContainer2, propertyContainer);
 
-    OverrideNodeList<Node> newChilds = new OverrideNodeList<Node>();
-    propertyContainer2.put(DOMProperties.NODE_LIST_FIELD, newChilds);
+    propertyContainer2.put(DOMProperties.NODE_LIST_FIELD,
+        JsoFactory.createNodeList());
 
-    OverrideNodeList<Node> childs = getChildNodeList(node);
+    List<Node> childs = getChildNodeList(node);
     if (deep) {
       // copy all child nodes
-      for (Node child : childs.getList()) {
+      for (Node child : childs) {
         appendChild(newNode, cloneNode(child, true));
       }
     } else {
       // only copy the TextNode if exists
-      for (Node child : childs.getList()) {
+      for (Node child : childs) {
         if (Node.TEXT_NODE == child.getNodeType()) {
           appendChild(newNode,
               Document.get().createTextNode(child.getNodeValue()));
@@ -78,24 +79,24 @@ public class NodePatcher extends OverlayPatcher {
 
   @PatchMethod
   public static Node getFirstChild(Node node) {
-    OverrideNodeList<Node> list = getChildNodeList(node);
+    List<Node> list = getChildNodeList(node);
 
-    if (list.getLength() == 0) {
+    if (list.size() == 0) {
       return null;
     }
 
-    return list.getItem(0);
+    return list.get(0);
   }
 
   @PatchMethod
   public static Node getLastChild(Node node) {
-    OverrideNodeList<Node> list = getChildNodeList(node);
+    List<Node> list = getChildNodeList(node);
 
-    if (list.getLength() == 0) {
+    if (list.size() == 0) {
       return null;
     }
 
-    return list.getItem(list.getLength() - 1);
+    return list.get(list.size() - 1);
   }
 
   @PatchMethod
@@ -104,12 +105,12 @@ public class NodePatcher extends OverlayPatcher {
     if (parent == null)
       return null;
 
-    OverrideNodeList<Node> list = getChildNodeList(parent);
+    List<Node> list = getChildNodeList(parent);
 
-    for (int i = 0; i < list.getLength(); i++) {
-      Node current = list.getItem(i);
-      if (current.equals(node) && i < list.getLength() - 1) {
-        return list.getItem(i + 1);
+    for (int i = 0; i < list.size(); i++) {
+      Node current = list.get(i);
+      if (current.equals(node) && i < list.size() - 1) {
+        return list.get(i + 1);
       }
     }
 
@@ -165,7 +166,7 @@ public class NodePatcher extends OverlayPatcher {
 
   @PatchMethod
   public static Document getOwnerDocument(Node node) {
-    return NodeFactory.getDocument();
+    return JsoFactory.getDocument();
   }
 
   @PatchMethod
@@ -174,12 +175,12 @@ public class NodePatcher extends OverlayPatcher {
     if (parent == null)
       return null;
 
-    OverrideNodeList<Node> list = getChildNodeList(parent);
+    List<Node> list = getChildNodeList(parent);
 
-    for (int i = 0; i < list.getLength(); i++) {
-      Node current = list.getItem(i);
+    for (int i = 0; i < list.size(); i++) {
+      Node current = list.get(i);
       if (current.equals(node) && i > 0) {
-        return list.getItem(i - 1);
+        return list.get(i - 1);
       }
     }
 
@@ -188,11 +189,11 @@ public class NodePatcher extends OverlayPatcher {
 
   @PatchMethod
   public static boolean hasChildNodes(Node node) {
-    return getChildNodeList(node).getLength() > 0;
+    return getChildNodeList(node).size() > 0;
   }
 
   public static Node insertAtIndex(Node parent, Node newChild, int index) {
-    OverrideNodeList<Node> list = getChildNodeList(parent);
+    List<Node> list = getChildNodeList(parent);
 
     // First, remove from old parent
     Node oldParent = newChild.getParentNode();
@@ -201,13 +202,13 @@ public class NodePatcher extends OverlayPatcher {
     }
 
     // Then, check parent doesn't contain newChild and remove it if necessary
-    list.getList().remove(newChild);
+    list.remove(newChild);
 
     // Finally, add
-    if (index == -1 || index >= list.getLength()) {
-      list.getList().add(newChild);
+    if (index == -1 || index >= list.size()) {
+      list.add(newChild);
     } else {
-      list.getList().add(index, newChild);
+      list.add(index, newChild);
     }
 
     // Manage getParentNode()
@@ -219,14 +220,14 @@ public class NodePatcher extends OverlayPatcher {
 
   @PatchMethod
   public static Node insertBefore(Node parent, Node newChild, Node refChild) {
-    OverrideNodeList<Node> list = getChildNodeList(parent);
+    List<Node> list = getChildNodeList(parent);
 
     // get the index of refChild
     int index = -1;
     if (refChild != null) {
       int i = 0;
-      while (index == -1 && i < list.getLength()) {
-        if (list.getItem(i).equals(refChild)) {
+      while (index == -1 && i < list.size()) {
+        if (list.get(i).equals(refChild)) {
           index = i;
         }
         i++;
@@ -248,9 +249,9 @@ public class NodePatcher extends OverlayPatcher {
 
   @PatchMethod
   public static Node removeChild(Node oldParent, Node oldChild) {
-    OverrideNodeList<Node> list = getChildNodeList(oldParent);
+    List<Node> list = getChildNodeList(oldParent);
 
-    if (list.getList().remove(oldChild)) {
+    if (list.remove(oldChild)) {
       return oldChild;
     } else {
       return null;
@@ -260,12 +261,12 @@ public class NodePatcher extends OverlayPatcher {
   @PatchMethod
   public static Node replaceChild(Node parent, Node newChild, Node oldChild) {
     if (oldChild != null) {
-      OverrideNodeList<Node> list = getChildNodeList(parent);
+      List<Node> list = getChildNodeList(parent);
 
-      for (int i = 0; i < list.getLength(); i++) {
-        if (list.getItem(i).equals(oldChild)) {
-          list.getList().add(i, newChild);
-          list.getList().remove(oldChild);
+      for (int i = 0; i < list.size(); i++) {
+        if (list.get(i).equals(oldChild)) {
+          list.add(i, newChild);
+          list.remove(oldChild);
           return oldChild;
         }
       }
@@ -305,14 +306,15 @@ public class NodePatcher extends OverlayPatcher {
       } else if (entry.getValue() instanceof Style) {
         // The propertyContainerAware have to be an instance of Element since
         // Style requiers Element in its constructor with gwt-test-utils
-        Style newStyle = NodeFactory.createStyle((Element) n.getOwner());
+        Style newStyle = JsoFactory.createStyle((Element) n.getOwner());
         PropertyContainer o = PropertyContainerUtils.cast(entry.getValue()).getProperties();
         PropertyContainer nn = PropertyContainerUtils.cast(newStyle).getProperties();
         nn.clear();
 
         fillNewPropertyContainer(nn, o);
         n.put(entry.getKey(), newStyle);
-      } else if (entry.getValue() instanceof OverrideNodeList<?>) {
+      } else if (entry.getValue() instanceof NodeList<?>) {
+        // TODO: wtf ?
       } else if (entry.getValue() instanceof PropertyContainer) {
         PropertyContainer toCopy = (PropertyContainer) entry.getValue();
         PropertyContainer nn = new PropertyContainer(toCopy.getOwner());
@@ -325,19 +327,21 @@ public class NodePatcher extends OverlayPatcher {
     }
   }
 
-  private static OverrideNodeList<Node> getChildNodeList(Node node) {
-    return PropertyContainerUtils.getProperty(node,
+  private static List<Node> getChildNodeList(Node node) {
+    NodeList<Node> nodeList = PropertyContainerUtils.getProperty(node,
         DOMProperties.NODE_LIST_FIELD);
+
+    return PropertyContainerUtils.getProperty(nodeList,
+        DOMProperties.NODE_LIST_INNER_LIST);
   }
 
   @Override
   public void initClass(CtClass c) throws Exception {
     super.initClass(c);
     CtConstructor cons = findConstructor(c);
-
     cons.insertAfter(PropertyContainerUtils.getCodeSetProperty("this",
-        DOMProperties.NODE_LIST_FIELD,
-        "new " + OverrideNodeList.class.getCanonicalName() + "()")
+        DOMProperties.NODE_LIST_FIELD, JsoFactory.class.getName()
+            + ".createNodeList()")
         + ";");
   }
 }

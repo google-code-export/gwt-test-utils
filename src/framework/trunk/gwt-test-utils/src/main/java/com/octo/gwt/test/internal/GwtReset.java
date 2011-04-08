@@ -11,14 +11,14 @@ import com.octo.gwt.test.GwtClassLoader;
 import com.octo.gwt.test.internal.patchers.CurrencyListPatcher;
 import com.octo.gwt.test.internal.patchers.HistoryImplPatcher;
 import com.octo.gwt.test.internal.patchers.TimerPatcher;
-import com.octo.gwt.test.internal.patchers.dom.NodeFactory;
+import com.octo.gwt.test.internal.patchers.dom.JsoFactory;
 import com.octo.gwt.test.internal.utils.i18n.GwtPropertiesHelper;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 public class GwtReset {
 
   public static void reset() throws Exception {
-    NodeFactory.reset();
+    JsoFactory.reset();
     GwtConfig.get().reset();
     GwtPropertiesHelper.get().reset();
     CurrencyListPatcher.reset();

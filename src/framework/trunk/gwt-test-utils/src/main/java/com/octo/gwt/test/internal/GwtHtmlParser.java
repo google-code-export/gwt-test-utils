@@ -17,8 +17,7 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
 import com.octo.gwt.test.exceptions.GwtTestDomException;
-import com.octo.gwt.test.internal.overrides.OverrideNodeList;
-import com.octo.gwt.test.internal.patchers.dom.NodeFactory;
+import com.octo.gwt.test.internal.patchers.dom.JsoFactory;
 import com.octo.gwt.test.internal.utils.StyleUtils;
 
 public class GwtHtmlParser {
@@ -40,7 +39,7 @@ public class GwtHtmlParser {
       if (parent != null) {
         parent.setInnerText(string.getText());
       } else {
-        visitedNodes.add(NodeFactory.createTextNode(string.getText()));
+        visitedNodes.add(JsoFactory.createTextNode(string.getText()));
       }
     }
 
@@ -79,19 +78,23 @@ public class GwtHtmlParser {
   }
 
   public static NodeList<Node> parse(String html) {
+    List<Node> innerList;
     if (html == null) {
-      return new OverrideNodeList<Node>();
+      innerList = new ArrayList<Node>();
+    } else {
+      Parser parser = Parser.createParser(html, "UTF-8");
+      try {
+        GwtNodeVisitor visitor = new GwtNodeVisitor();
+
+        // fill the visitor.visitedNodes
+        parser.visitAllNodesWith(visitor);
+
+        innerList = visitor.visitedNodes;
+      } catch (ParserException e) {
+        throw new GwtTestDomException("error while parsing HTML : " + html, e);
+      }
     }
 
-    Parser parser = Parser.createParser(html, "UTF-8");
-    try {
-      GwtNodeVisitor visitor = new GwtNodeVisitor();
-      parser.visitAllNodesWith(visitor);
-
-      return new OverrideNodeList<Node>(visitor.visitedNodes);
-    } catch (ParserException e) {
-      throw new GwtTestDomException("error while parsing HTML : " + html, e);
-    }
+    return JsoFactory.createNodeList(innerList);
   }
-
 }

@@ -16,7 +16,7 @@ import com.google.gwt.dom.client.HeadingElement;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
 import com.octo.gwt.test.GwtTestTest;
-import com.octo.gwt.test.internal.patchers.dom.NodeFactory;
+import com.octo.gwt.test.internal.patchers.dom.JsoFactory;
 
 public class ElementTest extends GwtTestTest {
 
@@ -167,9 +167,9 @@ public class ElementTest extends GwtTestTest {
     ButtonElement be0 = Document.get().createPushButtonElement();
     ButtonElement be1 = Document.get().createPushButtonElement();
     e.appendChild(be0);
-    e.appendChild(NodeFactory.createTextNode("test1"));
+    e.appendChild(JsoFactory.createTextNode("test1"));
     e.appendChild(be1);
-    e.appendChild(NodeFactory.createTextNode("test2"));
+    e.appendChild(JsoFactory.createTextNode("test2"));
 
     // Test & Assert
     Assert.assertEquals(be1, be0.getNextSiblingElement());

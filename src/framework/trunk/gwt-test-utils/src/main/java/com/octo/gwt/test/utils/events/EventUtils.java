@@ -1,9 +1,7 @@
 package com.octo.gwt.test.utils.events;
 
-import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.user.client.Event;
 import com.octo.gwt.test.exceptions.GwtTestDomException;
-import com.octo.gwt.test.internal.overrides.OverrideEvent;
 
 public class EventUtils {
 
@@ -97,11 +95,6 @@ public class EventUtils {
             "Cannot get the String type of event with code [" + eventTypeInt
                 + "]");
     }
-  }
-
-  public static String getEventTypeString(NativeEvent nativeEvent) {
-    OverrideEvent event = nativeEvent.cast();
-    return getEventTypeString(event.getOverrideType());
   }
 
   private EventUtils() {

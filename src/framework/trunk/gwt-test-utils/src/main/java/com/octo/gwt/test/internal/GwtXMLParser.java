@@ -15,7 +15,7 @@ import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.Text;
-import com.octo.gwt.test.internal.patchers.dom.NodeFactory;
+import com.octo.gwt.test.internal.patchers.dom.JsoFactory;
 
 public class GwtXMLParser {
 
@@ -65,7 +65,7 @@ public class GwtXMLParser {
     }
 
     public void startDocument() throws SAXException {
-      document = NodeFactory.createDocument();
+      document = JsoFactory.createObject(Document.class);
       currentNode = document;
     }
 

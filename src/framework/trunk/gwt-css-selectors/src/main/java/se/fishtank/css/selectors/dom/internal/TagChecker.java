@@ -104,7 +104,7 @@ public class TagChecker extends NodeTraversalChecker {
         }
 
         String tag = selector.getTagName();
-        if (tag.equals(node.getNodeName())
+        if (tag.equalsIgnoreCase(node.getNodeName())
             || tag.equals(Selector.UNIVERSAL_TAG)) {
           result.add(node);
         }

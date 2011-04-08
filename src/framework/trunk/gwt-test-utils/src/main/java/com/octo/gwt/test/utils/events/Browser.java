@@ -15,7 +15,8 @@ import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
-import com.octo.gwt.test.internal.overrides.OverrideEvent;
+import com.octo.gwt.test.internal.patchers.dom.DOMProperties;
+import com.octo.gwt.test.internal.utils.PropertyContainerUtils;
 import com.octo.gwt.test.utils.WidgetUtils;
 
 /**
@@ -151,18 +152,23 @@ public class Browser {
 
     for (int i = 0; i < value.length(); i++) {
 
-      int keyCode = (int) value.charAt(i);
-      OverrideEvent keyDownEvent = EventBuilder.create(Event.ONKEYDOWN).setKeyCode(
+      int keyCode = value.charAt(i);
+      Event keyDownEvent = EventBuilder.create(Event.ONKEYDOWN).setKeyCode(
           keyCode).build().cast();
-      OverrideEvent keyPressEvent = EventBuilder.create(Event.ONKEYPRESS).setKeyCode(
+      Event keyPressEvent = EventBuilder.create(Event.ONKEYPRESS).setKeyCode(
           keyCode).build().cast();
-      OverrideEvent keyUpEvent = EventBuilder.create(Event.ONKEYUP).setKeyCode(
-          keyCode).build().cast();
+      Event keyUpEvent = EventBuilder.create(Event.ONKEYUP).setKeyCode(keyCode).build().cast();
 
       dispatchEvent((Widget) hasTextWidget, keyDownEvent, keyPressEvent,
           keyUpEvent);
 
-      if (!keyDownEvent.isPreventDefault() && !keyPressEvent.isPreventDefault()) {
+      boolean keyDownEventPreventDefault = PropertyContainerUtils.getPropertyBoolean(
+          keyDownEvent, DOMProperties.EVENT_PREVENTDEFAULT);
+
+      boolean keyPressEventPreventDefault = PropertyContainerUtils.getPropertyBoolean(
+          keyPressEvent, DOMProperties.EVENT_PREVENTDEFAULT);
+
+      if (!keyDownEventPreventDefault && !keyPressEventPreventDefault) {
         hasTextWidget.setText(value.substring(0, i + 1));
         changed = true;
       }

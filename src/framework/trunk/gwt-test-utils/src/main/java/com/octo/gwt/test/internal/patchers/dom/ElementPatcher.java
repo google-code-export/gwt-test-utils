@@ -1,5 +1,7 @@
 package com.octo.gwt.test.internal.patchers.dom;
 
+import java.util.List;
+
 import javassist.CtClass;
 import javassist.CtConstructor;
 
@@ -8,7 +10,6 @@ import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Style;
 import com.octo.gwt.test.internal.GwtHtmlParser;
-import com.octo.gwt.test.internal.overrides.OverrideNodeList;
 import com.octo.gwt.test.internal.utils.GwtStringUtils;
 import com.octo.gwt.test.internal.utils.PropertyContainerUtils;
 import com.octo.gwt.test.patchers.OverlayPatcher;
@@ -145,13 +146,14 @@ public class ElementPatcher extends OverlayPatcher {
 
   @PatchMethod
   public static void setInnerHTML(Element element, String html) {
-    OverrideNodeList<Node> list = element.getChildNodes().cast();
-    list.getList().clear();
+    List<Node> innerList = PropertyContainerUtils.getProperty(
+        element.getChildNodes(), DOMProperties.NODE_LIST_INNER_LIST);
+    innerList.clear();
 
     NodeList<Node> nodes = GwtHtmlParser.parse(html);
 
     for (int i = 0; i < nodes.getLength(); i++) {
-      list.getList().add(nodes.getItem(i));
+      innerList.add(nodes.getItem(i));
     }
 
     PropertyContainerUtils.setProperty(element, DOMProperties.INNER_HTML, html);
@@ -187,7 +189,7 @@ public class ElementPatcher extends OverlayPatcher {
     CtConstructor cons = findConstructor(c);
 
     cons.insertAfter(PropertyContainerUtils.getCodeSetProperty("this",
-        DOMProperties.STYLE_OBJECT_FIELD, NodeFactory.class.getCanonicalName()
+        DOMProperties.STYLE_OBJECT_FIELD, JsoFactory.class.getCanonicalName()
             + ".createStyle(this)")
         + ";");
 
