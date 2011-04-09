@@ -1,6 +1,7 @@
 package com.octo.gwt.test;
 
 import java.lang.reflect.Field;
+import java.util.Set;
 
 import org.junit.Before;
 import org.mockito.Mockito;
@@ -104,6 +105,15 @@ public abstract class GwtTestWithMockito extends GwtTestWithMocks {
             "Could not register Mockito mocks declared in test class", e);
       }
     }
+  }
+
+  @Override
+  protected Set<Field> getMockFields() {
+    Set<Field> mocksFields = super.getMockFields();
+    Set<Field> mockitoMockFields = GwtReflectionUtils.getAnnotatedField(
+        this.getClass(), org.mockito.Mock.class);
+    mocksFields.addAll(mockitoMockFields);
+    return mocksFields;
   }
 
 }

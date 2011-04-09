@@ -112,6 +112,10 @@ public abstract class GwtTest {
               + moduleFullQualifiedName + "'", e);
     }
 
+    if ("test-classes".equals(classDir.getName())) {
+      classDir = new File(classDir.getParent(), "classes");
+    }
+
     // try at the root of the test classpath
     File file = new File(classDir, fileSimpleName);
     if (file.exists()) {
