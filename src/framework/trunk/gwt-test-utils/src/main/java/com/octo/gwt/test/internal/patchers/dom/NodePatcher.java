@@ -1,10 +1,7 @@
 package com.octo.gwt.test.internal.patchers.dom;
 
 import java.util.List;
-import java.util.Map.Entry;
-
-import javassist.CtClass;
-import javassist.CtConstructor;
+import java.util.Map;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.Document;
@@ -14,8 +11,7 @@ import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Text;
 import com.octo.gwt.test.exceptions.GwtTestDomException;
-import com.octo.gwt.test.internal.utils.PropertyContainer;
-import com.octo.gwt.test.internal.utils.PropertyContainerUtils;
+import com.octo.gwt.test.internal.utils.JsoProperties;
 import com.octo.gwt.test.patchers.OverlayPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
@@ -30,50 +26,25 @@ public class NodePatcher extends OverlayPatcher {
 
   @PatchMethod
   public static Node cloneNode(Node node, boolean deep) {
-    PropertyContainer propertyContainer = PropertyContainerUtils.cast(node).getProperties();
-
     Node newNode;
     switch (node.getNodeType()) {
       case Node.ELEMENT_NODE:
-        Element elem = node.cast();
-        newNode = JsoFactory.createElement((elem).getTagName());
+        Element e = node.cast();
+        newNode = JavaScriptObjects.newElement(e.getTagName());
         break;
       case Node.DOCUMENT_NODE:
-        newNode = JsoFactory.getDocument();
+        newNode = JavaScriptObjects.newObject(Document.class);
         break;
       case Node.TEXT_NODE:
-        newNode = JsoFactory.createTextNode(((Text) node).getData());
+        newNode = JavaScriptObjects.newObject(Text.class);
         break;
       default:
         throw new GwtTestDomException("Cannot create a Node of type ["
             + node.getClass().getName() + "]");
     }
 
-    PropertyContainer propertyContainer2 = PropertyContainerUtils.cast(newNode).getProperties();
+    copyJSOProperties(newNode, node, deep);
 
-    propertyContainer2.clear();
-
-    fillNewPropertyContainer(propertyContainer2, propertyContainer);
-
-    propertyContainer2.put(DOMProperties.NODE_LIST_FIELD,
-        JsoFactory.createNodeList());
-
-    List<Node> childs = getChildNodeList(node);
-    if (deep) {
-      // copy all child nodes
-      for (Node child : childs) {
-        appendChild(newNode, cloneNode(child, true));
-      }
-    } else {
-      // only copy the TextNode if exists
-      for (Node child : childs) {
-        if (Node.TEXT_NODE == child.getNodeType()) {
-          appendChild(newNode,
-              Document.get().createTextNode(child.getNodeValue()));
-          break;
-        }
-      }
-    }
     return newNode;
   }
 
@@ -166,7 +137,7 @@ public class NodePatcher extends OverlayPatcher {
 
   @PatchMethod
   public static Document getOwnerDocument(Node node) {
-    return JsoFactory.getDocument();
+    return Document.get();
   }
 
   @PatchMethod
@@ -212,8 +183,8 @@ public class NodePatcher extends OverlayPatcher {
     }
 
     // Manage getParentNode()
-    PropertyContainerUtils.setProperty(newChild,
-        DOMProperties.PARENT_NODE_FIELD, parent);
+    JavaScriptObjects.getJsoProperties(newChild).put(
+        JsoProperties.PARENT_NODE_FIELD, parent);
 
     return newChild;
   }
@@ -291,57 +262,76 @@ public class NodePatcher extends OverlayPatcher {
     }
   }
 
-  private static void fillNewPropertyContainer(PropertyContainer n,
-      PropertyContainer old) {
-    for (Entry<String, Object> entry : old.entrySet()) {
-      if (DOMProperties.PARENT_NODE_FIELD.equals(entry.getKey())) {
-      } else if (entry.getValue() instanceof String) {
-        n.put(entry.getKey(), new String((String) entry.getValue()));
-      } else if (entry.getValue() instanceof Integer) {
-        n.put(entry.getKey(), new Integer((Integer) entry.getValue()));
-      } else if (entry.getValue() instanceof Double) {
-        n.put(entry.getKey(), new Double((Double) entry.getValue()));
-      } else if (entry.getValue() instanceof Boolean) {
-        n.put(entry.getKey(), new Boolean((Boolean) entry.getValue()));
-      } else if (entry.getValue() instanceof Style) {
-        // The propertyContainerAware have to be an instance of Element since
-        // Style requiers Element in its constructor with gwt-test-utils
-        Style newStyle = JsoFactory.createStyle((Element) n.getOwner());
-        PropertyContainer o = PropertyContainerUtils.cast(entry.getValue()).getProperties();
-        PropertyContainer nn = PropertyContainerUtils.cast(newStyle).getProperties();
-        nn.clear();
+  private static void copyJSOProperties(JavaScriptObject newJso,
+      JavaScriptObject oldJso, boolean deep) {
+    for (Map.Entry<String, Object> entry : JavaScriptObjects.getJsoProperties(
+        oldJso).entrySet()) {
 
-        fillNewPropertyContainer(nn, o);
-        n.put(entry.getKey(), newStyle);
-      } else if (entry.getValue() instanceof NodeList<?>) {
-        // TODO: wtf ?
-      } else if (entry.getValue() instanceof PropertyContainer) {
-        PropertyContainer toCopy = (PropertyContainer) entry.getValue();
-        PropertyContainer nn = new PropertyContainer(toCopy.getOwner());
-        fillNewPropertyContainer(nn, toCopy);
-        n.put(entry.getKey(), nn);
+      if (JsoProperties.PARENT_NODE_FIELD.equals(entry.getKey())) {
+        // Nothing to do : new cloned node does not have any parent
+      } else if (JsoProperties.STYLE_OBJECT_FIELD.equals(entry.getKey())) {
+        setupStyle(newJso, (Style) entry.getValue());
+      } else if (JsoProperties.NODE_LIST_FIELD.equals(entry.getKey())) {
+        Node newNode = newJso.cast();
+        Node oldNode = oldJso.cast();
+        setupChildNodes(newNode, oldNode, deep);
+      } else if (JavaScriptObject.class.isInstance(entry.getValue())) {
+        JavaScriptObject oldChildJso = (JavaScriptObject) entry.getValue();
+        JavaScriptObject newChildJso = JavaScriptObjects.newObject(oldChildJso.getClass());
+        copyJSOProperties(newChildJso, oldChildJso, deep);
+        JavaScriptObjects.getJsoProperties(newJso).put(entry.getKey(),
+            newChildJso);
       } else {
-        throw new GwtTestDomException("Not managed type "
-            + entry.getValue().getClass() + ", value " + entry.getKey());
+        // copy the property, which should be a String or a primitive type (or
+        // corresponding wrapper object)
+        JavaScriptObjects.getJsoProperties(newJso).put(entry.getKey(),
+            entry.getValue());
+      }
+    }
+
+  }
+
+  private static List<Node> getChildNodeList(Node node) {
+    NodeList<Node> nodeList = JavaScriptObjects.getJsoProperties(node).getObject(
+        JsoProperties.NODE_LIST_FIELD);
+
+    return JavaScriptObjects.getJsoProperties(nodeList).getObject(
+        JsoProperties.NODE_LIST_INNER_LIST);
+  }
+
+  private static void setupChildNodes(Node newNode, Node oldNode, boolean deep) {
+
+    List<Node> childs = getChildNodeList(oldNode);
+    if (deep) {
+      // copy all child nodes
+      for (Node child : childs) {
+        appendChild(newNode, cloneNode(child, true));
+      }
+    } else {
+      // only copy the TextNode if exists
+      for (Node child : childs) {
+        if (Node.TEXT_NODE == child.getNodeType()) {
+          appendChild(newNode,
+              Document.get().createTextNode(child.getNodeValue()));
+          break;
+        }
       }
     }
   }
 
-  private static List<Node> getChildNodeList(Node node) {
-    NodeList<Node> nodeList = PropertyContainerUtils.getProperty(node,
-        DOMProperties.NODE_LIST_FIELD);
+  private static void setupStyle(JavaScriptObject newNode, Style oldStyle) {
+    Style newStyle = JavaScriptObjects.getJsoProperties(newNode).getObject(
+        JsoProperties.STYLE_OBJECT_FIELD);
 
-    return PropertyContainerUtils.getProperty(nodeList,
-        DOMProperties.NODE_LIST_INNER_LIST);
+    for (Map.Entry<String, Object> entry : JavaScriptObjects.getJsoProperties(
+        oldStyle).entrySet()) {
+      if (!JsoProperties.STYLE_TARGET_ELEMENT.equals(entry.getKey())) {
+        JavaScriptObjects.getJsoProperties(newStyle).put(entry.getKey(),
+            entry.getValue());
+      }
+
+    }
+
   }
 
-  @Override
-  public void initClass(CtClass c) throws Exception {
-    super.initClass(c);
-    CtConstructor cons = findConstructor(c);
-    cons.insertAfter(PropertyContainerUtils.getCodeSetProperty("this",
-        DOMProperties.NODE_LIST_FIELD, JsoFactory.class.getName()
-            + ".createNodeList()")
-        + ";");
-  }
 }

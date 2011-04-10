@@ -7,14 +7,16 @@ import org.junit.Test;
 import com.google.gwt.dom.client.AnchorElement;
 import com.google.gwt.dom.client.BaseElement;
 import com.google.gwt.dom.client.ButtonElement;
+import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.OptionElement;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Text;
 import com.octo.gwt.test.GwtTestTest;
-import com.octo.gwt.test.internal.patchers.dom.JsoFactory;
+import com.octo.gwt.test.internal.patchers.dom.JavaScriptObjects;
 import com.octo.gwt.test.internal.utils.GwtPatcherUtils;
 
 @SuppressWarnings("deprecation")
@@ -47,60 +49,60 @@ public class NodeTest extends GwtTestTest {
     // Setup
     AnchorElement child = Document.get().createAnchorElement();
     child.setInnerText("child inner text");
+    child.getStyle().setBackgroundColor("black");
     n.appendChild(child);
 
     Element e = n.cast();
     e.setInnerText("text");
 
     // Test
-    Node newNode = n.cloneNode(true);
+    DivElement newNode = n.cloneNode(true).cast();
 
     // Assert
     Assert.assertEquals(Node.ELEMENT_NODE, newNode.getNodeType());
-    Element newElement = newNode.cast();
+    Assert.assertEquals("text", newNode.getInnerText());
 
-    Assert.assertEquals("text", newElement.getInnerText());
-    Assert.assertNull("Cloned node's parent should be null",
-        newNode.getParentNode());
-    Assert.assertEquals("Deep cloned node should have child nodes",
-        n.getChildNodes().getLength(), newNode.getChildNodes().getLength());
+    Assert.assertNull(newNode.getParentNode());
+    Assert.assertEquals(n.getChildNodes().getLength(),
+        newNode.getChildNodes().getLength());
 
     Assert.assertEquals(Node.ELEMENT_NODE,
         newNode.getChildNodes().getItem(0).getNodeType());
-    Element childElement = newNode.getChildNodes().getItem(0).cast();
+    AnchorElement childElement = newNode.getChildNodes().getItem(0).cast();
     Assert.assertEquals("child inner text", childElement.getInnerText());
+
+    Style newStyle = childElement.getStyle();
+    Assert.assertTrue(newStyle != child.getStyle());
+    Assert.assertEquals("black", newStyle.getBackgroundColor());
 
     Assert.assertEquals(Node.TEXT_NODE,
         newNode.getChildNodes().getItem(1).getNodeType());
     Text textNode = newNode.getChildNodes().getItem(1).cast();
     Assert.assertEquals("text", textNode.getData());
-
   }
 
   @Test
   public void checkCloneNotDeep() {
     // Setup
+    Element e = n.cast();
+    e.setInnerText("text");
+    e.getStyle().setBackgroundColor("black");
+
     AnchorElement child = Document.get().createAnchorElement();
     child.setInnerText("child inner text");
     n.appendChild(child);
 
-    Element e = n.cast();
-    e.setInnerText("text");
-
     // Test
-    Node newNode = n.cloneNode(false);
+    DivElement newNode = n.cloneNode(false).cast();
 
     // Assert
     Assert.assertEquals(Node.ELEMENT_NODE, newNode.getNodeType());
-    Element newElement = newNode.cast();
-
-    Assert.assertEquals("text", newElement.getInnerText());
-
-    Assert.assertNull("Cloned node's parent should be null",
-        newNode.getParentNode());
+    Assert.assertTrue(e.getStyle() != newNode.getStyle());
+    Assert.assertEquals("black", newNode.getStyle().getBackgroundColor());
+    Assert.assertEquals("text", newNode.getInnerText());
+    Assert.assertNull(newNode.getParentNode());
     Assert.assertEquals(2, n.getChildNodes().getLength());
-    Assert.assertEquals("Not deep cloned node should not have child nodes", 1,
-        newNode.getChildNodes().getLength());
+    Assert.assertEquals(1, newNode.getChildNodes().getLength());
   }
 
   @Test
@@ -216,7 +218,7 @@ public class NodeTest extends GwtTestTest {
 
   @Test
   public void checkIs() {
-    NodeList<OptionElement> list = JsoFactory.createNodeList();
+    NodeList<OptionElement> list = JavaScriptObjects.newNodeList();
     Assert.assertFalse("null is not a DOM node", Node.is(null));
     Assert.assertFalse("NodeList is not a DOM node", Node.is(list));
     Assert.assertTrue("AnchorElement is a DOM node",
@@ -230,7 +232,7 @@ public class NodeTest extends GwtTestTest {
         Document.get().getDocumentElement().getNodeName());
     Assert.assertEquals("a", Document.get().createAnchorElement().getNodeName());
     Assert.assertEquals("#text",
-        JsoFactory.createTextNode("test").getNodeName());
+        JavaScriptObjects.newText("test").getNodeName());
   }
 
   @Test
@@ -241,7 +243,7 @@ public class NodeTest extends GwtTestTest {
     Assert.assertEquals(Node.ELEMENT_NODE,
         Document.get().createAnchorElement().getNodeType());
     Assert.assertEquals(Node.TEXT_NODE,
-        JsoFactory.createTextNode("test").getNodeType());
+        JavaScriptObjects.newText("test").getNodeType());
   }
 
   @Test

@@ -2,22 +2,16 @@ package com.octo.gwt.test.internal.utils;
 
 import java.util.HashMap;
 
+import com.google.gwt.core.client.JavaScriptObject;
+
 public class PropertyContainer extends HashMap<String, Object> {
 
   private static final long serialVersionUID = -2421991095282208998L;
 
-  private PropertyContainerAware owner;
+  private final JavaScriptObject owner;
 
-  public PropertyContainer(Object o) {
-    if (!PropertyContainerAware.class.isInstance(o)) {
-      throw new IllegalArgumentException("Error while creating a '"
-          + PropertyContainer.class.getSimpleName()
-          + "' instance : owner object is not an instance of '"
-          + PropertyContainerAware.class.getSimpleName() + "' : "
-          + o.getClass().getName() + "'");
-    }
-
-    owner = (PropertyContainerAware) o;
+  public PropertyContainer(JavaScriptObject jso) {
+    owner = jso;
   }
 
   public boolean getBoolean(String key) {
@@ -35,7 +29,12 @@ public class PropertyContainer extends HashMap<String, Object> {
     return i == null ? 0 : i;
   }
 
-  public PropertyContainerAware getOwner() {
+  @SuppressWarnings("unchecked")
+  public <T> T getObject(String key) {
+    return (T) get(key);
+  }
+
+  public JavaScriptObject getOwner() {
     return owner;
   }
 

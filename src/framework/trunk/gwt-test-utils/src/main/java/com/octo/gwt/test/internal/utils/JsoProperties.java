@@ -1,9 +1,9 @@
-package com.octo.gwt.test.internal.patchers.dom;
+package com.octo.gwt.test.internal.utils;
 
 import java.util.Map;
 import java.util.TreeMap;
 
-public class DOMProperties {
+public class JsoProperties {
 
   public static final String ABSOLUTE_LEFT = "absoluteLeft";
   public static final String ABSOLUTE_TOP = "absoluteTop";
@@ -26,6 +26,8 @@ public class DOMProperties {
   public static final String NODE_LIST_FIELD = "childNodes";
   public static final String NODE_LIST_INNER_LIST = "NODE_LIST_INNER_LIST";
   public static final String NODE_NAME = "nodeName";
+  public static final String NODE_NAMESPACE_URI = "namespaceURI";
+  public static final String NODE_TYPE_FIELD = "nodeType";
   public static final String PARENT_NODE_FIELD = "parentNode";
   public static final String SCROLL_LEFT = "scrollLeft";
   public static final String SELECTED_INDEX_FIELD = "selectedIndex";
@@ -35,30 +37,35 @@ public class DOMProperties {
   public static final String SRC = "src";
   public static final String STYLE_OBJECT_FIELD = "STYLE_OBJECT";
   public static final String STYLE_TARGET_ELEMENT = "STYLE_TARGET_ELEMENT";
+  public static final String STYLE_WHITESPACE_PROPERTY = "whiteSpace";
   public static final String TAB_INDEX = "tabIndex";
   public static final String TAG_NAME = "tagName";
   public static final String TYPE = "type";
 
-  private static final DOMProperties INSTANCE = new DOMProperties();
+  public static final String XML_ATTR_JSO = "XML_ATTR_JSO";
+  public static final String XML_ATTR_NAME = "XML_ATTR_NAME";
+  public static final String XML_ATTR_VALUE = "XML_ATTR_VALUE";
 
-  public static final DOMProperties get() {
+  private static final JsoProperties INSTANCE = new JsoProperties();
+
+  public static final JsoProperties get() {
     return INSTANCE;
   }
 
   private final Map<String, String> propertyNames;
 
-  private DOMProperties() {
+  private JsoProperties() {
     propertyNames = new TreeMap<String, String>();
   }
 
-  public void addDOMProperty(String propertyName) {
+  public void addJsoProperty(String propertyName) {
     propertyNames.put(propertyName.toLowerCase(), propertyName);
   }
 
   public String getPropertyName(String propertyNameCaseInsensitive) {
     String propertyName = propertyNames.get(propertyNameCaseInsensitive.toLowerCase());
 
-    return (propertyName != null || propertyNameCaseInsensitive.startsWith("_"))
+    return (propertyName != null || propertyNameCaseInsensitive.contains("_"))
         ? propertyName : propertyNameCaseInsensitive;
   }
 

@@ -2,16 +2,13 @@ package com.octo.gwt.test.internal.patchers.dom;
 
 import java.util.List;
 
-import javassist.CtClass;
-import javassist.CtConstructor;
-
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Style;
 import com.octo.gwt.test.internal.GwtHtmlParser;
 import com.octo.gwt.test.internal.utils.GwtStringUtils;
-import com.octo.gwt.test.internal.utils.PropertyContainerUtils;
+import com.octo.gwt.test.internal.utils.JsoProperties;
 import com.octo.gwt.test.patchers.OverlayPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
@@ -75,20 +72,17 @@ public class ElementPatcher extends OverlayPatcher {
 
   @PatchMethod
   public static boolean getPropertyBoolean(Element element, String propertyName) {
-    return PropertyContainerUtils.cast(element).getProperties().getBoolean(
-        propertyName);
+    return JavaScriptObjects.getJsoProperties(element).getBoolean(propertyName);
   }
 
   @PatchMethod
   public static double getPropertyDouble(Element element, String propertyName) {
-    return PropertyContainerUtils.cast(element).getProperties().getDouble(
-        propertyName);
+    return JavaScriptObjects.getJsoProperties(element).getDouble(propertyName);
   }
 
   @PatchMethod
   public static int getPropertyInt(Element element, String propertyName) {
-    return PropertyContainerUtils.cast(element).getProperties().getInteger(
-        propertyName);
+    return JavaScriptObjects.getJsoProperties(element).getInteger(propertyName);
   }
 
   @PatchMethod
@@ -96,7 +90,7 @@ public class ElementPatcher extends OverlayPatcher {
     if ("tagName".equals(propertyName)) {
       return element.getTagName();
     }
-    return PropertyContainerUtils.getProperty(element, propertyName);
+    return JavaScriptObjects.getJsoProperties(element).getObject(propertyName);
   }
 
   @PatchMethod
@@ -107,7 +101,7 @@ public class ElementPatcher extends OverlayPatcher {
     // null (javascript undefined) is a possible value here if not a DOM
     // standard property
     if (value == null) {
-      String propertyNameCaseSensitive = DOMProperties.get().getPropertyName(
+      String propertyNameCaseSensitive = JsoProperties.get().getPropertyName(
           propertyName);
       if (propertyName.equals(propertyNameCaseSensitive)) {
         value = "";
@@ -119,19 +113,19 @@ public class ElementPatcher extends OverlayPatcher {
 
   @PatchMethod
   public static Style getStyle(Element element) {
-    return PropertyContainerUtils.getProperty(element,
-        DOMProperties.STYLE_OBJECT_FIELD);
+    return JavaScriptObjects.getJsoProperties(element).getObject(
+        JsoProperties.STYLE_OBJECT_FIELD);
   }
 
   @PatchMethod
   public static void removeAttribute(Element element, String name) {
-    PropertyContainerUtils.removeProperty(element, name);
+    JavaScriptObjects.getJsoProperties(element).remove(name);
   }
 
   @PatchMethod
   public static void setAttribute(Element element, String attributeName,
       String value) {
-    PropertyContainerUtils.setProperty(element, attributeName, value);
+    JavaScriptObjects.getJsoProperties(element).put(attributeName, value);
   }
 
   @PatchMethod
@@ -146,8 +140,8 @@ public class ElementPatcher extends OverlayPatcher {
 
   @PatchMethod
   public static void setInnerHTML(Element element, String html) {
-    List<Node> innerList = PropertyContainerUtils.getProperty(
-        element.getChildNodes(), DOMProperties.NODE_LIST_INNER_LIST);
+    List<Node> innerList = JavaScriptObjects.getJsoProperties(
+        element.getChildNodes()).getObject(JsoProperties.NODE_LIST_INNER_LIST);
     innerList.clear();
 
     NodeList<Node> nodes = GwtHtmlParser.parse(html);
@@ -156,45 +150,32 @@ public class ElementPatcher extends OverlayPatcher {
       innerList.add(nodes.getItem(i));
     }
 
-    PropertyContainerUtils.setProperty(element, DOMProperties.INNER_HTML, html);
+    JavaScriptObjects.getJsoProperties(element).put(JsoProperties.INNER_HTML,
+        html);
   }
 
   @PatchMethod
   public static void setPropertyBoolean(Element element, String propertyName,
       boolean value) {
-    PropertyContainerUtils.setProperty(element, propertyName, value);
+    JavaScriptObjects.getJsoProperties(element).put(propertyName, value);
   }
 
   @PatchMethod
   public static void setPropertyDouble(Element element, String propertyName,
       double value) {
-    PropertyContainerUtils.setProperty(element, propertyName, value);
+    JavaScriptObjects.getJsoProperties(element).put(propertyName, value);
   }
 
   @PatchMethod
   public static void setPropertyInt(Element element, String propertyName,
       int value) {
-    PropertyContainerUtils.setProperty(element, propertyName, value);
+    JavaScriptObjects.getJsoProperties(element).put(propertyName, value);
   }
 
   @PatchMethod
   public static void setPropertyString(Element element, String propertyName,
       String value) {
-    PropertyContainerUtils.setProperty(element, propertyName, value);
-  }
-
-  @Override
-  public void initClass(CtClass c) throws Exception {
-    super.initClass(c);
-    CtConstructor cons = findConstructor(c);
-
-    cons.insertAfter(PropertyContainerUtils.getCodeSetProperty("this",
-        DOMProperties.STYLE_OBJECT_FIELD, JsoFactory.class.getCanonicalName()
-            + ".createStyle(this)")
-        + ";");
-
-    cons.insertAfter(PropertyContainerUtils.getCodeSetProperty("this",
-        DOMProperties.CLASSNAME_FIELD, "\"\"") + ";");
+    JavaScriptObjects.getJsoProperties(element).put(propertyName, value);
   }
 
 }

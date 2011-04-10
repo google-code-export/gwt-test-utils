@@ -7,16 +7,15 @@ import java.util.regex.Pattern;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
-import com.octo.gwt.test.internal.patchers.dom.DOMProperties;
-import com.octo.gwt.test.utils.GwtReflectionUtils;
+import com.octo.gwt.test.internal.patchers.dom.JavaScriptObjects;
 
 public class StyleUtils {
 
-  private static Pattern STYLE_PATTERN = Pattern.compile("(.+):(.+)");
+  private static final Pattern STYLE_PATTERN = Pattern.compile("(.+):(.+)");
 
   public static Element getOwnerElement(Style style) {
-    return GwtReflectionUtils.getPrivateFieldValue(style,
-        DOMProperties.STYLE_TARGET_ELEMENT);
+    return JavaScriptObjects.getJsoProperties(style).getObject(
+        JsoProperties.STYLE_TARGET_ELEMENT);
   }
 
   public static LinkedHashMap<String, String> getStyleProperties(String style) {

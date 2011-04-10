@@ -9,6 +9,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.google.gwt.xml.client.Document;
@@ -25,9 +26,15 @@ public class XMLParserTest extends GwtTestTest {
     // Test
     Document document = XMLParser.parse(xmlContent);
 
-    // Assert
-    Element element = document.getElementById("myElemId");
-    // Assert.assertEquals("myElem", element.getTagName());
+    // Asserts
+    Element element = document.getElementById("testBean");
+    Assert.assertEquals("bean", element.getTagName());
+    Assert.assertEquals("http://www.springframework.org/schema/beans",
+        element.getNamespaceURI());
+    Assert.assertEquals("org.springframework.beans.TestBean",
+        element.getAttribute("class"));
+    // Assert.assertEquals("org.springframework.beans.TestBean",
+    // element.getAttributeNode("class").getValue());
   }
 
   private String convertXMLFileToString(String fileName) {

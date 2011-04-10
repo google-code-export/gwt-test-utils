@@ -26,7 +26,7 @@ public class TableRowElementPatcher extends OverlayPatcher {
       }
     }
 
-    return JsoFactory.createNodeList(cells);
+    return JavaScriptObjects.newNodeList(cells);
   }
 
   @PatchMethod

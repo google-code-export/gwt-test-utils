@@ -1,4 +1,4 @@
-package com.octo.gwt.test.internal;
+package com.octo.gwt.test.internal.xml;
 
 import java.io.IOException;
 
@@ -15,7 +15,8 @@ import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.Text;
-import com.octo.gwt.test.internal.patchers.dom.JsoFactory;
+import com.octo.gwt.test.internal.patchers.dom.JavaScriptObjects;
+import com.octo.gwt.test.internal.utils.JsoProperties;
 
 public class GwtXMLParser {
 
@@ -28,13 +29,11 @@ public class GwtXMLParser {
     }
 
     public void characters(char[] ch, int start, int end) throws SAXException {
-      System.out.println("#PCDATA : " + new String(ch, start, end));
       Text text = Document.get().createTextNode(new String(ch, start, end));
       currentNode.appendChild(text);
     }
 
     public void endDocument() throws SAXException {
-      System.out.println("Fin de l'analyse du document");
     }
 
     public void endElement(String nameSpaceURI, String localName, String rawName)
@@ -43,19 +42,14 @@ public class GwtXMLParser {
     }
 
     public void endPrefixMapping(String prefix) throws SAXException {
-      System.out.println("Fin de traitement de l'espace de nommage : " + prefix);
     }
 
     public void ignorableWhitespace(char[] ch, int start, int end)
         throws SAXException {
-      System.out.println("espaces inutiles rencontres : ..."
-          + new String(ch, start, end) + "...");
     }
 
     public void processingInstruction(String target, String data)
         throws SAXException {
-      System.out.println("Instruction de fonctionnement : " + target);
-      System.out.println("  dont les arguments sont : " + data);
     }
 
     public void setDocumentLocator(Locator locator) {
@@ -65,29 +59,30 @@ public class GwtXMLParser {
     }
 
     public void startDocument() throws SAXException {
-      document = JsoFactory.createObject(Document.class);
+      document = JavaScriptObjects.newObject(Document.class);
       currentNode = document;
     }
 
     public void startElement(String nameSpaceURI, String localName,
-        String rawName, Attributes attributs) throws SAXException {
+        String rawName, Attributes attributes) throws SAXException {
 
       Element element = Document.get().createElement(localName);
 
+      JavaScriptObjects.getJsoProperties(element).put(
+          JsoProperties.NODE_NAMESPACE_URI, nameSpaceURI);
+
       currentNode.appendChild(element);
-
       currentNode = element;
-      System.out.println("Ouverture de la balise : " + localName);
 
-      if (!"".equals(nameSpaceURI)) { // espace de nommage particulier
-        System.out.println("  appartenant a l'espace de nom : " + nameSpaceURI);
+      for (int index = 0; index < attributes.getLength(); index++) {
+        String attrName = attributes.getLocalName(index);
+        String attrValue = attributes.getValue(index);
+        element.setAttribute(attrName, attrValue);
       }
     }
 
     public void startPrefixMapping(String prefix, String URI)
         throws SAXException {
-      System.out.println("Traitement de l'espace de nommage : " + URI
-          + ", prefixe choisi : " + prefix);
     }
 
   }

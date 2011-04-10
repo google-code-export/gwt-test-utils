@@ -12,7 +12,7 @@ import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.user.client.Element;
 import com.octo.gwt.test.exceptions.GwtTestPatchException;
-import com.octo.gwt.test.internal.patchers.dom.JsoFactory;
+import com.octo.gwt.test.internal.patchers.dom.JavaScriptObjects;
 import com.octo.gwt.test.patchers.AutomaticPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
@@ -30,7 +30,7 @@ public class DomQueryPatcher extends AutomaticPatcher {
   public static JavaScriptObject internalSelect(String selector, Element root) {
     try {
       Set<Node> nodeSet = new DOMNodeSelector(root).querySelectorAll(selector);
-      return JsoFactory.createNodeList(new ArrayList<Node>(nodeSet));
+      return JavaScriptObjects.newNodeList(new ArrayList<Node>(nodeSet));
     } catch (NodeSelectorException e) {
       throw new GwtTestPatchException(
           "Error while trying to find GWT nodes matching '" + selector + "'", e);

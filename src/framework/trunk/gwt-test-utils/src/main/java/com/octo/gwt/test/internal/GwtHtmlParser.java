@@ -17,7 +17,7 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
 import com.octo.gwt.test.exceptions.GwtTestDomException;
-import com.octo.gwt.test.internal.patchers.dom.JsoFactory;
+import com.octo.gwt.test.internal.patchers.dom.JavaScriptObjects;
 import com.octo.gwt.test.internal.utils.StyleUtils;
 
 public class GwtHtmlParser {
@@ -39,7 +39,7 @@ public class GwtHtmlParser {
       if (parent != null) {
         parent.setInnerText(string.getText());
       } else {
-        visitedNodes.add(JsoFactory.createTextNode(string.getText()));
+        visitedNodes.add(JavaScriptObjects.newText(string.getText()));
       }
     }
 
@@ -95,6 +95,6 @@ public class GwtHtmlParser {
       }
     }
 
-    return JsoFactory.createNodeList(innerList);
+    return JavaScriptObjects.newNodeList(innerList);
   }
 }

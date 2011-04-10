@@ -1,18 +1,12 @@
 package com.octo.gwt.test.internal.patchers.dom;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import com.google.gwt.core.client.GWT;
+import javassist.CtClass;
+
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.AnchorElement;
 import com.google.gwt.dom.client.AreaElement;
@@ -66,19 +60,15 @@ import com.google.gwt.dom.client.Text;
 import com.google.gwt.dom.client.TextAreaElement;
 import com.google.gwt.dom.client.TitleElement;
 import com.google.gwt.dom.client.UListElement;
-import com.octo.gwt.test.GwtTest;
-import com.octo.gwt.test.exceptions.GwtTestConfigurationException;
-import com.octo.gwt.test.exceptions.GwtTestDomException;
-import com.octo.gwt.test.exceptions.GwtTestException;
-import com.octo.gwt.test.internal.GwtConfig;
-import com.octo.gwt.test.internal.GwtHtmlParser;
+import com.octo.gwt.test.internal.utils.JsoProperties;
 import com.octo.gwt.test.internal.utils.PropertyContainer;
-import com.octo.gwt.test.internal.utils.PropertyContainerUtils;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
-public class JsoFactory {
+public class JavaScriptObjects {
 
-  public static Document DOCUMENT;
+  public static final String PROPERTIES = "__PROPERTIES__";
+
+  public static CtClass STRING_TYPE;
 
   private static final Map<String, Class<? extends Element>> elementMap = new TreeMap<String, Class<? extends Element>>();
 
@@ -144,181 +134,95 @@ public class JsoFactory {
     elementMap.put("ul", UListElement.class);
   }
 
-  public static Element createElement(String tag) {
-    try {
-      Class<? extends Element> clazz = elementMap.get(tag.toLowerCase());
-
-      if (clazz == null) {
-        clazz = Element.class;
-      }
-
-      Element elem = GwtReflectionUtils.instantiateClass(clazz);
-
-      PropertyContainerUtils.setProperty(elem, DOMProperties.TAG_NAME, tag);
-
-      if (tag.equalsIgnoreCase("html")) {
-        PropertyContainerUtils.setProperty(elem, DOMProperties.NODE_NAME,
-            "HTML");
-      }
-
-      return elem;
-    } catch (Exception e) {
-      throw new GwtTestDomException("Cannot create element for tag <" + tag
-          + ">", e);
-    }
+  public static PropertyContainer getJsoProperties(JavaScriptObject o) {
+    return GwtReflectionUtils.getPrivateFieldValue(o, PROPERTIES);
   }
 
-  public static <T extends Node> NodeList<T> createNodeList() {
-    return createNodeList(new ArrayList<T>());
+  public static Element newElement(String tag) {
+    Class<? extends Element> clazz = elementMap.get(tag.toLowerCase());
+
+    if (clazz == null) {
+      clazz = Element.class;
+    }
+
+    Element elem = newObject(clazz);
+
+    setProperty(elem, JsoProperties.TAG_NAME, tag);
+
+    if (tag.equalsIgnoreCase("html")) {
+      setProperty(elem, JsoProperties.NODE_NAME, "HTML");
+    }
+
+    return elem;
+  }
+
+  public static <T extends Node> NodeList<T> newNodeList() {
+    return newNodeList(new ArrayList<T>());
   }
 
   @SuppressWarnings("unchecked")
-  public static <T extends Node> NodeList<T> createNodeList(List<T> innerList) {
-    NodeList<T> nodeList = createObject(NodeList.class);
+  public static <T extends Node> NodeList<T> newNodeList(List<T> innerList) {
+    NodeList<T> nodeList = newObject(NodeList.class);
 
-    PropertyContainerUtils.setProperty(nodeList,
-        DOMProperties.NODE_LIST_INNER_LIST, innerList);
+    setProperty(nodeList, JsoProperties.NODE_LIST_INNER_LIST, innerList);
 
     return nodeList;
   }
 
-  public static <T extends JavaScriptObject> T createObject(Class<T> jsoClass) {
+  public static <T extends JavaScriptObject> T newObject(Class<T> jsoClass) {
     // TODO : need to work with => JavaScriptObject.createObject().cast()
-    return GwtReflectionUtils.instantiateClass(jsoClass);
-  }
+    T o = GwtReflectionUtils.instantiateClass(jsoClass);
 
-  public static Style createStyle(Element owner) {
-    Constructor<Style> cons;
-    try {
-      cons = Style.class.getConstructor(Element.class);
-    } catch (Exception e) {
-      throw new GwtTestDomException("Unable to create style for element <"
-          + owner.getTagName() + ">" + e);
+    short nodeType = -1;
+
+    if (Node.class.isAssignableFrom(jsoClass)) {
+      setProperty(o, JsoProperties.NODE_LIST_FIELD, newNodeList());
     }
-    return GwtReflectionUtils.instantiateClass(cons, owner);
-  }
 
-  public static Text createTextNode(String data) {
-    try {
-      Text text = GwtReflectionUtils.instantiateClass(Text.class);
-      text.setData(data);
+    if (Document.class.isAssignableFrom(jsoClass)) {
+      nodeType = Node.DOCUMENT_NODE;
+    } else if (Element.class.isAssignableFrom(jsoClass)) {
+      nodeType = Node.ELEMENT_NODE;
 
-      return text;
-    } catch (Exception e) {
-      throw new GwtTestDomException("Unable to create text " + e);
-    }
-  }
+      Element e = o.cast();
+      setProperty(o, JsoProperties.STYLE_OBJECT_FIELD, newStyle(e));
 
-  public static Document getDocument() {
-    if (DOCUMENT == null) {
-      try {
-        DOCUMENT = createObject(Document.class);
-        Element e = parseHTMLElement();
-        DOCUMENT.appendChild(e);
-        PropertyContainerUtils.setProperty(DOCUMENT,
-            DOMProperties.DOCUMENT_ELEMENT, e);
-      } catch (Exception e) {
-        if (GwtTestException.class.isInstance(e)) {
-          throw (GwtTestException) e;
-        } else {
-          throw new GwtTestDomException("Unable to create Document", e);
-        }
-      }
-    }
-    return DOCUMENT;
-  }
-
-  public static void reset() {
-    if (DOCUMENT != null) {
-      PropertyContainer bodyPc = PropertyContainerUtils.cast(DOCUMENT.getBody()).getProperties();
-      bodyPc.clear();
-
-      PropertyContainer documentPc = PropertyContainerUtils.cast(DOCUMENT).getProperties();
-      documentPc.clear();
-      DOCUMENT = null;
-    }
-  }
-
-  private static Element findHTMLElement(String hostPagePath,
-      NodeList<Node> nodes) {
-    int i = 0;
-    while (i < nodes.getLength()) {
-      Node node = nodes.getItem(i);
-      if (Node.ELEMENT_NODE == node.getNodeType()) {
-        Element e = node.cast();
-        if ("html".equalsIgnoreCase(e.getTagName())) {
-          return e;
-        }
-      }
-      i++;
-    }
-    throw new GwtTestDomException("Cannot find a root <html> element in file '"
-        + hostPagePath + "'");
-  }
-
-  private static String getHostPageHTML(String hostPagePath) {
-
-    InputStream is = JsoFactory.class.getClassLoader().getResourceAsStream(
-        hostPagePath);
-
-    if (is == null) {
-      try {
-        is = new FileInputStream(hostPagePath);
-      } catch (FileNotFoundException e) {
-        // handle just after
-      }
-    }
-    if (is == null) {
-      throw new GwtTestConfigurationException("Cannot find file '"
-          + hostPagePath + "', please override "
-          + GwtTest.class.getSimpleName()
-          + ".getHostPagePath() method correctly (see "
-          + ClassLoader.class.getSimpleName()
-          + ".getResourceAsStream(string name))");
-    }
-    BufferedReader br = null;
-    try {
-      br = new BufferedReader(new InputStreamReader(is));
-      StringBuilder sb = new StringBuilder();
-      String line;
-      while ((line = br.readLine()) != null) {
-        sb.append(line);
+      if (SelectElement.class.isAssignableFrom(jsoClass)) {
+        setProperty(o, JsoProperties.SELECTED_INDEX_FIELD, -1);
       }
 
-      return sb.toString();
-    } catch (IOException e) {
-      throw new GwtTestConfigurationException(
-          "Error while reading module HTML host page '" + hostPagePath + "'", e);
-    } finally {
-      if (br != null) {
-        try {
-          br.close();
-        } catch (IOException e) {
-          // don't care
-        }
-      }
+      // TODO: remove ?
+      setProperty(o, JsoProperties.CLASSNAME_FIELD, "");
+    } else if (Text.class.isAssignableFrom(jsoClass)) {
+      nodeType = Node.TEXT_NODE;
     }
 
+    setProperty(o, JsoProperties.NODE_TYPE_FIELD, nodeType);
+
+    return o;
   }
 
-  private static Element parseHTMLElement() {
-    String hostPagePath = GwtConfig.get().getHostPagePath();
+  public static Style newStyle(Element owner) {
+    Style style = newObject(Style.class);
 
-    if (hostPagePath == null) {
-      throw new GwtTestConfigurationException(
-          "Cannot find the actual HTML host page for module '"
-              + GWT.getModuleName()
-              + "'. You should override "
-              + GwtTest.class.getName()
-              + ".getHostPagePath(String moduleFullQualifiedName) method to specify it.");
-    }
+    setProperty(style, JsoProperties.STYLE_TARGET_ELEMENT, owner);
+    setProperty(style, JsoProperties.STYLE_WHITESPACE_PROPERTY, "nowrap");
 
-    // parsing of the host page
-    String html = getHostPageHTML(hostPagePath);
-    NodeList<Node> nodes = GwtHtmlParser.parse(html);
-    return findHTMLElement(hostPagePath, nodes);
+    return style;
   }
 
-  private JsoFactory() {
+  public static Text newText(String data) {
+    Text text = newObject(Text.class);
+    text.setData(data);
+
+    return text;
+  }
+
+  private static void setProperty(JavaScriptObject o, String propertyName,
+      Object propertyValue) {
+    getJsoProperties(o).put(propertyName, propertyValue);
+  }
+
+  private JavaScriptObjects() {
   }
 }

@@ -15,8 +15,8 @@ import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
-import com.octo.gwt.test.internal.patchers.dom.DOMProperties;
-import com.octo.gwt.test.internal.utils.PropertyContainerUtils;
+import com.octo.gwt.test.internal.patchers.dom.JavaScriptObjects;
+import com.octo.gwt.test.internal.utils.JsoProperties;
 import com.octo.gwt.test.utils.WidgetUtils;
 
 /**
@@ -162,11 +162,11 @@ public class Browser {
       dispatchEvent((Widget) hasTextWidget, keyDownEvent, keyPressEvent,
           keyUpEvent);
 
-      boolean keyDownEventPreventDefault = PropertyContainerUtils.getPropertyBoolean(
-          keyDownEvent, DOMProperties.EVENT_PREVENTDEFAULT);
+      boolean keyDownEventPreventDefault = JavaScriptObjects.getJsoProperties(
+          keyDownEvent).getBoolean(JsoProperties.EVENT_PREVENTDEFAULT);
 
-      boolean keyPressEventPreventDefault = PropertyContainerUtils.getPropertyBoolean(
-          keyPressEvent, DOMProperties.EVENT_PREVENTDEFAULT);
+      boolean keyPressEventPreventDefault = JavaScriptObjects.getJsoProperties(
+          keyPressEvent).getBoolean(JsoProperties.EVENT_PREVENTDEFAULT);
 
       if (!keyDownEventPreventDefault && !keyPressEventPreventDefault) {
         hasTextWidget.setText(value.substring(0, i + 1));
