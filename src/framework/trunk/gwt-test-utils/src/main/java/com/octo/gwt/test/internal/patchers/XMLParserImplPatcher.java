@@ -1,9 +1,15 @@
 package com.octo.gwt.test.internal.patchers;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
+import com.google.gwt.dom.client.NodeList;
+import com.google.gwt.dom.client.Text;
 import com.google.gwt.xml.client.impl.XMLParserImpl;
 import com.octo.gwt.test.exceptions.GwtTestPatchException;
 import com.octo.gwt.test.internal.patchers.dom.JavaScriptObjects;
@@ -17,9 +23,42 @@ import com.octo.gwt.test.patchers.PatchMethod;
 public class XMLParserImplPatcher extends AutomaticPatcher {
 
   @PatchMethod
+  public static JavaScriptObject appendChild(JavaScriptObject jsObject,
+      JavaScriptObject newChildJs) {
+    Node n = jsObject.cast();
+    Node newChildNode = newChildJs.cast();
+    return n.appendChild(newChildNode);
+  }
+
+  @PatchMethod
+  public static JavaScriptObject createCDATASection(JavaScriptObject jsObject,
+      String data) {
+    Text text = JavaScriptObjects.newObject(Text.class);
+
+    // set the special type
+    JavaScriptObjects.getJsoProperties(text).put(JsoProperties.NODE_TYPE_FIELD,
+        com.google.gwt.xml.client.Node.CDATA_SECTION_NODE);
+
+    text.setData(data);
+
+    return text;
+  }
+
+  @PatchMethod
+  public static JavaScriptObject createDocumentImpl(XMLParserImpl xmlParserImpl) {
+    return JavaScriptObjects.newObject(Document.class);
+  }
+
+  @PatchMethod
+  public static JavaScriptObject createElement(JavaScriptObject jsObject,
+      String tagName) {
+    Document document = jsObject.cast();
+    return document.createElement(tagName);
+  }
+
+  @PatchMethod
   public static String getAttribute(JavaScriptObject o, String name) {
-    Element element = o.cast();
-    return element.getAttribute(name);
+    return JavaScriptObjects.getJsoProperties(o).getObject(name);
   }
 
   @PatchMethod
@@ -36,8 +75,37 @@ public class XMLParserImplPatcher extends AutomaticPatcher {
         JsoProperties.XML_ATTR_NAME, name);
     JavaScriptObjects.getJsoProperties(attrJSO).put(
         JsoProperties.XML_ATTR_VALUE, value);
+    JavaScriptObjects.getJsoProperties(attrJSO).put(
+        JsoProperties.NODE_NAMESPACE_URI, getNamespaceURI(o));
 
     return attrJSO;
+  }
+
+  @PatchMethod
+  public static JavaScriptObject getAttributes(JavaScriptObject t) {
+    Set<String> attrSet = JavaScriptObjects.getJsoProperties(t).getObject(
+        JsoProperties.XML_ATTR_SET);
+
+    List<Node> list = new ArrayList<Node>();
+
+    for (String attrName : attrSet) {
+      Node attrNode = getAttributeNode(t, attrName).cast();
+      list.add(attrNode);
+    }
+
+    return JavaScriptObjects.newNodeList(list);
+  }
+
+  @PatchMethod
+  public static JavaScriptObject getChildNodes(JavaScriptObject t) {
+    Node n = t.cast();
+    return n.getChildNodes();
+  }
+
+  @PatchMethod
+  public static String getData(JavaScriptObject o) {
+    Text text = o.cast();
+    return text.getData();
   }
 
   @PatchMethod
@@ -48,9 +116,69 @@ public class XMLParserImplPatcher extends AutomaticPatcher {
   }
 
   @PatchMethod
+  public static JavaScriptObject getElementsByTagNameImpl(
+      XMLParserImpl xmlParserImpl, JavaScriptObject o, String tagName) {
+    Node node = o.cast();
+    NodeList<Element> nodeList;
+
+    switch (node.getNodeType()) {
+      case Node.DOCUMENT_NODE:
+        Document document = node.cast();
+        nodeList = document.getElementsByTagName(tagName);
+        break;
+      case Node.ELEMENT_NODE:
+        Element element = node.cast();
+        nodeList = element.getElementsByTagName(tagName);
+        break;
+      default:
+        nodeList = JavaScriptObjects.newNodeList();
+        break;
+    }
+
+    return nodeList;
+  }
+
+  @PatchMethod
+  public static int getLength(JavaScriptObject o) {
+    NodeList<Node> nodeList = o.cast();
+    return nodeList.getLength();
+  }
+
+  @PatchMethod
+  public static String getName(JavaScriptObject o) {
+    return JavaScriptObjects.getJsoProperties(o).getString(
+        JsoProperties.XML_ATTR_NAME);
+  }
+
+  @PatchMethod
+  public static JavaScriptObject getNamedItem(JavaScriptObject t, String name) {
+    NodeList<Node> attrs = t.cast();
+
+    for (int i = 0; i < attrs.getLength(); i++) {
+      Node n = attrs.getItem(i);
+      if (name.equals(getName(n))) {
+        return n;
+      }
+    }
+
+    return null;
+  }
+
+  @PatchMethod
   public static String getNamespaceURI(JavaScriptObject jsObject) {
     return JavaScriptObjects.getJsoProperties(jsObject).getString(
         JsoProperties.NODE_NAMESPACE_URI);
+  }
+
+  @PatchMethod
+  public static String getNodeName(JavaScriptObject o) {
+    try {
+      Element e = o.cast();
+      return e.getNodeName();
+    } catch (ClassCastException e) {
+      // TODO: remove this when cast() will be fine
+      return "";
+    }
   }
 
   @PatchMethod
@@ -60,9 +188,42 @@ public class XMLParserImplPatcher extends AutomaticPatcher {
   }
 
   @PatchMethod
+  public static String getNodeValue(JavaScriptObject o) {
+    Node n = o.cast();
+    switch (n.getNodeType()) {
+      case com.google.gwt.xml.client.Node.ATTRIBUTE_NODE:
+        return JavaScriptObjects.getJsoProperties(n).getString(
+            JsoProperties.XML_ATTR_VALUE);
+      case Node.ELEMENT_NODE:
+        Element e = n.cast();
+        return e.getInnerText();
+      default:
+        return n.getNodeValue();
+    }
+  }
+
+  @PatchMethod
   public static String getTagName(JavaScriptObject o) {
     Element e = o.cast();
     return e.getTagName();
+  }
+
+  @PatchMethod
+  public static String getValue(JavaScriptObject o) {
+    return JavaScriptObjects.getJsoProperties(o).getString(
+        JsoProperties.XML_ATTR_VALUE);
+  }
+
+  @PatchMethod
+  public static boolean hasChildNodes(JavaScriptObject jsObject) {
+    Node n = jsObject.cast();
+    return n.hasChildNodes();
+  }
+
+  @PatchMethod
+  public static JavaScriptObject item(JavaScriptObject t, int index) {
+    NodeList<Node> nodeList = t.cast();
+    return nodeList.getItem(index);
   }
 
   @PatchMethod
@@ -74,15 +235,32 @@ public class XMLParserImplPatcher extends AutomaticPatcher {
     } catch (Exception e) {
       throw new GwtTestPatchException("Error while parsing XML", e);
     }
-    // if (nodes.getLength() > 0) {
-    // Element e0 = nodes.getItem(0).cast();
-    // if ("?".equals(e0.getTagName())) {
-    // document.appendChild(nodes.getItem(1);
-    // } else {
-    // return nodes.getItem(0);
-    // }
-    // } else {
-    // return null;
-    // }
+  }
+
+  @PatchMethod
+  public static JavaScriptObject removeChild(JavaScriptObject jsObject,
+      JavaScriptObject oldChildJs) {
+    Node node = jsObject.cast();
+    Node oldChildNode = oldChildJs.cast();
+
+    return node.removeChild(oldChildNode);
+  }
+
+  @PatchMethod
+  public static void setNodeValue(JavaScriptObject jsObject, String nodeValue) {
+    Node n = jsObject.cast();
+    switch (n.getNodeType()) {
+      case Node.TEXT_NODE:
+        Text text = n.cast();
+        text.setData(nodeValue);
+        break;
+      case Node.ELEMENT_NODE:
+        Element element = n.cast();
+        element.setInnerText(nodeValue);
+        break;
+      case Node.DOCUMENT_NODE:
+        // nothing to do
+        break;
+    }
   }
 }

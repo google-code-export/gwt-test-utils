@@ -44,6 +44,7 @@ public class JsoProperties {
 
   public static final String XML_ATTR_JSO = "XML_ATTR_JSO";
   public static final String XML_ATTR_NAME = "XML_ATTR_NAME";
+  public static final String XML_ATTR_SET = "XML_ATTR_SET";
   public static final String XML_ATTR_VALUE = "XML_ATTR_VALUE";
 
   private static final JsoProperties INSTANCE = new JsoProperties();

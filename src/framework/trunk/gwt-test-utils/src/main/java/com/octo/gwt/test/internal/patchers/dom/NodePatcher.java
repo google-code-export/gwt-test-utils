@@ -107,15 +107,10 @@ public class NodePatcher extends OverlayPatcher {
 
   @PatchMethod
   public static short getNodeType(Node node) {
-    if (node instanceof Document) {
-      return Node.DOCUMENT_NODE;
-    } else if (node instanceof Text) {
-      return Node.TEXT_NODE;
-    } else if (node instanceof Element) {
-      return Node.ELEMENT_NODE;
-    }
+    short nodeType = JavaScriptObjects.getJsoProperties(node).getShort(
+        JsoProperties.NODE_TYPE_FIELD);
 
-    return (short) -1;
+    return nodeType != 0 ? nodeType : -1;
   }
 
   @PatchMethod

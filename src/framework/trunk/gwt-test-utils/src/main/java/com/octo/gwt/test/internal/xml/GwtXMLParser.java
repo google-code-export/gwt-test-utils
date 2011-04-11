@@ -1,6 +1,8 @@
 package com.octo.gwt.test.internal.xml;
 
 import java.io.IOException;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import org.apache.tools.ant.filters.StringInputStream;
 import org.xml.sax.Attributes;
@@ -29,8 +31,10 @@ public class GwtXMLParser {
     }
 
     public void characters(char[] ch, int start, int end) throws SAXException {
-      Text text = Document.get().createTextNode(new String(ch, start, end));
-      currentNode.appendChild(text);
+      if (end > start) {
+        Text text = Document.get().createTextNode(new String(ch, start, end));
+        currentNode.appendChild(text);
+      }
     }
 
     public void endDocument() throws SAXException {
@@ -74,10 +78,15 @@ public class GwtXMLParser {
       currentNode.appendChild(element);
       currentNode = element;
 
+      Set<String> attrs = new LinkedHashSet<String>();
+      JavaScriptObjects.getJsoProperties(element).put(
+          JsoProperties.XML_ATTR_SET, attrs);
+
       for (int index = 0; index < attributes.getLength(); index++) {
         String attrName = attributes.getLocalName(index);
         String attrValue = attributes.getValue(index);
         element.setAttribute(attrName, attrValue);
+        attrs.add(attrName);
       }
     }
 

@@ -49,11 +49,24 @@ public class PropertyContainer extends HashMap<String, Object> {
   }
 
   public void put(String key, boolean value) {
-    put(key, new Boolean(value));
+    put(key, Boolean.valueOf(value));
+  }
+
+  public void put(String key, double value) {
+    put(key, Double.valueOf(value));
   }
 
   public void put(String key, int value) {
-    put(key, new Integer(value));
+    put(key, Integer.valueOf(value));
+  }
+
+  public void put(String key, long value) {
+    put(key, Long.valueOf(value));
+  }
+
+  public Object put(String key, short value) {
+    // TODO Auto-generated method stub
+    return super.put(key, Short.valueOf(value));
   }
 
 }
