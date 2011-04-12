@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.octo.gwt.test.GwtCreateHandler;
 import com.octo.gwt.test.integration.internal.TestRemoteServiceCreateHandler;
+import com.octo.gwt.test.internal.uibinder.UiBinderCreateHandler;
 import com.octo.gwt.test.internal.utils.i18n.LocalizableCreateHandler;
 import com.octo.gwt.test.internal.utils.resources.ClientBundleCreateHandler;
 import com.octo.gwt.test.internal.utils.resources.ImageBundleCreateHandler;
@@ -24,16 +25,20 @@ public class GwtCreateHandlerManager {
   private final GwtCreateHandler defaultGwtCreateHandler;
   private final GwtCreateHandler imageBundleCreateHandler;
   private final GwtCreateHandler localizableResourceHandler;
+  private final GwtCreateHandler uiBinderCreateHandler;
   private GwtCreateHandler mockCreateHandler;
-  private final TestRemoteServiceCreateHandler testRemoteServiceCreateHandler = TestRemoteServiceCreateHandler.get();
+  private final TestRemoteServiceCreateHandler testRemoteServiceCreateHandler;
 
   private GwtCreateHandlerManager() {
-    addedHandlers = new ArrayList<GwtCreateHandler>();
-    localizableResourceHandler = new LocalizableCreateHandler();
-    clientBundleCreateHander = new ClientBundleCreateHandler();
-    imageBundleCreateHandler = new ImageBundleCreateHandler();
-    defaultGwtCreateHandler = new DefaultGwtCreateHandler();
+    // TODO : all createHandler should be singleton ?
     abstractClassCreateHandler = new AbstractClassCreateHandler();
+    addedHandlers = new ArrayList<GwtCreateHandler>();
+    clientBundleCreateHander = new ClientBundleCreateHandler();
+    defaultGwtCreateHandler = new DefaultGwtCreateHandler();
+    localizableResourceHandler = new LocalizableCreateHandler();
+    imageBundleCreateHandler = new ImageBundleCreateHandler();
+    uiBinderCreateHandler = new UiBinderCreateHandler();
+    testRemoteServiceCreateHandler = TestRemoteServiceCreateHandler.get();
   }
 
   public boolean addGwtCreateHandler(GwtCreateHandler gwtCreateHandler) {
@@ -55,6 +60,7 @@ public class GwtCreateHandlerManager {
     list.add(localizableResourceHandler);
     list.add(clientBundleCreateHander);
     list.add(imageBundleCreateHandler);
+    list.add(uiBinderCreateHandler);
     list.add(testRemoteServiceCreateHandler);
     list.add(defaultGwtCreateHandler);
     list.add(abstractClassCreateHandler);
