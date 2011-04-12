@@ -64,7 +64,7 @@ public class UiBinderInvocationHandler implements InvocationHandler {
   }
 
   /**
-   * Get the actual class of the <U> parmeter.
+   * Get the actual class of the <U> parameter.
    * 
    * @return The class of the root element or widget generated from UiBinder.
    */
@@ -83,14 +83,13 @@ public class UiBinderInvocationHandler implements InvocationHandler {
         + "' is not parameterized. Please add its generic types.");
   }
 
-  private Object instanciateJSO(Class<? extends JavaScriptObject> nodeClass) {
+  private <T extends JavaScriptObject> T instanciateJSO(Class<T> nodeClass) {
     if (Element.class.isAssignableFrom(nodeClass)) {
       String tagName = GwtReflectionUtils.getStaticFieldValue(nodeClass, "TAG");
-      return JavaScriptObjects.newElement(tagName).cast();
+      return (T) JavaScriptObjects.newElement(tagName);
     } else {
       return JavaScriptObjects.newObject(nodeClass);
     }
-
   }
 
 }
