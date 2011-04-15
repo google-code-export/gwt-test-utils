@@ -4,9 +4,24 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
+import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.user.client.ui.HTMLPanel;
 
 public class HTMLPanelTest extends GwtTestTest {
+
+  @Test
+  public void checkGetElementById() {
+    // Setup
+    HTMLPanel panel = new HTMLPanel(
+        "<div id=\"childDiv\" class=\"myClass\">some text</div>");
+
+    // Test
+    DivElement childDiv = panel.getElementById("childDiv").cast();
+
+    // Assert
+    Assert.assertEquals("myClass", childDiv.getClassName());
+    Assert.assertEquals("some text", childDiv.getInnerText());
+  }
 
   @Test
   public void checkInstanciation() {

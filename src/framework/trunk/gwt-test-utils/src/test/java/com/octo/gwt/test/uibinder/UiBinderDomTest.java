@@ -20,7 +20,7 @@ public class UiBinderDomTest extends GwtTestTest {
     // Test
     helloWorld.setName("World");
 
-    // Assert
+    // Asserts
     SpanElement nameSpan = GwtReflectionUtils.getPrivateFieldValue(helloWorld,
         "nameSpan");
     Assert.assertEquals("World", nameSpan.getInnerText());

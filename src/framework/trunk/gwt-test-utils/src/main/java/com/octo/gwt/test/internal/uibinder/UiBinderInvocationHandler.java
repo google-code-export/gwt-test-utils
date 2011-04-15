@@ -5,19 +5,15 @@ import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
-import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.dom.client.Element;
+import com.google.gwt.dev.Link;
 import com.octo.gwt.test.exceptions.GwtTestConfigurationException;
 import com.octo.gwt.test.exceptions.ReflectionException;
-import com.octo.gwt.test.internal.patchers.dom.JavaScriptObjects;
-import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 /**
  * 
  * @author Gael Lazzari
  * 
  */
-@SuppressWarnings("unchecked")
 public class UiBinderInvocationHandler implements InvocationHandler {
 
   private final Class<?> proxiedClass;
@@ -36,31 +32,18 @@ public class UiBinderInvocationHandler implements InvocationHandler {
     }
   }
 
+  /**
+   * This method is in charge of the instanciation of DOM object / GWT widget
+   * and their binding with @UiField in the owner
+   * 
+   * @param owner The owner UiBinder subclass instance.
+   * @return The root component, initially returned by {@link Link
+   *         UiBinder#createAndBindUi(Object)}.
+   */
   private Object createAndBindUi(Object owner) {
     Class<?> rootElementClass = getRootElementClass();
-
-    Object result;
-
-    if (JavaScriptObject.class.isAssignableFrom(rootElementClass)) {
-      result = instanciateJSO((Class<? extends JavaScriptObject>) rootElementClass);
-    } else {
-      result = GwtReflectionUtils.instantiateClass(rootElementClass);
-    }
-
-    fillObjectsWithXMLData(result, owner);
-    return result;
-  }
-
-/**
-       * This method is in charge of the instanciation of DOM object / GWT
-       * widget and their binding with @UiField in the owner
-       * 
-       * @param result The resulting object, to be returned by {@link 
-       * @param owner
-       */
-  private void fillObjectsWithXMLData(Object result, Object owner) {
     GwtUiBinderParser parser = new GwtUiBinderParser();
-    parser.fillObjects(result, owner);
+    return parser.createUiComponenet(rootElementClass, owner);
   }
 
   /**
@@ -81,15 +64,6 @@ public class UiBinderInvocationHandler implements InvocationHandler {
     throw new GwtTestConfigurationException("The UiBinder subinterface '"
         + proxiedClass.getName()
         + "' is not parameterized. Please add its generic types.");
-  }
-
-  private <T extends JavaScriptObject> T instanciateJSO(Class<T> nodeClass) {
-    if (Element.class.isAssignableFrom(nodeClass)) {
-      String tagName = GwtReflectionUtils.getStaticFieldValue(nodeClass, "TAG");
-      return (T) JavaScriptObjects.newElement(tagName);
-    } else {
-      return JavaScriptObjects.newObject(nodeClass);
-    }
   }
 
 }
