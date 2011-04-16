@@ -385,10 +385,7 @@ public class GwtReflectionUtils {
     try {
       field.set(target, value);
     } catch (Exception e) {
-      e.printStackTrace();
-      throw new ReflectionException(e.getMessage()
-          + " Unable to set field, class " + fieldName + ", fieldClass "
-          + target.getClass());
+      throw new ReflectionException(e);
     }
   }
 
@@ -399,9 +396,7 @@ public class GwtReflectionUtils {
       field.set(null, value);
     } catch (Exception e) {
       e.printStackTrace();
-      throw new ReflectionException(e.getMessage()
-          + " Unable to set field, class " + fieldName + ", fieldClass "
-          + clazz);
+      throw new ReflectionException(e);
     }
   }
 

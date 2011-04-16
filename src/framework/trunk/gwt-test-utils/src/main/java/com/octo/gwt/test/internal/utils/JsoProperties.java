@@ -31,6 +31,7 @@ public class JsoProperties {
   public static final String PARENT_NODE_FIELD = "parentNode";
   public static final String SCROLL_LEFT = "scrollLeft";
   public static final String SELECTED_INDEX_FIELD = "selectedIndex";
+  public static final String SELECTED_SIZE = "SELECTED_SIZE";
 
   public static final String SELECTION_END = "selectionEnd";
   public static final String SELECTION_START = "selectionStart";

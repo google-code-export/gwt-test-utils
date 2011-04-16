@@ -2,7 +2,7 @@ package com.octo.gwt.test.internal.patchers.dom;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.SelectElement;
-import com.google.gwt.user.client.ui.UIObject;
+import com.octo.gwt.test.internal.utils.JsoProperties;
 import com.octo.gwt.test.patchers.OverlayPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
@@ -12,16 +12,39 @@ public class SelectElementPatcher extends OverlayPatcher {
 
   @PatchMethod
   public static int getSize(SelectElement select) {
-    int size = 0;
+    int visibleSize = JavaScriptObjects.getJsoProperties(select).getInteger(
+        JsoProperties.SELECTED_SIZE);
+    int actualSize = select.getChildNodes().getLength();
+
+    if (visibleSize == -1 || visibleSize > actualSize) {
+      visibleSize = actualSize;
+    }
+
+    return visibleSize;
+  }
+
+  public static void refreshSelect(SelectElement select) {
+    int visibleSize = select.getSize();
 
     for (int i = 0; i < select.getChildNodes().getLength(); i++) {
       Element e = select.getChildNodes().getItem(i).cast();
-      if (UIObject.isVisible(e)) {
-        size++;
+
+      if (i < visibleSize) {
+        // this element is visible
+        e.getStyle().clearProperty("display");
+      } else {
+        // it's not visible
+        e.getStyle().setProperty("display", "none");
       }
     }
 
-    return size;
+  }
+
+  @PatchMethod
+  public static void setSize(SelectElement select, int size) {
+    JavaScriptObjects.getJsoProperties(select).put(JsoProperties.SELECTED_SIZE,
+        size);
+    refreshSelect(select);
   }
 
 }

@@ -10,7 +10,6 @@ import com.google.gwt.uibinder.client.UiField;
 import com.octo.gwt.test.exceptions.GwtTestConfigurationException;
 import com.octo.gwt.test.exceptions.GwtTestException;
 import com.octo.gwt.test.exceptions.GwtTestPatchException;
-import com.octo.gwt.test.internal.uibinder.objects.UiBinderTag;
 import com.octo.gwt.test.internal.uibinder.objects.UiBinderTagFactory;
 
 /**
@@ -25,12 +24,13 @@ public class GwtUiBinderParser {
   /**
    * Parse the .ui.xml file to fill the corresponding objects.
    * 
-   * @param rootElementClass the root component's class that UiBinder has to
+   * @param rootComponentClass the root component's class that UiBinder has to
    *          instanciated.
    * @param owner The owner of the UiBinder template, with {@link UiField}
    *          fields.
    */
-  public <T> T createUiComponenet(Class<T> rootElementClass, Object owner) {
+  @SuppressWarnings("unchecked")
+  public <T> T createUiComponenet(Class<T> rootComponentClass, Object owner) {
     InputStream uiXmlStream = getUiXmlFile(owner);
     if (uiXmlStream == null) {
       throw new GwtTestConfigurationException(
@@ -38,31 +38,40 @@ public class GwtUiBinderParser {
               + owner.getClass().getName() + "'");
     }
 
+    UiXmlContentHandler contentHandler = createUiBnderParser(owner);
+
     try {
       XMLReader saxReader = XMLReaderFactory.createXMLReader("org.apache.xerces.parsers.SAXParser");
-      UiXmlContentHandler<T> contentHandler = createUiBnderParser(
-          rootElementClass, owner);
       saxReader.setContentHandler(contentHandler);
       saxReader.parse(new InputSource(getUiXmlFile(owner)));
-
-      return contentHandler.getRootComponent();
     } catch (Exception e) {
       if (GwtTestException.class.isInstance(e)) {
         throw (GwtTestException) e;
       } else {
-        throw new GwtTestPatchException(
-            "Error while parsing UiBinder file for '"
-                + owner.getClass().getName() + "'", e);
+        throw new GwtTestPatchException("Error while parsing '"
+            + owner.getClass().getSimpleName() + ".ui.xml'", e);
       }
     }
+
+    Object rootComponent = contentHandler.getRootComponent();
+
+    if (!rootComponentClass.isInstance(rootComponent)) {
+      throw new GwtTestConfigurationException(
+          "Error in '"
+              + owner.getClass().getSimpleName()
+              + ".ui.xml' configuration : root component is expected to be an instance of '"
+              + rootComponentClass.getName()
+              + "' but is actually an instance of '"
+              + rootComponent.getClass().getName() + "'");
+    }
+
+    return (T) rootComponent;
+
   }
 
-  private <T> UiXmlContentHandler<T> createUiBnderParser(
-      Class<T> rootComponentClass, Object owner) {
+  private UiXmlContentHandler createUiBnderParser(Object owner) {
     UiBinderTagFactory factory = new UiBinderTagFactory(owner);
-
-    UiBinderTag rootTag = factory.createUiBinderTag(rootComponentClass);
-    return new UiXmlContentHandler<T>(factory, rootTag);
+    return new UiXmlContentHandler(factory);
   }
 
   private InputStream getUiXmlFile(Object owner) {

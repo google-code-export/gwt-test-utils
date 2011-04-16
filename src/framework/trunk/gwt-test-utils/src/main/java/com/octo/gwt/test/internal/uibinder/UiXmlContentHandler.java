@@ -9,17 +9,14 @@ import com.octo.gwt.test.internal.uibinder.objects.UiBinderTag;
 import com.octo.gwt.test.internal.uibinder.objects.UiBinderTagFactory;
 import com.octo.gwt.test.utils.FastStack;
 
-public class UiXmlContentHandler<T> implements ContentHandler {
+public class UiXmlContentHandler implements ContentHandler {
 
   private final UiBinderTagFactory factory;
-  private final UiBinderTag rootTag;
+  private Object rootComponent;
   private final FastStack<UiBinderTag> tags = new FastStack<UiBinderTag>();
 
-  public UiXmlContentHandler(UiBinderTagFactory factory,
-      UiBinderTag rootTag) {
+  public UiXmlContentHandler(UiBinderTagFactory factory) {
     this.factory = factory;
-    this.rootTag = rootTag;
-    tags.push(rootTag);
   }
 
   public void characters(char[] ch, int start, int end) throws SAXException {
@@ -37,8 +34,14 @@ public class UiXmlContentHandler<T> implements ContentHandler {
     // skip root tag
     if (!UiBinderUtils.isUiBinderTag(nameSpaceURI, localName)) {
       UiBinderTag tag = tags.pop();
-      // add to its parent
-      tags.get(tags.size() - 1).addTag(tag);
+
+      if (tags.size() == 0) {
+        // parsing is finished, this is the root component
+        rootComponent = tag.complete();
+      } else {
+        // add to its parent
+        tags.get(tags.size() - 1).addTag(tag);
+      }
     }
 
   }
@@ -46,9 +49,8 @@ public class UiXmlContentHandler<T> implements ContentHandler {
   public void endPrefixMapping(String prefix) throws SAXException {
   }
 
-  @SuppressWarnings("unchecked")
-  public T getRootComponent() {
-    return (T) rootTag.complete();
+  public Object getRootComponent() {
+    return rootComponent;
   }
 
   public void ignorableWhitespace(char[] ch, int start, int end)
@@ -75,8 +77,7 @@ public class UiXmlContentHandler<T> implements ContentHandler {
 
     // skip UiBinder element
     if (!UiBinderUtils.isUiBinderTag(nameSpaceURI, localName)) {
-      tags.push(factory.createUiBinderTag(nameSpaceURI, localName,
-          attributes));
+      tags.push(factory.createUiBinderTag(nameSpaceURI, localName, attributes));
     }
   }
 

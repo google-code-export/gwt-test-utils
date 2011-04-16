@@ -189,6 +189,7 @@ public class JavaScriptObjects {
 
       if (SelectElement.class.isAssignableFrom(jsoClass)) {
         setProperty(o, JsoProperties.SELECTED_INDEX_FIELD, -1);
+        setProperty(o, JsoProperties.SELECTED_SIZE, -1);
       }
 
       // TODO: remove ?

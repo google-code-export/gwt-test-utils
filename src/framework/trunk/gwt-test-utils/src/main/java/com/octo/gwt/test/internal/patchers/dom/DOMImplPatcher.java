@@ -299,6 +299,8 @@ public class DOMImplPatcher extends AutomaticPatcher {
     } else {
       select.insertBefore(option, before);
     }
+
+    refreshSelect(select);
   }
 
   @PatchMethod
@@ -310,12 +312,12 @@ public class DOMImplPatcher extends AutomaticPatcher {
     select.setSelectedIndex(-1);
   }
 
-  // Abstract methods
-
   @PatchMethod
   public static int selectGetLength(Object domImpl, SelectElement select) {
     return selectGetOptions(domImpl, select).getLength();
   }
+
+  // Abstract methods
 
   @PatchMethod
   public static NodeList<OptionElement> selectGetOptions(Object domImpl,
@@ -339,6 +341,8 @@ public class DOMImplPatcher extends AutomaticPatcher {
     List<Node> list = JavaScriptObjects.getJsoProperties(childNodes).getObject(
         JsoProperties.NODE_LIST_INNER_LIST);
     list.remove(index);
+
+    refreshSelect(select);
   }
 
   @PatchMethod
@@ -374,6 +378,10 @@ public class DOMImplPatcher extends AutomaticPatcher {
     }
 
     return null;
+  }
+
+  private static void refreshSelect(SelectElement select) {
+    SelectElementPatcher.refreshSelect(select);
   }
 
 }
