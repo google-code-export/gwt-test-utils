@@ -7,8 +7,8 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.UIObject;
 
-public class UiBinderDom extends UIObject { // Could extend Widget instead
-  interface MyUiBinder extends UiBinder<DivElement, UiBinderDom> {
+public class UiBinderWithDom extends UIObject { // Could extend Widget instead
+  interface MyUiBinder extends UiBinder<DivElement, UiBinderWithDom> {
   }
 
   private static MyUiBinder uiBinder = GWT.create(MyUiBinder.class);
@@ -16,7 +16,7 @@ public class UiBinderDom extends UIObject { // Could extend Widget instead
   @UiField
   SpanElement nameSpan;
 
-  public UiBinderDom() {
+  public UiBinderWithDom() {
     // createAndBindUi initializes this.nameSpan
     setElement(uiBinder.createAndBindUi(this));
   }

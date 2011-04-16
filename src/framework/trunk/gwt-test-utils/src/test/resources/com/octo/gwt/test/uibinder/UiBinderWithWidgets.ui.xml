@@ -4,7 +4,10 @@
 	<g:HTMLPanel>
 		Hello,
 		<g:ListBox ui:field='listBox' visibleItemCount='1' />
+		<g:Label>Keep your ducks</g:Label>
 		.
+		<span id="mySpan" class="mySpanClass">some span for testing</span>
+		<g:Button ui:field='button'>My button</g:Button>
 	</g:HTMLPanel>
 
 </ui:UiBinder>

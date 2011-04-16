@@ -33,52 +33,56 @@ public class UiBinderWidget<T extends Widget> implements UiBinderTag {
       String attrUri = attributes.getURI(i);
 
       if (UiBinderUtils.isUiBinderField(attrUri, attrName)) {
-        GwtReflectionUtils.setPrivateFieldValue(owner, attrValue, wrapped);
+        GwtReflectionUtils.setPrivateFieldValue(owner, attrValue, this.wrapped);
       } else {
         attributesMap.put(attrName, attrValue);
       }
     }
   }
 
-  public void addTag(UiBinderTag tag) {
+  public final void addTag(UiBinderTag tag) {
     Object wrappedChild = tag.complete();
     if (Widget.class.isInstance(wrappedChild)) {
-      addWidget((Widget) wrappedChild);
+      addWidget(this.wrapped, (Widget) wrappedChild);
     } else {
-      appendElement((Element) wrappedChild);
+      appendElement(this.wrapped, (Element) wrappedChild);
     }
   }
 
-  public void appendText(String data) {
-    if (HasText.class.isInstance(wrapped)) {
-      ((HasText) wrapped).setText(data);
-    } else {
-      Text text = JavaScriptObjects.newText(data);
-      wrapped.getElement().appendChild(text);
-    }
+  public final void appendText(String data) {
+    appendText(wrapped, data);
   }
 
   public Object complete() {
 
     try {
-      BeanUtils.populate(wrapped, attributesMap);
+      BeanUtils.populate(this.wrapped, attributesMap);
     } catch (Exception e) {
       throw new ReflectionException("Error while setting properties for '"
-          + wrapped.getClass().getSimpleName() + "' in '"
+          + this.wrapped.getClass().getSimpleName() + "' in '"
           + owner.getClass().getSimpleName() + ".ui.xml'", e);
     }
 
     return wrapped;
   }
 
-  protected void addWidget(Widget widget) {
+  protected void addWidget(T wrapped, Widget widget) {
     if (HasWidgets.class.isInstance(wrapped)) {
       ((HasWidgets) wrapped).add(widget);
     }
   }
 
-  protected void appendElement(Element child) {
+  protected void appendElement(T wrapped, Element child) {
     wrapped.getElement().appendChild(child);
+  }
+
+  protected void appendText(T wrapped, String data) {
+    if (HasText.class.isInstance(wrapped)) {
+      ((HasText) wrapped).setText(data);
+    } else {
+      Text text = JavaScriptObjects.newText(data);
+      wrapped.getElement().appendChild(text);
+    }
   }
 
   protected T instanciate(Class<T> clazz) {

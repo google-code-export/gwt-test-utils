@@ -30,7 +30,7 @@ public class GwtUiBinderParser {
    *          fields.
    */
   @SuppressWarnings("unchecked")
-  public <T> T createUiComponenet(Class<T> rootComponentClass, Object owner) {
+  public <T> T createUiComponent(Class<T> rootComponentClass, Object owner) {
     InputStream uiXmlStream = getUiXmlFile(owner);
     if (uiXmlStream == null) {
       throw new GwtTestConfigurationException(

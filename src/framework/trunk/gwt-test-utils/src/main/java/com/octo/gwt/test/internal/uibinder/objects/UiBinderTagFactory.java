@@ -20,7 +20,7 @@ public class UiBinderTagFactory {
 
     int i = nameSpaceURI.lastIndexOf(':');
     if (i > 0 && Character.isUpperCase(localName.charAt(0))) {
-
+      // the element should represent a Widget Class
       String className = nameSpaceURI.substring(i + 1) + "." + localName;
 
       Class<?> clazz = null;
@@ -44,7 +44,7 @@ public class UiBinderTagFactory {
             + "' are managed");
       }
     } else {
-      return new UiBinderElement(localName, attributes, owner);
+      return new UiBinderElement(nameSpaceURI, localName, attributes, owner);
     }
   }
 

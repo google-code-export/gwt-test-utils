@@ -9,12 +9,12 @@ import com.google.gwt.dom.client.SpanElement;
 import com.octo.gwt.test.GwtTestTest;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
-public class UiBinderDomTest extends GwtTestTest {
+public class UiBinderWithDomTest extends GwtTestTest {
 
   @Test
   public void checkUiBinderDom() {
     // Setup
-    UiBinderDom helloWorld = new UiBinderDom();
+    UiBinderWithDom helloWorld = new UiBinderWithDom();
     Document.get().getBody().appendChild(helloWorld.getElement());
 
     // Test

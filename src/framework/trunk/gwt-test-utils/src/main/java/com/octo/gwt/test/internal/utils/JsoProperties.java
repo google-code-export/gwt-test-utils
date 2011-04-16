@@ -43,10 +43,13 @@ public class JsoProperties {
   public static final String TAG_NAME = "tagName";
   public static final String TYPE = "type";
 
+  public static final String UIBINDER_CHILD_WIDGETS_LIST = "UIBINDER_CHILD_WIDGETS_LIST";
+
   public static final String XML_ATTR_JSO = "XML_ATTR_JSO";
   public static final String XML_ATTR_NAME = "XML_ATTR_NAME";
   public static final String XML_ATTR_SET = "XML_ATTR_SET";
   public static final String XML_ATTR_VALUE = "XML_ATTR_VALUE";
+  public static final String XML_NAMESPACE = "XML_NAMESPACE";
 
   private static final JsoProperties INSTANCE = new JsoProperties();
 
