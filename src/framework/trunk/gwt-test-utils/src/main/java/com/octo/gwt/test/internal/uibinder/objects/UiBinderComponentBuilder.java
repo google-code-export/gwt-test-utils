@@ -152,7 +152,7 @@ public class UiBinderComponentBuilder<T> {
     }
 
     if (instance == null) {
-      instance = GWT.create(clazz);
+      instance = (U) GWT.create(clazz);
     }
 
     return instance;
@@ -201,7 +201,7 @@ public class UiBinderComponentBuilder<T> {
 
     for (Method factoryMethod : map.keySet()) {
       if (factoryMethod.getReturnType() == clazz) {
-        return GwtReflectionUtils.callPrivateMethod(owner, factoryMethod);
+        return (U) GwtReflectionUtils.callPrivateMethod(owner, factoryMethod);
       }
     }
 
@@ -215,7 +215,7 @@ public class UiBinderComponentBuilder<T> {
     for (Map.Entry<Field, UiField> entry : map.entrySet()) {
       if (entry.getKey().getType() == withObjectClass
           && entry.getValue().provided()) {
-        U providedObject = GwtReflectionUtils.getPrivateFieldValue(owner,
+        Object providedObject = GwtReflectionUtils.getPrivateFieldValue(owner,
             entry.getKey());
         if (providedObject == null) {
           throw new GwtTestUiBinderException(
@@ -226,7 +226,7 @@ public class UiBinderComponentBuilder<T> {
                   + "' has not been initialized before calling 'UiBinder.createAndBind(..)' method");
         }
 
-        return providedObject;
+        return (U) providedObject;
       }
     }
 

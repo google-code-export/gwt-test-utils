@@ -78,7 +78,7 @@ public class GwtReflectionUtils {
   public static <T> T callPrivateMethod(Object target, String methodName,
       Object... args) {
     Method method = findMethod(target.getClass(), methodName, args);
-    return callPrivateMethod(target, method, args);
+    return (T) callPrivateMethod(target, method, args);
 
   }
 
@@ -241,7 +241,7 @@ public class GwtReflectionUtils {
 
   public static <T> T getPrivateFieldValue(Object target, String fieldName) {
     Field field = getUniqueFieldByName(target.getClass(), fieldName);
-    return getPrivateFieldValue(target, field);
+    return (T) getPrivateFieldValue(target, field);
   }
 
   public static void getStaticAndCallClear(Class<?> clazz, String fieldName) {
