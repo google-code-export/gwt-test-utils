@@ -1,6 +1,7 @@
 package com.octo.gwt.test.internal.uibinder.objects;
 
 import java.util.List;
+import java.util.Map;
 
 import org.xml.sax.Attributes;
 
@@ -13,9 +14,9 @@ import com.octo.gwt.test.internal.utils.JsoProperties;
 public class UiBinderWithDockLayoutPanel extends
     UiBinderWidget<DockLayoutPanel> {
 
-  public UiBinderWithDockLayoutPanel(Class<DockLayoutPanel> clazz,
-      Attributes attributes, Object owner) {
-    super(clazz, attributes, owner);
+  public UiBinderWithDockLayoutPanel(DockLayoutPanel wrapped,
+      Attributes attributes, Object owner, Map<String, Object> resources) {
+    super(wrapped, attributes, owner, resources);
   }
 
   private void handleDockLayoutPanelSpecifics(DockLayoutPanel wrapped,

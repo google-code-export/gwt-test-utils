@@ -1,13 +1,25 @@
 package com.octo.gwt.test.internal.uibinder.objects;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.xml.sax.Attributes;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.uibinder.client.UiConstructor;
+import com.google.gwt.uibinder.client.UiFactory;
+import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.octo.gwt.test.exceptions.GwtTestConfigurationException;
-import com.octo.gwt.test.exceptions.GwtTestPatchException;
+import com.octo.gwt.test.exceptions.GwtTestUiBinderException;
 import com.octo.gwt.test.internal.uibinder.UiBinderUtils;
 import com.octo.gwt.test.utils.FastStack;
+import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 @SuppressWarnings("unchecked")
 public class UiBinderComponentBuilder<T> {
@@ -18,10 +30,9 @@ public class UiBinderComponentBuilder<T> {
   }
 
   private final Object owner;
-
+  private final Map<String, Object> resources = new HashMap<String, Object>();
   private Object rootComponent;
   private final Class<T> rootComponentClass;
-
   private final FastStack<UiBinderTag> tags = new FastStack<UiBinderTag>();
 
   private UiBinderComponentBuilder(Class<T> rootComponentClass, Object owner) {
@@ -39,12 +50,12 @@ public class UiBinderComponentBuilder<T> {
 
   public T build() {
     if (rootComponent == null) {
-      throw new GwtTestPatchException(
+      throw new GwtTestUiBinderException(
           "Cannot build UiBinder component while the parsing of '"
               + owner.getClass().getSimpleName() + ".ui.xml' is not finished");
 
     } else if (!rootComponentClass.isInstance(rootComponent)) {
-      throw new GwtTestConfigurationException(
+      throw new GwtTestUiBinderException(
           "Error in '"
               + owner.getClass().getSimpleName()
               + ".ui.xml' configuration : root component is expected to be an instance of '"
@@ -58,7 +69,8 @@ public class UiBinderComponentBuilder<T> {
 
   public UiBinderComponentBuilder<T> endTag(String nameSpaceURI,
       String localName) {
-    if (!shouldIgnoreTag(nameSpaceURI, localName)) {
+    if (!shouldIgnoreTag(nameSpaceURI, localName)
+        && !UiBinderUtils.isResourceTag(nameSpaceURI, localName)) {
       UiBinderTag tag = tags.pop();
 
       if (tags.size() == 0) {
@@ -77,8 +89,13 @@ public class UiBinderComponentBuilder<T> {
       String localName, Attributes attributes) {
 
     if (!shouldIgnoreTag(nameSpaceURI, localName)) {
-      if (UiBinderUtils.isUiBinderResource(nameSpaceURI, localName)) {
-        // TODO: handle
+      if (UiBinderUtils.isResourceTag(nameSpaceURI, localName)) {
+        String alias = getResourceAlias(localName, attributes);
+
+        if (!resources.containsKey(alias)) {
+          String type = getResourceType(localName, attributes);
+          resources.put(alias, this.getInstance(type, attributes));
+        }
       } else {
         tags.push(createUiBinderTag(nameSpaceURI, localName, attributes));
       }
@@ -99,18 +116,21 @@ public class UiBinderComponentBuilder<T> {
       try {
         clazz = Class.forName(className);
       } catch (ClassNotFoundException e) {
-        throw new GwtTestConfigurationException("Cannot find class '"
-            + className + "' declared in file '"
-            + owner.getClass().getSimpleName() + ".ui.xml");
+        throw new GwtTestUiBinderException("Cannot find class '" + className
+            + "' declared in file '" + owner.getClass().getSimpleName()
+            + ".ui.xml");
       }
 
+      // TODO: refactor..
       if (HTMLPanel.class == clazz) {
-        return new UiBinderHTMLPanel(attributes, owner);
+        HTMLPanel panel = new HTMLPanel("");
+        return new UiBinderWidget<HTMLPanel>(panel, attributes, owner,
+            resources);
       } else if (Widget.class.isAssignableFrom(clazz)) {
-        return new UiBinderWidget<Widget>((Class<Widget>) clazz, attributes,
-            owner);
+        Widget widget = getInstance((Class<Widget>) clazz, attributes);
+        return new UiBinderWidget<Widget>(widget, attributes, owner, resources);
       } else {
-        throw new GwtTestConfigurationException("Not managed type in file '"
+        throw new GwtTestUiBinderException("Not managed type in file '"
             + owner.getClass().getSimpleName() + ".ui.xml"
             + "', only subclass of '" + Widget.class.getName()
             + "' are managed");
@@ -118,6 +138,139 @@ public class UiBinderComponentBuilder<T> {
     } else {
       return new UiBinderElement(nameSpaceURI, localName, attributes, owner);
     }
+  }
+
+  private <U> U getInstance(Class<U> clazz, Attributes attributes) {
+    U instance = getProvidedUiField(clazz);
+
+    if (instance == null) {
+      instance = getObjectFromUiFactory(clazz);
+    }
+
+    if (instance == null) {
+      instance = getObjectFromUiConstructor(clazz, attributes);
+    }
+
+    if (instance == null) {
+      instance = GWT.create(clazz);
+    }
+
+    return instance;
+  }
+
+  private <U> U getInstance(String type, Attributes attributes) {
+    ;
+    try {
+      Class<U> clazz = (Class<U>) Class.forName(type);
+      return getInstance(clazz, attributes);
+    } catch (ClassNotFoundException e) {
+      throw new GwtTestUiBinderException("Cannot find class '" + type
+          + "' declared in file '" + owner.getClass().getSimpleName()
+          + ".ui.xml'");
+    }
+  }
+
+  private <U> U getObjectFromUiConstructor(Class<U> clazz, Attributes attributes) {
+    for (Constructor<?> cons : clazz.getDeclaredConstructors()) {
+      if (cons.getAnnotation(UiConstructor.class) != null) {
+        Constructor<U> uiConstructor = (Constructor<U>) cons;
+        String[] arguments = getUiConstructorArgs(attributes);
+        try {
+          return uiConstructor.newInstance((Object[]) arguments);
+        } catch (Exception e) {
+          StringBuilder sb = new StringBuilder();
+          sb.append("Error while executing instruction 'new ").append(
+              clazz.getSimpleName()).append("(");
+          for (String argument : arguments) {
+            sb.append(argument);
+            sb.append(", ");
+          }
+          sb.replace(sb.length() - 3, sb.length() - 1, "')");
+
+          throw new GwtTestUiBinderException(sb.toString(), e);
+        }
+      }
+    }
+
+    return null;
+  }
+
+  private <U> U getObjectFromUiFactory(Class<U> clazz) {
+    Map<Method, UiFactory> map = GwtReflectionUtils.getAnnotatedMethod(
+        owner.getClass(), UiFactory.class);
+
+    for (Method factoryMethod : map.keySet()) {
+      if (factoryMethod.getReturnType() == clazz) {
+        return GwtReflectionUtils.callPrivateMethod(owner, factoryMethod);
+      }
+    }
+
+    return null;
+  }
+
+  private <U> U getProvidedUiField(Class<U> withObjectClass) {
+    Map<Field, UiField> map = GwtReflectionUtils.getAnnotatedField(
+        owner.getClass(), UiField.class);
+
+    for (Map.Entry<Field, UiField> entry : map.entrySet()) {
+      if (entry.getKey().getType() == withObjectClass
+          && entry.getValue().provided()) {
+        U providedObject = GwtReflectionUtils.getPrivateFieldValue(owner,
+            entry.getKey());
+        if (providedObject == null) {
+          throw new GwtTestUiBinderException(
+              "The UiField(provided=true) '"
+                  + entry.getKey().getDeclaringClass().getSimpleName()
+                  + "."
+                  + entry.getKey().getName()
+                  + "' has not been initialized before calling 'UiBinder.createAndBind(..)' method");
+        }
+
+        return providedObject;
+      }
+    }
+
+    return null;
+  }
+
+  private String getResourceAlias(String localName, Attributes attributes) {
+    String alias;
+    alias = attributes.getValue("field");
+    if (!"with".equals(localName) && alias == null) {
+      alias = localName;
+    }
+    if (alias == null) {
+      throw new GwtTestUiBinderException(
+          "Cannot get the 'field' value for tag <" + localName + "> in "
+              + owner.getClass().getSimpleName() + ".ui.xml");
+    }
+
+    return alias;
+  }
+
+  private String getResourceType(String localName, Attributes attributes) {
+    String type = attributes.getValue("type");
+
+    if (type == null) {
+      throw new GwtTestUiBinderException("Error in '"
+          + owner.getClass().getSimpleName() + ".ui.xml' : a <" + localName
+          + "> tag does not contain the corresponding 'type' attribute");
+    }
+
+    return type;
+  }
+
+  private String[] getUiConstructorArgs(Attributes attributes) {
+    List<String> argsList = new ArrayList<String>();
+
+    for (int i = 0; i < attributes.getLength(); i++) {
+      if (!UiBinderUtils.isUiFieldAttribute(attributes.getURI(i),
+          attributes.getLocalName(i))) {
+        argsList.add(attributes.getValue(i));
+      }
+    }
+
+    return argsList.toArray(new String[0]);
   }
 
   private boolean shouldIgnoreTag(String nameSpaceURI, String localName) {

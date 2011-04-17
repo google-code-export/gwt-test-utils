@@ -15,6 +15,7 @@ import java.util.Set;
 import com.octo.gwt.test.exceptions.GwtTestException;
 import com.octo.gwt.test.exceptions.ReflectionException;
 
+@SuppressWarnings("unchecked")
 public class GwtReflectionUtils {
 
   /**
@@ -51,7 +52,7 @@ public class GwtReflectionUtils {
     }
   }
 
-  private static DoubleMap<Class<?>, Class<?>, Set<Field>> cacheAnnotatedField = new DoubleMap<Class<?>, Class<?>, Set<Field>>();
+  private static DoubleMap<Class<?>, Class<?>, Map<Field, ?>> cacheAnnotatedField = new DoubleMap<Class<?>, Class<?>, Map<Field, ?>>();
   private static DoubleMap<Class<?>, Class<?>, Map<Method, ?>> cacheAnnotatedMethod = new DoubleMap<Class<?>, Class<?>, Map<Method, ?>>();
   private static DoubleMap<Class<?>, Class<?>, Object> cacheAnnotation = new DoubleMap<Class<?>, Class<?>, Object>();
 
@@ -61,21 +62,26 @@ public class GwtReflectionUtils {
 
   private static DoubleMap<Class<?>, String, Field> cacheUniqueField = new DoubleMap<Class<?>, String, Field>();
 
-  @SuppressWarnings("unchecked")
-  public static <T> T callPrivateMethod(Object target, String methodName,
+  public static <T> T callPrivateMethod(Object target, Method method,
       Object... args) {
     try {
-      Method m = findMethod(target.getClass(), methodName, args);
-      m.setAccessible(true);
-      Object res = m.invoke(target, args);
+      method.setAccessible(true);
+      Object res = method.invoke(target, args);
       return (T) res;
     } catch (Exception e) {
-      throw new ReflectionException("Unable to call method \""
-          + target.getClass().getSimpleName() + "." + methodName + "\"", e);
+      throw new ReflectionException("Unable to call method '"
+          + target.getClass().getSimpleName() + "." + method.getName()
+          + "(..)'", e);
     }
   }
 
-  @SuppressWarnings("unchecked")
+  public static <T> T callPrivateMethod(Object target, String methodName,
+      Object... args) {
+    Method method = findMethod(target.getClass(), methodName, args);
+    return callPrivateMethod(target, method, args);
+
+  }
+
   public static <T> T callStaticMethod(Class<?> clazz, String methodName,
       Object... args) {
     try {
@@ -126,19 +132,19 @@ public class GwtReflectionUtils {
     return null;
   }
 
-  public static Set<Field> getAnnotatedField(Class<?> clazz,
-      Class<?> annotationClass) {
-    Set<Field> l = cacheAnnotatedField.get(clazz, annotationClass);
+  public static <T extends Annotation> Map<Field, T> getAnnotatedField(
+      Class<?> clazz, Class<T> annotationClass) {
+    Map<Field, T> l = (Map<Field, T>) cacheAnnotatedField.get(clazz,
+        annotationClass);
     if (l != null) {
       return l;
     }
-    l = new HashSet<Field>();
+    l = new HashMap<Field, T>();
     recurseGetAnnotatedField(l, clazz, annotationClass);
     cacheAnnotatedField.put(clazz, annotationClass, l);
     return l;
   }
 
-  @SuppressWarnings("unchecked")
   public static <T extends Annotation> Map<Method, T> getAnnotatedMethod(
       Class<?> target, Class<T> annotationClass) {
     Map<Method, T> map = (Map<Method, T>) cacheAnnotatedMethod.get(target,
@@ -152,7 +158,6 @@ public class GwtReflectionUtils {
     return map;
   }
 
-  @SuppressWarnings("unchecked")
   public static <T> T getAnnotation(Class<?> clazz, Class<T> annotationClass) {
 
     Object o = cacheAnnotation.get(clazz, annotationClass);
@@ -224,24 +229,25 @@ public class GwtReflectionUtils {
     return res;
   }
 
-  @SuppressWarnings("unchecked")
-  public static <T> T getPrivateFieldValue(Object target, String fieldName) {
-    Field field = getUniqueFieldByName(target.getClass(), fieldName);
+  public static <T> T getPrivateFieldValue(Object target, Field field) {
     try {
+      makeAccessible(field);
       return (T) field.get(target);
     } catch (Exception e) {
-      e.printStackTrace();
-      throw new ReflectionException(e.getMessage()
-          + " Unable to get field, class " + fieldName + ", fieldClass "
-          + target.getClass());
+      throw new ReflectionException("Unable to get field '"
+          + target.getClass().getSimpleName() + "." + field.getName() + "'", e);
     }
+  }
+
+  public static <T> T getPrivateFieldValue(Object target, String fieldName) {
+    Field field = getUniqueFieldByName(target.getClass(), fieldName);
+    return getPrivateFieldValue(target, field);
   }
 
   public static void getStaticAndCallClear(Class<?> clazz, String fieldName) {
     callPrivateMethod(getStaticFieldValue(clazz, fieldName), "clear");
   }
 
-  @SuppressWarnings("unchecked")
   public static <T> T getStaticFieldValue(Class<?> clazz, String fieldName) {
     Field field = getUniqueFieldByName(clazz, fieldName);
     try {
@@ -437,21 +443,20 @@ public class GwtReflectionUtils {
     return field;
   }
 
-  private static void recurseGetAnnotatedField(Set<Field> set, Class<?> target,
-      Class<?> annotationClass) {
+  private static <T extends Annotation> void recurseGetAnnotatedField(
+      Map<Field, T> map, Class<?> target, Class<?> annotationClass) {
     for (Field f : target.getDeclaredFields()) {
       for (Annotation a : f.getDeclaredAnnotations()) {
         if (a.annotationType() == annotationClass) {
-          set.add(f);
+          map.put(f, (T) a);
         }
       }
     }
     if (target.getSuperclass() != null) {
-      recurseGetAnnotatedField(set, target.getSuperclass(), annotationClass);
+      recurseGetAnnotatedField(map, target.getSuperclass(), annotationClass);
     }
   }
 
-  @SuppressWarnings("unchecked")
   private static <T extends Annotation> void recurseGetAnnotatedMethod(
       Map<Method, T> map, Class<?> target, Class<?> annotationClass) {
     for (Method m : target.getDeclaredMethods()) {

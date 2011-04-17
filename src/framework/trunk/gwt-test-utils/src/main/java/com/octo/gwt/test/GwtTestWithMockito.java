@@ -111,7 +111,7 @@ public abstract class GwtTestWithMockito extends GwtTestWithMocks {
   protected Set<Field> getMockFields() {
     Set<Field> mocksFields = super.getMockFields();
     Set<Field> mockitoMockFields = GwtReflectionUtils.getAnnotatedField(
-        this.getClass(), org.mockito.Mock.class);
+        this.getClass(), org.mockito.Mock.class).keySet();
     mocksFields.addAll(mockitoMockFields);
     return mocksFields;
   }

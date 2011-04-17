@@ -5,12 +5,11 @@ import org.junit.Test;
 
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.SpanElement;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.octo.gwt.test.GwtTestTest;
+import com.octo.gwt.test.resources.MyClientBundle;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 import com.octo.gwt.test.utils.events.Browser;
 
@@ -19,19 +18,26 @@ public class UiBinderWithWidgetsTest extends GwtTestTest {
   @Test
   public void checkUiBinderWidget() {
     // Setup
-    UiBinderWithWidgets helloWorld = new UiBinderWithWidgets("gael", "eric");
+    UiBinderWithWidgets w = new UiBinderWithWidgets("gael", "eric");
 
     // Test
-    RootPanel.get().add(helloWorld);
+    RootPanel.get().add(w);
 
     // Asserts
-    ListBox listBox = GwtReflectionUtils.getPrivateFieldValue(helloWorld,
-        "listBox");
-    Assert.assertEquals(1, listBox.getVisibleItemCount());
+    Assert.assertEquals(1, w.listBox.getVisibleItemCount());
 
-    HTMLPanel wrappedPanel = GwtReflectionUtils.callPrivateMethod(helloWorld,
+    HTMLPanel wrappedPanel = GwtReflectionUtils.callPrivateMethod(w,
         "getWidget");
-    Assert.assertEquals(listBox, wrappedPanel.getWidget(0));
+    Assert.assertEquals(w.listBox, wrappedPanel.getWidget(0));
+
+    Assert.assertEquals(MyClientBundle.INSTANCE.testImageResource().getURL(),
+        w.image.getUrl());
+
+    // TODO: pass this assert
+    // Assert.assertEquals("my label", w.providedLabel.getText());
+    Assert.assertEquals("custom text setup in ui.xml",
+        w.providedLabel.getCustomText());
+    Assert.assertEquals("my provided string", w.providedLabel.myString);
 
     Label label = (Label) wrappedPanel.getWidget(1);
     Assert.assertNotNull(label);
@@ -47,19 +53,15 @@ public class UiBinderWithWidgetsTest extends GwtTestTest {
   @Test
   public void checkUiHandlerClick() {
     // Setup
-    UiBinderWithWidgets helloWorld = new UiBinderWithWidgets("gael", "eric");
-    ListBox listBox = GwtReflectionUtils.getPrivateFieldValue(helloWorld,
-        "listBox");
-    Button button = GwtReflectionUtils.getPrivateFieldValue(helloWorld,
-        "button");
+    UiBinderWithWidgets w = new UiBinderWithWidgets("gael", "eric");
 
     // Pre-Assert
-    Assert.assertEquals(1, listBox.getVisibleItemCount());
+    Assert.assertEquals(1, w.listBox.getVisibleItemCount());
 
     // Test
-    Browser.click(button);
+    Browser.click(w.button);
 
     // Asserts
-    // Assert.assertEquals(2, listBox.getVisibleItemCount());
+    Assert.assertEquals(2, w.listBox.getVisibleItemCount());
   }
 }

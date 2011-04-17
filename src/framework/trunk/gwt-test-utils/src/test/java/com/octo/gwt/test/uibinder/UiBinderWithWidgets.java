@@ -7,6 +7,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.Widget;
@@ -22,13 +23,20 @@ public class UiBinderWithWidgets extends Composite {
   Button button;
 
   @UiField
+  Image image;
+
+  @UiField
   ListBox listBox;
+
+  @UiField(provided = true)
+  ProvidedLabel providedLabel;
 
   @UiField
   PushButton pushButton;
 
   public UiBinderWithWidgets(String... names) {
-    // sets listBox
+    providedLabel = new ProvidedLabel("my provided string");
+
     initWidget(uiBinder.createAndBindUi(this));
     for (String name : names) {
       listBox.addItem(name);

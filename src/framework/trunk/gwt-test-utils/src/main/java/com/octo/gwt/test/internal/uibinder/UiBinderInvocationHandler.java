@@ -11,8 +11,7 @@ import com.google.gwt.dev.Link;
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Widget;
-import com.octo.gwt.test.exceptions.GwtTestConfigurationException;
-import com.octo.gwt.test.exceptions.ReflectionException;
+import com.octo.gwt.test.exceptions.GwtTestUiBinderException;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 /**
@@ -33,7 +32,7 @@ public class UiBinderInvocationHandler implements InvocationHandler {
     if (method.getName().equals("createAndBindUi")) {
       return createAndBindUi(args[0]);
     } else {
-      throw new ReflectionException("Not managed method for UiBinder : "
+      throw new GwtTestUiBinderException("Not managed method for UiBinder : "
           + method.getName());
     }
   }
@@ -84,7 +83,7 @@ public class UiBinderInvocationHandler implements InvocationHandler {
       public Object invoke(Object proxy, Method method, Object[] args)
           throws Throwable {
         return GwtReflectionUtils.callPrivateMethod(uiHandlerOwner,
-            uiHandlerMethod.getName(), args);
+            uiHandlerMethod, args);
       }
     };
   }
@@ -110,7 +109,7 @@ public class UiBinderInvocationHandler implements InvocationHandler {
       return (Class<EventHandler>) Class.forName(eventHandlerClassName);
     } catch (ClassNotFoundException e) {
       // should never happen
-      throw new GwtTestConfigurationException(
+      throw new GwtTestUiBinderException(
           "Cannot find handler class for event type '"
               + eventTypeClass.getName() + "'. By convention, it should be '"
               + eventHandlerClassName + "'");
@@ -141,7 +140,7 @@ public class UiBinderInvocationHandler implements InvocationHandler {
       }
     }
 
-    throw new GwtTestConfigurationException("The UiBinder subinterface '"
+    throw new GwtTestUiBinderException("The UiBinder subinterface '"
         + proxiedClass.getName()
         + "' is not parameterized. Please add its generic types.");
   }

@@ -29,7 +29,7 @@ public class UiBinderElement implements UiBinderTag {
       String attrValue = attributes.getValue(i).trim();
       String attrUri = attributes.getURI(i);
 
-      if (UiBinderUtils.isUiBinderField(attrUri, attrName)) {
+      if (UiBinderUtils.isUiFieldAttribute(attrUri, attrName)) {
         GwtReflectionUtils.setPrivateFieldValue(owner, attrValue, this.wrapped);
       } else if ("class".equalsIgnoreCase(attrName)) {
         this.wrapped.setAttribute("class",
