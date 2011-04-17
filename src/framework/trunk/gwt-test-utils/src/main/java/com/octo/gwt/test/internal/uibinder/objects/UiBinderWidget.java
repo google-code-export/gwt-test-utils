@@ -29,11 +29,14 @@ public class UiBinderWidget<T extends Widget> implements UiBinderTag {
 
     for (int i = 0; i < attributes.getLength(); i++) {
       String attrName = attributes.getLocalName(i);
-      String attrValue = attributes.getValue(i);
+      String attrValue = attributes.getValue(i).trim();
       String attrUri = attributes.getURI(i);
 
       if (UiBinderUtils.isUiBinderField(attrUri, attrName)) {
         GwtReflectionUtils.setPrivateFieldValue(owner, attrValue, this.wrapped);
+      } else if (attrName.contains("tyleName")) {
+        attributesMap.put(attrName,
+            UiBinderUtils.getEffectiveClassName(attrValue));
       } else {
         attributesMap.put(attrName, attrValue);
       }

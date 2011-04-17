@@ -5,51 +5,38 @@ import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 
-import com.octo.gwt.test.internal.uibinder.objects.UiBinderTag;
-import com.octo.gwt.test.internal.uibinder.objects.UiBinderTagFactory;
-import com.octo.gwt.test.utils.FastStack;
+import com.octo.gwt.test.internal.uibinder.objects.UiBinderComponentBuilder;
 
-public class UiXmlContentHandler implements ContentHandler {
+public class UiXmlContentHandler<T> implements ContentHandler {
 
-  private final UiBinderTagFactory factory;
-  private Object rootComponent;
-  private final FastStack<UiBinderTag> tags = new FastStack<UiBinderTag>();
+  private UiBinderComponentBuilder<T> builder;
+  private final Object owner;
 
-  public UiXmlContentHandler(UiBinderTagFactory factory) {
-    this.factory = factory;
+  private T rootComponent;
+  private final Class<T> rootComponentClass;
+
+  public UiXmlContentHandler(Class<T> rootComponentClass, Object owner) {
+    this.rootComponentClass = rootComponentClass;
+    this.owner = owner;
   }
 
   public void characters(char[] ch, int start, int end) throws SAXException {
-    if (end > start) {
-      tags.get(tags.size() - 1).appendText(new String(ch, start, end));
-    }
+    this.builder.appendText(ch, start, end);
   }
 
   public void endDocument() throws SAXException {
+    this.rootComponent = this.builder.build();
   }
 
   public void endElement(String nameSpaceURI, String localName, String rawName)
       throws SAXException {
-
-    // skip root tag
-    if (!UiBinderUtils.isUiBinderTag(nameSpaceURI, localName)) {
-      UiBinderTag tag = tags.pop();
-
-      if (tags.size() == 0) {
-        // parsing is finished, this is the root component
-        rootComponent = tag.complete();
-      } else {
-        // add to its parent
-        tags.get(tags.size() - 1).addTag(tag);
-      }
-    }
-
+    this.builder.endTag(nameSpaceURI, localName);
   }
 
   public void endPrefixMapping(String prefix) throws SAXException {
   }
 
-  public Object getRootComponent() {
+  public T getRootComponent() {
     return rootComponent;
   }
 
@@ -69,19 +56,17 @@ public class UiXmlContentHandler implements ContentHandler {
   }
 
   public void startDocument() throws SAXException {
-
+    this.builder = UiBinderComponentBuilder.create(this.rootComponentClass,
+        this.owner);
   }
 
   public void startElement(String nameSpaceURI, String localName,
       String rawName, Attributes attributes) throws SAXException {
-
-    // skip UiBinder element
-    if (!UiBinderUtils.isUiBinderTag(nameSpaceURI, localName)) {
-      tags.push(factory.createUiBinderTag(nameSpaceURI, localName, attributes));
-    }
+    this.builder.startTag(nameSpaceURI, localName, attributes);
   }
 
   public void startPrefixMapping(String prefix, String URI) throws SAXException {
+
   }
 
 }

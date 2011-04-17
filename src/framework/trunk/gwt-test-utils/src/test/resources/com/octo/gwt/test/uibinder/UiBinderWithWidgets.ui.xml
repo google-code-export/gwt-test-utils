@@ -1,13 +1,28 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
 	xmlns:g='urn:import:com.google.gwt.user.client.ui'>
 
+	<ui:style type="com.octo.gwt.test.resources.TestCssResource">
+		.testStyle {
+			margin-top: 2px;
+			color: green;
+		}
+	</ui:style>
+
+	<ui:style field='otherStyle'>
+		.pretty {
+			background-color: Orange;
+		}
+	</ui:style>
+
 	<g:HTMLPanel>
 		Hello,
 		<g:ListBox ui:field='listBox' visibleItemCount='1' />
 		<g:Label>Keep your ducks</g:Label>
 		.
-		<span id="mySpan" class="mySpanClass">some span for testing</span>
-		<g:Button ui:field='button'>My button</g:Button>
+		<span id="mySpan" class=" {otherStyle.pretty}  ">some span for testing</span>
+		<g:Button ui:field='button' styleName='{style.testStyle}'>My button</g:Button>
+		<g:PushButton ui:field='pushButton'
+			addStyleNames='{style.testStyle} {otherStyle.pretty}'>Push my hot button!</g:PushButton>
 	</g:HTMLPanel>
 
 </ui:UiBinder>

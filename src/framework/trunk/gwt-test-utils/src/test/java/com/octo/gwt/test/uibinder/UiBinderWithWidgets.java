@@ -8,6 +8,7 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.Widget;
 
 public class UiBinderWithWidgets extends Composite {
@@ -22,6 +23,9 @@ public class UiBinderWithWidgets extends Composite {
 
   @UiField
   ListBox listBox;
+
+  @UiField
+  PushButton pushButton;
 
   public UiBinderWithWidgets(String... names) {
     // sets listBox

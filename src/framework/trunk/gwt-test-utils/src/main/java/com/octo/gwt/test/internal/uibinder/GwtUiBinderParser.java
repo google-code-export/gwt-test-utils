@@ -10,7 +10,6 @@ import com.google.gwt.uibinder.client.UiField;
 import com.octo.gwt.test.exceptions.GwtTestConfigurationException;
 import com.octo.gwt.test.exceptions.GwtTestException;
 import com.octo.gwt.test.exceptions.GwtTestPatchException;
-import com.octo.gwt.test.internal.uibinder.objects.UiBinderTagFactory;
 
 /**
  * Class in charge of parsing the .ui.xml file and filling both root
@@ -29,7 +28,6 @@ public class GwtUiBinderParser {
    * @param owner The owner of the UiBinder template, with {@link UiField}
    *          fields.
    */
-  @SuppressWarnings("unchecked")
   public <T> T createUiComponent(Class<T> rootComponentClass, Object owner) {
     InputStream uiXmlStream = getUiXmlFile(owner);
     if (uiXmlStream == null) {
@@ -38,7 +36,8 @@ public class GwtUiBinderParser {
               + owner.getClass().getName() + "'");
     }
 
-    UiXmlContentHandler contentHandler = createUiBnderParser(owner);
+    UiXmlContentHandler<T> contentHandler = new UiXmlContentHandler<T>(
+        rootComponentClass, owner);
 
     try {
       XMLReader saxReader = XMLReaderFactory.createXMLReader("org.apache.xerces.parsers.SAXParser");
@@ -53,25 +52,7 @@ public class GwtUiBinderParser {
       }
     }
 
-    Object rootComponent = contentHandler.getRootComponent();
-
-    if (!rootComponentClass.isInstance(rootComponent)) {
-      throw new GwtTestConfigurationException(
-          "Error in '"
-              + owner.getClass().getSimpleName()
-              + ".ui.xml' configuration : root component is expected to be an instance of '"
-              + rootComponentClass.getName()
-              + "' but is actually an instance of '"
-              + rootComponent.getClass().getName() + "'");
-    }
-
-    return (T) rootComponent;
-
-  }
-
-  private UiXmlContentHandler createUiBnderParser(Object owner) {
-    UiBinderTagFactory factory = new UiBinderTagFactory(owner);
-    return new UiXmlContentHandler(factory);
+    return contentHandler.getRootComponent();
   }
 
   private InputStream getUiXmlFile(Object owner) {
