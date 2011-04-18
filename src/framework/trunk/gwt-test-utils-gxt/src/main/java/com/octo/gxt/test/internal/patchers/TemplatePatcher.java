@@ -12,7 +12,7 @@ public class TemplatePatcher extends AutomaticPatcher {
 
   public static class TemplateJSO extends JavaScriptObject {
 
-    private String html;
+    private final String html;
 
     public TemplateJSO(String html) {
       this.html = html;
@@ -33,6 +33,11 @@ public class TemplatePatcher extends AutomaticPatcher {
   public static String applyInternal(JavaScriptObject t, JavaScriptObject values) {
     TemplateJSO tjso = t.cast();
     return tjso.html;
+  }
+
+  @PatchMethod
+  public static void compile(Template tem) {
+    //
   }
 
   @PatchMethod

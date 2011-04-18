@@ -5,13 +5,14 @@ import com.google.gwt.user.client.ui.Widget;
 import com.octo.gwt.test.patchers.AutomaticPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
+import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 @PatchClass(Component.class)
 public class ComponentPatcher extends AutomaticPatcher {
 
   @PatchMethod
   public static void setParent(Component component, Widget parent) {
-    parent.getElement().appendChild(component.getElement());
+    GwtReflectionUtils.setPrivateFieldValue(component, "parent", parent);
   }
 
 }
