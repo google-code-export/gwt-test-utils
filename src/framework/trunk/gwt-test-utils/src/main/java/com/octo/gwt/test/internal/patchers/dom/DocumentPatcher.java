@@ -120,7 +120,9 @@ public class DocumentPatcher extends OverlayPatcher {
 
   public static void reset() {
     if (DOCUMENT != null) {
-      JavaScriptObjects.getJsoProperties(DOCUMENT.getBody()).clear();
+      if (DOCUMENT.getBody() != null) {
+        JavaScriptObjects.getJsoProperties(DOCUMENT.getBody()).clear();
+      }
       JavaScriptObjects.getJsoProperties(DOCUMENT).clear();
       DOCUMENT = null;
     }
