@@ -1,0 +1,11 @@
+start
+runmacro;InitialisationMacro
+selectInListBox;1;/simpleComposite2/listBox
+fillTextBox;Foo;/simpleComposite2/textBox
+click;/simpleComposite2/button
+assertExact;Good morning Foo;/simpleComposite2/label/text
+
+selectInListBox;0;/simpleComposite2/listBox
+fillTextBox;Bar;/simpleComposite2/textBox
+click;/simpleComposite2/button
+assertExact;Hello Bar;/simpleComposite2/label/text
