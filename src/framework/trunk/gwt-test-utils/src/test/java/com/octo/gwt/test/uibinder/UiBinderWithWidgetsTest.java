@@ -33,20 +33,17 @@ public class UiBinderWithWidgetsTest extends GwtTestTest {
     Assert.assertEquals(MyClientBundle.INSTANCE.testImageResource().getURL(),
         w.image.getUrl());
 
-    // TODO: pass this assert
-    // Assert.assertEquals("my label", w.providedLabel.getText());
+    Assert.assertEquals("my label", w.providedLabel.getText());
     Assert.assertEquals("custom text setup in ui.xml",
         w.providedLabel.getCustomText());
     Assert.assertEquals("my provided string", w.providedLabel.myString);
 
     Label label = (Label) wrappedPanel.getWidget(1);
     Assert.assertNotNull(label);
-    // TODO: pass this assert
-    // Assert.assertEquals("Keep your ducks", label.getText());
+    Assert.assertEquals("Keep your ducks", label.getText());
 
     SpanElement spanElement = Document.get().getElementById("mySpan").cast();
-    // TODO: pass this assert
-    // Assert.assertEquals("some span for testing", spanElement.getInnerText());
+    Assert.assertEquals("some span for testing", spanElement.getInnerText());
     Assert.assertEquals("pretty", spanElement.getClassName());
   }
 

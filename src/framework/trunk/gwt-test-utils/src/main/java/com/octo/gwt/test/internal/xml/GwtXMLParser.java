@@ -16,7 +16,6 @@ import org.xml.sax.helpers.XMLReaderFactory;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
-import com.google.gwt.dom.client.Text;
 import com.octo.gwt.test.internal.patchers.dom.JavaScriptObjects;
 import com.octo.gwt.test.internal.utils.JsoProperties;
 
@@ -30,10 +29,13 @@ public class GwtXMLParser {
     private GwtContentHandler() {
     }
 
-    public void characters(char[] ch, int start, int end) throws SAXException {
-      if (end > start) {
-        Text text = Document.get().createTextNode(new String(ch, start, end));
-        currentNode.appendChild(text);
+    public void characters(char[] ch, int start, int length)
+        throws SAXException {
+
+      String text = String.copyValueOf(ch, start, length).trim();
+
+      if (text.length() > 0) {
+        currentNode.appendChild(Document.get().createTextNode(text));
       }
     }
 

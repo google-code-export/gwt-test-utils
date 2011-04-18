@@ -20,8 +20,11 @@ public class UiXmlContentHandler<T> implements ContentHandler {
     this.owner = owner;
   }
 
-  public void characters(char[] ch, int start, int end) throws SAXException {
-    this.builder.appendText(ch, start, end);
+  public void characters(char[] ch, int start, int length) throws SAXException {
+    String text = String.copyValueOf(ch, start, length).trim();
+    if (text.length() > 0) {
+      this.builder.appendText(text);
+    }
   }
 
   public void endDocument() throws SAXException {

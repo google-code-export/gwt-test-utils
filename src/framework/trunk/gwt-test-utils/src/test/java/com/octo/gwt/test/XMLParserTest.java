@@ -17,6 +17,7 @@ import com.google.gwt.xml.client.Document;
 import com.google.gwt.xml.client.Element;
 import com.google.gwt.xml.client.NamedNodeMap;
 import com.google.gwt.xml.client.NodeList;
+import com.google.gwt.xml.client.Text;
 import com.google.gwt.xml.client.XMLParser;
 
 public class XMLParserTest extends GwtTestTest {
@@ -71,6 +72,21 @@ public class XMLParserTest extends GwtTestTest {
     Assert.assertEquals("property-path", name.getNodeName());
     Assert.assertEquals("http://www.springframework.org/schema/util",
         name.getNamespaceURI());
+
+  }
+
+  @Test
+  public void checkParseSimple() {
+    // Setup
+    String simpleXML = "<tags><tag>value</tag></tags>";
+
+    // Test
+    Document doc = XMLParser.parse(simpleXML);
+
+    // Asserts
+    NodeList tags = doc.getElementsByTagName("tag");
+    Text text = (Text) tags.item(0).getChildNodes().item(0);
+    Assert.assertEquals("value", text.getData());
 
   }
 

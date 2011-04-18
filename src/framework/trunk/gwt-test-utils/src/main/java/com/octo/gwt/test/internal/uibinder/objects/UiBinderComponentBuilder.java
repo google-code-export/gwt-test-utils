@@ -40,9 +40,12 @@ public class UiBinderComponentBuilder<T> {
     this.owner = owner;
   }
 
-  public UiBinderComponentBuilder<T> appendText(char[] ch, int start, int end) {
-    if (end > start) {
-      tags.get(tags.size() - 1).appendText(new String(ch, start, end));
+  public UiBinderComponentBuilder<T> appendText(String text) {
+
+    // if stack is empty, it means that the text is a style declaration, just
+    // ignore it..
+    if (tags.size() > 0) {
+      tags.get(tags.size() - 1).appendText(text);
     }
 
     return this;
