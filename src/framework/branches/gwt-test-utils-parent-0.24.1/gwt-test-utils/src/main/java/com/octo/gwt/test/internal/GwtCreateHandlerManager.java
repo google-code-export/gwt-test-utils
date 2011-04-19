@@ -28,6 +28,7 @@ public class GwtCreateHandlerManager {
 	private GwtCreateHandler imageBundleCreateHandler;
 	private GwtCreateHandler defaultGwtCreateHandler;
 	private GwtCreateHandler abstractClassCreateHandler;
+	private GwtCreateHandler debugIdImplCreateHandler;
 
 	private GwtCreateHandlerManager() {
 		addedHandlers = new ArrayList<GwtCreateHandler>();
@@ -36,6 +37,7 @@ public class GwtCreateHandlerManager {
 		imageBundleCreateHandler = new ImageBundleCreateHandler();
 		defaultGwtCreateHandler = new DefaultGwtCreateHandler();
 		abstractClassCreateHandler = new AbstractClassCreateHandler();
+		debugIdImplCreateHandler = new DebugIdImplCreateHandler();
 	}
 
 	public void setMockCreateHandler(GwtCreateHandler mockCreateHandler) {
@@ -45,7 +47,10 @@ public class GwtCreateHandlerManager {
 	public List<GwtCreateHandler> getGwtCreateHandlers() {
 		List<GwtCreateHandler> list = new ArrayList<GwtCreateHandler>();
 
-		// declared @Mock objects are always created in the first place if possible
+		// debug always configure first
+		list.add(debugIdImplCreateHandler);
+
+		// than, declared @Mock objects creation
 		if (mockCreateHandler != null) {
 			list.add(mockCreateHandler);
 		}

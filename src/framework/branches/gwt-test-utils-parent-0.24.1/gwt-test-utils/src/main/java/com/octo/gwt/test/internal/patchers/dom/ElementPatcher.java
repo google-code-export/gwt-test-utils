@@ -107,6 +107,16 @@ public class ElementPatcher extends AutomaticPropertyContainerPatcher {
 	}
 
 	@PatchMethod
+	public static String getId(Element element) {
+		return getPropertyString(element, "id");
+	}
+
+	@PatchMethod
+	public static void setId(Element element, String id) {
+		setPropertyString(element, "id", id);
+	}
+
+	@PatchMethod
 	public static String getPropertyString(Element element, String propertyName) {
 		if ("tagName".equals(propertyName)) {
 			return element.getTagName();

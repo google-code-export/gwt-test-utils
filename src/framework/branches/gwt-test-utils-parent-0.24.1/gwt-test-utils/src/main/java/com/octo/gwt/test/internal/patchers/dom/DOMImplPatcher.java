@@ -48,6 +48,11 @@ public class DOMImplPatcher extends AutomaticPatcher {
 	}
 
 	@PatchMethod
+	public static int eventGetCharCode(Object domImpl, NativeEvent evt) {
+		return evt.getKeyCode();
+	}
+
+	@PatchMethod
 	public static int getBodyOffsetTop(Object domImpl, Document doc) {
 		return 0;
 	}

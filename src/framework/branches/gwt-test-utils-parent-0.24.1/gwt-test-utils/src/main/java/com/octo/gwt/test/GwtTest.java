@@ -6,7 +6,11 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.ui.UIObject;
+import com.google.gwt.user.client.ui.UIObject.DebugIdImpl;
 import com.octo.gwt.test.internal.GwtReset;
+import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 /**
  * <p>
@@ -30,11 +34,13 @@ import com.octo.gwt.test.internal.GwtReset;
 public abstract class GwtTest {
 
 	@Before
-	public void setUpAbstractGwtIntegrationShell() throws Exception {
+	public void setUpGwtTest() throws Exception {
 		GwtConfig.setLocale(getLocale());
 		GwtConfig.setCurrentTestedModuleFile(getCurrentTestedModuleFile());
 		GwtConfig.setLogHandler(getLogHandler());
 		GwtConfig.setHostPagePath(getHostPagePath());
+		GwtConfig.setEnsureDebugId(ensureDebugId());
+		GwtReflectionUtils.setStaticField(UIObject.class, "debugIdImpl", GWT.create(DebugIdImpl.class));
 	}
 
 	@After
@@ -55,6 +61,16 @@ public abstract class GwtTest {
 	protected Locale getLocale() {
 		// this method can be overrided by subclass
 		return null;
+	}
+
+	/**
+	 * Override this method if you want your test to allow the setup of debug
+	 * id.
+	 * 
+	 * @return true if setting debug id should be enabled, false otherwise.
+	 */
+	protected boolean ensureDebugId() {
+		return false;
 	}
 
 	protected String getHostPagePath() {

@@ -10,6 +10,7 @@ import com.octo.gwt.test.internal.patchers.dom.NodeFactory;
 public class GwtConfig {
 
 	private static Locale locale;
+	private static boolean ensureDebugId;
 
 	public static void setLocale(Locale locale) {
 		GwtConfig.locale = locale;
@@ -17,6 +18,14 @@ public class GwtConfig {
 
 	public static Locale getLocale() {
 		return locale;
+	}
+
+	public static boolean ensureDebugId() {
+		return ensureDebugId;
+	}
+
+	public static void setEnsureDebugId(boolean ensureDebugId) {
+		GwtConfig.ensureDebugId = ensureDebugId;
 	}
 
 	public static void setLogHandler(GwtLogHandler gwtLogHandler) {
@@ -37,8 +46,7 @@ public class GwtConfig {
 	 * @param gwtCreateHandler
 	 *            A handler gwt-test-utils will try to delegate GWT.create(..)
 	 *            calls
-	 * @deprecated Use
-	 *             {@link GwtConfig#addGwtCreateHandler(GwtCreateHandler)
+	 * @deprecated Use {@link GwtConfig#addGwtCreateHandler(GwtCreateHandler)
 	 *             instead}
 	 */
 	@Deprecated
@@ -52,6 +60,7 @@ public class GwtConfig {
 
 	public static void reset() {
 		locale = null;
+		ensureDebugId = false;
 	}
 
 }
