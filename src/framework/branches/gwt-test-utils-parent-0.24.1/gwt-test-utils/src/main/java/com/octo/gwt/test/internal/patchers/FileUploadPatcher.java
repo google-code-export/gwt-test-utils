@@ -8,7 +8,7 @@ import com.google.gwt.user.client.ui.FileUpload;
 import com.octo.gwt.test.patchers.AutomaticPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
-import com.octo.gwt.test.patchers.PatchType;
+import com.octo.gwt.test.patchers.PatchMethod.Type;
 
 @PatchClass(FileUpload.class)
 public class FileUploadPatcher extends AutomaticPatcher {
@@ -29,7 +29,7 @@ public class FileUploadPatcher extends AutomaticPatcher {
 
 	}
 
-	@PatchMethod(PatchType.NEW_CODE_AS_STRING)
+	@PatchMethod(type = Type.NEW_CODE_AS_STRING)
 	public static String onBrowserEvent() {
 		return "return super.onBrowserEvent($1)";
 	}

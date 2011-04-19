@@ -8,7 +8,7 @@ import com.octo.gwt.test.internal.utils.PropertyContainerHelper;
 import com.octo.gwt.test.patchers.AutomaticPropertyContainerPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
-import com.octo.gwt.test.patchers.PatchType;
+import com.octo.gwt.test.patchers.PatchMethod.Type;
 
 @PatchClass(InputElement.class)
 public class InputElementPatcher extends AutomaticPropertyContainerPatcher {
@@ -23,7 +23,7 @@ public class InputElementPatcher extends AutomaticPropertyContainerPatcher {
 
 	}
 
-	@PatchMethod(value = PatchType.NEW_CODE_AS_STRING)
+	@PatchMethod(type = Type.NEW_CODE_AS_STRING)
 	public static String useMap() {
 		return PropertyContainerHelper.getCodeGetProperty("this", "UserMap", CtClass.booleanType);
 	}

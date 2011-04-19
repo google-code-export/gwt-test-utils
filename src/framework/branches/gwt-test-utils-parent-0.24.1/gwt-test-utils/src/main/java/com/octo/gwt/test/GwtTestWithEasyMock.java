@@ -41,10 +41,10 @@ public abstract class GwtTestWithEasyMock extends GwtTest {
 	private Map<Class<?>, Object> mockObjects = new HashMap<Class<?>, Object>();
 	private List<Class<?>> mockedClasses = new ArrayList<Class<?>>();
 	private Set<Field> annotatedFieldToInject;
-	
+
 	public GwtTestWithEasyMock() {
 		GwtCreateHandlerManager.getInstance().setMockCreateHandler(new MockCreateHandler(mockObjects));
-		annotatedFieldToInject = GwtReflectionUtils.getAnnotatedField(this.getClass(), Mock.class);
+		annotatedFieldToInject = GwtReflectionUtils.getAnnotatedField(this.getClass(), Mock.class).keySet();
 		for (Field f : annotatedFieldToInject) {
 			mockedClasses.add(f.getType());
 		}
@@ -124,7 +124,7 @@ public abstract class GwtTestWithEasyMock extends GwtTest {
 	 * except the one with the name given as a parameter.
 	 */
 	public <T> T createMockAndKeepOneMethod(Class<T> clazz, String methodName) {
-		return createMockAndKeepMethods(clazz, true, GwtReflectionUtils.findMethod(clazz, methodName, null));
+		return createMockAndKeepMethods(clazz, true, GwtReflectionUtils.findMethod(clazz, methodName));
 	}
 
 	/**
@@ -162,9 +162,9 @@ public abstract class GwtTestWithEasyMock extends GwtTest {
 	 * 
 	 * You can use this method if you want to use AbstractGwtEasyMockTest's mock
 	 * handling methods ({@link GwtTestWithEasyMock#replay()},
-	 * {@link GwtTestWithEasyMock#verify()},
-	 * {@link GwtTestWithEasyMock#reset()}...) for a mock that you created
-	 * without using the framework's {@link Mock @Mock} annotation.
+	 * {@link GwtTestWithEasyMock#verify()}, {@link GwtTestWithEasyMock#reset()}
+	 * ...) for a mock that you created without using the framework's
+	 * {@link Mock @Mock} annotation.
 	 * 
 	 * @param clazz
 	 *            The class for which a mock object is being defined

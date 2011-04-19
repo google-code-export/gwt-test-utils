@@ -14,6 +14,7 @@ import javassist.CtMethod;
 import javassist.NotFoundException;
 
 import com.octo.gwt.test.IPatcher;
+import com.octo.gwt.test.patchers.PatchMethod.Type;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 public class AutomaticPatcher implements IPatcher {
@@ -36,13 +37,13 @@ public class AutomaticPatcher implements IPatcher {
 	private Entry<Method, PatchMethod> findAnnotatedMethod(CtMethod m) throws Exception {
 		for (Entry<Method, PatchMethod> entry : annotatedMethods.entrySet()) {
 			String methodName = entry.getKey().getName();
-			if (entry.getValue().methodName().length() > 0) {
-				methodName = entry.getValue().methodName();
+			if (entry.getValue().value().length() > 0) {
+				methodName = entry.getValue().value();
 			}
 			if (m.getName().equals(methodName)) {
 				if (entry.getValue().args().length == 1 && entry.getValue().args()[0] == PatchMethod.class
 				// Either this is a new method or it has to have a compatible signature
-						&& (entry.getValue().value() != PatchType.STATIC_CALL || hasCompatibleSignature(m, entry.getKey()))) {
+						&& (entry.getValue().type() != Type.STATIC_CALL || hasCompatibleSignature(m, entry.getKey()))) {
 					return entry;
 				} else {
 					if (hasSameSignature(m, entry.getValue().args(), m.getParameterTypes())) {
@@ -132,7 +133,7 @@ public class AutomaticPatcher implements IPatcher {
 				throw new RuntimeException("Method " + annotatedMethod + " have to be static");
 			}
 
-			switch (e.getValue().value()) {
+			switch (e.getValue().type()) {
 			case INSERT_CODE_BEFORE:
 				newBody = INSERT_BEFORE + treatMethod(annotatedMethod);
 				break;
