@@ -109,6 +109,12 @@ public class XMLParserImplPatcher extends AutomaticPatcher {
   }
 
   @PatchMethod
+  public static JavaScriptObject getDocumentElement(JavaScriptObject o) {
+    Document document = o.cast();
+    return document.getFirstChild();
+  }
+
+  @PatchMethod
   public static JavaScriptObject getElementByIdImpl(
       XMLParserImpl xmlParserImpl, JavaScriptObject jsoDocument, String id) {
     Document document = jsoDocument.cast();

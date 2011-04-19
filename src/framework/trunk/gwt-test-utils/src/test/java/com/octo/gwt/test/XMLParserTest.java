@@ -31,6 +31,9 @@ public class XMLParserTest extends GwtTestTest {
     Document document = XMLParser.parse(xmlContent);
 
     // Asserts
+    Element documentElement = document.getDocumentElement();
+    Assert.assertEquals("beans", documentElement.getTagName());
+
     Element testBean = document.getElementById("testBean");
     NodeList beans = document.getElementsByTagName("bean");
 
