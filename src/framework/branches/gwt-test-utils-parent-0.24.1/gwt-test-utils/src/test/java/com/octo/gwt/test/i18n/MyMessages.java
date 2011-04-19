@@ -1,4 +1,4 @@
-package com.octo.gwt.test.internal.i18n;
+package com.octo.gwt.test.i18n;
 
 import com.google.gwt.i18n.client.LocalizableResource.DefaultLocale;
 import com.google.gwt.i18n.client.Messages;

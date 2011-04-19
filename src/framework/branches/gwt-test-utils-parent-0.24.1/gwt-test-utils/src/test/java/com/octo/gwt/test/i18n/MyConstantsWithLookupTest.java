@@ -1,4 +1,4 @@
-package com.octo.gwt.test.internal.i18n;
+package com.octo.gwt.test.i18n;
 
 import java.util.Locale;
 import java.util.Map;

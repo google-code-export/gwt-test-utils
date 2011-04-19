@@ -30,7 +30,6 @@ import com.octo.gwt.test.utils.events.Browser;
  * @author GLZ
  * 
  */
-@SuppressWarnings("deprecation")
 public class WidgetUtils {
 
 	/**

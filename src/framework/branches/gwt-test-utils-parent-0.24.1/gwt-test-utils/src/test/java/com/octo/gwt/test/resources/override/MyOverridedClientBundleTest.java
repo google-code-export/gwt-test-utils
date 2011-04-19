@@ -1,4 +1,4 @@
-package com.octo.gwt.test.internal.utils.resources.override;
+package com.octo.gwt.test.resources.override;
 
 import junit.framework.Assert;
 
