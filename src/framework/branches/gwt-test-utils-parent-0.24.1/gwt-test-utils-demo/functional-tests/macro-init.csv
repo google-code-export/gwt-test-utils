@@ -1,0 +1,7 @@
+macro;InitialisationMacro
+initApp
+assertEmpty;/simpleComposite/label
+assertEmpty;/simpleComposite2/textBox
+assertExact;this label will be updated;/simpleComposite2/label
+assertEmpty;/rpcComposite/label
+endmacro
