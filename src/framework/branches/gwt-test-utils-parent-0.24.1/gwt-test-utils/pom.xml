@@ -2,12 +2,12 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>gwt-test-utils</artifactId>
 	<packaging>jar</packaging>
-	<name>GWT Tests Utils</name>
+	<name>${project.artifactId}</name>
 
 	<parent>
 		<groupId>com.octo.gwt.test</groupId>
 		<artifactId>gwt-test-utils-parent</artifactId>
-		<version>0.24</version>
+		<version>0.24.1-SNAPSHOT</version>
 	</parent>
 
 	<dependencies>
@@ -32,9 +32,21 @@
 			<version>${javassist.version}</version>
 		</dependency>
 		<dependency>
+			<groupId>commons-beanutils</groupId>
+			<artifactId>commons-beanutils</artifactId>
+			<version>${commons.beanutils.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>org.easymock</groupId>
 			<artifactId>easymock</artifactId>
 			<version>${easymock.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<version>${mockito.version}</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>commons-lang</groupId>
@@ -47,5 +59,17 @@
 			<version>${htmlparser.version}</version>
 		</dependency>
 	</dependencies>
-
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<encoding>${encoding}</encoding>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 </project>

@@ -9,7 +9,7 @@ import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.Image;
 import com.octo.gwt.test.resources.MyClientBundle;
 
-public class ImageTest extends AbstractGwtTest {
+public class ImageTest extends GwtTest {
 
 	@Override
 	public String getCurrentTestedModuleFile() {

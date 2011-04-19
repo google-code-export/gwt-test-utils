@@ -10,9 +10,10 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Widget;
+import com.octo.gwt.test.utils.events.Browser;
 
 @SuppressWarnings("deprecation")
-public class ButtonTest extends AbstractGwtTest {
+public class ButtonTest extends GwtTest {
 
 	@Test
 	public void checkWrap() {
@@ -117,7 +118,7 @@ public class ButtonTest extends AbstractGwtTest {
 		Assert.assertEquals("", b.getHTML());
 
 		// simulate click
-		click(b);
+		Browser.click(b);
 
 		// assert that the "AbstractGWTTest.click(Widget)" method trigger the "onClick" handler's method
 		Assert.assertEquals("clicked", b.getHTML());
@@ -138,7 +139,7 @@ public class ButtonTest extends AbstractGwtTest {
 		Assert.assertEquals("", b.getHTML());
 
 		// simulate click
-		click(b);
+		Browser.click(b);
 
 		Assert.assertEquals("clicked", b.getHTML());
 	}

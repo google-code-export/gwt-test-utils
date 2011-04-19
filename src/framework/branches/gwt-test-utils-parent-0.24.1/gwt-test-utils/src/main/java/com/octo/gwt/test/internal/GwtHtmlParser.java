@@ -19,7 +19,7 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
 import com.octo.gwt.test.internal.overrides.OverrideNodeList;
-import com.octo.gwt.test.internal.patcher.dom.NodeFactory;
+import com.octo.gwt.test.internal.patchers.dom.NodeFactory;
 
 public class GwtHtmlParser {
 

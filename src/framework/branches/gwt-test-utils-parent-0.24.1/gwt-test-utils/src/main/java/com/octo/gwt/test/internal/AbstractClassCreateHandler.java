@@ -10,7 +10,7 @@ import javassist.CtMethod;
 
 import com.octo.gwt.test.GwtCreateHandler;
 import com.octo.gwt.test.GwtTestClassLoader;
-import com.octo.gwt.test.internal.utils.PatchGwtUtils;
+import com.octo.gwt.test.internal.utils.GwtPatcherUtils;
 
 public class AbstractClassCreateHandler implements GwtCreateHandler {
 
@@ -44,7 +44,7 @@ public class AbstractClassCreateHandler implements GwtCreateHandler {
 			}
 		}
 
-		PatchGwtUtils.patch(subClass, null);
+		GwtPatcherUtils.patch(subClass, null);
 
 		newClass = GwtTestClassLoader.getInstance().loadClass(subClass.getName());
 		cache.put(classLiteral, newClass);

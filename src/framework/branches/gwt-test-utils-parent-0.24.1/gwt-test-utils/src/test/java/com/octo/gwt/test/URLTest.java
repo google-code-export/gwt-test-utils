@@ -5,7 +5,7 @@ import org.junit.Test;
 
 import com.google.gwt.http.client.URL;
 
-public class URLTest extends AbstractGwtTest {
+public class URLTest extends GwtTest {
 
 	@Test
 	public void checkEncodeComponent() {

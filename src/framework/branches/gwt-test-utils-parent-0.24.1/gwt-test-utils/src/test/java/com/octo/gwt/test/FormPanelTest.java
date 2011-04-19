@@ -15,7 +15,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
-public class FormPanelTest extends AbstractGwtTest {
+public class FormPanelTest extends GwtTest {
 
 	private FormPanel form;
 	private boolean submitted;

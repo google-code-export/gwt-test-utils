@@ -7,9 +7,9 @@ import org.junit.Test;
 
 import com.google.gwt.dom.client.BRElement;
 import com.google.gwt.dom.client.Document;
-import com.octo.gwt.test.AbstractGwtTest;
+import com.octo.gwt.test.GwtTest;
 
-public class BRElementTest extends AbstractGwtTest {
+public class BRElementTest extends GwtTest {
 
 	private BRElement b;
 

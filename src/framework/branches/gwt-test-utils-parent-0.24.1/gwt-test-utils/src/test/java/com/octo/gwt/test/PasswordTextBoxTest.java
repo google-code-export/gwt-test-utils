@@ -5,7 +5,7 @@ import org.junit.Test;
 
 import com.google.gwt.user.client.ui.PasswordTextBox;
 
-public class PasswordTextBoxTest extends AbstractGwtTest {
+public class PasswordTextBoxTest extends GwtTest {
 
 	@Test
 	public void checkName() {

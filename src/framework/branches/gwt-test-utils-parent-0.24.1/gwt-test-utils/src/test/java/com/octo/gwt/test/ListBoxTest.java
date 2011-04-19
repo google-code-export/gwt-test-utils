@@ -5,7 +5,7 @@ import org.junit.Test;
 
 import com.google.gwt.user.client.ui.ListBox;
 
-public class ListBoxTest extends AbstractGwtTest {
+public class ListBoxTest extends GwtTest {
 
 	@Test
 	public void checkName() {

@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import com.google.gwt.user.client.Timer;
 
-public class TimerTest extends AbstractGwtTest {
+public class TimerTest extends GwtTest {
 
 	boolean bool;
 	int i;

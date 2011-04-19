@@ -8,7 +8,7 @@ import com.google.gwt.dom.client.Document;
 import com.google.gwt.i18n.client.HasDirection.Direction;
 import com.google.gwt.user.client.ui.Label;
 
-public class LabelTest extends AbstractGwtTest {
+public class LabelTest extends GwtTest {
 
 	@Test
 	public void checkText() {

@@ -1,5 +1,7 @@
 package com.octo.gwt.test;
 
+import com.google.gwt.core.client.GWT;
+
 /**
  * Interface for an object capable of handling object creation, which is
  * delegated by the patched version of {@link GWT#create(Class)}.

@@ -13,7 +13,7 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 
-public class LayoutPanelTest extends AbstractGwtTest {
+public class LayoutPanelTest extends GwtTest {
 
 	private LayoutPanel panel;
 

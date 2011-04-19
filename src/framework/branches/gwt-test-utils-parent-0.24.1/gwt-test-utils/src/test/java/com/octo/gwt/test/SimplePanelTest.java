@@ -7,7 +7,7 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 
-public class SimplePanelTest extends AbstractGwtTest {
+public class SimplePanelTest extends GwtTest {
 
 	@Test
 	public void checkTitle() {

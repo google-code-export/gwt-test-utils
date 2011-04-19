@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
  * </p>
  * 
  * <p>
- * The class declaring such a field must extend {@link AbstractGwtEasyMockTest}
+ * The class declaring such a field must extend {@link GwtTestWithEasyMock}
  * in order to make the mock injection possible.
  * </p>
  * 

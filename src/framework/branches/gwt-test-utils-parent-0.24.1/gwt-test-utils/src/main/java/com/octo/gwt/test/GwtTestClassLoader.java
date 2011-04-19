@@ -13,7 +13,7 @@ import com.octo.gwt.test.internal.PatchGwtClassPool;
 
 /**
  * GwtTestClassLoader is the class loader used to instantiate classes referenced
- * inside a test class extending {@link AbstractGwtTest}.
+ * inside a test class extending {@link GwtTest}.
  */
 public class GwtTestClassLoader extends Loader {
 
