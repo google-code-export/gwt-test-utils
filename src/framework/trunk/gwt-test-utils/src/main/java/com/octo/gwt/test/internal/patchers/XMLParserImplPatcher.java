@@ -177,10 +177,16 @@ public class XMLParserImplPatcher extends AutomaticPatcher {
   }
 
   @PatchMethod
+  public static JavaScriptObject getNextSibling(JavaScriptObject o) {
+    Node n = o.cast();
+    return n.getNextSibling();
+  }
+
+  @PatchMethod
   public static String getNodeName(JavaScriptObject o) {
     try {
-      Element e = o.cast();
-      return e.getNodeName();
+      Node node = o.cast();
+      return node.getNodeName();
     } catch (ClassCastException e) {
       // TODO: remove this when cast() will be fine
       return "";
@@ -206,6 +212,12 @@ public class XMLParserImplPatcher extends AutomaticPatcher {
       default:
         return n.getNodeValue();
     }
+  }
+
+  @PatchMethod
+  public static JavaScriptObject getPreviousSibling(JavaScriptObject o) {
+    Node n = o.cast();
+    return n.getPreviousSibling();
   }
 
   @PatchMethod

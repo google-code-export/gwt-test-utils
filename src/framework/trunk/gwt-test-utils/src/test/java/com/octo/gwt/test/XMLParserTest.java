@@ -34,12 +34,17 @@ public class XMLParserTest extends GwtTestTest {
     Element documentElement = document.getDocumentElement();
     Assert.assertEquals("beans", documentElement.getTagName());
 
-    Element testBean = document.getElementById("testBean");
-    NodeList beans = document.getElementsByTagName("bean");
+    Element beans = (Element) document.getFirstChild();
+    Assert.assertEquals("beans", beans.getTagName());
+    Assert.assertNull(beans.getNextSibling());
+    Assert.assertNull(beans.getPreviousSibling());
 
-    Assert.assertEquals(2, beans.getLength());
+    Element testBean = document.getElementById("testBean");
+    NodeList beanList = document.getElementsByTagName("bean");
+
+    Assert.assertEquals(2, beanList.getLength());
     Assert.assertEquals("testBean",
-        beans.item(0).getAttributes().getNamedItem("id").getNodeValue());
+        beanList.item(0).getAttributes().getNamedItem("id").getNodeValue());
     Assert.assertEquals("bean", testBean.getTagName());
     Assert.assertEquals("bean", testBean.getNodeName());
     Assert.assertEquals("http://www.springframework.org/schema/beans",
@@ -54,15 +59,18 @@ public class XMLParserTest extends GwtTestTest {
         classAttr.getValue());
     Assert.assertEquals("http://www.springframework.org/schema/beans",
         classAttr.getNamespaceURI());
-    Assert.assertEquals("", classAttr.getNodeName());
+    Assert.assertEquals("class", classAttr.getNodeName());
     // CDATA attribute
     Element ageProperty = (Element) testBean.getChildNodes().item(0);
     Assert.assertEquals(1, ageProperty.getAttributes().getLength());
     Assert.assertEquals("age", ageProperty.getAttribute("name"));
     Assert.assertEquals("<10>", ageProperty.getNodeValue());
+    // TODO : pass this assertion
+    // Assert.assertEquals("#cdata-section",
+    // ageProperty.getFirstChild().getNodeName());
 
     // "spouse" child bean assertions
-    NamedNodeMap innerBeanAgePropertyAttributes = beans.item(1).getChildNodes().item(
+    NamedNodeMap innerBeanAgePropertyAttributes = beanList.item(1).getChildNodes().item(
         0).getAttributes();
     Assert.assertEquals("age",
         innerBeanAgePropertyAttributes.getNamedItem("name").getNodeValue());
@@ -70,7 +78,7 @@ public class XMLParserTest extends GwtTestTest {
         innerBeanAgePropertyAttributes.getNamedItem("value").getNodeValue());
 
     // bean from "util" namespace
-    Element name = document.getElementById("name");
+    Element name = (Element) testBean.getNextSibling();
     Assert.assertEquals("property-path", name.getTagName());
     Assert.assertEquals("property-path", name.getNodeName());
     Assert.assertEquals("http://www.springframework.org/schema/util",
@@ -90,7 +98,7 @@ public class XMLParserTest extends GwtTestTest {
     NodeList tags = doc.getElementsByTagName("tag");
     Text text = (Text) tags.item(0).getChildNodes().item(0);
     Assert.assertEquals("value", text.getData());
-
+    Assert.assertEquals("#text", tags.item(0).getFirstChild().getNodeName());
   }
 
   @Test
@@ -115,7 +123,6 @@ public class XMLParserTest extends GwtTestTest {
     Assert.assertEquals(0, child.getChildNodes().getLength());
     // empty cdata is not removed
     Assert.assertEquals(1, child2.getChildNodes().getLength());
-
   }
 
   private String convertXMLFileToString(String fileName) {

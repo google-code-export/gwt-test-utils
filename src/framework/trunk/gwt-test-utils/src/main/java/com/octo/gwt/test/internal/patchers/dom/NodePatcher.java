@@ -98,9 +98,12 @@ public class NodePatcher extends OverlayPatcher {
         return e.getTagName();
       case Node.TEXT_NODE:
         return "#text";
+      case com.google.gwt.xml.client.Node.ATTRIBUTE_NODE:
+        return JavaScriptObjects.getJsoProperties(node).getString(
+            JsoProperties.XML_ATTR_NAME);
       default:
         throw new GwtTestDomException(
-            "Invalid Node type (not a Document / Element / Text : "
+            "Invalid Node type (not a Document / Element / Text / Attribute) : "
                 + node.getNodeType());
     }
   }
