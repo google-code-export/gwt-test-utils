@@ -13,7 +13,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.octo.gwt.test.utils.events.Browser;
 
 @SuppressWarnings("deprecation")
-public class ButtonTest extends GwtTest {
+public class ButtonTest extends GwtTestTest {
 
 	@Test
 	public void checkWrap() {

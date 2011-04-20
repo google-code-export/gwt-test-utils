@@ -9,9 +9,9 @@ import com.google.gwt.resources.client.DataResource;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.resources.client.TextResource;
 import com.google.gwt.user.client.ui.Tree.Resources;
-import com.octo.gwt.test.GwtTest;
+import com.octo.gwt.test.GwtTestTest;
 
-public class ClientBundleTest extends GwtTest {
+public class ClientBundleTest extends GwtTestTest {
 
 	@Override
 	public String getCurrentTestedModuleFile() {

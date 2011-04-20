@@ -14,10 +14,10 @@ import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
-import com.octo.gwt.test.GwtTest;
+import com.octo.gwt.test.GwtTestTest;
 import com.octo.gwt.test.internal.patchers.dom.NodeFactory;
 
-public class ElementTest extends GwtTest {
+public class ElementTest extends GwtTestTest {
 
 	private Element e;
 

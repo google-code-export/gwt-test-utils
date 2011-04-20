@@ -9,9 +9,9 @@ import org.junit.Test;
 
 import com.google.gwt.core.client.GWT;
 import com.octo.gwt.test.GwtConfig;
-import com.octo.gwt.test.GwtTest;
+import com.octo.gwt.test.GwtTestTest;
 
-public class MyConstantsWithLookupTest extends GwtTest {
+public class MyConstantsWithLookupTest extends GwtTestTest {
 
 	private MyConstantsWithLookup constants;
 

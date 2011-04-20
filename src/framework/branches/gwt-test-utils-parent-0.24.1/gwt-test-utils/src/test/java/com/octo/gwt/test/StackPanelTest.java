@@ -9,7 +9,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.StackPanel;
 import com.octo.gwt.test.utils.events.Browser;
 
-public class StackPanelTest extends GwtTest {
+public class StackPanelTest extends GwtTestTest {
 
 	private int index = -1;
 

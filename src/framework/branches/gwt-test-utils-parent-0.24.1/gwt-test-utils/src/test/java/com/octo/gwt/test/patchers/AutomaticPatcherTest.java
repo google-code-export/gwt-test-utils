@@ -9,7 +9,6 @@ import org.junit.Test;
 
 import com.octo.gwt.test.internal.PatchGwtClassPool;
 import com.octo.gwt.test.internal.utils.GwtPatcherUtils;
-import com.octo.gwt.test.patchers.AutomaticPatcher;
 import com.octo.gwt.test.patchers.MyClassToPatch.MyInnerClass;
 
 public class AutomaticPatcherTest {

@@ -9,7 +9,7 @@ import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.MenuItemSeparator;
 import com.octo.gwt.test.utils.events.Browser;
 
-public class MenuBarTest extends GwtTest {
+public class MenuBarTest extends GwtTestTest {
 
 	@Override
 	public String getCurrentTestedModuleFile() {

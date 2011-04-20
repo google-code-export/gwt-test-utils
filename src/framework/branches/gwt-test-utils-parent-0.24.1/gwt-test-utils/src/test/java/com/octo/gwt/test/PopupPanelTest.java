@@ -5,7 +5,7 @@ import org.junit.Test;
 
 import com.google.gwt.user.client.ui.PopupPanel;
 
-public class PopupPanelTest extends GwtTest {
+public class PopupPanelTest extends GwtTestTest {
 
 	@Test
 	public void checkAutoHideEnabled() {

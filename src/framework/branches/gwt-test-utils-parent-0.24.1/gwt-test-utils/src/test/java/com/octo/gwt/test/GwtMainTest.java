@@ -17,7 +17,7 @@ import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.ui.Button;
 import com.octo.gwt.test.utils.events.Browser;
 
-public class GwtMainTest extends GwtTest {
+public class GwtMainTest extends GwtTestTest {
 
 	private String sToday;
 	private boolean success;

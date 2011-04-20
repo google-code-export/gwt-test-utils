@@ -36,7 +36,7 @@ import com.octo.gwt.test.utils.GwtReflectionUtils.MethodCallback;
  * the methods provided by AbstractGwtEasyMockTest.
  * </p>
  */
-public abstract class GwtTestWithEasyMock extends GwtTest {
+public abstract class GwtTestWithEasyMock extends GwtTestTest {
 
 	private Map<Class<?>, Object> mockObjects = new HashMap<Class<?>, Object>();
 	private List<Class<?>> mockedClasses = new ArrayList<Class<?>>();

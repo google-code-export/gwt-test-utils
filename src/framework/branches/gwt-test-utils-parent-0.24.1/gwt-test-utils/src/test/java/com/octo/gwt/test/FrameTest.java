@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import com.google.gwt.user.client.ui.Frame;
 
-public class FrameTest extends GwtTest {
+public class FrameTest extends GwtTestTest {
 
 	@Test
 	public void checkTitle() {

@@ -13,10 +13,10 @@ import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.dom.client.Style.VerticalAlign;
 import com.google.gwt.dom.client.Style.Visibility;
 import com.google.gwt.user.client.ui.Button;
-import com.octo.gwt.test.GwtTest;
+import com.octo.gwt.test.GwtTestTest;
 import com.octo.gwt.test.utils.WidgetUtils;
 
-public class StyleTest extends GwtTest {
+public class StyleTest extends GwtTestTest {
 
 	@Test
 	public void checkStyles() {

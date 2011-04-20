@@ -43,6 +43,8 @@ public abstract class GwtTest {
 		resetPatchGwt();
 	}
 
+	public abstract String getModuleName();
+
 	protected String getCurrentTestedModuleFile() {
 		// this method can be overrided by subclass
 		return null;

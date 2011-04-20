@@ -9,7 +9,7 @@ import com.google.gwt.dom.client.Document;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.impl.FocusImpl;
 
-public class FocusImplTest extends GwtTest {
+public class FocusImplTest extends GwtTestTest {
 
 	private FocusImpl focusImpl = FocusImpl.getFocusImplForWidget();
 	private Element e;

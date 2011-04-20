@@ -1,4 +1,4 @@
-package com.octo.gwt.test.csv.tools;
+package com.octo.gwt.test.csv;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -31,9 +31,15 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 import com.octo.gwt.test.GwtTest;
-import com.octo.gwt.test.csv.CsvMethod;
 import com.octo.gwt.test.csv.runner.CsvRunner;
 import com.octo.gwt.test.csv.runner.Node;
+import com.octo.gwt.test.csv.tools.DefaultWidgetVisitor;
+import com.octo.gwt.test.csv.tools.DirectoryTestReader;
+import com.octo.gwt.test.csv.tools.MacroReader;
+import com.octo.gwt.test.csv.tools.NodeObjectFinder;
+import com.octo.gwt.test.csv.tools.ObjectFinder;
+import com.octo.gwt.test.csv.tools.VisitorObjectFinder;
+import com.octo.gwt.test.csv.tools.WidgetVisitor;
 import com.octo.gwt.test.internal.utils.ArrayUtils;
 import com.octo.gwt.test.internal.utils.GwtTestStringUtils;
 import com.octo.gwt.test.utils.GwtReflectionUtils;

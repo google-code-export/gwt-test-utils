@@ -16,7 +16,7 @@ import com.google.gwt.user.client.ui.SuggestBox.SuggestionDisplay;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 import com.octo.gwt.test.utils.WidgetUtils;
 
-public class WidgetUtilsTest extends GwtTest {
+public class WidgetUtilsTest extends GwtTestTest {
 
 	@Override
 	public String getCurrentTestedModuleFile() {

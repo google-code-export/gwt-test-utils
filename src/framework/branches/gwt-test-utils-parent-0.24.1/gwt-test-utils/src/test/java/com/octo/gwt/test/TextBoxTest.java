@@ -6,7 +6,7 @@ import org.junit.Test;
 import com.google.gwt.user.client.ui.TextBox;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
-public class TextBoxTest extends GwtTest {
+public class TextBoxTest extends GwtTestTest {
 
 	@Test
 	public void checkName() {

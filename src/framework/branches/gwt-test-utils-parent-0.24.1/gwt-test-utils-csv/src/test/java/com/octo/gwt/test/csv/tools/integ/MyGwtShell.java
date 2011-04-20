@@ -7,10 +7,10 @@ import org.junit.runner.RunWith;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.octo.gwt.test.csv.CsvMethod;
+import com.octo.gwt.test.csv.GwtCsvTest;
 import com.octo.gwt.test.csv.StandardJUnit4CsvRunner;
 import com.octo.gwt.test.csv.runner.CsvRunner;
 import com.octo.gwt.test.csv.runner.Node;
-import com.octo.gwt.test.csv.tools.GwtCsvTest;
 import com.octo.gwt.test.csv.tools.NodeObjectFinder;
 import com.octo.gwt.test.integration.DefaultGwtRpcExceptionHandler;
 import com.octo.gwt.test.integration.RemoteServiceCreateHandler;
@@ -21,6 +21,11 @@ public abstract class MyGwtShell extends GwtCsvTest {
 	private MyBeautifulApp app;
 
 	private RemoteServiceCreateHandler handlerImpl;
+
+	@Override
+	public String getModuleName() {
+		return null;
+	}
 
 	@Before
 	public void setUp() throws Exception {

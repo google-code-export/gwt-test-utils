@@ -45,7 +45,7 @@ import com.google.gwt.user.client.ui.StackPanel;
 import com.google.gwt.user.client.ui.SuggestBox;
 import com.octo.gwt.test.utils.events.Browser;
 
-public class EventsTest extends GwtTest {
+public class EventsTest extends GwtTestTest {
 
 	private boolean tested;
 	private int counter;

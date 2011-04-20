@@ -6,7 +6,7 @@ import org.junit.Test;
 import com.google.gwt.user.client.ui.TextArea;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
-public class TextAreaTest extends GwtTest {
+public class TextAreaTest extends GwtTestTest {
 
 	@Test
 	public void checkName() {

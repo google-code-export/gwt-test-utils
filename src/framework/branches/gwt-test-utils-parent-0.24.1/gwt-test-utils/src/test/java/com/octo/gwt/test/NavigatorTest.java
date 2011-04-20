@@ -5,7 +5,7 @@ import org.junit.Test;
 
 import com.google.gwt.user.client.Window.Navigator;
 
-public class NavigatorTest extends GwtTest {
+public class NavigatorTest extends GwtTestTest {
 
 	@Test
 	public void checkGetAppCodeName() {

@@ -9,7 +9,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Hyperlink;
 import com.octo.gwt.test.utils.events.Browser;
 
-public class HyperlinkTest extends GwtTest {
+public class HyperlinkTest extends GwtTestTest {
 
 	@Test
 	public void checkTitle() {

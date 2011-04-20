@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import com.google.gwt.user.client.ui.Button;
 
-public class DebugIdDisabledTest extends GwtTest {
+public class DebugIdDisabledTest extends GwtTestTest {
 
 	@Override
 	protected boolean ensureDebugId() {

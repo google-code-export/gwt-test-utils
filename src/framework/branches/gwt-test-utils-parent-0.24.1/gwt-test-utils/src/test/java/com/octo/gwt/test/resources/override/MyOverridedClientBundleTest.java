@@ -7,9 +7,9 @@ import org.junit.Test;
 import com.google.gwt.resources.client.DataResource;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.resources.client.TextResource;
-import com.octo.gwt.test.GwtTest;
+import com.octo.gwt.test.GwtTestTest;
 
-public class MyOverridedClientBundleTest extends GwtTest {
+public class MyOverridedClientBundleTest extends GwtTestTest {
 
 	@Override
 	public String getCurrentTestedModuleFile() {
