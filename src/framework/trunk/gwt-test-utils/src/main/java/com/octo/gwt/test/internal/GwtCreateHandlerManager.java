@@ -22,18 +22,20 @@ public class GwtCreateHandlerManager {
   private final GwtCreateHandler abstractClassCreateHandler;
   private final List<GwtCreateHandler> addedHandlers;
   private final GwtCreateHandler clientBundleCreateHander;
+  private final GwtCreateHandler debugIdImplCreateHandler;
   private final GwtCreateHandler defaultGwtCreateHandler;
   private final GwtCreateHandler imageBundleCreateHandler;
   private final GwtCreateHandler localizableResourceHandler;
-  private final GwtCreateHandler uiBinderCreateHandler;
   private GwtCreateHandler mockCreateHandler;
   private final TestRemoteServiceCreateHandler testRemoteServiceCreateHandler;
+  private final GwtCreateHandler uiBinderCreateHandler;
 
   private GwtCreateHandlerManager() {
     // TODO : all createHandler should be singleton ?
     abstractClassCreateHandler = new AbstractClassCreateHandler();
     addedHandlers = new ArrayList<GwtCreateHandler>();
     clientBundleCreateHander = new ClientBundleCreateHandler();
+    debugIdImplCreateHandler = new DebugIdImplCreateHandler();
     defaultGwtCreateHandler = new DefaultGwtCreateHandler();
     localizableResourceHandler = new LocalizableCreateHandler();
     imageBundleCreateHandler = new ImageBundleCreateHandler();
@@ -48,7 +50,10 @@ public class GwtCreateHandlerManager {
   public List<GwtCreateHandler> getGwtCreateHandlers() {
     List<GwtCreateHandler> list = new ArrayList<GwtCreateHandler>();
 
-    // declared @Mock objects are always created in the first place if possible
+    // debug always configure first
+    list.add(debugIdImplCreateHandler);
+
+    // than, declared @Mock objects creation
     if (mockCreateHandler != null) {
       list.add(mockCreateHandler);
     }

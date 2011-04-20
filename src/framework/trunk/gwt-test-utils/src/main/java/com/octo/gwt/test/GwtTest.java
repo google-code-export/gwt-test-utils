@@ -55,6 +55,7 @@ public abstract class GwtTest {
    * @return the fully qualified name of a module. <strong>It cannot be null or
    *         empty</strong>.
    * 
+   * 
    */
   public abstract String getModuleName();
 
@@ -62,6 +63,7 @@ public abstract class GwtTest {
   public void setUpGwtTest() throws Exception {
     GwtConfig.get().setLocale(getLocale());
     GwtConfig.get().setLogHandler(getLogHandler());
+    GwtConfig.get().setEnsureDebugId(ensureDebugId());
 
     String moduleName = getCheckedModuleName();
     GwtConfig.get().setModuleName(moduleName);
@@ -95,6 +97,15 @@ public abstract class GwtTest {
 
   protected boolean addGwtCreateHandler(GwtCreateHandler gwtCreateHandler) {
     return GwtCreateHandlerManager.get().addGwtCreateHandler(gwtCreateHandler);
+  }
+
+  /**
+   * Override this method if you want your test to allow the setup of debug id.
+   * 
+   * @return true if setting debug id should be enabled, false otherwise.
+   */
+  protected boolean ensureDebugId() {
+    return false;
   }
 
   protected String getHostPagePath(String moduleFullQualifiedName) {
