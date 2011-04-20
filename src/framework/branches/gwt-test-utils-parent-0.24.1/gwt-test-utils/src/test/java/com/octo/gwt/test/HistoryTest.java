@@ -90,4 +90,10 @@ public class HistoryTest extends GwtTestWithEasyMock {
 		verify();
 	}
 
+	@Override
+	public String getModuleName() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

@@ -62,4 +62,10 @@ public class RootPanelTest extends GwtTestWithEasyMock {
 		Assert.assertTrue(label.isAttached());
 	}
 
+	@Override
+	public String getModuleName() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

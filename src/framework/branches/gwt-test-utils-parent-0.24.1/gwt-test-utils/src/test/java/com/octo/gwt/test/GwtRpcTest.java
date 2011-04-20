@@ -79,4 +79,10 @@ public class GwtRpcTest extends GwtTestWithEasyMock {
 		Assert.assertEquals("error", gwtClass.myValue);
 	}
 
+	@Override
+	public String getModuleName() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
