@@ -82,4 +82,10 @@ public class VisitorObjectFinderTest extends GwtTestWithEasyMock {
 		Assert.assertEquals(expectedCompositeLabel, compositeLabel);
 	}
 
+	@Override
+	public String getModuleName() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
