@@ -6,11 +6,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.ui.UIObject;
-import com.google.gwt.user.client.ui.UIObject.DebugIdImpl;
 import com.octo.gwt.test.internal.GwtReset;
-import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 /**
  * <p>
@@ -40,7 +36,6 @@ public abstract class GwtTest {
 		GwtConfig.setLogHandler(getLogHandler());
 		GwtConfig.setHostPagePath(getHostPagePath());
 		GwtConfig.setEnsureDebugId(ensureDebugId());
-		GwtReflectionUtils.setStaticField(UIObject.class, "debugIdImpl", GWT.create(DebugIdImpl.class));
 	}
 
 	@After

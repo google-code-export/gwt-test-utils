@@ -2,10 +2,14 @@ package com.octo.gwt.test;
 
 import java.util.Locale;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.ui.UIObject;
+import com.google.gwt.user.client.ui.UIObject.DebugIdImpl;
 import com.octo.gwt.test.internal.GwtCreateHandlerManager;
 import com.octo.gwt.test.internal.patchers.GwtPatcher;
 import com.octo.gwt.test.internal.patchers.ImplPatcher;
 import com.octo.gwt.test.internal.patchers.dom.NodeFactory;
+import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 public class GwtConfig {
 
@@ -26,6 +30,8 @@ public class GwtConfig {
 
 	public static void setEnsureDebugId(boolean ensureDebugId) {
 		GwtConfig.ensureDebugId = ensureDebugId;
+		// refresh the static instance in UIObject
+		GwtReflectionUtils.setStaticField(UIObject.class, "debugIdImpl", GWT.create(DebugIdImpl.class));
 	}
 
 	public static void setLogHandler(GwtLogHandler gwtLogHandler) {
