@@ -1,0 +1,27 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+	xmlns:g='urn:import:com.google.gwt.user.client.ui'
+	xmlns:test='urn:import:com.octo.gwt.test.uibinder'>
+
+	<ui:with field='res' type='com.octo.gwt.test.resources.MyClientBundle' />
+
+	<ui:style field='otherStyle'>
+		.pretty {
+			background-color: Orange;
+		}
+	</ui:style>
+
+	<g:HTMLPanel>
+		Hello,
+		<g:ListBox ui:field='listBox' visibleItemCount='1' />
+		<g:Label>Keep your ducks</g:Label>
+		.
+		<span id="mySpan" class=" {otherStyle.pretty}  ">some span for testing</span>
+		<g:Button ui:field='button' styleName='{res.testCssResource.testStyle}'>My button</g:Button>
+		<g:PushButton ui:field='pushButton'
+			addStyleNames='{res.testCssResource.testStyle} {otherStyle.pretty}'>Push my hot button!</g:PushButton>
+	
+		 <g:Image ui:field='image' resource='{res.testImageResource}'/>
+		 <test:ProvidedLabel customText="custom text setup in ui.xml">my label</test:ProvidedLabel>
+	</g:HTMLPanel>
+
+</ui:UiBinder>
