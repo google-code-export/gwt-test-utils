@@ -27,20 +27,38 @@ public abstract class LocalizableResourcesInvocationHandler implements
 
   public Object invoke(Object proxy, Method method, Object[] args)
       throws Throwable {
-    Locale locale = getResourceLocale(proxiedClass);
-    Properties prop = GwtPropertiesHelper.get().getLocalizedProperties(
-        proxiedClass.getCanonicalName().replaceAll("\\.", "/"), locale);
-
-    Object result = null;
-    if (prop != null) {
-      result = extractFromProperties(prop, method, args, locale);
-    }
-
+    // try in the locale specific .properties of the class
+    Object result = extractLocaleSpecificValue(proxiedClass, method, args);
     if (result != null) {
       return result;
     }
 
-    result = extractDefaultValue(method, args, locale);
+    // try in the locale specific .properties of the parent class
+    result = recurseExtractFromParentLocaleSpecificResource(
+        proxiedClass.getInterfaces(), method, args);
+    if (result != null) {
+      return result;
+    }
+
+    // try to get the value from a .properties without locale
+    result = extractFromDefaultProperties(proxiedClass, method, args);
+    Properties prop = GwtPropertiesHelper.get().getProperties(
+        getPropertiesFilePrefix(proxiedClass));
+    if (prop != null) {
+      result = extractFromProperties(prop, method, args, null);
+      if (result != null) {
+        return result;
+      }
+    }
+
+    // try in .properties of the parent class (without locale)
+    result = recurseExtractFromParentResource(proxiedClass.getInterfaces(),
+        method, args);
+    if (result != null) {
+      return result;
+    }
+
+    result = extractDefaultValue(method, args);
 
     if (result != null) {
       return result;
@@ -53,12 +71,84 @@ public abstract class LocalizableResourcesInvocationHandler implements
             + method.getName() + "' called method");
   }
 
-  private Locale getResourceLocale(Class<?> clazz) {
+  private Object extractFromDefaultProperties(Class<?> clazz, Method method,
+      Object[] args) throws Throwable {
+    // try to get the value from a .properties without locale
+    Properties prop = GwtPropertiesHelper.get().getProperties(
+        getPropertiesFilePrefix(clazz));
+    if (prop != null) {
+      return extractFromProperties(prop, method, args, getLocale());
+    } else {
+      return null;
+    }
+  }
+
+  private Object extractLocaleSpecificValue(Class<?> localizableResourceClass,
+      Method method, Object[] args) throws Throwable {
+    Object result = null;
+    Locale locale = getLocale();
+    Properties prop = GwtPropertiesHelper.get().getLocalizedProperties(
+        getPropertiesFilePrefix(localizableResourceClass), locale);
+
+    if (prop != null) {
+      result = extractFromProperties(prop, method, args, locale);
+    }
+
+    return result;
+  }
+
+  private String getPropertiesFilePrefix(Class<?> localizableResourceClass) {
+    return localizableResourceClass.getCanonicalName().replaceAll("\\.", "/");
+  }
+
+  private Object recurseExtractFromParentLocaleSpecificResource(
+      Class<?>[] interfaces, Method method, Object[] args) throws Throwable {
+    Object result;
+    for (Class<?> inter : interfaces) {
+      if (LocalizableResource.class.isAssignableFrom(inter)) {
+        result = extractLocaleSpecificValue(inter, method, args);
+
+        if (result != null) {
+          return result;
+        }
+        recurseExtractFromParentLocaleSpecificResource(inter.getInterfaces(),
+            method, args);
+      }
+    }
+
+    return null;
+  }
+
+  private Object recurseExtractFromParentResource(Class<?>[] interfaces,
+      Method method, Object[] args) throws Throwable {
+    Object result;
+    for (Class<?> inter : interfaces) {
+      if (LocalizableResource.class.isAssignableFrom(inter)) {
+        result = extractFromDefaultProperties(inter, method, args);
+
+        if (result != null) {
+          return result;
+        }
+        recurseExtractFromParentResource(inter.getInterfaces(), method, args);
+      }
+    }
+
+    return null;
+  }
+
+  protected abstract Object extractDefaultValue(Method method, Object[] args)
+      throws Throwable;
+
+  protected abstract Object extractFromProperties(
+      Properties localizedProperties, Method method, Object[] args,
+      Locale locale) throws Throwable;
+
+  protected Locale getLocale() {
     if (GwtConfig.get().getLocale() != null) {
       return GwtConfig.get().getLocale();
     }
 
-    DefaultLocale annotation = GwtReflectionUtils.getAnnotation(clazz,
+    DefaultLocale annotation = GwtReflectionUtils.getAnnotation(proxiedClass,
         DefaultLocale.class);
     if (annotation != null) {
       String[] localeCodes = annotation.value().split("_");
@@ -70,28 +160,13 @@ public abstract class LocalizableResourcesInvocationHandler implements
         default:
           throw new GwtTestI18NException(
               "Cannot parse Locale value in annoted class ["
-                  + clazz.getSimpleName() + "] : @"
+                  + proxiedClass.getSimpleName() + "] : @"
                   + DefaultLocale.class.getSimpleName() + "("
                   + annotation.value() + ")");
       }
     } else {
       return null;
     }
-  }
-
-  protected abstract Object extractDefaultValue(Method method, Object[] args,
-      Locale locale) throws Throwable;
-
-  protected abstract Object extractFromProperties(
-      Properties localizedProperties, Method method, Object[] args,
-      Locale locale) throws Throwable;
-
-  protected String extractProperty(Properties properties, String key) {
-    String result = properties.getProperty(key);
-    if (result == null) {
-      result = properties.getProperty(key.replaceAll("_", "."));
-    }
-    return result;
   }
 
 }

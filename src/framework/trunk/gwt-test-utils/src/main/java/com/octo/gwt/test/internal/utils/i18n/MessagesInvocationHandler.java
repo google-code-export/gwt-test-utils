@@ -36,7 +36,7 @@ public class MessagesInvocationHandler extends
    *          {@link AlternateMessage} or a {@link PluralText}
    * @param method The i18n called method
    * @param args The parameter passed to the i18n method during the call
-   * @param locale
+   * @param locale The locale to use
    * @return A String in which are appended all the {@link PluralCount} and
    *         {@link Select} value, or null if there is no such annotations
    */
@@ -100,7 +100,10 @@ public class MessagesInvocationHandler extends
   }
 
   private String format(String pattern, Object[] args, Locale locale) {
-    return new MessageFormat(pattern, locale).format(args);
+    MessageFormat format = locale == null ? new MessageFormat(pattern)
+        : new MessageFormat(pattern, locale);
+
+    return format.format(args);
   }
 
   /**
@@ -156,14 +159,14 @@ public class MessagesInvocationHandler extends
   }
 
   @Override
-  protected Object extractDefaultValue(Method method, Object[] args,
-      Locale locale) throws Throwable {
+  protected Object extractDefaultValue(Method method, Object[] args)
+      throws Throwable {
     DefaultMessage defaultMessage = method.getAnnotation(DefaultMessage.class);
     Annotation messageAnnotation = getMessageAnnotation(method);
     String valuePattern = null;
     if (messageAnnotation != null) {
       String key = extractPluralCountAndSelectValues(messageAnnotation, method,
-          args, locale);
+          args, getLocale());
       String[] values = getMessageAnnotationValues(messageAnnotation);
       valuePattern = getAnnotationValues(values).get(key);
     }
@@ -171,7 +174,7 @@ public class MessagesInvocationHandler extends
       valuePattern = defaultMessage.value();
     }
     if (valuePattern != null) {
-      return format(valuePattern, args, locale);
+      return format(valuePattern, args, getLocale());
     }
 
     return null;
@@ -191,6 +194,14 @@ public class MessagesInvocationHandler extends
     }
 
     return null;
+  }
+
+  protected String extractProperty(Properties properties, String key) {
+    String result = properties.getProperty(key);
+    if (result == null) {
+      result = properties.getProperty(key.replaceAll("_", "."));
+    }
+    return result;
   }
 
 }

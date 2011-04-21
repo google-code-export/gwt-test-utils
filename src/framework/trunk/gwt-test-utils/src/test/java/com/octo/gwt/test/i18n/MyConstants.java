@@ -31,4 +31,8 @@ public interface MyConstants extends Constants {
   @DefaultStringArrayValue({"default0", "default1"})
   public String[] stringArray();
 
+  public String valueWithoutLocale();
+
+  public String valueWithoutLocaleToBeOverride();
+
 }

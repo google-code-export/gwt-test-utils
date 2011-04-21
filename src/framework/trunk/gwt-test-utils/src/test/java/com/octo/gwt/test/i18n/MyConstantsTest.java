@@ -25,6 +25,8 @@ public class MyConstantsTest extends GwtTestTest {
     String goodbye = constants.goodbye();
     String[] stringArray = constants.stringArray();
     Map<String, Object> map = constants.map();
+    String valueWithoutLocale = constants.valueWithoutLocale();
+    String valueWithoutLocaleToBeOverride = constants.valueWithoutLocaleToBeOverride();
 
     // Assert 1
     Assert.assertEquals("Hello english !", hello);
@@ -41,6 +43,12 @@ public class MyConstantsTest extends GwtTestTest {
     Assert.assertEquals("glad to work with gwt-test-utils", map.get("map1"));
     Assert.assertEquals("hehe, it roxs !", map.get("map2"));
     Assert.assertNull(map.get("map3"));
+
+    Assert.assertEquals(
+        "Value from a default .properties file, without locale",
+        valueWithoutLocale);
+    Assert.assertEquals("Value from parent default .properties",
+        valueWithoutLocaleToBeOverride);
 
     // Test 2
     GwtConfig.get().setLocale(Locale.US);
@@ -70,7 +78,7 @@ public class MyConstantsTest extends GwtTestTest {
   @Test
   public void checkMyConstantsDefaultValue() {
     // Setup
-    String expectedErrorMessage = "No matching property \"goodbye\" for Constants class [com.octo.gwt.test.i18n.MyConstants]. Please check the corresponding properties file or use @DefaultStringValue";
+    String expectedErrorMessage = "No matching property \"goodbye\" for Constants class [com.octo.gwt.test.i18n.MyConstants]. Please check the corresponding properties files or use @DefaultStringValue";
 
     // Test 1
     String hello = constants.hello();
@@ -99,7 +107,7 @@ public class MyConstantsTest extends GwtTestTest {
     // Test 2 : no @DefaultStringValue
     try {
       constants.goodbye();
-      Assert.fail("i18n patching mechanism should throw an exception if no locale and no @DefaultStringValue is set");
+      Assert.fail("i18n patching mechanism should throw an exception if no locale, no default .properties file and no @DefaultStringValue is set");
     } catch (Exception e) {
       // Assert 2
       Assert.assertEquals(expectedErrorMessage, e.getMessage());

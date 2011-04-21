@@ -18,7 +18,7 @@ public class MyConstantsWithLookupTest extends GwtTestTest {
   @Test
   public void checkMyConstantsDefaultValue() {
     // Setup
-    String expectedErrorMessage = "No matching property \"goodbye\" for Constants class [com.octo.gwt.test.i18n.MyConstantsWithLookup]. Please check the corresponding properties file or use @DefaultStringValue";
+    String expectedErrorMessage = "No matching property \"goodbye\" for Constants class [com.octo.gwt.test.i18n.MyConstantsWithLookup]. Please check the corresponding properties files or use @DefaultStringValue";
 
     // Test 1
     String hello = constants.hello();

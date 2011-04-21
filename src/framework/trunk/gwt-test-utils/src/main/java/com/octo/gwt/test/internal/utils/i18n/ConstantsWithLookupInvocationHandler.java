@@ -31,9 +31,9 @@ public class ConstantsWithLookupInvocationHandler extends
   }
 
   @Override
-  protected Object extractDefaultValue(Method method, Object[] args,
-      Locale locale) throws Throwable {
-    return super.extractDefaultValue(getAskedMethod(method, args), args, locale);
+  protected Object extractDefaultValue(Method method, Object[] args)
+      throws Throwable {
+    return super.extractDefaultValue(getAskedMethod(method, args), args);
   }
 
   @Override

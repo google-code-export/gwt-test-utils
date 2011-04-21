@@ -33,7 +33,7 @@ public class ConstantsInvocationHandler extends
       throw new GwtTestI18NException("No matching property \""
           + method.getName() + "\" for Constants class ["
           + getProxiedClass().getCanonicalName()
-          + "]. Please check the corresponding properties file or use @"
+          + "]. Please check the corresponding properties files or use @"
           + defaultAnnotation.getSimpleName());
     }
 
@@ -45,8 +45,8 @@ public class ConstantsInvocationHandler extends
   }
 
   @Override
-  protected Object extractDefaultValue(Method method, Object[] args,
-      Locale locale) throws Throwable {
+  protected Object extractDefaultValue(Method method, Object[] args)
+      throws Throwable {
     Class<?> returnType = method.getReturnType();
     if (returnType == String.class) {
       DefaultStringValue a = getCheckedAnnotation(method,
