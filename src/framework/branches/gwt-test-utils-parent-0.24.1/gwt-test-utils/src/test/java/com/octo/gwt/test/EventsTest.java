@@ -1,5 +1,8 @@
 package com.octo.gwt.test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -7,6 +10,8 @@ import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.DomEvent;
@@ -43,16 +48,103 @@ import com.google.gwt.user.client.ui.HTMLTable.Cell;
 import com.google.gwt.user.client.ui.MultiWordSuggestOracle;
 import com.google.gwt.user.client.ui.StackPanel;
 import com.google.gwt.user.client.ui.SuggestBox;
+import com.google.gwt.user.client.ui.TextBox;
 import com.octo.gwt.test.utils.events.Browser;
 
 public class EventsTest extends GwtTestTest {
 
 	private boolean tested;
 	private int counter;
+	private boolean onBlurTriggered;
+	private boolean onChangeTriggered;
 
 	@Override
 	public String getCurrentTestedModuleFile() {
 		return "test-config.gwt.xml";
+	}
+
+	@Test
+	public void checkFillText() {
+		// Setup
+		onChangeTriggered = false;
+		onBlurTriggered = false;
+		String textToFill = "some text";
+
+		final List<Character> keyUpChars = new ArrayList<Character>();
+		final List<Character> keyDownChars = new ArrayList<Character>();
+		final List<Character> keyPressChars = new ArrayList<Character>();
+
+		final TextBox tb = new TextBox();
+
+		tb.addChangeHandler(new ChangeHandler() {
+
+			public void onChange(ChangeEvent event) {
+				onChangeTriggered = true;
+			}
+		});
+
+		tb.addBlurHandler(new BlurHandler() {
+
+			public void onBlur(BlurEvent event) {
+				onBlurTriggered = true;
+			}
+		});
+
+		tb.addKeyPressHandler(new KeyPressHandler() {
+
+			public void onKeyPress(KeyPressEvent event) {
+				// Assert that onKeyPress is triggered before onKeyUp and after
+				// onKeyDown
+				Assert.assertEquals(keyPressChars.size(), keyUpChars.size());
+				Assert.assertEquals(keyPressChars.size() + 1, keyDownChars.size());
+
+				keyPressChars.add(event.getCharCode());
+			}
+		});
+
+		tb.addKeyUpHandler(new KeyUpHandler() {
+
+			public void onKeyUp(KeyUpEvent event) {
+				// Assert that onKeyUp is triggered after onKeyDown and onKeyPress
+				Assert.assertEquals(keyUpChars.size() + 1, keyDownChars.size());
+				Assert.assertEquals(keyUpChars.size() + 1, keyPressChars.size());
+
+				keyUpChars.add((char) event.getNativeKeyCode());
+			}
+		});
+
+		tb.addKeyDownHandler(new KeyDownHandler() {
+
+			public void onKeyDown(KeyDownEvent event) {
+				// Assert that onKeyDown is triggered before onKeyPress and onKeyUp
+				Assert.assertEquals(keyDownChars.size(), keyPressChars.size());
+				Assert.assertEquals(keyDownChars.size(), keyUpChars.size());
+
+				keyDownChars.add((char) event.getNativeKeyCode());
+			}
+		});
+
+		// Test
+		Browser.fillText(tb, textToFill);
+
+		// Asserts
+		Assert.assertEquals(textToFill, tb.getText());
+		Assert.assertEquals(textToFill, tb.getValue());
+		assertTextFilledCorrectly(textToFill, keyDownChars);
+		assertTextFilledCorrectly(textToFill, keyPressChars);
+		assertTextFilledCorrectly(textToFill, keyUpChars);
+		Assert.assertTrue(onBlurTriggered);
+		Assert.assertTrue(onChangeTriggered);
+	}
+
+	private void assertTextFilledCorrectly(String filledText, List<Character> typedChars) {
+
+		Assert.assertEquals(filledText.length(), typedChars.size());
+
+		for (int i = 0; i < filledText.length(); i++) {
+			Assert.assertEquals((Object) filledText.charAt(i), typedChars.get(i));
+		}
+
 	}
 
 	@Test
