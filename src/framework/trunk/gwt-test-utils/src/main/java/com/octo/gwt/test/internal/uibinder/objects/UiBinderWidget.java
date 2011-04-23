@@ -83,20 +83,19 @@ public class UiBinderWidget<T extends Widget> implements UiBinderTag {
     }
   }
 
-  public final void addTag(UiBinderTag tag) {
-    Object wrappedChild = tag.complete();
-    if (Widget.class.isInstance(wrappedChild)) {
-      addWidget(this.wrapped, (Widget) wrappedChild);
-    } else {
-      appendElement(this.wrapped, (Element) wrappedChild);
-    }
+  public final void addElement(Element element) {
+    appendElement(wrapped, element);
+  }
+
+  public final void addWidget(Widget widget) {
+    addWidget(wrapped, widget);
   }
 
   public final void appendText(String data) {
     appendText(wrapped, data);
   }
 
-  public Object complete() {
+  public Object getWrapped() {
 
     try {
       BeanUtils.populate(this.wrapped, attributesMap);

@@ -45,6 +45,12 @@ public class UiBinderWithWidgetsTest extends GwtTestTest {
     SpanElement spanElement = Document.get().getElementById("mySpan").cast();
     Assert.assertEquals("some span for testing", spanElement.getInnerText());
     Assert.assertEquals("pretty", spanElement.getClassName());
+
+    Assert.assertEquals("We <b>strongly</b> urge you to reconsider.",
+        w.msgLabel.getText());
+
+    Assert.assertEquals("9'00", w.msgInnerWidget.getText());
+    Assert.assertEquals(w.msgInnerWidget, wrappedPanel.getWidget(3));
   }
 
   @Test

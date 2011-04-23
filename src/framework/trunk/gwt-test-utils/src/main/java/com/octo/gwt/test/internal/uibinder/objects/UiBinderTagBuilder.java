@@ -11,6 +11,7 @@ import java.util.Map;
 import org.xml.sax.Attributes;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.uibinder.client.UiConstructor;
 import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
@@ -22,11 +23,11 @@ import com.octo.gwt.test.utils.FastStack;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 @SuppressWarnings("unchecked")
-public class UiBinderComponentBuilder<T> {
+public class UiBinderTagBuilder<T> {
 
-  public static final <T> UiBinderComponentBuilder<T> create(
+  public static final <T> UiBinderTagBuilder<T> create(
       Class<T> rootComponentClass, Object owner) {
-    return new UiBinderComponentBuilder<T>(rootComponentClass, owner);
+    return new UiBinderTagBuilder<T>(rootComponentClass, owner);
   }
 
   private final Object owner;
@@ -35,12 +36,12 @@ public class UiBinderComponentBuilder<T> {
   private final Class<T> rootComponentClass;
   private final FastStack<UiBinderTag> tags = new FastStack<UiBinderTag>();
 
-  private UiBinderComponentBuilder(Class<T> rootComponentClass, Object owner) {
+  private UiBinderTagBuilder(Class<T> rootComponentClass, Object owner) {
     this.rootComponentClass = rootComponentClass;
     this.owner = owner;
   }
 
-  public UiBinderComponentBuilder<T> appendText(String text) {
+  public UiBinderTagBuilder<T> appendText(String text) {
 
     // if stack is empty, it means that the text is a style declaration, just
     // ignore it..
@@ -70,26 +71,39 @@ public class UiBinderComponentBuilder<T> {
     return (T) rootComponent;
   }
 
-  public UiBinderComponentBuilder<T> endTag(String nameSpaceURI,
-      String localName) {
+  public UiBinderTagBuilder<T> endTag(String nameSpaceURI, String localName) {
     if (!shouldIgnoreTag(nameSpaceURI, localName)
         && !UiBinderUtils.isResourceTag(nameSpaceURI, localName)) {
-      UiBinderTag tag = tags.pop();
+
+      UiBinderTag currentTag = tags.pop();
 
       if (tags.size() == 0) {
         // parsing is finished, this is the root component
-        rootComponent = tag.complete();
+        rootComponent = currentTag.getWrapped();
       } else {
         // add to its parent
-        tags.get(tags.size() - 1).addTag(tag);
+        UiBinderTag parentTag = getPrevious();
+
+        Object wrappedChild = currentTag.getWrapped();
+        if (Widget.class.isInstance(wrappedChild)) {
+          parentTag.addWidget((Widget) wrappedChild);
+        } else if (Element.class.isInstance(wrappedChild)) {
+          parentTag.addElement((Element) wrappedChild);
+        } else if (String.class == wrappedChild.getClass()) {
+          parentTag.appendText((String) wrappedChild);
+        } else {
+          throw new GwtTestUiBinderException("Cannot add an instance of '"
+              + UiBinderTag.class.getSimpleName() + "' which wraps a '"
+              + wrappedChild.getClass().getName() + "' object");
+        }
       }
     }
 
     return this;
   }
 
-  public UiBinderComponentBuilder<T> startTag(String nameSpaceURI,
-      String localName, Attributes attributes) {
+  public UiBinderTagBuilder<T> startTag(String nameSpaceURI, String localName,
+      Attributes attributes) {
 
     if (!shouldIgnoreTag(nameSpaceURI, localName)) {
       if (UiBinderUtils.isResourceTag(nameSpaceURI, localName)) {
@@ -138,6 +152,8 @@ public class UiBinderComponentBuilder<T> {
             + "', only subclass of '" + Widget.class.getName()
             + "' are managed");
       }
+    } else if (UiBinderUtils.isMsgTag(nameSpaceURI, localName)) {
+      return new UiBinderMsg(getPrevious());
     } else {
       return new UiBinderElement(nameSpaceURI, localName, attributes, owner);
     }
@@ -209,6 +225,10 @@ public class UiBinderComponentBuilder<T> {
     }
 
     return null;
+  }
+
+  private UiBinderTag getPrevious() {
+    return tags.get(tags.size() - 1);
   }
 
   private <U> U getProvidedUiField(Class<U> withObjectClass) {

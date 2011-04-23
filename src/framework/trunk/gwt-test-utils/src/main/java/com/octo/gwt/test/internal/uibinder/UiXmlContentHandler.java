@@ -5,11 +5,11 @@ import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 
-import com.octo.gwt.test.internal.uibinder.objects.UiBinderComponentBuilder;
+import com.octo.gwt.test.internal.uibinder.objects.UiBinderTagBuilder;
 
 public class UiXmlContentHandler<T> implements ContentHandler {
 
-  private UiBinderComponentBuilder<T> builder;
+  private UiBinderTagBuilder<T> builder;
   private final Object owner;
 
   private T rootComponent;
@@ -21,10 +21,8 @@ public class UiXmlContentHandler<T> implements ContentHandler {
   }
 
   public void characters(char[] ch, int start, int length) throws SAXException {
-    String text = String.copyValueOf(ch, start, length).trim();
-    if (text.length() > 0) {
-      this.builder.appendText(text);
-    }
+    String text = String.copyValueOf(ch, start, length);
+    this.builder.appendText(text);
   }
 
   public void endDocument() throws SAXException {
@@ -59,7 +57,7 @@ public class UiXmlContentHandler<T> implements ContentHandler {
   }
 
   public void startDocument() throws SAXException {
-    this.builder = UiBinderComponentBuilder.create(this.rootComponentClass,
+    this.builder = UiBinderTagBuilder.create(this.rootComponentClass,
         this.owner);
   }
 

@@ -110,9 +110,10 @@ public abstract class LocalizableResourcesInvocationHandler implements
 
         if (result != null) {
           return result;
+        } else {
+          return recurseExtractFromParentLocaleSpecificResource(
+              inter.getInterfaces(), method, args);
         }
-        recurseExtractFromParentLocaleSpecificResource(inter.getInterfaces(),
-            method, args);
       }
     }
 
@@ -128,8 +129,10 @@ public abstract class LocalizableResourcesInvocationHandler implements
 
         if (result != null) {
           return result;
+        } else {
+          return recurseExtractFromParentResource(inter.getInterfaces(),
+              method, args);
         }
-        recurseExtractFromParentResource(inter.getInterfaces(), method, args);
       }
     }
 

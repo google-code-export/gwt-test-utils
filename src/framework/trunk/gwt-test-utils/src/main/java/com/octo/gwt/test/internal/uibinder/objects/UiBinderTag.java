@@ -1,11 +1,15 @@
 package com.octo.gwt.test.internal.uibinder.objects;
 
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.user.client.ui.Widget;
 
 public interface UiBinderTag {
 
-  public void addTag(UiBinderTag tag);
+  public void addElement(Element element);
 
-  public void appendText(String data);
+  public void addWidget(Widget widget);
 
-  public Object complete();
+  public void appendText(String text);
+
+  public Object getWrapped();
 }

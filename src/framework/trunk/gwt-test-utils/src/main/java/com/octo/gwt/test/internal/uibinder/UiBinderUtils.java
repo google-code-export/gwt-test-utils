@@ -6,6 +6,7 @@ import java.util.Set;
 public class UiBinderUtils {
 
   private static final String FIELD_ATTR_NAME = "field";
+  private static final String MSG_TAG = "msg";
   private static final Set<String> RESOURCE_TAGS = new HashSet<String>();
   private static final String TYPE_ATTR_NAME = "type";
   private static final String UIBINDER_NSURI = "urn:ui:com.google.gwt.uibinder";
@@ -14,7 +15,6 @@ public class UiBinderUtils {
   static {
     RESOURCE_TAGS.add("data");
     RESOURCE_TAGS.add("img");
-    RESOURCE_TAGS.add("msg");
     RESOURCE_TAGS.add("with");
   }
 
@@ -24,8 +24,8 @@ public class UiBinderUtils {
     return array[array.length - 1];
   }
 
-  public static boolean isUiFieldAttribute(String nameSpaceURI, String attrName) {
-    return FIELD_ATTR_NAME.equals(attrName)
+  public static boolean isMsgTag(String nameSpaceURI, String tagName) {
+    return MSG_TAG.equals(tagName) && nameSpaceURI != null
         && nameSpaceURI.equals(UIBINDER_NSURI);
   }
 
@@ -40,6 +40,11 @@ public class UiBinderUtils {
 
   public static boolean isUiBinderTag(String nameSpaceURI, String tagName) {
     return UIBINDER_TAG.equals(tagName) && nameSpaceURI != null
+        && nameSpaceURI.equals(UIBINDER_NSURI);
+  }
+
+  public static boolean isUiFieldAttribute(String nameSpaceURI, String attrName) {
+    return FIELD_ATTR_NAME.equals(attrName)
         && nameSpaceURI.equals(UIBINDER_NSURI);
   }
 

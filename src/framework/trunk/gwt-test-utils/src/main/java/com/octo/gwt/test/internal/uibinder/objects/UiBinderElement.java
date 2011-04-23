@@ -40,20 +40,21 @@ public class UiBinderElement implements UiBinderTag {
     }
   }
 
-  public final void addTag(UiBinderTag tag) {
-    Object wrappedChild = tag.complete();
-    if (Widget.class.isInstance(wrappedChild)) {
-      addWidget(this.wrapped, (Widget) wrappedChild);
-    } else {
-      appendElement(this.wrapped, (Element) wrappedChild);
-    }
+  public final void addElement(Element element) {
+    appendElement(wrapped, element);
+
+  }
+
+  public void addWidget(Widget widget) {
+    addWidget(wrapped, widget);
+
   }
 
   public final void appendText(String data) {
     appendText(this.wrapped, data);
   }
 
-  public Object complete() {
+  public Object getWrapped() {
     return this.wrapped;
   }
 

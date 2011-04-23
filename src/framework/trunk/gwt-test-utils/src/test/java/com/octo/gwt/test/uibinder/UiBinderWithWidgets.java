@@ -8,6 +8,7 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.Widget;
@@ -27,6 +28,12 @@ public class UiBinderWithWidgets extends Composite {
 
   @UiField
   ListBox listBox;
+
+  @UiField
+  Label msgInnerWidget;
+
+  @UiField
+  Label msgLabel;
 
   @UiField(provided = true)
   ProvidedLabel providedLabel;
