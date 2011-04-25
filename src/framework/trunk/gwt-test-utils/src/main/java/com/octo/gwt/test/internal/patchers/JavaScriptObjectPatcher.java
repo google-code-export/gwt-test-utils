@@ -5,6 +5,7 @@ import javassist.CtField;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArrayString;
+import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Text;
@@ -25,31 +26,38 @@ public class JavaScriptObjectPatcher extends AutomaticPatcher {
 
   @PatchMethod
   public static String toString(JavaScriptObject jso) {
-    StringBuilder sb = new StringBuilder();
-    sb.append(jso.getClass().getSimpleName()).append("[");
     // TODO : remove this code when overlay will be OK
-    if (NodeList.class.isInstance(jso)) {
-      sb.append(JavaScriptObjects.getJsoProperties(jso).getObject(
-          JsoProperties.NODE_LIST_INNER_LIST));
+    if (Text.class.isInstance(jso)) {
+      Text text = jso.cast();
+      return "'" + text.getData() + "'";
+    } else if (Document.class.isInstance(jso)) {
+      return "[object HTMLDocument]";
     } else if (Element.class.isInstance(jso)) {
       Element e = jso.cast();
-      sb.append(e.getTagName());
-    } else if (Text.class.isInstance(jso)) {
-      Text text = jso.cast();
-      sb.append(text.getData());
+      return elementToString(e);
+    } else if (NodeList.class.isInstance(jso)) {
+      return JavaScriptObjects.getJsoProperties(jso).getObject(
+          JsoProperties.NODE_LIST_INNER_LIST).toString();
     } else {
+      StringBuilder sb = new StringBuilder();
+      sb.append(jso.getClass().getSimpleName()).append("[");
       sb.append(JavaScriptObjects.getJsoProperties(jso).size());
+      sb.append("]");
+      return sb.toString();
     }
-    sb.append("]");
+  }
 
-    return sb.toString();
+  private static String elementToString(Element elem) {
+    StringBuilder sb = new StringBuilder();
+    sb.append("<").append(elem.getTagName()).append(" ");
+    return elem.getTagName();
   }
 
   @Override
   public void initClass(CtClass c) throws Exception {
     super.initClass(c);
 
-    // add field "protected PropertyContainer __PROPERTIES__;"
+    // add field "protected PropertyContainer JSO_PROPERTIES;"
     CtField propertiesField = CtField.make(
         "protected final " + PropertyContainer.class.getName() + " "
             + JavaScriptObjects.PROPERTIES + " = new "

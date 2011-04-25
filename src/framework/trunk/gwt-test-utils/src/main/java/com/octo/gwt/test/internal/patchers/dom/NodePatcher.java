@@ -48,6 +48,11 @@ public class NodePatcher extends OverlayPatcher {
     return newNode;
   }
 
+  public static NodeList<Node> getChildNodes(Node node) {
+    return JavaScriptObjects.getJsoProperties(node).getObject(
+        JsoProperties.NODE_LIST_FIELD);
+  }
+
   @PatchMethod
   public static Node getFirstChild(Node node) {
     List<Node> list = getChildNodeList(node);

@@ -154,10 +154,10 @@ public class Browser {
 
       int keyCode = value.charAt(i);
       Event keyDownEvent = EventBuilder.create(Event.ONKEYDOWN).setKeyCode(
-          keyCode).build().cast();
+          keyCode).build();
       Event keyPressEvent = EventBuilder.create(Event.ONKEYPRESS).setKeyCode(
-          keyCode).build().cast();
-      Event keyUpEvent = EventBuilder.create(Event.ONKEYUP).setKeyCode(keyCode).build().cast();
+          keyCode).build();
+      Event keyUpEvent = EventBuilder.create(Event.ONKEYUP).setKeyCode(keyCode).build();
 
       dispatchEvent((Widget) hasTextWidget, keyDownEvent, keyPressEvent,
           keyUpEvent);

@@ -52,7 +52,7 @@ public class DOMImplPatcher extends AutomaticPatcher {
     JavaScriptObjects.getJsoProperties(e).put(JsoProperties.TYPE, type);
 
     if (name != null) {
-      JavaScriptObjects.getJsoProperties(e).put(JsoProperties.NAME, name);
+      JavaScriptObjects.getJsoProperties(e).put(JsoProperties.DOM_NAME, name);
     }
 
     return e;
@@ -151,14 +151,12 @@ public class DOMImplPatcher extends AutomaticPatcher {
 
   @PatchMethod
   public static int getAbsoluteLeft(Object domImpl, Element elem) {
-    return JavaScriptObjects.getJsoProperties(elem).getInteger(
-        JsoProperties.ABSOLUTE_LEFT);
+    return 0;
   }
 
   @PatchMethod
   public static int getAbsoluteTop(Object domImpl, Element elem) {
-    return JavaScriptObjects.getJsoProperties(elem).getInteger(
-        JsoProperties.ABSOLUTE_TOP);
+    return 0;
   }
 
   @PatchMethod
@@ -372,8 +370,8 @@ public class DOMImplPatcher extends AutomaticPatcher {
 
     for (int i = 0; i < list.getLength(); i++) {
       Node node = list.getItem(i);
-      if (Text.class.isInstance(node)) {
-        return (Text) node;
+      if (Node.TEXT_NODE == node.getNodeType()) {
+        return node.cast();
       }
     }
 

@@ -66,7 +66,7 @@ import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 public class JavaScriptObjects {
 
-  public static final String PROPERTIES = "__PROPERTIES__";
+  public static final String PROPERTIES = "JSO_PROPERTIES";
 
   public static CtClass STRING_TYPE;
 
@@ -191,9 +191,6 @@ public class JavaScriptObjects {
         setProperty(o, JsoProperties.SELECTED_INDEX_FIELD, -1);
         setProperty(o, JsoProperties.SELECTED_SIZE, -1);
       }
-
-      // TODO: remove ?
-      setProperty(o, JsoProperties.CLASSNAME_FIELD, "");
     } else if (Text.class.isAssignableFrom(jsoClass)) {
       nodeType = Node.TEXT_NODE;
     }

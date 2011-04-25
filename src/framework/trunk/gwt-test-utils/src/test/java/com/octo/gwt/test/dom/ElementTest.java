@@ -15,6 +15,7 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.HeadingElement;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
+import com.google.gwt.dom.client.Style.Float;
 import com.octo.gwt.test.GwtTestTest;
 import com.octo.gwt.test.internal.patchers.dom.JavaScriptObjects;
 
@@ -359,6 +360,26 @@ public class ElementTest extends GwtTestTest {
     Assert.assertNull(e.getPropertyString("titLe"));
     Assert.assertEquals("MyTitle", e.getPropertyObject("title"));
     Assert.assertNull(e.getPropertyObject("titLe"));
+  }
+
+  // TODO : pass the toString test ?
+  // @Test
+  public void checkToString() {
+    // Setup
+    DivElement div = Document.get().createDivElement();
+    div.setAttribute("someAttr", "myVal");
+    div.getStyle().setBackgroundColor("black");
+    div.getStyle().setFloat(Float.LEFT);
+    div.getStyle().setProperty("backgroundColor", "white");
+
+    // Test
+    String html = div.toString();
+
+    // Assert
+    Assert.assertEquals(
+        "<div someAttr=\"myVal\" style=\"float: left; background-color: white; \"></div>",
+        html);
+
   }
 
   @Before

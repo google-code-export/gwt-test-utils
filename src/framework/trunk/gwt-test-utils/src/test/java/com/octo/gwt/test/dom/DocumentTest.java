@@ -283,6 +283,16 @@ public class DocumentTest extends GwtTestTest {
     Assert.assertEquals(3, d.getScrollTop());
   }
 
+  @Test
+  public void checkToString() {
+    // Test
+    String toString = Document.get().toString();
+
+    // Assert
+    Assert.assertEquals("[object HTMLDocument]", toString);
+
+  }
+
   @Before
   public void initDocument() {
     d = Document.get();
