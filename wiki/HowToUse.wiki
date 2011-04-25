@@ -14,7 +14,7 @@ First, you have to setup the required dependency in the _pom.xml_ :
    <dependency>
       <groupId>com.octo.gwt.test</groupId>
       <artifactId>gwt-test-utils</artifactId>
-      <version>0.28</version>
+      <version>0.27</version>
       <scope>test</scope>
    </dependency>
    ...
@@ -75,7 +75,7 @@ Sometimes, it could be helpfull to get the lastest snapshot. It's done with the 
    <dependency>
       <groupId>com.octo.gwt.test</groupId>
       <artifactId>gwt-test-utils-integration</artifactId>
-      <version>0.29-SNAPSHOT</version>
+      <version>0.28-SNAPSHOT</version>
       <scope>test</scope>
    </dependency>
    ...
