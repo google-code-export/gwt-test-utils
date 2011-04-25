@@ -14,7 +14,7 @@ First, you have to setup the required dependency in the _pom.xml_ :
    <dependency>
       <groupId>com.octo.gwt.test</groupId>
       <artifactId>gwt-test-utils</artifactId>
-      <version>0.27</version>
+      <version>0.28</version>
       <scope>test</scope>
    </dependency>
    ...
@@ -75,7 +75,7 @@ Sometimes, it could be helpfull to get the lastest snapshot. It's done with the 
    <dependency>
       <groupId>com.octo.gwt.test</groupId>
       <artifactId>gwt-test-utils-integration</artifactId>
-      <version>0.28-SNAPSHOT</version>
+      <version>0.29-SNAPSHOT</version>
       <scope>test</scope>
    </dependency>
    ...
@@ -115,18 +115,20 @@ Lastest Snapshot can be downloaded through [http://forge.octo.com/nexus/content/
 
 ==== List of third-party jars required by {{{gwt-test-utils}}} ====
 
- * cglib-nodep-2.2.jar
- * commons-lang-2.5.jar
- * easymock-3.0.jar
- * mockito-core-1.8.5.jar
- * gwt-dev-2.1.1.jar
- * gwt-servlet-2.1.1.jar
- * gwt-user-2.1.1.jar
+ * commons-beanutils-1.8.3.jar
+ * commons-logging-1.1.1.jar
+ * gwt-dev-2.2.0.jar
+ * gwt-servlet-2.2.0.jar
+ * gwt-user-2.2.0.jar
  * htmlparser-1.6.jar
  * javassist-3.12.1.GA.jar
  * junit-4.8.2.jar
- * objenesis-1.2.jar
  * slf4j-api-1.6.1.jar (with the adapter of your choice)
+
+If you are interested in using a java mock framework, *gwt-test-utils* has been tested with :
+
+ * easymock-3.0.jar
+ * mockito-core-1.8.5.jar
 
 
 ==== List of third-party jars required by {{{gwt-test-utils-csv}}} ====
