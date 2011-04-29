@@ -9,12 +9,19 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 import com.octo.gwt.test.internal.patchers.dom.JavaScriptObjects;
 
+/**
+ * 
+ * Some {@link Style} utility methods. <strong>For internal use only.</strong>
+ * 
+ * @author Gael Lazzari
+ * 
+ */
 public class StyleUtils {
 
   private static final Pattern STYLE_PATTERN = Pattern.compile("(.+):(.+)");
 
   public static Element getOwnerElement(Style style) {
-    return JavaScriptObjects.getJsoProperties(style).getObject(
+    return JavaScriptObjects.getObject(style,
         JsoProperties.STYLE_TARGET_ELEMENT);
   }
 

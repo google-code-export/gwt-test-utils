@@ -9,11 +9,11 @@ import javassist.bytecode.annotation.StringMemberValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import com.octo.gwt.test.GwtCreateHandler;
 import com.octo.gwt.test.exceptions.GwtTestRpcException;
-import com.octo.gwt.test.integration.internal.GwtRpcInvocationHandler;
 import com.octo.gwt.test.internal.GwtClassPool;
 
 /**
@@ -37,6 +37,22 @@ import com.octo.gwt.test.internal.GwtClassPool;
  * 
  */
 public abstract class RemoteServiceCreateHandler implements GwtCreateHandler {
+
+  private class DefaultGwtRpcExceptionHandler implements GwtRpcExceptionHandler {
+
+    public void handle(Throwable t, AsyncCallback<?> callback) {
+      callback.onFailure(t);
+    }
+
+  }
+  private class DefaultGwtRpcSerializerHandler implements
+      GwtRpcSerializerHandler {
+
+    public <T> T serializeUnserialize(T o) throws Exception {
+      return DeepCopy.copy(o);
+    }
+
+  }
 
   private static final Logger logger = LoggerFactory.getLogger(RemoteServiceCreateHandler.class);
 

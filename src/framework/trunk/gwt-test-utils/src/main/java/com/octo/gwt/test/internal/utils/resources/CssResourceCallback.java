@@ -10,7 +10,7 @@ import com.google.gwt.dom.client.StyleInjector;
 import com.google.gwt.resources.client.ClientBundle;
 import com.octo.gwt.test.internal.utils.resources.CssResourceReader.CssParsingResult;
 
-public class CssResourceCallback extends AbstractClientBundleCallback {
+class CssResourceCallback extends ClientBundleCallback {
 
   private boolean alreadyInjected = false;
 

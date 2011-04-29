@@ -20,7 +20,7 @@ import com.octo.gwt.test.exceptions.GwtTestConfigurationException;
 import com.octo.gwt.test.exceptions.GwtTestDomException;
 import com.octo.gwt.test.exceptions.GwtTestException;
 import com.octo.gwt.test.internal.GwtConfig;
-import com.octo.gwt.test.internal.GwtHtmlParser;
+import com.octo.gwt.test.internal.utils.GwtHtmlParser;
 import com.octo.gwt.test.internal.utils.JsoProperties;
 import com.octo.gwt.test.patchers.OverlayPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
@@ -51,8 +51,8 @@ public class DocumentPatcher extends OverlayPatcher {
         DOCUMENT = JavaScriptObjects.newObject(Document.class);
         Element e = parseHTMLElement();
         DOCUMENT.appendChild(e);
-        JavaScriptObjects.getJsoProperties(DOCUMENT).put(
-            JsoProperties.DOCUMENT_ELEMENT, e);
+        JavaScriptObjects.setProperty(DOCUMENT, JsoProperties.DOCUMENT_ELEMENT,
+            e);
       } catch (Exception e) {
         if (GwtTestException.class.isInstance(e)) {
           throw (GwtTestException) e;
@@ -121,9 +121,9 @@ public class DocumentPatcher extends OverlayPatcher {
   public static void reset() {
     if (DOCUMENT != null) {
       if (DOCUMENT.getBody() != null) {
-        JavaScriptObjects.getJsoProperties(DOCUMENT.getBody()).clear();
+        JavaScriptObjects.clearProperties(DOCUMENT.getBody());
       }
-      JavaScriptObjects.getJsoProperties(DOCUMENT).clear();
+      JavaScriptObjects.clearProperties(DOCUMENT);
       DOCUMENT = null;
     }
   }
@@ -146,8 +146,7 @@ public class DocumentPatcher extends OverlayPatcher {
   }
 
   private static NodeList<Node> getChildNodeList(Node node) {
-    return JavaScriptObjects.getJsoProperties(node).getObject(
-        JsoProperties.NODE_LIST_FIELD);
+    return JavaScriptObjects.getObject(node, JsoProperties.NODE_LIST_FIELD);
   }
 
   private static String getHostPageHTML(String hostPagePath) {
@@ -198,7 +197,7 @@ public class DocumentPatcher extends OverlayPatcher {
   private static void inspectDomForTag(Node node, String tagName,
       NodeList<Element> result) {
     NodeList<Node> childs = getChildNodeList(node);
-    List<Node> list = JavaScriptObjects.getJsoProperties(result).getObject(
+    List<Node> list = JavaScriptObjects.getObject(result,
         JsoProperties.NODE_LIST_INNER_LIST);
 
     for (int i = 0; i < childs.getLength(); i++) {

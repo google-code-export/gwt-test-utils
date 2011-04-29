@@ -16,13 +16,14 @@ import com.google.gwt.dom.client.SelectElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Text;
 import com.google.gwt.user.client.Event;
+import com.octo.gwt.test.internal.utils.EventUtils;
 import com.octo.gwt.test.internal.utils.JsoProperties;
+import com.octo.gwt.test.internal.utils.PropertyContainer;
 import com.octo.gwt.test.patchers.AutomaticPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 import com.octo.gwt.test.utils.events.EventBuilder;
-import com.octo.gwt.test.utils.events.EventUtils;
 
 @PatchClass(classes = {"com.google.gwt.dom.client.DOMImpl"})
 public class DOMImplPatcher extends AutomaticPatcher {
@@ -31,7 +32,9 @@ public class DOMImplPatcher extends AutomaticPatcher {
   public static ButtonElement createButtonElement(Object domImpl, Document doc,
       String type) {
     ButtonElement e = (ButtonElement) doc.createElement("button");
-    JavaScriptObjects.getJsoProperties(e).put(JsoProperties.TYPE, type);
+    PropertyContainer properties = JavaScriptObjects.getObject(e,
+        JsoProperties.ELEM_PROPERTIES);
+    properties.put(JsoProperties.ELEM_TYPE, type);
     return e;
   }
 
@@ -49,10 +52,14 @@ public class DOMImplPatcher extends AutomaticPatcher {
   public static InputElement createInputElement(Document doc, String type,
       String name) {
     InputElement e = (InputElement) doc.createElement("input");
-    JavaScriptObjects.getJsoProperties(e).put(JsoProperties.TYPE, type);
+
+    PropertyContainer properties = JavaScriptObjects.getObject(e,
+        JsoProperties.ELEM_PROPERTIES);
+
+    properties.put(JsoProperties.ELEM_TYPE, type);
 
     if (name != null) {
-      JavaScriptObjects.getJsoProperties(e).put(JsoProperties.DOM_NAME, name);
+      properties.put(JsoProperties.ELEM_NAME, name);
     }
 
     return e;
@@ -85,14 +92,12 @@ public class DOMImplPatcher extends AutomaticPatcher {
 
   @PatchMethod
   public static boolean eventGetAltKey(Object domImpl, NativeEvent evt) {
-    return JavaScriptObjects.getJsoProperties(evt).getBoolean(
-        JsoProperties.EVENT_KEY_ALT);
+    return JavaScriptObjects.getBoolean(evt, JsoProperties.EVENT_KEY_ALT);
   }
 
   @PatchMethod
   public static int eventGetButton(Object domImpl, NativeEvent evt) {
-    return JavaScriptObjects.getJsoProperties(evt).getInteger(
-        JsoProperties.EVENT_BUTTON);
+    return JavaScriptObjects.getInteger(evt, JsoProperties.EVENT_BUTTON);
   }
 
   @PatchMethod
@@ -102,46 +107,40 @@ public class DOMImplPatcher extends AutomaticPatcher {
 
   @PatchMethod
   public static boolean eventGetCtrlKey(Object domImpl, NativeEvent evt) {
-    return JavaScriptObjects.getJsoProperties(evt).getBoolean(
-        JsoProperties.EVENT_KEY_CTRL);
+    return JavaScriptObjects.getBoolean(evt, JsoProperties.EVENT_KEY_CTRL);
   }
 
   @PatchMethod
   public static int eventGetKeyCode(Object domImpl, NativeEvent evt) {
-    return JavaScriptObjects.getJsoProperties(evt).getInteger(
-        JsoProperties.EVENT_KEYCODE);
+    return JavaScriptObjects.getInteger(evt, JsoProperties.EVENT_KEYCODE);
   }
 
   @PatchMethod
   public static boolean eventGetMetaKey(Object domImpl, NativeEvent evt) {
-    return JavaScriptObjects.getJsoProperties(evt).getBoolean(
-        JsoProperties.EVENT_KEY_META);
+    return JavaScriptObjects.getBoolean(evt, JsoProperties.EVENT_KEY_META);
   }
 
   @PatchMethod
   public static boolean eventGetShiftKey(Object domImpl, NativeEvent evt) {
-    return JavaScriptObjects.getJsoProperties(evt).getBoolean(
-        JsoProperties.EVENT_KEY_SHIFT);
+    return JavaScriptObjects.getBoolean(evt, JsoProperties.EVENT_KEY_SHIFT);
   }
 
   @PatchMethod
   public static EventTarget eventGetTarget(Object domImpl,
       NativeEvent nativeEvent) {
-    return JavaScriptObjects.getJsoProperties(nativeEvent).getObject(
-        JsoProperties.EVENT_TARGET);
+    return JavaScriptObjects.getObject(nativeEvent, JsoProperties.EVENT_TARGET);
   }
 
   @PatchMethod
   public static String eventGetType(Object domImpl, NativeEvent nativeEvent) {
-    int eventType = JavaScriptObjects.getJsoProperties(nativeEvent).getInteger(
+    int eventType = JavaScriptObjects.getInteger(nativeEvent,
         JsoProperties.EVENT_TYPE);
     return EventUtils.getEventTypeString(eventType);
   }
 
   @PatchMethod
   public static void eventPreventDefault(Object domImpl, NativeEvent evt) {
-    JavaScriptObjects.getJsoProperties(evt).put(
-        JsoProperties.EVENT_PREVENTDEFAULT, true);
+    JavaScriptObjects.setProperty(evt, JsoProperties.EVENT_PREVENTDEFAULT, true);
   }
 
   @PatchMethod
@@ -162,7 +161,9 @@ public class DOMImplPatcher extends AutomaticPatcher {
   @PatchMethod
   public static String getAttribute(Object domImpl, Element elem, String name) {
     name = JsoProperties.get().getPropertyName(name);
-    return JavaScriptObjects.getJsoProperties(elem).getString(name);
+    PropertyContainer properties = JavaScriptObjects.getObject(elem,
+        JsoProperties.ELEM_PROPERTIES);
+    return properties.getString(name);
   }
 
   @PatchMethod
@@ -190,9 +191,9 @@ public class DOMImplPatcher extends AutomaticPatcher {
   }
 
   @PatchMethod
+  // TODO : use JSO.toString() instead..
   public static String getInnerHTML(Object domImpl, Element elem) {
-    return JavaScriptObjects.getJsoProperties(elem).getString(
-        JsoProperties.INNER_HTML);
+    return JavaScriptObjects.getString(elem, JsoProperties.INNER_HTML);
   }
 
   @PatchMethod
@@ -240,14 +241,12 @@ public class DOMImplPatcher extends AutomaticPatcher {
 
   @PatchMethod
   public static int getScrollLeft(Object domImpl, Element elem) {
-    return JavaScriptObjects.getJsoProperties(elem).getInteger(
-        JsoProperties.SCROLL_LEFT);
+    return JavaScriptObjects.getInteger(elem, JsoProperties.SCROLL_LEFT);
   }
 
   @PatchMethod
   public static int getTabIndex(Object domImpl, Element elem) {
-    return JavaScriptObjects.getJsoProperties(elem).getInteger(
-        JsoProperties.TAB_INDEX);
+    return JavaScriptObjects.getInteger(elem, JsoProperties.TAB_INDEX);
   }
 
   @PatchMethod
@@ -255,8 +254,7 @@ public class DOMImplPatcher extends AutomaticPatcher {
     if (elem == null)
       return null;
 
-    String tagName = JavaScriptObjects.getJsoProperties(elem).getObject(
-        JsoProperties.TAG_NAME);
+    String tagName = JavaScriptObjects.getObject(elem, JsoProperties.TAG_NAME);
 
     return (tagName != null) ? tagName
         : (String) GwtReflectionUtils.getStaticFieldValue(elem.getClass(),
@@ -265,12 +263,16 @@ public class DOMImplPatcher extends AutomaticPatcher {
 
   @PatchMethod
   public static String imgGetSrc(Object domImpl, Element img) {
-    return JavaScriptObjects.getJsoProperties(img).getString(JsoProperties.SRC);
+    PropertyContainer properties = JavaScriptObjects.getObject(img,
+        JsoProperties.ELEM_PROPERTIES);
+    return properties.getString(JsoProperties.ELEM_IMG_SRC);
   }
 
   @PatchMethod
   public static void imgSetSrc(Object domImpl, Element img, String src) {
-    JavaScriptObjects.getJsoProperties(img).put(JsoProperties.SRC, src);
+    PropertyContainer properties = JavaScriptObjects.getObject(img,
+        JsoProperties.ELEM_PROPERTIES);
+    properties.put(JsoProperties.ELEM_IMG_SRC, src);
   }
 
   @PatchMethod
@@ -303,8 +305,8 @@ public class DOMImplPatcher extends AutomaticPatcher {
 
   @PatchMethod
   public static void selectClear(Object domImpl, SelectElement select) {
-    List<Node> innerList = JavaScriptObjects.getJsoProperties(
-        select.getChildNodes()).getObject(JsoProperties.NODE_LIST_INNER_LIST);
+    List<Node> innerList = JavaScriptObjects.getObject(select.getChildNodes(),
+        JsoProperties.NODE_LIST_INNER_LIST);
 
     innerList.clear();
     select.setSelectedIndex(-1);
@@ -314,8 +316,6 @@ public class DOMImplPatcher extends AutomaticPatcher {
   public static int selectGetLength(Object domImpl, SelectElement select) {
     return selectGetOptions(domImpl, select).getLength();
   }
-
-  // Abstract methods
 
   @PatchMethod
   public static NodeList<OptionElement> selectGetOptions(Object domImpl,
@@ -332,11 +332,13 @@ public class DOMImplPatcher extends AutomaticPatcher {
     return JavaScriptObjects.newNodeList(innerList);
   }
 
+  // Abstract methods
+
   @PatchMethod
   public static void selectRemoveOption(Object domImpl, SelectElement select,
       int index) {
     NodeList<Node> childNodes = select.getChildNodes();
-    List<Node> list = JavaScriptObjects.getJsoProperties(childNodes).getObject(
+    List<Node> list = JavaScriptObjects.getObject(childNodes,
         JsoProperties.NODE_LIST_INNER_LIST);
     list.remove(index);
 
@@ -356,13 +358,16 @@ public class DOMImplPatcher extends AutomaticPatcher {
 
   @PatchMethod
   public static void setScrollLeft(Object domImpl, Element elem, int left) {
-    JavaScriptObjects.getJsoProperties(elem).put(JsoProperties.SCROLL_LEFT,
-        left);
+    JavaScriptObjects.setProperty(elem, JsoProperties.SCROLL_LEFT, left);
+  }
+
+  @PatchMethod
+  public static String toString(Object domImpl, Element elem) {
+    return elem.toString();
   }
 
   private static NodeList<Node> getChildNodeList(Node node) {
-    return JavaScriptObjects.getJsoProperties(node).getObject(
-        JsoProperties.NODE_LIST_FIELD);
+    return JavaScriptObjects.getObject(node, JsoProperties.NODE_LIST_FIELD);
   }
 
   private static Text getTextNode(Element elem) {

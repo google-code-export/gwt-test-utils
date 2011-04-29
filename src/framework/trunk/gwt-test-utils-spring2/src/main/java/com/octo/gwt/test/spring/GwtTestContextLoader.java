@@ -6,7 +6,7 @@ import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.test.context.support.GenericXmlContextLoader;
 
-import com.octo.gwt.test.GwtClassLoader;
+import com.octo.gwt.test.internal.GwtClassLoader;
 
 public class GwtTestContextLoader extends GenericXmlContextLoader {
 

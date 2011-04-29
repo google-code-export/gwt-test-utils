@@ -8,8 +8,7 @@ import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
 
-import com.octo.gwt.test.GwtClassLoader;
-import com.octo.gwt.test.csv.tools.DirectoryTestReader;
+import com.octo.gwt.test.internal.GwtClassLoader;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 public class BlockJUnit4CsvRunner extends BlockJUnit4ClassRunner {

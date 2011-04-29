@@ -7,14 +7,24 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.impl.HistoryImpl;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.octo.gwt.test.GwtClassLoader;
+import com.octo.gwt.test.internal.handlers.GwtCreateHandlerManager;
 import com.octo.gwt.test.internal.patchers.CurrencyListPatcher;
 import com.octo.gwt.test.internal.patchers.HistoryImplPatcher;
 import com.octo.gwt.test.internal.patchers.TimerPatcher;
 import com.octo.gwt.test.internal.patchers.dom.DocumentPatcher;
-import com.octo.gwt.test.internal.utils.i18n.GwtPropertiesHelper;
+import com.octo.gwt.test.internal.utils.GwtPropertiesHelper;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
+/**
+ * Class in charge of reseting all necessary objects after the execution of a
+ * unit test. <strong>For internal use only.</strong>
+ * 
+ * @author Bertrand Paquet
+ * @author Gael Lazzari
+ * 
+ */
+// TODO : refactor this to have a resetable interface, maybe with the observable
+// pattern ?
 public class GwtReset {
 
   public static void reset() throws Exception {

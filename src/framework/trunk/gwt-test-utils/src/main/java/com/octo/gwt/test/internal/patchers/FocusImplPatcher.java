@@ -23,13 +23,12 @@ public class FocusImplPatcher extends AutomaticPatcher {
 
   @PatchMethod
   public static int getTabIndex(FocusImpl focusImpl, Element elem) {
-    return JavaScriptObjects.getJsoProperties(elem).getInteger(
-        JsoProperties.TAB_INDEX);
+    return JavaScriptObjects.getInteger(elem, JsoProperties.TAB_INDEX);
   }
 
   @PatchMethod
   public static void setTabIndex(FocusImpl focusImpl, Element elem, int index) {
-    JavaScriptObjects.getJsoProperties(elem).put(JsoProperties.TAB_INDEX, index);
+    JavaScriptObjects.setProperty(elem, JsoProperties.TAB_INDEX, index);
   }
 
 }

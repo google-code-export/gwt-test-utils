@@ -17,7 +17,7 @@ public class NodeListPatcher extends AutomaticPatcher {
     if (nodeList.getLength() <= index) {
       return null;
     } else {
-      List<T> innerList = JavaScriptObjects.getJsoProperties(nodeList).getObject(
+      List<T> innerList = JavaScriptObjects.getObject(nodeList,
           JsoProperties.NODE_LIST_INNER_LIST);
       return innerList.get(index);
     }
@@ -25,7 +25,7 @@ public class NodeListPatcher extends AutomaticPatcher {
 
   @PatchMethod
   public static <T extends Node> int getLength(NodeList<T> nodeList) {
-    List<T> innerList = JavaScriptObjects.getJsoProperties(nodeList).getObject(
+    List<T> innerList = JavaScriptObjects.getObject(nodeList,
         JsoProperties.NODE_LIST_INNER_LIST);
     return innerList.size();
   }

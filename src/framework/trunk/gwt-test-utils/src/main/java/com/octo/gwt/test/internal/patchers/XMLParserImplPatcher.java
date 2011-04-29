@@ -13,8 +13,9 @@ import com.google.gwt.dom.client.Text;
 import com.google.gwt.xml.client.impl.XMLParserImpl;
 import com.octo.gwt.test.exceptions.GwtTestPatchException;
 import com.octo.gwt.test.internal.patchers.dom.JavaScriptObjects;
+import com.octo.gwt.test.internal.utils.GwtXMLParser;
 import com.octo.gwt.test.internal.utils.JsoProperties;
-import com.octo.gwt.test.internal.xml.GwtXMLParser;
+import com.octo.gwt.test.internal.utils.PropertyContainer;
 import com.octo.gwt.test.patchers.AutomaticPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
@@ -36,7 +37,7 @@ public class XMLParserImplPatcher extends AutomaticPatcher {
     Text text = JavaScriptObjects.newObject(Text.class);
 
     // set the special type
-    JavaScriptObjects.getJsoProperties(text).put(JsoProperties.NODE_TYPE_FIELD,
+    JavaScriptObjects.setProperty(text, JsoProperties.NODE_TYPE_FIELD,
         com.google.gwt.xml.client.Node.CDATA_SECTION_NODE);
 
     text.setData(data);
@@ -58,7 +59,10 @@ public class XMLParserImplPatcher extends AutomaticPatcher {
 
   @PatchMethod
   public static String getAttribute(JavaScriptObject o, String name) {
-    return JavaScriptObjects.getJsoProperties(o).getObject(name);
+    // Attribute return by XML node can be null
+    PropertyContainer properties = JavaScriptObjects.getObject(o,
+        JsoProperties.ELEM_PROPERTIES);
+    return properties.getObject(name);
   }
 
   @PatchMethod
@@ -68,22 +72,19 @@ public class XMLParserImplPatcher extends AutomaticPatcher {
 
     // create the JavaScriptObject which will simulate an google.xml.Attr
     Node attrJSO = JavaScriptObjects.newObject(Node.class);
-    JavaScriptObjects.getJsoProperties(attrJSO).put(
-        JsoProperties.NODE_TYPE_FIELD,
+    JavaScriptObjects.setProperty(attrJSO, JsoProperties.NODE_TYPE_FIELD,
         com.google.gwt.xml.client.Node.ATTRIBUTE_NODE);
-    JavaScriptObjects.getJsoProperties(attrJSO).put(
-        JsoProperties.XML_ATTR_NAME, name);
-    JavaScriptObjects.getJsoProperties(attrJSO).put(
-        JsoProperties.XML_ATTR_VALUE, value);
-    JavaScriptObjects.getJsoProperties(attrJSO).put(
-        JsoProperties.NODE_NAMESPACE_URI, getNamespaceURI(o));
+    JavaScriptObjects.setProperty(attrJSO, JsoProperties.XML_ATTR_NAME, name);
+    JavaScriptObjects.setProperty(attrJSO, JsoProperties.XML_ATTR_VALUE, value);
+    JavaScriptObjects.setProperty(attrJSO, JsoProperties.NODE_NAMESPACE_URI,
+        getNamespaceURI(o));
 
     return attrJSO;
   }
 
   @PatchMethod
   public static JavaScriptObject getAttributes(JavaScriptObject t) {
-    Set<String> attrSet = JavaScriptObjects.getJsoProperties(t).getObject(
+    Set<String> attrSet = JavaScriptObjects.getObject(t,
         JsoProperties.XML_ATTR_SET);
 
     List<Node> list = new ArrayList<Node>();
@@ -152,8 +153,7 @@ public class XMLParserImplPatcher extends AutomaticPatcher {
 
   @PatchMethod
   public static String getName(JavaScriptObject o) {
-    return JavaScriptObjects.getJsoProperties(o).getString(
-        JsoProperties.XML_ATTR_NAME);
+    return JavaScriptObjects.getString(o, JsoProperties.XML_ATTR_NAME);
   }
 
   @PatchMethod
@@ -171,9 +171,8 @@ public class XMLParserImplPatcher extends AutomaticPatcher {
   }
 
   @PatchMethod
-  public static String getNamespaceURI(JavaScriptObject jsObject) {
-    return JavaScriptObjects.getJsoProperties(jsObject).getString(
-        JsoProperties.NODE_NAMESPACE_URI);
+  public static String getNamespaceURI(JavaScriptObject o) {
+    return JavaScriptObjects.getString(o, JsoProperties.NODE_NAMESPACE_URI);
   }
 
   @PatchMethod
@@ -204,8 +203,7 @@ public class XMLParserImplPatcher extends AutomaticPatcher {
     Node n = o.cast();
     switch (n.getNodeType()) {
       case com.google.gwt.xml.client.Node.ATTRIBUTE_NODE:
-        return JavaScriptObjects.getJsoProperties(n).getString(
-            JsoProperties.XML_ATTR_VALUE);
+        return JavaScriptObjects.getString(n, JsoProperties.XML_ATTR_VALUE);
       case Node.ELEMENT_NODE:
         Element e = n.cast();
         return e.getInnerText();
@@ -228,8 +226,7 @@ public class XMLParserImplPatcher extends AutomaticPatcher {
 
   @PatchMethod
   public static String getValue(JavaScriptObject o) {
-    return JavaScriptObjects.getJsoProperties(o).getString(
-        JsoProperties.XML_ATTR_VALUE);
+    return JavaScriptObjects.getString(o, JsoProperties.XML_ATTR_VALUE);
   }
 
   @PatchMethod

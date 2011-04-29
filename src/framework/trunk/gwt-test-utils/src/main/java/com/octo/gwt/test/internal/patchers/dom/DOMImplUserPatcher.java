@@ -3,10 +3,10 @@ package com.octo.gwt.test.internal.patchers.dom;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.impl.DOMImpl;
+import com.octo.gwt.test.internal.utils.EventUtils;
 import com.octo.gwt.test.patchers.AutomaticPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
-import com.octo.gwt.test.utils.events.EventUtils;
 
 @PatchClass(DOMImpl.class)
 public class DOMImplUserPatcher extends AutomaticPatcher {

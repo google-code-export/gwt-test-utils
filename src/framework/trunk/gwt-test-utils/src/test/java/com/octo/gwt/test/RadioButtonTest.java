@@ -105,7 +105,7 @@ public class RadioButtonTest extends GwtTestTest {
     // Make some radio buttons, all in one group.
     RadioButton rb0 = new RadioButton("myRadioGroup");
 
-    // Assert.assertEquals("myRadioGroup", rb0.getName());
+    Assert.assertEquals("myRadioGroup", rb0.getName());
 
     rb0.setName("myNewRadioGroup");
 

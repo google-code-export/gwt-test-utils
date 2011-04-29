@@ -10,6 +10,14 @@ import com.google.gwt.user.client.ui.ImageBundle;
 import com.octo.gwt.test.GwtCreateHandler;
 import com.octo.gwt.test.exceptions.GwtTestResourcesException;
 
+/**
+ * Class in charge of the instanciation of all {@link ImageBundle}
+ * sub-interfaces through deferred binding. <strong>For internal use
+ * only.</strong>
+ * 
+ * @author Gael Lazzari
+ * 
+ */
 @SuppressWarnings("deprecation")
 public class ImageBundleCreateHandler implements GwtCreateHandler {
 

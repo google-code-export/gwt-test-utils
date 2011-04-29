@@ -25,6 +25,14 @@ import com.octo.gwt.test.exceptions.GwtTestResourcesException;
 import com.octo.gwt.test.internal.GwtClassPool;
 import com.octo.gwt.test.internal.patchers.GwtPatcher;
 
+/**
+ * Class in charge of the instanciation of all {@link ClientBundle}
+ * sub-interfaces through deferred binding. <strong>For internal use
+ * only.</strong>
+ * 
+ * @author Gael Lazzari
+ * 
+ */
 @SuppressWarnings("unchecked")
 public class ClientBundleCreateHandler implements GwtCreateHandler {
 
@@ -167,7 +175,7 @@ public class ClientBundleCreateHandler implements GwtCreateHandler {
     private static Map<String, ClientBundleProxyFactory> factoryMap = new HashMap<String, ClientBundleProxyFactory>();
 
     private static Object generateInvocationHandler(
-        final IClientBundleCallback callback,
+        final ClientBundleCallback callback,
         final String clientBundleFunctionName) {
       final Class<? extends ClientBundle> clazz = callback.getWrappedClass();
       InvocationHandler ih = new InvocationHandler() {

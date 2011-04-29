@@ -25,14 +25,10 @@ import org.slf4j.LoggerFactory;
 
 import com.octo.gwt.test.Patcher;
 import com.octo.gwt.test.exceptions.GwtTestConfigurationException;
-import com.octo.gwt.test.exceptions.GwtTestPatchException;
-import com.octo.gwt.test.internal.modifiers.ClassSubstituer;
-import com.octo.gwt.test.internal.modifiers.JavaClassModifier;
-import com.octo.gwt.test.internal.modifiers.MethodRemover;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
-public class ConfigurationLoader {
+class ConfigurationLoader {
 
   private static final String CONFIG_FILENAME = "META-INF/gwt-test-utils.properties";
 
@@ -65,9 +61,9 @@ public class ConfigurationLoader {
 
   private final ClassLoader classLoader;
 
-  private final List<String> delegateList;
+  private final ClassSubstituer classSubstituer;
 
-  private final List<JavaClassModifier> javaClassModifierList;
+  private final List<String> delegateList;
   private final String jsoClassName;
   private final Set<String> jsoSubClasses;
   private final MethodRemover methodRemover;
@@ -77,29 +73,32 @@ public class ConfigurationLoader {
 
   private ConfigurationLoader(ClassLoader classLoader, String jsoClassName) {
     this.classLoader = classLoader;
+    this.classSubstituer = new ClassSubstituer();
     this.jsoClassName = jsoClassName;
     this.jsoSubClasses = new HashSet<String>();
     this.delegateList = new ArrayList<String>();
     this.scanPackageSet = new HashSet<String>();
-    this.javaClassModifierList = new ArrayList<JavaClassModifier>();
     this.methodRemover = new MethodRemover();
     this.patchers = new HashMap<String, Patcher>();
-    this.javaClassModifierList.add(methodRemover);
 
     readFiles();
     loadPatchersAndJavaScriptObjects();
+  }
+
+  public JavaClassModifier getClassSubstituer() {
+    return classSubstituer;
   }
 
   public List<String> getDelegateList() {
     return Collections.unmodifiableList(delegateList);
   }
 
-  public List<JavaClassModifier> getJavaClassModifierList() {
-    return Collections.unmodifiableList(javaClassModifierList);
-  }
-
   public Set<String> getJSOSubClasses() {
     return jsoSubClasses;
+  }
+
+  public JavaClassModifier getMethodRemover() {
+    return methodRemover;
   }
 
   public Map<String, Patcher> getPatchers() {
@@ -216,8 +215,6 @@ public class ConfigurationLoader {
         processRemoveMethod(key, url);
       } else if ("substitute-class".equals(value)) {
         processSubstituteClass(key, url);
-      } else if ("class-modifier".equals(value)) {
-        processClassModifier(key, url);
       } else if ("module-file".equals(value)) {
         processModuleFile(key, url);
         processedModuleFile = true;
@@ -225,36 +222,6 @@ public class ConfigurationLoader {
         throw new GwtTestConfigurationException("Error in '" + url.getPath()
             + "' : unknown value '" + value + "'");
       }
-    }
-  }
-
-  private void processClassModifier(String key, URL url) {
-    Class<?> clazz = null;
-
-    // get the class
-    try {
-      clazz = Class.forName(key);
-    } catch (ClassNotFoundException e) {
-      throw new GwtTestConfigurationException(
-          "Invalid 'class-modifier' property : " + key
-              + " class cannot be found");
-    }
-
-    // check it implements JavaClassModifier
-    if (!JavaClassModifier.class.isAssignableFrom(clazz)) {
-      throw new GwtTestConfigurationException(
-          "Invalid 'class-modifier' property : " + key
-              + " is not implementing "
-              + JavaClassModifier.class.getSimpleName() + " interface");
-    }
-
-    // Instanciate it and add it to the list of JavaClassModifier
-    try {
-      JavaClassModifier modifier = (JavaClassModifier) clazz.newInstance();
-      javaClassModifierList.add(modifier);
-    } catch (Exception e) {
-      throw new GwtTestPatchException("Error while instanciating " + key
-          + " through the default constructor", e);
     }
   }
 
@@ -288,8 +255,7 @@ public class ConfigurationLoader {
     String originalClass = array[0];
     String substitutionClass = array[1];
     // add in second position, just after method-substituer
-    javaClassModifierList.add(1, new ClassSubstituer(originalClass,
-        substitutionClass));
+    this.classSubstituer.registerSubstitution(originalClass, substitutionClass);
   }
 
   private void readFiles() {

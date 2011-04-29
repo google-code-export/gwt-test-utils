@@ -8,8 +8,8 @@ import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.octo.gwt.test.GwtClassLoader;
-import com.octo.gwt.test.csv.tools.DirectoryTestReader;
+import com.octo.gwt.test.csv.internal.DirectoryTestReader;
+import com.octo.gwt.test.internal.GwtClassLoader;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 public class Spring3JUnit4ClassRunner extends SpringJUnit4ClassRunner {

@@ -12,11 +12,11 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class CssResourceReader {
+class CssResourceReader {
 
   public static class CssParsingResult {
 
-    private Map<String, String> constants;
+    private final Map<String, String> constants;
 
     private CssParsingResult(Map<String, String> constants, Set<String> styles) {
       this.constants = constants;
@@ -72,6 +72,10 @@ public class CssResourceReader {
 
   public static void reset() {
     cache.clear();
+  }
+
+  private CssResourceReader() {
+
   }
 
 }

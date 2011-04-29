@@ -6,9 +6,10 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Style;
-import com.octo.gwt.test.internal.GwtHtmlParser;
+import com.octo.gwt.test.internal.utils.GwtHtmlParser;
 import com.octo.gwt.test.internal.utils.GwtStringUtils;
 import com.octo.gwt.test.internal.utils.JsoProperties;
+import com.octo.gwt.test.internal.utils.PropertyContainer;
 import com.octo.gwt.test.patchers.OverlayPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
@@ -28,7 +29,7 @@ public class ElementPatcher extends OverlayPatcher {
 
   @PatchMethod
   public static String getClassName(Element element) {
-    return element.getAttribute("class");
+    return element.getAttribute(JsoProperties.ELEM_CLASS);
   }
 
   @PatchMethod
@@ -39,7 +40,7 @@ public class ElementPatcher extends OverlayPatcher {
 
   @PatchMethod
   public static String getId(Element element) {
-    return element.getAttribute("id");
+    return element.getAttribute(JsoProperties.ELEM_ID);
   }
 
   @PatchMethod
@@ -72,25 +73,34 @@ public class ElementPatcher extends OverlayPatcher {
 
   @PatchMethod
   public static boolean getPropertyBoolean(Element element, String propertyName) {
-    return JavaScriptObjects.getJsoProperties(element).getBoolean(propertyName);
+    PropertyContainer properties = JavaScriptObjects.getObject(element,
+        JsoProperties.ELEM_PROPERTIES);
+    return properties.getBoolean(propertyName);
   }
 
   @PatchMethod
   public static double getPropertyDouble(Element element, String propertyName) {
-    return JavaScriptObjects.getJsoProperties(element).getDouble(propertyName);
+    PropertyContainer properties = JavaScriptObjects.getObject(element,
+        JsoProperties.ELEM_PROPERTIES);
+    return properties.getDouble(propertyName);
   }
 
   @PatchMethod
   public static int getPropertyInt(Element element, String propertyName) {
-    return JavaScriptObjects.getJsoProperties(element).getInteger(propertyName);
+    PropertyContainer properties = JavaScriptObjects.getObject(element,
+        JsoProperties.ELEM_PROPERTIES);
+    return properties.getInteger(propertyName);
   }
 
   @PatchMethod
   public static Object getPropertyObject(Element element, String propertyName) {
+    // TODO: remove this test ?
     if ("tagName".equals(propertyName)) {
       return element.getTagName();
     }
-    return JavaScriptObjects.getJsoProperties(element).getObject(propertyName);
+    PropertyContainer properties = JavaScriptObjects.getObject(element,
+        JsoProperties.ELEM_PROPERTIES);
+    return properties.getObject(propertyName);
   }
 
   @PatchMethod
@@ -113,35 +123,44 @@ public class ElementPatcher extends OverlayPatcher {
 
   @PatchMethod
   public static Style getStyle(Element element) {
-    return JavaScriptObjects.getJsoProperties(element).getObject(
+    return JavaScriptObjects.getObject(element,
         JsoProperties.STYLE_OBJECT_FIELD);
   }
 
   @PatchMethod
+  public static String getTitle(Element element) {
+    return element.getAttribute(JsoProperties.ELEM_TITLE);
+  }
+
+  @PatchMethod
   public static void removeAttribute(Element element, String name) {
-    JavaScriptObjects.getJsoProperties(element).remove(name);
+    PropertyContainer properties = JavaScriptObjects.getObject(element,
+        JsoProperties.ELEM_PROPERTIES);
+    properties.remove(name);
   }
 
   @PatchMethod
   public static void setAttribute(Element element, String attributeName,
       String value) {
-    JavaScriptObjects.getJsoProperties(element).put(attributeName, value);
+    PropertyContainer properties = JavaScriptObjects.getObject(element,
+        JsoProperties.ELEM_PROPERTIES);
+    properties.put(attributeName, value);
   }
 
   @PatchMethod
   public static void setClassName(Element element, String className) {
-    element.setAttribute("class", className);
+    element.setAttribute(JsoProperties.ELEM_CLASS, className);
   }
 
   @PatchMethod
   public static void setId(Element element, String id) {
-    element.setAttribute("id", id);
+    element.setAttribute(JsoProperties.ELEM_ID, id);
   }
 
   @PatchMethod
   public static void setInnerHTML(Element element, String html) {
-    List<Node> innerList = JavaScriptObjects.getJsoProperties(
-        element.getChildNodes()).getObject(JsoProperties.NODE_LIST_INNER_LIST);
+    List<Node> innerList = JavaScriptObjects.getObject(element.getChildNodes(),
+        JsoProperties.NODE_LIST_INNER_LIST);
     innerList.clear();
 
     NodeList<Node> nodes = GwtHtmlParser.parse(html);
@@ -150,32 +169,44 @@ public class ElementPatcher extends OverlayPatcher {
       innerList.add(nodes.getItem(i));
     }
 
-    JavaScriptObjects.getJsoProperties(element).put(JsoProperties.INNER_HTML,
-        html);
+    JavaScriptObjects.setProperty(element, JsoProperties.INNER_HTML, html);
   }
 
   @PatchMethod
   public static void setPropertyBoolean(Element element, String propertyName,
       boolean value) {
-    JavaScriptObjects.getJsoProperties(element).put(propertyName, value);
+    PropertyContainer properties = JavaScriptObjects.getObject(element,
+        JsoProperties.ELEM_PROPERTIES);
+    properties.put(propertyName, value);
   }
 
   @PatchMethod
   public static void setPropertyDouble(Element element, String propertyName,
       double value) {
-    JavaScriptObjects.getJsoProperties(element).put(propertyName, value);
+    PropertyContainer properties = JavaScriptObjects.getObject(element,
+        JsoProperties.ELEM_PROPERTIES);
+    properties.put(propertyName, value);
   }
 
   @PatchMethod
   public static void setPropertyInt(Element element, String propertyName,
       int value) {
-    JavaScriptObjects.getJsoProperties(element).put(propertyName, value);
+    PropertyContainer properties = JavaScriptObjects.getObject(element,
+        JsoProperties.ELEM_PROPERTIES);
+    properties.put(propertyName, value);
   }
 
   @PatchMethod
   public static void setPropertyString(Element element, String propertyName,
       String value) {
-    JavaScriptObjects.getJsoProperties(element).put(propertyName, value);
+    PropertyContainer properties = JavaScriptObjects.getObject(element,
+        JsoProperties.ELEM_PROPERTIES);
+    properties.put(propertyName, value);
+  }
+
+  @PatchMethod
+  public static void setTitle(Element element, String title) {
+    element.setAttribute(JsoProperties.ELEM_TITLE, title);
   }
 
 }

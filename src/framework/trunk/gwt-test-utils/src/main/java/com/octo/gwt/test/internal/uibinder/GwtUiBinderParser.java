@@ -17,7 +17,7 @@ import com.octo.gwt.test.exceptions.GwtTestUiBinderException;
  * @author Gael Lazzari
  * 
  */
-public class GwtUiBinderParser {
+class GwtUiBinderParser {
 
   /**
    * Parse the .ui.xml file to fill the corresponding objects.

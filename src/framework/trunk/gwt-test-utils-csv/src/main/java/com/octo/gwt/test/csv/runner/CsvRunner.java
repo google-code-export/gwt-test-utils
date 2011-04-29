@@ -50,6 +50,7 @@ public class CsvRunner {
             + CsvMethod.class.getSimpleName() + " ' " + methodName
             + " ' not found in object " + fixture);
       }
+      GwtReflectionUtils.makeAccessible(m);
       logger.debug(getProcessingMessagePrefix() + "Executing " + methodName
           + ", params " + Arrays.toString(filterArgs.toArray()));
       List<Object> argList = new ArrayList<Object>();

@@ -1,7 +1,7 @@
 package com.octo.gwt.test;
 
 import com.google.gwt.core.client.GWT;
-import com.octo.gwt.test.internal.GwtCreateHandlerManager;
+import com.octo.gwt.test.internal.handlers.GwtCreateHandlerManager;
 
 /**
  * <p>

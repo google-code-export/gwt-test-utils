@@ -11,7 +11,7 @@ import com.google.gwt.i18n.client.CurrencyData;
 import com.google.gwt.i18n.client.CurrencyList;
 import com.google.gwt.i18n.client.impl.CurrencyDataImpl;
 import com.octo.gwt.test.internal.GwtConfig;
-import com.octo.gwt.test.internal.utils.i18n.GwtPropertiesHelper;
+import com.octo.gwt.test.internal.utils.GwtPropertiesHelper;
 import com.octo.gwt.test.patchers.AutomaticPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;

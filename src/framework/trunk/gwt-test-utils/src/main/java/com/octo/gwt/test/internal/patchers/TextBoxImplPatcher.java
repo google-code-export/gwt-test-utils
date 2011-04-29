@@ -13,15 +13,14 @@ public class TextBoxImplPatcher extends AutomaticPatcher {
 
   @PatchMethod
   public static int getCursorPos(TextBoxImpl textBoxImpl, Element e) {
-    return JavaScriptObjects.getJsoProperties(e).getInteger(
-        JsoProperties.SELECTION_START);
+    return JavaScriptObjects.getInteger(e, JsoProperties.SELECTION_START);
   }
 
   @PatchMethod
   public static int getSelectionLength(TextBoxImpl textBoxImpl, Element e) {
-    int selectionStart = JavaScriptObjects.getJsoProperties(e).getInteger(
+    int selectionStart = JavaScriptObjects.getInteger(e,
         JsoProperties.SELECTION_START);
-    int selectionEnd = JavaScriptObjects.getJsoProperties(e).getInteger(
+    int selectionEnd = JavaScriptObjects.getInteger(e,
         JsoProperties.SELECTION_END);
     return selectionEnd - selectionStart;
   }
@@ -29,10 +28,8 @@ public class TextBoxImplPatcher extends AutomaticPatcher {
   @PatchMethod
   public static void setSelectionRange(TextBoxImpl textBoxImpl, Element e,
       int pos, int length) {
-    JavaScriptObjects.getJsoProperties(e).put(JsoProperties.SELECTION_START,
-        pos);
-    JavaScriptObjects.getJsoProperties(e).put(JsoProperties.SELECTION_END,
-        pos + length);
+    JavaScriptObjects.setProperty(e, JsoProperties.SELECTION_START, pos);
+    JavaScriptObjects.setProperty(e, JsoProperties.SELECTION_END, pos + length);
   }
 
 }

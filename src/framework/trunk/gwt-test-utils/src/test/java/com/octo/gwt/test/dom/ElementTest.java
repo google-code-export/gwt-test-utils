@@ -362,7 +362,7 @@ public class ElementTest extends GwtTestTest {
     Assert.assertNull(e.getPropertyObject("titLe"));
   }
 
-  // TODO : pass the toString test ?
+  // TODO : pass the toString test on DOM elements..
   // @Test
   public void checkToString() {
     // Setup

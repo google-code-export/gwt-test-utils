@@ -114,6 +114,24 @@ public class ButtonTest extends GwtTestTest {
     Assert.assertEquals("title", b.getTitle());
   }
 
+  // TODO : pass the toString test on DOM elements..
+  // @Test
+  public void checkToString() {
+    // Setup
+    Button b = new Button("test button");
+    b.setEnabled(false);
+    b.setFocus(false);
+    b.setStyleName("my-style");
+
+    // Test
+    String toString = b.toString();
+
+    // Assert
+    Assert.assertEquals(
+        "<button type=\"button\" class=\"my-style\" disabled=\"\">test button</button>",
+        toString);
+  }
+
   @Test
   public void checkVisible() {
     Button b = new Button();
@@ -142,7 +160,6 @@ public class ButtonTest extends GwtTestTest {
 
     // Assert 2
     Assert.assertEquals(1, element.getTabIndex());
-
   }
 
 }

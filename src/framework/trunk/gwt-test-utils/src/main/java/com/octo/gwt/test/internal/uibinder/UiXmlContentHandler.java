@@ -5,9 +5,8 @@ import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 
-import com.octo.gwt.test.internal.uibinder.objects.UiBinderTagBuilder;
 
-public class UiXmlContentHandler<T> implements ContentHandler {
+class UiXmlContentHandler<T> implements ContentHandler {
 
   private UiBinderTagBuilder<T> builder;
   private final Object owner;

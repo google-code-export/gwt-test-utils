@@ -14,6 +14,15 @@ import com.octo.gwt.test.Patcher;
 import com.octo.gwt.test.exceptions.GwtTestPatchException;
 import com.octo.gwt.test.patchers.AutomaticPatcher;
 
+/**
+ * 
+ * Some patching utility methods. Bytecode manipulation relies on javassist API.
+ * <strong>For internal use only.</strong>
+ * 
+ * @author Bertrand Paquet
+ * @author Gael Lazzari
+ * 
+ */
 public class GwtPatcherUtils {
 
   public static boolean areAssertionEnabled() {

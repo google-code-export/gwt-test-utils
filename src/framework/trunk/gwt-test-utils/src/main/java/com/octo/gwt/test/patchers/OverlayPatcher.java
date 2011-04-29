@@ -58,28 +58,31 @@ public class OverlayPatcher extends AutomaticPatcher {
 
   private String getCodeGetProperty(String object, String fieldName,
       CtClass returnType) {
-    if (returnType == CtClass.booleanType) {
-      return JavaScriptObjects.class.getName() + ".getJsoProperties(" + object
-          + ").getBoolean( \"" + fieldName + "\")";
+    if (returnType == STRING_TYPE) {
+      return JavaScriptObjects.class.getName() + ".getString(" + object
+          + ", \"" + fieldName + "\")";
+    } else if (returnType == CtClass.booleanType) {
+      return JavaScriptObjects.class.getName() + ".getBoolean(" + object
+          + ", \"" + fieldName + "\")";
     } else if (returnType == CtClass.intType) {
-      return JavaScriptObjects.class.getName() + ".getJsoProperties(" + object
-          + ").getInteger( \"" + fieldName + "\")";
+      return JavaScriptObjects.class.getName() + ".getInteger(" + object
+          + ", \"" + fieldName + "\")";
     } else if (returnType == CtClass.doubleType) {
-      return JavaScriptObjects.class.getName() + ".getJsoProperties(" + object
-          + ").getDouble( \"" + fieldName + "\")";
-    } else if (returnType == STRING_TYPE) {
-      return JavaScriptObjects.class.getName() + ".getJsoProperties(" + object
-          + ").getString( \"" + fieldName + "\")";
+      return JavaScriptObjects.class.getName() + ".getDouble(" + object
+          + ", \"" + fieldName + "\")";
+    } else if (returnType == CtClass.shortType) {
+      return JavaScriptObjects.class.getName() + ".getShort(" + object + ", \""
+          + fieldName + "\")";
     }
     return "(" + returnType.getName() + ") "
-        + JavaScriptObjects.class.getName() + ".getJsoProperties(" + object
-        + ").getObject( \"" + fieldName + "\")";
+        + JavaScriptObjects.class.getName() + ".getObject(" + object + ", \""
+        + fieldName + "\")";
   }
 
   private String getCodeSetProperty(String object, String propertyName,
       String propertyValue) {
-    return JavaScriptObjects.class.getName() + ".getJsoProperties(" + object
-        + ").put(\"" + propertyName + "\", " + propertyValue + ")";
+    return JavaScriptObjects.class.getName() + ".setProperty(" + object
+        + ", \"" + propertyName + "\", " + propertyValue + ")";
   }
 
   private String getPropertyName(CtMethod m) throws Exception {

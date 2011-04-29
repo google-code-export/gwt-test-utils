@@ -3,6 +3,13 @@ package com.octo.gwt.test.internal.utils;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * 
+ * Some array utility methods. <strong>For internal use only.</strong>
+ * 
+ * @author Gael Lazzari
+ * 
+ */
 public class ArrayUtils {
 
   public static boolean contains(Object[] array, Object valueToFind) {

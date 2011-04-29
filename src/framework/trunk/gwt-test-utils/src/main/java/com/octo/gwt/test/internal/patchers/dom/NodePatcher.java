@@ -49,8 +49,7 @@ public class NodePatcher extends OverlayPatcher {
   }
 
   public static NodeList<Node> getChildNodes(Node node) {
-    return JavaScriptObjects.getJsoProperties(node).getObject(
-        JsoProperties.NODE_LIST_FIELD);
+    return JavaScriptObjects.getObject(node, JsoProperties.NODE_LIST_FIELD);
   }
 
   @PatchMethod
@@ -104,8 +103,7 @@ public class NodePatcher extends OverlayPatcher {
       case Node.TEXT_NODE:
         return "#text";
       case com.google.gwt.xml.client.Node.ATTRIBUTE_NODE:
-        return JavaScriptObjects.getJsoProperties(node).getString(
-            JsoProperties.XML_ATTR_NAME);
+        return JavaScriptObjects.getString(node, JsoProperties.XML_ATTR_NAME);
       default:
         throw new GwtTestDomException(
             "Invalid Node type (not a Document / Element / Text / Attribute) : "
@@ -115,7 +113,7 @@ public class NodePatcher extends OverlayPatcher {
 
   @PatchMethod
   public static short getNodeType(Node node) {
-    short nodeType = JavaScriptObjects.getJsoProperties(node).getShort(
+    short nodeType = JavaScriptObjects.getShort(node,
         JsoProperties.NODE_TYPE_FIELD);
 
     return nodeType != 0 ? nodeType : -1;
@@ -186,8 +184,8 @@ public class NodePatcher extends OverlayPatcher {
     }
 
     // Manage getParentNode()
-    JavaScriptObjects.getJsoProperties(newChild).put(
-        JsoProperties.PARENT_NODE_FIELD, parent);
+    JavaScriptObjects.setProperty(newChild, JsoProperties.PARENT_NODE_FIELD,
+        parent);
 
     return newChild;
   }
@@ -267,8 +265,7 @@ public class NodePatcher extends OverlayPatcher {
 
   private static void copyJSOProperties(JavaScriptObject newJso,
       JavaScriptObject oldJso, boolean deep) {
-    for (Map.Entry<String, Object> entry : JavaScriptObjects.getJsoProperties(
-        oldJso).entrySet()) {
+    for (Map.Entry<String, Object> entry : JavaScriptObjects.entrySet(oldJso)) {
 
       if (JsoProperties.PARENT_NODE_FIELD.equals(entry.getKey())) {
         // Nothing to do : new cloned node does not have any parent
@@ -282,23 +279,21 @@ public class NodePatcher extends OverlayPatcher {
         JavaScriptObject oldChildJso = (JavaScriptObject) entry.getValue();
         JavaScriptObject newChildJso = JavaScriptObjects.newObject(oldChildJso.getClass());
         copyJSOProperties(newChildJso, oldChildJso, deep);
-        JavaScriptObjects.getJsoProperties(newJso).put(entry.getKey(),
-            newChildJso);
+        JavaScriptObjects.setProperty(newJso, entry.getKey(), newChildJso);
       } else {
         // copy the property, which should be a String or a primitive type (or
         // corresponding wrapper object)
-        JavaScriptObjects.getJsoProperties(newJso).put(entry.getKey(),
-            entry.getValue());
+        JavaScriptObjects.setProperty(newJso, entry.getKey(), entry.getValue());
       }
     }
 
   }
 
   private static List<Node> getChildNodeList(Node node) {
-    NodeList<Node> nodeList = JavaScriptObjects.getJsoProperties(node).getObject(
+    NodeList<Node> nodeList = JavaScriptObjects.getObject(node,
         JsoProperties.NODE_LIST_FIELD);
 
-    return JavaScriptObjects.getJsoProperties(nodeList).getObject(
+    return JavaScriptObjects.getObject(nodeList,
         JsoProperties.NODE_LIST_INNER_LIST);
   }
 
@@ -323,13 +318,12 @@ public class NodePatcher extends OverlayPatcher {
   }
 
   private static void setupStyle(JavaScriptObject newNode, Style oldStyle) {
-    Style newStyle = JavaScriptObjects.getJsoProperties(newNode).getObject(
+    Style newStyle = JavaScriptObjects.getObject(newNode,
         JsoProperties.STYLE_OBJECT_FIELD);
 
-    for (Map.Entry<String, Object> entry : JavaScriptObjects.getJsoProperties(
-        oldStyle).entrySet()) {
+    for (Map.Entry<String, Object> entry : JavaScriptObjects.entrySet(oldStyle)) {
       if (!JsoProperties.STYLE_TARGET_ELEMENT.equals(entry.getKey())) {
-        JavaScriptObjects.getJsoProperties(newStyle).put(entry.getKey(),
+        JavaScriptObjects.setProperty(newStyle, entry.getKey(),
             entry.getValue());
       }
 

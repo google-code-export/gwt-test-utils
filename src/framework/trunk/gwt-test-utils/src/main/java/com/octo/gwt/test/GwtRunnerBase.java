@@ -12,6 +12,7 @@ import org.junit.runner.manipulation.Sorter;
 import org.junit.runner.notification.RunNotifier;
 
 import com.octo.gwt.test.exceptions.GwtTestConfigurationException;
+import com.octo.gwt.test.internal.GwtClassLoader;
 
 /**
  * <p>

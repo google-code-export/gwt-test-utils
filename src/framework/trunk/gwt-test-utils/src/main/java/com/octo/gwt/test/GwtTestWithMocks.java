@@ -10,8 +10,8 @@ import java.util.Set;
 
 import org.junit.After;
 
-import com.octo.gwt.test.internal.GwtCreateHandlerManager;
-import com.octo.gwt.test.internal.mock.MockCreateHandler;
+import com.google.gwt.user.client.rpc.RemoteService;
+import com.octo.gwt.test.internal.handlers.GwtCreateHandlerManager;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 /**
@@ -32,6 +32,24 @@ import com.octo.gwt.test.utils.GwtReflectionUtils;
  * @author Eric Therond
  */
 public abstract class GwtTestWithMocks extends GwtTest {
+
+  private class MockCreateHandler implements GwtCreateHandler {
+
+    private final Map<Class<?>, Object> mockObjects;
+
+    public MockCreateHandler(Map<Class<?>, Object> mockObjects) {
+      this.mockObjects = mockObjects;
+    }
+
+    public Object create(Class<?> classLiteral) throws Exception {
+      if (RemoteService.class.isAssignableFrom(classLiteral)) {
+        String asyncName = classLiteral.getCanonicalName() + "Async";
+        classLiteral = Class.forName(asyncName);
+      }
+      return mockObjects.get(classLiteral);
+    }
+
+  }
 
   protected List<Class<?>> mockedClasses = new ArrayList<Class<?>>();
   protected Set<Field> mockFields;

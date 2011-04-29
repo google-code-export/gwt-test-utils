@@ -16,10 +16,9 @@ import com.google.gwt.i18n.client.Constants.DefaultStringMapValue;
 import com.google.gwt.i18n.client.Constants.DefaultStringValue;
 import com.google.gwt.i18n.client.LocalizableResource;
 import com.octo.gwt.test.exceptions.GwtTestI18NException;
-import com.octo.gwt.test.internal.PropertiesStringModifier;
+import com.octo.gwt.test.internal.utils.GwtPropertiesHelper;
 
-public class ConstantsInvocationHandler extends
-    LocalizableResourcesInvocationHandler {
+class ConstantsInvocationHandler extends LocalizableResourcesInvocationHandler {
 
   public ConstantsInvocationHandler(
       Class<? extends LocalizableResource> proxiedClass) {
@@ -41,7 +40,7 @@ public class ConstantsInvocationHandler extends
   }
 
   private String treatLine(String line) {
-    return PropertiesStringModifier.get().treatString(line);
+    return GwtPropertiesHelper.get().treatString(line);
   }
 
   @Override

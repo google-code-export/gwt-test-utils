@@ -17,6 +17,14 @@ import com.octo.gwt.test.GwtCreateHandler;
 import com.octo.gwt.test.exceptions.GwtTestI18NException;
 import com.octo.gwt.test.internal.GwtConfig;
 
+/**
+ * Class in charge of the instanciation of all {@link LocalizableResource}
+ * sub-interfaces through deferred binding. <strong>For internal use
+ * only.</strong>
+ * 
+ * @author Gael Lazzari
+ * 
+ */
 public class LocalizableCreateHandler implements GwtCreateHandler {
 
   private static class LocalizableResourceProxyFactory {

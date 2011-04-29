@@ -11,9 +11,9 @@ import org.junit.runner.RunWith;
 
 import com.octo.gwt.test.exceptions.GwtTestConfigurationException;
 import com.octo.gwt.test.internal.GwtConfig;
-import com.octo.gwt.test.internal.GwtCreateHandlerManager;
 import com.octo.gwt.test.internal.GwtReset;
 import com.octo.gwt.test.internal.ModuleData;
+import com.octo.gwt.test.internal.handlers.GwtCreateHandlerManager;
 
 /**
  * <p>

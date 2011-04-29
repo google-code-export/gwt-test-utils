@@ -14,12 +14,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.octo.gwt.test.exceptions.GwtTestUiBinderException;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
-/**
- * 
- * @author Gael Lazzari
- * 
- */
-public class UiBinderInvocationHandler implements InvocationHandler {
+class UiBinderInvocationHandler implements InvocationHandler {
 
   private final Class<?> proxiedClass;
 

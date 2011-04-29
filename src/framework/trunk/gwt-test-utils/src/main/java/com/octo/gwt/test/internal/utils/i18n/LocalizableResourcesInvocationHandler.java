@@ -9,9 +9,10 @@ import com.google.gwt.i18n.client.LocalizableResource;
 import com.google.gwt.i18n.client.LocalizableResource.DefaultLocale;
 import com.octo.gwt.test.exceptions.GwtTestI18NException;
 import com.octo.gwt.test.internal.GwtConfig;
+import com.octo.gwt.test.internal.utils.GwtPropertiesHelper;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
-public abstract class LocalizableResourcesInvocationHandler implements
+abstract class LocalizableResourcesInvocationHandler implements
     InvocationHandler {
 
   private final Class<? extends LocalizableResource> proxiedClass;

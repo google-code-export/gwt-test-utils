@@ -17,7 +17,7 @@ import org.antlr.runtime.TokenStream;
 import org.antlr.runtime.tree.CommonTreeAdaptor;
 import org.antlr.runtime.tree.TreeAdaptor;
 
-public class XPathParser extends Parser {
+class XPathParser extends Parser {
   public static class condition_return extends ParserRuleReturnScope {
     Object tree;
 
@@ -249,13 +249,16 @@ public class XPathParser extends Parser {
   public Node root;
   protected TreeAdaptor adaptor = new CommonTreeAdaptor();
   protected Stack<token_scope> token_stack = new Stack<token_scope>();
+
   public XPathParser(TokenStream input) {
     this(input, new RecognizerSharedState());
   }
+
   public XPathParser(TokenStream input, RecognizerSharedState state) {
     super(input, state);
 
   }
+
   // $ANTLR start "condition"
   // D:\\gwt-test-utils\\gwt-test-utils-csv\\src\\main\\resources\\com\\octo\\gwt\\test\\csv\\runner\\XPath.g:50:1:
   // condition : IN_COND internal_condition OUT_COND ;
@@ -279,11 +282,11 @@ public class XPathParser extends Parser {
       // D:\\gwt-test-utils\\gwt-test-utils-csv\\src\\main\\resources\\com\\octo\\gwt\\test\\csv\\runner\\XPath.g:50:13:
       // IN_COND internal_condition OUT_COND
       {
-        root_0 = (Object) adaptor.nil();
+        root_0 = adaptor.nil();
 
         IN_COND12 = (Token) match(input, IN_COND,
             FOLLOW_IN_COND_in_condition158);
-        IN_COND12_tree = (Object) adaptor.create(IN_COND12);
+        IN_COND12_tree = adaptor.create(IN_COND12);
         adaptor.addChild(root_0, IN_COND12_tree);
 
         pushFollow(FOLLOW_internal_condition_in_condition160);
@@ -294,14 +297,14 @@ public class XPathParser extends Parser {
         adaptor.addChild(root_0, internal_condition13.getTree());
         OUT_COND14 = (Token) match(input, OUT_COND,
             FOLLOW_OUT_COND_in_condition162);
-        OUT_COND14_tree = (Object) adaptor.create(OUT_COND14);
+        OUT_COND14_tree = adaptor.create(OUT_COND14);
         adaptor.addChild(root_0, OUT_COND14_tree);
 
       }
 
       retval.stop = input.LT(-1);
 
-      retval.tree = (Object) adaptor.rulePostProcessing(root_0);
+      retval.tree = adaptor.rulePostProcessing(root_0);
       adaptor.setTokenBoundaries(retval.tree, retval.start, retval.stop);
 
     }
@@ -312,6 +315,7 @@ public class XPathParser extends Parser {
     }
     return retval;
   }
+
   // $ANTLR start "element"
   // D:\\gwt-test-utils\\gwt-test-utils-csv\\src\\main\\resources\\com\\octo\\gwt\\test\\csv\\runner\\XPath.g:38:1:
   // element : label= LABEL ( sub )? ;
@@ -332,10 +336,10 @@ public class XPathParser extends Parser {
       // D:\\gwt-test-utils\\gwt-test-utils-csv\\src\\main\\resources\\com\\octo\\gwt\\test\\csv\\runner\\XPath.g:38:11:
       // label= LABEL ( sub )?
       {
-        root_0 = (Object) adaptor.nil();
+        root_0 = adaptor.nil();
 
         label = (Token) match(input, LABEL, FOLLOW_LABEL_in_element99);
-        label_tree = (Object) adaptor.create(label);
+        label_tree = adaptor.create(label);
         adaptor.addChild(root_0, label_tree);
 
         // D:\\gwt-test-utils\\gwt-test-utils-csv\\src\\main\\resources\\com\\octo\\gwt\\test\\csv\\runner\\XPath.g:38:23:
@@ -363,14 +367,14 @@ public class XPathParser extends Parser {
 
         }
 
-        ((token_scope) token_stack.peek()).currentNode.setLabel((label != null
+        (token_stack.peek()).currentNode.setLabel((label != null
             ? label.getText() : null));
 
       }
 
       retval.stop = input.LT(-1);
 
-      retval.tree = (Object) adaptor.rulePostProcessing(root_0);
+      retval.tree = adaptor.rulePostProcessing(root_0);
       adaptor.setTokenBoundaries(retval.tree, retval.start, retval.stop);
 
     }
@@ -381,6 +385,7 @@ public class XPathParser extends Parser {
     }
     return retval;
   }
+
   // $ANTLR start "eq_expr"
   // D:\\gwt-test-utils\\gwt-test-utils-csv\\src\\main\\resources\\com\\octo\\gwt\\test\\csv\\runner\\XPath.g:62:1:
   // eq_expr : t= token EQ v= value_expr_parenthesis ;
@@ -403,7 +408,7 @@ public class XPathParser extends Parser {
       // D:\\gwt-test-utils\\gwt-test-utils-csv\\src\\main\\resources\\com\\octo\\gwt\\test\\csv\\runner\\XPath.g:62:11:
       // t= token EQ v= value_expr_parenthesis
       {
-        root_0 = (Object) adaptor.nil();
+        root_0 = adaptor.nil();
 
         pushFollow(FOLLOW_token_in_eq_expr245);
         t = token();
@@ -412,7 +417,7 @@ public class XPathParser extends Parser {
 
         adaptor.addChild(root_0, t.getTree());
         EQ24 = (Token) match(input, EQ, FOLLOW_EQ_in_eq_expr247);
-        EQ24_tree = (Object) adaptor.create(EQ24);
+        EQ24_tree = adaptor.create(EQ24);
         adaptor.addChild(root_0, EQ24_tree);
 
         pushFollow(FOLLOW_value_expr_parenthesis_in_eq_expr251);
@@ -422,16 +427,15 @@ public class XPathParser extends Parser {
 
         adaptor.addChild(root_0, v.getTree());
 
-        ((token_scope) token_stack.peek()).currentNode.setMap((v != null
-            ? input.toString(v.start, v.stop) : null));
-        ((token_scope) token_stack.peek()).currentNode.setMapEq((t != null
-            ? t.result : null));
+        (token_stack.peek()).currentNode.setMap((v != null ? input.toString(
+            v.start, v.stop) : null));
+        (token_stack.peek()).currentNode.setMapEq((t != null ? t.result : null));
 
       }
 
       retval.stop = input.LT(-1);
 
-      retval.tree = (Object) adaptor.rulePostProcessing(root_0);
+      retval.tree = adaptor.rulePostProcessing(root_0);
       adaptor.setTokenBoundaries(retval.tree, retval.start, retval.stop);
 
     }
@@ -442,6 +446,7 @@ public class XPathParser extends Parser {
     }
     return retval;
   }
+
   // $ANTLR start "expr"
   // D:\\gwt-test-utils\\gwt-test-utils-csv\\src\\main\\resources\\com\\octo\\gwt\\test\\csv\\runner\\XPath.g:21:1:
   // expr : SLASH t= token ;
@@ -462,10 +467,10 @@ public class XPathParser extends Parser {
       // D:\\gwt-test-utils\\gwt-test-utils-csv\\src\\main\\resources\\com\\octo\\gwt\\test\\csv\\runner\\XPath.g:21:8:
       // SLASH t= token
       {
-        root_0 = (Object) adaptor.nil();
+        root_0 = adaptor.nil();
 
         SLASH1 = (Token) match(input, SLASH, FOLLOW_SLASH_in_expr50);
-        SLASH1_tree = (Object) adaptor.create(SLASH1);
+        SLASH1_tree = adaptor.create(SLASH1);
         adaptor.addChild(root_0, SLASH1_tree);
 
         pushFollow(FOLLOW_token_in_expr54);
@@ -481,7 +486,7 @@ public class XPathParser extends Parser {
 
       retval.stop = input.LT(-1);
 
-      retval.tree = (Object) adaptor.rulePostProcessing(root_0);
+      retval.tree = adaptor.rulePostProcessing(root_0);
       adaptor.setTokenBoundaries(retval.tree, retval.start, retval.stop);
 
     }
@@ -492,15 +497,19 @@ public class XPathParser extends Parser {
     }
     return retval;
   }
+
   public String getGrammarFileName() {
     return "D:\\gwt-test-utils\\gwt-test-utils-csv\\src\\main\\resources\\com\\octo\\gwt\\test\\csv\\runner\\XPath.g";
   }
+
   public String[] getTokenNames() {
     return XPathParser.tokenNames;
   }
+
   public TreeAdaptor getTreeAdaptor() {
     return adaptor;
   }
+
   // $ANTLR start "internal_condition"
   // D:\\gwt-test-utils\\gwt-test-utils-csv\\src\\main\\resources\\com\\octo\\gwt\\test\\csv\\runner\\XPath.g:52:1:
   // internal_condition : ( simple_expr | eq_expr ) ;
@@ -521,7 +530,7 @@ public class XPathParser extends Parser {
       // D:\\gwt-test-utils\\gwt-test-utils-csv\\src\\main\\resources\\com\\octo\\gwt\\test\\csv\\runner\\XPath.g:52:22:
       // ( simple_expr | eq_expr )
       {
-        root_0 = (Object) adaptor.nil();
+        root_0 = adaptor.nil();
 
         // D:\\gwt-test-utils\\gwt-test-utils-csv\\src\\main\\resources\\com\\octo\\gwt\\test\\csv\\runner\\XPath.g:52:22:
         // ( simple_expr | eq_expr )
@@ -582,7 +591,7 @@ public class XPathParser extends Parser {
 
       retval.stop = input.LT(-1);
 
-      retval.tree = (Object) adaptor.rulePostProcessing(root_0);
+      retval.tree = adaptor.rulePostProcessing(root_0);
       adaptor.setTokenBoundaries(retval.tree, retval.start, retval.stop);
 
     }
@@ -593,6 +602,7 @@ public class XPathParser extends Parser {
     }
     return retval;
   }
+
   // $ANTLR start "params"
   // D:\\gwt-test-utils\\gwt-test-utils-csv\\src\\main\\resources\\com\\octo\\gwt\\test\\csv\\runner\\XPath.g:46:1:
   // params : v= value_expr ( VIRG params )? ;
@@ -615,7 +625,7 @@ public class XPathParser extends Parser {
       // D:\\gwt-test-utils\\gwt-test-utils-csv\\src\\main\\resources\\com\\octo\\gwt\\test\\csv\\runner\\XPath.g:46:10:
       // v= value_expr ( VIRG params )?
       {
-        root_0 = (Object) adaptor.nil();
+        root_0 = adaptor.nil();
 
         pushFollow(FOLLOW_value_expr_in_params140);
         v = value_expr();
@@ -637,7 +647,7 @@ public class XPathParser extends Parser {
             // VIRG params
           {
             VIRG10 = (Token) match(input, VIRG, FOLLOW_VIRG_in_params143);
-            VIRG10_tree = (Object) adaptor.create(VIRG10);
+            VIRG10_tree = adaptor.create(VIRG10);
             adaptor.addChild(root_0, VIRG10_tree);
 
             pushFollow(FOLLOW_params_in_params145);
@@ -652,14 +662,14 @@ public class XPathParser extends Parser {
 
         }
 
-        ((token_scope) token_stack.peek()).currentNode.insertParam((v != null
+        (token_stack.peek()).currentNode.insertParam((v != null
             ? input.toString(v.start, v.stop) : null));
 
       }
 
       retval.stop = input.LT(-1);
 
-      retval.tree = (Object) adaptor.rulePostProcessing(root_0);
+      retval.tree = adaptor.rulePostProcessing(root_0);
       adaptor.setTokenBoundaries(retval.tree, retval.start, retval.stop);
 
     }
@@ -670,6 +680,7 @@ public class XPathParser extends Parser {
     }
     return retval;
   }
+
   // $ANTLR start "parenthesis"
   // D:\\gwt-test-utils\\gwt-test-utils-csv\\src\\main\\resources\\com\\octo\\gwt\\test\\csv\\runner\\XPath.g:44:1:
   // parenthesis : IN params OUT ;
@@ -693,10 +704,10 @@ public class XPathParser extends Parser {
       // D:\\gwt-test-utils\\gwt-test-utils-csv\\src\\main\\resources\\com\\octo\\gwt\\test\\csv\\runner\\XPath.g:44:15:
       // IN params OUT
       {
-        root_0 = (Object) adaptor.nil();
+        root_0 = adaptor.nil();
 
         IN7 = (Token) match(input, IN, FOLLOW_IN_in_parenthesis126);
-        IN7_tree = (Object) adaptor.create(IN7);
+        IN7_tree = adaptor.create(IN7);
         adaptor.addChild(root_0, IN7_tree);
 
         pushFollow(FOLLOW_params_in_parenthesis128);
@@ -706,14 +717,14 @@ public class XPathParser extends Parser {
 
         adaptor.addChild(root_0, params8.getTree());
         OUT9 = (Token) match(input, OUT, FOLLOW_OUT_in_parenthesis130);
-        OUT9_tree = (Object) adaptor.create(OUT9);
+        OUT9_tree = adaptor.create(OUT9);
         adaptor.addChild(root_0, OUT9_tree);
 
       }
 
       retval.stop = input.LT(-1);
 
-      retval.tree = (Object) adaptor.rulePostProcessing(root_0);
+      retval.tree = adaptor.rulePostProcessing(root_0);
       adaptor.setTokenBoundaries(retval.tree, retval.start, retval.stop);
 
     }
@@ -724,9 +735,11 @@ public class XPathParser extends Parser {
     }
     return retval;
   }
+
   public void setTreeAdaptor(TreeAdaptor adaptor) {
     this.adaptor = adaptor;
   }
+
   // $ANTLR start "simple_expr"
   // D:\\gwt-test-utils\\gwt-test-utils-csv\\src\\main\\resources\\com\\octo\\gwt\\test\\csv\\runner\\XPath.g:54:1:
   // simple_expr : s= value_expr ;
@@ -745,7 +758,7 @@ public class XPathParser extends Parser {
       // D:\\gwt-test-utils\\gwt-test-utils-csv\\src\\main\\resources\\com\\octo\\gwt\\test\\csv\\runner\\XPath.g:54:15:
       // s= value_expr
       {
-        root_0 = (Object) adaptor.nil();
+        root_0 = adaptor.nil();
 
         pushFollow(FOLLOW_value_expr_in_simple_expr186);
         s = value_expr();
@@ -754,14 +767,14 @@ public class XPathParser extends Parser {
 
         adaptor.addChild(root_0, s.getTree());
 
-        ((token_scope) token_stack.peek()).currentNode.setMap((s != null
-            ? input.toString(s.start, s.stop) : null));
+        (token_stack.peek()).currentNode.setMap((s != null ? input.toString(
+            s.start, s.stop) : null));
 
       }
 
       retval.stop = input.LT(-1);
 
-      retval.tree = (Object) adaptor.rulePostProcessing(root_0);
+      retval.tree = adaptor.rulePostProcessing(root_0);
       adaptor.setTokenBoundaries(retval.tree, retval.start, retval.stop);
 
     }
@@ -772,6 +785,7 @@ public class XPathParser extends Parser {
     }
     return retval;
   }
+
   // $ANTLR start "sub"
   // D:\\gwt-test-utils\\gwt-test-utils-csv\\src\\main\\resources\\com\\octo\\gwt\\test\\csv\\runner\\XPath.g:42:1:
   // sub : ( parenthesis | condition ) ;
@@ -791,7 +805,7 @@ public class XPathParser extends Parser {
       // D:\\gwt-test-utils\\gwt-test-utils-csv\\src\\main\\resources\\com\\octo\\gwt\\test\\csv\\runner\\XPath.g:42:7:
       // ( parenthesis | condition )
       {
-        root_0 = (Object) adaptor.nil();
+        root_0 = adaptor.nil();
 
         // D:\\gwt-test-utils\\gwt-test-utils-csv\\src\\main\\resources\\com\\octo\\gwt\\test\\csv\\runner\\XPath.g:42:7:
         // ( parenthesis | condition )
@@ -841,7 +855,7 @@ public class XPathParser extends Parser {
 
       retval.stop = input.LT(-1);
 
-      retval.tree = (Object) adaptor.rulePostProcessing(root_0);
+      retval.tree = adaptor.rulePostProcessing(root_0);
       adaptor.setTokenBoundaries(retval.tree, retval.start, retval.stop);
 
     }
@@ -852,6 +866,7 @@ public class XPathParser extends Parser {
     }
     return retval;
   }
+
   // $ANTLR start "token"
   // D:\\gwt-test-utils\\gwt-test-utils-csv\\src\\main\\resources\\com\\octo\\gwt\\test\\csv\\runner\\XPath.g:25:1:
   // token returns [Node result] : element ( SLASH t= token )? ;
@@ -869,7 +884,7 @@ public class XPathParser extends Parser {
 
     Object SLASH3_tree = null;
 
-    ((token_scope) token_stack.peek()).currentNode = new Node();
+    (token_stack.peek()).currentNode = new Node();
 
     try {
       // D:\\gwt-test-utils\\gwt-test-utils-csv\\src\\main\\resources\\com\\octo\\gwt\\test\\csv\\runner\\XPath.g:30:1:
@@ -877,7 +892,7 @@ public class XPathParser extends Parser {
       // D:\\gwt-test-utils\\gwt-test-utils-csv\\src\\main\\resources\\com\\octo\\gwt\\test\\csv\\runner\\XPath.g:30:3:
       // element ( SLASH t= token )?
       {
-        root_0 = (Object) adaptor.nil();
+        root_0 = adaptor.nil();
 
         pushFollow(FOLLOW_element_in_token77);
         element2 = element();
@@ -899,7 +914,7 @@ public class XPathParser extends Parser {
             // SLASH t= token
           {
             SLASH3 = (Token) match(input, SLASH, FOLLOW_SLASH_in_token80);
-            SLASH3_tree = (Object) adaptor.create(SLASH3);
+            SLASH3_tree = adaptor.create(SLASH3);
             adaptor.addChild(root_0, SLASH3_tree);
 
             pushFollow(FOLLOW_token_in_token84);
@@ -915,16 +930,15 @@ public class XPathParser extends Parser {
         }
 
         if (t != null) {
-          ((token_scope) token_stack.peek()).currentNode.setNext((t != null
-              ? t.result : null));
+          (token_stack.peek()).currentNode.setNext((t != null ? t.result : null));
         }
-        retval.result = ((token_scope) token_stack.peek()).currentNode;
+        retval.result = (token_stack.peek()).currentNode;
 
       }
 
       retval.stop = input.LT(-1);
 
-      retval.tree = (Object) adaptor.rulePostProcessing(root_0);
+      retval.tree = adaptor.rulePostProcessing(root_0);
       adaptor.setTokenBoundaries(retval.tree, retval.start, retval.stop);
 
     }
@@ -936,6 +950,7 @@ public class XPathParser extends Parser {
     }
     return retval;
   }
+
   // $ANTLR start "value_expr"
   // D:\\gwt-test-utils\\gwt-test-utils-csv\\src\\main\\resources\\com\\octo\\gwt\\test\\csv\\runner\\XPath.g:58:1:
   // value_expr : ( VALUE | LABEL ) ;
@@ -954,12 +969,12 @@ public class XPathParser extends Parser {
       // D:\\gwt-test-utils\\gwt-test-utils-csv\\src\\main\\resources\\com\\octo\\gwt\\test\\csv\\runner\\XPath.g:58:14:
       // ( VALUE | LABEL )
       {
-        root_0 = (Object) adaptor.nil();
+        root_0 = adaptor.nil();
 
-        set17 = (Token) input.LT(1);
+        set17 = input.LT(1);
         if (input.LA(1) == LABEL || input.LA(1) == VALUE) {
           input.consume();
-          adaptor.addChild(root_0, (Object) adaptor.create(set17));
+          adaptor.addChild(root_0, adaptor.create(set17));
           state.errorRecovery = false;
         } else {
           MismatchedSetException mse = new MismatchedSetException(null, input);
@@ -970,7 +985,7 @@ public class XPathParser extends Parser {
 
       retval.stop = input.LT(-1);
 
-      retval.tree = (Object) adaptor.rulePostProcessing(root_0);
+      retval.tree = adaptor.rulePostProcessing(root_0);
       adaptor.setTokenBoundaries(retval.tree, retval.start, retval.stop);
 
     }
@@ -981,6 +996,7 @@ public class XPathParser extends Parser {
     }
     return retval;
   }
+
   // $ANTLR start "value_expr_parenthesis"
   // D:\\gwt-test-utils\\gwt-test-utils-csv\\src\\main\\resources\\com\\octo\\gwt\\test\\csv\\runner\\XPath.g:60:1:
   // value_expr_parenthesis : ( value_expr | IN | OUT ) ( ( value_expr | IN |
@@ -1011,7 +1027,7 @@ public class XPathParser extends Parser {
       // D:\\gwt-test-utils\\gwt-test-utils-csv\\src\\main\\resources\\com\\octo\\gwt\\test\\csv\\runner\\XPath.g:60:26:
       // ( value_expr | IN | OUT ) ( ( value_expr | IN | OUT ) )*
       {
-        root_0 = (Object) adaptor.nil();
+        root_0 = adaptor.nil();
 
         // D:\\gwt-test-utils\\gwt-test-utils-csv\\src\\main\\resources\\com\\octo\\gwt\\test\\csv\\runner\\XPath.g:60:26:
         // ( value_expr | IN | OUT )
@@ -1057,7 +1073,7 @@ public class XPathParser extends Parser {
           {
             IN19 = (Token) match(input, IN,
                 FOLLOW_IN_in_value_expr_parenthesis215);
-            IN19_tree = (Object) adaptor.create(IN19);
+            IN19_tree = adaptor.create(IN19);
             adaptor.addChild(root_0, IN19_tree);
 
           }
@@ -1068,7 +1084,7 @@ public class XPathParser extends Parser {
           {
             OUT20 = (Token) match(input, OUT,
                 FOLLOW_OUT_in_value_expr_parenthesis219);
-            OUT20_tree = (Object) adaptor.create(OUT20);
+            OUT20_tree = adaptor.create(OUT20);
             adaptor.addChild(root_0, OUT20_tree);
 
           }
@@ -1135,7 +1151,7 @@ public class XPathParser extends Parser {
                 {
                   IN22 = (Token) match(input, IN,
                       FOLLOW_IN_in_value_expr_parenthesis228);
-                  IN22_tree = (Object) adaptor.create(IN22);
+                  IN22_tree = adaptor.create(IN22);
                   adaptor.addChild(root_0, IN22_tree);
 
                 }
@@ -1146,7 +1162,7 @@ public class XPathParser extends Parser {
                 {
                   OUT23 = (Token) match(input, OUT,
                       FOLLOW_OUT_in_value_expr_parenthesis232);
-                  OUT23_tree = (Object) adaptor.create(OUT23);
+                  OUT23_tree = adaptor.create(OUT23);
                   adaptor.addChild(root_0, OUT23_tree);
 
                 }
@@ -1166,7 +1182,7 @@ public class XPathParser extends Parser {
 
       retval.stop = input.LT(-1);
 
-      retval.tree = (Object) adaptor.rulePostProcessing(root_0);
+      retval.tree = adaptor.rulePostProcessing(root_0);
       adaptor.setTokenBoundaries(retval.tree, retval.start, retval.stop);
 
     }

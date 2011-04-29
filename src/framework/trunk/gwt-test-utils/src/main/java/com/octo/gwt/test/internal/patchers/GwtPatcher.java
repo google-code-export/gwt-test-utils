@@ -8,7 +8,7 @@ import com.octo.gwt.test.exceptions.GwtTestConfigurationException;
 import com.octo.gwt.test.exceptions.GwtTestException;
 import com.octo.gwt.test.exceptions.GwtTestPatchException;
 import com.octo.gwt.test.internal.GwtConfig;
-import com.octo.gwt.test.internal.GwtCreateHandlerManager;
+import com.octo.gwt.test.internal.handlers.GwtCreateHandlerManager;
 import com.octo.gwt.test.patchers.AutomaticPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;

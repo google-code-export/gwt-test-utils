@@ -8,7 +8,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-public class TextResourceReader {
+class TextResourceReader {
 
   private static Map<URL, String> cache;
 
@@ -48,6 +48,10 @@ public class TextResourceReader {
 
   public static void reset() {
     cache.clear();
+  }
+
+  private TextResourceReader() {
+
   }
 
 }

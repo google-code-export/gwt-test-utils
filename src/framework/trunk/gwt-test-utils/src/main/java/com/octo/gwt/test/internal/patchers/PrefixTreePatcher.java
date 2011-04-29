@@ -9,13 +9,13 @@ import javassist.CtClass;
 import javassist.CtField;
 
 import com.octo.gwt.test.internal.GwtClassPool;
-import com.octo.gwt.test.patchers.OverlayPatcher;
+import com.octo.gwt.test.patchers.AutomaticPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 @PatchClass(classes = {"com.google.gwt.user.client.ui.PrefixTree"})
-public class PrefixTreePatcher extends OverlayPatcher {
+public class PrefixTreePatcher extends AutomaticPatcher {
 
   private static final String PREFIXES_SET_PROPERTY = "PREFIXES_SET";
 

@@ -18,7 +18,7 @@ public class FormPanelImplPatcher extends AutomaticPatcher {
 
   @PatchMethod
   public static String getEncoding(FormPanelImpl panelImpl, Element form) {
-    return JavaScriptObjects.getJsoProperties(form).getString("enctype");
+    return JavaScriptObjects.getString(form, "enctype");
   }
 
   @PatchMethod
@@ -30,8 +30,8 @@ public class FormPanelImplPatcher extends AutomaticPatcher {
   @PatchMethod
   public static void setEncoding(FormPanelImpl panelImpl, Element form,
       String encoding) {
-    JavaScriptObjects.getJsoProperties(form).put("enctype", encoding);
-    JavaScriptObjects.getJsoProperties(form).put("encoding", encoding);
+    JavaScriptObjects.setProperty(form, "enctype", encoding);
+    JavaScriptObjects.setProperty(form, "encoding", encoding);
   }
 
   @PatchMethod

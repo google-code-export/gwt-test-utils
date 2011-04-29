@@ -19,8 +19,7 @@ import com.google.gwt.i18n.client.impl.plurals.DefaultRule;
 import com.octo.gwt.test.exceptions.GwtTestI18NException;
 
 @SuppressWarnings("deprecation")
-public class MessagesInvocationHandler extends
-    LocalizableResourcesInvocationHandler {
+class MessagesInvocationHandler extends LocalizableResourcesInvocationHandler {
 
   public MessagesInvocationHandler(
       Class<? extends LocalizableResource> proxiedClass) {

@@ -5,9 +5,9 @@ import java.net.URL;
 
 import com.google.gwt.resources.client.ClientBundle;
 
-public class DataResourceCallback extends AbstractClientBundleCallback {
+class DataResourceCallback extends ClientBundleCallback {
 
-  private String url;
+  private final String url;
 
   protected DataResourceCallback(Class<? extends ClientBundle> wrappedClass,
       URL resourceURL, Class<? extends ClientBundle> proxiedClass) {

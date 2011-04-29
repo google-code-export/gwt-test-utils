@@ -7,8 +7,7 @@ import java.util.Properties;
 import com.google.gwt.i18n.client.LocalizableResource;
 import com.octo.gwt.test.exceptions.GwtTestI18NException;
 
-public class ConstantsWithLookupInvocationHandler extends
-    ConstantsInvocationHandler {
+class ConstantsWithLookupInvocationHandler extends ConstantsInvocationHandler {
 
   public ConstantsWithLookupInvocationHandler(
       Class<? extends LocalizableResource> proxiedClass) {

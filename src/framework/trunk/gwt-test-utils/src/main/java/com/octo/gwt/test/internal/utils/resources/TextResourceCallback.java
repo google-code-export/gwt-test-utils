@@ -5,7 +5,7 @@ import java.net.URL;
 
 import com.google.gwt.resources.client.ClientBundle;
 
-public class TextResourceCallback extends AbstractClientBundleCallback {
+class TextResourceCallback extends ClientBundleCallback {
 
   protected TextResourceCallback(Class<? extends ClientBundle> wrappedClass,
       URL resourceURL) {

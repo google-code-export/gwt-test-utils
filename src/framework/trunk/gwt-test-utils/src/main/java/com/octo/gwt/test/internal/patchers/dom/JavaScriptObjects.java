@@ -1,8 +1,10 @@
 package com.octo.gwt.test.internal.patchers.dom;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 
 import javassist.CtClass;
@@ -134,8 +136,37 @@ public class JavaScriptObjects {
     elementMap.put("ul", UListElement.class);
   }
 
-  public static PropertyContainer getJsoProperties(JavaScriptObject o) {
-    return GwtReflectionUtils.getPrivateFieldValue(o, PROPERTIES);
+  public static void clearProperties(JavaScriptObject jso) {
+    getJsoProperties(jso).clear();
+  }
+
+  public static Set<Map.Entry<String, Object>> entrySet(JavaScriptObject jso) {
+    return getJsoProperties(jso).entrySet();
+  }
+
+  public static boolean getBoolean(JavaScriptObject jso, String propName) {
+    return getJsoProperties(jso).getBoolean(propName);
+  }
+
+  public static double getDouble(JavaScriptObject jso, String propName) {
+    return getJsoProperties(jso).getDouble(propName);
+  }
+
+  public static int getInteger(JavaScriptObject jso, String propName) {
+    return getJsoProperties(jso).getInteger(propName);
+  }
+
+  @SuppressWarnings("unchecked")
+  public static <T> T getObject(JavaScriptObject jso, String propName) {
+    return (T) getJsoProperties(jso).getObject(propName);
+  }
+
+  public static short getShort(JavaScriptObject jso, String propName) {
+    return getJsoProperties(jso).getShort(propName);
+  }
+
+  public static String getString(JavaScriptObject jso, String propName) {
+    return getJsoProperties(jso).getString(propName);
   }
 
   public static Element newElement(String tag) {
@@ -185,7 +216,13 @@ public class JavaScriptObjects {
       nodeType = Node.ELEMENT_NODE;
 
       Element e = o.cast();
-      setProperty(o, JsoProperties.STYLE_OBJECT_FIELD, newStyle(e));
+      setProperty(e, JsoProperties.STYLE_OBJECT_FIELD, newStyle(e));
+
+      // a propertyContainer with a LinkedHashMap to record the order of DOM
+      // properties
+      PropertyContainer elemProperties = PropertyContainer.newInstance(e,
+          new LinkedHashMap<String, Object>());
+      setProperty(e, JsoProperties.ELEM_PROPERTIES, elemProperties);
 
       if (SelectElement.class.isAssignableFrom(jsoClass)) {
         setProperty(o, JsoProperties.SELECTED_INDEX_FIELD, -1);
@@ -216,9 +253,42 @@ public class JavaScriptObjects {
     return text;
   }
 
-  private static void setProperty(JavaScriptObject o, String propertyName,
-      Object propertyValue) {
-    getJsoProperties(o).put(propertyName, propertyValue);
+  public static void remove(JavaScriptObject jso, String propName) {
+    getJsoProperties(jso).remove(propName);
+  }
+
+  public static void setProperty(JavaScriptObject jso, String propName,
+      boolean value) {
+    getJsoProperties(jso).put(propName, Boolean.valueOf(value));
+  }
+
+  public static void setProperty(JavaScriptObject jso, String propName,
+      double value) {
+    getJsoProperties(jso).put(propName, Double.valueOf(value));
+  }
+
+  public static void setProperty(JavaScriptObject jso, String propName,
+      int value) {
+    getJsoProperties(jso).put(propName, Integer.valueOf(value));
+  }
+
+  public static void setProperty(JavaScriptObject jso, String propName,
+      long value) {
+    getJsoProperties(jso).put(propName, Long.valueOf(value));
+  }
+
+  public static void setProperty(JavaScriptObject jso, String propName,
+      Object value) {
+    getJsoProperties(jso).put(propName, value);
+  }
+
+  public static void setProperty(JavaScriptObject jso, String propName,
+      short value) {
+    getJsoProperties(jso).put(propName, Short.valueOf(value));
+  }
+
+  private static PropertyContainer getJsoProperties(JavaScriptObject o) {
+    return GwtReflectionUtils.getPrivateFieldValue(o, PROPERTIES);
   }
 
   private JavaScriptObjects() {

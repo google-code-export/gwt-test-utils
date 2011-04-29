@@ -3,11 +3,30 @@ package com.octo.gwt.test.internal.utils;
 import java.util.Map;
 import java.util.TreeMap;
 
+import com.google.gwt.core.client.JavaScriptObject;
+
+/**
+ * 
+ * List of {@link JavaScriptObject} properties. <strong>For internal use
+ * only.</strong>
+ * 
+ * @author Gael Lazzari
+ * 
+ */
 public class JsoProperties {
 
   public static final String DOCUMENT_ELEMENT = "documentElement";
 
-  public static final String DOM_NAME = "name";
+  public static final String ELEM_CLASS = "class";
+  public static final String ELEM_ID = "id";
+  public static final String ELEM_IMG_SRC = "src";
+  public static final String ELEM_LANG = "lang";
+  public static final String ELEM_NAME = "name";
+  public static final String ELEM_PROPERTIES = "ELEM_PROPERTIES";
+  public static final String ELEM_STYLE = "style";
+  public static final String ELEM_TITLE = "title";
+  public static final String ELEM_TYPE = "type";
+
   // EVENT PROPERTIES
   public static final String EVENT_BUTTON = "EVENT_button";
   public static final String EVENT_KEY_ALT = "EVENT_altKey";
@@ -16,10 +35,11 @@ public class JsoProperties {
   public static final String EVENT_KEY_SHIFT = "EVENT_shiftKey";
   public static final String EVENT_KEYCODE = "EVENT_keyCode";
   public static final String EVENT_PREVENTDEFAULT = "EVENT_preventDefault";
-  public static final String EVENT_TARGET = "EVENT_target";
 
+  public static final String EVENT_TARGET = "EVENT_target";
   public static final String EVENT_TYPE = "EVENT_type";
   public static final String INNER_HTML = "INNER_HTML";
+  public static final String INPUT_ELEM_VALUE = "value";
   public static final String NODE_LIST_FIELD = "childNodes";
   public static final String NODE_LIST_INNER_LIST = "NODE_LIST_INNER_LIST";
   public static final String NODE_NAME = "nodeName";
@@ -27,18 +47,23 @@ public class JsoProperties {
   public static final String NODE_TYPE_FIELD = "nodeType";
   public static final String PARENT_NODE_FIELD = "parentNode";
   public static final String SCROLL_LEFT = "scrollLeft";
+
   public static final String SELECTED_INDEX_FIELD = "selectedIndex";
   public static final String SELECTED_SIZE = "SELECTED_SIZE";
-
   public static final String SELECTION_END = "SELECTION_END";
   public static final String SELECTION_START = "SELECTION_START";
-  public static final String SRC = "src";
+
+  public static final String STYLE_BORDER_BOTTOM_WIDTH = "border-bottom-width";
+  public static final String STYLE_BORDER_LEFT_WIDTH = "border-left-width";
+  public static final String STYLE_BORDER_RIGHT_WIDTH = "border-right-width";
+  public static final String STYLE_BORDER_TOP_WIDTH = "border-top-width";
   public static final String STYLE_OBJECT_FIELD = "STYLE_OBJECT";
   public static final String STYLE_TARGET_ELEMENT = "STYLE_TARGET_ELEMENT";
   public static final String STYLE_WHITESPACE_PROPERTY = "whiteSpace";
+
   public static final String TAB_INDEX = "tabIndex";
+
   public static final String TAG_NAME = "tagName";
-  public static final String TYPE = "type";
 
   public static final String UIBINDER_CHILD_WIDGETS_LIST = "UIBINDER_CHILD_WIDGETS_LIST";
 

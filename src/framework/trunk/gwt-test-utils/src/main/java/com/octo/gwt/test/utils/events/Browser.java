@@ -162,11 +162,11 @@ public class Browser {
       dispatchEvent((Widget) hasTextWidget, keyDownEvent, keyPressEvent,
           keyUpEvent);
 
-      boolean keyDownEventPreventDefault = JavaScriptObjects.getJsoProperties(
-          keyDownEvent).getBoolean(JsoProperties.EVENT_PREVENTDEFAULT);
+      boolean keyDownEventPreventDefault = JavaScriptObjects.getBoolean(
+          keyDownEvent, JsoProperties.EVENT_PREVENTDEFAULT);
 
-      boolean keyPressEventPreventDefault = JavaScriptObjects.getJsoProperties(
-          keyPressEvent).getBoolean(JsoProperties.EVENT_PREVENTDEFAULT);
+      boolean keyPressEventPreventDefault = JavaScriptObjects.getBoolean(
+          keyPressEvent, JsoProperties.EVENT_PREVENTDEFAULT);
 
       if (!keyDownEventPreventDefault && !keyPressEventPreventDefault) {
         hasTextWidget.setText(value.substring(0, i + 1));

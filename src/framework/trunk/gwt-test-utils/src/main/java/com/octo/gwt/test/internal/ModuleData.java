@@ -18,10 +18,16 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import com.octo.gwt.test.GwtClassLoader;
 import com.octo.gwt.test.exceptions.GwtTestConfigurationException;
 import com.octo.gwt.test.exceptions.GwtTestException;
 
+/**
+ * Class which provide all necessary information about a GWT module. <strong>For
+ * internal use only.</strong>
+ * 
+ * @author Gael Lazzari
+ * 
+ */
 public class ModuleData {
 
   private static final ModuleData INSTANCE = new ModuleData();

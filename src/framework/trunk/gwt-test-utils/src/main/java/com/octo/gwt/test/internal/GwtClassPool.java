@@ -6,6 +6,12 @@ import javassist.NotFoundException;
 
 import com.octo.gwt.test.exceptions.GwtTestPatchException;
 
+/**
+ * Entry point to the javassist API. <strong>For internal use only.</strong>
+ * 
+ * @author Gael Lazzari
+ * 
+ */
 public class GwtClassPool {
 
   private static ClassPool classPool = ClassPool.getDefault();

@@ -12,7 +12,7 @@ public class SelectElementPatcher extends OverlayPatcher {
 
   @PatchMethod
   public static int getSize(SelectElement select) {
-    int visibleSize = JavaScriptObjects.getJsoProperties(select).getInteger(
+    int visibleSize = JavaScriptObjects.getInteger(select,
         JsoProperties.SELECTED_SIZE);
     int actualSize = select.getChildNodes().getLength();
 
@@ -42,8 +42,7 @@ public class SelectElementPatcher extends OverlayPatcher {
 
   @PatchMethod
   public static void setSize(SelectElement select, int size) {
-    JavaScriptObjects.getJsoProperties(select).put(JsoProperties.SELECTED_SIZE,
-        size);
+    JavaScriptObjects.setProperty(select, JsoProperties.SELECTED_SIZE, size);
     refreshSelect(select);
   }
 

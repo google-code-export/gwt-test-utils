@@ -3,7 +3,7 @@ package com.octo.gwt.test.internal.uibinder;
 import java.util.HashSet;
 import java.util.Set;
 
-public class UiBinderUtils {
+class UiBinderUtils {
 
   private static final String FIELD_ATTR_NAME = "field";
   private static final String MSG_TAG = "msg";

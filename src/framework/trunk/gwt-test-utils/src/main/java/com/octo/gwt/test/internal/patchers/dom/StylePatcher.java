@@ -8,7 +8,7 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Float;
 import com.google.gwt.dom.client.Style.Unit;
 import com.octo.gwt.test.internal.utils.GwtStringUtils;
-import com.octo.gwt.test.internal.utils.PropertyContainer;
+import com.octo.gwt.test.internal.utils.JsoProperties;
 import com.octo.gwt.test.internal.utils.StyleUtils;
 import com.octo.gwt.test.patchers.OverlayPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
@@ -19,10 +19,10 @@ public class StylePatcher extends OverlayPatcher {
 
   @PatchMethod
   public static void clearBorderWidth(Style style) {
-    JavaScriptObjects.getJsoProperties(style).remove("border-top-width");
-    JavaScriptObjects.getJsoProperties(style).remove("border-right-width");
-    JavaScriptObjects.getJsoProperties(style).remove("border-bottom-width");
-    JavaScriptObjects.getJsoProperties(style).remove("border-left-width");
+    JavaScriptObjects.remove(style, JsoProperties.STYLE_BORDER_BOTTOM_WIDTH);
+    JavaScriptObjects.remove(style, JsoProperties.STYLE_BORDER_LEFT_WIDTH);
+    JavaScriptObjects.remove(style, JsoProperties.STYLE_BORDER_RIGHT_WIDTH);
+    JavaScriptObjects.remove(style, JsoProperties.STYLE_BORDER_TOP_WIDTH);
   }
 
   @PatchMethod
@@ -32,24 +32,27 @@ public class StylePatcher extends OverlayPatcher {
 
   @PatchMethod
   public static String getBorderWidth(Style style) {
-    return getPropertyImpl(style, "border-top-width");
+    return getPropertyImpl(style, JsoProperties.STYLE_BORDER_TOP_WIDTH);
   }
 
   @PatchMethod
   public static String getPropertyImpl(Style style, String propertyName) {
-    return JavaScriptObjects.getJsoProperties(style).getString(propertyName);
+    return JavaScriptObjects.getString(style, propertyName);
   }
 
   @PatchMethod
   public static void setBorderWidth(Style style, double value, Unit unit) {
-    PropertyContainer pc = JavaScriptObjects.getJsoProperties(style);
     double modulo = value % 1;
     String completeValue = (modulo == 0) ? Integer.toString((int) value)
         + unit.getType() : Double.toString(value) + unit.getType();
-    pc.put("border-top-width", completeValue);
-    pc.put("border-right-width", completeValue);
-    pc.put("border-bottom-width", completeValue);
-    pc.put("border-left-width", completeValue);
+    JavaScriptObjects.setProperty(style,
+        JsoProperties.STYLE_BORDER_BOTTOM_WIDTH, completeValue);
+    JavaScriptObjects.setProperty(style, JsoProperties.STYLE_BORDER_LEFT_WIDTH,
+        completeValue);
+    JavaScriptObjects.setProperty(style,
+        JsoProperties.STYLE_BORDER_RIGHT_WIDTH, completeValue);
+    JavaScriptObjects.setProperty(style, JsoProperties.STYLE_BORDER_TOP_WIDTH,
+        completeValue);
   }
 
   @PatchMethod
@@ -63,10 +66,10 @@ public class StylePatcher extends OverlayPatcher {
     // treat case when propertyValue = "250.0px" => "250px" instead
     propertyValue = GwtStringUtils.treatDoubleValue(propertyValue);
 
-    JavaScriptObjects.getJsoProperties(style).put(propertyName, propertyValue);
+    JavaScriptObjects.setProperty(style, propertyName, propertyValue);
 
     Element owner = StyleUtils.getOwnerElement(style);
-    String styleAttribute = owner.getAttribute("style");
+    String styleAttribute = owner.getAttribute(JsoProperties.ELEM_STYLE);
 
     LinkedHashMap<String, String> styleProperties = StyleUtils.getStyleProperties(styleAttribute);
 
@@ -89,7 +92,7 @@ public class StylePatcher extends OverlayPatcher {
 
     String styleValue = (sb.length() > 0) ? sb.toString().substring(0,
         sb.length() - 1) : "";
-    owner.setAttribute("style", styleValue);
+    owner.setAttribute(JsoProperties.ELEM_STYLE, styleValue);
   }
 
 }

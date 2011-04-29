@@ -3,6 +3,13 @@ package com.octo.gwt.test.internal.utils;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * 
+ * Some String utility methods. <strong>For internal use only.</strong>
+ * 
+ * @author Gael Lazzari
+ * 
+ */
 public class GwtStringUtils {
 
   private static Pattern DOUBLE_PATTERN = Pattern.compile("^\\s*\\d+\\.(\\d+).*$");
@@ -83,22 +90,22 @@ public class GwtStringUtils {
       } else {
         switch (c) {
           case '\\':
-            b.append((char) '\\');
+            b.append('\\');
             break;
           case 'n':
-            b.append((char) '\n');
+            b.append('\n');
             break;
           case 'r':
-            b.append((char) '\r');
+            b.append('\r');
             break;
           case 't':
-            b.append((char) '\t');
+            b.append('\t');
             break;
           case 'f':
-            b.append((char) '\f');
+            b.append('\f');
             break;
           case 'b':
-            b.append((char) '\b');
+            b.append('\b');
             break;
           default:
             b.append(c);

@@ -8,6 +8,13 @@ import com.google.gwt.user.client.ui.UIObject.DebugIdImpl;
 import com.octo.gwt.test.GwtLogHandler;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
+/**
+ * Internal configuration of gwt-test-utils. <strong>For internal use
+ * only.</strong>
+ * 
+ * @author Gael Lazzari
+ * 
+ */
 public class GwtConfig {
 
   private static final GwtConfig INSTANCE = new GwtConfig();

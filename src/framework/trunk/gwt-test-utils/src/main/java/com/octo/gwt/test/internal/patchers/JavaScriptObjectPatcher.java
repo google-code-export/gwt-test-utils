@@ -36,32 +36,30 @@ public class JavaScriptObjectPatcher extends AutomaticPatcher {
       Element e = jso.cast();
       return elementToString(e);
     } else if (NodeList.class.isInstance(jso)) {
-      return JavaScriptObjects.getJsoProperties(jso).getObject(
+      return JavaScriptObjects.getObject(jso,
           JsoProperties.NODE_LIST_INNER_LIST).toString();
     } else {
-      StringBuilder sb = new StringBuilder();
-      sb.append(jso.getClass().getSimpleName()).append("[");
-      sb.append(JavaScriptObjects.getJsoProperties(jso).size());
-      sb.append("]");
-      return sb.toString();
+      return jso.getClass().getSimpleName();
     }
   }
 
   private static String elementToString(Element elem) {
     StringBuilder sb = new StringBuilder();
-    sb.append("<").append(elem.getTagName()).append(" ");
-    return elem.getTagName();
+    sb.append("<").append(elem.getTagName());
+    sb.append(">").append(elem.getInnerHTML());
+    sb.append("</").append(elem.getTagName()).append(">");
+    return sb.toString();
   }
 
   @Override
   public void initClass(CtClass c) throws Exception {
     super.initClass(c);
-
     // add field "protected PropertyContainer JSO_PROPERTIES;"
     CtField propertiesField = CtField.make(
         "protected final " + PropertyContainer.class.getName() + " "
-            + JavaScriptObjects.PROPERTIES + " = new "
-            + PropertyContainer.class.getName() + "(this);", c);
+            + JavaScriptObjects.PROPERTIES + " = "
+            + PropertyContainer.class.getName()
+            + ".newInstance(this, new java.util.HashMap());", c);
     c.addField(propertiesField);
   }
 
