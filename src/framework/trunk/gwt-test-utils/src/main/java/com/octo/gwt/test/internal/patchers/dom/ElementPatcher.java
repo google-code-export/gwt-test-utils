@@ -144,7 +144,7 @@ public class ElementPatcher extends OverlayPatcher {
       String value) {
     PropertyContainer properties = JavaScriptObjects.getObject(element,
         JsoProperties.ELEM_PROPERTIES);
-    properties.put(attributeName, value);
+    properties.put(attributeName.toLowerCase(), value);
   }
 
   @PatchMethod
@@ -168,8 +168,6 @@ public class ElementPatcher extends OverlayPatcher {
     for (int i = 0; i < nodes.getLength(); i++) {
       innerList.add(nodes.getItem(i));
     }
-
-    JavaScriptObjects.setProperty(element, JsoProperties.INNER_HTML, html);
   }
 
   @PatchMethod
@@ -177,7 +175,7 @@ public class ElementPatcher extends OverlayPatcher {
       boolean value) {
     PropertyContainer properties = JavaScriptObjects.getObject(element,
         JsoProperties.ELEM_PROPERTIES);
-    properties.put(propertyName, value);
+    properties.put(propertyName.toLowerCase(), value);
   }
 
   @PatchMethod
@@ -185,7 +183,7 @@ public class ElementPatcher extends OverlayPatcher {
       double value) {
     PropertyContainer properties = JavaScriptObjects.getObject(element,
         JsoProperties.ELEM_PROPERTIES);
-    properties.put(propertyName, value);
+    properties.put(propertyName.toLowerCase(), value);
   }
 
   @PatchMethod
@@ -193,7 +191,7 @@ public class ElementPatcher extends OverlayPatcher {
       int value) {
     PropertyContainer properties = JavaScriptObjects.getObject(element,
         JsoProperties.ELEM_PROPERTIES);
-    properties.put(propertyName, value);
+    properties.put(propertyName.toLowerCase(), value);
   }
 
   @PatchMethod
@@ -201,7 +199,7 @@ public class ElementPatcher extends OverlayPatcher {
       String value) {
     PropertyContainer properties = JavaScriptObjects.getObject(element,
         JsoProperties.ELEM_PROPERTIES);
-    properties.put(propertyName, value);
+    properties.put(propertyName.toLowerCase(), value);
   }
 
   @PatchMethod

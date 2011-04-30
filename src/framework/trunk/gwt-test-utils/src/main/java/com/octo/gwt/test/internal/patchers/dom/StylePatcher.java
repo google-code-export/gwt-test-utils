@@ -90,9 +90,7 @@ public class StylePatcher extends OverlayPatcher {
           "; ");
     }
 
-    String styleValue = (sb.length() > 0) ? sb.toString().substring(0,
-        sb.length() - 1) : "";
-    owner.setAttribute(JsoProperties.ELEM_STYLE, styleValue);
+    owner.setAttribute(JsoProperties.ELEM_STYLE, sb.toString());
   }
 
 }

@@ -13,18 +13,19 @@ public class ElementMapperImplPatcher extends AutomaticPatcher {
 
   @PatchMethod
   public static void clearIndex(Element e) {
+    JavaScriptObjects.setProperty(e, widgetId, null);
     e.setPropertyString(widgetId, null);
   }
 
   @PatchMethod
   public static int getIndex(Element e) {
-    String index = e.getPropertyString(widgetId);
+    String index = JavaScriptObjects.getObject(e, widgetId);
     return index == null ? -1 : Integer.parseInt(index);
   }
 
   @PatchMethod
   public static void setIndex(Element e, int index) {
-    e.setPropertyString(widgetId, Integer.toString(index));
+    JavaScriptObjects.setProperty(e, widgetId, Integer.toString(index));
   }
 
 }

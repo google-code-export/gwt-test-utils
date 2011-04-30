@@ -38,7 +38,6 @@ public class JsoProperties {
 
   public static final String EVENT_TARGET = "EVENT_target";
   public static final String EVENT_TYPE = "EVENT_type";
-  public static final String INNER_HTML = "INNER_HTML";
   public static final String INPUT_ELEM_VALUE = "value";
   public static final String NODE_LIST_FIELD = "childNodes";
   public static final String NODE_LIST_INNER_LIST = "NODE_LIST_INNER_LIST";

@@ -363,7 +363,7 @@ public class ElementTest extends GwtTestTest {
   }
 
   // TODO : pass the toString test on DOM elements..
-  // @Test
+  @Test
   public void checkToString() {
     // Setup
     DivElement div = Document.get().createDivElement();
@@ -371,13 +371,14 @@ public class ElementTest extends GwtTestTest {
     div.getStyle().setBackgroundColor("black");
     div.getStyle().setFloat(Float.LEFT);
     div.getStyle().setProperty("backgroundColor", "white");
+    div.setInnerHTML("<span>in span</span> out span");
 
     // Test
     String html = div.toString();
 
     // Assert
     Assert.assertEquals(
-        "<div someAttr=\"myVal\" style=\"float: left; background-color: white; \"></div>",
+        "<div someattr=\"myVal\" style=\"float: left; background-color: white; \"><span>in span</span> out span</div>",
         html);
 
   }

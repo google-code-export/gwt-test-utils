@@ -75,7 +75,7 @@ public class StyleTest extends GwtTestTest {
     // Assert 1
     Assert.assertEquals(Style.Float.RIGHT.getCssName(),
         style.getProperty("float"));
-    Assert.assertEquals("float: right;",
+    Assert.assertEquals("float: right; ",
         button.getElement().getAttribute("style"));
 
     // Test 2
@@ -97,7 +97,7 @@ public class StyleTest extends GwtTestTest {
 
     // Assert 1
     Assert.assertEquals("1", style.getOpacity());
-    Assert.assertEquals("opacity: 1;",
+    Assert.assertEquals("opacity: 1; ",
         button.getElement().getAttribute("style"));
 
     // Test 2
@@ -105,7 +105,7 @@ public class StyleTest extends GwtTestTest {
 
     // Assert 2
     Assert.assertEquals("0.94", style.getOpacity());
-    Assert.assertEquals("opacity: 0.94;",
+    Assert.assertEquals("opacity: 0.94; ",
         button.getElement().getAttribute("style"));
 
     // Test 3
@@ -162,7 +162,7 @@ public class StyleTest extends GwtTestTest {
 
     // Assert 1
     Assert.assertEquals(
-        "background-color: black; background-image: /img.png; border-color: blue; bottom: 4px; color: red; cursor: e-resize; float: left; display: inline-block; font-size: 10.5cm; font-style: normal; font-weight: bold; height: 3.1pc; left: 40in; list-style-type: circle; margin: 30.5%; margin-bottom: 29pt; margin-left: 47ex; margin-right: 3mm; margin-top: 10.3cm; overflow: scroll; padding: 10px; padding-bottom: 11px; padding-left: 12px; padding-right: 13px; padding-top: 14px; position: relative; string: stringvalue; double-unit: 17.2cm; right: 13.4cm; text-decoration: overline; top: 7.77pc; vertical-align: middle; visibility: visible; width: 3.5px; z-index: 1000;",
+        "background-color: black; background-image: /img.png; border-color: blue; bottom: 4px; color: red; cursor: e-resize; float: left; display: inline-block; font-size: 10.5cm; font-style: normal; font-weight: bold; height: 3.1pc; left: 40in; list-style-type: circle; margin: 30.5%; margin-bottom: 29pt; margin-left: 47ex; margin-right: 3mm; margin-top: 10.3cm; overflow: scroll; padding: 10px; padding-bottom: 11px; padding-left: 12px; padding-right: 13px; padding-top: 14px; position: relative; string: stringvalue; double-unit: 17.2cm; right: 13.4cm; text-decoration: overline; top: 7.77pc; vertical-align: middle; visibility: visible; width: 3.5px; z-index: 1000; ",
         button.getElement().getAttribute("style"));
     Assert.assertEquals("black", style.getBackgroundColor());
     Assert.assertEquals("/img.png", style.getBackgroundImage());
@@ -244,7 +244,7 @@ public class StyleTest extends GwtTestTest {
 
     // Assert 2
     // the only style we didn't remove in the test
-    Assert.assertEquals("vertical-align: middle;",
+    Assert.assertEquals("vertical-align: middle; ",
         button.getElement().getAttribute("style"));
     Assert.assertEquals("", style.getBackgroundColor());
     Assert.assertEquals("", style.getBackgroundImage());

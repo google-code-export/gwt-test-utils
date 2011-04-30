@@ -191,9 +191,19 @@ public class DOMImplPatcher extends AutomaticPatcher {
   }
 
   @PatchMethod
-  // TODO : use JSO.toString() instead..
   public static String getInnerHTML(Object domImpl, Element elem) {
-    return JavaScriptObjects.getString(elem, JsoProperties.INNER_HTML);
+    StringBuilder sb = new StringBuilder();
+    for (int i = 0; i < elem.getChildNodes().getLength(); i++) {
+      Node current = elem.getChildNodes().getItem(i);
+      if (current.getNodeType() == Node.TEXT_NODE) {
+        Text text = current.cast();
+        sb.append(text.getData());
+      } else {
+        sb.append(current.toString());
+      }
+    }
+
+    return sb.toString();
   }
 
   @PatchMethod

@@ -1,5 +1,7 @@
 package com.octo.gwt.test.internal.patchers;
 
+import java.util.Map;
+
 import javassist.CtClass;
 import javassist.CtField;
 
@@ -45,9 +47,29 @@ public class JavaScriptObjectPatcher extends AutomaticPatcher {
 
   private static String elementToString(Element elem) {
     StringBuilder sb = new StringBuilder();
-    sb.append("<").append(elem.getTagName());
+    String tagName = elem.getTagName().toLowerCase();
+    sb.append("<").append(tagName).append(" ");
+
+    PropertyContainer attrs = JavaScriptObjects.getObject(elem,
+        JsoProperties.ELEM_PROPERTIES);
+    for (Map.Entry<String, Object> entry : attrs.entrySet()) {
+      // special treatment for "disabled" property, which should be a empty
+      // string attribute if the DOM element is disabled
+      if ("disabled".equals(entry.getKey())) {
+        Boolean disabled = (Boolean) entry.getValue();
+        if (disabled.booleanValue()) {
+          sb.append(entry.getKey()).append("=\"\" ");
+        }
+      } else {
+        sb.append(entry.getKey()).append("=\"").append(entry.getValue()).append(
+            "\" ");
+      }
+    }
+    // remove the last space character
+    sb.replace(sb.length() - 1, sb.length(), "");
+
     sb.append(">").append(elem.getInnerHTML());
-    sb.append("</").append(elem.getTagName()).append(">");
+    sb.append("</").append(tagName).append(">");
     return sb.toString();
   }
 
