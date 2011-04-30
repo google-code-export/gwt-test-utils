@@ -278,4 +278,5 @@ public class XMLParserImplPatcher extends AutomaticPatcher {
         break;
     }
   }
+
 }

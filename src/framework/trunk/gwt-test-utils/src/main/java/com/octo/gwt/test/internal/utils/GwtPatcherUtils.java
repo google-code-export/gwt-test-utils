@@ -115,20 +115,6 @@ public class GwtPatcherUtils {
     }
   }
 
-  private static void addDefaultConstructor(CtClass c)
-      throws CannotCompileException {
-    CtConstructor cons;
-    try {
-      cons = c.getDeclaredConstructor(new CtClass[]{});
-      cons.setModifiers(Modifier.PUBLIC);
-    } catch (NotFoundException e) {
-      cons = new CtConstructor(new CtClass[]{}, c);
-      cons.setBody(";");
-      c.addConstructor(cons);
-    }
-
-  }
-
   private static void insertAfter(CtMethod m, String newBody) throws Exception {
     removeNativeModifier(m);
     m.insertAfter(newBody);
@@ -198,8 +184,6 @@ public class GwtPatcherUtils {
     }
 
     c.setModifiers(Modifier.PUBLIC);
-
-    addDefaultConstructor(c);
   }
 
   private GwtPatcherUtils() {

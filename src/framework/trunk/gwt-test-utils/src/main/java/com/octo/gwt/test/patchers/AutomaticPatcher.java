@@ -45,7 +45,8 @@ public class AutomaticPatcher implements Patcher {
   public void finalizeClass(CtClass c) throws Exception {
     for (Method m : annotatedMethods.keySet()) {
       if (!processedMethods.contains(m)) {
-        throw new GwtTestPatchException("@PatchMethod not used : " + m);
+        throw new GwtTestPatchException("@" + PatchMethod.class.getSimpleName()
+            + " not used : " + m);
       }
     }
 
@@ -57,8 +58,8 @@ public class AutomaticPatcher implements Patcher {
     if (e != null) {
       Method annotatedMethod = e.getKey();
       if (!Modifier.isStatic(annotatedMethod.getModifiers())) {
-        throw new GwtTestPatchException("Method " + annotatedMethod
-            + " have to be static");
+        throw new GwtTestPatchException("@" + PatchMethod.class.getSimpleName()
+            + " " + annotatedMethod + " has to be static");
       }
 
       switch (e.getValue().type()) {

@@ -96,9 +96,12 @@ public class XMLParserTest extends GwtTestTest {
 
     // Asserts
     NodeList tags = doc.getElementsByTagName("tag");
+    Assert.assertEquals("<tag>value</tag>", tags.item(0).toString());
     Text text = (Text) tags.item(0).getChildNodes().item(0);
     Assert.assertEquals("value", text.getData());
     Assert.assertEquals("#text", tags.item(0).getFirstChild().getNodeName());
+    Assert.assertEquals("<tags><tag>value</tag></tags>",
+        doc.getDocumentElement().toString());
   }
 
   @Test

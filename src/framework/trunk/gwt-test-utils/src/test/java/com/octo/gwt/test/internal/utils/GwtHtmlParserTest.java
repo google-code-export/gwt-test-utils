@@ -1,4 +1,4 @@
-package com.octo.gwt.test.internal;
+package com.octo.gwt.test.internal.utils;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -11,41 +11,8 @@ import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Text;
 import com.octo.gwt.test.GwtTestTest;
-import com.octo.gwt.test.internal.utils.GwtHtmlParser;
 
 public class GwtHtmlParserTest extends GwtTestTest {
-
-  // @Test
-  // public void checkFormat() throws Exception {
-  // // Setup
-  // DivElement root = Document.get().createDivElement();
-  // root.setId("root");
-  // DivElement div0 = Document.get().createDivElement();
-  // div0.setId("div0");
-  // div0.setClassName("div0Class");
-  // div0.getStyle().setBackgroundColor("red");
-  // div0.getStyle().setBorderWidth(10.1, Unit.EM);
-  // root.appendChild(div0);
-  //
-  // DivElement div1 = Document.get().createDivElement();
-  // SpanElement span = Document.get().createSpanElement();
-  // span.setInnerText("spanText àéè");
-  // span.setAttribute("customAttr", "customValue");
-  // span.getStyle().setFloat(Float.RIGHT);
-  // div1.appendChild(span);
-  // div1.appendChild(Document.get().createBRElement());
-  // div1.appendChild(Document.get().createCaptionElement());
-  // root.appendChild(div1);
-  //
-  // String expectedHtml =
-  // "<div id=\"div0\" class=\"div0Class\" style=\"background-color: red; border-top-width: 10.1em; border-right-width: 10.1em; border-bottom-width: 10.1em; border-left-width: 10.1em; \"></div><div><span customattr=\"customValue\" style=\"float: right; \">spanText àéè</span><br><caption></caption></div>";
-  //
-  // // Test
-  // String html = GwtHtmlParser.format(root);
-  //
-  // // Assert
-  // Assert.assertEquals(expectedHtml, html);
-  // }
 
   @Test
   public void checkParse() throws Exception {
