@@ -233,6 +233,10 @@ public class ModuleData {
             + "' : <servlet> declared without a correct 'class' value");
       }
 
+      if (!servletPath.startsWith("/")) {
+        servletPath = "/" + servletPath;
+      }
+
       remoteServiceImpls.put(servletPath, servletClassName);
 
     }

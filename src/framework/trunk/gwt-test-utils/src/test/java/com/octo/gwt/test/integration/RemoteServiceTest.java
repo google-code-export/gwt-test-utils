@@ -2,7 +2,6 @@ package com.octo.gwt.test.integration;
 
 import junit.framework.Assert;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import com.google.gwt.core.client.GWT;
@@ -82,21 +81,4 @@ public class RemoteServiceTest extends GwtTestTest {
     Assert.assertFalse(failure);
   }
 
-  @Before
-  public void setupRemoteServiceTest() {
-    addGwtCreateHandler(new RemoteServiceCreateHandler() {
-
-      @Override
-      protected Object findService(Class<?> remoteServiceClass,
-          String remoteServiceRelativePath) {
-        if (remoteServiceClass == MyService.class)
-          return new MyServiceImpl();
-
-        return null;
-      }
-    });
-
-    success = false;
-    failure = false;
-  }
 }
