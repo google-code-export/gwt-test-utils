@@ -10,7 +10,6 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Widget;
-import com.octo.gwt.test.utils.events.Browser;
 
 @SuppressWarnings("deprecation")
 public class ButtonTest extends GwtTestTest {
@@ -32,7 +31,7 @@ public class ButtonTest extends GwtTestTest {
     Assert.assertEquals("", b.getHTML());
 
     // simulate click
-    Browser.click(b);
+    b.click();
 
     // assert that the "AbstractGWTTest.click(Widget)" method trigger the
     // "onClick" handler's method
@@ -54,7 +53,7 @@ public class ButtonTest extends GwtTestTest {
     Assert.assertEquals("", b.getHTML());
 
     // simulate click
-    Browser.click(b);
+    b.click();
 
     Assert.assertEquals("clicked", b.getHTML());
   }
