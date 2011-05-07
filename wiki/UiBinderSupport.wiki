@@ -1,4 +1,4 @@
-#summary This page explain what part of UiBinder is supported or not by gwt-test-utils
+#summary This page explain which part of UiBinder are supported or not by gwt-test-utils
 
 = Introduction =
 
@@ -7,9 +7,10 @@ Since version 0.28, *gwt-test-utils* is working with UiBinder. However, there st
 
 = Details =
 
-Here is the list of feature which are fully working :
+Here is the list of features which are fully working :
  * UiBinder templates with HTML element
  * UiBinder templates with GWT widgets
+ * UiBinder template with GWT2 LayoutPanels
  * All GWT EventHandler (you can found information about how to simulate Browser events [http://code.google.com/p/gwt-test-utils/wiki/Events here])
  * GWT styles
  * External resources
@@ -20,6 +21,8 @@ Here is the list of feature which are fully working :
 If something goes wrong with one of those features, please [http://code.google.com/p/gwt-test-utils/issues/list report an issue] or feel free to ask on the framework [http://groups.google.com/group/gwt-test-utils-users user mailing list].
 
 *We are aware of only one feature which is not working has expected when launching our GWT application : [http://code.google.com/intl/fr-FR/webtoolkit/doc/latest/DevGuideUiBinderI18n.html UiBinder i18n support].*
+
+Whereas
 
 
  
