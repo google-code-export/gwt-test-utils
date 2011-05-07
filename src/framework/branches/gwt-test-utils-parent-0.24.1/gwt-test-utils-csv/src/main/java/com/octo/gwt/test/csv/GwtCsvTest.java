@@ -438,6 +438,12 @@ public abstract class GwtCsvTest extends GwtTest {
 	}
 
 	@CsvMethod
+	public void emptyTextBox(String... params) {
+		TextBox textBox = getObject(TextBox.class, params);
+		Browser.emptyText(textBox);
+	}
+
+	@CsvMethod
 	public void fillInvisibleTextBox(String value, String... params) {
 		TextBox textBox = getObject(TextBox.class, params);
 		textBox.setText(value);
