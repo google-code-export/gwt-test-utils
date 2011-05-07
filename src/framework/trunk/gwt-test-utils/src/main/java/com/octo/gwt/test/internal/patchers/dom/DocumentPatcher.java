@@ -162,12 +162,12 @@ public class DocumentPatcher extends OverlayPatcher {
       }
     }
     if (is == null) {
-      throw new GwtTestConfigurationException("Cannot find file '"
-          + hostPagePath + "', please override "
-          + GwtTest.class.getSimpleName()
-          + ".getHostPagePath() method correctly (see "
-          + ClassLoader.class.getSimpleName()
-          + ".getResourceAsStream(string name))");
+      throw new GwtTestConfigurationException(
+          "Cannot find file '"
+              + hostPagePath
+              + "', please override "
+              + GwtTest.class.getSimpleName()
+              + ".getHostPagePath() method by specifying the relative path from the root directory of your java project");
     }
     BufferedReader br = null;
     try {

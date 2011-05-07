@@ -1,8 +1,6 @@
 package com.octo.gwt.test;
 
 import java.io.File;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.Locale;
 
 import org.junit.After;
@@ -38,6 +36,9 @@ import com.octo.gwt.test.internal.handlers.GwtCreateHandlerManager;
  */
 @RunWith(GwtRunner.class)
 public abstract class GwtTest {
+
+  private static final String DEFAULT_WAR_DIR = "war/";
+  private static final String MAVEN_DEFAULT_RES_DIR = "src/main/resources/";
 
   /**
    * <p>
@@ -108,72 +109,32 @@ public abstract class GwtTest {
     return false;
   }
 
+  /**
+   * Return the relative path in the project of the HTML file which is used by
+   * the corresponding GWT module.
+   * 
+   * @param moduleFullQualifiedName The full qualifed name of the corresponding
+   *          GWT module.
+   * @return The relative path of the HTML file used.
+   */
   protected String getHostPagePath(String moduleFullQualifiedName) {
-    // TODO: refactor this scary method :-o
+    // try with gwt default structure
     String fileSimpleName = moduleFullQualifiedName.substring(moduleFullQualifiedName.lastIndexOf('.') + 1)
         + ".html";
 
-    URL classesURL = GwtTest.class.getClassLoader().getResource(".");
-    File classDir = null;
-    try {
-      classDir = new File(classesURL.toURI());
-    } catch (URISyntaxException e) {
-      throw new GwtTestConfigurationException(
-          "Error while trying to load HTML host page for module '"
-              + moduleFullQualifiedName + "'", e);
+    String fileRelativePath = DEFAULT_WAR_DIR + fileSimpleName;
+    if (new File(fileRelativePath).exists()) {
+      return fileRelativePath;
     }
 
-    if ("test-classes".equals(classDir.getName())) {
-      classDir = new File(classDir.getParent(), "classes");
-    }
-
-    // try at the root of the test classpath
-    File file = new File(classDir, fileSimpleName);
-    if (file.exists()) {
-      return file.getAbsolutePath();
-    }
-
-    String fileRelativePath = moduleFullQualifiedName.substring(0,
+    // try with maven archetype default path
+    String packagePath = moduleFullQualifiedName.substring(0,
         moduleFullQualifiedName.lastIndexOf('.') + 1).replaceAll("\\.", "/");
 
-    // try in package folder at the root of the test classpath
-    file = new File(classDir, fileRelativePath + fileSimpleName);
-    if (file.exists()) {
-      return file.getAbsolutePath();
-    }
-
-    // try old maven archetype fashion (with a index.html which redirect to a
-    // html file in
-    // a "public" folder in src/main/resources
-    file = new File(classDir, fileRelativePath + "/public/" + fileSimpleName);
-    if (file.exists()) {
-      return file.getAbsolutePath();
-    }
-
-    // try in the "war" folder at the root of the projet
-    File root = classDir.equals("target") ? classDir.getParentFile()
-        : classDir.getParentFile().getParentFile();
-
-    file = new File(root, "war/" + fileSimpleName);
-    if (file.exists()) {
-      return file.getAbsolutePath();
-    }
-    // try in "war folder, with package name
-    file = new File(root, "war/" + fileRelativePath + fileSimpleName);
-    if (file.exists()) {
-      return file.getAbsolutePath();
-    }
-
-    // try in src/main/webapp
-    file = new File(root, "src/main/webapp/" + fileSimpleName);
-    if (file.exists()) {
-      return file.getAbsolutePath();
-    }
-    // try in "src/main/webapp", with package name
-    file = new File(root, "src/main/webapp/" + fileRelativePath
-        + fileSimpleName);
-    if (file.exists()) {
-      return file.getAbsolutePath();
+    fileRelativePath = MAVEN_DEFAULT_RES_DIR + packagePath + "public/"
+        + fileSimpleName;
+    if (new File(fileRelativePath).exists()) {
+      return fileRelativePath;
     }
 
     return null;

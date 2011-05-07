@@ -1,5 +1,7 @@
 package com.octo.gwt.test.internal;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.Collections;
 import java.util.HashMap;
@@ -30,6 +32,10 @@ import com.octo.gwt.test.exceptions.GwtTestException;
  */
 public class ModuleData {
 
+  private static final String[] CLASSPATH_ROOTS = new String[]{
+      "src/main/java/", "src/main/resources/", "src/test/java/",
+      "src/test/resources/", "src/", "resources/", "res/"};
+
   private static final ModuleData INSTANCE = new ModuleData();
 
   public static ModuleData get() {
@@ -39,6 +45,7 @@ public class ModuleData {
   private final Set<String> clientExclusions;
   private final Set<String> clientPaths;
   private final Map<String, String> moduleAlias;
+
   private final Map<String, String> remoteServiceImpls;
 
   private ModuleData() {
@@ -111,15 +118,7 @@ public class ModuleData {
 
   private Document createDocument(String moduleFilePath) throws Exception {
 
-    InputStream is = GwtConfig.class.getClassLoader().getResourceAsStream(
-        moduleFilePath);
-
-    if (is == null) {
-      throw new IllegalArgumentException(
-          "Cannot find GWT module configuration file '" + moduleFilePath
-              + "', please see the " + ClassLoader.class.getSimpleName()
-              + ".getResourceAsStream(String path) method for more information");
-    }
+    InputStream is = getModuleFileAsStream(moduleFilePath);
 
     try {
       DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
@@ -137,6 +136,27 @@ public class ModuleData {
   private String getModuleAlias(Document document, XPath xpath,
       String moduleFilePath) throws XPathExpressionException {
     return xpath.evaluate("/module/@rename-to", document).trim();
+  }
+
+  private InputStream getModuleFileAsStream(String moduleFilePath) {
+    InputStream is = GwtConfig.class.getClassLoader().getResourceAsStream(
+        moduleFilePath);
+
+    if (is != null) {
+      return is;
+    }
+
+    for (String classpathRoot : CLASSPATH_ROOTS) {
+      try {
+        return new FileInputStream(classpathRoot + moduleFilePath);
+      } catch (FileNotFoundException e) {
+        // try next
+      }
+    }
+
+    throw new GwtTestConfigurationException(
+        "Cannot find GWT module configuration file '" + moduleFilePath
+            + "' in the classpath");
   }
 
   private String getModuleName(String moduleFilePath) {
