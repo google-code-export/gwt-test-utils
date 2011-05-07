@@ -2,6 +2,12 @@ package com.octo.gwt.test.utils.events;
 
 import org.junit.Assert;
 
+import com.google.gwt.event.dom.client.BlurEvent;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyDownEvent;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.shared.UmbrellaException;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.CheckBox;
@@ -143,7 +149,130 @@ public class Browser {
     dispatchEventInternal(target, events);
   }
 
-  public static void fillText(HasText hasTextWidget, String value) {
+  /**
+   * <p>
+   * Remove the text within a widget which implements HasText interface by
+   * simulating a long backspace key press.
+   * </p>
+   * <p>
+   * <ul>
+   * <li>For each character in the text value of the widget, a
+   * {@link KeyDownEvent} is triggered with value {@link KeyCodes#KEY_BACKSPACE}
+   * . It can be prevented with normal effect.</li>
+   * <li><strong>Only one</strong> {@link KeyUpEvent} is triggered with value
+   * {@link KeyCodes#KEY_BACKSPACE}.</li>
+   * <li>Than, a {@link BlurEvent} is triggered.</li>
+   * <li>Finally, if at least one on the KeyDown events has not been prevented,
+   * a {@link ChangeEvent} is triggered.</li>
+   * </p>
+   * <p>
+   * Note that no {@link KeyPressEvent} would be triggered.
+   * </p>
+   * 
+   * @param hasTextWidget The widget to fill. If this implementation actually
+   *          isn't a {@link Widget} instance, nothing would be done.
+   */
+  public static void emptyText(HasText hasTextWidget) {
+    boolean changed = false;
+
+    int baseLength = hasTextWidget.getText().length();
+    for (int i = 0; i < baseLength; i++) {
+      Event keyDownEvent = EventBuilder.create(Event.ONKEYDOWN).setKeyCode(
+          KeyCodes.KEY_BACKSPACE).build();
+      dispatchEvent((Widget) hasTextWidget, keyDownEvent);
+
+      boolean keyDownEventPreventDefault = JavaScriptObjects.getBoolean(
+          keyDownEvent, JsoProperties.EVENT_PREVENTDEFAULT);
+
+      if (!keyDownEventPreventDefault) {
+        hasTextWidget.setText(hasTextWidget.getText().substring(0,
+            hasTextWidget.getText().length() - 1));
+        changed = true;
+      }
+
+    }
+
+    // don't have to check if the event can be dispatch since it's check
+    // before
+    Event keyUpEvent = EventBuilder.create(Event.ONKEYUP).setKeyCode(
+        KeyCodes.KEY_BACKSPACE).build();
+    dispatchEventInternal((Widget) hasTextWidget, keyUpEvent);
+
+    dispatchEventInternal((Widget) hasTextWidget,
+        EventBuilder.create(Event.ONBLUR).build());
+
+    if (changed) {
+      dispatchEventInternal((Widget) hasTextWidget,
+          EventBuilder.create(Event.ONCHANGE).build());
+    }
+
+  }
+
+  /**
+   * <p>
+   * Remove the text within a widget which implements HasText interface
+   * </p>
+   * <p>
+   * <ul>
+   * <li>For each character in the text value of the widget, a
+   * {@link KeyDownEvent} is triggered with value {@link KeyCodes#KEY_BACKSPACE}
+   * . It can be prevented with normal effect.</li>
+   * <li>Either one or x {@link KeyUpEvent} are triggered with value
+   * {@link KeyCodes#KEY_BACKSPACE}, according to the chosen empty text
+   * simulation (with x the number of character in the text value).</li>
+   * <li>Than, a {@link BlurEvent} is triggered.</li>
+   * <li>Finally, if at least one on the KeyDown events has not been prevented,
+   * a {@link ChangeEvent} is triggered.</li>
+   * </p>
+   * <p>
+   * Note that no {@link KeyPressEvent} would be triggered.
+   * </p>
+   * 
+   * @param hasTextWidget The widget to fill. If this implementation actually
+   *          isn't a {@link Widget} instance, nothing would be done.
+   * @param longBackPress True if it should simulate a long backspace press or
+   *          not.
+   */
+  public static void emptyText(HasText hasTextWidget, boolean longBackPress) {
+    if (longBackPress) {
+      emptyText(hasTextWidget);
+    } else {
+      removeText(hasTextWidget, hasTextWidget.getText().length());
+    }
+  }
+
+  /**
+   * <p>
+   * Fill a widget which implements HasText interface.
+   * </p>
+   * <p>
+   * <ul>
+   * <li>For each character in the value to fill, {@link KeyDownEvent},
+   * {@link KeyPressEvent} and {@link KeyUpEvent} are triggered. They can be
+   * prevented with normal effect.</li>
+   * <li>After typing, a {@link BlurEvent} is triggered.</li>
+   * <li>Than, if at least one on the KeyDown or KeyPress events has not been
+   * prevented, a {@link ChangeEvent} is triggered.</li>
+   * </ul>
+   * </p>
+   * 
+   * <p>
+   * <strong>Do not use this method to remove text by calling it with an empty
+   * string. Use {@link Browser#emptyText(HasText, boolean)} instead.</strong>
+   * </p>
+   * 
+   * @param hasTextWidget The widget to fill. If this implementation actually
+   *          isn't a {@link Widget} instance, nothing would be done.
+   * @param value The value to fill. Cannot be null or empty.
+   * @throws IllegalArgumentException if the value to fill is null or empty.
+   */
+  public static void fillText(HasText hasTextWidget, String value)
+      throws IllegalArgumentException {
+    if (value == null || "".equals(value)) {
+      throw new IllegalArgumentException(
+          "Cannot fill a null or empty text. If you intent to remove some text, use '"
+              + Browser.class.getSimpleName() + ".emptyText(..)' instead");
+    }
     if (!Widget.class.isInstance(hasTextWidget)) {
       return;
     }
@@ -255,6 +384,64 @@ public class Browser {
    */
   public static void mouseWheel(Widget target) {
     dispatchEvent(target, EventBuilder.create(Event.ONMOUSEWHEEL).build());
+  }
+
+  /**
+   * <p>
+   * Remove a fixed number of character from the text within a widget which
+   * implements HasText interface by simulating a backspace key press.
+   * </p>
+   * <p>
+   * <ul>
+   * <li>x {@link KeyDownEvent} are triggered with value
+   * {@link KeyCodes#KEY_BACKSPACE}, with x the number of backspace press passed
+   * as parameter. It can be prevented with normal effect.</li>
+   * <li>Than, x {@link KeyUpEvent} are triggered with value
+   * {@link KeyCodes#KEY_BACKSPACE}, with x the number of backspace press passed
+   * as parameter.</li>
+   * <li>Than, a {@link BlurEvent} is triggered.</li>
+   * <li>Finally, if at least one on the KeyDown events has not been prevented,
+   * a {@link ChangeEvent} is triggered.</li>
+   * </p>
+   * <p>
+   * Note that no {@link KeyPressEvent} would be triggered.
+   * </p>
+   * 
+   * @param hasTextWidget The targeted widget. If this implementation actually
+   *          isn't a {@link Widget} instance, nothing would be done.
+   * @param backspacePressNumber The number of backspace key press to simulate.
+   */
+  public static void removeText(HasText hasTextWidget, int backspacePressNumber) {
+    boolean changed = false;
+
+    for (int i = 0; i < backspacePressNumber; i++) {
+      Event keyDownEvent = EventBuilder.create(Event.ONKEYDOWN).setKeyCode(
+          KeyCodes.KEY_BACKSPACE).build();
+      Event keyUpEvent = EventBuilder.create(Event.ONKEYUP).setKeyCode(
+          KeyCodes.KEY_BACKSPACE).build();
+      dispatchEvent((Widget) hasTextWidget, keyDownEvent, keyUpEvent);
+
+      boolean keyDownEventPreventDefault = JavaScriptObjects.getBoolean(
+          keyDownEvent, JsoProperties.EVENT_PREVENTDEFAULT);
+
+      if (!keyDownEventPreventDefault) {
+        hasTextWidget.setText(hasTextWidget.getText().substring(0,
+            hasTextWidget.getText().length() - 1));
+        changed = true;
+      }
+
+    }
+
+    // don't have to check if the event can be dispatch since it's check
+    // before
+    dispatchEventInternal((Widget) hasTextWidget,
+        EventBuilder.create(Event.ONBLUR).build());
+
+    if (changed) {
+      dispatchEventInternal((Widget) hasTextWidget,
+          EventBuilder.create(Event.ONCHANGE).build());
+    }
+
   }
 
   private static void assertCanApplyEvent(UIObject target, Event... events) {
