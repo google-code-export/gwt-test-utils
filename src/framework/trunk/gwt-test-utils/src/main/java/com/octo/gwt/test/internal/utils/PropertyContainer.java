@@ -18,17 +18,13 @@ public class PropertyContainer {
 
   private static final long serialVersionUID = -2421991095282208998L;
 
-  public static PropertyContainer newInstance(JavaScriptObject jso,
-      Map<String, Object> map) {
-    return new PropertyContainer(jso, map);
+  public static PropertyContainer newInstance(Map<String, Object> map) {
+    return new PropertyContainer(map);
   }
 
   private final Map<String, Object> map;
 
-  private final JavaScriptObject owner;
-
-  private PropertyContainer(JavaScriptObject jso, Map<String, Object> map) {
-    this.owner = jso;
+  private PropertyContainer(Map<String, Object> map) {
     this.map = map;
   }
 
@@ -58,10 +54,6 @@ public class PropertyContainer {
   @SuppressWarnings("unchecked")
   public <T> T getObject(String key) {
     return (T) map.get(key);
-  }
-
-  public JavaScriptObject getOwner() {
-    return owner;
   }
 
   public short getShort(String key) {

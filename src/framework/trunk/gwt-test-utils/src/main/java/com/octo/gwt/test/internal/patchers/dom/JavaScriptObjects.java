@@ -220,8 +220,7 @@ public class JavaScriptObjects {
 
       // a propertyContainer with a LinkedHashMap to record the order of DOM
       // properties
-      PropertyContainer elemProperties = PropertyContainer.newInstance(e,
-          new LinkedHashMap<String, Object>());
+      PropertyContainer elemProperties = PropertyContainer.newInstance(new LinkedHashMap<String, Object>());
       setProperty(e, JsoProperties.ELEM_PROPERTIES, elemProperties);
 
       if (SelectElement.class.isAssignableFrom(jsoClass)) {

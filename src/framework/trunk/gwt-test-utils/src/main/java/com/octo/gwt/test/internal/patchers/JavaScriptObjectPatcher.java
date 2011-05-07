@@ -81,7 +81,7 @@ public class JavaScriptObjectPatcher extends AutomaticPatcher {
         "protected final " + PropertyContainer.class.getName() + " "
             + JavaScriptObjects.PROPERTIES + " = "
             + PropertyContainer.class.getName()
-            + ".newInstance(this, new java.util.HashMap());", c);
+            + ".newInstance(new java.util.HashMap());", c);
     c.addField(propertiesField);
   }
 
