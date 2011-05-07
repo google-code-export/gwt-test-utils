@@ -291,6 +291,10 @@ class ConfigurationLoader {
       throw new GwtTestConfigurationException(
           "Cannot find class in the classpath : '" + patchCtClass.getName()
               + "'");
+    } catch (NoClassDefFoundError e) {
+      throw new GwtTestConfigurationException(
+          "No class definition found in the classpath for : '" + e.getMessage()
+              + "'");
     }
     PatchClass patchClass = GwtReflectionUtils.getAnnotation(clazz,
         PatchClass.class);
