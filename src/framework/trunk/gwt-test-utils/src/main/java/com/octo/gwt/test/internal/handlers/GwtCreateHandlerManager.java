@@ -23,8 +23,9 @@ public class GwtCreateHandlerManager {
   private final GwtCreateHandler clientBundleCreateHander;
   private final GwtCreateHandler debugIdImplCreateHandler;
   private final GwtCreateHandler defaultGwtCreateHandler;
+  private final GwtCreateHandler dockLayoutPanelCreateHandler;
   private final GwtCreateHandler imageBundleCreateHandler;
-  private final GwtCreateHandler localizableResourceHandler;
+  private final GwtCreateHandler localizableResourceCreateHandler;
   private GwtCreateHandler mockCreateHandler;
   private final TestRemoteServiceCreateHandler testRemoteServiceCreateHandler;
   private final GwtCreateHandler uiBinderCreateHandler;
@@ -36,8 +37,9 @@ public class GwtCreateHandlerManager {
     clientBundleCreateHander = new ClientBundleCreateHandler();
     debugIdImplCreateHandler = new DebugIdImplCreateHandler();
     defaultGwtCreateHandler = new DefaultGwtCreateHandler();
-    localizableResourceHandler = new LocalizableCreateHandler();
+    dockLayoutPanelCreateHandler = new DefaultDockLayoutPanelHandler();
     imageBundleCreateHandler = new ImageBundleCreateHandler();
+    localizableResourceCreateHandler = new LocalizableCreateHandler();
     uiBinderCreateHandler = new UiBinderCreateHandler();
     testRemoteServiceCreateHandler = TestRemoteServiceCreateHandler.get();
   }
@@ -61,13 +63,14 @@ public class GwtCreateHandlerManager {
     list.addAll(addedHandlers);
 
     // finally, add all default gwt-test-utils createHandlers
-    list.add(localizableResourceHandler);
+    list.add(localizableResourceCreateHandler);
     list.add(clientBundleCreateHander);
     list.add(imageBundleCreateHandler);
     list.add(uiBinderCreateHandler);
     list.add(testRemoteServiceCreateHandler);
     list.add(defaultGwtCreateHandler);
     list.add(abstractClassCreateHandler);
+    list.add(dockLayoutPanelCreateHandler);
 
     return Collections.unmodifiableList(list);
   }

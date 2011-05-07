@@ -44,12 +44,14 @@ class UiBinderElement implements UiBinderTag {
   }
 
   public void addWidget(Widget widget) {
-    addWidget(wrapped, widget);
+    addWidget(this.wrapped, widget);
 
   }
 
   public final void appendText(String data) {
-    appendText(this.wrapped, data);
+    if (!"".equals(data.trim())) {
+      appendText(this.wrapped, data);
+    }
   }
 
   public Object getWrapped() {

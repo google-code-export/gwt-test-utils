@@ -83,15 +83,17 @@ class UiBinderWidget<T extends Widget> implements UiBinderTag {
   }
 
   public final void addElement(Element element) {
-    appendElement(wrapped, element);
+    appendElement(this.wrapped, element);
   }
 
   public final void addWidget(Widget widget) {
-    addWidget(wrapped, widget);
+    addWidget(this.wrapped, widget);
   }
 
   public final void appendText(String data) {
-    appendText(wrapped, data);
+    if (!"".equals(data.trim())) {
+      appendText(this.wrapped, data);
+    }
   }
 
   public Object getWrapped() {
