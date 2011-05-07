@@ -372,6 +372,12 @@ public abstract class GwtCsvTest extends GwtTest {
   }
 
   @CsvMethod
+  public void emptyTextBox(String... params) {
+    TextBox textBox = getObject(TextBox.class, params);
+    Browser.emptyText(textBox);
+  }
+
+  @CsvMethod
   public void fillAndSelectInSuggestBoxByIndex(String content, String index,
       String... params) {
     SuggestBox suggestBox = getObject(SuggestBox.class, params);
