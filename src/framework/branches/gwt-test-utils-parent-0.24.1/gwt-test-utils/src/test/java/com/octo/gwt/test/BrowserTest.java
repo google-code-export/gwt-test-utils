@@ -51,16 +51,201 @@ import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.octo.gwt.test.utils.events.Browser;
 
-public class EventsTest extends GwtTestTest {
+public class BrowserTest extends GwtTestTest {
 
 	private boolean tested;
 	private int counter;
+	private int keyDownCount;
+	private int keyUpCount;
 	private boolean onBlurTriggered;
 	private boolean onChangeTriggered;
 
 	@Override
 	public String getCurrentTestedModuleFile() {
 		return "test-config.gwt.xml";
+	}
+
+	@Test
+	public void checkEmptyText_LongPressFalse() {
+		// Setup
+		onChangeTriggered = false;
+		onBlurTriggered = false;
+		keyDownCount = 0;
+		keyUpCount = 0;
+		String initialText = "1234";
+
+		final TextBox tb = new TextBox();
+		tb.setText(initialText);
+
+		tb.addChangeHandler(new ChangeHandler() {
+
+			public void onChange(ChangeEvent event) {
+				onChangeTriggered = true;
+			}
+		});
+
+		tb.addBlurHandler(new BlurHandler() {
+
+			public void onBlur(BlurEvent event) {
+				onBlurTriggered = true;
+			}
+		});
+
+		tb.addKeyPressHandler(new KeyPressHandler() {
+
+			public void onKeyPress(KeyPressEvent event) {
+				Assert.fail("no keyPress event should be triggered when pressing backspace button");
+			}
+		});
+
+		tb.addKeyUpHandler(new KeyUpHandler() {
+
+			public void onKeyUp(KeyUpEvent event) {
+				Assert.assertEquals(KeyCodes.KEY_BACKSPACE, event.getNativeKeyCode());
+				keyUpCount++;
+			}
+		});
+
+		tb.addKeyDownHandler(new KeyDownHandler() {
+
+			public void onKeyDown(KeyDownEvent event) {
+				Assert.assertEquals(KeyCodes.KEY_BACKSPACE, event.getNativeKeyCode());
+				keyDownCount++;
+			}
+		});
+
+		// Test
+		Browser.emptyText(tb, false);
+
+		// Asserts
+		// the textbox value should be updated
+		Assert.assertEquals("", tb.getText());
+		Assert.assertEquals(4, keyDownCount);
+		Assert.assertEquals(4, keyUpCount);
+		Assert.assertTrue(onBlurTriggered);
+		Assert.assertTrue(onChangeTriggered);
+	}
+
+	@Test
+	public void checkEmptyText_LongPressTrue() {
+		// Setup
+		onChangeTriggered = false;
+		onBlurTriggered = false;
+		keyDownCount = 0;
+		keyUpCount = 0;
+		String initialText = "1234";
+
+		final TextBox tb = new TextBox();
+		tb.setText(initialText);
+
+		tb.addChangeHandler(new ChangeHandler() {
+
+			public void onChange(ChangeEvent event) {
+				onChangeTriggered = true;
+			}
+		});
+
+		tb.addBlurHandler(new BlurHandler() {
+
+			public void onBlur(BlurEvent event) {
+				onBlurTriggered = true;
+			}
+		});
+
+		tb.addKeyPressHandler(new KeyPressHandler() {
+
+			public void onKeyPress(KeyPressEvent event) {
+				Assert.fail("no keyPress event should be triggered when pressing backspace button");
+			}
+		});
+
+		tb.addKeyUpHandler(new KeyUpHandler() {
+
+			public void onKeyUp(KeyUpEvent event) {
+				Assert.assertEquals(KeyCodes.KEY_BACKSPACE, event.getNativeKeyCode());
+				keyUpCount++;
+			}
+		});
+
+		tb.addKeyDownHandler(new KeyDownHandler() {
+
+			public void onKeyDown(KeyDownEvent event) {
+				Assert.assertEquals(KeyCodes.KEY_BACKSPACE, event.getNativeKeyCode());
+				keyDownCount++;
+			}
+		});
+
+		// Test
+		Browser.emptyText(tb, true);
+
+		// Asserts
+		// the textbox value should be updated
+		Assert.assertEquals("", tb.getText());
+		Assert.assertEquals(4, keyDownCount);
+		Assert.assertEquals(1, keyUpCount);
+		Assert.assertTrue(onBlurTriggered);
+		Assert.assertTrue(onChangeTriggered);
+	}
+
+	@Test
+	public void checkRemoveText() {
+		// Setup
+		onChangeTriggered = false;
+		onBlurTriggered = false;
+		keyDownCount = 0;
+		keyUpCount = 0;
+		String initialText = "1234";
+
+		final TextBox tb = new TextBox();
+		tb.setText(initialText);
+
+		tb.addChangeHandler(new ChangeHandler() {
+
+			public void onChange(ChangeEvent event) {
+				onChangeTriggered = true;
+			}
+		});
+
+		tb.addBlurHandler(new BlurHandler() {
+
+			public void onBlur(BlurEvent event) {
+				onBlurTriggered = true;
+			}
+		});
+
+		tb.addKeyPressHandler(new KeyPressHandler() {
+
+			public void onKeyPress(KeyPressEvent event) {
+				Assert.fail("no keyPress event should be triggered when pressing backspace button");
+			}
+		});
+
+		tb.addKeyUpHandler(new KeyUpHandler() {
+
+			public void onKeyUp(KeyUpEvent event) {
+				Assert.assertEquals(KeyCodes.KEY_BACKSPACE, event.getNativeKeyCode());
+				keyUpCount++;
+			}
+		});
+
+		tb.addKeyDownHandler(new KeyDownHandler() {
+
+			public void onKeyDown(KeyDownEvent event) {
+				Assert.assertEquals(KeyCodes.KEY_BACKSPACE, event.getNativeKeyCode());
+				keyDownCount++;
+			}
+		});
+
+		// Test
+		Browser.removeText(tb, 2);
+
+		// Asserts
+		// the textbox value should be updated
+		Assert.assertEquals("12", tb.getText());
+		Assert.assertEquals(2, keyDownCount);
+		Assert.assertEquals(2, keyUpCount);
+		Assert.assertTrue(onBlurTriggered);
+		Assert.assertTrue(onChangeTriggered);
 	}
 
 	@Test
