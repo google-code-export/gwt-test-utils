@@ -48,11 +48,9 @@ Because it would be a non-sense to test the client user-agent or server internal
 }}}
 
 
-
-
 = Time to test =
 
-Since this application is very simple, the way you would like to test it  is quite natural, and would be something like :
+Ok, We now have a very simple "Hello World !" application. The most logical way to test it would be something like :
 
  * *Arrange :* Fill the textbox
  * *Act :* Click the 'Send' button
