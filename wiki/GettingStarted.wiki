@@ -43,7 +43,7 @@ Because it would be a non-sense to test the client user-agent or server internal
     // Escape data from the client to avoid cross-site script vulnerabilities.
     input = escapeHtml(input);
 
-    return "Hello, " + input + "!<br>";
+    return "Hello, " + input + "!";
   }
 }}}
 
