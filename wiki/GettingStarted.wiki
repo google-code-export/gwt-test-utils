@@ -1,0 +1,18 @@
+#summary The gwt-test-utils "Hello World !" application
+
+Since *gwt-test-utils* is a testing framework, this page won't explain how to developp a "Hello World !" application, but how to test a GWT "Hello world !" application instead :-)
+
+Therefore, the purpose of this page is to help you setting up *gwt-test-utils* basics and write your first GWT test in less than 5 minutes.
+
+
+= Creating the GWT "Hello World !" application =
+
+If you're not familiar with GWT yet... well, it would be hard to have a GWT app and some unit tests working in 5 minutes
+
+
+= Details =
+
+Add your content here.  Format your content with:
+  * Text in *bold* or _italic_
+  * Headings, paragraphs, and lists
+  * Automatic links to other wiki pages
