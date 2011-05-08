@@ -2,12 +2,17 @@
 
 Since *gwt-test-utils* is a testing framework, this page won't explain how to developp a "Hello World !" application, but how to test a GWT "Hello world !" application instead :-)
 
-Therefore, the purpose of this page is to help you setting up *gwt-test-utils* basics and write your first GWT test in less than 5 minutes.
+Therefore, the purpose of this page is to help you setting up *gwt-test-utils* basics and write your first test in less than 5 minutes.
+
+If you're not familiar with GWT yet... well, it would be hard to have a GWT app and some unit tests working in 5 minutes ! You should consider the [http://code.google.com/intl/fr-FR/webtoolkit/gettingstarted.html GWT official Getting Started] before to continue with *gwt-test-utils*.
 
 
 = Creating the GWT "Hello World !" application =
 
-If you're not familiar with GWT yet... well, it would be hard to have a GWT app and some unit tests working in 5 minutes
+Let's create an out-of-the-box GWT application with the [http://code.google.com/intl/fr-FR/eclipse/docs/getting_started.html GWT plugin for eclipse] : 
+ 
+ * Select *File > New > Web Application Project* from the Eclipse menu.
+ * In the *New Web Application Project* wizard, enter a name for your project ({{{GwtTestSample}}}) and a java package name, ({{{com.example.mywebapp}}}). Be sure *Generate GWT sample code* is checked, than click *Finish*.
 
 
 = Details =
