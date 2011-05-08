@@ -12,12 +12,87 @@ If you're not familiar with GWT yet... well, it would be hard to have a GWT app 
 Let's create an out-of-the-box GWT application with the [http://code.google.com/intl/fr-FR/eclipse/docs/getting_started.html GWT plugin for eclipse] : 
  
  * Select *File > New > Web Application Project* from the Eclipse menu.
- * In the *New Web Application Project* wizard, enter a name for your project ({{{GwtTestSample}}}) and a java package name, ({{{com.example.mywebapp}}}). Be sure *Generate GWT sample code* is checked, than click *Finish*.
+
+ * In the *New Web Application Project* wizard, enter a name for your project ({{{GwtTestSample}}}) and a java package name, ({{{com.example.mywebapp}}}). 
+
+ * Be sure *Generate GWT sample code* is checked 
+
+ * Click *Finish*.
 
 
-= Details =
+Launch the generated 'GwtTestSample' application. It is very basic : 
 
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+ * one label
+ * one textbox
+ * one 'Send' button
+
+Fill the textbox with 'toto', and click the button. The client calls the server and fill a DialogBox with server-side generated HTML. This is a typical GWT use case.
+
+
+= Time to test =
+
+Since this application is very simple, the way you would like to test it  is quite natural, and would be something like :
+
+ * *Arrange :* Fill the textbox
+ * *Act :* Click the 'Send' button
+ * *Assert :* Check the dialogbox is shown and its html is like expected
+
+
+But testing it with {{{GWTTestCase}}} would not be so simple. You would have to :
+
+ * Launch a jetty instance. Ok, this is done behind the scene by {{{GWTTestCase}}}, but it's very, very slow...
+ * Design your unit test to be compatible with the asynchronous server call, e.g., tell GWTTestCase to wait x milliseconds for server response..
+ * manually cleanup the DOM @Test method by overriding the [http://google-web-toolkit.googlecode.com/svn/javadoc/1.6/com/google/gwt/junit/client/GWTTestCase.html#gwtTearDown() gwtTearDown()] method.
+
+ 
+=== Let's do this with gwt-test-utils ===
+
+1) Add all librairies requiered by gwt-test-utils. They are available in the lastest bundle under the [http://code.google.com/p/gwt-test-utils/downloads/list Download section].
+
+1) Create a META-INF/gwt-test-utils.properties file in your test classpath, e.g., in "test" directory.
+
+2) Add this simple entry in it :
+`com/example/mywebapp/GwtTestSample.gwt.xml = module-file`
+Each module file you will declared here will be parsed by gwt-test-utils to know which classes are supposed to by compiled in JavaScript and operated some magic tricks on them.
+
+Note that you won't have to declare {{{.gwt.xml}}} files from modules which are inherited by the module you've declared in {{{gwt-test-utils.properties}}} file. 
+In our sample application, it would be useless to declare this : 
+com/google/gwt/user/theme/standard/Standard.gwt.xml since we have in our GwtTestSample.gwt.xml the corresponding inherit declaration.
+
+3) In GwtTestSample.java, declare all widgets which will be instanciated as class variable, so we can access them in your test :
+
+{{{
+public class GwtTestSample implements EntryPoint {
+  
+  Button sendButton;
+  TextBox nameField;
+  Label errorLabel;
+  DialogBox dialogBox;
+  Button closeButton;
+  Label textToServerLabel;
+  HTML serverResponseLabel;
+
+  ...
+
+  public void onModuleLoad() {
+    sendButton = new Button("Send");
+    nameField = new TextBox();
+    errorLabel = new Label();
+    dialogBox = new DialogBox();
+    closeButton = new Button("Close");
+    textToServerLabel = new Label();
+    serverResponseLabel = new HTML();
+
+    ...
+  }
+}
+}}}
+
+This is necessary to be able to access those widgets in our test. Their scope is "package-protected" to keep the demonstration as simple as possible, but you could make them private if you want and use java reflection to access them without any GWT constraint ;-)
+
+4) Now, we can create the test class, like this :
+
+{{{
+
+
+}}}
