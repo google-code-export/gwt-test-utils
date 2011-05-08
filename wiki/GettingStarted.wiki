@@ -49,11 +49,13 @@ But testing it with {{{GWTTestCase}}} would not be so simple. You would have to 
 
 1) Add all librairies requiered by gwt-test-utils. They are available in the lastest bundle under the [http://code.google.com/p/gwt-test-utils/downloads/list Download section].
 
-1) Create a META-INF/gwt-test-utils.properties file in your test classpath, e.g., in "test" directory.
+1) Create a META-INF/gwt-test-utils.properties file in your test classpath, e.g., in "test" directory. Add this line in it :
 
-2) Add this simple entry in it :
+{{{
 `com/example/mywebapp/GwtTestSample.gwt.xml = module-file`
-Each module file you will declared here will be parsed by gwt-test-utils to know which classes are supposed to by compiled in JavaScript and operated some magic tricks on them.
+}}}
+
+Each module file declared here will be parsed by gwt-test-utils to know which classes are supposed to by compiled in JavaScript and operated some magic modifications on them.
 
 Note that you won't have to declare {{{.gwt.xml}}} files from modules which are inherited by the module you've declared in {{{gwt-test-utils.properties}}} file. 
 In our sample application, it would be useless to declare this : 
@@ -88,7 +90,8 @@ public class GwtTestSample implements EntryPoint {
 }
 }}}
 
-This is necessary to be able to access those widgets in our test. Their scope is "package-protected" to keep the demonstration as simple as possible, but you could make them private if you want and use java reflection to access them without any GWT constraint ;-)
+Note that they are declared as "package-protected" class properties to be accessible directly in the test we are gonna write (in the same package).
+But you could make them private if you want and use java reflection to access them without any GWT constraint ;-)
 
 4) Now, we can create the test class, like this :
 
