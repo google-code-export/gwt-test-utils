@@ -214,4 +214,6 @@ You may have noticed that the generated code handle a "press enter" action, whic
 
 = Conclusion =
 
-Well, this was just an introduction about what *gwt-test-utils* is able to do. If you are interesed in the many other feature the framework provides, you should considere reading the complete [http://code.google.com/p/gwt-test-utils/wiki/UserGuide User Guide] :-)
+Well, this was just an introduction about what *gwt-test-utils* is able to do. If you are interesed in the many other features the framework provides, you should considere reading the complete [http://code.google.com/p/gwt-test-utils/wiki/UserGuide User Guide] :-)
+
+Of course, the GwtTestSample eclipse project can be downloaded under the [http://code.google.com/p/gwt-test-utils/downloads/list Download section].
