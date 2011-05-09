@@ -26,7 +26,7 @@ Launch the generated 'GwtTestSample' application. It is very basic :
  * one textbox
  * one 'Send' button
 
-Fill the textbox with 'toto', and click the button. The client calls the server and fill a DialogBox with server-side generated HTML. This is a typical GWT use case.
+Fill the textbox with 'World', and click the button. The client calls the server which validate the text has at least 4 characters and fill a DialogBox with server-side generated HTML. This is a typical GWT use case.
 
 Because it would be a non-sense to test the client user-agent or server internal information in automatic tests, modify the server side HTML construction (`GreetingServiceImpl.greetServer(...)` function) :
 
@@ -71,7 +71,7 @@ But testing it with {{{GWTTestCase}}} would not be so simple. You would have to 
 1) Create a META-INF/gwt-test-utils.properties file in your test classpath, e.g., in "test" directory. Add this line in it :
 
 {{{
-`com/example/mywebapp/GwtTestSample.gwt.xml = module-file`
+com/example/mywebapp/GwtTestSample.gwt.xml = module-file
 }}}
 
 Each module file declared here will be parsed by gwt-test-utils to know which classes are supposed to by compiled in JavaScript and operated some magic modifications on them.
@@ -116,5 +116,104 @@ But you could make them private if you want and use java reflection to access th
 
 {{{
 
+public class GwtTestSamleTest extends GwtTest {
+
+  private GwtTestSample app;
+
+  @Override
+  public String getModuleName() {
+    return "com.example.mywebapp.GwtTestSample";
+  }
+
+  @Before
+  public void setupGwtTestSample() {
+    app = new GwtTestSample();
+    app.onModuleLoad();
+
+    // Some pre-assertions
+    Assert.assertFalse(app.dialogBox.isShowing());
+    Assert.assertEquals("", app.errorLabel.getText());
+  }
+  
+  @Test
+  public void checkClickOnSendMoreThan4chars() {
+    // Arrange
+    Browser.fillText(app.nameField, "World");
+
+    // Act
+    Browser.click(app.sendButton);
+
+    // Assert
+    Assert.assertTrue(app.dialogBox.isShowing());
+    Assert.assertEquals("", app.errorLabel.getText());
+    Assert.assertEquals("Hello, World!", app.serverResponseLabel.getHTML());
+    Assert.assertEquals("Remote Procedure Call", app.dialogBox.getText());
+  }
+  
+}
 
 }}}
+
+ * The test class *must* extend {{{GwtTest}}}, which is the *gwt-test-utils* alternative to GWT {{{GWTTestCase}}}
+
+ * You must provide the full qualified name of the current tested module by implementing the {{{getModuleName()}}} method. 
+Be carefull to use a module you've declared the corresponding .gwt.xml file in your {{{META-INF/gwt-test-utils.properties}}}. Otherwise, an exception would be thrown.
+
+ * Before each test method, create and initialize a new app by calling the {{{EntryPoint.onModuleLoad()}}} method on it. No need to worry about the DOM state between two tests :-)
+
+ * Finally, our test method which check the result of a click with a 5 characters long string is pretty straightfoward.
+To simulate browser events, *gwt-test-utils* comes with a {{{Browser}}} class, which can simulate every DOM event.
+
+
+Now, write a test to check an error is displayed when filling a less than 4 character String in the textbox :
+
+{{{
+  @Test
+  public void checkClickOnSendLessThan4chars() {
+    // Arrange
+    Browser.fillText(app.nameField, "123");
+
+    // Act
+    Browser.click(app.sendButton);
+
+    // Assert
+    Assert.assertFalse(app.dialogBox.isShowing());
+    Assert.assertEquals("Please enter at least four characters",
+        app.errorLabel.getText());
+  }
+}}}
+
+Very simple, isn't it ?
+
+
+You may have noticed that the generated code handle a "press enter" action, which also send the text to the server. Let's write a test for it :
+
+{{{
+  @Test
+  public void checkPressEnterMoreThan4chars() {
+    // Arrange
+    Browser.fillText(app.nameField, "Enter");
+    Event keyUpEvent = EventBuilder.create(Event.ONKEYUP).setKeyCode(
+        KeyCodes.KEY_ENTER).build();
+
+    // Act
+    Browser.dispatchEvent(app.nameField, keyUpEvent);
+
+    // Assert
+    Assert.assertTrue(app.dialogBox.isShowing());
+    Assert.assertEquals("", app.errorLabel.getText());
+    Assert.assertEquals("Hello, Enter!", app.serverResponseLabel.getHTML());
+    Assert.assertEquals("Remote Procedure Call", app.dialogBox.getText());
+  }
+}}}
+
+ * In the arrange phase, a GWT {{{Event}}} is created through the *gwt-test-utils* {{{EventBuilder}}}. It has been designed to build very complex events easily.
+
+ * Launch it {{{Browser.dispatchEvent}}}, and everything will work as expected !
+
+Actually, the {{{Browser}}} class provides a lot of helper methods, such as {{{Browser.keyUp(Widget, KeyCode)}}} which would be more appropriate for this test. But we just wanted to introduce the {{{EventBuilder}}} here :-)
+
+
+= Conclusion =
+
+Well, this was just an introduction about what *gwt-test-utils* is able to do. If you are interesed in the many other feature the framework provides, you should considere reading the complete [http://code.google.com/p/gwt-test-utils/wiki/UserGuide User Guide] :-)
