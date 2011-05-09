@@ -184,7 +184,7 @@ Now that you have our first green test, you may want write some other, because h
 
 Very simple, isn't it ?
 
-=== Simulating complex DOM event ? Easy win ! ===
+=== Simulating complex DOM events ? Easy win ! ===
 
 You may have noticed that the generated code handle a "press enter" action, which also send the text to the server. You may want to automatically test it :
 
