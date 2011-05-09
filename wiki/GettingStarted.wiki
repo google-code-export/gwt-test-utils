@@ -1,10 +1,10 @@
 #summary The gwt-test-utils "Hello World !" application
 
-Since *gwt-test-utils* is a testing framework, this page won't explain how to developp a "Hello World !" application, but how to test a GWT "Hello world !" application instead :-)
+Since *gwt-test-utils* is a testing framework, this page won't explain how to develop a "Hello World !" application, but how to test a GWT "Hello world !" application instead :-)
 
 Therefore, the purpose of this page is to help you setting up *gwt-test-utils* basics and write your first test in less than 5 minutes.
 
-If you're not familiar with GWT yet... well, it would be hard to have a GWT app and some unit tests working in 5 minutes ! You should consider the [http://code.google.com/intl/fr-FR/webtoolkit/gettingstarted.html GWT official Getting Started] before to continue with *gwt-test-utils*.
+If you're not familiar with GWT yet... well, it would be hard to have a GWT app and some unit tests working in 5 minutes ! You should consider the [http://code.google.com/intl/fr-FR/webtoolkit/gettingstarted.html GWT official Getting Started] before continuing with *gwt-test-utils*.
 
 
 = Creating the GWT "Hello World !" application =
@@ -50,7 +50,7 @@ Because it would be a non-sense to test the client user-agent or server internal
 
 = Time to test =
 
-Ok, We now have a very simple "Hello World !" application. The most logical way to test it would be something like :
+Ok, you now have a very simple "Hello World !" application. The most logical way to test it would be something like :
 
  * *Arrange :* Fill the textbox
  * *Act :* Click the 'Send' button
@@ -61,7 +61,7 @@ But testing it with {{{GWTTestCase}}} would not be so simple. You would have to 
 
  * Launch a jetty instance. Ok, this is done behind the scene by {{{GWTTestCase}}}, but it's very, very slow...
  * Design your unit test to be compatible with the asynchronous server call, e.g., tell GWTTestCase to wait x milliseconds for server response..
- * manually cleanup the DOM @Test method by overriding the [http://google-web-toolkit.googlecode.com/svn/javadoc/1.6/com/google/gwt/junit/client/GWTTestCase.html#gwtTearDown() gwtTearDown()] method.
+ * manually cleanup the DOM after each @Test method by overriding the [http://google-web-toolkit.googlecode.com/svn/javadoc/1.6/com/google/gwt/junit/client/GWTTestCase.html#gwtTearDown() gwtTearDown()] method.
 
  
 === Let's do this with gwt-test-utils ===
@@ -77,10 +77,10 @@ com/example/mywebapp/GwtTestSample.gwt.xml = module-file
 Each module file declared here will be parsed by gwt-test-utils to know which classes are supposed to by compiled in JavaScript and operated some magic modifications on them.
 
 Note that you won't have to declare {{{.gwt.xml}}} files from modules which are inherited by the module you've declared in {{{gwt-test-utils.properties}}} file. 
-In our sample application, it would be useless to declare this : 
-com/google/gwt/user/theme/standard/Standard.gwt.xml since we have in our GwtTestSample.gwt.xml the corresponding inherit declaration.
+In your sample application, it would be useless to declare this : 
+com/google/gwt/user/theme/standard/Standard.gwt.xml since you have the corresponding inherit declaration in your GwtTestSample.gwt.xml.
 
-3) In GwtTestSample.java, declare all widgets which will be instanciated as class variable, so we can access them in your test :
+3) In GwtTestSample.java, declare all widgets which will be instanciated as class variable, so you can access them in your test :
 
 {{{
 public class GwtTestSample implements EntryPoint {
@@ -109,10 +109,10 @@ public class GwtTestSample implements EntryPoint {
 }
 }}}
 
-Note that they are declared as "package-protected" class properties to be accessible directly in the test we are gonna write (in the same package).
+Note that they are declared as "package-protected" class properties to be accessible directly in the test you are gonna write (in the same package).
 But you could make them private if you want and use java reflection to access them without any GWT constraint ;-)
 
-4) Now, we can create the test class, like this :
+4) Now, you can create the test class, like this :
 
 {{{
 
@@ -154,15 +154,13 @@ public class GwtTestSamleTest extends GwtTest {
 
 }}}
 
- * The test class *must* extend {{{GwtTest}}}, which is the *gwt-test-utils* alternative to GWT {{{GWTTestCase}}}
+ * The test class *must* extend {{{GwtTest}}}, which is the *gwt-test-utils* alternative to GWT {{{GWTTestCase}}}.
 
- * You must provide the full qualified name of the current tested module by implementing the {{{getModuleName()}}} method. 
-Be carefull to use a module you've declared the corresponding .gwt.xml file in your {{{META-INF/gwt-test-utils.properties}}}. Otherwise, an exception would be thrown.
+ * You must provide the full qualified name of the current tested module by implementing the {{{getModuleName()}}} method. *Be carefull to use a module you've declared the corresponding .gwt.xml file in your {{{META-INF/gwt-test-utils.properties}}}*. Otherwise, an exception would be thrown.
 
- * Before each test method, create and initialize a new app by calling the {{{EntryPoint.onModuleLoad()}}} method on it. No need to worry about the DOM state between two tests :-)
+ * Before each test method, create and initialize a new app by calling the {{{EntryPoint.onModuleLoad()}}} method on it. The "pre assertions" show you that the DOM is automatically reinitialize between two tests :-)
 
- * Finally, our test method which check the result of a click with a 5 characters long string is pretty straightfoward.
-To simulate browser events, *gwt-test-utils* comes with a {{{Browser}}} class, which can simulate every DOM event.
+ * Finally, your test method which check the result of a click with a 5 characters long string is pretty straightfoward. Use the {{{Browser}}} class to simulate any DOM event of your choice.
 
 
 Now, write a test to check an error is displayed when filling a less than 4 character String in the textbox :
@@ -211,7 +209,7 @@ You may have noticed that the generated code handle a "press enter" action, whic
 
  * Launch it {{{Browser.dispatchEvent}}}, and everything will work as expected !
 
-Actually, the {{{Browser}}} class provides a lot of helper methods, such as {{{Browser.keyUp(Widget, KeyCode)}}} which would be more appropriate for this test. But we just wanted to introduce the {{{EventBuilder}}} here :-)
+*NOTE :* Actually, the {{{Browser}}} class provides a lot of helper methods, such as {{{Browser.keyUp(Widget, KeyCode)}}} which would be more appropriate for this test. But we just wanted to introduce the {{{EventBuilder}}} here :-)
 
 
 = Conclusion =
