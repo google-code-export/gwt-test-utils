@@ -156,7 +156,7 @@ public class GwtTestSamleTest extends GwtTest {
 
  * The test class *must* extend {{{GwtTest}}}, which is the *gwt-test-utils* alternative to GWT {{{GWTTestCase}}}.
 
- * You must provide the full qualified name of the current tested module by implementing the {{{getModuleName()}}} method. *Be carefull to use a module you've declared the corresponding .gwt.xml file in your {{{META-INF/gwt-test-utils.properties}}}*. Otherwise, an exception would be thrown.
+ * You must provide the full qualified name of the current tested module by implementing the {{{getModuleName()}}} method. *Be carefull to use a module you've declared in your {{{META-INF/gwt-test-utils.properties}}}* with the 'module-file' key/value pair. Otherwise, an exception would be thrown.
 
  * Before each test method, create and initialize a new app by calling the {{{EntryPoint.onModuleLoad()}}} method on it. The "pre assertions" show you that the DOM is automatically reinitialize between two tests :-)
 
