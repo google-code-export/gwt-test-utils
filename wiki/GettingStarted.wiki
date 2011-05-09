@@ -164,7 +164,7 @@ public class GwtTestSamleTest extends GwtTest {
 
 === More tests, pleaaase ! ===
 
-Now that you have our first green test, you may want write some other, because having a lot of green tests is cool ! So, let's check an error is displayed when filling a less than 4 character String in the textbox :
+Now that you have our first green test, you may want write some others, because having a lot of green tests is cool ! So, let's check an error is displayed when filling a less than 4 character String in the textbox :
 
 {{{
   @Test
