@@ -26,7 +26,7 @@ Launch the generated 'GwtTestSample' application. It is very basic :
  * one textbox
  * one 'Send' button
 
-Fill the textbox with 'World', and click the button. The client calls the server which validate the text has at least 4 characters and fill a DialogBox with server-side generated HTML. This is a typical GWT use case.
+Fill the textbox with 'World', and click the button. The client calls the server which validate the text has at least 4 characters and fill a DialogBox with server-side generated HTML _'Hello, World!'_. This is a typical GWT use case.
 
 Because it would be a non-sense to test the client user-agent or server internal information in automatic tests, modify the server side HTML construction (`GreetingServiceImpl.greetServer(...)` function) :
 
