@@ -1,5 +1,5 @@
  * [UserGuide User Guide]
- * [HowToUse Getting gwt-test-utils]
+ * [HowToUse Setup gwt-test-utils]
  * [HowToWriteUnitTests Writing unit tests]
   * [SimpleUnitTest Unit testing basics]
   * [Events Using events]
