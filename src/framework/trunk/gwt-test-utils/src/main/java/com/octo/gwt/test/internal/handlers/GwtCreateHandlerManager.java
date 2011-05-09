@@ -29,6 +29,7 @@ public class GwtCreateHandlerManager {
   private GwtCreateHandler mockCreateHandler;
   private final TestRemoteServiceCreateHandler testRemoteServiceCreateHandler;
   private final GwtCreateHandler uiBinderCreateHandler;
+  private final WebXmlRemoteServiceCreateHandler webXmlRemoteServiceCreateHandler;
 
   private GwtCreateHandlerManager() {
     // TODO : all createHandler should be singleton ?
@@ -42,6 +43,7 @@ public class GwtCreateHandlerManager {
     localizableResourceCreateHandler = new LocalizableCreateHandler();
     uiBinderCreateHandler = new UiBinderCreateHandler();
     testRemoteServiceCreateHandler = TestRemoteServiceCreateHandler.get();
+    webXmlRemoteServiceCreateHandler = new WebXmlRemoteServiceCreateHandler();
   }
 
   public boolean addGwtCreateHandler(GwtCreateHandler gwtCreateHandler) {
@@ -68,6 +70,7 @@ public class GwtCreateHandlerManager {
     list.add(imageBundleCreateHandler);
     list.add(uiBinderCreateHandler);
     list.add(testRemoteServiceCreateHandler);
+    list.add(webXmlRemoteServiceCreateHandler);
     list.add(defaultGwtCreateHandler);
     list.add(abstractClassCreateHandler);
     list.add(dockLayoutPanelCreateHandler);

@@ -31,10 +31,7 @@ class TestRemoteServiceCreateHandler extends RemoteServiceCreateHandler {
         remoteServiceRelativePath);
 
     if (remoteServiceImplClass == null) {
-      throw new GwtTestConfigurationException(
-          "Cannot find a RemoteService implementation class for servlet path '"
-              + remoteServiceRelativePath
-              + "'. Please add a <servlet> element in your test GWT configuration file (.gwt.xml)");
+      return null;
     } else if (!remoteServiceClass.isAssignableFrom(remoteServiceImplClass)) {
       throw new GwtTestConfigurationException("The servlet class '"
           + remoteServiceImplClass.getName() + "' setup for path '"

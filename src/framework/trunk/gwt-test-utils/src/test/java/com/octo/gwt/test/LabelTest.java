@@ -22,6 +22,18 @@ public class LabelTest extends GwtTestTest {
   }
 
   @Test
+  public void checkSetId() {
+    // Arrange
+    Label label = new Label();
+
+    // Act
+    label.getElement().setId("myId");
+
+    // Assert
+    Assert.assertEquals("myId", label.getElement().getAttribute("id"));
+  }
+
+  @Test
   public void checkText() {
     Label label = new Label("foo");
     Assert.assertEquals("foo", label.getText());

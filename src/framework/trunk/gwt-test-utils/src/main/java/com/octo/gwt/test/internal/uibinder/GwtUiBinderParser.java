@@ -4,11 +4,11 @@ import java.io.InputStream;
 
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
-import org.xml.sax.helpers.XMLReaderFactory;
 
 import com.google.gwt.uibinder.client.UiField;
 import com.octo.gwt.test.exceptions.GwtTestException;
 import com.octo.gwt.test.exceptions.GwtTestUiBinderException;
+import com.octo.gwt.test.internal.utils.XmlUtils;
 
 /**
  * Class in charge of parsing the .ui.xml file and filling both root
@@ -38,8 +38,9 @@ class GwtUiBinderParser {
     UiXmlContentHandler<T> contentHandler = new UiXmlContentHandler<T>(
         rootComponentClass, owner);
 
+    XMLReader saxReader = XmlUtils.newXMLReader();
+
     try {
-      XMLReader saxReader = XMLReaderFactory.createXMLReader("org.apache.xerces.parsers.SAXParser");
       saxReader.setContentHandler(contentHandler);
       saxReader.parse(new InputSource(getUiXmlFile(owner)));
     } catch (Exception e) {

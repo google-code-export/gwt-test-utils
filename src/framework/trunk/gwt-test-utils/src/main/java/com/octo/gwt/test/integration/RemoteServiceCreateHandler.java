@@ -80,10 +80,12 @@ public abstract class RemoteServiceCreateHandler implements GwtCreateHandler {
       throw new Exception("Remote serivce Async class not found : " + asyncName);
     }
     logger.debug("Searching remote service implementing " + className);
+
+    // try to find
     Object service = findService(classLiteral, relativePath);
+
     if (service == null) {
-      logger.error("Remote service not found " + className);
-      throw new GwtTestRpcException("Remote service not found " + className);
+      return null;
     }
 
     GwtRpcInvocationHandler handler = new GwtRpcInvocationHandler(asyncClazz,

@@ -11,7 +11,6 @@ import org.xml.sax.InputSource;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
-import org.xml.sax.helpers.XMLReaderFactory;
 
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
@@ -105,7 +104,7 @@ public class GwtXMLParser {
   }
 
   public static Document parse(String html) throws SAXException, IOException {
-    XMLReader saxReader = XMLReaderFactory.createXMLReader("org.apache.xerces.parsers.SAXParser");
+    XMLReader saxReader = XmlUtils.newXMLReader();
     GwtContentHandler contentHandler = new GwtContentHandler();
     saxReader.setContentHandler(contentHandler);
     saxReader.parse(new InputSource(new StringInputStream(html, "UTF-8")));

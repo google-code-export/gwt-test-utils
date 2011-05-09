@@ -33,13 +33,6 @@ public class UiBinderWithDockLayoutPanel extends Composite {
 
   public UiBinderWithDockLayoutPanel() {
     initWidget(uiBinder.createAndBindUi(this));
-
-    System.out.println("northLabel : " + northLabel.getText());
-    System.out.println("centerLabel : " + centerLabel.getText());
-    System.out.println("westHTML : " + westHTML.getHTML());
-    System.out.println("---");
-    System.out.println("eastLabel : " + eastLabel.getText());
-    System.out.println("southLabel : " + southLabel.getText());
   }
 
 }
