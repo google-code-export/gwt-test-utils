@@ -162,8 +162,9 @@ public class GwtTestSamleTest extends GwtTest {
 
  * Finally, your test method which check the result of a click with a 5 characters long string is pretty straightfoward. Use the {{{Browser}}} class to simulate any DOM event of your choice.
 
+=== More tests, pleaaase ! ===
 
-Now, write a test to check an error is displayed when filling a less than 4 character String in the textbox :
+Now that you have our first green test, you may want write some other, because having a lot of green tests is cool ! So, let's check an error is displayed when filling a less than 4 character String in the textbox :
 
 {{{
   @Test
@@ -183,8 +184,9 @@ Now, write a test to check an error is displayed when filling a less than 4 char
 
 Very simple, isn't it ?
 
+=== Simulating complex DOM event ? Easy win ! ===
 
-You may have noticed that the generated code handle a "press enter" action, which also send the text to the server. Let's write a test for it :
+You may have noticed that the generated code handle a "press enter" action, which also send the text to the server. You may want to automatically test it :
 
 {{{
   @Test
@@ -207,7 +209,7 @@ You may have noticed that the generated code handle a "press enter" action, whic
 
  * In the arrange phase, a GWT {{{Event}}} is created through the *gwt-test-utils* {{{EventBuilder}}}. It has been designed to build very complex events easily.
 
- * Launch it {{{Browser.dispatchEvent}}}, and everything will work as expected !
+ * {{{Browser.dispatchEvent}}} is a generic method to simulate events you've built yourself.
 
 *NOTE :* Actually, the {{{Browser}}} class provides a lot of helper methods, such as {{{Browser.keyUp(Widget, KeyCode)}}} which would be more appropriate for this test. But we just wanted to introduce the {{{EventBuilder}}} here :-)
 
