@@ -51,6 +51,12 @@ public class SimpleCompositeTest extends GwtTest {
    // the tested composite
    private SimpleComposite composite;
 
+   @Override
+   public String getModuleName() {
+      // return the full qualifed name of your GWT module
+      return "com.example.mywebapp.GwtTestSample";
+   }
+
    @Before
    public void init() throws Exception {
       // instanciate the composite
