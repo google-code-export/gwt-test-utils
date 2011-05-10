@@ -4,15 +4,15 @@
 
 = Getting gwt-test-utils =
 
-*gwt-test-utils* is an open source framework composed of several modules you can combine :
+_gwt-test-utils_ is an open source framework composed of several modules you can combine :
 
- *gwt-test-utils-X.jar* : the core module of gwt-test-utils. It enables to execute GWT client classes in a standalone JVM.
+ * *gwt-test-utils-X.jar* : the core module of gwt-test-utils. It enables to execute GWT client classes in a standalone JVM.
 
- *gwt-test-utils-csv-X.jar* : use this module if you want [http://code.google.com/p/gwt-test-utils/wiki/HowToWriteCsvScenario to write complexe test scenario easily]
+ * *gwt-test-utils-csv-X.jar* : use this module if you want [http://code.google.com/p/gwt-test-utils/wiki/HowToWriteCsvScenario to write complexe test scenario easily]
 
- *gwt-test-utils-gxt-X.jar* : use this module if you want to test UI designed with the popular third-party components librairy [http://www.sencha.com/products/extgwt/ ext-GWT]
+ * *gwt-test-utils-gxt-X.jar* : use this module if you want to test UI designed with the popular third-party components librairy [http://www.sencha.com/products/extgwt/ ext-GWT]
 
- *gwt-css-selector-X.jar* : this module is just an internal dependency of *gwt-test-utils-gxt-X.jar* to simulate CSS 3 selectors for GWT's DOM representation. Actually is just an adaptation of the nice chsan-css-selector API which works for JDK's DOM representation.
+ * *gwt-css-selector-X.jar* : this module is just an internal dependency of *gwt-test-utils-gxt-X.jar* to simulate CSS 3 selectors for GWT's DOM representation. Actually is just an adaptation of the nice chsan-css-selector API which works for JDK's DOM representation.
 
  * *gwt-test-utils-spring2-X.jar* : use this module if you want to test a GWT application which is connected to a Spring2-based backend
 
@@ -22,7 +22,7 @@ Note that those modules all directly depend on *gwt-test-utils-X.jar* and can be
 
 == Without Maven == 
 
-You can download *gwt-test-utils* X version jars through the [http://code.google.com/p/gwt-test-utils/downloads/list Download section].
+You can download _gwt-test-utils_ X version jars through the [http://code.google.com/p/gwt-test-utils/downloads/list Download section].
 
 The framework requiers some third-party librairies you should add to your project test classpath :
 
@@ -38,7 +38,7 @@ The framework requiers some third-party librairies you should add to your projec
  * junit-4.8.2.jar
  * slf4j-api-1.6.1.jar (with the adapter of your choice)
 
-If you are interested in using a java mock framework, *gwt-test-utils* has been tested with :
+If you are interested in using a java mock framework, _gwt-test-utils_ has been tested with :
 
  * easymock-3.0.jar
  * mockito-core-1.8.5.jar
@@ -46,29 +46,29 @@ If you are interested in using a java mock framework, *gwt-test-utils* has been 
 
 ==== List of third-party jars required by {{{gwt-test-utils-csv}}} ====
 
-Same dependencies as *gwt-test-utils* module  plus :
+Same dependencies as _gwt-test-utils_ module  plus :
 
  * antlr-runtime-3.1.1.jar
 
 
 ==== List of third-party jars required by gwt-test-utils-gxt ====
 
-Same dependencies as *gwt-test-utils* module plus :
+Same dependencies as _gwt-test-utils_ module plus :
 
- * gwt-css-selector-x.jar (with x the version of *gwt-test-utils* you're using)
+ * gwt-css-selector-x.jar (with x the version of _gwt-test-utils_ you're using)
  * gxt-2.2.0.jar
 
 
 ==== List of third-party jars required by gwt-test-utils-spring2 ====
 
-Same dependencies as *gwt-test-utils* module plus :
+Same dependencies as _gwt-test-utils_ module plus :
 
  * spring-2.5.x.jar
 
 
 ==== List of third-party jars required by *gwt-test-utils-spring3 ====
 
-Same dependencies as *gwt-test-utils* module plus :
+Same dependencies as _gwt-test-utils_ module plus :
 
  * spring-3.0.x.jar
 
@@ -160,7 +160,7 @@ Sometimes, it could be helpfull to get the lastest snapshot. It's done with the 
 
 = Running your tests = 
 
-Since *gwt-test-utils* is memory expensive (to test GWT in a simple JVM has a cost ;-)), you  should increase the memory available.
+Since _gwt-test-utils_ is memory expensive (to test GWT in a simple JVM has a cost ;-)), you  should increase the memory available.
 
 == Under Eclipse == 
 
