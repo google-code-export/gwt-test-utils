@@ -38,12 +38,17 @@ public class MyUnitTestWithMocks extends GwtTestWithEasyMock {
 
    private MyComposite composite;
 
+   @Override
+   public String getModuleName() {
+      // return the full qualifed name of your GWT module
+      return "com.example.mywebapp.GwtTestSample";
+   }
+
    @Before
    public void init() throws Exception {
       composite = new Composite();
    }
 
-   @SuppressWarnings("unchecked")
    @Test
    public void checkCallingFoo() {
       //Setup
@@ -102,12 +107,17 @@ public class MyUnitTestWithMocks extends GwtTestWithMockito {
 
    private MyComposite composite;
 
+   @Override
+   public String getModuleName() {
+      // return the full qualifed name of your GWT module
+      return "com.example.mywebapp.GwtTestSample";
+   }
+
    @Before
    public void init() throws Exception {
       composite = new Composite();
    }
 
-   @SuppressWarnings("unchecked")
    @Test
    public void checkCallingFoo() {
       //Setup
