@@ -25,11 +25,12 @@ import com.octo.gwt.test.internal.utils.JsoProperties;
 import com.octo.gwt.test.patchers.OverlayPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
+import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 @PatchClass(Document.class)
 public class DocumentPatcher extends OverlayPatcher {
 
-  public static Document DOCUMENT;
+  private static Document DOCUMENT;
 
   private static int ID = 0;
 
@@ -42,26 +43,6 @@ public class DocumentPatcher extends OverlayPatcher {
   public static String createUniqueId(Document document) {
     ID++;
     return "elem_" + Long.toString(ID);
-  }
-
-  @PatchMethod
-  public static Document get() {
-    if (DOCUMENT == null) {
-      try {
-        DOCUMENT = JavaScriptObjects.newObject(Document.class);
-        Element e = parseHTMLElement();
-        DOCUMENT.appendChild(e);
-        JavaScriptObjects.setProperty(DOCUMENT, JsoProperties.DOCUMENT_ELEMENT,
-            e);
-      } catch (Exception e) {
-        if (GwtTestException.class.isInstance(e)) {
-          throw (GwtTestException) e;
-        } else {
-          throw new GwtTestDomException("Unable to create Document", e);
-        }
-      }
-    }
-    return DOCUMENT;
   }
 
   @PatchMethod
@@ -118,6 +99,28 @@ public class DocumentPatcher extends OverlayPatcher {
     return "";
   }
 
+  @PatchMethod
+  public static Document nativeGet() {
+    if (DOCUMENT == null) {
+      try {
+        DOCUMENT = JavaScriptObjects.newObject(Document.class);
+        Element e = parseHTMLElement();
+        DOCUMENT.appendChild(e);
+        JavaScriptObjects.setProperty(DOCUMENT, JsoProperties.DOCUMENT_ELEMENT,
+            e);
+
+        return DOCUMENT;
+      } catch (Exception e) {
+        if (GwtTestException.class.isInstance(e)) {
+          throw (GwtTestException) e;
+        } else {
+          throw new GwtTestDomException("Unable to create Document", e);
+        }
+      }
+    }
+    return DOCUMENT;
+  }
+
   public static void reset() {
     if (DOCUMENT != null) {
       if (DOCUMENT.getBody() != null) {
@@ -125,6 +128,7 @@ public class DocumentPatcher extends OverlayPatcher {
       }
       JavaScriptObjects.clearProperties(DOCUMENT);
       DOCUMENT = null;
+      GwtReflectionUtils.setStaticField(Document.class, "doc", null);
     }
   }
 

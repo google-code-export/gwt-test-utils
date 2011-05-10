@@ -39,6 +39,15 @@ public class DOMImplPatcher extends AutomaticPatcher {
   }
 
   @PatchMethod
+  public static InputElement createCheckInputElement(Object domImpl,
+      Document doc) {
+    InputElement e = createInputElement(doc, "checkbox", null);
+    e.setValue("on");
+
+    return e;
+  }
+
+  @PatchMethod
   public static Element createElement(Object domImpl, Document doc, String tag) {
     return JavaScriptObjects.newElement(tag);
   }
@@ -51,7 +60,7 @@ public class DOMImplPatcher extends AutomaticPatcher {
 
   public static InputElement createInputElement(Document doc, String type,
       String name) {
-    InputElement e = (InputElement) doc.createElement("input");
+    InputElement e = doc.createElement("input").cast();
 
     PropertyContainer properties = JavaScriptObjects.getObject(e,
         JsoProperties.ELEM_PROPERTIES);
@@ -269,6 +278,14 @@ public class DOMImplPatcher extends AutomaticPatcher {
     return (tagName != null) ? tagName
         : (String) GwtReflectionUtils.getStaticFieldValue(elem.getClass(),
             "TAG");
+  }
+
+  @PatchMethod
+  public static boolean hasAttribute(Object domImpl, Element elem, String name) {
+    PropertyContainer properties = JavaScriptObjects.getObject(elem,
+        JsoProperties.ELEM_PROPERTIES);
+
+    return properties.contains(name);
   }
 
   @PatchMethod
