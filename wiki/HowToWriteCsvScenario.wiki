@@ -83,6 +83,12 @@ public class MyTestShell extends GwtCsvTest {
 
    private MyApp myApp = new MyApp();
 
+   @Override
+   public String getModuleName() {
+      // return the full qualifed name of your GWT module
+      return "com.example.mywebapp.GwtTestSample";
+   }
+
    @CsvMethod
    public void initApp() {
       myApp.onModuleLoad();
@@ -192,6 +198,12 @@ We also have to modify the test class to provide some glue to connect the GWT UI
 public class MyTestShell extends GwtCsvTest {
 
    private MyApp myApp = new MyApp();
+
+   @Override
+   public String getModuleName() {
+      // return the full qualifed name of your GWT module
+      return "com.example.mywebapp.GwtTestSample";
+   }
 
    @CsvMethod
    public void initApp() {
