@@ -66,6 +66,7 @@ import com.octo.gwt.test.internal.GwtHtmlParser;
 import com.octo.gwt.test.internal.utils.PropertyContainer;
 import com.octo.gwt.test.internal.utils.PropertyContainerHelper;
 import com.octo.gwt.test.internal.utils.TagAware;
+import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 public class NodeFactory {
 
@@ -149,6 +150,8 @@ public class NodeFactory {
 			PropertyContainer documentPc = PropertyContainerHelper.cast(DOCUMENT).getProperties();
 			documentPc.clear();
 			DOCUMENT = null;
+
+			GwtReflectionUtils.setStaticField(Document.class, "doc", null);
 		}
 	}
 
@@ -225,9 +228,8 @@ public class NodeFactory {
 		}
 		InputStream is = NodeFactory.class.getClassLoader().getResourceAsStream(hostPagePath);
 		if (is == null) {
-			throw new RuntimeException("Cannot find file '" + hostPagePath + "', please override "
-					+ GwtTest.class.getSimpleName() + ".getHostPagePath() method correctly (see "
-					+ ClassLoader.class.getSimpleName() + ".getResourceAsStream(string name))");
+			throw new RuntimeException("Cannot find file '" + hostPagePath + "', please override " + GwtTest.class.getSimpleName()
+					+ ".getHostPagePath() method correctly (see " + ClassLoader.class.getSimpleName() + ".getResourceAsStream(string name))");
 		}
 		BufferedReader br = null;
 		try {

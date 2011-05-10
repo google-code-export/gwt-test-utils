@@ -48,6 +48,19 @@ public class DOMImplPatcher extends AutomaticPatcher {
 	}
 
 	@PatchMethod
+	public static boolean hasAttribute(Object domImpl, Element elem, String name) {
+		return PropertyContainerHelper.cast(elem).getProperties().containsKey(name);
+	}
+
+	@PatchMethod
+	public static InputElement createCheckInputElement(Object domImpl, Document doc) {
+		InputElement e = createInputElement(doc, "checkbox", null);
+		e.setValue("on");
+
+		return e;
+	}
+
+	@PatchMethod
 	public static int eventGetCharCode(Object domImpl, NativeEvent evt) {
 		return evt.getKeyCode();
 	}
