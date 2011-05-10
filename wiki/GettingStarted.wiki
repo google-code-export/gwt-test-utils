@@ -75,7 +75,7 @@ But testing it with {{{GWTTestCase}}} would not be so simple. You would have to 
  * {{{junit-4.8.2.jar}}}
  * {{{slf4j-api-1.6.1.jar}}}
 
-1) Create a META-INF/gwt-test-utils.properties file in your test classpath, e.g., in "test" directory. Add this line in it :
+2) Create a META-INF/gwt-test-utils.properties file in your test classpath, e.g., in "test" directory. Add this line in it :
 
 {{{
 com/example/mywebapp/GwtTestSample.gwt.xml = module-file
