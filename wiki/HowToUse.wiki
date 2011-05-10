@@ -12,7 +12,7 @@ _gwt-test-utils_ is an open source framework composed of several modules you can
 
  * *gwt-test-utils-gxt-X.jar* : use this module if you want to test UI designed with the popular third-party components librairy [http://www.sencha.com/products/extgwt/ ext-GWT]
 
- * *gwt-css-selector-X.jar* : this module is just an internal dependency of *gwt-test-utils-gxt-X.jar* to simulate CSS 3 selectors for GWT's DOM representation. Actually is just an adaptation of the nice chsan-css-selector API which works for JDK's DOM representation.
+ * *gwt-css-selector-X.jar* : this module is just an internal dependency of *gwt-test-utils-gxt-X.jar* to simulate CSS 3 selectors for GWT's DOM representation. Actually is just an adaptation of the nice [https://github.com/chrsan/css-selectors/tree css-selector API] from Christer Sandberg.
 
  * *gwt-test-utils-spring2-X.jar* : use this module if you want to test a GWT application which is connected to a Spring2-based backend
 
@@ -26,7 +26,7 @@ You can download _gwt-test-utils_ X version jars through the [http://code.google
 
 The framework requiers some third-party librairies you should add to your project test classpath :
 
-==== List of third-party jars required by {{{gwt-test-utils}}} ====
+==== gwt-test-utils : ====
 
  * commons-beanutils-1.8.3.jar
  * commons-logging-1.1.1.jar
@@ -44,29 +44,29 @@ If you are interested in using a java mock framework, _gwt-test-utils_ has been 
  * mockito-core-1.8.5.jar
 
 
-==== List of third-party jars required by {{{gwt-test-utils-csv}}} ====
+==== gwt-test-utils-csv : ====
 
 Same dependencies as _gwt-test-utils_ module  plus :
 
  * antlr-runtime-3.1.1.jar
 
 
-==== List of third-party jars required by gwt-test-utils-gxt ====
+==== gwt-test-utils-gxt : ====
 
 Same dependencies as _gwt-test-utils_ module plus :
 
- * gwt-css-selector-x.jar (with x the version of _gwt-test-utils_ you're using)
+ * gwt-css-selector-X.jar
  * gxt-2.2.0.jar
 
 
-==== List of third-party jars required by gwt-test-utils-spring2 ====
+==== gwt-test-utils-spring2 : ====
 
 Same dependencies as _gwt-test-utils_ module plus :
 
  * spring-2.5.x.jar
 
 
-==== List of third-party jars required by *gwt-test-utils-spring3 ====
+==== gwt-test-utils-spring3 : ====
 
 Same dependencies as _gwt-test-utils_ module plus :
 
@@ -152,10 +152,25 @@ Sometimes, it could be helpfull to get the lastest snapshot. It's done with the 
 
 = Configure gwt-test-utils =
 
-=> META-INF/gwt-test-utils.properties
+Inside your project, _gwt-test_utils_ will need some configurations : 
 
-=> override getModuleName()
+1) Create a *META-INF/gwt-test-utils.properties* file in your test classpath, e.g., in "test" directory. 
+Add at least one 'module-file' property in it, just like this : 
 
+{{{
+com/example/mywebapp/YourModule1.gwt.xml = module-file
+com/example/mywebapp/YourModule2.gwt.xml = module-file
+}}}
+
+Each module file declared here will be parsed by gwt-test-utils to know which classes are supposed to by compiled in JavaScript? and operated some magic modifications on them.
+
+Note that you won't have to declare .gwt.xml files from modules which are inherited by the module you've declared in gwt-test-utils.properties file. 
+So, if {{{YourModule2}}} was inheriting {{{YourModule1}}}, it would be useless to declare {{{YourModule1}}} in your {{{gwt-test-utils.properties}}} file.
+
+
+2) All your GWT test classes should inherits {{{GwtTest}}} or one of its subclasses instead of the standard {{{GWTTestCase}}}.
+Like {{{GWTTestCase}}}, you'll have to override a {{{GwtTest.getModuleName()}}} method to provide the full qualified name of the current tested module by implementing the getModuleName() method. *Be carefull to use a module you've declared in your META-INF/gwt-test-utils.properties* with the 'module-file' key/value pair. 
+Otherwise, an exception would be thrown.
 
 
 = Running your tests = 
