@@ -2,116 +2,29 @@
 #labels Phase-Requirements
 #sidebar TableOfContents
 
-= With Maven =
+= Getting gwt-test-utils =
 
-== Pom release configuration ==
+*gwt-test-utils* is an open source framework composed of several modules you can combine :
 
-First, you have to setup the required dependency in the _pom.xml_ :
+ *gwt-test-utils-X.jar* : the core module of gwt-test-utils. It enables to execute GWT client classes in a standalone JVM.
 
-{{{
-<dependencies>
-   ...
-   <dependency>
-      <groupId>com.octo.gwt.test</groupId>
-      <artifactId>gwt-test-utils</artifactId>
-      <version>0.27</version>
-      <scope>test</scope>
-   </dependency>
-   ...
-</dependencies>   
-}}}
+ *gwt-test-utils-csv-X.jar* : use this module if you want [http://code.google.com/p/gwt-test-utils/wiki/HowToWriteCsvScenario to write complexe test scenario easily]
 
-*gwt-test-utils* is the core module of gwt-test-utils. It enables to execute GWT client classes in a standalone JVM.
+ *gwt-test-utils-gxt-X.jar* : use this module if you want to test UI designed with the popular third-party components librairy [http://www.sencha.com/products/extgwt/ ext-GWT]
 
-The framework provides some other module to match your needs :
+ *gwt-css-selector-X.jar* : this module is just an internal dependency of *gwt-test-utils-gxt-X.jar* to simulate CSS 3 selectors for GWT's DOM representation. Actually is just an adaptation of the nice chsan-css-selector API which works for JDK's DOM representation.
 
- * *gwt-test-utils-csv* : use this module if you want [http://code.google.com/p/gwt-test-utils/wiki/HowToWriteCsvScenario to write complexe test scenario easily]
+ * *gwt-test-utils-spring2-X.jar* : use this module if you want to test a GWT application which is connected to a Spring2-based backend
 
- * *gwt-test-utils-gxt* : use this module if you want to test UI designed with the popular third-party components librairy [http://www.sencha.com/products/extgwt/ ext-GWT]
+ * *gwt-test-utils-spring3-X.jar* : use this module if you want to test a GWT application which is connected to a Spring3-based backend
 
- * *gwt-test-utils-spring2* : use this module if you want to test a GWT application which is connected to a Spring2-based backend
+Note that those modules all directly depend on *gwt-test-utils-X.jar* and can be combined in your project {{{pom.xml}}}. However, *you should always use the same version* when combining them in a single project.
 
- * *gwt-test-utils-spring3* : use this module if you want to test a GWT application which is connected to a Spring3-based backend
+== Without Maven == 
 
-Note that those modules all directly depend on *gwt-test-utils* and can be combined in your project {{{pom.xml}}}. However It is recommanded to use the same version.
+You can download *gwt-test-utils* X version jars through the [http://code.google.com/p/gwt-test-utils/downloads/list Download section].
 
-All those modules are hosted on a custom Maven repository, which is provided by [http://www.octo.com/ Octo Technology] :
-
-{{{
-<repositories>
-   ...
-   <repository>
-      <id>forge.octo.com</id>
-      <url>http://forge.octo.com/nexus/content/repositories/releases/</url>
-   </repository>
-   ...
-</repositories>
-}}}
-
-Since *gwt-test-utils* is memory expensive (to test GWT in a simple JVM has a cost ;-)), you  should increase the memory available for your tests, as shown in this example :
-
-{{{
-<plugins>
-   ...
-   <plugin>
-      <groupId>org.apache.maven.plugins</groupId>
-      <artifactId>maven-surefire-plugin</artifactId>
-      <configuration>
-         <argLine>-XX:MaxPermSize=128M -Xmx512M</argLine>
-      </configuration>
-   </plugin>
-   ...
-</plugins>
-}}}
-
-== POM snapshot configuration ==
-
-Sometimes, it could be helpfull to get the lastest snapshot. It's done with the following configuration :
-
-
-{{{
-<dependencies>
-   ...
-   <dependency>
-      <groupId>com.octo.gwt.test</groupId>
-      <artifactId>gwt-test-utils-integration</artifactId>
-      <version>0.28-SNAPSHOT</version>
-      <scope>test</scope>
-   </dependency>
-   ...
-</dependencies> 
-
-...
-
-<repositories>
-   ...
-   <repository>
-      <id>snapshot-forge.octo.com</id>
-         <url>http://forge.octo.com/nexus/content/repositories/snapshots/</url>
-         <snapshots>
-            <enabled>true</enabled>
-         </snapshots>
-         <releases>
-            <enabled>false</enabled>
-         </releases>
-      </repository>
-   ...
-</repositories>
-}}}
-
-
-== Under eclipse, on a maven project ==
-
-To run your unit tests directly inside eclipse in a maven project, you should use the POM configurations explained above (dependency, repository and plugin configuration).
-
-Then, just open a new JUnit Run configuration, and specify in the "JVM Arguments" text area the amount of memory you'll need for your tests.
-
-= Without Maven =
-
-To run your GWT unit tests without Maven, just add the *gwt-test-utils-x.jar* to the classpath :-)
-
-*gwt-test-utils* jars are available under the [http://code.google.com/p/gwt-test-utils/downloads/list Download section. 
-Lastest Snapshot can be downloaded through [http://forge.octo.com/nexus/content/repositories/snapshots/com/octo/gwt/test/ gwt-test-utils snapshots repository].
+The framework requiers some third-party librairies you should add to your project test classpath :
 
 ==== List of third-party jars required by {{{gwt-test-utils}}} ====
 
@@ -158,3 +71,120 @@ Same dependencies as *gwt-test-utils* module plus :
 Same dependencies as *gwt-test-utils* module plus :
 
  * spring-3.0.x.jar
+
+
+== With Maven ==
+
+=== Pom releases configuration ===
+
+First, you have to setup the required dependency in the _pom.xml_ :
+
+{{{
+<dependencies>
+   ...
+   <dependency>
+      <groupId>com.octo.gwt.test</groupId>
+      <artifactId>gwt-test-utils</artifactId>
+      <version>X</version>
+      <scope>test</scope>
+   </dependency>
+   ...
+</dependencies>   
+}}}
+
+
+Other modules are listed by theirs artifactId :
+
+ * {{{gwt-test-utils-csv}}}
+ * {{{gwt-test-utils-gxt}}}
+ * {{{gwt-test-utils-spring2}}}
+ * {{{gwt-test-utils-spring3}}}
+
+
+All those modules are hosted on a custom Maven repository, which is provided by [http://www.octo.com/ Octo Technology] :
+
+{{{
+<repositories>
+   ...
+   <repository>
+      <id>forge.octo.com</id>
+      <url>http://forge.octo.com/nexus/content/repositories/releases/</url>
+   </repository>
+   ...
+</repositories>
+}}}
+
+== POM snapshots configuration ==
+
+Sometimes, it could be helpfull to get the lastest snapshot. It's done with the following configuration :
+
+
+{{{
+<dependencies>
+   ...
+   <dependency>
+      <groupId>com.octo.gwt.test</groupId>
+      <artifactId>gwt-test-utils-integration</artifactId>
+      <version>X+1-SNAPSHOT</version>
+      <scope>test</scope>
+   </dependency>
+   ...
+</dependencies> 
+
+...
+
+<repositories>
+   ...
+   <repository>
+      <id>snapshot-forge.octo.com</id>
+         <url>http://forge.octo.com/nexus/content/repositories/snapshots/</url>
+         <snapshots>
+            <enabled>true</enabled>
+         </snapshots>
+         <releases>
+            <enabled>false</enabled>
+         </releases>
+      </repository>
+   ...
+</repositories>
+}}}
+
+
+= Configure gwt-test-utils =
+
+=> META-INF/gwt-test-utils.properties
+
+=> override getModuleName()
+
+
+
+= Running your tests = 
+
+Since *gwt-test-utils* is memory expensive (to test GWT in a simple JVM has a cost ;-)), you  should increase the memory available.
+
+== Under Eclipse == 
+
+Just open a new JUnit Run configuration, and specify in the "JVM Arguments" text area the amount of memory you'll need for your tests. For example :
+
+{{{
+-Xmx512M -XX:MaxPermSize=128M
+}}}
+
+
+== With Maven ==
+
+In your project {{{pom.xml}}}, configure the Maven test plugin to increase the amount of memory available :
+
+{{{
+<plugins>
+   ...
+   <plugin>
+      <groupId>org.apache.maven.plugins</groupId>
+      <artifactId>maven-surefire-plugin</artifactId>
+      <configuration>
+         <argLine>-Xmx512M -XX:MaxPermSize=128M</argLine>
+      </configuration>
+   </plugin>
+   ...
+</plugins>
+}}}
