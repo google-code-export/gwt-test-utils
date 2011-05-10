@@ -1,4 +1,4 @@
-#summary This page explains how to migrate to gwt-test-utils-0.27
+#summary This page explains how to migrate to gwt-test-utils-0.28
 
 = Purpose =
 
@@ -66,6 +66,6 @@ This is done by overrding {{{GwtTest.getModuleName()}}} method. Example :
   @Override
   protected String getModuleName() {
       // we want to test "Module1", which is corresponding to com/mycompany/gwtmodule1/Module1.gwt.xml
-      return "Module1";
+      return "com.mycompany.gwtmodule1.Module1";
   }
 }}}
