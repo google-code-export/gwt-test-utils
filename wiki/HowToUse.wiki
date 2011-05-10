@@ -179,7 +179,9 @@ Like {{{GWTTestCase}}}, you'll have to override a {{{GwtTest.getModuleName()}}} 
 
 = Running your tests = 
 
-Since _gwt-test-utils_ is memory expensive (to test GWT in a simple JVM has a cost ;-)), you  should increase the memory available.
+_gwt_test_utils_ tests are standard JUnit tests :-)
+
+But, since it can be memory expensive (to test GWT in a simple JVM has a cost ;-)), you may have to increase the memory available.
 
 == Under Eclipse == 
 
