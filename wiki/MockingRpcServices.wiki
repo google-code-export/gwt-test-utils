@@ -120,6 +120,12 @@ public class RPCCompositeTest extends GwtTestWithEasyMock {
 
    private RPCComposite composite;
 
+   @Override
+   public String getModuleName() {
+      // return the full qualifed name of your GWT module
+      return "com.example.mywebapp.GwtTestSample";
+   }
+
    @Before
    public void init() throws Exception {
       composite = new RPCComposite();
@@ -204,6 +210,12 @@ public class RPCCompositeTest extends GwtTestWithMockito {
    private RCPServiceAsync service;
 
    private RPCComposite composite;
+
+   @Override
+   public String getModuleName() {
+      // return the full qualifed name of your GWT module
+      return "com.example.mywebapp.GwtTestSample";
+   }
 
    @Before
    public void init() throws Exception {
