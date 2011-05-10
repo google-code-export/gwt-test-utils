@@ -168,9 +168,11 @@ Note that you won't have to declare .gwt.xml files from modules which are inheri
 So, if {{{YourModule2}}} was inheriting {{{YourModule1}}}, it would be useless to declare {{{YourModule1}}} in your {{{gwt-test-utils.properties}}} file.
 
 
-2) All your GWT test classes should inherits {{{GwtTest}}} or one of its subclasses instead of the standard {{{GWTTestCase}}}.
-Like {{{GWTTestCase}}}, you'll have to override a {{{GwtTest.getModuleName()}}} method to provide the full qualified name of the current tested module by implementing the getModuleName() method. *Be carefull to use a module you've declared in your META-INF/gwt-test-utils.properties* with the 'module-file' key/value pair. 
-Otherwise, an exception would be thrown.
+2) All your GWT test classes *must* inherits {{{GwtTest}}} or one of its subclasses instead of the standard {{{GWTTestCase}}}.
+
+Like {{{GWTTestCase}}}, you'll have to override a {{{GwtTest.getModuleName()}}} method to provide the full qualified name of the current tested module by implementing the getModuleName() method. 
+
+*Be carefull to use a module you've declared in your META-INF/gwt-test-utils.properties* with the '{{{module-file}}}' key/value pair. Otherwise, an exception would be thrown.
 
 
 = Running your tests = 
