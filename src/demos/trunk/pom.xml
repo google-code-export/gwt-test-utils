@@ -5,7 +5,7 @@
 	<groupId>com.octo.gwt.test</groupId>
 	<artifactId>demos-parent</artifactId>
 	<packaging>pom</packaging>
-	<version>0.28</version>
+	<version>0.29-SNAPSHOT</version>
 	<name>${project.artifactId}</name>
 	
 	<modules>
@@ -15,7 +15,7 @@
 	</modules>
 	
 	<scm>
-		<developerConnection>scm:svn:https://gwt-test-utils.googlecode.com/svn/src/demos/tags/demos-parent-0.28</developerConnection>
+		<developerConnection>scm:svn:https://gwt-test-utils.googlecode.com/svn/src/demos/trunk</developerConnection>
 	</scm>
 
 	<properties>
