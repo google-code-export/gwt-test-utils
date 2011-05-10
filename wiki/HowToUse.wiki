@@ -152,9 +152,10 @@ Sometimes, it could be helpfull to get the lastest snapshot. It's done with the 
 
 = Configure gwt-test-utils =
 
-Inside your project, _gwt-test_utils_ will need some configurations : 
+=== General project configuration ===
 
-1) Create a *META-INF/gwt-test-utils.properties* file in your test classpath, e.g., in "test" directory. 
+_gwt_test_utils_ *requiers* a {{{META-INF/gwt-test-utils.properties}}} configuration file in your project test classpath.
+
 Add at least one 'module-file' property in it, just like this : 
 
 {{{
@@ -167,8 +168,9 @@ Each module file declared here will be parsed by gwt-test-utils to know which cl
 Note that you won't have to declare .gwt.xml files from modules which are inherited by the module you've declared in gwt-test-utils.properties file. 
 So, if {{{YourModule2}}} was inheriting {{{YourModule1}}}, it would be useless to declare {{{YourModule1}}} in your {{{gwt-test-utils.properties}}} file.
 
+=== test classes configuration ===
 
-2) All your GWT test classes *must* inherits {{{GwtTest}}} or one of its subclasses instead of the standard {{{GWTTestCase}}}.
+All your GWT test classes *must* inherits {{{GwtTest}}} or one of its subclasses instead of the standard {{{GWTTestCase}}}.
 
 Like {{{GWTTestCase}}}, you'll have to override a {{{GwtTest.getModuleName()}}} method to provide the full qualified name of the current tested module by implementing the getModuleName() method. 
 
