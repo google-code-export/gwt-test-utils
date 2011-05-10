@@ -168,7 +168,7 @@ Each module file declared here will be parsed by gwt-test-utils to know which cl
 Note that you won't have to declare .gwt.xml files from modules which are inherited by the module you've declared in gwt-test-utils.properties file. 
 So, if {{{YourModule2}}} was inheriting {{{YourModule1}}}, it would be useless to declare {{{YourModule1}}} in your {{{gwt-test-utils.properties}}} file.
 
-=== test classes configuration ===
+=== Test classes configuration ===
 
 All your GWT test classes *must* inherits {{{GwtTest}}} or one of its subclasses instead of the standard {{{GWTTestCase}}}.
 
