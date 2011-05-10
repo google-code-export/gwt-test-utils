@@ -66,7 +66,14 @@ But testing it with {{{GWTTestCase}}} would not be so simple. You would have to 
  
 === Let's do this with gwt-test-utils ===
 
-1) Add all librairies requiered by gwt-test-utils. They are available in the lastest bundle under the [http://code.google.com/p/gwt-test-utils/downloads/list Download section].
+1) Add all librairies required by gwt-test-utils : 
+
+ * {{{gwt-test-utils-0.28.jar}}} (or higher)
+ * {{{commons-beanutils-1.8.3.jar}}}
+ * {{{htmlparser-1.6.jar}}}
+ * {{{javassist-3.12.1.GA.jar}}}
+ * {{{junit-4.8.2.jar}}}
+ * {{{slf4j-api-1.6.1.jar}}}
 
 1) Create a META-INF/gwt-test-utils.properties file in your test classpath, e.g., in "test" directory. Add this line in it :
 
