@@ -1,4 +1,4 @@
-#summary This page explains how to migrate to gwt-test-utils-0.28
+#summary This page explains how to migrate to gwt-test-utils-0.28 or higher
 
 = Purpose =
 
