@@ -104,10 +104,10 @@ public class Browser {
 			Event keyPressEvent = EventBuilder.create(Event.ONKEYPRESS).setKeyCode(keyCode).build();
 			dispatchEvent((Widget) hasTextWidget, keyPressEvent);
 
+			hasTextWidget.setText(value.substring(0, i + 1));
+
 			Event keyUpEvent = EventBuilder.create(Event.ONKEYUP).setKeyCode(keyCode).build();
 			dispatchEvent((Widget) hasTextWidget, keyUpEvent);
-
-			hasTextWidget.setText(value.substring(0, i + 1));
 		}
 
 		dispatchEventInternal((Widget) hasTextWidget, EventBuilder.create(Event.ONBLUR).build());
