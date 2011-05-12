@@ -1,6 +1,0 @@
-@def testConstant constant-value
-
-.testStyle:HOVER {
-	margin-top: 2px;
-	color: red;
-}
