@@ -26,7 +26,7 @@
 	</properties>
 
 	<scm>
-		<developerConnection>scm:svn:https://gwt-test-utils.googlecode.com/svn/src/framework/tags/gwt-test-utils-parent-0.28</developerConnection>
+		<developerConnection>scm:svn:https://gwt-test-utils.googlecode.com/svn/src/framework/branches/gwt-test-utils-parent-0.28.1</developerConnection>
 	</scm>
 
 	<distributionManagement>
