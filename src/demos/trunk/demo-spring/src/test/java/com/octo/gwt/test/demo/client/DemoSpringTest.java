@@ -18,10 +18,6 @@ public abstract class DemoSpringTest extends GwtTest implements
 
   private ApplicationContext applicationContext;
 
-  public ApplicationContext getApplicationContext() {
-    return applicationContext;
-  }
-
   @Override
   public String getModuleName() {
     return "com.octo.gwt.test.demo.Application";
@@ -30,8 +26,7 @@ public abstract class DemoSpringTest extends GwtTest implements
   @Before
   public void initDemoSpringTest() throws Exception {
     // add a new RemoteServiceHandler which will call Spring context
-    addGwtCreateHandler(new SpringServiceGwtCreateHandler(
-        getApplicationContext()) {
+    addGwtCreateHandler(new SpringServiceGwtCreateHandler(applicationContext) {
 
       @Override
       protected Object findInSpringContext(
