@@ -13,7 +13,8 @@ import com.octo.gwt.test.spring.SpringServiceGwtCreateHandler;
 
 @RunWith(GwtSpringRunner.class)
 @ContextConfiguration(locations = {"classpath:applicationContext.xml"})
-public class DemoSpringTest extends GwtTest implements ApplicationContextAware {
+public abstract class DemoSpringTest extends GwtTest implements
+    ApplicationContextAware {
 
   private ApplicationContext applicationContext;
 
