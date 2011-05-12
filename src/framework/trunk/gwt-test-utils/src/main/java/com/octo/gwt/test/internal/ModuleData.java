@@ -36,15 +36,18 @@ public class ModuleData {
       "src/main/java/", "src/main/resources/", "src/test/java/",
       "src/test/resources/", "src/", "resources/", "res/"};
 
-  private static final Set<String> DEFAULT_CLIENT_PATHS = new HashSet<String>();
+  // must be declared and initialized BEFORE ModuleData INSTANCE
+  private static final Set<String> DEFAULT_CLIENT_PATHS = new HashSet<String>() {
+    private static final long serialVersionUID = -4617529294589721345L;
+
+    {
+      add("com.google.gwt.");
+      add("com.octo.gwt.");
+      add("com.extjs.gxt.");
+    }
+  };
 
   private static final ModuleData INSTANCE = new ModuleData();
-
-  static {
-    DEFAULT_CLIENT_PATHS.add("com.google.gwt.");
-    DEFAULT_CLIENT_PATHS.add("com.octo.gwt.");
-    DEFAULT_CLIENT_PATHS.add("com.extjs.gxt.");
-  }
 
   public static ModuleData get() {
     return INSTANCE;
