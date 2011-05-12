@@ -10,7 +10,6 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
@@ -22,6 +21,7 @@ import org.w3c.dom.NodeList;
 
 import com.octo.gwt.test.exceptions.GwtTestConfigurationException;
 import com.octo.gwt.test.exceptions.GwtTestException;
+import com.octo.gwt.test.internal.utils.XmlUtils;
 
 /**
  * Class which provide all necessary information about a GWT module. <strong>For
@@ -36,7 +36,15 @@ public class ModuleData {
       "src/main/java/", "src/main/resources/", "src/test/java/",
       "src/test/resources/", "src/", "resources/", "res/"};
 
+  private static final Set<String> DEFAULT_CLIENT_PATHS = new HashSet<String>();
+
   private static final ModuleData INSTANCE = new ModuleData();
+
+  static {
+    DEFAULT_CLIENT_PATHS.add("com.google.gwt.");
+    DEFAULT_CLIENT_PATHS.add("com.octo.gwt.");
+    DEFAULT_CLIENT_PATHS.add("com.extjs.gxt.");
+  }
 
   public static ModuleData get() {
     return INSTANCE;
@@ -51,11 +59,8 @@ public class ModuleData {
   private ModuleData() {
     moduleAlias = new HashMap<String, String>();
 
-    // TODO: remove static client paths
     clientPaths = new HashSet<String>();
-    clientPaths.add("com.google.gwt.");
-    clientPaths.add("com.octo.gwt.");
-    clientPaths.add("com.extjs.gxt.");
+    clientPaths.addAll(DEFAULT_CLIENT_PATHS);
 
     clientExclusions = new HashSet<String>();
 
@@ -121,7 +126,7 @@ public class ModuleData {
     InputStream is = getModuleFileAsStream(moduleFilePath);
 
     try {
-      DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+      DocumentBuilder builder = XmlUtils.newDocumentBuilder();
       return builder.parse(is);
     } finally {
       // close the stream
@@ -219,8 +224,10 @@ public class ModuleData {
       String inheritName = xpath.evaluate("@name", inherit).trim();
 
       if (moduleAlias.containsKey(inheritName)
-          || moduleAlias.containsValue(inheritName))
+          || moduleAlias.containsValue(inheritName)
+          || isDefaultClientPathModule(inheritName)) {
         continue;
+      }
 
       String inheritModuleFilePath = inheritName.replaceAll("\\.", "/")
           + ".gwt.xml";
@@ -260,6 +267,16 @@ public class ModuleData {
       remoteServiceImpls.put(servletPath, servletClassName);
 
     }
+  }
+
+  private boolean isDefaultClientPathModule(String moduleName) {
+    for (String defaultClientPath : DEFAULT_CLIENT_PATHS) {
+      if (moduleName.startsWith(defaultClientPath)) {
+        return true;
+      }
+    }
+
+    return false;
   }
 
   private void parseModuleFile(String moduleFilePath, Document document,

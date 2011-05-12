@@ -282,18 +282,17 @@ public class Browser {
     for (int i = 0; i < value.length(); i++) {
 
       int keyCode = value.charAt(i);
+
+      // trigger keyDown and keyPress
       Event keyDownEvent = EventBuilder.create(Event.ONKEYDOWN).setKeyCode(
           keyCode).build();
       Event keyPressEvent = EventBuilder.create(Event.ONKEYPRESS).setKeyCode(
           keyCode).build();
-      Event keyUpEvent = EventBuilder.create(Event.ONKEYUP).setKeyCode(keyCode).build();
+      dispatchEvent((Widget) hasTextWidget, keyDownEvent, keyPressEvent);
 
-      dispatchEvent((Widget) hasTextWidget, keyDownEvent, keyPressEvent,
-          keyUpEvent);
-
+      // check if one on the events has been prevented
       boolean keyDownEventPreventDefault = JavaScriptObjects.getBoolean(
           keyDownEvent, JsoProperties.EVENT_PREVENTDEFAULT);
-
       boolean keyPressEventPreventDefault = JavaScriptObjects.getBoolean(
           keyPressEvent, JsoProperties.EVENT_PREVENTDEFAULT);
 
@@ -301,6 +300,10 @@ public class Browser {
         hasTextWidget.setText(value.substring(0, i + 1));
         changed = true;
       }
+
+      // trigger keyUp
+      Event keyUpEvent = EventBuilder.create(Event.ONKEYUP).setKeyCode(keyCode).build();
+      dispatchEventInternal((Widget) hasTextWidget, keyUpEvent);
     }
 
     // don't have to check if the event can be dispatch since it's check before
