@@ -2,6 +2,8 @@ package com.octo.gwt.test.utils.events;
 
 import org.junit.Assert;
 
+import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
@@ -476,6 +478,36 @@ public class Browser {
   private static void dispatchEventInternal(Widget target, Event... events) {
     try {
       for (Event event : events) {
+
+        // set the target if it's not
+        Element targetElement = JavaScriptObjects.getObject(event,
+            JsoProperties.EVENT_TARGET);
+        if (targetElement == null) {
+          JavaScriptObjects.setProperty(event, JsoProperties.EVENT_TARGET,
+              target.getElement());
+        }
+
+        // set the related target
+        Element relatedTargetElement = JavaScriptObjects.getObject(event,
+            JsoProperties.EVENT_RELATEDTARGET);
+
+        if (relatedTargetElement == null) {
+          switch (event.getTypeInt()) {
+            case Event.ONMOUSEOVER:
+            case Event.ONMOUSEOUT:
+              Widget parent = target.getParent();
+              if (parent != null) {
+                relatedTargetElement = parent.getElement();
+              } else {
+                relatedTargetElement = Document.get().getDocumentElement();
+              }
+              break;
+          }
+
+          JavaScriptObjects.setProperty(event,
+              JsoProperties.EVENT_RELATEDTARGET, relatedTargetElement);
+        }
+
         if (CheckBox.class.isInstance(target)
             && event.getTypeInt() == Event.ONCLICK) {
           CheckBox checkBox = (CheckBox) target;

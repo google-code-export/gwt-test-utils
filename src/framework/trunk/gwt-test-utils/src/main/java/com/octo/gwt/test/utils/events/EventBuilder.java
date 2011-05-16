@@ -1,6 +1,7 @@
 package com.octo.gwt.test.utils.events;
 
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.EventTarget;
 import com.google.gwt.user.client.Event;
 import com.octo.gwt.test.internal.patchers.dom.JavaScriptObjects;
 import com.octo.gwt.test.internal.utils.JsoProperties;
@@ -66,6 +67,12 @@ public class EventBuilder {
 
   public EventBuilder setMetaKey(boolean metaKey) {
     JavaScriptObjects.setProperty(event, JsoProperties.EVENT_KEY_META, metaKey);
+    return this;
+  }
+
+  public EventBuilder setRelatedTarget(EventTarget target) {
+    JavaScriptObjects.setProperty(event, JsoProperties.EVENT_RELATEDTARGET,
+        target);
     return this;
   }
 
