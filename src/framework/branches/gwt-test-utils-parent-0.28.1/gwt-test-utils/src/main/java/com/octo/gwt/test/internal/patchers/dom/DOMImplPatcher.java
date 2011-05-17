@@ -3,6 +3,7 @@ package com.octo.gwt.test.internal.patchers.dom;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.ButtonElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
@@ -118,6 +119,20 @@ public class DOMImplPatcher extends AutomaticPatcher {
   @PatchMethod
   public static boolean eventGetMetaKey(Object domImpl, NativeEvent evt) {
     return JavaScriptObjects.getBoolean(evt, JsoProperties.EVENT_KEY_META);
+  }
+
+  @PatchMethod
+  public static EventTarget eventGetRelatedTarget(Object domImpl,
+      NativeEvent nativeEvent) {
+
+    JavaScriptObject relatedTargetJSO = JavaScriptObjects.getObject(
+        nativeEvent, JsoProperties.EVENT_RELATEDTARGET);
+
+    if (relatedTargetJSO == null) {
+      return null;
+    }
+
+    return relatedTargetJSO.cast();
   }
 
   @PatchMethod

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 import com.google.gwt.event.dom.client.BlurEvent;
@@ -41,6 +42,7 @@ import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTMLTable.Cell;
 import com.google.gwt.user.client.ui.MultiWordSuggestOracle;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.StackPanel;
 import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.TextBox;
@@ -48,21 +50,26 @@ import com.octo.gwt.test.utils.events.Browser;
 
 public class BrowserTest extends GwtTestTest {
 
+  private Button b;
   private Cell clickedCell;
   private int keyDownCount;
   private int keyUpCount;
   private boolean onBlurTriggered;
   private boolean onChangeTriggered;
+
   private boolean tested;
 
   @Test
   public void checkBlurEvent() {
-    tested = false;
-    Button b = new Button();
+    tested = false;;
     b.addBlurHandler(new BlurHandler() {
 
       public void onBlur(BlurEvent event) {
         tested = !tested;
+
+        Assert.assertEquals(b.getElement(),
+            event.getNativeEvent().getEventTarget());
+        Assert.assertNull(event.getNativeEvent().getRelatedEventTarget());
       }
 
     });
@@ -75,12 +82,15 @@ public class BrowserTest extends GwtTestTest {
 
   @Test
   public void checkClickEvent() {
-    tested = false;
-    Button b = new Button();
+    tested = false;;
     b.addClickHandler(new ClickHandler() {
 
       public void onClick(ClickEvent event) {
         tested = !tested;
+
+        Assert.assertEquals(b.getElement(),
+            event.getNativeEvent().getEventTarget());
+        Assert.assertNull(event.getNativeEvent().getRelatedEventTarget());
       }
 
     });
@@ -96,7 +106,8 @@ public class BrowserTest extends GwtTestTest {
 
     // Set up
     tested = false;
-    ComplexPanel panel = new StackPanel() {
+    final Anchor a = new Anchor();
+    final ComplexPanel panel = new StackPanel() {
 
       @Override
       public void onBrowserEvent(com.google.gwt.user.client.Event event) {
@@ -105,10 +116,13 @@ public class BrowserTest extends GwtTestTest {
         if (DOM.eventGetType(event) == Event.ONCLICK) {
           tested = !tested;
         }
+
+        Assert.assertEquals(a.getElement(), event.getEventTarget());
+        Assert.assertNull(event.getRelatedEventTarget());
       };
     };
 
-    panel.add(new Anchor());
+    panel.add(a);
 
     // Test
     Browser.click(panel, 0);
@@ -121,15 +135,19 @@ public class BrowserTest extends GwtTestTest {
   public void checkClickOnGrid() {
     // Setup
     final Grid g = new Grid(2, 2);
+    final Anchor a = new Anchor();
+    g.setWidget(1, 1, a);
+
     g.addClickHandler(new ClickHandler() {
 
       public void onClick(ClickEvent event) {
         clickedCell = g.getCellForEvent(event);
+
+        Assert.assertEquals(a.getElement(),
+            event.getNativeEvent().getEventTarget());
+        Assert.assertNull(event.getNativeEvent().getRelatedEventTarget());
       }
     });
-
-    Anchor a = new Anchor();
-    g.setWidget(1, 1, a);
 
     // Test
     Browser.click(g, 1, 1);
@@ -695,12 +713,15 @@ public class BrowserTest extends GwtTestTest {
 
   @Test
   public void checkFocusEvent() {
-    tested = false;
-    Button b = new Button();
+    tested = false;;
     b.addFocusHandler(new FocusHandler() {
 
       public void onFocus(FocusEvent event) {
         tested = !tested;
+
+        Assert.assertEquals(b.getElement(),
+            event.getNativeEvent().getEventTarget());
+        Assert.assertNull(event.getNativeEvent().getRelatedEventTarget());
       }
 
     });
@@ -713,13 +734,17 @@ public class BrowserTest extends GwtTestTest {
 
   @Test
   public void checkKeyDownEvent() {
-    tested = false;
-    Button b = new Button();
+    tested = false;;
     b.addKeyDownHandler(new KeyDownHandler() {
 
       public void onKeyDown(KeyDownEvent event) {
-        if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER)
+        if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
           tested = !tested;
+        }
+
+        Assert.assertEquals(b.getElement(),
+            event.getNativeEvent().getEventTarget());
+        Assert.assertNull(event.getNativeEvent().getRelatedEventTarget());
       }
     });
 
@@ -736,13 +761,17 @@ public class BrowserTest extends GwtTestTest {
 
   @Test
   public void checkKeyPressEvent() {
-    tested = false;
-    Button b = new Button();
+    tested = false;;
     b.addKeyPressHandler(new KeyPressHandler() {
 
       public void onKeyPress(KeyPressEvent event) {
-        if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER)
+        if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER) {
           tested = !tested;
+        }
+
+        Assert.assertEquals(b.getElement(),
+            event.getNativeEvent().getEventTarget());
+        Assert.assertNull(event.getNativeEvent().getRelatedEventTarget());
       }
     });
 
@@ -759,13 +788,17 @@ public class BrowserTest extends GwtTestTest {
 
   @Test
   public void checkKeyUpEvent() {
-    tested = false;
-    Button b = new Button();
+    tested = false;;
     b.addKeyUpHandler(new KeyUpHandler() {
 
       public void onKeyUp(KeyUpEvent event) {
-        if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER)
+        if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
           tested = !tested;
+        }
+
+        Assert.assertEquals(b.getElement(),
+            event.getNativeEvent().getEventTarget());
+        Assert.assertNull(event.getNativeEvent().getRelatedEventTarget());
       }
     });
 
@@ -782,12 +815,15 @@ public class BrowserTest extends GwtTestTest {
 
   @Test
   public void checkMouseDownEvent() {
-    tested = false;
-    Button b = new Button();
+    tested = false;;
     b.addMouseDownHandler(new MouseDownHandler() {
 
       public void onMouseDown(MouseDownEvent event) {
         tested = !tested;
+
+        Assert.assertEquals(b.getElement(),
+            event.getNativeEvent().getEventTarget());
+        Assert.assertNull(event.getNativeEvent().getRelatedEventTarget());
       }
 
     });
@@ -800,12 +836,15 @@ public class BrowserTest extends GwtTestTest {
 
   @Test
   public void checkMouseMoveEvent() {
-    tested = false;
-    Button b = new Button();
+    tested = false;;
     b.addMouseMoveHandler(new MouseMoveHandler() {
 
       public void onMouseMove(MouseMoveEvent event) {
         tested = !tested;
+
+        Assert.assertEquals(b.getElement(),
+            event.getNativeEvent().getEventTarget());
+        Assert.assertNull(event.getNativeEvent().getRelatedEventTarget());
       }
 
     });
@@ -819,11 +858,16 @@ public class BrowserTest extends GwtTestTest {
   @Test
   public void checkMouseOutEvent() {
     tested = false;
-    Button b = new Button();
+
     b.addMouseOutHandler(new MouseOutHandler() {
 
       public void onMouseOut(MouseOutEvent event) {
         tested = !tested;
+
+        Assert.assertEquals(b.getElement(),
+            event.getNativeEvent().getEventTarget());
+        Assert.assertEquals(b.getParent().getElement(),
+            event.getNativeEvent().getRelatedEventTarget());
       }
 
     });
@@ -836,12 +880,16 @@ public class BrowserTest extends GwtTestTest {
 
   @Test
   public void checkMouseOverEvent() {
-    tested = false;
-    Button b = new Button();
+    tested = false;;
     b.addMouseOverHandler(new MouseOverHandler() {
 
       public void onMouseOver(MouseOverEvent event) {
         tested = !tested;
+
+        Assert.assertEquals(b.getElement(),
+            event.getNativeEvent().getEventTarget());
+        Assert.assertEquals(b.getParent().getElement(),
+            event.getNativeEvent().getRelatedEventTarget());
       }
 
     });
@@ -854,12 +902,15 @@ public class BrowserTest extends GwtTestTest {
 
   @Test
   public void checkMouseUpEvent() {
-    tested = false;
-    Button b = new Button();
+    tested = false;;
     b.addMouseUpHandler(new MouseUpHandler() {
 
       public void onMouseUp(MouseUpEvent event) {
         tested = !tested;
+
+        Assert.assertEquals(b.getElement(),
+            event.getNativeEvent().getEventTarget());
+        Assert.assertNull(event.getNativeEvent().getRelatedEventTarget());
       }
 
     });
@@ -872,12 +923,15 @@ public class BrowserTest extends GwtTestTest {
 
   @Test
   public void checkMouseWheelEvent() {
-    tested = false;
-    Button b = new Button();
+    tested = false;;
     b.addMouseWheelHandler(new MouseWheelHandler() {
 
       public void onMouseWheel(MouseWheelEvent event) {
         tested = !tested;
+
+        Assert.assertEquals(b.getElement(),
+            event.getNativeEvent().getEventTarget());
+        Assert.assertNull(event.getNativeEvent().getRelatedEventTarget());
       }
 
     });
@@ -1010,6 +1064,12 @@ public class BrowserTest extends GwtTestTest {
     Assert.assertEquals(2, keyUpCount);
     Assert.assertTrue(onBlurTriggered);
     Assert.assertFalse(onChangeTriggered);
+  }
+
+  @Before
+  public void setupBrowserTest() {
+    b = new Button();
+    RootPanel.get().add(b);
   }
 
   private void assertTextFilledCorrectly(String filledText,
