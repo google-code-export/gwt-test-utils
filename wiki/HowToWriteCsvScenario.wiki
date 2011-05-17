@@ -231,7 +231,7 @@ public class MyTestShell extends GwtCsvTest {
          return new NodeObjectFinder() {
 
             public Object find(CsvRunner csvRunner, Node node) {
-               return csvRunner.getNodeValue(RootPanel.get().getWidget(2), node);
+               return csvRunner.getNodeValue(RootPanel.get().getWidget(1), node);
             }
          };
       } 
