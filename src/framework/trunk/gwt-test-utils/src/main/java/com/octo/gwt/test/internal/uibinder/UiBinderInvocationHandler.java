@@ -5,16 +5,20 @@ import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Proxy;
 import java.lang.reflect.Type;
+import java.util.HashMap;
 import java.util.Map;
 
 import com.google.gwt.dev.Link;
 import com.google.gwt.event.shared.EventHandler;
+import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Widget;
 import com.octo.gwt.test.exceptions.GwtTestUiBinderException;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 class UiBinderInvocationHandler implements InvocationHandler {
+
+  private static final Map<Class<?>, GwtEvent<?>> EVENT_PROTOTYPES = new HashMap<Class<?>, GwtEvent<?>>();
 
   private final Class<?> proxiedClass;
 
@@ -33,7 +37,7 @@ class UiBinderInvocationHandler implements InvocationHandler {
   }
 
   @SuppressWarnings("unchecked")
-  private <H extends EventHandler> void addDomHandlers(Object owner) {
+  private <H extends EventHandler> void addHandlers(Object owner) {
     Map<Method, UiHandler> uiHandlerMethods = GwtReflectionUtils.getAnnotatedMethod(
         owner.getClass(), UiHandler.class);
 
@@ -41,10 +45,10 @@ class UiBinderInvocationHandler implements InvocationHandler {
       for (String uiFieldName : entry.getValue().value()) {
         Widget uiField = GwtReflectionUtils.getPrivateFieldValue(owner,
             uiFieldName);
-        com.google.gwt.event.dom.client.DomEvent.Type<H> eventType = (com.google.gwt.event.dom.client.DomEvent.Type<H>) getEventType(entry.getKey());
+        GwtEvent.Type<H> eventType = (GwtEvent.Type<H>) getEventType(entry.getKey());
 
         H handler = (H) createHandler(uiField, entry.getKey(), owner);
-        uiField.addDomHandler(handler, eventType);
+        uiField.addHandler(handler, eventType);
       }
 
     }
@@ -65,7 +69,7 @@ class UiBinderInvocationHandler implements InvocationHandler {
     // parse .ui.xml file and inject @UiField
     Object rootComponent = parser.createUiComponent(rootComponentClass, owner);
     // handle @UiHandlers
-    addDomHandlers(owner);
+    addHandlers(owner);
 
     return rootComponent;
   }
@@ -112,12 +116,16 @@ class UiBinderInvocationHandler implements InvocationHandler {
 
   }
 
-  private com.google.gwt.event.dom.client.DomEvent.Type<?> getEventType(
-      Method method) {
+  private GwtEvent.Type<?> getEventType(Method method) {
     Class<?> eventTypeClass = method.getParameterTypes()[0];
 
-    return GwtReflectionUtils.callStaticMethod(eventTypeClass, "getType");
+    GwtEvent<?> eventPrototype = EVENT_PROTOTYPES.get(eventTypeClass);
+    if (eventPrototype == null) {
+      eventPrototype = (GwtEvent<?>) GwtReflectionUtils.instantiateClass(eventTypeClass);
+      EVENT_PROTOTYPES.put(eventTypeClass, eventPrototype);
+    }
 
+    return eventPrototype.getAssociatedType();
   }
 
   /**
