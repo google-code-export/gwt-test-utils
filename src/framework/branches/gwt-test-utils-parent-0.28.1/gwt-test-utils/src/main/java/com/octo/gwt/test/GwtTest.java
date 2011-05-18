@@ -39,6 +39,7 @@ public abstract class GwtTest {
 
   private static final String DEFAULT_WAR_DIR = "war/";
   private static final String MAVEN_DEFAULT_RES_DIR = "src/main/resources/";
+  private static final String MAVEN_DEFAULT_WEB_DIR = "src/main/webapp/";
 
   /**
    * <p>
@@ -127,7 +128,13 @@ public abstract class GwtTest {
       return fileRelativePath;
     }
 
-    // try with maven archetype default path
+    // try with the new maven archetype default path
+    fileRelativePath = MAVEN_DEFAULT_WEB_DIR + fileSimpleName;
+    if (new File(fileRelativePath).exists()) {
+      return fileRelativePath;
+    }
+
+    // try with the old maven archetype default path
     String packagePath = moduleFullQualifiedName.substring(0,
         moduleFullQualifiedName.lastIndexOf('.') + 1).replaceAll("\\.", "/");
 
