@@ -6,6 +6,8 @@ import org.junit.Test;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.octo.gwt.test.GwtTestTest;
@@ -51,6 +53,11 @@ public class UiBinderWithWidgetsTest extends GwtTestTest {
 
     Assert.assertEquals("9'00", w.msgInnerWidget.getText());
     Assert.assertEquals(w.msgInnerWidget, wrappedPanel.getWidget(3));
+
+    Assert.assertEquals(HasHorizontalAlignment.ALIGN_LEFT,
+        w.verticalPanel.getHorizontalAlignment());
+    Assert.assertEquals(HasVerticalAlignment.ALIGN_MIDDLE,
+        w.verticalPanel.getVerticalAlignment());
   }
 
   @Test
