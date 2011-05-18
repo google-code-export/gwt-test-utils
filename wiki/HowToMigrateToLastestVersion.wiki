@@ -2,7 +2,8 @@
 
 = Purpose =
 
-For the 0.25 release of *gwt-test-utils*, the public API has changed to be more convenient. Unfortunatly for our users, it will involve some changes that are listed bellow.
+For the 0.25 release of _gwt-test-utils_, the public API has changed to be more convenient. Unfortunatly for our users, it will involve some changes that are listed bellow.
+You *should* read this page if you're still using _gwt-test_utils-0.24_ or any previous release.
 
 
 = Details =
@@ -10,7 +11,7 @@ For the 0.25 release of *gwt-test-utils*, the public API has changed to be more 
 
  ==== 1) change your maven dependencies ====
 
-Some classes of the old *gwt-test-utils-integration* module, which was used to provide with CSV-based synthax for complex integration scenario, have been moved to *gwt-test-utils* core module. Now, you will be able to bind your RPC service implementation to your client side code without *gwt-test-utils-integration* module.
+Some classes of the old *gwt-test-utils-integration* module, which was used to provide with CSV-based synthax for complex integration scenario, have been moved to _*gwt-test-utils_ core module. Now, you will be able to bind your RPC service implementation to your client side code without *gwt-test-utils-integration* module.
 
 Since it just deals with CSV synthax feature, it has been renamed to "{{{gwt-test-utils-csv}}}".
 
@@ -47,7 +48,7 @@ Some deprecated methods have now been removed, use the substitution ones  :
 
  ==== 5) Configuring your META-INF/gwt-test-utils.properties ====
  
- Since *gwt-test-utils* must know which class will be compiled in JavaScript code, you have to tell it through a simple properties file.
+ Since _gwt-test-utils_ must know which class will be compiled in JavaScript code, you have to tell it through a simple properties file.
  This is quite simple : if it doesn't exist yet, add a file named *gwt-test-utils.properties* in the *META-INF* folder of your test classpath (for maven users : {{{src/test/resources/META-INF/gwt-test-utils.properties}}}).
  
 In this file, you have to declare any GWT module configuration file you've created in your application this way :
@@ -59,7 +60,7 @@ com/mycompany/gwtmodule2/Module2.gwt.xml = module-file
 
 If your declared modules are inherting GWT modules from third-party jars (for example : {{{com.google.gwt.user.User}}}), you would not have to declare this parent module in your {{{gwt-test-utils.properties}}} file : the framework handle it for you.
 
-Finally, if your application is multi-module, you would have to tell *gwt-test-utils* which module your {{{GwtTest}}} class is testing.
+Finally, if your application is multi-module, you would have to tell _gwt-test-utils_ which module your {{{GwtTest}}} class is testing.
 This is done by overrding {{{GwtTest.getModuleName()}}} method. Example :
 
 {{{
