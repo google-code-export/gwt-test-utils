@@ -5,9 +5,9 @@
 An important thing to know about _gwt-test-utils_ is that it relies on _GWT_ internal APIs.
 So, when a new GWT version is released, its compatibily isn't assured by the current version of _gwt-test_utils_. We may have to apply some modifications on the framework internal APIs, which would no longer guarantee its compatibility with older versions of _GWT_.
 
- * Lastest version working with *GWT 2.3* is _gwt-test-utils-0.29_
+ * Lastest version working with *GWT 2.3.0* is _gwt-test-utils-0.29_
 
- * Lastest version working with *GWT 2.2* is _gwt-test-utils-0.28.2_
+ * Lastest version working with *GWT 2.2.0* is _gwt-test-utils-0.28.2_
 
 = Public API modifications =
 
