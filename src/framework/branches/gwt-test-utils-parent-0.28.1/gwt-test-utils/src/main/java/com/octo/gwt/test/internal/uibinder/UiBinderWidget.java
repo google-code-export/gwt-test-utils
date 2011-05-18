@@ -5,7 +5,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.xml.sax.Attributes;
 
 import com.google.gwt.dom.client.Element;
@@ -15,7 +14,6 @@ import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
 import com.octo.gwt.test.exceptions.GwtTestException;
 import com.octo.gwt.test.exceptions.GwtTestUiBinderException;
-import com.octo.gwt.test.exceptions.ReflectionException;
 import com.octo.gwt.test.internal.patchers.dom.JavaScriptObjects;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
@@ -24,13 +22,12 @@ class UiBinderWidget<T extends Widget> implements UiBinderTag {
   private static final Pattern ATTRIBUTE_PATTERN = Pattern.compile("^\\{(\\w+)\\.{1}([^\\}]*)}$");
 
   private final Map<String, Object> attributesMap;
-  private final Object owner;
+
   private final T wrapped;
 
   public UiBinderWidget(T wrapped, Attributes attributes, Object owner,
       Map<String, Object> resources) {
     this.wrapped = wrapped;
-    this.owner = owner;
     this.attributesMap = new HashMap<String, Object>();
 
     for (int i = 0; i < attributes.getLength(); i++) {
@@ -98,13 +95,7 @@ class UiBinderWidget<T extends Widget> implements UiBinderTag {
 
   public Object getWrapped() {
 
-    try {
-      BeanUtils.populate(this.wrapped, attributesMap);
-    } catch (Exception e) {
-      throw new ReflectionException("Error while setting properties for '"
-          + this.wrapped.getClass().getSimpleName() + "' in '"
-          + owner.getClass().getSimpleName() + ".ui.xml'", e);
-    }
+    UiBinderUtils.populateWidget(this.wrapped, attributesMap);
 
     return wrapped;
   }

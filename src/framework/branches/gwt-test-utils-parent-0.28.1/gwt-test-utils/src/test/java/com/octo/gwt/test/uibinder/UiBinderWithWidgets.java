@@ -11,6 +11,7 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.PushButton;
+import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class UiBinderWithWidgets extends Composite {
@@ -40,6 +41,9 @@ public class UiBinderWithWidgets extends Composite {
 
   @UiField
   PushButton pushButton;
+
+  @UiField
+  VerticalPanel verticalPanel;
 
   public UiBinderWithWidgets(String... names) {
     providedLabel = new ProvidedLabel("my provided string");
