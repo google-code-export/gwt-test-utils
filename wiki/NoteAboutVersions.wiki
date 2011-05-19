@@ -4,9 +4,10 @@
 
 An important thing to know about _gwt-test-utils_ is that it relies on _GWT_ internal APIs.
 
-So, when a new GWT version is released, its compatibility with the current version of _gwt-test-utils_ cannot be ensured. In order to make them work together, we may have to apply some modifications on the framework internal APIs ; those changes could, in turn, break the framework's compatibility with older versions of _GWT_.
+So, when a new GWT version is released, its compatibility with the current version of _gwt-test-utils_ cannot be ensured. 
+In order to make them work together, we may have to apply some modifications on the framework internal APIs ; those changes could, in turn, break the framework's compatibility with older versions of _GWT_.
 
-Here is a recap of the latest versions of the frameworks compatible with a given GWT version :
+Here is a recap of the latest versions of the frameworks compatible with a given _GWT_ version :
 
 || GWT version || Latest gwt-test-utils compatible version ||
 || *GWT 2.3.0* || gwt-test-utils-0.29 ||
@@ -14,7 +15,7 @@ Here is a recap of the latest versions of the frameworks compatible with a given
 
 = Public API modifications =
 
-Since _gwt-test-utils-1.0_ has not been released yet, its public API might evolve if we realize there is a better and easier way to write GWT test code.
+Since _gwt-test-utils-1.0_ has not been released yet, its public API might evolve if we realize there is a better and easier way to write  _GWT _ test code.
 If such a modification is introduced in a release, it would be listed in the [http://code.google.com/p/gwt-test-utils/wiki/HowToMigrateToLastestVersion How to migrate to lastest version] wiki page.
 
 Note that from version 0.28, the public API *should be compatible from one version to another*.
