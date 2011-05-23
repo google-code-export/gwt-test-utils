@@ -3,6 +3,7 @@ package com.octo.gwt.test.uibinder;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
@@ -20,6 +21,8 @@ public class UiBinderWithWidgets extends Composite {
   }
 
   private static MyUiBinder uiBinder = GWT.create(MyUiBinder.class);
+
+  private final String uiFactoryLabelText;
 
   @UiField
   Button button;
@@ -43,10 +46,17 @@ public class UiBinderWithWidgets extends Composite {
   PushButton pushButton;
 
   @UiField
+  UiConstructorLabel uiConstructorLabel;
+
+  @UiField
+  UiFactoryLabel uiFactoryLabel;
+
+  @UiField
   VerticalPanel verticalPanel;
 
   public UiBinderWithWidgets(String... names) {
     providedLabel = new ProvidedLabel("my provided string");
+    this.uiFactoryLabelText = names[0];
 
     initWidget(uiBinder.createAndBindUi(this));
     for (String name : names) {
@@ -57,6 +67,12 @@ public class UiBinderWithWidgets extends Composite {
   @UiHandler("button")
   void handleClick(ClickEvent e) {
     listBox.setVisibleItemCount(2);
+  }
+
+  /** Used by MyUiBinder to instantiate UiFactoryLabel */
+  @UiFactory
+  UiFactoryLabel makeUiFactoryLabel() { // method name is insignificant
+    return new UiFactoryLabel(uiFactoryLabelText);
   }
 
 }

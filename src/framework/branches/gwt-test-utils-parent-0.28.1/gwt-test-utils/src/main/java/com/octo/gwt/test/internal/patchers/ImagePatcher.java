@@ -21,7 +21,17 @@ public class ImagePatcher extends AutomaticPatcher {
 
   private static final Pattern PATTERN = Pattern.compile("^(\\d+).*$");
 
-  public static int getDim(Image image, String dim) {
+  @PatchMethod
+  public static int getHeight(Image image) {
+    return getDim(image, "height");
+  }
+
+  @PatchMethod
+  public static int getWidth(Image image) {
+    return getDim(image, "width");
+  }
+
+  private static int getDim(Image image, String dim) {
     ImageElement elem = image.getElement().cast();
     String width = elem.getStyle().getProperty(dim);
     if (width == null)
@@ -31,16 +41,6 @@ public class ImagePatcher extends AutomaticPatcher {
       return Integer.parseInt(m.group(1));
     }
     return 0;
-  }
-
-  @PatchMethod
-  public static int getHeight(Image image) {
-    return getDim(image, "height");
-  }
-
-  @PatchMethod
-  public static int getWidth(Image image) {
-    return getDim(image, "width");
   }
 
   @Override

@@ -169,20 +169,6 @@ public class GwtPatcherUtils {
       throw new IllegalArgumentException("the class to patch cannot be null");
     }
 
-    int modifiers = c.getModifiers();
-
-    if (Modifier.isAnnotation(modifiers)) {
-      throw new IllegalArgumentException(
-          "the class to patch cannot be an annotation");
-    }
-    if (Modifier.isInterface(modifiers)) {
-      throw new IllegalArgumentException(
-          "the class to patch cannot be an interface");
-    }
-    if (Modifier.isEnum(modifiers)) {
-      throw new IllegalArgumentException("the class to patch cannot be an enum");
-    }
-
     c.setModifiers(Modifier.PUBLIC);
   }
 

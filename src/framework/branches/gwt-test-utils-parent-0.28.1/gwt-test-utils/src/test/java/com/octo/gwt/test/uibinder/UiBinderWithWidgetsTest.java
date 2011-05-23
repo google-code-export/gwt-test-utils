@@ -35,10 +35,22 @@ public class UiBinderWithWidgetsTest extends GwtTestTest {
     Assert.assertEquals(MyClientBundle.INSTANCE.testImageResource().getURL(),
         w.image.getUrl());
 
-    Assert.assertEquals("my label", w.providedLabel.getText());
+    Assert.assertEquals("my provided label", w.providedLabel.getText());
     Assert.assertEquals("custom text setup in ui.xml",
         w.providedLabel.getCustomText());
-    Assert.assertEquals("my provided string", w.providedLabel.myString);
+    Assert.assertEquals("my provided string", w.providedLabel.providedString);
+
+    Assert.assertEquals("my UiFactory label", w.uiFactoryLabel.getText());
+    Assert.assertEquals("custom text setup in ui.xml",
+        w.uiFactoryLabel.getCustomText());
+    Assert.assertEquals("gael", w.uiFactoryLabel.uiFactoryString);
+
+    Assert.assertEquals("my UiConstructor label",
+        w.uiConstructorLabel.getText());
+    Assert.assertEquals("custom text setup in ui.xml",
+        w.uiConstructorLabel.getCustomText());
+    Assert.assertEquals("uiConstructor property",
+        w.uiConstructorLabel.uiConstructorLabel);
 
     Label label = (Label) wrappedPanel.getWidget(1);
     Assert.assertNotNull(label);
