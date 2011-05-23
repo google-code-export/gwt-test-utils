@@ -162,6 +162,17 @@ public class UiBinderTagBuilder<T> {
     U instance = getProvidedUiField(clazz);
 
     if (instance == null) {
+      try {
+        // try to create it with any custom GwtCreateHandler or with
+        // DefaultGwtCreateHandler (if there is an empty constructor)
+        instance = (U) GWT.create(clazz);
+      } catch (Exception e) {
+        // just keep trying with @UiFactory or @UiConstructor
+        e.printStackTrace();
+      }
+    }
+
+    if (instance == null) {
       instance = getObjectFromUiFactory(clazz);
     }
 
@@ -170,7 +181,10 @@ public class UiBinderTagBuilder<T> {
     }
 
     if (instance == null) {
-      instance = (U) GWT.create(clazz);
+      throw new GwtTestUiBinderException(
+          clazz.getName()
+              + " has no default (zero args) constructor. To fix this, you can define a @UiFactory method on the UiBinder's owner, or annotate a constructor of "
+              + clazz.getSimpleName() + " with @UiConstructor.");
     }
 
     return instance;
@@ -192,18 +206,19 @@ public class UiBinderTagBuilder<T> {
     for (Constructor<?> cons : clazz.getDeclaredConstructors()) {
       if (cons.getAnnotation(UiConstructor.class) != null) {
         Constructor<U> uiConstructor = (Constructor<U>) cons;
-        String[] arguments = getUiConstructorArgs(attributes);
+        String[] args = getUiConstructorArgs(clazz, attributes);
         try {
-          return uiConstructor.newInstance((Object[]) arguments);
+          return GwtReflectionUtils.instantiateClass(uiConstructor,
+              (Object[]) args);
         } catch (Exception e) {
           StringBuilder sb = new StringBuilder();
           sb.append("Error while executing instruction 'new ").append(
               clazz.getSimpleName()).append("(");
-          for (String argument : arguments) {
-            sb.append(argument);
+          for (String arg : args) {
+            sb.append("\"" + arg + "\"");
             sb.append(", ");
           }
-          sb.replace(sb.length() - 3, sb.length() - 1, "')");
+          sb.replace(sb.length() - 2, sb.length() - 1, ");'");
 
           throw new GwtTestUiBinderException(sb.toString(), e);
         }
@@ -282,17 +297,29 @@ public class UiBinderTagBuilder<T> {
     return type;
   }
 
-  private String[] getUiConstructorArgs(Attributes attributes) {
+  private String[] getUiConstructorArgs(Class<?> clazz, Attributes attributes) {
     List<String> argsList = new ArrayList<String>();
 
     for (int i = 0; i < attributes.getLength(); i++) {
-      if (!UiBinderUtils.isUiFieldAttribute(attributes.getURI(i),
-          attributes.getLocalName(i))) {
+      String attrName = attributes.getLocalName(i);
+      if (!UiBinderUtils.isUiFieldAttribute(attributes.getURI(i), attrName)
+          && !isBeanProperty(clazz, attrName)) {
         argsList.add(attributes.getValue(i));
       }
     }
 
     return argsList.toArray(new String[0]);
+  }
+
+  private boolean isBeanProperty(Class<?> clazz, String attrName) {
+    String setter = "set" + Character.toUpperCase(attrName.charAt(0))
+        + attrName.substring(1);
+    for (Method m : clazz.getMethods()) {
+      if (setter.equals(m.getName()) && m.getParameterTypes().length == 1) {
+        return true;
+      }
+    }
+    return false;
   }
 
   private boolean shouldIgnoreTag(String nameSpaceURI, String localName) {

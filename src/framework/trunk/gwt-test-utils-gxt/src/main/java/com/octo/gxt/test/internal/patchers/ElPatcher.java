@@ -71,6 +71,11 @@ public class ElPatcher extends AutomaticPatcher {
     return el;
   }
 
+  @PatchMethod
+  public static El repaint(El el) {
+    return el;
+  }
+
   private static Element getWrappedElement(El el) {
     return GwtReflectionUtils.getPrivateFieldValue(el, "dom");
   }

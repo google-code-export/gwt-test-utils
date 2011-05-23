@@ -2,13 +2,13 @@ package com.octo.gwt.test.uibinder;
 
 import com.google.gwt.user.client.ui.Label;
 
-public class ProvidedLabel extends Label {
+public class UiFactoryLabel extends Label {
 
   private String customText;
-  final String providedString;
+  final String uiFactoryString;
 
-  ProvidedLabel(String providedString) {
-    this.providedString = providedString;
+  UiFactoryLabel(String uiFactoryString) {
+    this.uiFactoryString = uiFactoryString;
   }
 
   public String getCustomText() {
