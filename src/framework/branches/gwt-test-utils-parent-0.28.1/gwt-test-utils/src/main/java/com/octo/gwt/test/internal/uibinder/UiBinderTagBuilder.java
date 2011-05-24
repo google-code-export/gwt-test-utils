@@ -17,6 +17,7 @@ import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.octo.gwt.test.exceptions.GwtTestConfigurationException;
 import com.octo.gwt.test.exceptions.GwtTestUiBinderException;
 import com.octo.gwt.test.utils.FastStack;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
@@ -166,9 +167,8 @@ public class UiBinderTagBuilder<T> {
         // try to create it with any custom GwtCreateHandler or with
         // DefaultGwtCreateHandler (if there is an empty constructor)
         instance = (U) GWT.create(clazz);
-      } catch (Exception e) {
+      } catch (GwtTestConfigurationException e) {
         // just keep trying with @UiFactory or @UiConstructor
-        e.printStackTrace();
       }
     }
 

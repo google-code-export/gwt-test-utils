@@ -6,7 +6,6 @@ public class SimplePagerTest extends GwtTestTest {
 
   @Test
   public void checkSimplePager() {
-    // TODO : pass this test which deals with cellview API
     // // Arrange
     // // Create a CellList.
     // CellList<String> cellList = new CellList<String>(new TextCell());
