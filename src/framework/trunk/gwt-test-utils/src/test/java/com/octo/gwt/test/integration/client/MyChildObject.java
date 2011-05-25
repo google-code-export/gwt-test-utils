@@ -1,4 +1,4 @@
-package com.octo.gwt.test.integration;
+package com.octo.gwt.test.integration.client;
 
 import java.io.Serializable;
 

@@ -1,10 +1,8 @@
 package com.octo.gwt.test.internal;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -15,8 +13,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
 
 import javassist.CtClass;
 
@@ -25,6 +21,7 @@ import org.slf4j.LoggerFactory;
 
 import com.octo.gwt.test.Patcher;
 import com.octo.gwt.test.exceptions.GwtTestConfigurationException;
+import com.octo.gwt.test.internal.ClassesScanner.ClassFilter;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
@@ -37,14 +34,14 @@ class ConfigurationLoader {
   private static final Logger logger = LoggerFactory.getLogger(ConfigurationLoader.class);
 
   public static synchronized final ConfigurationLoader createInstance(
-      ClassLoader classLoader, String jsoClassName) {
+      ClassLoader classLoader) {
     if (INSTANCE != null) {
       throw new GwtTestConfigurationException(
           ConfigurationLoader.class.getSimpleName()
               + " instance has already been initialized");
     }
 
-    INSTANCE = new ConfigurationLoader(classLoader, jsoClassName);
+    INSTANCE = new ConfigurationLoader(classLoader);
 
     return INSTANCE;
   }
@@ -64,18 +61,14 @@ class ConfigurationLoader {
   private final ClassSubstituer classSubstituer;
 
   private final List<String> delegateList;
-  private final String jsoClassName;
-  private final Set<String> jsoSubClasses;
   private final MethodRemover methodRemover;
   private final Map<String, Patcher> patchers;
   private boolean processedModuleFile = false;
   private final Set<String> scanPackageSet;
 
-  private ConfigurationLoader(ClassLoader classLoader, String jsoClassName) {
+  private ConfigurationLoader(ClassLoader classLoader) {
     this.classLoader = classLoader;
     this.classSubstituer = new ClassSubstituer();
-    this.jsoClassName = jsoClassName;
-    this.jsoSubClasses = new HashSet<String>();
     this.delegateList = new ArrayList<String>();
     this.scanPackageSet = new HashSet<String>();
     this.methodRemover = new MethodRemover();
@@ -93,46 +86,12 @@ class ConfigurationLoader {
     return Collections.unmodifiableList(delegateList);
   }
 
-  public Set<String> getJSOSubClasses() {
-    return jsoSubClasses;
-  }
-
   public JavaClassModifier getMethodRemover() {
     return methodRemover;
   }
 
   public Map<String, Patcher> getPatchers() {
     return patchers;
-  }
-
-  private List<String> findScannedClasses() {
-    List<String> classList = new ArrayList<String>();
-    for (String s : scanPackageSet) {
-      String path = s.replaceAll("\\.", "/");
-      logger.debug("Scan package " + s);
-      try {
-        Enumeration<URL> l = classLoader.getResources(path);
-        while (l.hasMoreElements()) {
-          URL url = l.nextElement();
-          String u = url.toExternalForm();
-          if (u.startsWith("file:")) {
-            String directoryName = u.substring("file:".length());
-            directoryName = URLDecoder.decode(directoryName, "UTF-8");
-            loadClassesFromDirectory(new File(directoryName), s, classList);
-          } else if (u.startsWith("jar:file:")) {
-            loadClassesFromJarFile(u.substring("jar:file:".length()), s,
-                classList);
-          } else {
-            throw new IllegalArgumentException("Not managed class container "
-                + u);
-          }
-        }
-      } catch (Exception e) {
-        throw new GwtTestConfigurationException(
-            "Error while scanning class from package '" + s + "'", e);
-      }
-    }
-    return classList;
   }
 
   private boolean hasDefaultConstructor(Class<?> clazz) {
@@ -143,59 +102,19 @@ class ConfigurationLoader {
     }
   }
 
-  private void loadClassesFromDirectory(File directoryToScan, String current,
-      List<String> classList) {
-    logger.debug("Scan directory " + directoryToScan);
-    for (File f : directoryToScan.listFiles()) {
-      if (f.isDirectory()) {
-        if (!".".equals(f.getName()) && !"..".equals(f.getName())) {
-          loadClassesFromDirectory(f, current + "." + f.getName(), classList);
-        }
-      } else {
-        if (f.getName().endsWith(".class")) {
-          classList.add(current
-              + "."
-              + f.getName().substring(0,
-                  f.getName().length() - ".class".length()));
-        }
-      }
-    }
-    logger.debug("Directory scanned " + directoryToScan);
-  }
-
-  private void loadClassesFromJarFile(String path, String s,
-      List<String> classList) throws Exception {
-    String prefix = path.substring(path.indexOf("!") + 2);
-    String jarName = path.substring(0, path.indexOf("!"));
-    jarName = URLDecoder.decode(jarName, "UTF-8");
-    logger.debug("Load classes from jar " + jarName);
-    JarFile jar = new JarFile(jarName);
-    Enumeration<JarEntry> entries = jar.entries();
-    while (entries.hasMoreElements()) {
-      JarEntry entry = entries.nextElement();
-      if (entry.getName().startsWith(prefix)
-          && entry.getName().endsWith(".class")) {
-        String className = entry.getName();
-        className = className.substring(0,
-            className.length() - ".class".length());
-        className = className.replaceAll("\\/", ".");
-        classList.add(className);
-      }
-    }
-    logger.debug("Classes loaded from jar " + jarName);
-  }
-
   private void loadPatchersAndJavaScriptObjects() {
-    List<String> classList = findScannedClasses();
-    CtClass jsoCtClass = GwtClassPool.getClass(jsoClassName);
-    for (String className : classList) {
-      CtClass ctClass = GwtClassPool.getClass(className);
-      if (ctClass.subclassOf(jsoCtClass) && !ctClass.equals(jsoCtClass)) {
-        jsoSubClasses.add(className);
-      } else if (ctClass.hasAnnotation(PatchClass.class)) {
+    ClassFilter patchClassFilter = new ClassFilter() {
 
-        treatPatchClass(ctClass);
+      public boolean accept(CtClass ctClass) {
+        return ctClass.hasAnnotation(PatchClass.class);
       }
+    };
+
+    Set<CtClass> patchClasses = ClassesScanner.getInstance().findClasses(
+        patchClassFilter, scanPackageSet);
+
+    for (CtClass patchClass : patchClasses) {
+      treatPatchClass(patchClass);
     }
   }
 

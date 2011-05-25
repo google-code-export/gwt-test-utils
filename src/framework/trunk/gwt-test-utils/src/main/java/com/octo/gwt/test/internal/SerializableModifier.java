@@ -134,6 +134,19 @@ public class SerializableModifier implements JavaClassModifier {
     }
 
     CtClass serializableCtClass = GwtClassPool.getCtClass(Serializable.class);
+    CtClass isSerializableCtClass = GwtClassPool.getCtClass(IsSerializable.class);
+
+    // substitute isSerializable with Serializable
+    if (classToModify.subtypeOf(isSerializableCtClass)) {
+      CtClass[] interfaces = classToModify.getInterfaces();
+      for (int i = 0; i < interfaces.length; i++) {
+        if (isSerializableCtClass.equals(interfaces[i])) {
+          interfaces[i] = serializableCtClass;
+        }
+      }
+      classToModify.setInterfaces(interfaces);
+    }
+
     if (!classToModify.subtypeOf(serializableCtClass)) {
       return;
     }
