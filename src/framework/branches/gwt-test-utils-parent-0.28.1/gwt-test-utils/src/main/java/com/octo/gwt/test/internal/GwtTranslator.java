@@ -1,7 +1,6 @@
 package com.octo.gwt.test.internal;
 
 import java.util.Map;
-import java.util.Set;
 import java.util.regex.Pattern;
 
 import javassist.ClassPool;
@@ -24,28 +23,24 @@ class GwtTranslator implements Translator {
 
   private static final Pattern TEST_PATTERN = Pattern.compile("^.*[T|t][E|e][S|s][T|t].*$");
 
-  private final String jsoClassName;
-  private final Set<String> jsoSubTypes;
+  private final CtClass jsoClass;
   private final Patcher overlayPatcher = new OverlayPatcher();
   private final Map<String, Patcher> patchers;
   private final SerializableModifier serializableModifier = new SerializableModifier();
 
-  public GwtTranslator(Map<String, Patcher> patchers, String jsoClassName,
-      Set<String> jsoSubTypes) {
-    this.jsoClassName = jsoClassName;
-    this.jsoSubTypes = jsoSubTypes;
+  public GwtTranslator(Map<String, Patcher> patchers) {
     this.patchers = patchers;
+    this.jsoClass = GwtClassPool.getClass("com.google.gwt.core.client.JavaScriptObject");
   }
 
   public void onLoad(ClassPool pool, String className) throws NotFoundException {
-    if (!jsoClassName.equals(className)) {
+    if (!className.equals(jsoClass.getName())) {
       patchClass(pool.get(className));
     }
   }
 
   public void start(ClassPool pool) throws NotFoundException {
-    // patch JavaScriptObject first
-    patchJSO(pool);
+    patchClass(jsoClass);
   }
 
   private void applyJavaClassModifier(CtClass ctClass) {
@@ -70,8 +65,13 @@ class GwtTranslator implements Translator {
 
   private void applyPatcher(CtClass classToModify) {
     Patcher patcher = patchers.get(classToModify.getName());
-    if (patcher == null && jsoSubTypes.contains(classToModify.getName())) {
-      patcher = overlayPatcher;
+    try {
+      if (patcher == null && classToModify.subtypeOf(jsoClass)) {
+        patcher = overlayPatcher;
+      }
+    } catch (NotFoundException e) {
+      // should never happend
+      throw new GwtTestPatchException(e);
     }
 
     if (patcher == null) {
@@ -119,10 +119,5 @@ class GwtTranslator implements Translator {
     applyPatcher(classToModify);
     modifiyClass(classToModify);
     logger.debug("Class '" + classToModify.getName() + "' has been loaded");
-  }
-
-  private void patchJSO(ClassPool pool) throws NotFoundException {
-    assert jsoSubTypes.size() > 0 : "No JavaScriptObject subtype detected";
-    patchClass(pool.get(jsoClassName));
   }
 }

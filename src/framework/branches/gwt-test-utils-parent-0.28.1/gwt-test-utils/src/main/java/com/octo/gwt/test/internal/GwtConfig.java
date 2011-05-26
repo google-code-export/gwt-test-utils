@@ -6,6 +6,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.UIObject.DebugIdImpl;
 import com.octo.gwt.test.GwtLogHandler;
+import com.octo.gwt.test.WindowOperationsHandler;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 /**
@@ -28,6 +29,7 @@ public class GwtConfig {
   private Locale locale;
   private GwtLogHandler logHandler;
   private String moduleName;
+  private WindowOperationsHandler windowOperationsHandler;
 
   private GwtConfig() {
 
@@ -51,6 +53,10 @@ public class GwtConfig {
 
   public String getModuleName() {
     return moduleName;
+  }
+
+  public WindowOperationsHandler getWindowOperationsHandler() {
+    return windowOperationsHandler;
   }
 
   public void reset() {
@@ -82,6 +88,11 @@ public class GwtConfig {
 
   public void setModuleName(String moduleName) {
     this.moduleName = moduleName;
+  }
+
+  public void setWindowOperationsHandler(
+      WindowOperationsHandler windowOperationsHandler) {
+    this.windowOperationsHandler = windowOperationsHandler;
   }
 
 }
