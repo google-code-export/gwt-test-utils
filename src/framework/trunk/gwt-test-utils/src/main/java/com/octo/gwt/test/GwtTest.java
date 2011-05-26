@@ -66,6 +66,7 @@ public abstract class GwtTest {
   public void setUpGwtTest() throws Exception {
     GwtConfig.get().setLocale(getLocale());
     GwtConfig.get().setLogHandler(getLogHandler());
+    GwtConfig.get().setWindowOperationsHandler(getWindowOperationsHandler());
     GwtConfig.get().setEnsureDebugId(ensureDebugId());
 
     String moduleName = getCheckedModuleName();

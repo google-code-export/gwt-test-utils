@@ -46,8 +46,14 @@ public class JavaScriptObjectPatcher extends AutomaticPatcher {
   }
 
   private static String elementToString(Element elem) {
-    StringBuilder sb = new StringBuilder();
     String tagName = elem.getTagName().toLowerCase();
+
+    // handle the particular case of <br> element
+    if ("br".equals(tagName)) {
+      return "<br>" + elem.getInnerText();
+    }
+
+    StringBuilder sb = new StringBuilder();
     sb.append("<").append(tagName).append(" ");
 
     PropertyContainer attrs = JavaScriptObjects.getObject(elem,
