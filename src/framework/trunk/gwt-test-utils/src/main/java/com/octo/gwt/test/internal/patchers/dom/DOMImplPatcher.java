@@ -232,12 +232,11 @@ public class DOMImplPatcher extends AutomaticPatcher {
 
   @PatchMethod
   public static String getInnerText(Object domImpl, Element elem) {
-    Text textNode = getTextNode(elem);
-    if (textNode != null) {
-      return textNode.getData();
-    } else {
-      return "";
-    }
+    StringBuilder sb = new StringBuilder("");
+
+    appendInnerTextRecursive(elem, sb);
+
+    return sb.toString();
   }
 
   @PatchMethod
@@ -347,10 +346,7 @@ public class DOMImplPatcher extends AutomaticPatcher {
 
   @PatchMethod
   public static void selectClear(Object domImpl, SelectElement select) {
-    List<Node> innerList = JavaScriptObjects.getObject(select.getChildNodes(),
-        JsoProperties.NODE_LIST_INNER_LIST);
-
-    innerList.clear();
+    clearChildNodes(select);
     select.setSelectedIndex(-1);
   }
 
@@ -374,8 +370,6 @@ public class DOMImplPatcher extends AutomaticPatcher {
     return JavaScriptObjects.newNodeList(innerList);
   }
 
-  // Abstract methods
-
   @PatchMethod
   public static void selectRemoveOption(Object domImpl, SelectElement select,
       int index) {
@@ -389,13 +383,8 @@ public class DOMImplPatcher extends AutomaticPatcher {
 
   @PatchMethod
   public static void setInnerText(Object domImpl, Element elem, String text) {
-    Text textNode = getTextNode(elem);
-    if (textNode != null) {
-      textNode.setData(text);
-    } else {
-      textNode = JavaScriptObjects.newText(text);
-      elem.appendChild(textNode);
-    }
+    clearChildNodes(elem);
+    elem.appendChild(JavaScriptObjects.newText(text));
   }
 
   @PatchMethod
@@ -408,21 +397,33 @@ public class DOMImplPatcher extends AutomaticPatcher {
     return elem.toString();
   }
 
-  private static NodeList<Node> getChildNodeList(Node node) {
-    return JavaScriptObjects.getObject(node, JsoProperties.NODE_LIST_FIELD);
-  }
-
-  private static Text getTextNode(Element elem) {
+  private static void appendInnerTextRecursive(Element elem, StringBuilder sb) {
     NodeList<Node> list = elem.getChildNodes();
 
-    for (int i = 0; i < list.getLength(); i++) {
+    for (int i = 0; i < elem.getChildNodes().getLength(); i++) {
       Node node = list.getItem(i);
-      if (Node.TEXT_NODE == node.getNodeType()) {
-        return node.cast();
+      switch (node.getNodeType()) {
+        case Node.TEXT_NODE:
+          Text text = node.cast();
+          sb.append(text.getData());
+          break;
+        case Node.ELEMENT_NODE:
+          Element childNode = node.cast();
+          appendInnerTextRecursive(childNode, sb);
+          break;
       }
     }
+  }
 
-    return null;
+  private static void clearChildNodes(Element elem) {
+    List<Node> innerList = JavaScriptObjects.getObject(elem.getChildNodes(),
+        JsoProperties.NODE_LIST_INNER_LIST);
+
+    innerList.clear();
+  }
+
+  private static NodeList<Node> getChildNodeList(Node node) {
+    return JavaScriptObjects.getObject(node, JsoProperties.NODE_LIST_FIELD);
   }
 
   private static void refreshSelect(SelectElement select) {
