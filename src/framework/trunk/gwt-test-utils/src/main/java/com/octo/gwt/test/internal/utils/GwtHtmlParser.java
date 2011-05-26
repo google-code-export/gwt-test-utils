@@ -33,7 +33,8 @@ public class GwtHtmlParser {
 
     public List<Node> visitedNodes;
 
-    private final Map<org.htmlparser.Node, Element> map = new HashMap<org.htmlparser.Node, Element>();
+    private Element currentParent;
+    private final Map<org.htmlparser.Node, Element> tagMap = new HashMap<org.htmlparser.Node, Element>();
 
     private GwtNodeVisitor() {
       super(true);
@@ -42,9 +43,10 @@ public class GwtHtmlParser {
 
     @Override
     public void visitStringNode(Text string) {
-      Element parent = getParent(string);
-      if (parent != null) {
-        parent.setInnerText(string.getText());
+      if (currentParent != null) {
+        currentParent.setInnerText(string.getText());
+        // the parent element has been treated
+        currentParent = null;
       } else {
         visitedNodes.add(JavaScriptObjects.newText(string.getText()));
       }
@@ -53,11 +55,11 @@ public class GwtHtmlParser {
     @Override
     public void visitTag(Tag tag) {
       if (tag.getTagName().startsWith("!")) {
-        // Commentaire ou !DOCTYPE
+        // comment or !DOCTYPE
         return;
       }
       Element e = Document.get().createElement(tag.getTagName());
-      map.put(tag, e);
+      tagMap.put(tag, e);
       for (Object o : tag.getAttributesEx()) {
         Attribute a = (Attribute) o;
         if ("id".equalsIgnoreCase(a.getName())) {
@@ -70,17 +72,18 @@ public class GwtHtmlParser {
           e.setAttribute(a.getName(), a.getValue());
         }
       }
-      Element parent = getParent(tag);
+
+      Element parent = tagMap.get(tag.getParent());
       if (parent != null) {
         parent.appendChild(e);
       } else {
         visitedNodes.add(e);
       }
 
-    }
+      // if (tag.getChildren() != null) {
+      currentParent = e;
+      // }
 
-    private Element getParent(org.htmlparser.Node node) {
-      return map.get(node.getParent());
     }
   }
 

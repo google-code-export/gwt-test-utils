@@ -7,6 +7,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 
+import com.google.gwt.user.client.Window;
 import com.octo.gwt.test.exceptions.GwtTestConfigurationException;
 import com.octo.gwt.test.internal.GwtConfig;
 import com.octo.gwt.test.internal.GwtReset;
@@ -154,6 +155,21 @@ public abstract class GwtTest {
 
   protected GwtLogHandler getLogHandler() {
     // this method can be overrided by subclass
+    return null;
+  }
+
+  /**
+   * Override this method to provide a custom {@link WindowOperationsHandler}.
+   * 
+   * <p>
+   * This default implementation return null.
+   * </p>
+   * .
+   * 
+   * @return A custom Window to which static method calls from {@link Window}
+   *         are delegate.
+   */
+  protected WindowOperationsHandler getWindowOperationsHandler() {
     return null;
   }
 
