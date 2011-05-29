@@ -15,6 +15,8 @@ import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.CheckBox;
@@ -42,9 +44,11 @@ import com.octo.gwt.test.csv.tools.NodeObjectFinder;
 import com.octo.gwt.test.csv.tools.ObjectFinder;
 import com.octo.gwt.test.csv.tools.VisitorObjectFinder;
 import com.octo.gwt.test.csv.tools.WidgetVisitor;
+import com.octo.gwt.test.internal.patchers.dom.JavaScriptObjects;
 import com.octo.gwt.test.internal.utils.ArrayUtils;
 import com.octo.gwt.test.internal.utils.EventUtils;
 import com.octo.gwt.test.internal.utils.GwtStringUtils;
+import com.octo.gwt.test.internal.utils.JsoProperties;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 import com.octo.gwt.test.utils.WidgetUtils;
 import com.octo.gwt.test.utils.events.Browser;
@@ -147,6 +151,10 @@ public abstract class GwtCsvTest extends GwtTest {
    */
   @CsvMethod
   public void assertExact(String value, String... params) {
+    if ("/view/errorMessageBlockContainer/contentPanel/widget(0)".equals(params[0])) {
+      System.out.println("ok");
+    }
+
     value = GwtStringUtils.resolveBackSlash(value);
 
     String actualValue = getString(params);
@@ -777,6 +785,36 @@ public abstract class GwtCsvTest extends GwtTest {
 
   protected void dispatchNotCheckedEvent(Widget target, Event... events) {
     for (Event event : events) {
+
+      // set the target if it's not
+      Element targetElement = JavaScriptObjects.getObject(event,
+          JsoProperties.EVENT_TARGET);
+      if (targetElement == null) {
+        JavaScriptObjects.setProperty(event, JsoProperties.EVENT_TARGET,
+            target.getElement());
+      }
+
+      // set the related target
+      Element relatedTargetElement = JavaScriptObjects.getObject(event,
+          JsoProperties.EVENT_RELATEDTARGET);
+
+      if (relatedTargetElement == null) {
+        switch (event.getTypeInt()) {
+          case Event.ONMOUSEOVER:
+          case Event.ONMOUSEOUT:
+            Widget parent = target.getParent();
+            if (parent != null) {
+              relatedTargetElement = parent.getElement();
+            } else {
+              relatedTargetElement = Document.get().getDocumentElement();
+            }
+            break;
+        }
+
+        JavaScriptObjects.setProperty(event, JsoProperties.EVENT_RELATEDTARGET,
+            relatedTargetElement);
+      }
+
       if (CheckBox.class.isInstance(target)
           && event.getTypeInt() == Event.ONCLICK) {
         CheckBox checkBox = (CheckBox) target;

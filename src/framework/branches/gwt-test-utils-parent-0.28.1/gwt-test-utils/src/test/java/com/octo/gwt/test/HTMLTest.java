@@ -21,6 +21,24 @@ public class HTMLTest extends GwtTestTest {
   }
 
   @Test
+  public void checkText() {
+    // Arrange
+    HTML html = new HTML("this is a <b>great</b> test.<BR/>Enjoy!");
+
+    // Act
+    String result = html.getText();
+
+    // Assert
+    Assert.assertEquals("this is a great test.Enjoy!", result);
+
+    // Act 2
+    html.setText("override <b>not bold text</b>");
+
+    // Assert 2
+    Assert.assertEquals("override <b>not bold text</b>", html.getText());
+  }
+
+  @Test
   public void checkToString() {
     // Arrange
     HTML html = new HTML("this is a <b>great</b> test.<BR/>Enjoy!");

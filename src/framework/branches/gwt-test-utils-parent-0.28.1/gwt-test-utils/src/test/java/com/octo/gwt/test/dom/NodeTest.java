@@ -52,15 +52,15 @@ public class NodeTest extends GwtTestTest {
     child.getStyle().setBackgroundColor("black");
     n.appendChild(child);
 
-    Element e = n.cast();
-    e.setInnerText("text");
-
     // Test
     DivElement newNode = n.cloneNode(true).cast();
 
     // Assert
     Assert.assertEquals(Node.ELEMENT_NODE, newNode.getNodeType());
-    Assert.assertEquals("text", newNode.getInnerText());
+    DivElement source = n.cast();
+    Assert.assertEquals(source.getInnerText(), newNode.getInnerText());
+    Assert.assertEquals(source.getInnerHTML(), newNode.getInnerHTML());
+    Assert.assertEquals(source.toString(), newNode.toString());
 
     Assert.assertNull(newNode.getParentNode());
     Assert.assertEquals(n.getChildNodes().getLength(),
@@ -74,11 +74,6 @@ public class NodeTest extends GwtTestTest {
     Style newStyle = childElement.getStyle();
     Assert.assertTrue(newStyle != child.getStyle());
     Assert.assertEquals("black", newStyle.getBackgroundColor());
-
-    Assert.assertEquals(Node.TEXT_NODE,
-        newNode.getChildNodes().getItem(1).getNodeType());
-    Text textNode = newNode.getChildNodes().getItem(1).cast();
-    Assert.assertEquals("text", textNode.getData());
   }
 
   @Test
