@@ -1,4 +1,4 @@
-package com.octo.gwt.test.internal.utils;
+package com.octo.gwt.test.utils.events;
 
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
@@ -18,18 +18,15 @@ import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 import com.octo.gwt.test.internal.patchers.dom.JavaScriptObjects;
+import com.octo.gwt.test.internal.utils.JsoProperties;
 import com.octo.gwt.test.utils.WidgetUtils;
-import com.octo.gwt.test.utils.events.Browser;
-import com.octo.gwt.test.utils.events.EventBuilder;
 
 /**
  * 
- * Class responsible of dispatching {@link Event}. <strong>For internal use
- * only.</strong>
+ * Class responsible of dispatching {@link Event} object to {@link Widget}.
  * 
  * @author Gael Lazzari
  * 
- * @see Browser
  */
 public class EventDispatcher {
 

@@ -40,10 +40,10 @@ import com.octo.gwt.test.csv.tools.ObjectFinder;
 import com.octo.gwt.test.csv.tools.VisitorObjectFinder;
 import com.octo.gwt.test.csv.tools.WidgetVisitor;
 import com.octo.gwt.test.internal.utils.ArrayUtils;
-import com.octo.gwt.test.internal.utils.EventDispatcher;
-import com.octo.gwt.test.internal.utils.EventDispatcher.BrowserErrorHandler;
 import com.octo.gwt.test.internal.utils.GwtStringUtils;
 import com.octo.gwt.test.utils.WidgetUtils;
+import com.octo.gwt.test.utils.events.EventDispatcher;
+import com.octo.gwt.test.utils.events.EventDispatcher.BrowserErrorHandler;
 
 public abstract class GwtCsvTest extends GwtTest {
 
@@ -92,7 +92,7 @@ public abstract class GwtCsvTest extends GwtTest {
   private static final Class<?>[] baseList = {
       String.class, Integer.class, int.class, Class.class};
 
-  private final EventDispatcher DISPATCHER = EventDispatcher.newInstance(new BrowserErrorHandler() {
+  private final EventDispatcher dispatcher = EventDispatcher.newInstance(new BrowserErrorHandler() {
 
     public void onError(String errorMessage) {
       Assert.fail(csvRunner.getAssertionErrorMessagePrefix() + errorMessage);
@@ -272,7 +272,7 @@ public abstract class GwtCsvTest extends GwtTest {
   @CsvMethod
   public void blur(String... params) {
     Widget target = getObject(Widget.class, params);
-    DISPATCHER.blur(target);
+    dispatcher.blur(target);
   }
 
   @CsvMethod
@@ -283,19 +283,19 @@ public abstract class GwtCsvTest extends GwtTest {
   @CsvMethod
   public void change(String... params) {
     Widget target = getObject(Widget.class, params);
-    DISPATCHER.change(target);
+    dispatcher.change(target);
   }
 
   @CsvMethod
   public void click(String... params) {
     Widget target = getObject(Widget.class, params);
-    DISPATCHER.click(target);
+    dispatcher.click(target);
   }
 
   @CsvMethod
   public void clickComplexPanel(String index, String... params) {
     ComplexPanel panel = getObject(ComplexPanel.class, params);
-    DISPATCHER.click(panel, Integer.parseInt(index));
+    dispatcher.click(panel, Integer.parseInt(index));
   }
 
   @CsvMethod
@@ -304,25 +304,25 @@ public abstract class GwtCsvTest extends GwtTest {
     Grid grid = getObject(Grid.class, params);
     int row = Integer.parseInt(rowIndex);
     int column = Integer.parseInt(columnIndex);
-    DISPATCHER.click(grid, row, column);
+    dispatcher.click(grid, row, column);
   }
 
   @CsvMethod
   public void clickMenuItem(String index, String... params) {
     MenuBar menuBar = getObject(MenuBar.class, params);
-    DISPATCHER.click(menuBar, Integer.parseInt(index));
+    dispatcher.click(menuBar, Integer.parseInt(index));
   }
 
   @CsvMethod
   public void clickSimplePanel(String... params) {
     SimplePanel panel = getObject(SimplePanel.class, params);
-    DISPATCHER.click(panel);
+    dispatcher.click(panel);
   }
 
   @CsvMethod
   public void emptyTextBox(String... params) {
     TextBox textBox = getObject(TextBox.class, params);
-    DISPATCHER.emptyText(textBox);
+    dispatcher.emptyText(textBox);
   }
 
   @CsvMethod
@@ -330,15 +330,15 @@ public abstract class GwtCsvTest extends GwtTest {
       String... params) {
     SuggestBox suggestBox = getObject(SuggestBox.class, params);
 
-    DISPATCHER.fillText(suggestBox, content);
-    DISPATCHER.click(suggestBox, Integer.parseInt(index));
+    dispatcher.fillText(suggestBox, content);
+    dispatcher.click(suggestBox, Integer.parseInt(index));
   }
 
   @CsvMethod
   public void fillAndSelectInSuggestBoxByText(String content, String selected,
       String... params) {
     SuggestBox suggestBox = getObject(SuggestBox.class, params);
-    DISPATCHER.fillText(suggestBox, content);
+    dispatcher.fillText(suggestBox, content);
 
     List<MenuItem> menuItems = WidgetUtils.getMenuItems(suggestBox);
     int i = 0;
@@ -348,7 +348,7 @@ public abstract class GwtCsvTest extends GwtTest {
       MenuItem item = menuItems.get(i);
       if (selected.equals(item.getHTML()) || selected.equals(item.getText())) {
         index = i;
-        DISPATCHER.click(suggestBox, item);
+        dispatcher.click(suggestBox, item);
       }
       i++;
     }
@@ -360,19 +360,19 @@ public abstract class GwtCsvTest extends GwtTest {
   @CsvMethod
   public void fillInvisibleTextBox(String value, String... params) {
     TextBox textBox = getObject(TextBox.class, params);
-    DISPATCHER.fillText(textBox, false, value);
+    dispatcher.fillText(textBox, false, value);
   }
 
   @CsvMethod
   public void fillTextBox(String value, String... params) {
     TextBox textBox = getObject(TextBox.class, params);
-    DISPATCHER.fillText(textBox, value);
+    dispatcher.fillText(textBox, value);
   }
 
   @CsvMethod
   public void focus(String... params) {
     Widget target = getObject(Widget.class, params);
-    DISPATCHER.focus(target);
+    dispatcher.focus(target);
   }
 
   @CsvMethod
@@ -442,7 +442,7 @@ public abstract class GwtCsvTest extends GwtTest {
 
   @CsvMethod
   public void isEnabled(String... params) {
-    FocusWidget target = getObject(FocusWidget.class, params);
+    FocusWidget target = getFocusWidget(params);
     Assert.assertTrue(csvRunner.getAssertionErrorMessagePrefix() + "targeted "
         + target.getClass().getSimpleName() + " is not enabled",
         target.isEnabled());
@@ -457,7 +457,7 @@ public abstract class GwtCsvTest extends GwtTest {
 
   @CsvMethod
   public void isNotEnabled(String... params) {
-    FocusWidget target = getObject(FocusWidget.class, params);
+    FocusWidget target = getFocusWidget(params);
     Assert.assertFalse(csvRunner.getAssertionErrorMessagePrefix() + "targeted "
         + target.getClass().getSimpleName() + " is enabled", target.isEnabled());
   }
@@ -487,37 +487,37 @@ public abstract class GwtCsvTest extends GwtTest {
   @CsvMethod
   public void mouseDown(String... params) {
     Widget target = getObject(Widget.class, params);
-    DISPATCHER.mouseDown(target);
+    dispatcher.mouseDown(target);
   }
 
   @CsvMethod
   public void mouseMove(String... params) {
     Widget target = getObject(Widget.class, params);
-    DISPATCHER.mouseMove(target);
+    dispatcher.mouseMove(target);
   }
 
   @CsvMethod
   public void mouseOut(String... params) {
     Widget target = getObject(Widget.class, params);
-    DISPATCHER.mouseOut(target);
+    dispatcher.mouseOut(target);
   }
 
   @CsvMethod
   public void mouseOver(String... params) {
     Widget target = getObject(Widget.class, params);
-    DISPATCHER.mouseOver(target);
+    dispatcher.mouseOver(target);
   }
 
   @CsvMethod
   public void mouseUp(String... params) {
     Widget target = getObject(Widget.class, params);
-    DISPATCHER.mouseUp(target);
+    dispatcher.mouseUp(target);
   }
 
   @CsvMethod
   public void mouseWheel(String... params) {
     Widget target = getObject(Widget.class, params);
-    DISPATCHER.mouseWheel(target);
+    dispatcher.mouseWheel(target);
   }
 
   @CsvMethod
@@ -665,6 +665,14 @@ public abstract class GwtCsvTest extends GwtTest {
     }
   }
 
+  protected EventDispatcher getEventDispatcher() {
+    return dispatcher;
+  }
+
+  protected FocusWidget getFocusWidget(String... params) {
+    return getObject(FocusWidget.class, params);
+  }
+
   protected NodeObjectFinder getNodeObjectFinder(String prefix) {
     if ("root".equals(prefix)) {
       return new NodeObjectFinder() {
@@ -730,8 +738,8 @@ public abstract class GwtCsvTest extends GwtTest {
 
     if (selectedIndex > -1) {
       listBox.setSelectedIndex(selectedIndex);
-      DISPATCHER.click(listBox);
-      DISPATCHER.change(listBox);
+      dispatcher.click(listBox);
+      dispatcher.change(listBox);
     } else {
       errorMessage += WidgetUtils.getListBoxContentToString(listBox);
       Assert.fail(csvRunner.getAssertionErrorMessagePrefix() + errorMessage);

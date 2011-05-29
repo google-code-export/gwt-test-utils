@@ -16,12 +16,19 @@ import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.Widget;
-import com.octo.gwt.test.internal.utils.EventDispatcher;
-import com.octo.gwt.test.internal.utils.EventDispatcher.BrowserErrorHandler;
+import com.octo.gwt.test.utils.events.EventDispatcher.BrowserErrorHandler;
 
 /**
  * Provides several methods to simulate the occurring of browser events
  * (onClick, onKeyDown, onChange, etc.) caused by the interaction with a widget.
+ * 
+ * <p>
+ * It relies on an internal instance of {@link EventDispatcher}.
+ * </p>
+ * 
+ * @author Gael Lazzari
+ * 
+ * @see EventDispatcher
  */
 public class Browser {
 
