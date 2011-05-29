@@ -2,30 +2,22 @@ package com.octo.gwt.test.utils.events;
 
 import org.junit.Assert;
 
-import com.google.gwt.dom.client.Document;
-import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
-import com.google.gwt.event.shared.UmbrellaException;
 import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.ComplexPanel;
-import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
-import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.SuggestBox;
-import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
-import com.octo.gwt.test.internal.patchers.dom.JavaScriptObjects;
-import com.octo.gwt.test.internal.utils.JsoProperties;
-import com.octo.gwt.test.utils.WidgetUtils;
+import com.octo.gwt.test.internal.utils.EventDispatcher;
+import com.octo.gwt.test.internal.utils.EventDispatcher.BrowserErrorHandler;
 
 /**
  * Provides several methods to simulate the occurring of browser events
@@ -33,110 +25,109 @@ import com.octo.gwt.test.utils.WidgetUtils;
  */
 public class Browser {
 
+  private static final EventDispatcher DISPATCHER = EventDispatcher.newInstance(new BrowserErrorHandler() {
+
+    public void onError(String errorMessage) {
+      Assert.fail(errorMessage);
+    }
+  });
+
   /**
-   * Simulates a onblur event.
+   * Simulates a blur event.
+   * 
+   * @param target The targeted widget.
    */
   public static void blur(Widget target) {
-    dispatchEvent(target, EventBuilder.create(Event.ONBLUR).build());
+    DISPATCHER.blur(target);
   }
 
   /**
-   * Simulates a onchange event.
+   * Simulates a change event.
+   * 
+   * @param target The targeted widget.
    */
   public static void change(Widget target) {
-    dispatchEvent(target, EventBuilder.create(Event.ONCHANGE).build());
+    DISPATCHER.change(target);
   }
 
   /**
    * Simulates a click event on the widget with the given index inside a
    * ComplexPanel.
+   * 
+   * @param panel The targeted panel.
+   * @param index The index of the child widget to click inside the panel.
    */
   public static void click(ComplexPanel panel, int index) {
-    Widget target = panel.getWidget(index);
-    Event clickEvent = EventBuilder.create(Event.ONCLICK).setTarget(
-        target.getElement()).build();
-    assertCanApplyEvent(target, clickEvent);
-    dispatchEventInternal(panel, clickEvent);
+    DISPATCHER.click(panel, index);
   }
 
   /**
    * Simulates a click event on the Grid cell with the given indexes.
+   * 
+   * @param grid The targeted grid.
+   * @param row The row index of the cell to click.
+   * @param column The column index of the cell to click.
    */
   public static void click(Grid grid, int row, int column) {
-    Widget target = grid.getWidget(row, column);
-    Event clickEvent = EventBuilder.create(Event.ONCLICK).setTarget(
-        target.getElement()).build();
-    assertCanApplyEvent(target, clickEvent);
-    dispatchEventInternal(grid, clickEvent);
+    DISPATCHER.click(grid, row, column);
   }
 
   /**
    * Simulates a click event on the item of a MenuBar with the given index.
+   * 
+   * @param parent The targeted menu bar.
+   * @param clickedItemIndex The index of the child widget to click inside the
+   *          menu bar.
    */
   public static void click(MenuBar parent, int clickedItemIndex) {
-    click(parent, WidgetUtils.getMenuItems(parent).get(clickedItemIndex));
+    DISPATCHER.click(parent, clickedItemIndex);
   }
 
   /**
-   * Simulates a onchange event on a particular MenuItem of a MenuBar.
+   * Simulates a click event on a particular MenuItem of a MenuBar.
+   * 
+   * @param parent The targeted menu bar.
+   * @param clickedItem The widget to click inside the menu bar.
    */
   public static void click(MenuBar parent, MenuItem clickedItem) {
-    Event onMouseOver = EventBuilder.create(Event.ONMOUSEOVER).setTarget(
-        clickedItem.getElement()).build();
-    Event onMouseDown = EventBuilder.create(Event.ONMOUSEDOWN).setTarget(
-        clickedItem.getElement()).setButton(Event.BUTTON_LEFT).build();
-    Event onMouseUp = EventBuilder.create(Event.ONMOUSEUP).setTarget(
-        clickedItem.getElement()).setButton(Event.BUTTON_LEFT).build();
-    Event onClick = EventBuilder.create(Event.ONCLICK).setTarget(
-        clickedItem.getElement()).build();
-
-    assertCanApplyEvent(clickedItem, onMouseOver, onMouseDown, onMouseUp,
-        onClick);
-    dispatchEventInternal(parent, onMouseOver, onMouseDown, onMouseUp, onClick);
+    DISPATCHER.click(parent, clickedItem);
   }
 
   /**
    * Simulates a click event on the item of a SuggestBox with the given index.
+   * 
+   * @param parent The targeted suggest box.
+   * @param clickedItemIndex The index of the child widget to click inside the
+   *          suggest box.
    */
   public static void click(SuggestBox parent, int clickedItemIndex) {
-    click(parent, WidgetUtils.getMenuItems(parent).get(clickedItemIndex));
+    DISPATCHER.click(parent, clickedItemIndex);
   }
 
   /**
    * Simulates a click event on a particular MenuItem of a SuggestBox.
+   * 
+   * @param parent The targeted suggest box.
+   * @param clickedItem The child widget to click inside the suggest box.
+   * 
    */
   public static void click(SuggestBox parent, MenuItem clickedItem) {
-    Event onMouseOver = EventBuilder.create(Event.ONMOUSEOVER).setTarget(
-        clickedItem.getElement()).build();
-    Event onMouseDown = EventBuilder.create(Event.ONMOUSEDOWN).setTarget(
-        clickedItem.getElement()).setButton(Event.BUTTON_LEFT).build();
-    Event onMouseUp = EventBuilder.create(Event.ONMOUSEUP).setTarget(
-        clickedItem.getElement()).setButton(Event.BUTTON_LEFT).build();
-    Event onClick = EventBuilder.create(Event.ONCLICK).setTarget(
-        clickedItem.getElement()).build();
-
-    assertCanApplyEvent(clickedItem, onMouseOver, onMouseDown, onMouseUp,
-        onClick);
-    clickedItem.getCommand().execute();
+    DISPATCHER.click(parent, clickedItem);
   }
 
   /**
    * Simulates a click event.
+   * 
+   * @param The targeted widget.
    */
   public static void click(Widget target) {
-    Event onMouseOver = EventBuilder.create(Event.ONMOUSEOVER).setTarget(
-        target.getElement()).build();
-    Event onMouseDown = EventBuilder.create(Event.ONMOUSEDOWN).setButton(
-        Event.BUTTON_LEFT).build();
-    Event onMouseUp = EventBuilder.create(Event.ONMOUSEUP).setButton(
-        Event.BUTTON_LEFT).build();
-    Event onClick = EventBuilder.create(Event.ONCLICK).build();
-
-    dispatchEvent(target, onMouseOver, onMouseDown, onMouseUp, onClick);
+    DISPATCHER.click(target);
   }
 
   /**
    * Simulates a dblclick event.
+   * 
+   * @param The targeted widget.
    */
   public static void dblClick(Widget target) {
     dispatchEvent(target, EventBuilder.create(Event.ONDBLCLICK).build());
@@ -145,10 +136,14 @@ public class Browser {
   /**
    * Simulates an occurring of the given event due to an interaction with the
    * target widget.
+   * 
+   * @param target The targeted widget.
+   * @param browserErrorHandler The errorHandler to notify if a browser error
+   *          occurs.
+   * @param events Some events to dispatch.
    */
   public static void dispatchEvent(Widget target, Event... events) {
-    assertCanApplyEvent(target, events);
-    dispatchEventInternal(target, events);
+    DISPATCHER.dispatchEvent(target, events);
   }
 
   /**
@@ -175,39 +170,7 @@ public class Browser {
    *          isn't a {@link Widget} instance, nothing would be done.
    */
   public static void emptyText(HasText hasTextWidget) {
-    boolean changed = false;
-
-    int baseLength = hasTextWidget.getText().length();
-    for (int i = 0; i < baseLength; i++) {
-      Event keyDownEvent = EventBuilder.create(Event.ONKEYDOWN).setKeyCode(
-          KeyCodes.KEY_BACKSPACE).build();
-      dispatchEvent((Widget) hasTextWidget, keyDownEvent);
-
-      boolean keyDownEventPreventDefault = JavaScriptObjects.getBoolean(
-          keyDownEvent, JsoProperties.EVENT_PREVENTDEFAULT);
-
-      if (!keyDownEventPreventDefault) {
-        hasTextWidget.setText(hasTextWidget.getText().substring(0,
-            hasTextWidget.getText().length() - 1));
-        changed = true;
-      }
-
-    }
-
-    // don't have to check if the event can be dispatch since it's check
-    // before
-    Event keyUpEvent = EventBuilder.create(Event.ONKEYUP).setKeyCode(
-        KeyCodes.KEY_BACKSPACE).build();
-    dispatchEventInternal((Widget) hasTextWidget, keyUpEvent);
-
-    dispatchEventInternal((Widget) hasTextWidget,
-        EventBuilder.create(Event.ONBLUR).build());
-
-    if (changed) {
-      dispatchEventInternal((Widget) hasTextWidget,
-          EventBuilder.create(Event.ONCHANGE).build());
-    }
-
+    DISPATCHER.emptyText(hasTextWidget);
   }
 
   /**
@@ -236,11 +199,7 @@ public class Browser {
    *          not.
    */
   public static void emptyText(HasText hasTextWidget, boolean longBackPress) {
-    if (longBackPress) {
-      emptyText(hasTextWidget);
-    } else {
-      removeText(hasTextWidget, hasTextWidget.getText().length());
-    }
+    DISPATCHER.emptyText(hasTextWidget, longBackPress);
   }
 
   /**
@@ -270,125 +229,97 @@ public class Browser {
    */
   public static void fillText(HasText hasTextWidget, String value)
       throws IllegalArgumentException {
-    if (value == null || "".equals(value)) {
-      throw new IllegalArgumentException(
-          "Cannot fill a null or empty text. If you intent to remove some text, use '"
-              + Browser.class.getSimpleName() + ".emptyText(..)' instead");
-    }
-    if (!Widget.class.isInstance(hasTextWidget)) {
-      return;
-    }
-
-    boolean changed = false;
-
-    for (int i = 0; i < value.length(); i++) {
-
-      int keyCode = value.charAt(i);
-
-      // trigger keyDown and keyPress
-      Event keyDownEvent = EventBuilder.create(Event.ONKEYDOWN).setKeyCode(
-          keyCode).build();
-      Event keyPressEvent = EventBuilder.create(Event.ONKEYPRESS).setKeyCode(
-          keyCode).build();
-      dispatchEvent((Widget) hasTextWidget, keyDownEvent, keyPressEvent);
-
-      // check if one on the events has been prevented
-      boolean keyDownEventPreventDefault = JavaScriptObjects.getBoolean(
-          keyDownEvent, JsoProperties.EVENT_PREVENTDEFAULT);
-      boolean keyPressEventPreventDefault = JavaScriptObjects.getBoolean(
-          keyPressEvent, JsoProperties.EVENT_PREVENTDEFAULT);
-
-      if (!keyDownEventPreventDefault && !keyPressEventPreventDefault) {
-        hasTextWidget.setText(value.substring(0, i + 1));
-        changed = true;
-      }
-
-      // trigger keyUp
-      Event keyUpEvent = EventBuilder.create(Event.ONKEYUP).setKeyCode(keyCode).build();
-      dispatchEventInternal((Widget) hasTextWidget, keyUpEvent);
-    }
-
-    // don't have to check if the event can be dispatch since it's check before
-    dispatchEventInternal((Widget) hasTextWidget,
-        EventBuilder.create(Event.ONBLUR).build());
-
-    if (changed) {
-      dispatchEventInternal((Widget) hasTextWidget,
-          EventBuilder.create(Event.ONCHANGE).build());
-    }
+    DISPATCHER.fillText(hasTextWidget, value);
   }
 
   /**
    * Simulates a focus event.
+   * 
+   * @param target The targeted widget.
    */
   public static void focus(Widget target) {
-    dispatchEvent(target, EventBuilder.create(Event.ONFOCUS).build());
+    DISPATCHER.focus(target);
   }
 
   /**
    * Simulates a keydown event.
+   * 
+   * @param target The targeted widget.
    */
   public static void keyDown(Widget target, int keyCode) {
-    dispatchEvent(target,
-        EventBuilder.create(Event.ONKEYDOWN).setKeyCode(keyCode).build());
+    DISPATCHER.keyDown(target, keyCode);
   }
 
   /**
    * Simulates a keypress event.
+   * 
+   * @param target The targeted widget.
    */
   public static void keyPress(Widget target, int keyCode) {
-    dispatchEvent(target,
-        EventBuilder.create(Event.ONKEYPRESS).setKeyCode(keyCode).build());
+    DISPATCHER.keyPress(target, keyCode);
   }
 
   /**
    * Simulates a keyup event.
+   * 
+   * @param target The targeted widget.
    */
   public static void keyUp(Widget target, int keyCode) {
-    dispatchEvent(target,
-        EventBuilder.create(Event.ONKEYUP).setKeyCode(keyCode).build());
+    DISPATCHER.keyUp(target, keyCode);
   }
 
   /**
    * Simulates a mousedown event.
+   * 
+   * @param target The targeted widget.
    */
   public static void mouseDown(Widget target) {
-    dispatchEvent(target, EventBuilder.create(Event.ONMOUSEDOWN).build());
+    DISPATCHER.mouseDown(target);
   }
 
   /**
    * Simulates a mousemove event.
+   * 
+   * @param target The targeted widget.
    */
   public static void mouseMove(Widget target) {
-    dispatchEvent(target, EventBuilder.create(Event.ONMOUSEMOVE).build());
+    DISPATCHER.mouseMove(target);
   }
 
   /**
    * Simulates a mouseout event.
+   * 
+   * @param target The targeted widget.
    */
   public static void mouseOut(Widget target) {
-    dispatchEvent(target, EventBuilder.create(Event.ONMOUSEOUT).build());
+    DISPATCHER.mouseOut(target);
   }
 
   /**
    * Simulates a mouseover event.
+   * 
+   * @param target The targeted widget.
    */
   public static void mouseOver(Widget target) {
-    dispatchEvent(target, EventBuilder.create(Event.ONMOUSEOVER).build());
+    DISPATCHER.mouseOver(target);
   }
 
   /**
    * Simulates a mouseup event.
+   * 
+   * @param target The targeted widget.
    */
   public static void mouseUp(Widget target) {
-    dispatchEvent(target, EventBuilder.create(Event.ONMOUSEUP).build());
+    DISPATCHER.mouseUp(target);
   }
 
   /**
    * Simulates a mousewheel event.
+   * 
+   * @param target The targeted widget.
    */
   public static void mouseWheel(Widget target) {
-    dispatchEvent(target, EventBuilder.create(Event.ONMOUSEWHEEL).build());
+    DISPATCHER.mouseWheel(target);
   }
 
   /**
@@ -417,115 +348,7 @@ public class Browser {
    * @param backspacePressNumber The number of backspace key press to simulate.
    */
   public static void removeText(HasText hasTextWidget, int backspacePressNumber) {
-    boolean changed = false;
-
-    for (int i = 0; i < backspacePressNumber; i++) {
-      Event keyDownEvent = EventBuilder.create(Event.ONKEYDOWN).setKeyCode(
-          KeyCodes.KEY_BACKSPACE).build();
-      Event keyUpEvent = EventBuilder.create(Event.ONKEYUP).setKeyCode(
-          KeyCodes.KEY_BACKSPACE).build();
-      dispatchEvent((Widget) hasTextWidget, keyDownEvent, keyUpEvent);
-
-      boolean keyDownEventPreventDefault = JavaScriptObjects.getBoolean(
-          keyDownEvent, JsoProperties.EVENT_PREVENTDEFAULT);
-
-      if (!keyDownEventPreventDefault) {
-        hasTextWidget.setText(hasTextWidget.getText().substring(0,
-            hasTextWidget.getText().length() - 1));
-        changed = true;
-      }
-
-    }
-
-    // don't have to check if the event can be dispatch since it's check
-    // before
-    dispatchEventInternal((Widget) hasTextWidget,
-        EventBuilder.create(Event.ONBLUR).build());
-
-    if (changed) {
-      dispatchEventInternal((Widget) hasTextWidget,
-          EventBuilder.create(Event.ONCHANGE).build());
-    }
-
-  }
-
-  private static void assertCanApplyEvent(UIObject target, Event... events) {
-    for (Event event : events) {
-      if (!WidgetUtils.isWidgetVisible(target)) {
-        Assert.fail(createFailureMessage(target, event, "visible"));
-      }
-
-      if (target instanceof FocusWidget && !((FocusWidget) target).isEnabled()) {
-        Assert.fail(createFailureMessage(target, event, "enabled"));
-      }
-    }
-  }
-
-  private static String createFailureMessage(UIObject target, Event event,
-      String attribut) {
-    StringBuilder sb = new StringBuilder();
-
-    String className = target.getClass().isAnonymousClass()
-        ? target.getClass().getName() : target.getClass().getSimpleName();
-    sb.append("The targeted widget (").append(className);
-    sb.append(") and its possible parents have to be ").append(attribut);
-    sb.append(" to apply a browser '").append(event.getType()).append(
-        "\' event");
-
-    return sb.toString();
-  }
-
-  private static void dispatchEventInternal(Widget target, Event... events) {
-    try {
-      for (Event event : events) {
-
-        // set the target if it's not
-        Element targetElement = JavaScriptObjects.getObject(event,
-            JsoProperties.EVENT_TARGET);
-        if (targetElement == null) {
-          JavaScriptObjects.setProperty(event, JsoProperties.EVENT_TARGET,
-              target.getElement());
-        }
-
-        // set the related target
-        Element relatedTargetElement = JavaScriptObjects.getObject(event,
-            JsoProperties.EVENT_RELATEDTARGET);
-
-        if (relatedTargetElement == null) {
-          switch (event.getTypeInt()) {
-            case Event.ONMOUSEOVER:
-            case Event.ONMOUSEOUT:
-              Widget parent = target.getParent();
-              if (parent != null) {
-                relatedTargetElement = parent.getElement();
-              } else {
-                relatedTargetElement = Document.get().getDocumentElement();
-              }
-              break;
-          }
-
-          JavaScriptObjects.setProperty(event,
-              JsoProperties.EVENT_RELATEDTARGET, relatedTargetElement);
-        }
-
-        if (CheckBox.class.isInstance(target)
-            && event.getTypeInt() == Event.ONCLICK) {
-          CheckBox checkBox = (CheckBox) target;
-          if (RadioButton.class.isInstance(target)) {
-            checkBox.setValue(true);
-          } else {
-            checkBox.setValue(!checkBox.getValue());
-          }
-        }
-        target.onBrowserEvent(event);
-      }
-    } catch (UmbrellaException e) {
-      if (AssertionError.class.isInstance(e.getCause())) {
-        throw (AssertionError) e.getCause();
-      } else {
-        throw e;
-      }
-    }
+    DISPATCHER.removeText(hasTextWidget, backspacePressNumber);
   }
 
   private Browser() {

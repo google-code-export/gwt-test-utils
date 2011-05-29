@@ -115,10 +115,10 @@ public class BrowserTest extends GwtTestTest {
 
         if (DOM.eventGetType(event) == Event.ONCLICK) {
           tested = !tested;
+          Assert.assertNull(event.getRelatedEventTarget());
         }
 
         Assert.assertEquals(a.getElement(), event.getEventTarget());
-        Assert.assertNull(event.getRelatedEventTarget());
       };
     };
 

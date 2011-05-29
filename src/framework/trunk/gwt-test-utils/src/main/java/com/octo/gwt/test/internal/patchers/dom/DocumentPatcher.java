@@ -20,6 +20,7 @@ import com.octo.gwt.test.exceptions.GwtTestConfigurationException;
 import com.octo.gwt.test.exceptions.GwtTestDomException;
 import com.octo.gwt.test.exceptions.GwtTestException;
 import com.octo.gwt.test.internal.GwtConfig;
+import com.octo.gwt.test.internal.utils.DoubleMap;
 import com.octo.gwt.test.internal.utils.GwtHtmlParser;
 import com.octo.gwt.test.internal.utils.JsoProperties;
 import com.octo.gwt.test.patchers.OverlayPatcher;
@@ -31,6 +32,8 @@ import com.octo.gwt.test.utils.GwtReflectionUtils;
 public class DocumentPatcher extends OverlayPatcher {
 
   private static Document DOCUMENT;
+
+  private static final DoubleMap<String, String, Element> HTML_ELEMENT_PROTOTYPES = new DoubleMap<String, String, Element>();
 
   private static int ID = 0;
 
@@ -218,6 +221,7 @@ public class DocumentPatcher extends OverlayPatcher {
   }
 
   private static Element parseHTMLElement() {
+    String moduleName = GwtConfig.get().getModuleName();
     String hostPagePath = GwtConfig.get().getHostPagePath();
 
     if (hostPagePath == null) {
@@ -229,10 +233,19 @@ public class DocumentPatcher extends OverlayPatcher {
               + ".getHostPagePath(String moduleFullQualifiedName) method to specify it.");
     }
 
-    // parsing of the host page
-    String html = getHostPageHTML(hostPagePath);
-    NodeList<Node> nodes = GwtHtmlParser.parse(html);
-    return findHTMLElement(hostPagePath, nodes);
+    Element htmlPrototype = HTML_ELEMENT_PROTOTYPES.get(moduleName,
+        hostPagePath);
+
+    if (htmlPrototype == null) {
+      // parsing of the host page
+      String html = getHostPageHTML(hostPagePath);
+      NodeList<Node> list = GwtHtmlParser.parse(html);
+
+      htmlPrototype = findHTMLElement(hostPagePath, list);
+      HTML_ELEMENT_PROTOTYPES.put(moduleName, hostPagePath, htmlPrototype);
+    }
+
+    return htmlPrototype.cloneNode(true).cast();
   }
 
 }

@@ -15,8 +15,6 @@ import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.FocusWidget;
@@ -26,7 +24,6 @@ import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
-import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.SuggestBox;
@@ -43,12 +40,10 @@ import com.octo.gwt.test.csv.tools.ObjectFinder;
 import com.octo.gwt.test.csv.tools.VisitorObjectFinder;
 import com.octo.gwt.test.csv.tools.WidgetVisitor;
 import com.octo.gwt.test.internal.utils.ArrayUtils;
-import com.octo.gwt.test.internal.utils.EventUtils;
+import com.octo.gwt.test.internal.utils.EventDispatcher;
+import com.octo.gwt.test.internal.utils.EventDispatcher.BrowserErrorHandler;
 import com.octo.gwt.test.internal.utils.GwtStringUtils;
-import com.octo.gwt.test.utils.GwtReflectionUtils;
 import com.octo.gwt.test.utils.WidgetUtils;
-import com.octo.gwt.test.utils.events.Browser;
-import com.octo.gwt.test.utils.events.EventBuilder;
 
 public abstract class GwtCsvTest extends GwtTest {
 
@@ -96,6 +91,13 @@ public abstract class GwtCsvTest extends GwtTest {
   // MODE INTERACTIF
   private static final Class<?>[] baseList = {
       String.class, Integer.class, int.class, Class.class};
+
+  private final EventDispatcher DISPATCHER = EventDispatcher.newInstance(new BrowserErrorHandler() {
+
+    public void onError(String errorMessage) {
+      Assert.fail(csvRunner.getAssertionErrorMessagePrefix() + errorMessage);
+    }
+  });
 
   private MacroReader macroReader;
   private DirectoryTestReader reader;
@@ -147,6 +149,10 @@ public abstract class GwtCsvTest extends GwtTest {
    */
   @CsvMethod
   public void assertExact(String value, String... params) {
+    if ("/view/errorMessageBlockContainer/contentPanel/widget(0)".equals(params[0])) {
+      System.out.println("ok");
+    }
+
     value = GwtStringUtils.resolveBackSlash(value);
 
     String actualValue = getString(params);
@@ -265,8 +271,8 @@ public abstract class GwtCsvTest extends GwtTest {
 
   @CsvMethod
   public void blur(String... params) {
-    Widget widget = getObject(Widget.class, params);
-    dispatchEvent(widget, Event.ONBLUR);
+    Widget target = getObject(Widget.class, params);
+    DISPATCHER.blur(target);
   }
 
   @CsvMethod
@@ -276,105 +282,47 @@ public abstract class GwtCsvTest extends GwtTest {
 
   @CsvMethod
   public void change(String... params) {
-    Widget widget = getObject(Widget.class, params);
-    dispatchEvent(widget, Event.ONCHANGE);
+    Widget target = getObject(Widget.class, params);
+    DISPATCHER.change(target);
   }
 
   @CsvMethod
   public void click(String... params) {
     Widget target = getObject(Widget.class, params);
-
-    Event onMouseOver = EventBuilder.create(Event.ONMOUSEOVER).setTarget(
-        target.getElement()).build();
-    Event onMouseDown = EventBuilder.create(Event.ONMOUSEDOWN).setButton(
-        Event.BUTTON_LEFT).build();
-    Event onMouseUp = EventBuilder.create(Event.ONMOUSEUP).setButton(
-        Event.BUTTON_LEFT).build();
-    Event onClick = EventBuilder.create(Event.ONCLICK).build();
-
-    dispatchEvent(target, onMouseOver, onMouseDown, onMouseUp, onClick);
+    DISPATCHER.click(target);
   }
 
   @CsvMethod
   public void clickComplexPanel(String index, String... params) {
     ComplexPanel panel = getObject(ComplexPanel.class, params);
-    Widget target = panel.getWidget(Integer.parseInt(index));
-
-    Event onMouseOver = EventBuilder.create(Event.ONMOUSEOVER).setTarget(
-        target.getElement()).build();
-    Event onMouseDown = EventBuilder.create(Event.ONMOUSEDOWN).setTarget(
-        target.getElement()).setButton(Event.BUTTON_LEFT).build();
-    Event onMouseUp = EventBuilder.create(Event.ONMOUSEUP).setTarget(
-        target.getElement()).setButton(Event.BUTTON_LEFT).build();
-    Event onClick = EventBuilder.create(Event.ONCLICK).setTarget(
-        target.getElement()).build();
-
-    assertCanApplyEvent(target, onMouseOver, onMouseDown, onMouseUp, onClick);
-    dispatchNotCheckedEvent(panel, onMouseOver, onMouseDown, onMouseUp, onClick);
+    DISPATCHER.click(panel, Integer.parseInt(index));
   }
 
   @CsvMethod
-  public void clickGridCell(String rowIndex, String column, String identifier) {
-    Grid grid = getObject(Grid.class, identifier);
-    Widget target = grid.getWidget(Integer.parseInt(rowIndex),
-        Integer.parseInt(column));
-
-    Event onMouseOver = EventBuilder.create(Event.ONMOUSEOVER).setTarget(
-        target.getElement()).build();
-    Event onMouseDown = EventBuilder.create(Event.ONMOUSEDOWN).setTarget(
-        target.getElement()).setButton(Event.BUTTON_LEFT).build();
-    Event onMouseUp = EventBuilder.create(Event.ONMOUSEUP).setTarget(
-        target.getElement()).setButton(Event.BUTTON_LEFT).build();
-    Event onClick = EventBuilder.create(Event.ONCLICK).setTarget(
-        target.getElement()).build();
-
-    assertCanApplyEvent(target, onMouseOver, onMouseDown, onMouseUp, onClick);
-    dispatchNotCheckedEvent(grid, onMouseOver, onMouseDown, onMouseUp, onClick);
+  public void clickGridCell(String rowIndex, String columnIndex,
+      String... params) {
+    Grid grid = getObject(Grid.class, params);
+    int row = Integer.parseInt(rowIndex);
+    int column = Integer.parseInt(columnIndex);
+    DISPATCHER.click(grid, row, column);
   }
 
   @CsvMethod
-  public void clickMenuItem(String index, String identifier) {
-    MenuBar menuBar = getObject(MenuBar.class, identifier);
-    List<MenuItem> menuItems = GwtReflectionUtils.getPrivateFieldValue(menuBar,
-        "items");
-    MenuItem itemToClick = menuItems.get(Integer.parseInt(index));
-
-    Event onMouseOver = EventBuilder.create(Event.ONMOUSEOVER).setTarget(
-        itemToClick.getElement()).build();
-    Event onMouseDown = EventBuilder.create(Event.ONMOUSEDOWN).setTarget(
-        itemToClick.getElement()).setButton(Event.BUTTON_LEFT).build();
-    Event onMouseUp = EventBuilder.create(Event.ONMOUSEUP).setTarget(
-        itemToClick.getElement()).setButton(Event.BUTTON_LEFT).build();
-    Event onClick = EventBuilder.create(Event.ONCLICK).setTarget(
-        itemToClick.getElement()).build();
-
-    assertCanApplyEvent(itemToClick, onMouseOver, onMouseDown, onMouseUp,
-        onClick);
-    dispatchNotCheckedEvent(menuBar, onMouseOver, onMouseDown, onMouseUp,
-        onClick);
+  public void clickMenuItem(String index, String... params) {
+    MenuBar menuBar = getObject(MenuBar.class, params);
+    DISPATCHER.click(menuBar, Integer.parseInt(index));
   }
 
   @CsvMethod
   public void clickSimplePanel(String... params) {
     SimplePanel panel = getObject(SimplePanel.class, params);
-
-    Event onMouseOver = EventBuilder.create(Event.ONMOUSEOVER).setTarget(
-        panel.getElement()).build();
-    Event onMouseDown = EventBuilder.create(Event.ONMOUSEDOWN).setButton(
-        Event.BUTTON_LEFT).build();
-    Event onMouseUp = EventBuilder.create(Event.ONMOUSEUP).setButton(
-        Event.BUTTON_LEFT).build();
-    Event onClick = EventBuilder.create(Event.ONCLICK).build();
-
-    assertCanApplyEvent(panel.getWidget(), onMouseOver, onMouseDown, onMouseUp,
-        onClick);
-    dispatchNotCheckedEvent(panel, onMouseOver, onMouseDown, onMouseUp, onClick);
+    DISPATCHER.click(panel);
   }
 
   @CsvMethod
   public void emptyTextBox(String... params) {
     TextBox textBox = getObject(TextBox.class, params);
-    Browser.emptyText(textBox);
+    DISPATCHER.emptyText(textBox);
   }
 
   @CsvMethod
@@ -382,17 +330,15 @@ public abstract class GwtCsvTest extends GwtTest {
       String... params) {
     SuggestBox suggestBox = getObject(SuggestBox.class, params);
 
-    Browser.fillText(suggestBox, content);
-    executeSuggestCommandByIndex(WidgetUtils.getMenuItems(suggestBox),
-        Integer.parseInt(index));
+    DISPATCHER.fillText(suggestBox, content);
+    DISPATCHER.click(suggestBox, Integer.parseInt(index));
   }
 
   @CsvMethod
   public void fillAndSelectInSuggestBoxByText(String content, String selected,
       String... params) {
     SuggestBox suggestBox = getObject(SuggestBox.class, params);
-
-    Browser.fillText(suggestBox, content);
+    DISPATCHER.fillText(suggestBox, content);
 
     List<MenuItem> menuItems = WidgetUtils.getMenuItems(suggestBox);
     int i = 0;
@@ -402,38 +348,31 @@ public abstract class GwtCsvTest extends GwtTest {
       MenuItem item = menuItems.get(i);
       if (selected.equals(item.getHTML()) || selected.equals(item.getText())) {
         index = i;
+        DISPATCHER.click(suggestBox, item);
       }
       i++;
     }
 
     Assert.assertTrue(csvRunner.getAssertionErrorMessagePrefix()
         + "Cannot find '" + selected + "' in suggested choices", index > -1);
-
-    executeSuggestCommandByIndex(menuItems, index);
   }
 
   @CsvMethod
   public void fillInvisibleTextBox(String value, String... params) {
     TextBox textBox = getObject(TextBox.class, params);
-    textBox.setText(value);
-
-    dispatchNotCheckedEvent(
-        textBox,
-        EventBuilder.create(Event.ONKEYUP).setKeyCode(KeyCodes.KEY_ENTER).build());
-    dispatchNotCheckedEvent(textBox,
-        EventBuilder.create(Event.ONCHANGE).build());
+    DISPATCHER.fillText(textBox, false, value);
   }
 
   @CsvMethod
   public void fillTextBox(String value, String... params) {
     TextBox textBox = getObject(TextBox.class, params);
-    Browser.fillText(textBox, value);
+    DISPATCHER.fillText(textBox, value);
   }
 
   @CsvMethod
-  public void focus(String identifier) {
-    Widget widget = getObject(Widget.class, identifier);
-    dispatchEvent(widget, EventBuilder.create(Event.ONFOCUS).build());
+  public void focus(String... params) {
+    Widget target = getObject(Widget.class, params);
+    DISPATCHER.focus(target);
   }
 
   @CsvMethod
@@ -502,11 +441,11 @@ public abstract class GwtCsvTest extends GwtTest {
   }
 
   @CsvMethod
-  public void isEnabled(String identifier) {
-    FocusWidget button = getFocusWidget(identifier);
+  public void isEnabled(String... params) {
+    FocusWidget target = getObject(FocusWidget.class, params);
     Assert.assertTrue(csvRunner.getAssertionErrorMessagePrefix() + "targeted "
-        + button.getClass().getSimpleName() + " is not enabled",
-        button.isEnabled());
+        + target.getClass().getSimpleName() + " is not enabled",
+        target.isEnabled());
   }
 
   @CsvMethod
@@ -517,10 +456,10 @@ public abstract class GwtCsvTest extends GwtTest {
   }
 
   @CsvMethod
-  public void isNotEnabled(String identifier) {
-    FocusWidget button = getFocusWidget(identifier);
+  public void isNotEnabled(String... params) {
+    FocusWidget target = getObject(FocusWidget.class, params);
     Assert.assertFalse(csvRunner.getAssertionErrorMessagePrefix() + "targeted "
-        + button.getClass().getSimpleName() + " is enabled", button.isEnabled());
+        + target.getClass().getSimpleName() + " is enabled", target.isEnabled());
   }
 
   @CsvMethod
@@ -546,39 +485,39 @@ public abstract class GwtCsvTest extends GwtTest {
   }
 
   @CsvMethod
-  public void mouseDown(String identifier) {
-    Widget widget = getObject(Widget.class, identifier);
-    dispatchEvent(widget, EventBuilder.create(Event.ONMOUSEDOWN).build());
+  public void mouseDown(String... params) {
+    Widget target = getObject(Widget.class, params);
+    DISPATCHER.mouseDown(target);
   }
 
   @CsvMethod
-  public void mouseMove(String identifier) {
-    Widget widget = getObject(Widget.class, identifier);
-    dispatchEvent(widget, EventBuilder.create(Event.ONMOUSEMOVE).build());
+  public void mouseMove(String... params) {
+    Widget target = getObject(Widget.class, params);
+    DISPATCHER.mouseMove(target);
   }
 
   @CsvMethod
-  public void mouseOut(String identifier) {
-    Widget widget = getObject(Widget.class, identifier);
-    dispatchEvent(widget, EventBuilder.create(Event.ONMOUSEOUT).build());
+  public void mouseOut(String... params) {
+    Widget target = getObject(Widget.class, params);
+    DISPATCHER.mouseOut(target);
   }
 
   @CsvMethod
-  public void mouseOver(String identifier) {
-    Widget widget = getObject(Widget.class, identifier);
-    dispatchEvent(widget, EventBuilder.create(Event.ONMOUSEOVER).build());
+  public void mouseOver(String... params) {
+    Widget target = getObject(Widget.class, params);
+    DISPATCHER.mouseOver(target);
   }
 
   @CsvMethod
-  public void mouseUp(String identifier) {
-    Widget widget = getObject(Widget.class, identifier);
-    dispatchEvent(widget, EventBuilder.create(Event.ONMOUSEUP).build());
+  public void mouseUp(String... params) {
+    Widget target = getObject(Widget.class, params);
+    DISPATCHER.mouseUp(target);
   }
 
   @CsvMethod
-  public void mouseWheel(String identifier) {
-    Widget widget = getObject(Widget.class, identifier);
-    dispatchEvent(widget, EventBuilder.create(Event.ONMOUSEWHEEL).build());
+  public void mouseWheel(String... params) {
+    Widget target = getObject(Widget.class, params);
+    DISPATCHER.mouseWheel(target);
   }
 
   @CsvMethod
@@ -682,25 +621,6 @@ public abstract class GwtCsvTest extends GwtTest {
     return finder;
   }
 
-  private String createFailureMessage(UIObject target, int eventTypeInt,
-      String attribut) {
-    String className = target.getClass().isAnonymousClass()
-        ? target.getClass().getName() : target.getClass().getSimpleName();
-    StringBuilder sb = new StringBuilder();
-    String event = EventUtils.getEventTypeString(eventTypeInt);
-    sb.append("The targeted widget (").append(className);
-    sb.append(") has to be ").append(attribut);
-    sb.append(" to apply a browser '").append(event).append("\' event");
-
-    return sb.toString();
-  }
-
-  private void executeSuggestCommandByIndex(List<MenuItem> menuItems, int index) {
-    MenuItem item = menuItems.get(index);
-    assertCanApplyEvent(item, Event.ONCLICK);
-    item.getCommand().execute();
-  }
-
   private Object getObject(String param, PrintStream os) {
     Object o = getObject(Object.class, param);
     os.println("Object found, class " + o.getClass().getCanonicalName());
@@ -743,55 +663,6 @@ public abstract class GwtCsvTest extends GwtTest {
     if (clazz.getSuperclass() != null) {
       printGetter(o, clazz.getSuperclass(), os);
     }
-  }
-
-  protected void assertCanApplyEvent(UIObject widget, Event... events) {
-    for (Event event : events) {
-      assertCanApplyEvent(widget, event.getTypeInt());
-    }
-  }
-
-  protected void assertCanApplyEvent(UIObject widget, int eventType) {
-
-    if (!WidgetUtils.isWidgetVisible(widget)) {
-      String failureMessage = createFailureMessage(widget, eventType, "visible");
-      Assert.fail(csvRunner.getAssertionErrorMessagePrefix() + failureMessage);
-    }
-
-    if (widget instanceof FocusWidget && (!((FocusWidget) widget).isEnabled())) {
-      String failureMessage = createFailureMessage(widget, eventType, "enabled");
-      Assert.fail(csvRunner.getAssertionErrorMessagePrefix() + failureMessage);
-    }
-  }
-
-  protected void dispatchEvent(Widget target, Event... events) {
-    assertCanApplyEvent(target, events);
-
-    dispatchNotCheckedEvent(target, events);
-  }
-
-  protected void dispatchEvent(Widget target, int eventTypeInt) {
-    Event event = EventBuilder.create(eventTypeInt).build();
-    dispatchEvent(target, event);
-  }
-
-  protected void dispatchNotCheckedEvent(Widget target, Event... events) {
-    for (Event event : events) {
-      if (CheckBox.class.isInstance(target)
-          && event.getTypeInt() == Event.ONCLICK) {
-        CheckBox checkBox = (CheckBox) target;
-        if (RadioButton.class.isInstance(target)) {
-          checkBox.setValue(true);
-        } else {
-          checkBox.setValue(!checkBox.getValue());
-        }
-      }
-      target.onBrowserEvent(event);
-    }
-  }
-
-  protected FocusWidget getFocusWidget(String identifier) {
-    return getObject(FocusWidget.class, identifier);
   }
 
   protected NodeObjectFinder getNodeObjectFinder(String prefix) {
@@ -859,8 +730,8 @@ public abstract class GwtCsvTest extends GwtTest {
 
     if (selectedIndex > -1) {
       listBox.setSelectedIndex(selectedIndex);
-      dispatchEvent(listBox, Event.ONCLICK);
-      dispatchEvent(listBox, Event.ONCHANGE);
+      DISPATCHER.click(listBox);
+      DISPATCHER.change(listBox);
     } else {
       errorMessage += WidgetUtils.getListBoxContentToString(listBox);
       Assert.fail(csvRunner.getAssertionErrorMessagePrefix() + errorMessage);

@@ -19,7 +19,7 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.octo.gwt.test.exceptions.GwtTestConfigurationException;
 import com.octo.gwt.test.exceptions.GwtTestUiBinderException;
-import com.octo.gwt.test.utils.FastStack;
+import com.octo.gwt.test.internal.utils.FastStack;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 @SuppressWarnings("unchecked")
