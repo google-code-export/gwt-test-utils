@@ -208,11 +208,12 @@ public class EventDispatcher {
       dispatchEvent((Widget) hasTextWidget, check, keyUpEvent);
     }
 
-    dispatchEvent((Widget) hasTextWidget, check,
+    // no need to check event anymore
+    dispatchEvent((Widget) hasTextWidget, false,
         EventBuilder.create(Event.ONBLUR).build());
 
     if (changed) {
-      dispatchEvent((Widget) hasTextWidget, check,
+      dispatchEvent((Widget) hasTextWidget, false,
           EventBuilder.create(Event.ONCHANGE).build());
     }
   }
