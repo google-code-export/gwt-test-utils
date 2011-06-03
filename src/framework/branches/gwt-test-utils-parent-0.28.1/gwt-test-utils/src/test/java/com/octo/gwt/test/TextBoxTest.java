@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 import com.octo.gwt.test.utils.events.Browser;
@@ -78,6 +79,36 @@ public class TextBoxTest extends GwtTestTest {
     Assert.assertEquals(101, events.get(2).keyCode);
     Assert.assertEquals('l', events.get(3).charCode);
     Assert.assertEquals(108, events.get(3).keyCode);
+  }
+
+  @Test
+  public void checkSelectAll() {
+    // Arrange
+    TextBox t = new TextBox();
+    t.setValue("0123456789");
+    RootPanel.get().add(t);
+
+    // Act
+    t.selectAll();
+
+    // Assert
+    Assert.assertEquals(10, t.getSelectionLength());
+    Assert.assertEquals("0123456789", t.getSelectedText());
+  }
+
+  @Test
+  public void checkSelectionRange() {
+    // Arrange
+    TextBox t = new TextBox();
+    t.setValue("0123456789");
+    RootPanel.get().add(t);
+
+    // Act
+    t.setSelectionRange(4, 3);
+
+    // Assert
+    Assert.assertEquals(3, t.getSelectionLength());
+    Assert.assertEquals("456", t.getSelectedText());
   }
 
   @Test

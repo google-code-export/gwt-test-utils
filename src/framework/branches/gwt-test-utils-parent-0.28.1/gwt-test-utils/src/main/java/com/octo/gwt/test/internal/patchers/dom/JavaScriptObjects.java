@@ -10,6 +10,7 @@ import java.util.TreeMap;
 import javassist.CtClass;
 
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.dom.client.AnchorElement;
 import com.google.gwt.dom.client.AreaElement;
 import com.google.gwt.dom.client.BRElement;
@@ -229,6 +230,8 @@ public class JavaScriptObjects {
       }
     } else if (Text.class.isAssignableFrom(jsoClass)) {
       nodeType = Node.TEXT_NODE;
+    } else if (JsArrayString.class.isAssignableFrom(jsoClass)) {
+      setProperty(o, JsoProperties.JSARRAY_WRAPPED_LIST, new ArrayList<String>());
     }
 
     setProperty(o, JsoProperties.NODE_TYPE_FIELD, nodeType);
