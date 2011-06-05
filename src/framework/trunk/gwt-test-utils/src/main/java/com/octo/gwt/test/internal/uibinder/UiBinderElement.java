@@ -16,7 +16,7 @@ class UiBinderElement implements UiBinderTag {
 
   private final Element wrapped;
 
-  public UiBinderElement(String nsURI, String tagName, Attributes attributes,
+  UiBinderElement(String nsURI, String tagName, Attributes attributes,
       Object owner) {
     this.wrapped = JavaScriptObjects.newElement(tagName);
 

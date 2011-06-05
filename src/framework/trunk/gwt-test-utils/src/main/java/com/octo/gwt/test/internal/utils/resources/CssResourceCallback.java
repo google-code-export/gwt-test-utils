@@ -1,9 +1,6 @@
 package com.octo.gwt.test.internal.utils.resources;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
-import java.net.URISyntaxException;
 import java.net.URL;
 
 import com.google.gwt.dom.client.StyleInjector;
@@ -12,17 +9,38 @@ import com.octo.gwt.test.internal.utils.resources.CssResourceReader.CssParsingRe
 
 class CssResourceCallback extends ClientBundleCallback {
 
+  private static interface CssReader {
+
+    CssParsingResult readCss() throws Exception;
+
+    String readCssText() throws Exception;
+  }
+
   private boolean alreadyInjected = false;
 
+  private final CssReader cssReader;
+
   protected CssResourceCallback(Class<? extends ClientBundle> wrappedClass,
-      URL resourceURL) {
-    super(wrappedClass, resourceURL);
+      final URL resourceURL) {
+    super(wrappedClass);
+
+    cssReader = new CssReader() {
+
+      public CssParsingResult readCss() throws Exception {
+        return CssResourceReader.readCss(resourceURL);
+      }
+
+      public String readCssText() throws Exception {
+        return TextResourceReader.readFile(resourceURL);
+      }
+
+    };
   }
 
   public Object call(Object proxy, Method method, Object[] args)
       throws Exception {
     if (method.getName().equals("getText")) {
-      return getCssText();
+      return cssReader.readCss();
     } else if (method.getName().equals("ensureInjected")) {
       return ensureInjected();
     } else {
@@ -31,24 +49,17 @@ class CssResourceCallback extends ClientBundleCallback {
 
   }
 
-  private boolean ensureInjected() throws UnsupportedEncodingException,
-      IOException, URISyntaxException {
+  private boolean ensureInjected() throws Exception {
     if (!alreadyInjected) {
-      StyleInjector.inject(getCssText());
+      StyleInjector.inject(cssReader.readCssText());
       alreadyInjected = true;
       return true;
     }
     return false;
   }
 
-  private String getCssText() throws UnsupportedEncodingException, IOException,
-      URISyntaxException {
-    return TextResourceReader.readFile(resourceURL);
-  }
-
-  private String handleCustomMethod(String methodName)
-      throws UnsupportedEncodingException, IOException, URISyntaxException {
-    CssParsingResult result = CssResourceReader.readCss(resourceURL);
+  private String handleCustomMethod(String methodName) throws Exception {
+    CssParsingResult result = cssReader.readCss();
     String constant = result.getConstants().get(methodName);
     if (constant != null) {
       return constant;
@@ -56,5 +67,4 @@ class CssResourceCallback extends ClientBundleCallback {
       return methodName;
     }
   }
-
 }

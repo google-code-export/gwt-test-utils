@@ -24,6 +24,7 @@ public class GwtCreateHandlerManager {
   private final GwtCreateHandler debugIdImplCreateHandler;
   private final GwtCreateHandler defaultGwtCreateHandler;
   private final GwtCreateHandler dockLayoutPanelCreateHandler;
+  private final GwtCreateHandler htmlPanelCreateHandler;
   private final GwtCreateHandler imageBundleCreateHandler;
   private final GwtCreateHandler localizableResourceCreateHandler;
   private GwtCreateHandler mockCreateHandler;
@@ -39,6 +40,7 @@ public class GwtCreateHandlerManager {
     debugIdImplCreateHandler = new DebugIdImplCreateHandler();
     defaultGwtCreateHandler = new DefaultGwtCreateHandler();
     dockLayoutPanelCreateHandler = new DefaultDockLayoutPanelHandler();
+    htmlPanelCreateHandler = new HTMLPanelCreateHandler();
     imageBundleCreateHandler = new ImageBundleCreateHandler();
     localizableResourceCreateHandler = new LocalizableCreateHandler();
     uiBinderCreateHandler = new UiBinderCreateHandler();
@@ -68,12 +70,13 @@ public class GwtCreateHandlerManager {
     list.add(localizableResourceCreateHandler);
     list.add(clientBundleCreateHander);
     list.add(imageBundleCreateHandler);
+    list.add(htmlPanelCreateHandler);
+    list.add(dockLayoutPanelCreateHandler);
     list.add(uiBinderCreateHandler);
     list.add(testRemoteServiceCreateHandler);
     list.add(webXmlRemoteServiceCreateHandler);
     list.add(defaultGwtCreateHandler);
     list.add(abstractClassCreateHandler);
-    list.add(dockLayoutPanelCreateHandler);
 
     return Collections.unmodifiableList(list);
   }

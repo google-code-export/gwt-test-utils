@@ -1,7 +1,6 @@
 package com.octo.gwt.test.internal.uibinder;
 
 import java.util.List;
-import java.util.Map;
 
 import org.xml.sax.Attributes;
 
@@ -13,9 +12,9 @@ import com.octo.gwt.test.internal.utils.JsoProperties;
 
 class UiBinderWithDockLayoutPanel extends UiBinderWidget<DockLayoutPanel> {
 
-  public UiBinderWithDockLayoutPanel(DockLayoutPanel wrapped,
-      Attributes attributes, Object owner, Map<String, Object> resources) {
-    super(wrapped, attributes, owner, resources);
+  UiBinderWithDockLayoutPanel(DockLayoutPanel wrapped, Attributes attributes,
+      Object owner, UiResourceManager resourceManager) {
+    super(wrapped, attributes, owner, resourceManager);
   }
 
   private void handleDockLayoutPanelSpecifics(DockLayoutPanel wrapped,

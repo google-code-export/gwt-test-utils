@@ -4,7 +4,6 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -15,7 +14,6 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.uibinder.client.UiConstructor;
 import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.octo.gwt.test.exceptions.GwtTestConfigurationException;
 import com.octo.gwt.test.exceptions.GwtTestUiBinderException;
@@ -31,7 +29,7 @@ public class UiBinderTagBuilder<T> {
   }
 
   private final Object owner;
-  private final Map<String, Object> resources = new HashMap<String, Object>();
+  private final UiResourceManager resourceManager;
   private Object rootComponent;
   private final Class<T> rootComponentClass;
   private final FastStack<UiBinderTag> tags = new FastStack<UiBinderTag>();
@@ -39,6 +37,7 @@ public class UiBinderTagBuilder<T> {
   private UiBinderTagBuilder(Class<T> rootComponentClass, Object owner) {
     this.rootComponentClass = rootComponentClass;
     this.owner = owner;
+    this.resourceManager = UiResourceManager.newInstance(owner);
   }
 
   public UiBinderTagBuilder<T> appendText(String text) {
@@ -72,30 +71,36 @@ public class UiBinderTagBuilder<T> {
   }
 
   public UiBinderTagBuilder<T> endTag(String nameSpaceURI, String localName) {
-    if (!shouldIgnoreTag(nameSpaceURI, localName)
-        && !UiBinderUtils.isResourceTag(nameSpaceURI, localName)) {
 
-      UiBinderTag currentTag = tags.pop();
+    // ignore <UiBinder> tag
+    if (UiBinderUtils.isUiBinderTag(nameSpaceURI, localName)) {
+      return this;
+    }
 
-      if (tags.size() == 0) {
-        // parsing is finished, this is the root component
-        rootComponent = currentTag.getWrapped();
+    UiBinderTag currentTag = tags.pop();
+
+    // ignore <data>, <image> and <style> stags
+    if (UiBinderUtils.isResourceTag(nameSpaceURI, localName)) {
+      return this;
+    }
+
+    if (tags.size() == 0) {
+      // parsing is finished, this is the root component
+      rootComponent = currentTag.getWrapped();
+    } else {
+      // add to its parent
+      UiBinderTag parentTag = getPrevious();
+
+      Object wrappedChild = currentTag.getWrapped();
+      if (Widget.class.isInstance(wrappedChild)) {
+        parentTag.addWidget((Widget) wrappedChild);
+      } else if (Element.class.isInstance(wrappedChild)) {
+        parentTag.addElement((Element) wrappedChild);
+      } else if (String.class == wrappedChild.getClass()) {
+        // <msg> case
+        parentTag.appendText((String) wrappedChild);
       } else {
-        // add to its parent
-        UiBinderTag parentTag = getPrevious();
-
-        Object wrappedChild = currentTag.getWrapped();
-        if (Widget.class.isInstance(wrappedChild)) {
-          parentTag.addWidget((Widget) wrappedChild);
-        } else if (Element.class.isInstance(wrappedChild)) {
-          parentTag.addElement((Element) wrappedChild);
-        } else if (String.class == wrappedChild.getClass()) {
-          parentTag.appendText((String) wrappedChild);
-        } else {
-          throw new GwtTestUiBinderException("Cannot add an instance of '"
-              + UiBinderTag.class.getSimpleName() + "' which wraps a '"
-              + wrappedChild.getClass().getName() + "' object");
-        }
+        // just ignore it, it must be a resource tag
       }
     }
 
@@ -105,18 +110,12 @@ public class UiBinderTagBuilder<T> {
   public UiBinderTagBuilder<T> startTag(String nameSpaceURI, String localName,
       Attributes attributes) {
 
-    if (!shouldIgnoreTag(nameSpaceURI, localName)) {
-      if (UiBinderUtils.isResourceTag(nameSpaceURI, localName)) {
-        String alias = getResourceAlias(localName, attributes);
-
-        if (!resources.containsKey(alias)) {
-          String type = getResourceType(localName, attributes);
-          resources.put(alias, this.getInstance(type, attributes));
-        }
-      } else {
-        tags.push(createUiBinderTag(nameSpaceURI, localName, attributes));
-      }
+    if (UiBinderUtils.isUiBinderTag(nameSpaceURI, localName)) {
+      return this;
     }
+
+    // register the current UiBinderTag in the stack
+    tags.push(createUiBinderTag(nameSpaceURI, localName, attributes));
 
     return this;
   }
@@ -138,20 +137,20 @@ public class UiBinderTagBuilder<T> {
             + ".ui.xml");
       }
 
-      // TODO: refactor..
-      if (HTMLPanel.class == clazz) {
-        HTMLPanel panel = new HTMLPanel("");
-        return new UiBinderWidget<HTMLPanel>(panel, attributes, owner,
-            resources);
-      } else if (Widget.class.isAssignableFrom(clazz)) {
-        Widget widget = getInstance((Class<Widget>) clazz, attributes);
-        return new UiBinderWidget<Widget>(widget, attributes, owner, resources);
+      if (Widget.class.isAssignableFrom(clazz)) {
+        // create or get the instance
+        Widget widget = getInstance((Class<? extends Widget>) clazz, attributes);
+
+        return new UiBinderWidget<Widget>(widget, attributes, owner,
+            resourceManager);
       } else {
         throw new GwtTestUiBinderException("Not managed type in file '"
             + owner.getClass().getSimpleName() + ".ui.xml"
             + "', only subclass of '" + Widget.class.getName()
             + "' are managed");
       }
+    } else if (UiBinderUtils.isResourceTag(nameSpaceURI, localName)) {
+      return resourceManager.registerResource(localName, attributes);
     } else if (UiBinderUtils.isMsgTag(nameSpaceURI, localName)) {
       return new UiBinderMsg(getPrevious());
     } else {
@@ -188,18 +187,6 @@ public class UiBinderTagBuilder<T> {
     }
 
     return instance;
-  }
-
-  private <U> U getInstance(String type, Attributes attributes) {
-    ;
-    try {
-      Class<U> clazz = (Class<U>) Class.forName(type);
-      return getInstance(clazz, attributes);
-    } catch (ClassNotFoundException e) {
-      throw new GwtTestUiBinderException("Cannot find class '" + type
-          + "' declared in file '" + owner.getClass().getSimpleName()
-          + ".ui.xml'");
-    }
   }
 
   private <U> U getObjectFromUiConstructor(Class<U> clazz, Attributes attributes) {
@@ -245,13 +232,12 @@ public class UiBinderTagBuilder<T> {
     return tags.get(tags.size() - 1);
   }
 
-  private <U> U getProvidedUiField(Class<U> withObjectClass) {
+  private <U> U getProvidedUiField(Class<U> clazz) {
     Map<Field, UiField> map = GwtReflectionUtils.getAnnotatedField(
         owner.getClass(), UiField.class);
 
     for (Map.Entry<Field, UiField> entry : map.entrySet()) {
-      if (entry.getKey().getType() == withObjectClass
-          && entry.getValue().provided()) {
+      if (entry.getKey().getType() == clazz && entry.getValue().provided()) {
         Object providedObject = GwtReflectionUtils.getPrivateFieldValue(owner,
             entry.getKey());
         if (providedObject == null) {
@@ -268,33 +254,6 @@ public class UiBinderTagBuilder<T> {
     }
 
     return null;
-  }
-
-  private String getResourceAlias(String localName, Attributes attributes) {
-    String alias;
-    alias = attributes.getValue("field");
-    if (!"with".equals(localName) && alias == null) {
-      alias = localName;
-    }
-    if (alias == null) {
-      throw new GwtTestUiBinderException(
-          "Cannot get the 'field' value for tag <" + localName + "> in "
-              + owner.getClass().getSimpleName() + ".ui.xml");
-    }
-
-    return alias;
-  }
-
-  private String getResourceType(String localName, Attributes attributes) {
-    String type = attributes.getValue("type");
-
-    if (type == null) {
-      throw new GwtTestUiBinderException("Error in '"
-          + owner.getClass().getSimpleName() + ".ui.xml' : a <" + localName
-          + "> tag does not contain the corresponding 'type' attribute");
-    }
-
-    return type;
   }
 
   private String[] getUiConstructorArgs(Class<?> clazz, Attributes attributes) {
@@ -320,11 +279,6 @@ public class UiBinderTagBuilder<T> {
       }
     }
     return false;
-  }
-
-  private boolean shouldIgnoreTag(String nameSpaceURI, String localName) {
-    return "style".equals(localName)
-        || UiBinderUtils.isUiBinderTag(nameSpaceURI, localName);
   }
 
 }

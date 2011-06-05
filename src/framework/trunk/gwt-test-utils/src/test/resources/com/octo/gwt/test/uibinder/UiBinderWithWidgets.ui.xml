@@ -3,6 +3,21 @@
 
 	<ui:with field='res' type='com.octo.gwt.test.resources.MyClientBundle' />
 
+	<ui:style type='com.octo.gwt.test.uibinder.UiBinderWithWidgets.MyStyle'>
+		.redBox {
+			background-color: pink;
+			border: 1px solid red;
+		}
+		
+		.enabled {
+			color: black;
+		}
+		
+		.disabled {
+			color: gray;
+		}
+	</ui:style>
+
 	<ui:style field='otherStyle'>
 		.pretty {
 			background-color: Orange;
@@ -15,7 +30,11 @@
 		<g:Label>Keep your ducks</g:Label>
 		.
 		<g:Label ui:field='msgLabel'>
-			<ui:msg description="Greeting">We <b>strongly</b> urge you to reconsider.</ui:msg>
+			<ui:msg description="Greeting">
+				We
+				<b>strongly</b>
+				urge you to reconsider.
+			</ui:msg>
 		</g:Label>
 
 		<ui:msg>
@@ -32,11 +51,14 @@
 
 		<g:Image ui:field='image' resource='{res.testImageResource}' />
 
-		<g:VerticalPanel ui:field='verticalPanel' horizontalAlignment="ALIGN_LEFT"
-			verticalAlignment="ALIGN_MIDDLE">
+		<g:VerticalPanel ui:field='verticalPanel'
+			horizontalAlignment="ALIGN_LEFT" verticalAlignment="ALIGN_MIDDLE">
 			<test:ProvidedLabel customText="custom text setup in ui.xml">my provided label</test:ProvidedLabel>
-			<test:UiFactoryLabel ui:field="uiFactoryLabel" customText="custom text setup in ui.xml">my UiFactory label</test:UiFactoryLabel>
-			<test:UiConstructorLabel ui:field="uiConstructorLabel" uiConstructorLabel="uiConstructor property" customText="custom text setup in ui.xml">my UiConstructor label</test:UiConstructorLabel>
+			<test:UiFactoryLabel ui:field="uiFactoryLabel"
+				customText="custom text setup in ui.xml">my UiFactory label</test:UiFactoryLabel>
+			<test:UiConstructorLabel ui:field="uiConstructorLabel"
+				uiConstructorLabel="uiConstructor property" customText="custom text setup in ui.xml">my
+				UiConstructor label</test:UiConstructorLabel>
 		</g:VerticalPanel>
 
 	</g:HTMLPanel>

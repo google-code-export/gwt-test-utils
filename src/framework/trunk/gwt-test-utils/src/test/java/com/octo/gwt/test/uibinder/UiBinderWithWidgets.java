@@ -2,22 +2,29 @@ package com.octo.gwt.test.uibinder;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Widget;
 
 public class UiBinderWithWidgets extends Composite {
 
-  interface MyUiBinder extends UiBinder<Widget, UiBinderWithWidgets> {
+  interface MyStyle extends CssResource {
+    String disabled();
+
+    String enabled();
+  }
+
+  interface MyUiBinder extends UiBinder<HTMLPanel, UiBinderWithWidgets> {
   }
 
   private static MyUiBinder uiBinder = GWT.create(MyUiBinder.class);
@@ -46,6 +53,9 @@ public class UiBinderWithWidgets extends Composite {
   PushButton pushButton;
 
   @UiField
+  MyStyle style;
+
+  @UiField
   UiConstructorLabel uiConstructorLabel;
 
   @UiField
@@ -62,6 +72,8 @@ public class UiBinderWithWidgets extends Composite {
     for (String name : names) {
       listBox.addItem(name);
     }
+
+    providedLabel.setStyleName(style.disabled());
   }
 
   @UiHandler("button")

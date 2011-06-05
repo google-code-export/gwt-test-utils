@@ -11,8 +11,8 @@ class DataResourceCallback extends ClientBundleCallback {
 
   protected DataResourceCallback(Class<? extends ClientBundle> wrappedClass,
       URL resourceURL, Class<? extends ClientBundle> proxiedClass) {
-    super(wrappedClass, resourceURL);
-    url = computeUrl(resourceURL, proxiedClass);
+    super(wrappedClass);
+    url = ResourceURLUtils.computeUrl(resourceURL, proxiedClass);
   }
 
   public Object call(Object proxy, Method method, Object[] args)

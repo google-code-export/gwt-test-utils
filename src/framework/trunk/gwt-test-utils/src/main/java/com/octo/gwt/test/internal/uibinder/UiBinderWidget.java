@@ -25,8 +25,8 @@ class UiBinderWidget<T extends Widget> implements UiBinderTag {
 
   private final T wrapped;
 
-  public UiBinderWidget(T wrapped, Attributes attributes, Object owner,
-      Map<String, Object> resources) {
+  UiBinderWidget(T wrapped, Attributes attributes, Object owner,
+      UiResourceManager resourceManager) {
     this.wrapped = wrapped;
     this.attributesMap = new HashMap<String, Object>();
 
@@ -44,7 +44,7 @@ class UiBinderWidget<T extends Widget> implements UiBinderTag {
         Matcher m = ATTRIBUTE_PATTERN.matcher(attrValue);
         if (m.matches()) {
           String resourceAlias = m.group(1);
-          Object resource = resources.get(resourceAlias);
+          Object resource = resourceManager.getUiResource(resourceAlias);
           if (resource == null) {
             throw new GwtTestUiBinderException("Error in file '"
                 + owner.getClass().getSimpleName()
@@ -64,10 +64,11 @@ class UiBinderWidget<T extends Widget> implements UiBinderTag {
               throw (GwtTestException) e;
             } else {
               throw new GwtTestUiBinderException(
-                  "Error while calling property '" + m.group(2)
+                  "Error while calling property '"
+                      + m.group(2)
                       + "' on object of type '"
-                      + resources.get(resourceAlias).getClass().getName() + "'",
-                  e);
+                      + resourceManager.getUiResource(resourceAlias).getClass().getName()
+                      + "'", e);
             }
           }
           attributesMap.put(attrName, resource);
@@ -94,9 +95,7 @@ class UiBinderWidget<T extends Widget> implements UiBinderTag {
   }
 
   public Object getWrapped() {
-
     UiBinderUtils.populateWidget(this.wrapped, attributesMap);
-
     return wrapped;
   }
 

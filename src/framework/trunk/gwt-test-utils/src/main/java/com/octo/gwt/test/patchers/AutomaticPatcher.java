@@ -231,7 +231,7 @@ public class AutomaticPatcher implements Patcher {
   }
 
   protected CtConstructor findConstructor(CtClass ctClass,
-      Class<?>... argsClasses) throws NotFoundException {
+      Class<?>... argsClasses) {
     return GwtPatcherUtils.findConstructor(ctClass, argsClasses);
   }
 

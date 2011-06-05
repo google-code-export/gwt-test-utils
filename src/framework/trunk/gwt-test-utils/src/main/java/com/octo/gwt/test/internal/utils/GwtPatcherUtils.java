@@ -32,25 +32,32 @@ public class GwtPatcherUtils {
   }
 
   public static CtConstructor findConstructor(CtClass ctClass,
-      Class<?>... argsClasses) throws NotFoundException {
+      Class<?>... argsClasses) {
     List<CtConstructor> l = new ArrayList<CtConstructor>();
 
-    for (CtConstructor c : ctClass.getDeclaredConstructors()) {
-      if (argsClasses == null
-          || argsClasses.length == c.getParameterTypes().length) {
-        l.add(c);
+    try {
+      for (CtConstructor c : ctClass.getDeclaredConstructors()) {
+        if (argsClasses == null
+            || argsClasses.length == c.getParameterTypes().length) {
+          l.add(c);
 
-        if (argsClasses != null) {
-          int i = 0;
-          for (Class<?> argClass : argsClasses) {
-            if (!argClass.getName().equals(c.getParameterTypes()[i].getName())) {
-              l.remove(c);
-              continue;
+          if (argsClasses != null) {
+            int i = 0;
+            for (Class<?> argClass : argsClasses) {
+              if (!argClass.getName().equals(c.getParameterTypes()[i].getName())) {
+                l.remove(c);
+                continue;
+              }
+              i++;
             }
-            i++;
           }
         }
       }
+    } catch (NotFoundException e) {
+      // should never happen
+      throw new GwtTestPatchException(
+          "Error while trying find a constructor in class '"
+              + ctClass.getName() + "'", e);
     }
 
     if (l.size() == 1) {
@@ -158,7 +165,7 @@ public class GwtPatcherUtils {
       try {
         m.setBody(src);
       } catch (CannotCompileException e) {
-        throw new GwtTestPatchException("Unable to compile body " + src, e);
+        throw new CannotCompileException("Unable to compile body " + src);
       }
     }
   }

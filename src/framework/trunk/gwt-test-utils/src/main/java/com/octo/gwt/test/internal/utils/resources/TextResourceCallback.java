@@ -7,15 +7,29 @@ import com.google.gwt.resources.client.ClientBundle;
 
 class TextResourceCallback extends ClientBundleCallback {
 
+  private static interface TextReader {
+
+    String readText() throws Exception;
+  }
+
+  private final TextReader textReader;
+
   protected TextResourceCallback(Class<? extends ClientBundle> wrappedClass,
-      URL resourceURL) {
-    super(wrappedClass, resourceURL);
+      final URL resourceURL) {
+    super(wrappedClass);
+    textReader = new TextReader() {
+
+      public String readText() throws Exception {
+        return TextResourceReader.readFile(resourceURL);
+      }
+
+    };
   }
 
   public Object call(Object proxy, Method method, Object[] args)
       throws Exception {
     if (method.getName().equals("getText")) {
-      return TextResourceReader.readFile(resourceURL);
+      return textReader.readText();
     }
 
     return null;

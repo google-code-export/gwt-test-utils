@@ -7,7 +7,6 @@ import java.util.regex.Pattern;
 
 import javassist.CtClass;
 import javassist.CtConstructor;
-import javassist.NotFoundException;
 
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.ImageElement;
@@ -55,8 +54,7 @@ public class ImagePatcher extends AutomaticPatcher {
     }
   }
 
-  private List<CtConstructor> getConstructorsToModify(CtClass c)
-      throws NotFoundException {
+  private List<CtConstructor> getConstructorsToModify(CtClass c) {
     List<CtConstructor> result = new ArrayList<CtConstructor>();
     result.add(findConstructor(c));
     result.add(findConstructor(c, String.class));

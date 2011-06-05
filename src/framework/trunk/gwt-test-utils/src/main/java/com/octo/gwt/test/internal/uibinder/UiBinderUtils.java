@@ -27,6 +27,7 @@ class UiBinderUtils {
   private static final String UIBINDER_TAG = "UiBinder";
 
   static {
+    RESOURCE_TAGS.add("style");
     RESOURCE_TAGS.add("data");
     RESOURCE_TAGS.add("img");
     RESOURCE_TAGS.add("with");
