@@ -4,9 +4,9 @@ import javassist.ClassPool;
 
 public class PatchGwtClassPool {
 
-	private static ClassPool classPool = ClassPool.getDefault();
+  private static ClassPool classPool = ClassPool.getDefault();
 
-	public static ClassPool get() {
-		return classPool;
-	}
+  public static ClassPool get() {
+    return classPool;
+  }
 }

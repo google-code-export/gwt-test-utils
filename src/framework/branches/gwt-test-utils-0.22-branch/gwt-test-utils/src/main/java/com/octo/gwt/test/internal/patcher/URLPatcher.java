@@ -11,13 +11,13 @@ import com.octo.gwt.test.patcher.PatchMethod;
 @PatchClass(URL.class)
 public class URLPatcher extends AutomaticPatcher {
 
-	@PatchMethod
-	public static String encodeComponentImpl(String decodedURLComponent) {
-		try {
-			return URLEncoder.encode(decodedURLComponent, "UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			throw new RuntimeException(e);
-		}
-	}
+  @PatchMethod
+  public static String encodeComponentImpl(String decodedURLComponent) {
+    try {
+      return URLEncoder.encode(decodedURLComponent, "UTF-8");
+    } catch (UnsupportedEncodingException e) {
+      throw new RuntimeException(e);
+    }
+  }
 
 }

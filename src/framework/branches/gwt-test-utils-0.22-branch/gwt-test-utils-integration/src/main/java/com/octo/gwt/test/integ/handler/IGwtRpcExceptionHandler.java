@@ -4,6 +4,6 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public interface IGwtRpcExceptionHandler {
 
-	void handle(Throwable t, AsyncCallback<?> callback);
+  void handle(Throwable t, AsyncCallback<?> callback);
 
 }

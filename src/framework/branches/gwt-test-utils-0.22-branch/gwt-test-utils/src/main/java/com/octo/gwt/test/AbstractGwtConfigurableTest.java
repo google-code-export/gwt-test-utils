@@ -9,45 +9,45 @@ import com.octo.gwt.test.internal.PatchGwtReset;
 
 public abstract class AbstractGwtConfigurableTest {
 
-	@Before
-	public void setUpAbstractGwtIntegrationShell() throws Exception {
-		PatchGwtConfig.setLocale(getLocale());
-		PatchGwtConfig.setCurrentTestedModuleFile(getCurrentTestedModuleFile());
-		PatchGwtConfig.setLogHandler(getLogHandler());
-	}
+  @Before
+  public void setUpAbstractGwtIntegrationShell() throws Exception {
+    PatchGwtConfig.setLocale(getLocale());
+    PatchGwtConfig.setCurrentTestedModuleFile(getCurrentTestedModuleFile());
+    PatchGwtConfig.setLogHandler(getLogHandler());
+  }
 
-	@After
-	public void tearDownAbstractGwtIntegrationShell() throws Exception {
-		resetPatchGwt();
-	}
+  @After
+  public void tearDownAbstractGwtIntegrationShell() throws Exception {
+    resetPatchGwt();
+  }
 
-	protected String getCurrentTestedModuleFile() {
-		// this method can be overrided by subclass
-		return null;
-	}
+  protected String getCurrentTestedModuleFile() {
+    // this method can be overrided by subclass
+    return null;
+  }
 
-	protected GwtLogHandler getLogHandler() {
-		// this method can be overrided by subclass
-		return null;
-	}
+  protected GwtLogHandler getLogHandler() {
+    // this method can be overrided by subclass
+    return null;
+  }
 
-	protected Locale getLocale() {
-		// this method can be overrided by subclass
-		return null;
-	}
+  protected Locale getLocale() {
+    // this method can be overrided by subclass
+    return null;
+  }
 
-	protected void resetPatchGwt() throws Exception {
-		// reinit GWT
-		PatchGwtReset.reset();
-	}
+  protected void resetPatchGwt() throws Exception {
+    // reinit GWT
+    PatchGwtReset.reset();
+  }
 
-	protected boolean addGwtCreateHandler(GwtCreateHandler gwtCreateHandler) {
-		return PatchGwtConfig.addGwtCreateHandler(gwtCreateHandler);
-	}
+  protected boolean addGwtCreateHandler(GwtCreateHandler gwtCreateHandler) {
+    return PatchGwtConfig.addGwtCreateHandler(gwtCreateHandler);
+  }
 
-	@Deprecated
-	protected void setGwtCreateHandler(GwtCreateHandler gwtCreateHandler) {
-		addGwtCreateHandler(gwtCreateHandler);
-	}
+  @Deprecated
+  protected void setGwtCreateHandler(GwtCreateHandler gwtCreateHandler) {
+    addGwtCreateHandler(gwtCreateHandler);
+  }
 
 }

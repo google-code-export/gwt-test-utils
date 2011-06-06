@@ -14,29 +14,32 @@ import com.octo.gwt.test.patcher.AutomaticPatcher;
 
 public class AutomaticPatcherTest {
 
-	private AutomaticPatcher patcher;
+  private AutomaticPatcher patcher;
 
-	@Before
-	public void setUpAutomaticPatcher() {
-		patcher = new MyClassToPatchPatcher();
-	}
+  @Before
+  public void setUpAutomaticPatcher() {
+    patcher = new MyClassToPatchPatcher();
+  }
 
-	@Test
-	public void checkPatchWithInnerClassAsParam() throws Exception {
-		// Setup
-		ClassPool cp = PatchGwtClassPool.get();
-		CtClass ctClass = cp.getAndRename(MyClassToPatch.class.getName(), "generated.NewGeneratedClass");
-		ctClass.setSuperclass(cp.get(MyClassToPatch.class.getName()));
-		MyInnerClass innerObject = new MyInnerClass("innerOjbectForUnitTest");
+  @Test
+  public void checkPatchWithInnerClassAsParam() throws Exception {
+    // Setup
+    ClassPool cp = PatchGwtClassPool.get();
+    CtClass ctClass = cp.getAndRename(MyClassToPatch.class.getName(),
+        "generated.NewGeneratedClass");
+    ctClass.setSuperclass(cp.get(MyClassToPatch.class.getName()));
+    MyInnerClass innerObject = new MyInnerClass("innerOjbectForUnitTest");
 
-		// Test
-		PatchGwtUtils.patch(ctClass, patcher);
+    // Test
+    PatchGwtUtils.patch(ctClass, patcher);
 
-		//Assert
-		Class<?> clazz = ctClass.toClass();
-		MyClassToPatch instance = (MyClassToPatch) clazz.newInstance();
+    // Assert
+    Class<?> clazz = ctClass.toClass();
+    MyClassToPatch instance = (MyClassToPatch) clazz.newInstance();
 
-		Assert.assertEquals("myStringMethod has been patched : innerOjbectForUnitTest", instance.myStringMethod(innerObject));
-	}
+    Assert.assertEquals(
+        "myStringMethod has been patched : innerOjbectForUnitTest",
+        instance.myStringMethod(innerObject));
+  }
 
 }

@@ -13,8 +13,8 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 public @interface PatchClass {
 
-	Class<?>[] value() default {};
+  Class<?>[] value() default {};
 
-	String[] classes() default {};
+  String[] classes() default {};
 
 }

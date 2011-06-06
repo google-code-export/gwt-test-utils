@@ -17,103 +17,104 @@ import com.octo.gwt.test.internal.PatchGwtClassPool;
  */
 public class GwtTestClassLoader extends Loader {
 
-	private static GwtTestClassLoader INSTANCE;
+  private static GwtTestClassLoader INSTANCE;
 
-	public static ClassLoader getInstance() {
-		if (INSTANCE == null) {
-			try {
-				INSTANCE = new GwtTestClassLoader();
-			} catch (Exception e) {
-				if (e instanceof RuntimeException) {
-					throw (RuntimeException) e;
-				} else {
-					throw new RuntimeException(e);
-				}
-			}
-		}
+  public static ClassLoader getInstance() {
+    if (INSTANCE == null) {
+      try {
+        INSTANCE = new GwtTestClassLoader();
+      } catch (Exception e) {
+        if (e instanceof RuntimeException) {
+          throw (RuntimeException) e;
+        } else {
+          throw new RuntimeException(e);
+        }
+      }
+    }
 
-		return INSTANCE;
-	}
+    return INSTANCE;
+  }
 
-	private GwtTranslator translator;
+  private GwtTranslator translator;
 
-	private GwtTestClassLoader() throws NotFoundException, CannotCompileException {
-		super(PatchGwtClassPool.get());
+  private GwtTestClassLoader() throws NotFoundException, CannotCompileException {
+    super(PatchGwtClassPool.get());
 
-		init();
+    init();
 
-		ConfigurationLoader configurationLoader = ConfigurationLoader.createInstance(this.getParent());
+    ConfigurationLoader configurationLoader = ConfigurationLoader.createInstance(this.getParent());
 
-		for (String s : configurationLoader.getDelegateList()) {
-			delegateLoadingOf(s);
-		}
-		for (String s : configurationLoader.getNotDelegateList()) {
-			notDelegateLoadingOf(s);
-		}
+    for (String s : configurationLoader.getDelegateList()) {
+      delegateLoadingOf(s);
+    }
+    for (String s : configurationLoader.getNotDelegateList()) {
+      notDelegateLoadingOf(s);
+    }
 
-		translator = new GwtTranslator(configurationLoader.getPatchers());
+    translator = new GwtTranslator(configurationLoader.getPatchers());
 
-		addTranslator(PatchGwtClassPool.get(), translator);
-	}
+    addTranslator(PatchGwtClassPool.get(), translator);
+  }
 
-	private List<String> delegate;
+  private List<String> delegate;
 
-	private List<String> notDelegate;
+  private List<String> notDelegate;
 
-	private void init() {
-		if (delegate == null) {
-			delegate = new ArrayList<String>();
-		}
-		if (notDelegate == null) {
-			notDelegate = new ArrayList<String>();
-		}
-	}
+  private void init() {
+    if (delegate == null) {
+      delegate = new ArrayList<String>();
+    }
+    if (notDelegate == null) {
+      notDelegate = new ArrayList<String>();
+    }
+  }
 
-	@Override
-	public void delegateLoadingOf(String classname) {
-		init();
-		delegate.add(buildRegex(classname));
-	}
+  @Override
+  public void delegateLoadingOf(String classname) {
+    init();
+    delegate.add(buildRegex(classname));
+  }
 
-	public void notDelegateLoadingOf(String classname) {
-		init();
-		notDelegate.add(buildRegex(classname));
-	}
+  public void notDelegateLoadingOf(String classname) {
+    init();
+    notDelegate.add(buildRegex(classname));
+  }
 
-	private String buildRegex(String classname) {
-		StringBuilder sb = new StringBuilder();
-		sb.append("^");
-		classname = classname.replaceAll("\\.", "\\\\\\.");
-		classname = classname.replaceAll("\\*", ".*");
+  private String buildRegex(String classname) {
+    StringBuilder sb = new StringBuilder();
+    sb.append("^");
+    classname = classname.replaceAll("\\.", "\\\\\\.");
+    classname = classname.replaceAll("\\*", ".*");
 
-		if (classname.endsWith(".")) {
-			classname = classname + ".*";
-		}
+    if (classname.endsWith(".")) {
+      classname = classname + ".*";
+    }
 
-		sb.append(classname);
-		sb.append("$");
-		return sb.toString();
-	}
+    sb.append(classname);
+    sb.append("$");
+    return sb.toString();
+  }
 
-	protected Class<?> loadClassByDelegation(String classname) throws ClassNotFoundException {
-		if (isDelegated(classname)) {
-			return delegateToParent(classname);
-		}
-		return null;
-	}
+  protected Class<?> loadClassByDelegation(String classname)
+      throws ClassNotFoundException {
+    if (isDelegated(classname)) {
+      return delegateToParent(classname);
+    }
+    return null;
+  }
 
-	private boolean isDelegated(String classname) {
-		for (String pkg : notDelegate) {
-			if (classname.matches(pkg)) {
-				return false;
-			}
-		}
-		for (String pkg : delegate) {
-			if (classname.matches(pkg)) {
-				return true;
-			}
-		}
-		return false;
-	}
+  private boolean isDelegated(String classname) {
+    for (String pkg : notDelegate) {
+      if (classname.matches(pkg)) {
+        return false;
+      }
+    }
+    for (String pkg : delegate) {
+      if (classname.matches(pkg)) {
+        return true;
+      }
+    }
+    return false;
+  }
 
 }

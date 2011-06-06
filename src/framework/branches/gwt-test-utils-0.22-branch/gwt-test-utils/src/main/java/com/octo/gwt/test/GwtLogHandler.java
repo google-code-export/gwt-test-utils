@@ -7,10 +7,10 @@ package com.octo.gwt.test;
  */
 public interface GwtLogHandler {
 
-	/**
-	 * Logs a message (calls to {@link GWT#log(String, Throwable)} are delagated
-	 * to this method).
-	 */
-	void log(String message, Throwable t);
+  /**
+   * Logs a message (calls to {@link GWT#log(String, Throwable)} are delagated
+   * to this method).
+   */
+  void log(String message, Throwable t);
 
 }

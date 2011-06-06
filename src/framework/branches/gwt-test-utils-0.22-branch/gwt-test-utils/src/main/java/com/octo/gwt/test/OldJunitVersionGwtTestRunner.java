@@ -12,8 +12,9 @@ import org.junit.internal.runners.JUnit4ClassRunner;
 @SuppressWarnings("deprecation")
 public class OldJunitVersionGwtTestRunner extends JUnit4ClassRunner {
 
-	public OldJunitVersionGwtTestRunner(Class<?> clazz) throws InitializationError, ClassNotFoundException {
-		super(GwtTestClassLoader.getInstance().loadClass(clazz.getName()));
-	}
+  public OldJunitVersionGwtTestRunner(Class<?> clazz)
+      throws InitializationError, ClassNotFoundException {
+    super(GwtTestClassLoader.getInstance().loadClass(clazz.getName()));
+  }
 
 }

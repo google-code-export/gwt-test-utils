@@ -9,16 +9,16 @@ import com.octo.gwt.test.patcher.PatchMethod;
 @PatchClass(Frame.class)
 public class FramePatcher extends AutomaticPatcher {
 
-	@PatchMethod
-	public static String getUrl(Frame frame) {
-		IFrameElement e = frame.getElement().cast();
-		return e.getSrc();
-	}
+  @PatchMethod
+  public static String getUrl(Frame frame) {
+    IFrameElement e = frame.getElement().cast();
+    return e.getSrc();
+  }
 
-	@PatchMethod
-	public static void setUrl(Frame frame, String url) {
-		IFrameElement e = frame.getElement().cast();
-		e.setSrc(url);
-	}
+  @PatchMethod
+  public static void setUrl(Frame frame, String url) {
+    IFrameElement e = frame.getElement().cast();
+    e.setSrc(url);
+  }
 
 }

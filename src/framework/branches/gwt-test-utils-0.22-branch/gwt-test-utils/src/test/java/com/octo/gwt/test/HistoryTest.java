@@ -10,84 +10,84 @@ import com.google.gwt.user.client.HistoryListener;
 @SuppressWarnings("deprecation")
 public class HistoryTest extends AbstractGwtEasyMockTest {
 
-	@Mock
-	private HistoryListener listener;
+  @Mock
+  private HistoryListener listener;
 
-	@Mock
-	private ValueChangeHandler<String> listener2;
+  @Mock
+  private ValueChangeHandler<String> listener2;
 
-	@Test
-	public void checkHistoryOldSchool() {
-		// Setup
+  @Test
+  public void checkHistoryOldSchool() {
+    // Setup
 
-		listener.onHistoryChanged(EasyMock.eq("init"));
-		EasyMock.expectLastCall();
+    listener.onHistoryChanged(EasyMock.eq("init"));
+    EasyMock.expectLastCall();
 
-		listener.onHistoryChanged(EasyMock.eq("myToken"));
-		EasyMock.expectLastCall();
+    listener.onHistoryChanged(EasyMock.eq("myToken"));
+    EasyMock.expectLastCall();
 
-		replay();
-		// Test
-		History.addHistoryListener(listener);
+    replay();
+    // Test
+    History.addHistoryListener(listener);
 
-		History.newItem("init");
-		History.newItem("myToken");
+    History.newItem("init");
+    History.newItem("myToken");
 
-		// Assert
-		verify();
+    // Assert
+    verify();
 
-		reset();
+    reset();
 
-		// Setup
+    // Setup
 
-		listener.onHistoryChanged(EasyMock.eq("init"));
-		EasyMock.expectLastCall();
+    listener.onHistoryChanged(EasyMock.eq("init"));
+    EasyMock.expectLastCall();
 
-		replay();
-		// Test
-		History.back();
+    replay();
+    // Test
+    History.back();
 
-		History.removeHistoryListener(listener);
+    History.removeHistoryListener(listener);
 
-		History.newItem("myToken2");
+    History.newItem("myToken2");
 
-		// Assert
-		verify();
-	}
+    // Assert
+    verify();
+  }
 
-	@Test
-	public void checkHistory() {
-		// Setup
+  @Test
+  public void checkHistory() {
+    // Setup
 
-		listener2.onValueChange(ValueChangeEventMatcher.eq("init"));
-		EasyMock.expectLastCall();
+    listener2.onValueChange(ValueChangeEventMatcher.eq("init"));
+    EasyMock.expectLastCall();
 
-		listener2.onValueChange(ValueChangeEventMatcher.eq("myToken"));
-		EasyMock.expectLastCall();
+    listener2.onValueChange(ValueChangeEventMatcher.eq("myToken"));
+    EasyMock.expectLastCall();
 
-		replay();
-		// Test
-		History.addValueChangeHandler(listener2);
+    replay();
+    // Test
+    History.addValueChangeHandler(listener2);
 
-		History.newItem("init");
-		History.newItem("myToken");
+    History.newItem("init");
+    History.newItem("myToken");
 
-		// Assert
-		verify();
+    // Assert
+    verify();
 
-		reset();
+    reset();
 
-		// Setup
+    // Setup
 
-		listener2.onValueChange(ValueChangeEventMatcher.eq("init"));
-		EasyMock.expectLastCall();
+    listener2.onValueChange(ValueChangeEventMatcher.eq("init"));
+    EasyMock.expectLastCall();
 
-		replay();
-		// Test
-		History.back();
+    replay();
+    // Test
+    History.back();
 
-		// Assert
-		verify();
-	}
+    // Assert
+    verify();
+  }
 
 }

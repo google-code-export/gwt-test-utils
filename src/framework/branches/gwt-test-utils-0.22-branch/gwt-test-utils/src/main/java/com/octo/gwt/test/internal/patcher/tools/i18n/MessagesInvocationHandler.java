@@ -15,107 +15,124 @@ import com.google.gwt.i18n.client.Messages.PluralText;
 import com.google.gwt.i18n.client.PluralRule;
 import com.google.gwt.i18n.client.impl.plurals.DefaultRule;
 
-public class MessagesInvocationHandler extends LocalizableResourcesInvocationHandler {
+public class MessagesInvocationHandler extends
+    LocalizableResourcesInvocationHandler {
 
-	public MessagesInvocationHandler(Class<? extends LocalizableResource> proxiedClass) {
-		super(proxiedClass);
-	}
+  public MessagesInvocationHandler(
+      Class<? extends LocalizableResource> proxiedClass) {
+    super(proxiedClass);
+  }
 
-	@Override
-	protected Object extractFromProperties(Properties localizedProperties, Method method, Object[] args, Locale locale) throws Throwable {
-		PluralText pluralText = method.getAnnotation(PluralText.class);
+  @Override
+  protected Object extractFromProperties(Properties localizedProperties,
+      Method method, Object[] args, Locale locale) throws Throwable {
+    PluralText pluralText = method.getAnnotation(PluralText.class);
 
-		String key = (pluralText == null) ? method.getName() : getPluralTextSpecificKey(pluralText, method, args, locale);
+    String key = (pluralText == null) ? method.getName()
+        : getPluralTextSpecificKey(pluralText, method, args, locale);
 
-		String result = extractProperty(localizedProperties, key);
-		if (result != null) {
-			return format(result, args, locale);
-		}
+    String result = extractProperty(localizedProperties, key);
+    if (result != null) {
+      return format(result, args, locale);
+    }
 
-		return null;
+    return null;
 
-	}
+  }
 
-	private String getPluralTextSpecificKey(PluralText pluralText, Method method, Object[] args, Locale locale) {
-		String pluralCountValue = extractPluralCountValue(method, args, locale);
+  private String getPluralTextSpecificKey(PluralText pluralText, Method method,
+      Object[] args, Locale locale) {
+    String pluralCountValue = extractPluralCountValue(method, args, locale);
 
-		return method.getName() + "[" + pluralCountValue + "]";
-	}
+    return method.getName() + "[" + pluralCountValue + "]";
+  }
 
-	@Override
-	protected Object extractDefaultValue(Method method, Object[] args, Locale locale) throws Throwable {
-		DefaultMessage defaultMessage = method.getAnnotation(DefaultMessage.class);
-		PluralText pluralText = method.getAnnotation(PluralText.class);
-		String valuePattern = null;
-		if (pluralText != null) {
-			valuePattern = extractPluralCountPattern(pluralText, method, args, locale);
-		}
-		if (valuePattern == null && defaultMessage != null) {
-			valuePattern = defaultMessage.value();
-		}
-		if (valuePattern != null) {
-			return format(valuePattern, args, locale);
-		}
+  @Override
+  protected Object extractDefaultValue(Method method, Object[] args,
+      Locale locale) throws Throwable {
+    DefaultMessage defaultMessage = method.getAnnotation(DefaultMessage.class);
+    PluralText pluralText = method.getAnnotation(PluralText.class);
+    String valuePattern = null;
+    if (pluralText != null) {
+      valuePattern = extractPluralCountPattern(pluralText, method, args, locale);
+    }
+    if (valuePattern == null && defaultMessage != null) {
+      valuePattern = defaultMessage.value();
+    }
+    if (valuePattern != null) {
+      return format(valuePattern, args, locale);
+    }
 
-		return null;
-	}
+    return null;
+  }
 
-	private String extractPluralCountPattern(PluralText pluralText, Method method, Object[] args, Locale locale) {
-		String pluralCountValue = extractPluralCountValue(method, args, locale);
-		Map<String, String> pluralForms = getPluralForms(pluralText);
+  private String extractPluralCountPattern(PluralText pluralText,
+      Method method, Object[] args, Locale locale) {
+    String pluralCountValue = extractPluralCountValue(method, args, locale);
+    Map<String, String> pluralForms = getPluralForms(pluralText);
 
-		return pluralForms.get(pluralCountValue);
-	}
+    return pluralForms.get(pluralCountValue);
+  }
 
-	@SuppressWarnings("unchecked")
-	private String extractPluralCountValue(Method method, Object[] args, Locale locale) {
-		Annotation[][] annotations = method.getParameterAnnotations();
-		for (int i = 0; i < annotations.length; i++) {
-			Annotation[] childArray = annotations[i];
-			for (int j = 0; j < childArray.length; j++) {
-				if (PluralCount.class.isAssignableFrom(childArray[j].getClass())) {
-					PluralCount pluralCount = (PluralCount) childArray[j];
-					Class<? extends PluralRule> pluralRuleClass = pluralCount.value();
-					int count = (Integer) args[i];
+  @SuppressWarnings("unchecked")
+  private String extractPluralCountValue(Method method, Object[] args,
+      Locale locale) {
+    Annotation[][] annotations = method.getParameterAnnotations();
+    for (int i = 0; i < annotations.length; i++) {
+      Annotation[] childArray = annotations[i];
+      for (int j = 0; j < childArray.length; j++) {
+        if (PluralCount.class.isAssignableFrom(childArray[j].getClass())) {
+          PluralCount pluralCount = (PluralCount) childArray[j];
+          Class<? extends PluralRule> pluralRuleClass = pluralCount.value();
+          int count = (Integer) args[i];
 
-					String pluralRuleClassName = (pluralRuleClass != PluralRule.class) ? pluralRuleClass.getName() : DefaultRule.class.getName();
-					pluralRuleClassName += ("_" + locale.getLanguage());
+          String pluralRuleClassName = (pluralRuleClass != PluralRule.class)
+              ? pluralRuleClass.getName() : DefaultRule.class.getName();
+          pluralRuleClassName += ("_" + locale.getLanguage());
 
-					try {
-						Class<? extends PluralRule> acutalRule = (Class<? extends PluralRule>) Class.forName(pluralRuleClassName);
-						PluralRule ruleInstance = acutalRule.newInstance();
+          try {
+            Class<? extends PluralRule> acutalRule = (Class<? extends PluralRule>) Class.forName(pluralRuleClassName);
+            PluralRule ruleInstance = acutalRule.newInstance();
 
-						return ruleInstance.pluralForms()[ruleInstance.select(count)].getName();
+            return ruleInstance.pluralForms()[ruleInstance.select(count)].getName();
 
-					} catch (ClassNotFoundException e) {
-						throw new RuntimeException("Cannot find PluralRule for method '" + method.getDeclaringClass().getSimpleName() + "."
-								+ method.getName() + "()'. Expected PluralRule : '" + pluralRuleClassName + "'");
-					} catch (InstantiationException e) {
-						throw new RuntimeException("Error during instanciation of class '" + pluralRuleClassName + "'");
-					} catch (IllegalAccessException e) {
-						throw new RuntimeException("Error during instanciation of class '" + pluralRuleClassName + "'");
-					}
-				}
-			}
-		}
+          } catch (ClassNotFoundException e) {
+            throw new RuntimeException("Cannot find PluralRule for method '"
+                + method.getDeclaringClass().getSimpleName() + "."
+                + method.getName() + "()'. Expected PluralRule : '"
+                + pluralRuleClassName + "'");
+          } catch (InstantiationException e) {
+            throw new RuntimeException("Error during instanciation of class '"
+                + pluralRuleClassName + "'");
+          } catch (IllegalAccessException e) {
+            throw new RuntimeException("Error during instanciation of class '"
+                + pluralRuleClassName + "'");
+          }
+        }
+      }
+    }
 
-		throw new RuntimeException("Bad configuration of '" + method.getDeclaringClass() + "." + method.getName()
-				+ "' : a @PluralText is declared but no @PluralCount set on any method parameter'");
-	}
+    throw new RuntimeException(
+        "Bad configuration of '"
+            + method.getDeclaringClass()
+            + "."
+            + method.getName()
+            + "' : a @PluralText is declared but no @PluralCount set on any method parameter'");
+  }
 
-	private Map<String, String> getPluralForms(PluralText pluralText) {
-		Map<String, String> pluralForms = new HashMap<String, String>();
+  private Map<String, String> getPluralForms(PluralText pluralText) {
+    Map<String, String> pluralForms = new HashMap<String, String>();
 
-		String[] annotationValue = pluralText.value();
-		for (int i = 0; i < annotationValue.length; i++) {
-			pluralForms.put(annotationValue[i], annotationValue[++i]);
-		}
+    String[] annotationValue = pluralText.value();
+    for (int i = 0; i < annotationValue.length; i++) {
+      pluralForms.put(annotationValue[i], annotationValue[++i]);
+    }
 
-		return pluralForms;
-	}
+    return pluralForms;
+  }
 
-	private String format(String pattern, Object[] args, Locale locale) {
-		return new MessageFormat(pattern, locale).format(args);
-	}
+  private String format(String pattern, Object[] args, Locale locale) {
+    return new MessageFormat(pattern, locale).format(args);
+  }
 
 }

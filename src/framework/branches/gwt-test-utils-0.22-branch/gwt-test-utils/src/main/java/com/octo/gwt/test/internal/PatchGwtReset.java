@@ -21,45 +21,57 @@ import com.octo.gwt.test.utils.GwtTestReflectionUtils;
 
 public class PatchGwtReset {
 
-	public static void reset() throws Exception {
-		NodeFactory.reset();
-		PatchGwtConfig.reset();
-		CurrencyListPatcher.reset();
-		PatchGwtUtils.reset();
-		HistoryImplPatcher.reset();
-		GwtPatcher.reset();
-		TimerPatcher.reset();
-		ImplPatcher.reset();
-		GwtCreateHandlerManager.getInstance().reset();
+  public static void reset() throws Exception {
+    NodeFactory.reset();
+    PatchGwtConfig.reset();
+    CurrencyListPatcher.reset();
+    PatchGwtUtils.reset();
+    HistoryImplPatcher.reset();
+    GwtPatcher.reset();
+    TimerPatcher.reset();
+    ImplPatcher.reset();
+    GwtCreateHandlerManager.getInstance().reset();
 
-		WidgetCollection widgetCollection = GwtTestReflectionUtils.getPrivateFieldValue(RootPanel.get(), "children");
-		Widget[] array = GwtTestReflectionUtils.getPrivateFieldValue(widgetCollection, "array");
-		for (int i = 0; i < array.length; i++) {
-			array[i] = null;
-		}
-		GwtTestReflectionUtils.setPrivateFieldValue(widgetCollection, "size", 0);
+    WidgetCollection widgetCollection = GwtTestReflectionUtils.getPrivateFieldValue(
+        RootPanel.get(), "children");
+    Widget[] array = GwtTestReflectionUtils.getPrivateFieldValue(
+        widgetCollection, "array");
+    for (int i = 0; i < array.length; i++) {
+      array[i] = null;
+    }
+    GwtTestReflectionUtils.setPrivateFieldValue(widgetCollection, "size", 0);
 
-		GwtTestReflectionUtils.getStaticAndCallClear(Timer.class, "timers");
-		GwtTestReflectionUtils.getStaticAndCallClear(RootPanel.class, "rootPanels");
-		GwtTestReflectionUtils.getStaticAndCallClear(RootPanel.class, "widgetsToDetach");
+    GwtTestReflectionUtils.getStaticAndCallClear(Timer.class, "timers");
+    GwtTestReflectionUtils.getStaticAndCallClear(RootPanel.class, "rootPanels");
+    GwtTestReflectionUtils.getStaticAndCallClear(RootPanel.class,
+        "widgetsToDetach");
 
-		Object commandExecutor = GwtTestReflectionUtils.getStaticFieldValue(Class.forName("com.google.gwt.user.client.DeferredCommand"),
-				"commandExecutor");
-		GwtTestReflectionUtils.callPrivateMethod(GwtTestReflectionUtils.getPrivateFieldValue(commandExecutor, "commands"), "clear");
+    Object commandExecutor = GwtTestReflectionUtils.getStaticFieldValue(
+        Class.forName("com.google.gwt.user.client.DeferredCommand"),
+        "commandExecutor");
+    GwtTestReflectionUtils.callPrivateMethod(
+        GwtTestReflectionUtils.getPrivateFieldValue(commandExecutor, "commands"),
+        "clear");
 
-		HistoryImpl historyImpl = GwtTestReflectionUtils.getStaticFieldValue(History.class, "impl");
-		GwtTestReflectionUtils
-				.callPrivateMethod(
-						GwtTestReflectionUtils.getPrivateFieldValue(GwtTestReflectionUtils.getPrivateFieldValue(
-								GwtTestReflectionUtils.getPrivateFieldValue(historyImpl, "handlers"), "registry"), "map"), "clear");
+    HistoryImpl historyImpl = GwtTestReflectionUtils.getStaticFieldValue(
+        History.class, "impl");
+    GwtTestReflectionUtils.callPrivateMethod(
+        GwtTestReflectionUtils.getPrivateFieldValue(
+            GwtTestReflectionUtils.getPrivateFieldValue(
+                GwtTestReflectionUtils.getPrivateFieldValue(historyImpl,
+                    "handlers"), "registry"), "map"), "clear");
 
-		GwtTestReflectionUtils.setStaticField(NumberFormat.class, "cachedDecimalFormat", null);
-		GwtTestReflectionUtils.setStaticField(NumberFormat.class, "cachedScientificFormat", null);
-		GwtTestReflectionUtils.setStaticField(NumberFormat.class, "cachedPercentFormat", null);
-		GwtTestReflectionUtils.setStaticField(NumberFormat.class, "cachedCurrencyFormat", null);
+    GwtTestReflectionUtils.setStaticField(NumberFormat.class,
+        "cachedDecimalFormat", null);
+    GwtTestReflectionUtils.setStaticField(NumberFormat.class,
+        "cachedScientificFormat", null);
+    GwtTestReflectionUtils.setStaticField(NumberFormat.class,
+        "cachedPercentFormat", null);
+    GwtTestReflectionUtils.setStaticField(NumberFormat.class,
+        "cachedCurrencyFormat", null);
 
-		GwtTestReflectionUtils.setStaticField(Window.class, "handlers", null);
-		GwtTestReflectionUtils.setStaticField(Event.class, "handlers", null);
-	}
+    GwtTestReflectionUtils.setStaticField(Window.class, "handlers", null);
+    GwtTestReflectionUtils.setStaticField(Event.class, "handlers", null);
+  }
 
 }

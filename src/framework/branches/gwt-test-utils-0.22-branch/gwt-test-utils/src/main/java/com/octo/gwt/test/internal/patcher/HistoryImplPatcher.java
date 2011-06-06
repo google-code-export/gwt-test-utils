@@ -10,33 +10,33 @@ import com.octo.gwt.test.patcher.PatchMethod;
 @PatchClass(HistoryImpl.class)
 public class HistoryImplPatcher extends AutomaticPatcher {
 
-	static Stack<String> stack = new Stack<String>();
+  static Stack<String> stack = new Stack<String>();
 
-	private static String top = null;
+  private static String top = null;
 
-	@PatchMethod
-	public static boolean init(HistoryImpl historyImpl) {
-		return true;
-	}
+  @PatchMethod
+  public static boolean init(HistoryImpl historyImpl) {
+    return true;
+  }
 
-	@PatchMethod
-	public static void nativeUpdate(HistoryImpl historyImpl, String s) {
+  @PatchMethod
+  public static void nativeUpdate(HistoryImpl historyImpl, String s) {
 
-	}
+  }
 
-	@PatchMethod
-	public static void setToken(String token) {
-		stack.push(token);
-		top = token;
-	}
+  @PatchMethod
+  public static void setToken(String token) {
+    stack.push(token);
+    top = token;
+  }
 
-	@PatchMethod
-	public static String getToken() {
-		return top;
-	}
+  @PatchMethod
+  public static String getToken() {
+    return top;
+  }
 
-	public static void reset() {
-		stack.clear();
-	}
+  public static void reset() {
+    stack.clear();
+  }
 
 }

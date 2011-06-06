@@ -14,62 +14,64 @@ import java.util.regex.Pattern;
 
 public class CssResourceReader {
 
-	private static Map<URL, CssParsingResult> cache;
+  private static Map<URL, CssParsingResult> cache;
 
-	public static CssParsingResult readCss(URL url) throws UnsupportedEncodingException, IOException {
-		if (cache == null) {
-			cache = new HashMap<URL, CssParsingResult>();
-		}
+  public static CssParsingResult readCss(URL url)
+      throws UnsupportedEncodingException, IOException {
+    if (cache == null) {
+      cache = new HashMap<URL, CssParsingResult>();
+    }
 
-		if (!cache.containsKey(url)) {
+    if (!cache.containsKey(url)) {
 
-			Map<String, String> constants = new HashMap<String, String>();
-			Set<String> styles = new HashSet<String>();
+      Map<String, String> constants = new HashMap<String, String>();
+      Set<String> styles = new HashSet<String>();
 
-			Pattern constantPattern = Pattern.compile("^\\s*@def (\\S+)\\s+(\\S+)\\s*$");
+      Pattern constantPattern = Pattern.compile("^\\s*@def (\\S+)\\s+(\\S+)\\s*$");
 
-			BufferedReader reader = null;
+      BufferedReader reader = null;
 
-			try {
-				reader = new BufferedReader(new InputStreamReader(url.openStream(), "UTF-8"));
+      try {
+        reader = new BufferedReader(new InputStreamReader(url.openStream(),
+            "UTF-8"));
 
-				String line;
-				Matcher m;
-				while ((line = reader.readLine()) != null) {
-					m = constantPattern.matcher(line);
-					if (m.matches()) {
-						constants.put(m.group(1), m.group(2));
-					}
+        String line;
+        Matcher m;
+        while ((line = reader.readLine()) != null) {
+          m = constantPattern.matcher(line);
+          if (m.matches()) {
+            constants.put(m.group(1), m.group(2));
+          }
 
-				}
+        }
 
-				cache.put(url, new CssParsingResult(constants, styles));
+        cache.put(url, new CssParsingResult(constants, styles));
 
-			} finally {
-				if (reader != null) {
-					reader.close();
-				}
-			}
-		}
+      } finally {
+        if (reader != null) {
+          reader.close();
+        }
+      }
+    }
 
-		return cache.get(url);
-	}
+    return cache.get(url);
+  }
 
-	public static void reset() {
-		cache.clear();
-	}
+  public static void reset() {
+    cache.clear();
+  }
 
-	public static class CssParsingResult {
+  public static class CssParsingResult {
 
-		private Map<String, String> constants;
+    private Map<String, String> constants;
 
-		private CssParsingResult(Map<String, String> constants, Set<String> styles) {
-			this.constants = constants;
-		}
+    private CssParsingResult(Map<String, String> constants, Set<String> styles) {
+      this.constants = constants;
+    }
 
-		public Map<String, String> getConstants() {
-			return constants;
-		}
-	}
+    public Map<String, String> getConstants() {
+      return constants;
+    }
+  }
 
 }

@@ -12,44 +12,49 @@ import com.octo.gwt.test.internal.patcher.tools.resources.CssResourceReader.CssP
 
 public class CssResourceCallback extends AbstractClientBundleCallback {
 
-	private boolean alreadyInjected = false;
+  private boolean alreadyInjected = false;
 
-	protected CssResourceCallback(Class<? extends ClientBundle> wrappedClass, URL resourceURL) {
-		super(wrappedClass, resourceURL);
-	}
+  protected CssResourceCallback(Class<? extends ClientBundle> wrappedClass,
+      URL resourceURL) {
+    super(wrappedClass, resourceURL);
+  }
 
-	public Object call(Object proxy, Method method, Object[] args) throws Exception {
-		if (method.getName().equals("getText")) {
-			return getCssText();
-		} else if (method.getName().equals("ensureInjected")) {
-			return ensureInjected();
-		} else {
-			return handleCustomMethod(method.getName());
-		}
+  public Object call(Object proxy, Method method, Object[] args)
+      throws Exception {
+    if (method.getName().equals("getText")) {
+      return getCssText();
+    } else if (method.getName().equals("ensureInjected")) {
+      return ensureInjected();
+    } else {
+      return handleCustomMethod(method.getName());
+    }
 
-	}
+  }
 
-	private String getCssText() throws UnsupportedEncodingException, IOException, URISyntaxException {
-		return TextResourceReader.readFile(resourceURL);
-	}
+  private String getCssText() throws UnsupportedEncodingException, IOException,
+      URISyntaxException {
+    return TextResourceReader.readFile(resourceURL);
+  }
 
-	private boolean ensureInjected() throws UnsupportedEncodingException, IOException, URISyntaxException {
-		if (!alreadyInjected) {
-			StyleInjector.inject(getCssText());
-			alreadyInjected = true;
-			return true;
-		}
-		return false;
-	}
+  private boolean ensureInjected() throws UnsupportedEncodingException,
+      IOException, URISyntaxException {
+    if (!alreadyInjected) {
+      StyleInjector.inject(getCssText());
+      alreadyInjected = true;
+      return true;
+    }
+    return false;
+  }
 
-	private String handleCustomMethod(String methodName) throws UnsupportedEncodingException, IOException, URISyntaxException {
-		CssParsingResult result = CssResourceReader.readCss(resourceURL);
-		String constant = result.getConstants().get(methodName);
-		if (constant != null) {
-			return constant;
-		} else {
-			return methodName;
-		}
-	}
+  private String handleCustomMethod(String methodName)
+      throws UnsupportedEncodingException, IOException, URISyntaxException {
+    CssParsingResult result = CssResourceReader.readCss(resourceURL);
+    String constant = result.getConstants().get(methodName);
+    if (constant != null) {
+      return constant;
+    } else {
+      return methodName;
+    }
+  }
 
 }

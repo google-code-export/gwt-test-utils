@@ -8,21 +8,24 @@ import com.google.gwt.resources.client.TextResource;
 
 public interface MyClientBundle extends ClientBundle {
 
-	public static final MyClientBundle INSTANCE = GWT.create(MyClientBundle.class);
+  public static final MyClientBundle INSTANCE = GWT.create(MyClientBundle.class);
 
-	@Source("testCssResource.css")
-	public TestCssResource testCssResource();
+  @Source(value = "css/testCssResource.css")
+  public TestCssResource testCssResource();
 
-	@Source("textResourceXml.xml")
-	public TextResource textResourceXml();
+  @Source("textResourceXml.xml")
+  public TextResource textResourceXml();
 
-	public TextResource textResourceTxt();
+  public TextResource textResourceTxt();
 
-	@Source("textResourceXml.xml")
-	public DataResource testDataResource();
+  @Source("textResourceXml.xml")
+  public DataResource testDataResource();
 
-	public ImageResource testImageResource();
+  @Source(value = "img/icons/icon1.png")
+  public ImageResource icone1();
 
-	public ImageResource doubleShouldThrowException();
+  public ImageResource testImageResource();
+
+  public ImageResource doubleShouldThrowException();
 
 }

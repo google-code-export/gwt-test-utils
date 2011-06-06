@@ -7,18 +7,18 @@ import com.octo.gwt.test.GwtCreateHandler;
 
 public class MockCreateHandler implements GwtCreateHandler {
 
-	private Map<Class<?>, Object> mockObjects;
+  private Map<Class<?>, Object> mockObjects;
 
-	public MockCreateHandler(Map<Class<?>, Object> mockObjects) {
-		this.mockObjects = mockObjects;
-	}
+  public MockCreateHandler(Map<Class<?>, Object> mockObjects) {
+    this.mockObjects = mockObjects;
+  }
 
-	public Object create(Class<?> classLiteral) throws Exception {
-		if (RemoteService.class.isAssignableFrom(classLiteral)) {
-			String asyncName = classLiteral.getCanonicalName() + "Async";
-			classLiteral = Class.forName(asyncName);
-		}
-		return mockObjects.get(classLiteral);
-	}
+  public Object create(Class<?> classLiteral) throws Exception {
+    if (RemoteService.class.isAssignableFrom(classLiteral)) {
+      String asyncName = classLiteral.getCanonicalName() + "Async";
+      classLiteral = Class.forName(asyncName);
+    }
+    return mockObjects.get(classLiteral);
+  }
 
 }

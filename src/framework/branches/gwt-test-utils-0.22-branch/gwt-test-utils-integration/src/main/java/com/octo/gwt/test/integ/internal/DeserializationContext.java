@@ -6,35 +6,36 @@ import java.util.Map.Entry;
 
 import com.octo.gwt.test.integ.tools.ISerializeCallback;
 
-public class DeserializationContext extends HashMap<Class<?>, ISerializeCallback> {
+public class DeserializationContext extends
+    HashMap<Class<?>, ISerializeCallback> {
 
-	private static final long serialVersionUID = -2332437262166773402L;
+  private static final long serialVersionUID = -2332437262166773402L;
 
-	private Map<Class<?>, ISerializeCallback> cache = new HashMap<Class<?>, ISerializeCallback>();
+  private Map<Class<?>, ISerializeCallback> cache = new HashMap<Class<?>, ISerializeCallback>();
 
-	private static final ISerializeCallback defaultSerializeCallback = new ISerializeCallback() {
+  private static final ISerializeCallback defaultSerializeCallback = new ISerializeCallback() {
 
-		public Object callback(Object object) throws Exception {
-			return object;
-		}
+    public Object callback(Object object) throws Exception {
+      return object;
+    }
 
-	};
+  };
 
-	public Object resolve(Object object) throws Exception {
-		Class<?> targetClazz = object.getClass();
-		ISerializeCallback callback = cache.get(targetClazz);
-		if (callback == null) {
-			for (Entry<Class<?>, ISerializeCallback> entry : entrySet()) {
-				if (entry.getKey().isAssignableFrom(targetClazz)) {
-					callback = entry.getValue();
-				}
-			}
-			if (callback == null) {
-				callback = defaultSerializeCallback;
-			}
-			cache.put(targetClazz, callback);
-		}
-		return callback.callback(object);
-	}
+  public Object resolve(Object object) throws Exception {
+    Class<?> targetClazz = object.getClass();
+    ISerializeCallback callback = cache.get(targetClazz);
+    if (callback == null) {
+      for (Entry<Class<?>, ISerializeCallback> entry : entrySet()) {
+        if (entry.getKey().isAssignableFrom(targetClazz)) {
+          callback = entry.getValue();
+        }
+      }
+      if (callback == null) {
+        callback = defaultSerializeCallback;
+      }
+      cache.put(targetClazz, callback);
+    }
+    return callback.callback(object);
+  }
 
 }

@@ -8,11 +8,11 @@ import com.octo.gwt.test.integ.tools.VisitorObjectFinder.WidgetRepository;
 
 public interface WidgetVisitor {
 
-	void visitHasHTML(HasHTML hasHTML, WidgetRepository repository);
+  void visitHasHTML(HasHTML hasHTML, WidgetRepository repository);
 
-	void visitHasText(HasText hasText, WidgetRepository repository);
+  void visitHasText(HasText hasText, WidgetRepository repository);
 
-	void visitHasName(HasName hasName, WidgetRepository repository);
+  void visitHasName(HasName hasName, WidgetRepository repository);
 
-	void visitWidget(Widget widget, WidgetRepository repository);
+  void visitWidget(Widget widget, WidgetRepository repository);
 }

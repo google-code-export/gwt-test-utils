@@ -7,11 +7,11 @@ import com.octo.gwt.test.resources.MyClientBundle;
 
 public interface MyOverridedClientBundle extends MyClientBundle {
 
-	public static final MyOverridedClientBundle INSTANCE = GWT.create(MyOverridedClientBundle.class);
+  public static final MyOverridedClientBundle INSTANCE = GWT.create(MyOverridedClientBundle.class);
 
-	@Source("override_testImageResource.gif")
-	public ImageResource testImageResource();
+  @Source("override_testImageResource.gif")
+  public ImageResource testImageResource();
 
-	public TextResource textResourceTxt();
+  public TextResource textResourceTxt();
 
 }

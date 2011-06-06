@@ -20,35 +20,36 @@ import com.octo.gwt.test.patcher.PatchMethod;
 @PatchClass(Tree.class)
 public class TreePatcher extends AutomaticPatcher {
 
-	@PatchMethod
-	public static boolean shouldTreeDelegateFocusToElement(Element elem) {
-		List<Class<?>> focusElementClasses = getFocusElementClasses();
-		int i = 0;
-		boolean shouldDelegate = false;
+  @PatchMethod
+  public static boolean shouldTreeDelegateFocusToElement(Element elem) {
+    List<Class<?>> focusElementClasses = getFocusElementClasses();
+    int i = 0;
+    boolean shouldDelegate = false;
 
-		while (i < focusElementClasses.size() && !shouldDelegate) {
-			Class<?> focusElementClass = focusElementClasses.get(i++);
-			shouldDelegate = focusElementClass.isInstance(elem);
-		}
+    while (i < focusElementClasses.size() && !shouldDelegate) {
+      Class<?> focusElementClass = focusElementClasses.get(i++);
+      shouldDelegate = focusElementClass.isInstance(elem);
+    }
 
-		return shouldDelegate;
-	}
+    return shouldDelegate;
+  }
 
-	@PatchMethod
-	public static void showImage(Tree tree, TreeItem treeItem, AbstractImagePrototype proto) {
+  @PatchMethod
+  public static void showImage(Tree tree, TreeItem treeItem,
+      AbstractImagePrototype proto) {
 
-	}
+  }
 
-	private static List<Class<?>> getFocusElementClasses() {
-		List<Class<?>> list = new ArrayList<Class<?>>();
-		list.add(SelectElement.class);
-		list.add(InputElement.class);
-		list.add(TextAreaElement.class);
-		list.add(OptionElement.class);
-		list.add(ButtonElement.class);
-		list.add(LabelElement.class);
+  private static List<Class<?>> getFocusElementClasses() {
+    List<Class<?>> list = new ArrayList<Class<?>>();
+    list.add(SelectElement.class);
+    list.add(InputElement.class);
+    list.add(TextAreaElement.class);
+    list.add(OptionElement.class);
+    list.add(ButtonElement.class);
+    list.add(LabelElement.class);
 
-		return list;
-	}
+    return list;
+  }
 
 }

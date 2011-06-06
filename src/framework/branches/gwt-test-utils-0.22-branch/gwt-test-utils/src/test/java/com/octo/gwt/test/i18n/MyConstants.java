@@ -6,30 +6,30 @@ import com.google.gwt.i18n.client.Constants;
 
 public interface MyConstants extends Constants {
 
-	@DefaultStringValue("hello from @DefaultStringValue")
-	public String hello();
+  @DefaultStringValue("hello from @DefaultStringValue")
+  public String hello();
 
-	public String goodbye();
+  public String goodbye();
 
-	@DefaultStringArrayValue({ "default0", "default1" })
-	public String[] stringArray();
+  @DefaultStringArrayValue({"default0", "default1"})
+  public String[] stringArray();
 
-	@DefaultStringMapValue({ "hello" })
-	public Map<String, Object> map();
+  @DefaultStringMapValue({"hello"})
+  public Map<String, Object> map();
 
-	@DefaultStringValue("no corresponding property in any file, value from @DefaultStringValue")
-	public String noCorrespondance();
+  @DefaultStringValue("no corresponding property in any file, value from @DefaultStringValue")
+  public String noCorrespondance();
 
-	@DefaultIntValue(6)
-	public int functionInt();
+  @DefaultIntValue(6)
+  public int functionInt();
 
-	@DefaultDoubleValue(6.6)
-	public double functionDouble();
+  @DefaultDoubleValue(6.6)
+  public double functionDouble();
 
-	@DefaultFloatValue((float) 6.66)
-	public float functionFloat();
+  @DefaultFloatValue((float) 6.66)
+  public float functionFloat();
 
-	@DefaultBooleanValue(true)
-	public boolean functionBoolean();
+  @DefaultBooleanValue(true)
+  public boolean functionBoolean();
 
 }

@@ -9,74 +9,76 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public class GwtRpcTest extends AbstractGwtEasyMockTest {
 
-	static class MyGwtClass {
+  static class MyGwtClass {
 
-		public String myValue;
+    public String myValue;
 
-		public void run() {
-			MyRemoteServiceAsync service = GWT.create(MyRemoteService.class);
+    public void run() {
+      MyRemoteServiceAsync service = GWT.create(MyRemoteService.class);
 
-			service.myMethod("myParamValue", new AsyncCallback<String>() {
+      service.myMethod("myParamValue", new AsyncCallback<String>() {
 
-				public void onFailure(Throwable caught) {
-					myValue = "error";
-				}
+        public void onFailure(Throwable caught) {
+          myValue = "error";
+        }
 
-				public void onSuccess(String result) {
-					myValue = result;
-				}
+        public void onSuccess(String result) {
+          myValue = result;
+        }
 
-			});
-		}
-	}
+      });
+    }
+  }
 
-	@Mock
-	private MyRemoteServiceAsync mockedService;
+  @Mock
+  private MyRemoteServiceAsync mockedService;
 
-	@SuppressWarnings("unchecked")
-	@Test
-	public void checkGwtRpcOk() {
-		// Setup
+  @SuppressWarnings("unchecked")
+  @Test
+  public void checkGwtRpcOk() {
+    // Setup
 
-		// mock future remote call
-		mockedService.myMethod(EasyMock.eq("myParamValue"), EasyMock.isA(AsyncCallback.class));
-		expectServiceAndCallbackOnSuccess("returnValue");
+    // mock future remote call
+    mockedService.myMethod(EasyMock.eq("myParamValue"),
+        EasyMock.isA(AsyncCallback.class));
+    expectServiceAndCallbackOnSuccess("returnValue");
 
-		replay();
+    replay();
 
-		// Test
-		MyGwtClass gwtClass = new MyGwtClass();
-		gwtClass.myValue = "toto";
-		Assert.assertEquals("toto", gwtClass.myValue);
-		gwtClass.run();
+    // Test
+    MyGwtClass gwtClass = new MyGwtClass();
+    gwtClass.myValue = "toto";
+    Assert.assertEquals("toto", gwtClass.myValue);
+    gwtClass.run();
 
-		// Assert
-		verify();
+    // Assert
+    verify();
 
-		Assert.assertEquals("returnValue", gwtClass.myValue);
-	}
+    Assert.assertEquals("returnValue", gwtClass.myValue);
+  }
 
-	@SuppressWarnings("unchecked")
-	@Test
-	public void checkGwtRpcFailure() {
-		// Setup
+  @SuppressWarnings("unchecked")
+  @Test
+  public void checkGwtRpcFailure() {
+    // Setup
 
-		// mock future remote call
-		mockedService.myMethod(EasyMock.eq("myParamValue"), EasyMock.isA(AsyncCallback.class));
-		expectServiceAndCallbackOnFailure(new Exception());
+    // mock future remote call
+    mockedService.myMethod(EasyMock.eq("myParamValue"),
+        EasyMock.isA(AsyncCallback.class));
+    expectServiceAndCallbackOnFailure(new Exception());
 
-		replay();
+    replay();
 
-		// Test
-		MyGwtClass gwtClass = new MyGwtClass();
-		gwtClass.myValue = "toto";
-		Assert.assertEquals("toto", gwtClass.myValue);
-		gwtClass.run();
+    // Test
+    MyGwtClass gwtClass = new MyGwtClass();
+    gwtClass.myValue = "toto";
+    Assert.assertEquals("toto", gwtClass.myValue);
+    gwtClass.run();
 
-		// Assert
-		verify();
+    // Assert
+    verify();
 
-		Assert.assertEquals("error", gwtClass.myValue);
-	}
+    Assert.assertEquals("error", gwtClass.myValue);
+  }
 
 }

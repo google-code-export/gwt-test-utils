@@ -14,42 +14,45 @@ import com.octo.gwt.test.internal.utils.PatchGwtUtils;
 
 public class AbstractClassCreateHandler implements GwtCreateHandler {
 
-	private Map<Class<?>, Class<?>> cache = new HashMap<Class<?>, Class<?>>();
+  private Map<Class<?>, Class<?>> cache = new HashMap<Class<?>, Class<?>>();
 
-	// this GwtCreateHandler has been introduced to make possible the instanciation of abstract classes 
-	// that gwt-test-utils doesn't patch right now
-	public Object create(Class<?> classLiteral) throws Exception {
-		if (classLiteral.isAnnotation() || classLiteral.isArray() || classLiteral.isEnum() || classLiteral.isInterface()
-				|| !Modifier.isAbstract(classLiteral.getModifiers())) {
-			return null;
-		}
+  // this GwtCreateHandler has been introduced to make possible the
+  // instanciation of abstract classes
+  // that gwt-test-utils doesn't patch right now
+  public Object create(Class<?> classLiteral) throws Exception {
+    if (classLiteral.isAnnotation() || classLiteral.isArray()
+        || classLiteral.isEnum() || classLiteral.isInterface()
+        || !Modifier.isAbstract(classLiteral.getModifiers())) {
+      return null;
+    }
 
-		Class<?> newClass = cache.get(classLiteral);
+    Class<?> newClass = cache.get(classLiteral);
 
-		if (newClass != null) {
-			return newClass.newInstance();
-		}
+    if (newClass != null) {
+      return newClass.newInstance();
+    }
 
-		ClassPool cp = PatchGwtClassPool.get();
+    ClassPool cp = PatchGwtClassPool.get();
 
-		CtClass ctClass = PatchGwtClassPool.get().get(classLiteral.getName());
-		CtClass subClass = cp.makeClass(classLiteral.getCanonicalName() + "SubClass");
+    CtClass ctClass = PatchGwtClassPool.get().get(classLiteral.getName());
+    CtClass subClass = cp.makeClass(classLiteral.getCanonicalName()
+        + "SubClass");
 
-		subClass.setSuperclass(ctClass);
+    subClass.setSuperclass(ctClass);
 
-		for (CtMethod m : ctClass.getDeclaredMethods()) {
-			if (javassist.Modifier.isAbstract(m.getModifiers())) {
-				CtMethod copy = new CtMethod(m, subClass, null);
-				subClass.addMethod(copy);
-			}
-		}
+    for (CtMethod m : ctClass.getDeclaredMethods()) {
+      if (javassist.Modifier.isAbstract(m.getModifiers())) {
+        CtMethod copy = new CtMethod(m, subClass, null);
+        subClass.addMethod(copy);
+      }
+    }
 
-		PatchGwtUtils.patch(subClass, null);
+    PatchGwtUtils.patch(subClass, null);
 
-		newClass = GwtTestClassLoader.getInstance().loadClass(subClass.getName());
-		cache.put(classLiteral, newClass);
+    newClass = GwtTestClassLoader.getInstance().loadClass(subClass.getName());
+    cache.put(classLiteral, newClass);
 
-		return newClass.newInstance();
-	}
+    return newClass.newInstance();
+  }
 
 }

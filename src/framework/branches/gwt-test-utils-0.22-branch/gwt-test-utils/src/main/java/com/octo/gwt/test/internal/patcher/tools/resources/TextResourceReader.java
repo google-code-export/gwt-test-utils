@@ -10,42 +10,44 @@ import java.util.Map;
 
 public class TextResourceReader {
 
-	private static Map<URL, String> cache;
+  private static Map<URL, String> cache;
 
-	public static String readFile(URL url) throws UnsupportedEncodingException, IOException {
-		if (cache == null) {
-			cache = new HashMap<URL, String>();
-		}
+  public static String readFile(URL url) throws UnsupportedEncodingException,
+      IOException {
+    if (cache == null) {
+      cache = new HashMap<URL, String>();
+    }
 
-		if (!cache.containsKey(url)) {
-			StringBuilder sb = new StringBuilder();
+    if (!cache.containsKey(url)) {
+      StringBuilder sb = new StringBuilder();
 
-			BufferedReader reader = null;
+      BufferedReader reader = null;
 
-			try {
-				reader = new BufferedReader(new InputStreamReader(url.openStream(), "UTF-8"));
+      try {
+        reader = new BufferedReader(new InputStreamReader(url.openStream(),
+            "UTF-8"));
 
-				String line;
-				while ((line = reader.readLine()) != null) {
-					sb.append(line).append("\r\n");
-				}
+        String line;
+        while ((line = reader.readLine()) != null) {
+          sb.append(line).append("\r\n");
+        }
 
-				if (sb.length() > 0) {
-					sb.delete(sb.length() - "\r\n".length(), sb.length());
-				}
-				cache.put(url, sb.toString());
-			} finally {
-				if (reader != null) {
-					reader.close();
-				}
-			}
-		}
+        if (sb.length() > 0) {
+          sb.delete(sb.length() - "\r\n".length(), sb.length());
+        }
+        cache.put(url, sb.toString());
+      } finally {
+        if (reader != null) {
+          reader.close();
+        }
+      }
+    }
 
-		return cache.get(url);
-	}
+    return cache.get(url);
+  }
 
-	public static void reset() {
-		cache.clear();
-	}
+  public static void reset() {
+    cache.clear();
+  }
 
 }

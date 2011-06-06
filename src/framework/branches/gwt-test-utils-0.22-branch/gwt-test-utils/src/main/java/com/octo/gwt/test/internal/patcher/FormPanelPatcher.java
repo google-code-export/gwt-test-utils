@@ -13,21 +13,24 @@ import com.octo.gwt.test.utils.GwtTestReflectionUtils;
 @PatchClass(FormPanel.class)
 public class FormPanelPatcher extends AutomaticPatcher {
 
-	@PatchMethod
-	public static void submit(FormPanel formPanel) {
-		FormPanel.SubmitEvent event = new FormPanel.SubmitEvent();
-		formPanel.fireEvent(event);
-		if (!event.isCanceled()) {
-			FormPanelImpl impl = GwtTestReflectionUtils.getPrivateFieldValue(formPanel, "impl");
-			Element synthesizedFrame = GwtTestReflectionUtils.getPrivateFieldValue(formPanel, "synthesizedFrame");
-			FormPanel.SubmitCompleteEvent completeEvent = createCompleteSubmitEvent(impl.getContents(synthesizedFrame));
-			formPanel.fireEvent(completeEvent);
-		}
+  @PatchMethod
+  public static void submit(FormPanel formPanel) {
+    FormPanel.SubmitEvent event = new FormPanel.SubmitEvent();
+    formPanel.fireEvent(event);
+    if (!event.isCanceled()) {
+      FormPanelImpl impl = GwtTestReflectionUtils.getPrivateFieldValue(
+          formPanel, "impl");
+      Element synthesizedFrame = GwtTestReflectionUtils.getPrivateFieldValue(
+          formPanel, "synthesizedFrame");
+      FormPanel.SubmitCompleteEvent completeEvent = createCompleteSubmitEvent(impl.getContents(synthesizedFrame));
+      formPanel.fireEvent(completeEvent);
+    }
 
-	}
+  }
 
-	private static SubmitCompleteEvent createCompleteSubmitEvent(String resultsHtml) {
-		return new OverrideSubmitCompleteEvent(resultsHtml);
-	}
+  private static SubmitCompleteEvent createCompleteSubmitEvent(
+      String resultsHtml) {
+    return new OverrideSubmitCompleteEvent(resultsHtml);
+  }
 
 }

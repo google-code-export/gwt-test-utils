@@ -14,40 +14,41 @@ import com.octo.gwt.test.utils.GwtTestReflectionUtils;
 @PatchClass(HTMLTable.class)
 public class HTMLTablePatcher extends AutomaticPatcher {
 
-	@PatchMethod
-	public static Element getEventTargetCell(HTMLTable table, Event event) {
-		Object bodyElem = GwtTestReflectionUtils.getPrivateFieldValue(table, "bodyElem");
+  @PatchMethod
+  public static Element getEventTargetCell(HTMLTable table, Event event) {
+    Object bodyElem = GwtTestReflectionUtils.getPrivateFieldValue(table,
+        "bodyElem");
 
-		Element td = DOM.eventGetTarget(event);
-		for (; td != null; td = DOM.getParent(td)) {
-			// If it's a TD, it might be the one we're looking for.
-			if (DOM.getElementProperty(td, "tagName").equalsIgnoreCase("td")) {
-				// Make sure it's directly a part of this table before returning
-				// it.
-				Element tr = DOM.getParent(td);
-				Object body = DOM.getParent(tr);
+    Element td = DOM.eventGetTarget(event);
+    for (; td != null; td = DOM.getParent(td)) {
+      // If it's a TD, it might be the one we're looking for.
+      if (DOM.getElementProperty(td, "tagName").equalsIgnoreCase("td")) {
+        // Make sure it's directly a part of this table before returning
+        // it.
+        Element tr = DOM.getParent(td);
+        Object body = DOM.getParent(tr);
 
-				if (body == bodyElem) {
-					return td;
-				}
-			}
-			// If we run into this table's body, we're out of options.
-			if (td == bodyElem) {
-				return null;
-			}
-		}
-		return null;
-	}
+        if (body == bodyElem) {
+          return td;
+        }
+      }
+      // If we run into this table's body, we're out of options.
+      if (td == bodyElem) {
+        return null;
+      }
+    }
+    return null;
+  }
 
-	@PatchMethod
-	public static int getDOMRowCount(HTMLTable table, Element element) {
-		OverrideNodeList<Node> nodeList = (OverrideNodeList<Node>) element.getChildNodes();
-		return nodeList.getLength();
-	}
+  @PatchMethod
+  public static int getDOMRowCount(HTMLTable table, Element element) {
+    OverrideNodeList<Node> nodeList = (OverrideNodeList<Node>) element.getChildNodes();
+    return nodeList.getLength();
+  }
 
-	@PatchMethod
-	public static int getDOMCellCount(HTMLTable table, Element element, int row) {
-		return element.getChildNodes().getItem(row).getChildNodes().getLength();
-	}
+  @PatchMethod
+  public static int getDOMCellCount(HTMLTable table, Element element, int row) {
+    return element.getChildNodes().getItem(row).getChildNodes().getLength();
+  }
 
 }

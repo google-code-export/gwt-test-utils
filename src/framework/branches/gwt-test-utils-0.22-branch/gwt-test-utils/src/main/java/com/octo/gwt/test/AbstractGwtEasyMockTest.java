@@ -38,177 +38,180 @@ import com.octo.gwt.test.utils.GwtTestReflectionUtils.MethodCallback;
  */
 public abstract class AbstractGwtEasyMockTest extends AbstractGwtTest {
 
-	private Map<Class<?>, Object> mockObjects = new HashMap<Class<?>, Object>();
-	private List<Class<?>> mockedClasses = new ArrayList<Class<?>>();
-	private Set<Field> annotatedFieldToInject;
-	
-	public AbstractGwtEasyMockTest() {
-		GwtCreateHandlerManager.getInstance().setMockCreateHandler(new MockCreateHandler(mockObjects));
-		annotatedFieldToInject = GwtTestReflectionUtils.getAnnotatedField(this.getClass(), Mock.class);
-		for (Field f : annotatedFieldToInject) {
-			mockedClasses.add(f.getType());
-		}
-	}
+  private Map<Class<?>, Object> mockObjects = new HashMap<Class<?>, Object>();
+  private List<Class<?>> mockedClasses = new ArrayList<Class<?>>();
+  private Set<Field> annotatedFieldToInject;
 
-	@Before
-	public void setupAbstractGwtEasyMockTest() {
-		for (Class<?> clazz : mockedClasses) {
-			Object mock = EasyMock.createMock(clazz);
-			addMockedObject(clazz, mock);
-		}
-		try {
-			for (Field f : annotatedFieldToInject) {
-				Object mock = mockObjects.get(f.getType());
-				GwtTestReflectionUtils.makeAccessible(f);
-				f.set(this, mock);
-			}
-		} catch (Exception e) {
-			throw new RuntimeException("Error during gwt-test-utils @Mock creation", e);
-		}
-	}
+  public AbstractGwtEasyMockTest() {
+    GwtCreateHandlerManager.getInstance().setMockCreateHandler(
+        new MockCreateHandler(mockObjects));
+    annotatedFieldToInject = GwtTestReflectionUtils.getAnnotatedField(
+        this.getClass(), Mock.class);
+    for (Field f : annotatedFieldToInject) {
+      mockedClasses.add(f.getType());
+    }
+  }
 
-	@After
-	public void teardownAbstractGwtEasyMockTest() {
-		mockObjects.clear();
-	}
+  @Before
+  public void setupAbstractGwtEasyMockTest() {
+    for (Class<?> clazz : mockedClasses) {
+      Object mock = EasyMock.createMock(clazz);
+      addMockedObject(clazz, mock);
+    }
+    try {
+      for (Field f : annotatedFieldToInject) {
+        Object mock = mockObjects.get(f.getType());
+        GwtTestReflectionUtils.makeAccessible(f);
+        f.set(this, mock);
+      }
+    } catch (Exception e) {
+      throw new RuntimeException("Error during gwt-test-utils @Mock creation",
+          e);
+    }
+  }
 
-	/**
-	 * Set all declared mocks to replay state.
-	 */
-	public void replay() {
-		for (Object o : mockObjects.values()) {
-			EasyMock.replay(o);
-		}
-	}
+  @After
+  public void teardownAbstractGwtEasyMockTest() {
+    mockObjects.clear();
+  }
 
-	/**
-	 * Verifies that all recorded behaviors for every declared mock has actually
-	 * been used.
-	 */
-	public void verify() {
-		for (Object o : mockObjects.values()) {
-			EasyMock.verify(o);
-		}
-	}
+  /**
+   * Set all declared mocks to replay state.
+   */
+  public void replay() {
+    for (Object o : mockObjects.values()) {
+      EasyMock.replay(o);
+    }
+  }
 
-	/**
-	 * Reset all declared mocks.
-	 */
-	public void reset() {
-		for (Object o : mockObjects.values()) {
-			EasyMock.reset(o);
-		}
-	}
+  /**
+   * Verifies that all recorded behaviors for every declared mock has actually
+   * been used.
+   */
+  public void verify() {
+    for (Object o : mockObjects.values()) {
+      EasyMock.verify(o);
+    }
+  }
 
-	/**
-	 * Records a call to an asynchronous service and simulates a failure by
-	 * calling the onFailure() method of the corresponding AsyncCallback object.
-	 */
-	public void expectServiceAndCallbackOnFailure(final Throwable exception) {
-		IAnswer<Object> answer = new FailureAnswer<Object>(exception);
-		EasyMock.expectLastCall().andAnswer(answer);
-	}
+  /**
+   * Reset all declared mocks.
+   */
+  public void reset() {
+    for (Object o : mockObjects.values()) {
+      EasyMock.reset(o);
+    }
+  }
 
-	/**
-	 * Records a call to an asynchronous service and simulates a success by
-	 * calling the onSuccess() method of the corresponding AsyncCallback object.
-	 */
-	@SuppressWarnings("unchecked")
-	public <T> void expectServiceAndCallbackOnSuccess(final T object) {
-		IAnswer<T> answer = new SuccessAnswer<T>(object);
-		EasyMock.expectLastCall().andAnswer((IAnswer<Object>) answer);
-	}
+  /**
+   * Records a call to an asynchronous service and simulates a failure by
+   * calling the onFailure() method of the corresponding AsyncCallback object.
+   */
+  public void expectServiceAndCallbackOnFailure(final Throwable exception) {
+    IAnswer<Object> answer = new FailureAnswer<Object>(exception);
+    EasyMock.expectLastCall().andAnswer(answer);
+  }
 
-	/**
-	 * Creates a mock object for a given class, where all methods are mocked
-	 * except the one with the name given as a parameter.
-	 */
-	public <T> T createMockAndKeepOneMethod(Class<T> clazz, String methodName) {
-		return createMockAndKeepMethods(clazz, true, GwtTestReflectionUtils.findMethod(clazz, methodName, null));
-	}
+  /**
+   * Records a call to an asynchronous service and simulates a success by
+   * calling the onSuccess() method of the corresponding AsyncCallback object.
+   */
+  @SuppressWarnings("unchecked")
+  public <T> void expectServiceAndCallbackOnSuccess(final T object) {
+    IAnswer<T> answer = new SuccessAnswer<T>(object);
+    EasyMock.expectLastCall().andAnswer((IAnswer<Object>) answer);
+  }
 
-	/**
-	 * Creates a mock object for a given class, where all methods are mocked
-	 * except the ones given as parameters.
-	 * 
-	 * @param clazz
-	 *            The class for which a mock object will be created
-	 * @param keepSetters
-	 *            False if setters should be mocked, true otherwise
-	 * @param list
-	 *            List of methods that should not be mocked
-	 */
-	public <T> T createMockAndKeepMethods(Class<T> clazz, final boolean keepSetters, final Method... list) {
-		final List<Method> l = new ArrayList<Method>();
-		GwtTestReflectionUtils.doWithMethods(clazz, new MethodCallback() {
+  /**
+   * Creates a mock object for a given class, where all methods are mocked
+   * except the one with the name given as a parameter.
+   */
+  public <T> T createMockAndKeepOneMethod(Class<T> clazz, String methodName) {
+    return createMockAndKeepMethods(clazz, true,
+        GwtTestReflectionUtils.findMethod(clazz, methodName, null));
+  }
 
-			public void doWith(Method method) throws IllegalArgumentException, IllegalAccessException {
-				if (!ArrayUtils.contains(list, method)) {
-					if (!keepSetters || !method.getName().startsWith("set") || method.getReturnType() != void.class) {
-						l.add(method);
-					}
-				}
-			}
+  /**
+   * Creates a mock object for a given class, where all methods are mocked
+   * except the ones given as parameters.
+   * 
+   * @param clazz The class for which a mock object will be created
+   * @param keepSetters False if setters should be mocked, true otherwise
+   * @param list List of methods that should not be mocked
+   */
+  public <T> T createMockAndKeepMethods(Class<T> clazz,
+      final boolean keepSetters, final Method... list) {
+    final List<Method> l = new ArrayList<Method>();
+    GwtTestReflectionUtils.doWithMethods(clazz, new MethodCallback() {
 
-		});
-		T o = EasyMock.createMockBuilder(clazz).addMockedMethods(l.toArray(new Method[] {})).createMock();
-		addMockedObject(clazz, o);
-		return o;
-	}
+      public void doWith(Method method) throws IllegalArgumentException,
+          IllegalAccessException {
+        if (!ArrayUtils.contains(list, method)) {
+          if (!keepSetters || !method.getName().startsWith("set")
+              || method.getReturnType() != void.class) {
+            l.add(method);
+          }
+        }
+      }
 
-	/**
-	 * Adds a mock object to the list of mocks used in the context of this test
-	 * class.
-	 * 
-	 * You can use this method if you want to use AbstractGwtEasyMockTest's mock
-	 * handling methods ({@link AbstractGwtEasyMockTest#replay()},
-	 * {@link AbstractGwtEasyMockTest#verify()},
-	 * {@link AbstractGwtEasyMockTest#reset()}...) for a mock that you created
-	 * without using the framework's {@link Mock @Mock} annotation.
-	 * 
-	 * @param clazz
-	 *            The class for which a mock object is being defined
-	 * @param mock
-	 *            the mock instance
-	 */
-	public Object addMockedObject(Class<?> createClass, Object mock) {
-		return mockObjects.put(createClass, mock);
-	}
+    });
+    T o = EasyMock.createMockBuilder(clazz).addMockedMethods(
+        l.toArray(new Method[]{})).createMock();
+    addMockedObject(clazz, o);
+    return o;
+  }
 
-	private static class FailureAnswer<Z> implements IAnswer<Z> {
+  /**
+   * Adds a mock object to the list of mocks used in the context of this test
+   * class.
+   * 
+   * You can use this method if you want to use AbstractGwtEasyMockTest's mock
+   * handling methods ({@link AbstractGwtEasyMockTest#replay()},
+   * {@link AbstractGwtEasyMockTest#verify()},
+   * {@link AbstractGwtEasyMockTest#reset()}...) for a mock that you created
+   * without using the framework's {@link Mock @Mock} annotation.
+   * 
+   * @param clazz The class for which a mock object is being defined
+   * @param mock the mock instance
+   */
+  public Object addMockedObject(Class<?> createClass, Object mock) {
+    return mockObjects.put(createClass, mock);
+  }
 
-		private Throwable result;
+  private static class FailureAnswer<Z> implements IAnswer<Z> {
 
-		public FailureAnswer(Throwable result) {
-			this.result = result;
-		}
+    private Throwable result;
 
-		@SuppressWarnings("unchecked")
-		public Z answer() throws Throwable {
-			final Object[] arguments = EasyMock.getCurrentArguments();
-			AsyncCallback<Z> callback = (AsyncCallback<Z>) arguments[arguments.length - 1];
-			callback.onFailure(result);
-			return null;
-		}
+    public FailureAnswer(Throwable result) {
+      this.result = result;
+    }
 
-	}
+    @SuppressWarnings("unchecked")
+    public Z answer() throws Throwable {
+      final Object[] arguments = EasyMock.getCurrentArguments();
+      AsyncCallback<Z> callback = (AsyncCallback<Z>) arguments[arguments.length - 1];
+      callback.onFailure(result);
+      return null;
+    }
 
-	private static class SuccessAnswer<Z> implements IAnswer<Z> {
+  }
 
-		private Z result;
+  private static class SuccessAnswer<Z> implements IAnswer<Z> {
 
-		public SuccessAnswer(Z result) {
-			this.result = result;
-		}
+    private Z result;
 
-		@SuppressWarnings("unchecked")
-		public Z answer() throws Throwable {
-			final Object[] arguments = EasyMock.getCurrentArguments();
-			AsyncCallback<Z> callback = (AsyncCallback<Z>) arguments[arguments.length - 1];
-			callback.onSuccess(result);
-			return null;
-		}
+    public SuccessAnswer(Z result) {
+      this.result = result;
+    }
 
-	}
+    @SuppressWarnings("unchecked")
+    public Z answer() throws Throwable {
+      final Object[] arguments = EasyMock.getCurrentArguments();
+      AsyncCallback<Z> callback = (AsyncCallback<Z>) arguments[arguments.length - 1];
+      callback.onSuccess(result);
+      return null;
+    }
+
+  }
 
 }

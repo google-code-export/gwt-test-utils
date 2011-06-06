@@ -19,48 +19,51 @@ import com.octo.gwt.test.patcher.PatchMethod;
 @PatchClass(Image.class)
 public class ImagePatcher extends AutomaticPatcher {
 
-	private static final Pattern PATTERN = Pattern.compile("^(\\d+).*$");
+  private static final Pattern PATTERN = Pattern.compile("^(\\d+).*$");
 
-	@Override
-	public void initClass(CtClass c) throws Exception {
-		super.initClass(c);
+  @Override
+  public void initClass(CtClass c) throws Exception {
+    super.initClass(c);
 
-		List<CtConstructor> constructors = getConstructorsToModify(c);
+    List<CtConstructor> constructors = getConstructorsToModify(c);
 
-		for (CtConstructor cons : constructors) {
-			cons.insertBeforeBody("setElement(" + Document.class.getName() + ".get().createImageElement());");
-		}
-	}
+    for (CtConstructor cons : constructors) {
+      cons.insertBeforeBody("setElement(" + Document.class.getName()
+          + ".get().createImageElement());");
+    }
+  }
 
-	private List<CtConstructor> getConstructorsToModify(CtClass c) throws NotFoundException {
-		List<CtConstructor> result = new ArrayList<CtConstructor>();
-		result.add(findConstructor(c));
-		result.add(findConstructor(c, String.class));
-		result.add(findConstructor(c, String.class, Integer.TYPE, Integer.TYPE, Integer.TYPE, Integer.TYPE));
+  private List<CtConstructor> getConstructorsToModify(CtClass c)
+      throws NotFoundException {
+    List<CtConstructor> result = new ArrayList<CtConstructor>();
+    result.add(findConstructor(c));
+    result.add(findConstructor(c, String.class));
+    result.add(findConstructor(c, String.class, Integer.TYPE, Integer.TYPE,
+        Integer.TYPE, Integer.TYPE));
 
-		return result;
-	}
+    return result;
+  }
 
-	@PatchMethod
-	public static int getWidth(Image image) {
-		return getDim(image, "width");
-	}
+  @PatchMethod
+  public static int getWidth(Image image) {
+    return getDim(image, "width");
+  }
 
-	@PatchMethod
-	public static int getHeight(Image image) {
-		return getDim(image, "height");
-	}
+  @PatchMethod
+  public static int getHeight(Image image) {
+    return getDim(image, "height");
+  }
 
-	public static int getDim(Image image, String dim) {
-		ImageElement elem = image.getElement().cast();
-		String width = elem.getStyle().getProperty(dim);
-		if (width == null)
-			return 0;
-		Matcher m = PATTERN.matcher(width);
-		if (m.matches()) {
-			return Integer.parseInt(m.group(1));
-		}
-		return 0;
-	}
+  public static int getDim(Image image, String dim) {
+    ImageElement elem = image.getElement().cast();
+    String width = elem.getStyle().getProperty(dim);
+    if (width == null)
+      return 0;
+    Matcher m = PATTERN.matcher(width);
+    if (m.matches()) {
+      return Integer.parseInt(m.group(1));
+    }
+    return 0;
+  }
 
 }

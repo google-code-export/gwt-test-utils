@@ -14,31 +14,33 @@ import com.octo.gwt.test.utils.GwtTestReflectionUtils;
 
 public class Spring3JUnit4ClassRunner extends SpringJUnit4ClassRunner {
 
-	private DirectoryTestReader reader;
+  private DirectoryTestReader reader;
 
-	public Spring3JUnit4ClassRunner(Class<?> clazz) throws InitializationError, ClassNotFoundException {
-		super(GwtTestClassLoader.getInstance().loadClass(clazz.getCanonicalName()));
-	}
+  public Spring3JUnit4ClassRunner(Class<?> clazz) throws InitializationError,
+      ClassNotFoundException {
+    super(GwtTestClassLoader.getInstance().loadClass(clazz.getCanonicalName()));
+  }
 
-	protected List<FrameworkMethod> computeTestMethods() {
-		if (reader == null) {
-			reader = new DirectoryTestReader(getTestClass().getJavaClass());
-		}
-		List<FrameworkMethod> list = new ArrayList<FrameworkMethod>();
-		for (Method csvMethod : reader.getTestMethods()) {
-			list.add(new FrameworkMethod(csvMethod));
-		}
+  protected List<FrameworkMethod> computeTestMethods() {
+    if (reader == null) {
+      reader = new DirectoryTestReader(getTestClass().getJavaClass());
+    }
+    List<FrameworkMethod> list = new ArrayList<FrameworkMethod>();
+    for (Method csvMethod : reader.getTestMethods()) {
+      list.add(new FrameworkMethod(csvMethod));
+    }
 
-		return list;
-	}
+    return list;
+  }
 
-	@Override
-	protected Object createTest() throws Exception {
-		Object testInstance = reader.createObject();
-		Method m = GwtTestReflectionUtils.findMethod(testInstance.getClass(), "setReader", null);
-		m.invoke(testInstance, reader);
-		getTestContextManager().prepareTestInstance(testInstance);
-		return testInstance;
-	}
+  @Override
+  protected Object createTest() throws Exception {
+    Object testInstance = reader.createObject();
+    Method m = GwtTestReflectionUtils.findMethod(testInstance.getClass(),
+        "setReader", null);
+    m.invoke(testInstance, reader);
+    getTestContextManager().prepareTestInstance(testInstance);
+    return testInstance;
+  }
 
 }

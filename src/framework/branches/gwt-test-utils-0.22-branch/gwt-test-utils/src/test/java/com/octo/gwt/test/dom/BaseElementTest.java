@@ -11,37 +11,37 @@ import com.octo.gwt.test.AbstractGwtTest;
 
 public class BaseElementTest extends AbstractGwtTest {
 
-	private BaseElement b;
+  private BaseElement b;
 
-	@Before
-	public void initDocument() {
-		b = Document.get().createBaseElement();
-	}
+  @Before
+  public void initDocument() {
+    b = Document.get().createBaseElement();
+  }
 
-	@Test
-	public void checkAs() {
-		BaseElement asElement = BaseElement.as(b);
-		Assert.assertEquals(b, asElement);
-	}
+  @Test
+  public void checkAs() {
+    BaseElement asElement = BaseElement.as(b);
+    Assert.assertEquals(b, asElement);
+  }
 
-	@Test
-	public void checkHref() {
-		Assert.assertNull("Href should be null", b.getHref());
-		// Set up
-		b.setHref("Href");
+  @Test
+  public void checkHref() {
+    Assert.assertNull("Href should be null", b.getHref());
+    // Set up
+    b.setHref("Href");
 
-		// Assert
-		Assert.assertEquals("Href", b.getHref());
-	}
+    // Assert
+    Assert.assertEquals("Href", b.getHref());
+  }
 
-	@Test
-	public void checkTarget() {
-		Assert.assertNull("Target should be null", b.getTarget());
-		// Set up
-		b.setTarget("Target");
+  @Test
+  public void checkTarget() {
+    Assert.assertNull("Target should be null", b.getTarget());
+    // Set up
+    b.setTarget("Target");
 
-		// Assert
-		Assert.assertEquals("Target", b.getTarget());
-	}
+    // Assert
+    Assert.assertEquals("Target", b.getTarget());
+  }
 
 }

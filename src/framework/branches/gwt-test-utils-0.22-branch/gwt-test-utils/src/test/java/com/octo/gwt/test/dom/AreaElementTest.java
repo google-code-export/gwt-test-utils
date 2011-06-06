@@ -11,87 +11,87 @@ import com.octo.gwt.test.AbstractGwtTest;
 
 public class AreaElementTest extends AbstractGwtTest {
 
-	private AreaElement a;
+  private AreaElement a;
 
-	@Before
-	public void initDocument() {
-		a = Document.get().createAreaElement();
-	}
+  @Before
+  public void initDocument() {
+    a = Document.get().createAreaElement();
+  }
 
-	@Test
-	public void checkAs() {
-		AreaElement asElement = AreaElement.as(a);
-		Assert.assertEquals(a, asElement);
-	}
+  @Test
+  public void checkAs() {
+    AreaElement asElement = AreaElement.as(a);
+    Assert.assertEquals(a, asElement);
+  }
 
-	@Test
-	public void checkAccessKey() {
-		Assert.assertEquals("", a.getAccessKey());
-		// Set up
-		a.setAccessKey("k");
+  @Test
+  public void checkAccessKey() {
+    Assert.assertEquals("", a.getAccessKey());
+    // Set up
+    a.setAccessKey("k");
 
-		// Assert
-		Assert.assertEquals("k", a.getAccessKey());
-	}
+    // Assert
+    Assert.assertEquals("k", a.getAccessKey());
+  }
 
-	@Test
-	public void checkAlt() {
-		Assert.assertNull("Alt should be null", a.getAlt());
-		// Set up
-		a.setAlt("Alt");
+  @Test
+  public void checkAlt() {
+    Assert.assertNull("Alt should be null", a.getAlt());
+    // Set up
+    a.setAlt("Alt");
 
-		// Assert
-		Assert.assertEquals("Alt", a.getAlt());
-	}
+    // Assert
+    Assert.assertEquals("Alt", a.getAlt());
+  }
 
-	@Test
-	public void checkCoords() {
-		Assert.assertNull("Coords should be null", a.getCoords());
-		// Set up
-		a.setCoords("Coords");
+  @Test
+  public void checkCoords() {
+    Assert.assertNull("Coords should be null", a.getCoords());
+    // Set up
+    a.setCoords("Coords");
 
-		// Assert
-		Assert.assertEquals("Coords", a.getCoords());
-	}
+    // Assert
+    Assert.assertEquals("Coords", a.getCoords());
+  }
 
-	@Test
-	public void checkHref() {
-		Assert.assertNull("Href should be null", a.getHref());
-		// Set up
-		a.setHref("Href");
+  @Test
+  public void checkHref() {
+    Assert.assertNull("Href should be null", a.getHref());
+    // Set up
+    a.setHref("Href");
 
-		// Assert
-		Assert.assertEquals("Href", a.getHref());
-	}
+    // Assert
+    Assert.assertEquals("Href", a.getHref());
+  }
 
-	@Test
-	public void checkShape() {
-		Assert.assertNull("Shape should be null", a.getShape());
-		// Set up
-		a.setShape("Shape");
+  @Test
+  public void checkShape() {
+    Assert.assertNull("Shape should be null", a.getShape());
+    // Set up
+    a.setShape("Shape");
 
-		// Assert
-		Assert.assertEquals("Shape", a.getShape());
-	}
+    // Assert
+    Assert.assertEquals("Shape", a.getShape());
+  }
 
-	@Test
-	public void checkTabIndex() {
-		Assert.assertEquals(0, a.getTabIndex());
-		// Set up
-		a.setTabIndex(4);
+  @Test
+  public void checkTabIndex() {
+    Assert.assertEquals(0, a.getTabIndex());
+    // Set up
+    a.setTabIndex(4);
 
-		// Assert
-		Assert.assertEquals(4, a.getTabIndex());
-	}
+    // Assert
+    Assert.assertEquals(4, a.getTabIndex());
+  }
 
-	@Test
-	public void checkTarget() {
-		Assert.assertNull("Target should be null", a.getTarget());
-		// Set up
-		a.setTarget("Target");
+  @Test
+  public void checkTarget() {
+    Assert.assertNull("Target should be null", a.getTarget());
+    // Set up
+    a.setTarget("Target");
 
-		// Assert
-		Assert.assertEquals("Target", a.getTarget());
-	}
+    // Assert
+    Assert.assertEquals("Target", a.getTarget());
+  }
 
 }

@@ -7,8 +7,9 @@ import com.octo.gwt.test.utils.GwtTestReflectionUtils;
 
 public class StyleHelper {
 
-	public static Element getTargetElement(Style style) {
-		return GwtTestReflectionUtils.getPrivateFieldValue(style, StylePatcher.TARGET_ELEMENT);
-	}
+  public static Element getTargetElement(Style style) {
+    return GwtTestReflectionUtils.getPrivateFieldValue(style,
+        StylePatcher.TARGET_ELEMENT);
+  }
 
 }

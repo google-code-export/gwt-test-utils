@@ -12,42 +12,46 @@ import com.octo.gwt.test.GwtCreateHandler;
 @SuppressWarnings("deprecation")
 public class ImageBundleCreateHandler implements GwtCreateHandler {
 
-	public Object create(Class<?> classLiteral) throws Exception {
-		if (!ImageBundle.class.isAssignableFrom(classLiteral)) {
-			return null;
-		}
+  public Object create(Class<?> classLiteral) throws Exception {
+    if (!ImageBundle.class.isAssignableFrom(classLiteral)) {
+      return null;
+    }
 
-		return generateImageWrapper(classLiteral);
-	}
+    return generateImageWrapper(classLiteral);
+  }
 
-	private Object generateImageWrapper(Class<?> clazz) {
-		InvocationHandler ih = new InvocationHandler() {
+  private Object generateImageWrapper(Class<?> clazz) {
+    InvocationHandler ih = new InvocationHandler() {
 
-			public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-				if (method.getReturnType() == AbstractImagePrototype.class) {
-					return new OverrideImagePrototype();
-				}
-				throw new RuntimeException("Not managed return type for image bundle : " + method.getReturnType().getSimpleName());
-			}
+      public Object invoke(Object proxy, Method method, Object[] args)
+          throws Throwable {
+        if (method.getReturnType() == AbstractImagePrototype.class) {
+          return new OverrideImagePrototype();
+        }
+        throw new RuntimeException(
+            "Not managed return type for image bundle : "
+                + method.getReturnType().getSimpleName());
+      }
 
-		};
-		return Proxy.newProxyInstance(clazz.getClassLoader(), new Class<?>[] { clazz }, ih);
-	}
+    };
+    return Proxy.newProxyInstance(clazz.getClassLoader(),
+        new Class<?>[]{clazz}, ih);
+  }
 
-	private static class OverrideImagePrototype extends AbstractImagePrototype {
+  private static class OverrideImagePrototype extends AbstractImagePrototype {
 
-		public void applyTo(Image arg0) {
-		}
+    public void applyTo(Image arg0) {
+    }
 
-		public Image createImage() {
-			Image image = new Image();
-			return image;
-		}
+    public Image createImage() {
+      Image image = new Image();
+      return image;
+    }
 
-		public String getHTML() {
-			return "<img/>";
-		}
+    public String getHTML() {
+      return "<img/>";
+    }
 
-	}
+  }
 
 }

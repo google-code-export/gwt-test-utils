@@ -13,10 +13,10 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 public @interface PatchMethod {
 
-	PatchType value() default PatchType.STATIC_CALL;
+  PatchType value() default PatchType.STATIC_CALL;
 
-	Class<?>[] args() default { PatchMethod.class };
+  Class<?>[] args() default {PatchMethod.class};
 
-	String methodName() default "";
+  String methodName() default "";
 
 }

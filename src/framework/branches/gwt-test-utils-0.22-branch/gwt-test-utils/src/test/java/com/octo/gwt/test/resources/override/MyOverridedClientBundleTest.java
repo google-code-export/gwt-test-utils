@@ -11,60 +11,64 @@ import com.octo.gwt.test.AbstractGwtTest;
 
 public class MyOverridedClientBundleTest extends AbstractGwtTest {
 
-	@Override
-	public String getCurrentTestedModuleFile() {
-		return "test-config.gwt.xml";
-	}
+  @Override
+  public String getCurrentTestedModuleFile() {
+    return "test-config.gwt.xml";
+  }
 
-	@Test
-	public void checkChildNoOverride() {
-		// Setup
-		DataResource testDataResource = MyOverridedClientBundle.INSTANCE.testDataResource();
+  @Test
+  public void checkChildNoOverride() {
+    // Setup
+    DataResource testDataResource = MyOverridedClientBundle.INSTANCE.testDataResource();
 
-		// Test
-		String name = testDataResource.getName();
-		String url = testDataResource.getUrl();
+    // Test
+    String name = testDataResource.getName();
+    String url = testDataResource.getUrl();
 
-		// Assert
-		Assert.assertEquals("testDataResource", name);
-		Assert.assertEquals("http://localhost:8888/gwt_test_utils_module/com/octo/gwt/test/resources/textResourceXml.xml", url);
-	}
+    // Assert
+    Assert.assertEquals("testDataResource", name);
+    Assert.assertEquals(
+        "http://localhost:8888/gwt_test_utils_module/com/octo/gwt/test/resources/textResourceXml.xml",
+        url);
+  }
 
-	@Test
-	public void checkChildOverrideWithAnnotation() {
-		// Setup
-		ImageResource testImageResource = MyOverridedClientBundle.INSTANCE.testImageResource();
+  @Test
+  public void checkChildOverrideWithAnnotation() {
+    // Setup
+    ImageResource testImageResource = MyOverridedClientBundle.INSTANCE.testImageResource();
 
-		// Test
-		String name = testImageResource.getName();
-		String url = testImageResource.getURL();
-		int heigh = testImageResource.getHeight();
-		int left = testImageResource.getLeft();
-		int width = testImageResource.getWidth();
-		int top = testImageResource.getTop();
+    // Test
+    String name = testImageResource.getName();
+    String url = testImageResource.getURL();
+    int heigh = testImageResource.getHeight();
+    int left = testImageResource.getLeft();
+    int width = testImageResource.getWidth();
+    int top = testImageResource.getTop();
 
-		// Assert
-		Assert.assertEquals("testImageResource", name);
-		Assert.assertEquals("http://localhost:8888/gwt_test_utils_module/com/octo/gwt/test/resources/override/override_testImageResource.gif", url);
-		Assert.assertEquals(0, heigh);
-		Assert.assertEquals(0, left);
-		Assert.assertEquals(0, width);
-		Assert.assertEquals(0, top);
-	}
+    // Assert
+    Assert.assertEquals("testImageResource", name);
+    Assert.assertEquals(
+        "http://localhost:8888/gwt_test_utils_module/com/octo/gwt/test/resources/override/override_testImageResource.gif",
+        url);
+    Assert.assertEquals(0, heigh);
+    Assert.assertEquals(0, left);
+    Assert.assertEquals(0, width);
+    Assert.assertEquals(0, top);
+  }
 
-	@Test
-	public void checkChildOverrideWithoutAnnotation() {
-		// Setup
-		TextResource textResource = MyOverridedClientBundle.INSTANCE.textResourceTxt();
-		String expectedText = "Overrided text resource !";
+  @Test
+  public void checkChildOverrideWithoutAnnotation() {
+    // Setup
+    TextResource textResource = MyOverridedClientBundle.INSTANCE.textResourceTxt();
+    String expectedText = "Overrided text resource !";
 
-		// Test
-		String name = textResource.getName();
-		String text = textResource.getText();
+    // Test
+    String name = textResource.getName();
+    String text = textResource.getText();
 
-		// Assert
-		Assert.assertEquals("textResourceTxt", name);
-		Assert.assertEquals(expectedText, text);
-	}
+    // Assert
+    Assert.assertEquals("textResourceTxt", name);
+    Assert.assertEquals(expectedText, text);
+  }
 
 }

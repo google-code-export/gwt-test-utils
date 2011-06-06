@@ -15,6 +15,6 @@ import java.lang.annotation.Target;
 @Inherited
 public @interface CsvMethod {
 
-	public String methodName() default "";
+  public String methodName() default "";
 
 }
