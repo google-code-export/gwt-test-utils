@@ -11,7 +11,14 @@ import java.util.List;
 import java.util.Map;
 
 import javassist.CtClass;
+import javassist.CtMethod;
 import javassist.NotFoundException;
+import javassist.bytecode.AnnotationsAttribute;
+import javassist.bytecode.MethodInfo;
+import javassist.bytecode.annotation.Annotation;
+import javassist.bytecode.annotation.ArrayMemberValue;
+import javassist.bytecode.annotation.MemberValue;
+import javassist.bytecode.annotation.StringMemberValue;
 
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.ClientBundle.Source;
@@ -31,20 +38,27 @@ class ClientBundleProxyFactory {
 
     private URL computeResourceURL(Method method) throws NotFoundException,
         URISyntaxException {
-
       List<ResourceFileEntry> filesSimpleNames = new ArrayList<ResourceFileEntry>();
       boolean computeExtensions = false;
-      Source source = method.getAnnotation(Source.class);
-
-      if (source != null) {
-        for (String value : source.value()) {
-          filesSimpleNames.add(new ResourceFileEntry(value, method));
+      CtMethod m = ctClass.getMethod(method.getName(), getDescriptor(method));
+      MethodInfo minfo = m.getMethodInfo2();
+      AnnotationsAttribute attr = (AnnotationsAttribute) minfo.getAttribute(AnnotationsAttribute.invisibleTag);
+      if (attr != null) {
+        Annotation an = attr.getAnnotation(Source.class.getName());
+        if (an != null) {
+          MemberValue[] mvArray = ((ArrayMemberValue) an.getMemberValue("value")).getValue();
+          if (mvArray != null) {
+            for (MemberValue mv : mvArray) {
+              StringMemberValue smv = (StringMemberValue) mv;
+              filesSimpleNames.add(new ResourceFileEntry(smv.getValue(), m));
+            }
+          }
         }
       }
 
       if (filesSimpleNames.isEmpty()) {
         // no @Source annotation detected
-        filesSimpleNames.add(new ResourceFileEntry(method.getName(), method));
+        filesSimpleNames.add(new ResourceFileEntry(method.getName(), m));
         computeExtensions = true;
       }
 
@@ -52,9 +66,8 @@ class ClientBundleProxyFactory {
 
       for (ResourceFileEntry resourceEntry : filesSimpleNames) {
         String resourceName = resourceEntry.resourceName;
-        Class<?> declaringClass = resourceEntry.resourceMethod.getDeclaringClass();
-        String baseDir = declaringClass.getPackage().getName().replaceAll(
-            "\\.", "/")
+        CtClass declaringClass = resourceEntry.resourceMethod.getDeclaringClass();
+        String baseDir = declaringClass.getPackageName().replaceAll("\\.", "/")
             + "/";
         String fileName = (resourceName.startsWith(baseDir)) ? resourceName
             : baseDir + resourceName;
@@ -91,6 +104,15 @@ class ClientBundleProxyFactory {
 
     }
 
+    private String getDescriptor(Method method) {
+      Class<?> returnType = method.getReturnType();
+      StringBuilder sb = new StringBuilder();
+      sb.append("()L").append(returnType.getName().replaceAll("\\.", "/"));
+      sb.append(";");
+
+      return sb.toString();
+    }
+
     private String[] getResourceDefaultExtensions(Method method) {
       DefaultExtensions annotation = method.getReturnType().getAnnotation(
           DefaultExtensions.class);
@@ -120,10 +142,10 @@ class ClientBundleProxyFactory {
 
   private static class ResourceFileEntry {
 
-    private final Method resourceMethod;
+    private final CtMethod resourceMethod;
     private final String resourceName;
 
-    public ResourceFileEntry(String resourceName, Method resourceMethod) {
+    public ResourceFileEntry(String resourceName, CtMethod resourceMethod) {
       this.resourceName = resourceName;
       this.resourceMethod = resourceMethod;
     }
