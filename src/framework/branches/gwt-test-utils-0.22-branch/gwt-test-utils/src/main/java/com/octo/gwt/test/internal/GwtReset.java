@@ -58,7 +58,7 @@ public class GwtReset {
         GwtReflectionUtils.getPrivateFieldValue(
             GwtReflectionUtils.getPrivateFieldValue(
                 GwtReflectionUtils.getPrivateFieldValue(historyImpl, "handlers"),
-                "eventBus"), "map"), "clear");
+                "registry"), "map"), "clear");
 
     GwtReflectionUtils.setStaticField(NumberFormat.class,
         "cachedDecimalFormat", null);

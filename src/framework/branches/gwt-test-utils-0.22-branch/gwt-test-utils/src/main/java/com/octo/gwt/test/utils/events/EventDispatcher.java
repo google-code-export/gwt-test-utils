@@ -3,7 +3,6 @@ package com.octo.gwt.test.utils.events;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.shared.UmbrellaException;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.ComplexPanel;
@@ -336,47 +335,39 @@ public class EventDispatcher {
   }
 
   private void dispatchEventInternal(Widget target, Event... events) {
-    try {
-      for (Event event : events) {
-        // set the related target
-        Element relatedTargetElement = JavaScriptObjects.getObject(event,
-            JsoProperties.EVENT_RELATEDTARGET);
+    for (Event event : events) {
+      // set the related target
+      Element relatedTargetElement = JavaScriptObjects.getObject(event,
+          JsoProperties.EVENT_RELATEDTARGET);
 
-        if (relatedTargetElement == null) {
-          switch (event.getTypeInt()) {
-            case Event.ONMOUSEOVER:
-            case Event.ONMOUSEOUT:
-              Widget parent = target.getParent();
-              if (parent != null) {
-                relatedTargetElement = parent.getElement();
-              } else {
-                relatedTargetElement = Document.get().getDocumentElement();
-              }
+      if (relatedTargetElement == null) {
+        switch (event.getTypeInt()) {
+          case Event.ONMOUSEOVER:
+          case Event.ONMOUSEOUT:
+            Widget parent = target.getParent();
+            if (parent != null) {
+              relatedTargetElement = parent.getElement();
+            } else {
+              relatedTargetElement = Document.get().getDocumentElement();
+            }
 
-              JavaScriptObjects.setProperty(event,
-                  JsoProperties.EVENT_RELATEDTARGET, relatedTargetElement);
+            JavaScriptObjects.setProperty(event,
+                JsoProperties.EVENT_RELATEDTARGET, relatedTargetElement);
 
-              break;
-          }
+            break;
         }
+      }
 
-        if (CheckBox.class.isInstance(target)
-            && event.getTypeInt() == Event.ONCLICK) {
-          CheckBox checkBox = (CheckBox) target;
-          if (RadioButton.class.isInstance(target)) {
-            checkBox.setValue(true);
-          } else {
-            checkBox.setValue(!checkBox.getValue());
-          }
+      if (CheckBox.class.isInstance(target)
+          && event.getTypeInt() == Event.ONCLICK) {
+        CheckBox checkBox = (CheckBox) target;
+        if (RadioButton.class.isInstance(target)) {
+          checkBox.setValue(true);
+        } else {
+          checkBox.setValue(!checkBox.getValue());
         }
-        target.onBrowserEvent(event);
       }
-    } catch (UmbrellaException e) {
-      if (AssertionError.class.isInstance(e.getCause())) {
-        throw (AssertionError) e.getCause();
-      } else {
-        throw e;
-      }
+      target.onBrowserEvent(event);
     }
   }
 

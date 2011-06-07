@@ -19,7 +19,6 @@ import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SuggestBox;
-import com.google.gwt.user.client.ui.SuggestBox.SuggestionDisplay;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 import com.octo.gwt.test.utils.events.Browser;
@@ -50,6 +49,7 @@ public class WidgetUtils {
    * @param target
    * @deprecated use {@link Browser#blur(Widget)} instead
    */
+  @Deprecated
   public static void blur(Widget target) {
     Browser.blur(target);
   }
@@ -58,6 +58,7 @@ public class WidgetUtils {
    * @param target
    * @deprecated use {@link Browser#change(Widget)} instead
    */
+  @Deprecated
   public static void change(Widget target) {
     Browser.change(target);
   }
@@ -68,6 +69,7 @@ public class WidgetUtils {
    * @param index
    * @deprecated use {@link Browser#click(ComplexPanel, int)} instead
    */
+  @Deprecated
   public static void click(ComplexPanel panel, int index) {
     Browser.click(panel, index);
   }
@@ -79,6 +81,7 @@ public class WidgetUtils {
    * @param column
    * @deprecated use {@link Browser#click(Grid, int, int)} instead
    */
+  @Deprecated
   public static void click(Grid grid, int row, int column) {
     Browser.click(grid, row, column);
   }
@@ -89,6 +92,7 @@ public class WidgetUtils {
    * @param clickedItemIndex
    * @deprecated use {@link Browser#click(MenuBar, int)} instead
    */
+  @Deprecated
   public static void click(MenuBar parent, int clickedItemIndex) {
     Browser.click(parent, clickedItemIndex);
   }
@@ -99,6 +103,7 @@ public class WidgetUtils {
    * @param clickedItem
    * @deprecated use {@link Browser#click(MenuBar, MenuItem)} instead
    */
+  @Deprecated
   public static void click(MenuBar parent, MenuItem clickedItem) {
     Browser.click(parent, clickedItem);
   }
@@ -107,6 +112,7 @@ public class WidgetUtils {
    * @param target
    * @deprecated use {@link Browser#click(Widget)} instead
    */
+  @Deprecated
   public static void click(Widget target) {
     Browser.click(target);
   }
@@ -116,6 +122,7 @@ public class WidgetUtils {
    * @param target
    * @deprecated use {@link Browser#focus(Widget)} instead
    */
+  @Deprecated
   public static void focus(Widget target) {
     Browser.focus(target);
   }
@@ -177,10 +184,8 @@ public class WidgetUtils {
   }
 
   public static List<MenuItem> getMenuItems(SuggestBox suggestBox) {
-    SuggestionDisplay display = GwtReflectionUtils.getPrivateFieldValue(
-        suggestBox, "display");
-    MenuBar suggestionMenu = GwtReflectionUtils.getPrivateFieldValue(display,
-        "suggestionMenu");
+    MenuBar suggestionMenu = GwtReflectionUtils.getPrivateFieldValue(
+        suggestBox, "suggestionMenu");
     return getMenuItems(suggestionMenu);
   }
 
@@ -216,6 +221,7 @@ public class WidgetUtils {
    * @param keyCode
    * @deprecated use {@link Browser#keyDown(Widget, int)} instead
    */
+  @Deprecated
   public static void keyDown(Widget target, int keyCode) {
     Browser.keyDown(target, keyCode);
   }
@@ -226,6 +232,7 @@ public class WidgetUtils {
    * @param keyCode
    * @deprecated use {@link Browser#keyPress(Widget, int)} instead
    */
+  @Deprecated
   public static void keyPress(Widget target, int keyCode) {
     Browser.keyPress(target, keyCode);
   }
@@ -236,6 +243,7 @@ public class WidgetUtils {
    * @param keyCode
    * @deprecated use {@link Browser#keyUp(Widget, int)} instead
    */
+  @Deprecated
   public static void keyUp(Widget target, int keyCode) {
     Browser.keyUp(target, keyCode);
   }
@@ -244,6 +252,7 @@ public class WidgetUtils {
    * @param target
    * @deprecated use {@link Browser#mouseDown(Widget)} instead
    */
+  @Deprecated
   public static void mouseDown(Widget target) {
     Browser.mouseDown(target);
   }
@@ -253,6 +262,7 @@ public class WidgetUtils {
    * @param target
    * @deprecated use {@link Browser#mouseMove(Widget)} instead
    */
+  @Deprecated
   public static void mouseMove(Widget target) {
     Browser.mouseMove(target);
   }
@@ -270,6 +280,7 @@ public class WidgetUtils {
    * @param target
    * @deprecated use {@link Browser#mouseOver(Widget)} instead
    */
+  @Deprecated
   public static void mouseOver(Widget target) {
     Browser.mouseOver(target);
   }
@@ -278,6 +289,7 @@ public class WidgetUtils {
    * @param target
    * @deprecated use {@link Browser#mouseUp(Widget)} instead
    */
+  @Deprecated
   public static void mouseUp(Widget target) {
     Browser.mouseUp(target);
   }
@@ -286,6 +298,7 @@ public class WidgetUtils {
    * @param target
    * @deprecated use {@link Browser#mouseWheel(Widget)} instead
    */
+  @Deprecated
   public static void mouseWheel(Widget target) {
     Browser.mouseWheel(target);
   }

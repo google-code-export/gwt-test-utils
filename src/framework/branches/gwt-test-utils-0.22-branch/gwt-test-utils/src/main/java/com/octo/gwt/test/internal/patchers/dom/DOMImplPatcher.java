@@ -41,15 +41,6 @@ public class DOMImplPatcher extends AutomaticPatcher {
   }
 
   @PatchMethod
-  public static InputElement createCheckInputElement(Object domImpl,
-      Document doc) {
-    InputElement e = createInputElement(doc, "checkbox", null);
-    e.setValue("on");
-
-    return e;
-  }
-
-  @PatchMethod
   public static Element createElement(Object domImpl, Document doc, String tag) {
     return JavaScriptObjects.newElement(tag);
   }
@@ -109,11 +100,6 @@ public class DOMImplPatcher extends AutomaticPatcher {
   @PatchMethod
   public static int eventGetButton(Object domImpl, NativeEvent evt) {
     return JavaScriptObjects.getInteger(evt, JsoProperties.EVENT_BUTTON);
-  }
-
-  @PatchMethod
-  public static int eventGetCharCode(Object domImpl, NativeEvent evt) {
-    return evt.getKeyCode();
   }
 
   @PatchMethod
@@ -245,8 +231,9 @@ public class DOMImplPatcher extends AutomaticPatcher {
   @PatchMethod
   public static Element getNextSiblingElement(Object domImpl, Element elem) {
     Node parent = elem.getParentNode();
-    if (parent == null)
+    if (parent == null) {
       return null;
+    }
 
     NodeList<Node> list = getChildNodeList(parent);
 
@@ -269,8 +256,9 @@ public class DOMImplPatcher extends AutomaticPatcher {
   public static Element getParentElement(Object domImpl, Node elem) {
     Node parent = elem.getParentNode();
 
-    if (parent == null || !(parent instanceof Element))
+    if (parent == null || !(parent instanceof Element)) {
       return null;
+    }
 
     return parent.cast();
   }
@@ -281,14 +269,10 @@ public class DOMImplPatcher extends AutomaticPatcher {
   }
 
   @PatchMethod
-  public static int getTabIndex(Object domImpl, Element elem) {
-    return JavaScriptObjects.getInteger(elem, JsoProperties.TAB_INDEX);
-  }
-
-  @PatchMethod
   public static String getTagName(Object domImpl, Element elem) {
-    if (elem == null)
+    if (elem == null) {
       return null;
+    }
 
     String tagName = JavaScriptObjects.getObject(elem, JsoProperties.TAG_NAME);
 

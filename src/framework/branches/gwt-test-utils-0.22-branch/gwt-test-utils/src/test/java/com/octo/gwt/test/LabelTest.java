@@ -10,7 +10,6 @@ import com.google.gwt.user.client.ui.Label;
 
 public class LabelTest extends GwtTestTest {
 
-  @SuppressWarnings("deprecation")
   @Test
   public void checkDirection() {
     Label label = new Label();

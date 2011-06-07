@@ -11,9 +11,6 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.SimplePanel;
-import com.google.gwt.user.client.ui.SuggestBox;
-import com.google.gwt.user.client.ui.SuggestBox.SuggestionDisplay;
-import com.octo.gwt.test.utils.GwtReflectionUtils;
 import com.octo.gwt.test.utils.WidgetUtils;
 
 public class WidgetUtilsTest extends GwtTestTest {
@@ -138,33 +135,6 @@ public class WidgetUtilsTest extends GwtTestTest {
 
     // Assert
     Assert.assertTrue(isVisible);
-  }
-
-  @Test
-  public void checkSuggestBoxItems() {
-    // Setup
-    SuggestBox box = new SuggestBox();
-    SuggestionDisplay display = GwtReflectionUtils.getPrivateFieldValue(box,
-        "display");
-    MenuBar bar = GwtReflectionUtils.getPrivateFieldValue(display,
-        "suggestionMenu");
-
-    Command cmd = new Command() {
-      public void execute() {
-      }
-
-    };
-
-    MenuItem item0 = bar.addItem("item0", cmd);
-    MenuItem item1 = bar.addItem("item1", cmd);
-
-    // Test
-    List<MenuItem> items = WidgetUtils.getMenuItems(box);
-
-    // Assert
-    Assert.assertEquals(2, items.size());
-    Assert.assertEquals(item0, items.get(0));
-    Assert.assertEquals(item1, items.get(1));
   }
 
   @Test

@@ -135,4 +135,14 @@ public class DOMPatcher extends AutomaticPatcher {
       return null;
     }
   }
+
+  @PatchMethod
+  public static Element getNextSibling(Element elem) {
+    return (Element) elem.getNextSibling();
+  }
+
+  @PatchMethod
+  public static Element getParent(Element elem) {
+    return (Element) elem.getParentElement();
+  }
 }

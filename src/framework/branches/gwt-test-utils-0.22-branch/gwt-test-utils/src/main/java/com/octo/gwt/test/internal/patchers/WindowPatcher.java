@@ -35,16 +35,6 @@ public class WindowPatcher extends AutomaticPatcher {
   }
 
   @PatchMethod
-  public static void moveBy(int dx, int dy) {
-
-  }
-
-  @PatchMethod
-  public static void moveTo(int x, int y) {
-
-  }
-
-  @PatchMethod
   public static void open(String url, String name, String features) {
     WindowOperationsHandler handler = GwtConfig.get().getWindowOperationsHandler();
     if (handler != null) {
@@ -68,16 +58,6 @@ public class WindowPatcher extends AutomaticPatcher {
     }
 
     return null;
-  }
-
-  @PatchMethod
-  public static void resizeBy(int width, int height) {
-
-  }
-
-  @PatchMethod
-  public static void resizeTo(int width, int height) {
-
   }
 
   @PatchMethod

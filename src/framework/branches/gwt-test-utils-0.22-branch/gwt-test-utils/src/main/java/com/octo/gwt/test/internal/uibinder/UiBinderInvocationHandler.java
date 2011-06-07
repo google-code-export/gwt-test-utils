@@ -48,7 +48,8 @@ class UiBinderInvocationHandler implements InvocationHandler {
         GwtEvent.Type<H> eventType = (GwtEvent.Type<H>) getEventType(entry.getKey());
 
         H handler = (H) createHandler(uiField, entry.getKey(), owner);
-        uiField.addHandler(handler, eventType);
+        GwtReflectionUtils.callPrivateMethod(uiField, "addHandler", handler,
+            eventType);
       }
 
     }

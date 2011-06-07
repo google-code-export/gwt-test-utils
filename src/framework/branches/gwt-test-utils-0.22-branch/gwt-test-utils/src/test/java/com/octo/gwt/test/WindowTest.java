@@ -43,16 +43,6 @@ public class WindowTest extends GwtTestTest {
   }
 
   @Test
-  public void checkEmptyMethods() {
-    Window.enableScrolling(true);
-    Window.moveBy(1, 2);
-    Window.moveTo(3, 4);
-    Window.resizeBy(3, 6);
-    Window.resizeTo(8, 9);
-    Window.scrollTo(2, 4);
-  }
-
-  @Test
   public void checkMargin() {
     // Arrange
     Document.get().getBody().setAttribute("style", "");

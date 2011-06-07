@@ -9,16 +9,13 @@ import java.util.Map;
 import java.util.Properties;
 
 import com.google.gwt.i18n.client.LocalizableResource;
-import com.google.gwt.i18n.client.Messages.AlternateMessage;
 import com.google.gwt.i18n.client.Messages.DefaultMessage;
 import com.google.gwt.i18n.client.Messages.PluralCount;
 import com.google.gwt.i18n.client.Messages.PluralText;
-import com.google.gwt.i18n.client.Messages.Select;
 import com.google.gwt.i18n.client.PluralRule;
 import com.google.gwt.i18n.client.impl.plurals.DefaultRule;
 import com.octo.gwt.test.exceptions.GwtTestI18NException;
 
-@SuppressWarnings("deprecation")
 class MessagesInvocationHandler extends LocalizableResourcesInvocationHandler {
 
   public MessagesInvocationHandler(
@@ -79,8 +76,6 @@ class MessagesInvocationHandler extends LocalizableResourcesInvocationHandler {
                 "Error during instanciation of class '" + pluralRuleClassName
                     + "'", e);
           }
-        } else if (Select.class.isAssignableFrom(childArray[j].getClass())) {
-          sb.append(args[i]).append("|");
         }
       }
     }
@@ -90,7 +85,6 @@ class MessagesInvocationHandler extends LocalizableResourcesInvocationHandler {
           + method.getDeclaringClass() + "." + method.getName() + "' : a @"
           + messageAnnotation.getClass().getSimpleName()
           + " is declared but no @" + PluralCount.class.getSimpleName()
-          + " or @" + Select.class.getSimpleName()
           + " set on any method parameter'");
     } else {
       return sb.substring(0, sb.length() - 1);
@@ -124,25 +118,19 @@ class MessagesInvocationHandler extends LocalizableResourcesInvocationHandler {
   }
 
   /**
-   * Return an instance of {@link AlternateMessage} or {@link PluralText} if the
-   * i18n method is annotated, null otherwise.
+   * Return an instance of {@link PluralText} if the i18n method is annotated,
+   * null otherwise.
    * 
    * @param method The current processed i18n method
-   * @return an instance of {@link AlternateMessage} or {@link PluralText} if
-   *         the i18n method is annotated, null otherwise.
+   * @return an instance of {@link PluralText} if the i18n method is annotated,
+   *         null otherwise.
    */
   private Annotation getMessageAnnotation(Method method) {
-    Annotation specificMessageAnnotation = method.getAnnotation(AlternateMessage.class);
-    if (specificMessageAnnotation == null) {
-      specificMessageAnnotation = method.getAnnotation(PluralText.class);
-    }
-    return specificMessageAnnotation;
+    return method.getAnnotation(PluralText.class);
   }
 
   private String[] getMessageAnnotationValues(Annotation messageAnnotation) {
-    if (AlternateMessage.class.isInstance(messageAnnotation)) {
-      return ((AlternateMessage) messageAnnotation).value();
-    } else if (PluralText.class.isInstance(messageAnnotation)) {
+    if (PluralText.class.isInstance(messageAnnotation)) {
       return ((PluralText) messageAnnotation).value();
     }
 
