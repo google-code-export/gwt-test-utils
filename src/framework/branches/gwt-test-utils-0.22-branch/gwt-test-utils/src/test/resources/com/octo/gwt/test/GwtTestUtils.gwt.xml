@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module rename-to='gwt_test_utils_module'>
+	<inherits name='com.google.gwt.user.User' />
+	<inherits name="com.google.gwt.i18n.I18N" />
+	<inherits name='com.google.gwt.user.theme.standard.Standard' />
+
+	<!-- Specify the app entry point class. -->
+	<entry-point class='com.octo.gwt.demo.client.Gwt_test_utils_demo' />
+
+	<servlet path="myService" class="com.octo.gwt.test.integration.MyServiceImpl" />
+	
+	<!-- Specify the paths for translatable code -->
+	<source path='client' />
+	<source path='shared'>
+		<exclude name="Test1.java" />
+	</source>
+	<source path='integration.client' />
+
+
+</module>
