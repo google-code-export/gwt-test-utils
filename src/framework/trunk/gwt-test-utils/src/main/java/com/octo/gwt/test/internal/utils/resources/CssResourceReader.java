@@ -3,7 +3,8 @@ package com.octo.gwt.test.internal.utils.resources;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
+import java.io.Reader;
+import java.io.StringReader;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -12,7 +13,13 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-class CssResourceReader {
+/**
+ * Utility class to parse CSS files.<strong>For internal use only.</strong>
+ * 
+ * @author Gael Lazzari
+ * 
+ */
+public class CssResourceReader {
 
   public static class CssParsingResult {
 
@@ -27,55 +34,65 @@ class CssResourceReader {
     }
   }
 
-  private static Map<URL, CssParsingResult> cache;
+  private static final Pattern CSS_CONSTANT_PATTERN = Pattern.compile("^\\s*@def (\\S+)\\s+(\\S+)\\s*$");
 
-  public static CssParsingResult readCss(URL url)
-      throws UnsupportedEncodingException, IOException {
-    if (cache == null) {
-      cache = new HashMap<URL, CssParsingResult>();
-    }
+  private static final CssResourceReader INSTANCE = new CssResourceReader();
 
-    if (!cache.containsKey(url)) {
-
-      Map<String, String> constants = new HashMap<String, String>();
-      Set<String> styles = new HashSet<String>();
-
-      Pattern constantPattern = Pattern.compile("^\\s*@def (\\S+)\\s+(\\S+)\\s*$");
-
-      BufferedReader reader = null;
-
-      try {
-        reader = new BufferedReader(new InputStreamReader(url.openStream(),
-            "UTF-8"));
-
-        String line;
-        Matcher m;
-        while ((line = reader.readLine()) != null) {
-          m = constantPattern.matcher(line);
-          if (m.matches()) {
-            constants.put(m.group(1), m.group(2));
-          }
-
-        }
-
-        cache.put(url, new CssParsingResult(constants, styles));
-
-      } finally {
-        if (reader != null) {
-          reader.close();
-        }
-      }
-    }
-
-    return cache.get(url);
+  public static CssResourceReader get() {
+    return INSTANCE;
   }
 
-  public static void reset() {
-    cache.clear();
-  }
+  private final Map<URL, CssParsingResult> cache;
 
   private CssResourceReader() {
+    cache = new HashMap<URL, CssParsingResult>();
+  }
 
+  private CssParsingResult parse(Reader reader) throws IOException {
+
+    Map<String, String> constants = new HashMap<String, String>();
+    Set<String> styles = new HashSet<String>();
+
+    BufferedReader br = null;
+
+    try {
+      br = new BufferedReader(reader);
+
+      String line;
+      Matcher m;
+      while ((line = br.readLine()) != null) {
+        m = CSS_CONSTANT_PATTERN.matcher(line);
+        if (m.matches()) {
+          constants.put(m.group(1), m.group(2));
+        }
+      }
+
+      return new CssParsingResult(constants, styles);
+
+    } finally {
+      if (br != null) {
+        br.close();
+      }
+    }
+  }
+
+  public CssParsingResult readCss(String text) throws IOException {
+    return parse(new StringReader(text));
+  }
+
+  public CssParsingResult readCss(URL url) throws IOException {
+
+    CssParsingResult parsingResult = cache.get(url);
+    if (parsingResult == null) {
+      parsingResult = parse(new InputStreamReader(url.openStream(), "UTF-8"));
+      cache.put(url, parsingResult);
+    }
+
+    return parsingResult;
+  }
+
+  public void reset() {
+    cache.clear();
   }
 
 }

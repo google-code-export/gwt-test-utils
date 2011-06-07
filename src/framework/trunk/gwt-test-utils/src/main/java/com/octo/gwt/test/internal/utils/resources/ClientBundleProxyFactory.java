@@ -15,14 +15,9 @@ import javassist.NotFoundException;
 
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.ClientBundle.Source;
-import com.google.gwt.resources.client.CssResource;
-import com.google.gwt.resources.client.DataResource;
-import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.resources.client.TextResource;
 import com.google.gwt.resources.ext.DefaultExtensions;
 import com.octo.gwt.test.exceptions.GwtTestResourcesException;
 import com.octo.gwt.test.internal.GwtClassPool;
-import com.octo.gwt.test.internal.patchers.GwtPatcher;
 
 class ClientBundleProxyFactory {
   private static class ClientBundleMethodsRegistry {
@@ -32,16 +27,6 @@ class ClientBundleProxyFactory {
 
     public ClientBundleMethodsRegistry(Class<? extends ClientBundle> clazz) {
       ctClass = GwtClassPool.getCtClass(clazz);
-    }
-
-    public URL getResourceURL(Method method) throws Exception {
-      URL resourceURL = resourceURLs.get(method);
-      if (resourceURL == null) {
-        resourceURL = computeResourceURL(method);
-        resourceURLs.put(method, resourceURL);
-      }
-
-      return resourceURL;
     }
 
     private URL computeResourceURL(Method method) throws NotFoundException,
@@ -79,14 +64,13 @@ class ClientBundleProxyFactory {
 
           for (String extension : extensions) {
             String possibleFile = fileName + extension;
-            URL url = GwtPatcher.class.getClassLoader().getResource(
-                possibleFile);
+            URL url = this.getClass().getClassLoader().getResource(possibleFile);
             if (url != null) {
               existingFiles.add(url);
             }
           }
         } else {
-          URL url = GwtPatcher.class.getClassLoader().getResource(fileName);
+          URL url = this.getClass().getClassLoader().getResource(fileName);
           if (url != null) {
             existingFiles.add(url);
           }
@@ -95,12 +79,12 @@ class ClientBundleProxyFactory {
 
       if (existingFiles.isEmpty()) {
         throw new GwtTestResourcesException(
-            "No resource file found for method " + ctClass.getSimpleName()
-                + "." + method.getName() + "()");
+            "No resource file found for method '" + ctClass.getName() + "."
+                + method.getName() + "()'");
       } else if (existingFiles.size() > 1) {
         throw new GwtTestResourcesException(
-            "Too many resource files found for method "
-                + ctClass.getSimpleName() + "." + method.getName() + "()");
+            "Too many resource files found for method '" + ctClass.getName()
+                + "." + method.getName() + "()'");
       }
 
       return existingFiles.get(0);
@@ -120,6 +104,16 @@ class ClientBundleProxyFactory {
       } else {
         return annotation.value();
       }
+    }
+
+    public URL getResourceURL(Method method) throws Exception {
+      URL resourceURL = resourceURLs.get(method);
+      if (resourceURL == null) {
+        resourceURL = computeResourceURL(method);
+        resourceURLs.put(method, resourceURL);
+      }
+
+      return resourceURL;
     }
 
   }
@@ -148,36 +142,13 @@ class ClientBundleProxyFactory {
     return factory;
   }
 
-  private static Object generateInvocationHandler(
-      final ClientBundleCallback callback, final String clientBundleFunctionName) {
-    final Class<? extends ClientBundle> clazz = callback.getWrappedClass();
-    InvocationHandler ih = new InvocationHandler() {
-      public Object invoke(Object proxy, Method method, Object[] args)
-          throws Throwable {
-        if (method.getName().equals("getName")) {
-          return clientBundleFunctionName;
-        } else {
-          Object result = callback.call(proxy, method, args);
-          if (result != null) {
-            return result;
-          }
-        }
-        throw new GwtTestResourcesException("Not managed method \""
-            + method.getName() + "\" for generated " + clazz.getSimpleName()
-            + " proxy");
-      }
-    };
-
-    return Proxy.newProxyInstance(clazz.getClassLoader(),
-        new Class<?>[]{clazz}, ih);
-  }
-
   private final ClientBundleMethodsRegistry methodRegistry;
+
   private final Class<? extends ClientBundle> proxiedClass;
 
   private ClientBundleProxyFactory(Class<? extends ClientBundle> proxiedClass) {
     this.proxiedClass = proxiedClass;
-    this.methodRegistry = new ClientBundleMethodsRegistry(proxiedClass);
+    methodRegistry = new ClientBundleMethodsRegistry(proxiedClass);
   }
 
   @SuppressWarnings("unchecked")
@@ -186,27 +157,17 @@ class ClientBundleProxyFactory {
 
       public Object invoke(Object proxy, Method method, Object[] args)
           throws Throwable {
-        URL resourceFile = methodRegistry.getResourceURL(method);
-        if (TextResource.class.isAssignableFrom(method.getReturnType())) {
-          Class<? extends ClientBundle> clazz = (Class<ClientBundle>) method.getReturnType();
-          return generateInvocationHandler(new TextResourceCallback(clazz,
-              resourceFile), method.getName());
-        } else if (CssResource.class.isAssignableFrom(method.getReturnType())) {
-          Class<? extends ClientBundle> clazz = (Class<ClientBundle>) method.getReturnType();
-          return generateInvocationHandler(new CssResourceCallback(clazz,
-              resourceFile), method.getName());
-        } else if (DataResource.class.isAssignableFrom(method.getReturnType())) {
-          Class<? extends ClientBundle> clazz = (Class<ClientBundle>) method.getReturnType();
-          return generateInvocationHandler(new DataResourceCallback(clazz,
-              resourceFile, proxiedClass), method.getName());
-        } else if (ImageResource.class.isAssignableFrom(method.getReturnType())) {
-          Class<? extends ClientBundle> clazz = (Class<ClientBundle>) method.getReturnType();
-          return generateInvocationHandler(new ImageResourceCallback(clazz,
-              resourceFile, proxiedClass), method.getName());
-        }
-        throw new GwtTestResourcesException(
-            "Not managed return type for ClientBundle : "
-                + method.getReturnType().getSimpleName());
+
+        // create a ResourcePrototypeProxyBuilder with the good args
+        Class<?> resourcePrototypeClass = method.getReturnType();
+        String name = method.getName();
+        URL resourceURL = methodRegistry.getResourceURL(method);
+
+        ResourcePrototypeProxyBuilder builder = ResourcePrototypeProxyBuilder.createBuilder(
+            resourcePrototypeClass, proxiedClass).name(name).resourceURL(
+            resourceURL);
+
+        return builder.build();
       }
 
     };

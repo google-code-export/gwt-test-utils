@@ -84,29 +84,24 @@ class UiBinderWidget<T extends Widget> implements UiBinderTag {
     appendElement(this.wrapped, element);
   }
 
-  public final void addWidget(Widget widget) {
-    addWidget(this.wrapped, widget);
-  }
-
-  public final void appendText(String data) {
-    if (!"".equals(data.trim())) {
-      appendText(this.wrapped, data);
-    }
-  }
-
-  public Object getWrapped() {
-    UiBinderUtils.populateWidget(this.wrapped, attributesMap);
-    return wrapped;
-  }
-
   protected void addWidget(T wrapped, Widget widget) {
     if (HasWidgets.class.isInstance(wrapped)) {
       ((HasWidgets) wrapped).add(widget);
     }
   }
 
+  public final void addWidget(Widget widget) {
+    addWidget(this.wrapped, widget);
+  }
+
   protected void appendElement(T wrapped, Element child) {
     wrapped.getElement().appendChild(child);
+  }
+
+  public final void appendText(String data) {
+    if (!"".equals(data.trim())) {
+      appendText(this.wrapped, data);
+    }
   }
 
   protected void appendText(T wrapped, String data) {
@@ -116,6 +111,11 @@ class UiBinderWidget<T extends Widget> implements UiBinderTag {
       Text text = JavaScriptObjects.newText(data);
       wrapped.getElement().appendChild(text);
     }
+  }
+
+  public Object getWrapped() {
+    UiBinderUtils.populateWidget(this.wrapped, attributesMap);
+    return wrapped;
   }
 
 }

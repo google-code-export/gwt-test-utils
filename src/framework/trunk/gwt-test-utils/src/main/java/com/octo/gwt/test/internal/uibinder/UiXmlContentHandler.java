@@ -5,7 +5,6 @@ import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 
-
 class UiXmlContentHandler<T> implements ContentHandler {
 
   private UiBinderTagBuilder<T> builder;

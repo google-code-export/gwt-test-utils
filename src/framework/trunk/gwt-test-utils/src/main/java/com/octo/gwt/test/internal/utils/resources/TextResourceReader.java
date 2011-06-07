@@ -8,15 +8,28 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-class TextResourceReader {
+/**
+ * Utility class to parse text files.<strong>For internal use only.</strong>
+ * 
+ * @author Gael Lazzari
+ * 
+ */
+public class TextResourceReader {
 
-  private static Map<URL, String> cache;
+  private static final TextResourceReader INSTANCE = new TextResourceReader();
 
-  public static String readFile(URL url) throws UnsupportedEncodingException,
+  public static TextResourceReader get() {
+    return INSTANCE;
+  }
+
+  private final Map<URL, String> cache;
+
+  private TextResourceReader() {
+    cache = new HashMap<URL, String>();
+  }
+
+  public String readFile(URL url) throws UnsupportedEncodingException,
       IOException {
-    if (cache == null) {
-      cache = new HashMap<URL, String>();
-    }
 
     if (!cache.containsKey(url)) {
       StringBuilder sb = new StringBuilder();
@@ -46,12 +59,8 @@ class TextResourceReader {
     return cache.get(url);
   }
 
-  public static void reset() {
+  public void reset() {
     cache.clear();
-  }
-
-  private TextResourceReader() {
-
   }
 
 }

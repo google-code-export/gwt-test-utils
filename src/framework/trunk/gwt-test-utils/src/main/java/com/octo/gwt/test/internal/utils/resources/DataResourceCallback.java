@@ -1,22 +1,25 @@
 package com.octo.gwt.test.internal.utils.resources;
 
 import java.lang.reflect.Method;
-import java.net.URL;
 
-import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.DataResource;
 
-class DataResourceCallback extends ClientBundleCallback {
+/**
+ * Callback interface where {@link DataResource } methods calls are redirected.
+ * <strong>For internal use only.</strong>
+ * 
+ * @author Gael Lazzari
+ * 
+ */
+class DataResourceCallback implements ResourcePrototypeCallback {
 
   private final String url;
 
-  protected DataResourceCallback(Class<? extends ClientBundle> wrappedClass,
-      URL resourceURL, Class<? extends ClientBundle> proxiedClass) {
-    super(wrappedClass);
-    url = ResourceURLUtils.computeUrl(resourceURL, proxiedClass);
+  DataResourceCallback(String url) {
+    this.url = url;
   }
 
-  public Object call(Object proxy, Method method, Object[] args)
-      throws Exception {
+  public Object call(Method method, Object[] args) throws Exception {
     if (method.getName().equals("getUrl")) {
       return url;
     }

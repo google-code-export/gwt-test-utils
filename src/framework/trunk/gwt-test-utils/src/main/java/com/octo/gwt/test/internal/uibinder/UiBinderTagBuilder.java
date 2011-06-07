@@ -41,9 +41,6 @@ public class UiBinderTagBuilder<T> {
   }
 
   public UiBinderTagBuilder<T> appendText(String text) {
-
-    // if stack is empty, it means that the text is a style declaration, just
-    // ignore it..
     if (tags.size() > 0) {
       tags.get(tags.size() - 1).appendText(text);
     }
@@ -68,56 +65,6 @@ public class UiBinderTagBuilder<T> {
     }
 
     return (T) rootComponent;
-  }
-
-  public UiBinderTagBuilder<T> endTag(String nameSpaceURI, String localName) {
-
-    // ignore <UiBinder> tag
-    if (UiBinderUtils.isUiBinderTag(nameSpaceURI, localName)) {
-      return this;
-    }
-
-    UiBinderTag currentTag = tags.pop();
-
-    // ignore <data>, <image> and <style> stags
-    if (UiBinderUtils.isResourceTag(nameSpaceURI, localName)) {
-      return this;
-    }
-
-    if (tags.size() == 0) {
-      // parsing is finished, this is the root component
-      rootComponent = currentTag.getWrapped();
-    } else {
-      // add to its parent
-      UiBinderTag parentTag = getPrevious();
-
-      Object wrappedChild = currentTag.getWrapped();
-      if (Widget.class.isInstance(wrappedChild)) {
-        parentTag.addWidget((Widget) wrappedChild);
-      } else if (Element.class.isInstance(wrappedChild)) {
-        parentTag.addElement((Element) wrappedChild);
-      } else if (String.class == wrappedChild.getClass()) {
-        // <msg> case
-        parentTag.appendText((String) wrappedChild);
-      } else {
-        // just ignore it, it must be a resource tag
-      }
-    }
-
-    return this;
-  }
-
-  public UiBinderTagBuilder<T> startTag(String nameSpaceURI, String localName,
-      Attributes attributes) {
-
-    if (UiBinderUtils.isUiBinderTag(nameSpaceURI, localName)) {
-      return this;
-    }
-
-    // register the current UiBinderTag in the stack
-    tags.push(createUiBinderTag(nameSpaceURI, localName, attributes));
-
-    return this;
   }
 
   private UiBinderTag createUiBinderTag(String nameSpaceURI, String localName,
@@ -156,6 +103,42 @@ public class UiBinderTagBuilder<T> {
     } else {
       return new UiBinderElement(nameSpaceURI, localName, attributes, owner);
     }
+  }
+
+  public UiBinderTagBuilder<T> endTag(String nameSpaceURI, String localName) {
+
+    // ignore <UiBinder> tag
+    if (UiBinderUtils.isUiBinderTag(nameSpaceURI, localName)) {
+      return this;
+    }
+
+    Object currentObject = tags.pop().getWrapped();
+
+    // ignore <data>, <image> and <style> stags
+    if (UiBinderUtils.isResourceTag(nameSpaceURI, localName)) {
+      return this;
+    }
+
+    if (tags.size() == 0) {
+      // parsing is finished, this is the root component
+      rootComponent = currentObject;
+    } else {
+      // add to its parent
+      UiBinderTag parentTag = getPrevious();
+
+      if (Widget.class.isInstance(currentObject)) {
+        parentTag.addWidget((Widget) currentObject);
+      } else if (Element.class.isInstance(currentObject)) {
+        parentTag.addElement((Element) currentObject);
+      } else if (String.class == currentObject.getClass()) {
+        // <msg> case
+        parentTag.appendText((String) currentObject);
+      } else {
+        // just ignore it, it must be a resource tag
+      }
+    }
+
+    return this;
   }
 
   private <U> U getInstance(Class<U> clazz, Attributes attributes) {
@@ -279,6 +262,19 @@ public class UiBinderTagBuilder<T> {
       }
     }
     return false;
+  }
+
+  public UiBinderTagBuilder<T> startTag(String nameSpaceURI, String localName,
+      Attributes attributes) {
+
+    if (UiBinderUtils.isUiBinderTag(nameSpaceURI, localName)) {
+      return this;
+    }
+
+    // register the current UiBinderTag in the stack
+    tags.push(createUiBinderTag(nameSpaceURI, localName, attributes));
+
+    return this;
   }
 
 }

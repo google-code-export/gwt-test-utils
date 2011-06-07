@@ -1,6 +1,7 @@
 package com.octo.gwt.test.internal.uibinder;
 
 import java.lang.reflect.Field;
+import java.util.Map;
 import java.util.Set;
 
 import com.google.gwt.dom.client.Element;
@@ -8,30 +9,25 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Widget;
 import com.octo.gwt.test.exceptions.GwtTestUiBinderException;
 import com.octo.gwt.test.exceptions.ReflectionException;
+import com.octo.gwt.test.internal.utils.resources.ResourcePrototypeProxyBuilder;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
-class UiBinderResource implements UiBinderTag {
+class UiBinderInnerResource implements UiBinderTag {
 
+  private final String alias;
+  private final ResourcePrototypeProxyBuilder builder;
   private final Object owner;
-  private final Object wrapped;
+  private final Map<String, Object> resources;
+  private final StringBuilder text;
+  private Object wrappedObject;
 
-  UiBinderResource() {
-    this.wrapped = null;
-    this.owner = null;
-  }
-
-  UiBinderResource(Object wrapped, String alias, Object owner) {
-    this.wrapped = wrapped;
+  UiBinderInnerResource(ResourcePrototypeProxyBuilder builder, String alias,
+      Object owner, Map<String, Object> resources) {
+    this.builder = builder;
     this.owner = owner;
-
-    Field resourceUiField = getUniqueUiField(alias);
-    if (resourceUiField != null) {
-      try {
-        resourceUiField.set(owner, wrapped);
-      } catch (Exception e) {
-        throw new ReflectionException(e);
-      }
-    }
+    this.alias = alias;
+    this.resources = resources;
+    this.text = new StringBuilder();
   }
 
   public void addElement(Element element) {
@@ -43,11 +39,29 @@ class UiBinderResource implements UiBinderTag {
   }
 
   public void appendText(String text) {
-    // TODO Auto-generated method stub
+    this.text.append(text.trim());
   }
 
   public Object getWrapped() {
-    return this.wrapped;
+    if (wrappedObject == null) {
+      wrappedObject = builder.text(text.toString()).build();
+
+      // set the corresponding @UiField
+      Field resourceUiField = getUniqueUiField(alias);
+      if (resourceUiField != null) {
+        try {
+          resourceUiField.set(owner, wrappedObject);
+        } catch (Exception e) {
+          throw new ReflectionException(e);
+        }
+      }
+
+      // register the built resource to the resourceManager inner map
+      resources.put(alias, wrappedObject);
+
+    }
+
+    return wrappedObject;
   }
 
   private Field getUniqueUiField(String alias) {

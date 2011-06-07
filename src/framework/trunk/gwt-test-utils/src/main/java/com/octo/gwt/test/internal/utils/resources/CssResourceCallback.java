@@ -4,10 +4,17 @@ import java.lang.reflect.Method;
 import java.net.URL;
 
 import com.google.gwt.dom.client.StyleInjector;
-import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.CssResource;
 import com.octo.gwt.test.internal.utils.resources.CssResourceReader.CssParsingResult;
 
-class CssResourceCallback extends ClientBundleCallback {
+/**
+ * Callback interface where {@link CssResource } methods calls are redirected.
+ * <strong>For internal use only.</strong>
+ * 
+ * @author Gael Lazzari
+ * 
+ */
+class CssResourceCallback implements ResourcePrototypeCallback {
 
   private static interface CssReader {
 
@@ -20,27 +27,39 @@ class CssResourceCallback extends ClientBundleCallback {
 
   private final CssReader cssReader;
 
-  protected CssResourceCallback(Class<? extends ClientBundle> wrappedClass,
-      final URL resourceURL) {
-    super(wrappedClass);
+  CssResourceCallback(final String text) {
 
     cssReader = new CssReader() {
 
       public CssParsingResult readCss() throws Exception {
-        return CssResourceReader.readCss(resourceURL);
+        return CssResourceReader.get().readCss(text);
       }
 
       public String readCssText() throws Exception {
-        return TextResourceReader.readFile(resourceURL);
+        return text;
       }
 
     };
   }
 
-  public Object call(Object proxy, Method method, Object[] args)
-      throws Exception {
+  CssResourceCallback(final URL resourceURL) {
+
+    cssReader = new CssReader() {
+
+      public CssParsingResult readCss() throws Exception {
+        return CssResourceReader.get().readCss(resourceURL);
+      }
+
+      public String readCssText() throws Exception {
+        return TextResourceReader.get().readFile(resourceURL);
+      }
+
+    };
+  }
+
+  public Object call(Method method, Object[] args) throws Exception {
     if (method.getName().equals("getText")) {
-      return cssReader.readCss();
+      return cssReader.readCssText();
     } else if (method.getName().equals("ensureInjected")) {
       return ensureInjected();
     } else {

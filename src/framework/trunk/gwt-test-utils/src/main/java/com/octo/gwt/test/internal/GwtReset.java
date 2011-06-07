@@ -13,6 +13,8 @@ import com.octo.gwt.test.internal.patchers.HistoryImplPatcher;
 import com.octo.gwt.test.internal.patchers.TimerPatcher;
 import com.octo.gwt.test.internal.patchers.dom.DocumentPatcher;
 import com.octo.gwt.test.internal.utils.GwtPropertiesHelper;
+import com.octo.gwt.test.internal.utils.resources.CssResourceReader;
+import com.octo.gwt.test.internal.utils.resources.TextResourceReader;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 /**
@@ -36,6 +38,8 @@ public class GwtReset {
     GwtClassLoader.reset();
     TimerPatcher.reset();
     GwtCreateHandlerManager.get().reset();
+    TextResourceReader.get().reset();
+    CssResourceReader.get().reset();
 
     GwtReflectionUtils.getStaticAndCallClear(Timer.class, "timers");
     GwtReflectionUtils.getStaticAndCallClear(RootPanel.class, "rootPanels");

@@ -119,7 +119,7 @@ public class ClientBundleTest extends GwtTestTest {
   @Test
   public void checkImageResourceShouldThrowExceptionWhenMultipleMatchingResourceFile() {
     // Setup
-    String expectedMessage = "Too many resource files found for method MyClientBundle.doubleShouldThrowException()";
+    String expectedMessage = "Too many resource files found for method 'com.octo.gwt.test.resources.MyClientBundle.doubleShouldThrowException()'";
     try {
       // Test
       MyClientBundle.INSTANCE.doubleShouldThrowException();

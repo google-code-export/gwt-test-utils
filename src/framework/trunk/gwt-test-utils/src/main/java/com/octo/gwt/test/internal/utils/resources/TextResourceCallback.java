@@ -3,9 +3,16 @@ package com.octo.gwt.test.internal.utils.resources;
 import java.lang.reflect.Method;
 import java.net.URL;
 
-import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.TextResource;
 
-class TextResourceCallback extends ClientBundleCallback {
+/**
+ * Callback interface where {@link TextResource } methods calls are redirected.
+ * <strong>For internal use only.</strong>
+ * 
+ * @author Gael Lazzari
+ * 
+ */
+class TextResourceCallback implements ResourcePrototypeCallback {
 
   private static interface TextReader {
 
@@ -14,20 +21,27 @@ class TextResourceCallback extends ClientBundleCallback {
 
   private final TextReader textReader;
 
-  protected TextResourceCallback(Class<? extends ClientBundle> wrappedClass,
-      final URL resourceURL) {
-    super(wrappedClass);
+  TextResourceCallback(final String text) {
     textReader = new TextReader() {
 
       public String readText() throws Exception {
-        return TextResourceReader.readFile(resourceURL);
+        return text;
       }
 
     };
   }
 
-  public Object call(Object proxy, Method method, Object[] args)
-      throws Exception {
+  TextResourceCallback(final URL resourceURL) {
+    textReader = new TextReader() {
+
+      public String readText() throws Exception {
+        return TextResourceReader.get().readFile(resourceURL);
+      }
+
+    };
+  }
+
+  public Object call(Method method, Object[] args) throws Exception {
     if (method.getName().equals("getText")) {
       return textReader.readText();
     }

@@ -12,7 +12,7 @@ public interface MyClientBundle extends ClientBundle {
 
   public ImageResource doubleShouldThrowException();
 
-  @Source("testCssResource.css")
+  @Source("css/testCssResource.css")
   public TestCssResource testCssResource();
 
   @Source("textResourceXml.xml")
