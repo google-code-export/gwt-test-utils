@@ -1,5 +1,6 @@
 package com.octo.gwt.test.internal.uibinder;
 
+import java.io.IOException;
 import java.io.InputStream;
 
 import org.xml.sax.InputSource;
@@ -28,7 +29,7 @@ class GwtUiBinderParser {
    *          fields.
    */
   public <T> T createUiComponent(Class<T> rootComponentClass, Object owner) {
-    InputStream uiXmlStream = getUiXmlFile(owner);
+    InputStream uiXmlStream = getUiXmlFile(owner.getClass());
     if (uiXmlStream == null) {
       throw new GwtTestUiBinderException(
           "Cannot find the .ui.xml file corresponding to '"
@@ -42,7 +43,7 @@ class GwtUiBinderParser {
 
     try {
       saxReader.setContentHandler(contentHandler);
-      saxReader.parse(new InputSource(getUiXmlFile(owner)));
+      saxReader.parse(new InputSource(uiXmlStream));
     } catch (Exception e) {
       if (GwtTestException.class.isInstance(e)) {
         throw (GwtTestException) e;
@@ -50,14 +51,26 @@ class GwtUiBinderParser {
         throw new GwtTestUiBinderException("Error while parsing '"
             + owner.getClass().getSimpleName() + ".ui.xml'", e);
       }
+    } finally {
+      try {
+        uiXmlStream.close();
+      } catch (IOException e) {
+        // do nothing
+      }
     }
 
     return contentHandler.getRootComponent();
   }
 
-  private InputStream getUiXmlFile(Object owner) {
-    return owner.getClass().getResourceAsStream(
-        owner.getClass().getSimpleName() + ".ui.xml");
+  private InputStream getUiXmlFile(Class<?> ownerClass) {
+    InputStream is = ownerClass.getResourceAsStream(ownerClass.getSimpleName()
+        + ".ui.xml");
+
+    if (is == null && ownerClass.getSuperclass() != Object.class) {
+      is = getUiXmlFile(ownerClass.getSuperclass());
+    }
+
+    return is;
   }
 
 }
