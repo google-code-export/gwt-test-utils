@@ -9,6 +9,7 @@ import org.xml.sax.Attributes;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Text;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
@@ -84,24 +85,36 @@ class UiBinderWidget<T extends Widget> implements UiBinderTag {
     appendElement(this.wrapped, element);
   }
 
-  protected void addWidget(T wrapped, Widget widget) {
-    if (HasWidgets.class.isInstance(wrapped)) {
-      ((HasWidgets) wrapped).add(widget);
-    }
-  }
-
   public final void addWidget(Widget widget) {
     addWidget(this.wrapped, widget);
-  }
-
-  protected void appendElement(T wrapped, Element child) {
-    wrapped.getElement().appendChild(child);
   }
 
   public final void appendText(String data) {
     if (!"".equals(data.trim())) {
       appendText(this.wrapped, data);
     }
+  }
+
+  public Object getWrapped() {
+    UiBinderUtils.populateWidget(this.wrapped, attributesMap);
+    return wrapped;
+  }
+
+  protected void addWidget(T wrapped, Widget widget) {
+    if (HasWidgets.class.isInstance(wrapped)) {
+      // hack for GWT 2.1.0
+      if (wrapped instanceof HTMLPanel) {
+        HTMLPanel htmlPanel = (HTMLPanel) wrapped;
+        GwtReflectionUtils.callPrivateMethod(htmlPanel, "add", widget,
+            htmlPanel.getElement());
+      } else {
+        ((HasWidgets) wrapped).add(widget);
+      }
+    }
+  }
+
+  protected void appendElement(T wrapped, Element child) {
+    wrapped.getElement().appendChild(child);
   }
 
   protected void appendText(T wrapped, String data) {
@@ -111,11 +124,6 @@ class UiBinderWidget<T extends Widget> implements UiBinderTag {
       Text text = JavaScriptObjects.newText(data);
       wrapped.getElement().appendChild(text);
     }
-  }
-
-  public Object getWrapped() {
-    UiBinderUtils.populateWidget(this.wrapped, attributesMap);
-    return wrapped;
   }
 
 }

@@ -44,7 +44,6 @@ public interface MyMessages extends Messages {
   @Description("The total value of the items in the shopping cart in local currency")
   String totalAmount(@Example("$5.00") double amount);
 
-  @SuppressWarnings("deprecation")
   @DefaultMessage("You have {0} widgets")
   @PluralText({"one", "You have {0} widget"})
   String widgetCount(@PluralCount int count);
