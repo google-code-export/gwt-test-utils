@@ -92,7 +92,7 @@ public class MainGwtTest extends GwtTestTest {
 
   @Before
   public void setupGWTTest() {
-    GwtConfig.get().setLocale(new Locale("fr", "FR"));
+    GwtConfig.get().setLocale(new Locale("FR"));
     Calendar cal = new GregorianCalendar();
     cal.set(2010, 10, 24);
     sToday = DateTimeFormat.getFormat("EEE dd MMM").format(cal.getTime());
