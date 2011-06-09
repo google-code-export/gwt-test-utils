@@ -17,7 +17,6 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Widget;
 import com.octo.gwt.test.exceptions.GwtTestConfigurationException;
 import com.octo.gwt.test.exceptions.GwtTestUiBinderException;
-import com.octo.gwt.test.internal.utils.FastStack;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 @SuppressWarnings("unchecked")
@@ -28,11 +27,13 @@ public class UiBinderTagBuilder<T> {
     return new UiBinderTagBuilder<T>(rootComponentClass, owner);
   }
 
+  private UiBinderTag currentTag;
   private final Object owner;
   private final UiResourceManager resourceManager;
+
   private Object rootComponent;
+
   private final Class<T> rootComponentClass;
-  private final FastStack<UiBinderTag> tags = new FastStack<UiBinderTag>();
 
   private UiBinderTagBuilder(Class<T> rootComponentClass, Object owner) {
     this.rootComponentClass = rootComponentClass;
@@ -41,18 +42,23 @@ public class UiBinderTagBuilder<T> {
   }
 
   public UiBinderTagBuilder<T> appendText(String text) {
-    if (tags.size() > 0) {
-      tags.get(tags.size() - 1).appendText(text);
+    if (!"".equals(text.trim())) {
+      currentTag.appendText(text);
     }
-
     return this;
   }
 
   public T build() {
     if (rootComponent == null) {
-      throw new GwtTestUiBinderException(
-          "Cannot build UiBinder component while the parsing of '"
-              + owner.getClass().getSimpleName() + ".ui.xml' is not finished");
+      if (currentTag == null) {
+        throw new GwtTestUiBinderException(
+            owner.getClass().getName()
+                + " does not declare a root widget in its corresponding .ui.xml file");
+      } else {
+        throw new GwtTestUiBinderException(
+            "Cannot build UiBinder component while the parsing of '"
+                + owner.getClass().getSimpleName() + ".ui.xml' is not finished");
+      }
 
     } else if (!rootComponentClass.isInstance(rootComponent)) {
       throw new GwtTestUiBinderException(
@@ -67,8 +73,66 @@ public class UiBinderTagBuilder<T> {
     return (T) rootComponent;
   }
 
-  private UiBinderTag createUiBinderTag(String nameSpaceURI, String localName,
+  public UiBinderTagBuilder<T> endTag(String nameSpaceURI, String localName) {
+
+    // ignore <UiBinder> tag
+    if (UiBinderUtils.isUiBinderTag(nameSpaceURI, localName)) {
+      return this;
+    }
+
+    Object currentObject = currentTag.getWrapped();
+    UiBinderTag parentTag = currentTag.getParentTag();
+    currentTag = parentTag;
+
+    if (UiBinderUtils.isResourceTag(nameSpaceURI, localName)) {
+      // ignore <data>, <image> and <style> stags
+      return this;
+    } else if (UiBinderUtils.isMsgTag(nameSpaceURI, localName)) {
+      // special <msg> case
+      parentTag.appendText((String) currentObject);
+      return this;
+    }
+
+    if (parentTag == null) {
+      // parsing is finished, this must be the root component
+      if (rootComponent != null) {
+        throw new GwtTestUiBinderException(
+            "UiBinder template '"
+                + owner.getClass().getName()
+                + "' should declare only one root widget in its corresponding .ui.xml file");
+      } else {
+        rootComponent = currentObject;
+      }
+    } else {
+      // add to its parent
+      if (Widget.class.isInstance(currentObject)) {
+        parentTag.addWidget((Widget) currentObject);
+      } else {
+        parentTag.addElement((Element) currentObject);
+      }
+    }
+
+    return this;
+  }
+
+  public UiBinderTagBuilder<T> startTag(String nameSpaceURI, String localName,
       Attributes attributes) {
+
+    if (UiBinderUtils.isUiBinderTag(nameSpaceURI, localName)) {
+      return this;
+    }
+
+    // register the current UiBinderTag in the stack
+    currentTag = createUiBinderTag(nameSpaceURI, localName, attributes,
+        currentTag);
+
+    return this;
+  }
+
+  private UiBinderTag createUiBinderTag(String nameSpaceURI, String localName,
+      Attributes attributes, UiBinderTag parentTag) {
+
+    localName = localName.replaceAll("\\.", "\\$");
 
     int i = nameSpaceURI.lastIndexOf(':');
     if (i > 0 && Character.isUpperCase(localName.charAt(0))) {
@@ -88,7 +152,7 @@ public class UiBinderTagBuilder<T> {
         // create or get the instance
         Widget widget = getInstance((Class<? extends Widget>) clazz, attributes);
 
-        return new UiBinderWidget<Widget>(widget, attributes, owner,
+        return new UiBinderWidget<Widget>(widget, attributes, parentTag, owner,
             resourceManager);
       } else {
         throw new GwtTestUiBinderException("Not managed type in file '"
@@ -97,48 +161,13 @@ public class UiBinderTagBuilder<T> {
             + "' are managed");
       }
     } else if (UiBinderUtils.isResourceTag(nameSpaceURI, localName)) {
-      return resourceManager.registerResource(localName, attributes);
+      return resourceManager.registerResource(localName, attributes, parentTag);
     } else if (UiBinderUtils.isMsgTag(nameSpaceURI, localName)) {
-      return new UiBinderMsg(getPrevious());
+      return new UiBinderMsg(currentTag);
     } else {
-      return new UiBinderElement(nameSpaceURI, localName, attributes, owner);
+      return new UiBinderElement(nameSpaceURI, localName, attributes,
+          parentTag, owner);
     }
-  }
-
-  public UiBinderTagBuilder<T> endTag(String nameSpaceURI, String localName) {
-
-    // ignore <UiBinder> tag
-    if (UiBinderUtils.isUiBinderTag(nameSpaceURI, localName)) {
-      return this;
-    }
-
-    Object currentObject = tags.pop().getWrapped();
-
-    // ignore <data>, <image> and <style> stags
-    if (UiBinderUtils.isResourceTag(nameSpaceURI, localName)) {
-      return this;
-    }
-
-    if (tags.size() == 0) {
-      // parsing is finished, this is the root component
-      rootComponent = currentObject;
-    } else {
-      // add to its parent
-      UiBinderTag parentTag = getPrevious();
-
-      if (Widget.class.isInstance(currentObject)) {
-        parentTag.addWidget((Widget) currentObject);
-      } else if (Element.class.isInstance(currentObject)) {
-        parentTag.addElement((Element) currentObject);
-      } else if (String.class == currentObject.getClass()) {
-        // <msg> case
-        parentTag.appendText((String) currentObject);
-      } else {
-        // just ignore it, it must be a resource tag
-      }
-    }
-
-    return this;
   }
 
   private <U> U getInstance(Class<U> clazz, Attributes attributes) {
@@ -202,17 +231,24 @@ public class UiBinderTagBuilder<T> {
     Map<Method, UiFactory> map = GwtReflectionUtils.getAnnotatedMethod(
         owner.getClass(), UiFactory.class);
 
+    List<Method> compatibleFactories = new ArrayList<Method>();
     for (Method factoryMethod : map.keySet()) {
-      if (factoryMethod.getReturnType() == clazz) {
-        return (U) GwtReflectionUtils.callPrivateMethod(owner, factoryMethod);
+      if (clazz.isAssignableFrom(factoryMethod.getReturnType())) {
+        compatibleFactories.add(factoryMethod);
       }
     }
 
-    return null;
-  }
-
-  private UiBinderTag getPrevious() {
-    return tags.get(tags.size() - 1);
+    switch (compatibleFactories.size()) {
+      case 0:
+        return null;
+      case 1:
+        return (U) GwtReflectionUtils.callPrivateMethod(owner,
+            compatibleFactories.get(0));
+      default:
+        throw new GwtTestUiBinderException("Duplicate factory in class '"
+            + owner.getClass().getName() + " for type '" + clazz.getName()
+            + "'");
+    }
   }
 
   private <U> U getProvidedUiField(Class<U> clazz) {
@@ -262,19 +298,6 @@ public class UiBinderTagBuilder<T> {
       }
     }
     return false;
-  }
-
-  public UiBinderTagBuilder<T> startTag(String nameSpaceURI, String localName,
-      Attributes attributes) {
-
-    if (UiBinderUtils.isUiBinderTag(nameSpaceURI, localName)) {
-      return this;
-    }
-
-    // register the current UiBinderTag in the stack
-    tags.push(createUiBinderTag(nameSpaceURI, localName, attributes));
-
-    return this;
   }
 
 }

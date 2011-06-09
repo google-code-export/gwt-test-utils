@@ -17,14 +17,16 @@ class UiBinderInnerResource implements UiBinderTag {
   private final String alias;
   private final ResourcePrototypeProxyBuilder builder;
   private final Object owner;
+  private final UiBinderTag parentTag;
   private final Map<String, Object> resources;
   private final StringBuilder text;
   private Object wrappedObject;
 
   UiBinderInnerResource(ResourcePrototypeProxyBuilder builder, String alias,
-      Object owner, Map<String, Object> resources) {
+      UiBinderTag parentTag, Object owner, Map<String, Object> resources) {
     this.builder = builder;
     this.owner = owner;
+    this.parentTag = parentTag;
     this.alias = alias;
     this.resources = resources;
     this.text = new StringBuilder();
@@ -40,6 +42,10 @@ class UiBinderInnerResource implements UiBinderTag {
 
   public void appendText(String text) {
     this.text.append(text.trim());
+  }
+
+  public UiBinderTag getParentTag() {
+    return parentTag;
   }
 
   public Object getWrapped() {

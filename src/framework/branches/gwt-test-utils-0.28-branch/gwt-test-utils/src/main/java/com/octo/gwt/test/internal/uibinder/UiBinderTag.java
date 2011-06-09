@@ -11,5 +11,8 @@ interface UiBinderTag {
 
   public void appendText(String text);
 
+  public UiBinderTag getParentTag();
+
   public Object getWrapped();
+
 }

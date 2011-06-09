@@ -48,6 +48,13 @@ public class GwtReflectionUtils {
       method.setAccessible(true);
       Object res = method.invoke(target, args);
       return (T) res;
+    } catch (InvocationTargetException e) {
+      if (GwtTestException.class.isInstance(e.getCause())) {
+        throw (GwtTestException) e.getCause();
+      }
+      throw new ReflectionException("Error while calling '"
+          + target.getClass().getSimpleName() + "." + method.getName()
+          + "(..)'", e.getCause());
     } catch (Exception e) {
       throw new ReflectionException("Unable to call method '"
           + target.getClass().getSimpleName() + "." + method.getName()

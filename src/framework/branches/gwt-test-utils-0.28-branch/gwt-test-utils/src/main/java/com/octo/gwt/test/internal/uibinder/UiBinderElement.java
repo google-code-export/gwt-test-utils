@@ -14,11 +14,13 @@ import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 class UiBinderElement implements UiBinderTag {
 
+  private final UiBinderTag parentTag;
   private final Element wrapped;
 
   UiBinderElement(String nsURI, String tagName, Attributes attributes,
-      Object owner) {
+      UiBinderTag parentTag, Object owner) {
     this.wrapped = JavaScriptObjects.newElement(tagName);
+    this.parentTag = parentTag;
 
     JavaScriptObjects.setProperty(wrapped, JsoProperties.XML_NAMESPACE, nsURI);
 
@@ -52,6 +54,10 @@ class UiBinderElement implements UiBinderTag {
     if (!"".equals(data.trim())) {
       appendText(this.wrapped, data);
     }
+  }
+
+  public UiBinderTag getParentTag() {
+    return parentTag;
   }
 
   public Object getWrapped() {

@@ -23,11 +23,14 @@ class UiBinderWidget<T extends Widget> implements UiBinderTag {
 
   private final Map<String, Object> attributesMap;
 
+  private final UiBinderTag parentTag;
+
   private final T wrapped;
 
-  UiBinderWidget(T wrapped, Attributes attributes, Object owner,
-      UiResourceManager resourceManager) {
+  UiBinderWidget(T wrapped, Attributes attributes, UiBinderTag parentTag,
+      Object owner, UiResourceManager resourceManager) {
     this.wrapped = wrapped;
+    this.parentTag = parentTag;
     this.attributesMap = new HashMap<String, Object>();
 
     for (int i = 0; i < attributes.getLength(); i++) {
@@ -84,24 +87,33 @@ class UiBinderWidget<T extends Widget> implements UiBinderTag {
     appendElement(this.wrapped, element);
   }
 
-  protected void addWidget(T wrapped, Widget widget) {
-    if (HasWidgets.class.isInstance(wrapped)) {
-      ((HasWidgets) wrapped).add(widget);
-    }
-  }
-
   public final void addWidget(Widget widget) {
     addWidget(this.wrapped, widget);
-  }
-
-  protected void appendElement(T wrapped, Element child) {
-    wrapped.getElement().appendChild(child);
   }
 
   public final void appendText(String data) {
     if (!"".equals(data.trim())) {
       appendText(this.wrapped, data);
     }
+  }
+
+  public UiBinderTag getParentTag() {
+    return parentTag;
+  }
+
+  public Object getWrapped() {
+    UiBinderUtils.populateWidget(this.wrapped, attributesMap);
+    return wrapped;
+  }
+
+  protected void addWidget(T wrapped, Widget widget) {
+    if (HasWidgets.class.isInstance(wrapped)) {
+      ((HasWidgets) wrapped).add(widget);
+    }
+  }
+
+  protected void appendElement(T wrapped, Element child) {
+    wrapped.getElement().appendChild(child);
   }
 
   protected void appendText(T wrapped, String data) {
@@ -111,11 +123,6 @@ class UiBinderWidget<T extends Widget> implements UiBinderTag {
       Text text = JavaScriptObjects.newText(data);
       wrapped.getElement().appendChild(text);
     }
-  }
-
-  public Object getWrapped() {
-    UiBinderUtils.populateWidget(this.wrapped, attributesMap);
-    return wrapped;
   }
 
 }

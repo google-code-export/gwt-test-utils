@@ -13,8 +13,8 @@ import com.octo.gwt.test.internal.utils.JsoProperties;
 class UiBinderWithDockLayoutPanel extends UiBinderWidget<DockLayoutPanel> {
 
   UiBinderWithDockLayoutPanel(DockLayoutPanel wrapped, Attributes attributes,
-      Object owner, UiResourceManager resourceManager) {
-    super(wrapped, attributes, owner, resourceManager);
+      UiBinderTag parentTag, Object owner, UiResourceManager resourceManager) {
+    super(wrapped, attributes, parentTag, owner, resourceManager);
   }
 
   private void handleDockLayoutPanelSpecifics(DockLayoutPanel wrapped,

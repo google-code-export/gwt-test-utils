@@ -23,6 +23,44 @@ class UiResourceManager {
     this.owner = owner;
   }
 
+  public Object getUiResource(String alias) {
+    return resources.get(alias);
+  }
+
+  public UiBinderTag registerResource(String localName, Attributes attributes,
+      UiBinderTag parentTag) {
+
+    String alias = getResourceAlias(localName, attributes);
+
+    if (resources.containsKey(alias)) {
+      throw new GwtTestUiBinderException("Two inner resources '" + alias
+          + " are declared in " + owner.getClass().getSimpleName()
+          + ".ui.xml. You should add a 'field' attribute to one of them");
+    }
+
+    Class<?> clazz = getResourceClass(alias, localName, attributes);
+
+    if (clazz == null) {
+      return new UiBinderIgnoreTag(null);
+    }
+
+    Object resource;
+
+    if ("with".equals(localName)) {
+      resource = GWT.create(clazz);
+      resources.put(alias, resource);
+      return new UiBinderIgnoreTag(resource);
+
+    } else {
+      ResourcePrototypeProxyBuilder builder = ResourcePrototypeProxyBuilder.createBuilder(
+          clazz, owner.getClass()).name(alias);
+
+      return new UiBinderInnerResource(builder, alias, parentTag, owner,
+          resources);
+
+    }
+  }
+
   private String getResourceAlias(String localName, Attributes attributes) {
     String alias;
     alias = attributes.getValue("field");
@@ -63,43 +101,6 @@ class UiResourceManager {
             + owner.getClass().getSimpleName() + ".ui.xml'");
       }
     }
-  }
-
-  public Object getUiResource(String alias) {
-    return resources.get(alias);
-  }
-
-  public UiBinderTag registerResource(String localName, Attributes attributes) {
-
-    String alias = getResourceAlias(localName, attributes);
-
-    if (resources.containsKey(alias)) {
-      throw new GwtTestUiBinderException("Two inner resources '" + alias
-          + " are declared in " + owner.getClass().getSimpleName()
-          + ".ui.xml. You should add a 'field' attribute to one of them");
-    }
-
-    Class<?> clazz = getResourceClass(alias, localName, attributes);
-
-    if (clazz == null) {
-      return new UiBinderIgnoreTag(null);
-    }
-
-    Object resource;
-
-    if ("with".equals(localName)) {
-      resource = GWT.create(clazz);
-      resources.put(alias, resource);
-      return new UiBinderIgnoreTag(resource);
-
-    } else {
-      ResourcePrototypeProxyBuilder builder = ResourcePrototypeProxyBuilder.createBuilder(
-          clazz, owner.getClass()).name(alias);
-
-      return new UiBinderInnerResource(builder, alias, owner, resources);
-
-    }
-
   }
 
 }

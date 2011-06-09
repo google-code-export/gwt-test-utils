@@ -13,4 +13,9 @@ public class DurationPatcher extends AutomaticPatcher {
     return System.currentTimeMillis();
   }
 
+  @PatchMethod
+  public static int uncheckedConversion(double elapsed) {
+    return (int) elapsed;
+  }
+
 }

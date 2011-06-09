@@ -24,11 +24,14 @@ class UiBinderWidget<T extends Widget> implements UiBinderTag {
 
   private final Map<String, Object> attributesMap;
 
+  private final UiBinderTag parentTag;
+
   private final T wrapped;
 
-  UiBinderWidget(T wrapped, Attributes attributes, Object owner,
-      UiResourceManager resourceManager) {
+  UiBinderWidget(T wrapped, Attributes attributes, UiBinderTag parentTag,
+      Object owner, UiResourceManager resourceManager) {
     this.wrapped = wrapped;
+    this.parentTag = parentTag;
     this.attributesMap = new HashMap<String, Object>();
 
     for (int i = 0; i < attributes.getLength(); i++) {
@@ -93,6 +96,10 @@ class UiBinderWidget<T extends Widget> implements UiBinderTag {
     if (!"".equals(data.trim())) {
       appendText(this.wrapped, data);
     }
+  }
+
+  public UiBinderTag getParentTag() {
+    return parentTag;
   }
 
   public Object getWrapped() {
