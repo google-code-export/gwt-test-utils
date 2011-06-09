@@ -23,6 +23,11 @@ class UiBinderIgnoreTag implements UiBinderTag {
     // nothing to do
   }
 
+  public UiBinderTag getParentTag() {
+    // nothing to do
+    return null;
+  }
+
   public Object getWrapped() {
     return wrapped;
   }

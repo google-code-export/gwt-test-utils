@@ -5,11 +5,11 @@ import com.google.gwt.user.client.ui.Widget;
 
 class UiBinderMsg implements UiBinderTag {
 
-  private final UiBinderTag parent;
+  private final UiBinderTag parentTag;
   private final StringBuilder sb;
 
   public UiBinderMsg(UiBinderTag parent) {
-    this.parent = parent;
+    this.parentTag = parent;
     sb = new StringBuilder();
   }
 
@@ -21,12 +21,16 @@ class UiBinderMsg implements UiBinderTag {
   }
 
   public void addWidget(Widget widget) {
-    parent.addWidget(widget);
+    parentTag.addWidget(widget);
 
   }
 
   public void appendText(String data) {
     sb.append(data);
+  }
+
+  public UiBinderTag getParentTag() {
+    return parentTag;
   }
 
   public Object getWrapped() {
