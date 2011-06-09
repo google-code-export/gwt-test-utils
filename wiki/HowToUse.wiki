@@ -124,7 +124,7 @@ Sometimes, it could be helpfull to get the lastest snapshot. It's done with the 
    ...
    <dependency>
       <groupId>com.octo.gwt.test</groupId>
-      <artifactId>gwt-test-utils-integration</artifactId>
+      <artifactId>gwt-test-utils</artifactId>
       <version>X+1-SNAPSHOT</version>
       <scope>test</scope>
    </dependency>
