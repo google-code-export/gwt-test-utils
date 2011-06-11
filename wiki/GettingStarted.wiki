@@ -13,7 +13,7 @@ Let's create an out-of-the-box GWT application with the [http://code.google.com/
  
  * Select *File > New > Web Application Project* from the Eclipse menu.
 
- * In the *New Web Application Project* wizard, enter a name for your project ({{{GwtTestSample}}}) and a java package name, ({{{com.example.mywebapp}}}). 
+ * In the *New Web Application Project* wizard, enter a name for your project ({{{GwtTestSample}}}) and a java package name  ({{{com.example.mywebapp}}}). 
 
  * Be sure *Generate GWT sample code* is checked 
 
@@ -193,7 +193,7 @@ Very simple, isn't it ?
 
 === Simulating complex DOM events ? Easy win ! ===
 
-You may have noticed that the generated code handle a "press enter" action, which also send the text to the server. You may want to automatically test it :
+You may have noticed that the generated sample code handle a "press enter" action, which also send the text to the server. You may want to automatically test it :
 
 {{{
   @Test
