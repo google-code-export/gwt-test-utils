@@ -33,7 +33,7 @@ You also could have declared {{{my.patcher}}} as the root package to scan, but y
 
 In some cases, this example would not suit. This section explains what to do when facing one of them.
 
-==== Patching static methods ====
+=== Patching static methods ===
 
 Assume we want to patch {{{UiObject.isVisible(..)}}} method, which is static :
 {{{
@@ -64,10 +64,11 @@ class UIObjectPatcher {
 }}}
 
 The patch method must have exactly the same name and parameters as the original one.
+
 *Just ignore the rule "a patch method must take the initial caller instance as its first parameter" when patching static methods.*
 
 
-==== Patching private classes ====
+=== Patching private classes ===
 
 You may want to patch a private class. In this case, The annotation parameter {{{@PatchClass(MyPrivateClass.class)}}} won't feet since you can't make a reference to {{{MyPrivateClass}}}.
 
@@ -82,4 +83,4 @@ class MyPrivateClassPatcher {
 
 *When you want to patch a classes you don't have directly access to, use the {{{classes}}} attribute of {{{@PatchClass}}} which takes a string array representing the name of the classes you want to apply the patcher to.*
 
-==== Overriding existing patchers ====
+=== Overriding existing patchers ===
