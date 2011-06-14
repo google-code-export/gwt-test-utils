@@ -3,20 +3,37 @@
 
 = Introduction =
 
-The main challenge for *gwt-test-utils* has been to enable the instanciation of all GWT client side widgets in a standalone JVM and to simulate their behaviours in Java rather than in JavaScript.
+The main challenge for _gwt-test-utils_ has been to enable the instanciation of all GWT client side widgets in a standalone JVM and to simulate their behaviours in Java rather than in JavaScript.
 This is done by modifying GWT classes as they are loaded in the JVM by a custom classloader *gwt-test-utils* provides to launch JUnit tests.
 
-= The custom classloader =
+But don't worry, even if you are interested in writing your own custom bytecode modifications, you will never have to deal with classloading stuff : _gwt-test-utils_ provide a very simple "Patcher" API, which handle all loading and bytecode modification issues behind the scene.
+
+= The Patcher API =
  
-= The Patcher mecanism =
+Provide a "patch" for an existing class is done in two steps : 
+ * write some {{{PatchClass}}} for this class
+ * register thoses patch classes to _gwt-test-utils_
 
-TODO : present the Patcher API provided by gwt-test-utils, and the custom classloader which is used
+== Writing a custom patcher ==
 
 
-= gwt-test-utils configuration for patchers =
+== Registering custom patchers ==
 
-TODO : explain who gwt-test-utils scan the classpath to search for Patcher
+This part is *even more simpler* ! In your {{{META-INF/gwt-test-utils.properties}}} file (which must be available in your test classpath), simply add this line :
 
-= Example : writing a custom Patcher =
+{{{
+my.patcher.package = scan-class
+}}}
 
-TODO : all
+As you may have guessed, *my.patcher.package* must by the package of your {{{@PatchClass}}} annotated classes.
+Before loading any class, _gwt-test-utils_ will scan every file and directory within {{{my/patcher/package}}} to find classes with the {{{@PatchClass}}} annotation.
+You also could have declared {{{my.patcher}}} as the root package to scan, but you should considere performance concerns when scanning a to large number of files.
+
+== Non-trivial patchers ==
+
+=== Patching private classes ===
+
+
+=== Patching static methods ===
+
+=== Overriding existing patchers ===
