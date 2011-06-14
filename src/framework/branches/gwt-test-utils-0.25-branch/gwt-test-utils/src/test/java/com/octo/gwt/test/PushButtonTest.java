@@ -15,7 +15,7 @@ public class PushButtonTest extends GwtTestTest {
   @Test
   public void checkClick() {
 
-    // Setup
+    // Arrange
     clicked = false;
 
     final PushButton b = new PushButton("Up", "Down");
@@ -30,7 +30,7 @@ public class PushButtonTest extends GwtTestTest {
     // Pre-Assert
     Assert.assertEquals("Up", b.getText());
 
-    // Test
+    // Act
     Browser.click(b);
 
     // Assert

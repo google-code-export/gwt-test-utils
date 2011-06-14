@@ -12,12 +12,11 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Text;
 import com.octo.gwt.test.exceptions.GwtTestDomException;
 import com.octo.gwt.test.internal.utils.JsoProperties;
-import com.octo.gwt.test.patchers.OverlayPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
 @PatchClass(Node.class)
-public class NodePatcher extends OverlayPatcher {
+public class NodePatcher {
 
   @PatchMethod
   public static Node appendChild(Node parent, Node newChild) {

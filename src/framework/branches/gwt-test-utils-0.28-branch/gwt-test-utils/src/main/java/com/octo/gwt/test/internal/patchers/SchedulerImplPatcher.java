@@ -3,12 +3,11 @@ package com.octo.gwt.test.internal.patchers;
 import com.google.gwt.core.client.Scheduler.RepeatingCommand;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.core.client.impl.SchedulerImpl;
-import com.octo.gwt.test.patchers.AutomaticPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
 @PatchClass(SchedulerImpl.class)
-public class SchedulerImplPatcher extends AutomaticPatcher {
+public class SchedulerImplPatcher {
 
   @PatchMethod
   public static void scheduleDeferred(SchedulerImpl impl, ScheduledCommand cmd) {

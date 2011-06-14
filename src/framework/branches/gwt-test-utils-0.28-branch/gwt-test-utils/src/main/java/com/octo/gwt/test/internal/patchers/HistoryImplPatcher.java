@@ -3,12 +3,11 @@ package com.octo.gwt.test.internal.patchers;
 import java.util.Stack;
 
 import com.google.gwt.user.client.impl.HistoryImpl;
-import com.octo.gwt.test.patchers.AutomaticPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
 @PatchClass(HistoryImpl.class)
-public class HistoryImplPatcher extends AutomaticPatcher {
+public class HistoryImplPatcher {
 
   private static String top = null;
 

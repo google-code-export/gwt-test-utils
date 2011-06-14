@@ -18,7 +18,7 @@ import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
 @PatchClass(DomQuery.class)
-public class DomQueryPatcher extends AutomaticPatcher {
+public class DomQueryPatcher {
 
   @PatchMethod
   public static JavaScriptObject internalSelect(String selector) {

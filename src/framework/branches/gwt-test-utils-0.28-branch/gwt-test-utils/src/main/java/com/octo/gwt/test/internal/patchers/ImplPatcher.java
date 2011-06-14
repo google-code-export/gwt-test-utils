@@ -4,12 +4,11 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 
 import com.google.gwt.core.client.impl.Impl;
 import com.octo.gwt.test.internal.GwtConfig;
-import com.octo.gwt.test.patchers.AutomaticPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
 @PatchClass(Impl.class)
-public class ImplPatcher extends AutomaticPatcher {
+public class ImplPatcher {
 
   @PatchMethod
   public static int getHashCode(Object o) {

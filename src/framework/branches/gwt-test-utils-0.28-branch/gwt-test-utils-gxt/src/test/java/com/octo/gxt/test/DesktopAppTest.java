@@ -9,10 +9,10 @@ public class DesktopAppTest extends GwtGxtTest {
 
   @Test
   public void checkOnModuleLoad() {
-    // Setup
+    // Arrange
     DesktopApp app = GWT.create(DesktopApp.class);
 
-    // Test
+    // Act
     app.onModuleLoad();
 
     // Assert

@@ -16,13 +16,13 @@ public class DataListTest extends GwtGxtTest {
 
   @Test
   public void checkSelectedItem() {
-    // Setup
+    // Arrange
     DataListItem item0 = new DataListItem("item 0");
     dataList.add(item0);
     DataListItem item1 = new DataListItem("item 1");
     dataList.add(item1);
 
-    // Test
+    // Act
     dataList.setSelectedItem(item1);
 
     // Assert

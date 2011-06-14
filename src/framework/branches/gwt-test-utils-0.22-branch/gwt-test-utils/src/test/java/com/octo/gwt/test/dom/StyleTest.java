@@ -21,11 +21,11 @@ public class StyleTest extends GwtTestTest {
 
   @Test
   public void checkEmptyStyle() {
-    // Setup
+    // Arrange
     Button button = new Button();
     Style style = button.getElement().getStyle();
 
-    // Tests
+    // Act
     Assert.assertEquals("", style.getBackgroundColor());
     Assert.assertEquals("", style.getBackgroundImage());
     Assert.assertEquals("", style.getBorderColor());
@@ -65,11 +65,11 @@ public class StyleTest extends GwtTestTest {
 
   @Test
   public void checkFloat() {
-    // Setup
+    // Arrange
     Button button = new Button();
     Style style = button.getElement().getStyle();
 
-    // Test 1
+    // Act 1
     style.setFloat(Style.Float.RIGHT);
 
     // Assert 1
@@ -78,7 +78,7 @@ public class StyleTest extends GwtTestTest {
     Assert.assertEquals("float: right; ",
         button.getElement().getAttribute("style"));
 
-    // Test 2
+    // Act 2
     style.clearFloat();
 
     // Assert 2
@@ -88,11 +88,11 @@ public class StyleTest extends GwtTestTest {
 
   @Test
   public void checkOpacity() {
-    // Setup
+    // Arrange
     Button button = new Button();
     Style style = button.getElement().getStyle();
 
-    // Test 1
+    // Act 1
     style.setOpacity(1.0);
 
     // Assert 1
@@ -100,7 +100,7 @@ public class StyleTest extends GwtTestTest {
     Assert.assertEquals("opacity: 1; ",
         button.getElement().getAttribute("style"));
 
-    // Test 2
+    // Act 2
     style.setOpacity(0.94);
 
     // Assert 2
@@ -108,7 +108,7 @@ public class StyleTest extends GwtTestTest {
     Assert.assertEquals("opacity: 0.94; ",
         button.getElement().getAttribute("style"));
 
-    // Test 3
+    // Act 3
     style.clearOpacity();
     Assert.assertEquals("", button.getElement().getAttribute("style"));
 
@@ -118,11 +118,11 @@ public class StyleTest extends GwtTestTest {
 
   @Test
   public void checkProperties() {
-    // Setup
+    // Arrange
     Button button = new Button();
     Style style = button.getElement().getStyle();
 
-    // Test 1
+    // Act 1
     style.setBackgroundColor("black");
     style.setBackgroundImage("/img.png");
     style.setBorderColor("blue");
@@ -205,7 +205,7 @@ public class StyleTest extends GwtTestTest {
     Assert.assertEquals("3.5px", style.getWidth());
     Assert.assertEquals("1000", style.getZIndex());
 
-    // Test2
+    // Act2
     style.clearBackgroundColor();
     style.clearBackgroundImage();
     style.clearBorderColor();
@@ -285,13 +285,13 @@ public class StyleTest extends GwtTestTest {
 
   @Test
   public void checkStyles() {
-    // Setup
+    // Arrange
     Button b = new Button();
     b.setStylePrimaryName("toto");
     b.addStyleName("tata");
     b.addStyleName("titi");
 
-    // Tests & Asserts
+    // Act & Asserts
     Assert.assertEquals("toto", b.getStylePrimaryName());
     Assert.assertEquals(true, WidgetUtils.hasStyle(b, "tata"));
     Assert.assertEquals(true, WidgetUtils.hasStyle(b, "titi"));

@@ -47,21 +47,21 @@ public class ElementTest extends GwtTestTest {
 
   @Test
   public void checkClassName() {
-    // Test 1
+    // Act 1
     e.setClassName("clazz");
 
     // Assert 1
     Assert.assertEquals("clazz", e.getClassName());
     Assert.assertEquals("clazz", e.getAttribute("class"));
 
-    // Test 2
+    // Act 2
     e.addClassName("addon");
 
     // Assert 2
     Assert.assertEquals("clazz addon", e.getClassName());
     Assert.assertEquals("clazz addon", e.getAttribute("class"));
 
-    // Test 3
+    // Act 3
     e.setAttribute("class", "override");
 
     // Assert 3
@@ -124,12 +124,12 @@ public class ElementTest extends GwtTestTest {
     e.appendChild(ae1);
     e.appendChild(be);
 
-    // Tests
+    // Act
     NodeList<Element> anchorList = e.getElementsByTagName("a");
     NodeList<Element> buttonList = e.getElementsByTagName("button");
     NodeList<Element> allList = e.getElementsByTagName("*");
 
-    // Asserts
+    // Assert
     Assert.assertEquals(2, anchorList.getLength());
     Assert.assertEquals(ae0, anchorList.getItem(0));
     Assert.assertEquals(ae1, anchorList.getItem(1));
@@ -155,7 +155,7 @@ public class ElementTest extends GwtTestTest {
     e.appendChild(be0);
     e.appendChild(be1);
 
-    // Test & Assert
+    // Act & Assert
     Assert.assertEquals(be0, e.getFirstChildElement());
   }
 
@@ -172,7 +172,7 @@ public class ElementTest extends GwtTestTest {
     e.appendChild(be1);
     e.appendChild(JavaScriptObjects.newText("test2"));
 
-    // Test & Assert
+    // Act & Assert
     Assert.assertEquals(be1, be0.getNextSiblingElement());
     Assert.assertNull(be1.getNextSiblingElement());
   }
@@ -196,10 +196,10 @@ public class ElementTest extends GwtTestTest {
     Element child = Document.get().createBaseElement();
     e.appendChild(child);
 
-    // Test and assert
+    // Act and assert
     Assert.assertEquals(e, child.getParentElement());
 
-    // Test 2
+    // Act 2
     otherParent.appendChild(child);
 
     // Assert 2
@@ -210,10 +210,10 @@ public class ElementTest extends GwtTestTest {
 
   @Test
   public void checkHashCode() {
-    // Setup
+    // Arrange
     Map<Element, String> map = new HashMap<Element, String>();
 
-    // Test
+    // Act
     map.put(e, "a string value");
     map.put(e, "this value should have overrided the first one");
 
@@ -224,14 +224,14 @@ public class ElementTest extends GwtTestTest {
 
   @Test
   public void checkId() {
-    // Test 1
+    // Act 1
     e.setId("myId");
 
     // Assert 1
     Assert.assertEquals("myId", e.getId());
     Assert.assertEquals("myId", e.getAttribute("id"));
 
-    // Test 2
+    // Act 2
     e.setAttribute("id", "updatedId");
 
     // Assert 2
@@ -263,7 +263,7 @@ public class ElementTest extends GwtTestTest {
     e.appendChild(child);
     AnchorElement notAChild = Document.get().createAnchorElement();
 
-    // Test & Assert
+    // Act & Assert
     Assert.assertTrue(e.isOrHasChild(e));
     Assert.assertTrue(e.isOrHasChild(child));
     Assert.assertFalse(e.isOrHasChild(notAChild));
@@ -307,7 +307,7 @@ public class ElementTest extends GwtTestTest {
     // Set up
     e.setAttribute("test", "value");
 
-    // Test
+    // Act
     e.removeAttribute("test");
 
     // Assert
@@ -349,10 +349,10 @@ public class ElementTest extends GwtTestTest {
     Assert.assertNull(e.getPropertyObject("title"));
     Assert.assertNull(e.getPropertyObject("titLe"));
 
-    // Test
+    // Act
     e.setTitle("MyTitle");
 
-    // Asserts
+    // Assert
     Assert.assertEquals("MyTitle", e.getTitle());
     Assert.assertEquals("MyTitle", e.getAttribute("title"));
     Assert.assertEquals("MyTitle", e.getAttribute("titLe"));
@@ -365,7 +365,7 @@ public class ElementTest extends GwtTestTest {
   // TODO : pass the toString test on DOM elements..
   @Test
   public void checkToString() {
-    // Setup
+    // Arrange
     DivElement div = Document.get().createDivElement();
     div.setAttribute("someAttr", "myVal");
     div.getStyle().setBackgroundColor("black");
@@ -373,7 +373,7 @@ public class ElementTest extends GwtTestTest {
     div.getStyle().setProperty("backgroundColor", "white");
     div.setInnerHTML("<span>in span</span> out span");
 
-    // Test
+    // Act
     String html = div.toString();
 
     // Assert

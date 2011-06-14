@@ -8,7 +8,7 @@ import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
 @PatchClass(XDOM.class)
-public class XDOMPatcher extends AutomaticPatcher {
+public class XDOMPatcher {
 
   @PatchMethod
   public static Element getBody() {

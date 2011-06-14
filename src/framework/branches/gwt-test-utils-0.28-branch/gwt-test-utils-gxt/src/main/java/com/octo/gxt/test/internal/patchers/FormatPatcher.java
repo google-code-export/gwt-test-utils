@@ -7,7 +7,7 @@ import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
 @PatchClass(Format.class)
-public class FormatPatcher extends AutomaticPatcher {
+public class FormatPatcher {
 
   @PatchMethod
   public static String camelize(String s) {

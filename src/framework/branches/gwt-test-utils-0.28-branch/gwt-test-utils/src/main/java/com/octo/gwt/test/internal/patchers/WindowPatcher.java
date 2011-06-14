@@ -4,12 +4,11 @@ import com.google.gwt.dom.client.Document;
 import com.google.gwt.user.client.Window;
 import com.octo.gwt.test.WindowOperationsHandler;
 import com.octo.gwt.test.internal.GwtConfig;
-import com.octo.gwt.test.patchers.AutomaticPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
 @PatchClass(Window.class)
-public class WindowPatcher extends AutomaticPatcher {
+public class WindowPatcher {
 
   @PatchMethod
   public static void alert(String msg) {

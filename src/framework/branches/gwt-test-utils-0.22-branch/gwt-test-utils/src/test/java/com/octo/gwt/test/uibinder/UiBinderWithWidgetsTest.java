@@ -19,13 +19,13 @@ public class UiBinderWithWidgetsTest extends GwtTestTest {
 
   @Test
   public void checkUiBinderWidget() {
-    // Setup
+    // Arrange
     UiBinderWithWidgets w = new UiBinderWithWidgets("gael", "eric");
 
-    // Test
+    // Act
     RootPanel.get().add(w);
 
-    // Asserts
+    // Assert
     Assert.assertEquals(1, w.listBox.getVisibleItemCount());
 
     HTMLPanel wrappedPanel = GwtReflectionUtils.callPrivateMethod(w,
@@ -82,16 +82,16 @@ public class UiBinderWithWidgetsTest extends GwtTestTest {
 
   @Test
   public void checkUiHandlerClick() {
-    // Setup
+    // Arrange
     UiBinderWithWidgets w = new UiBinderWithWidgets("gael", "eric");
 
     // Pre-Assert
     Assert.assertEquals(1, w.listBox.getVisibleItemCount());
 
-    // Test
+    // Act
     Browser.click(w.button);
 
-    // Asserts
+    // Assert
     Assert.assertEquals(2, w.listBox.getVisibleItemCount());
   }
 }

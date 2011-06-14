@@ -10,10 +10,10 @@ public class DebugIdEnabledTest extends GwtTestTest {
 
   @Test
   public void checkEnsureDebugId() {
-    // Setup
+    // Arrange
     Button b = new Button();
 
-    // Test
+    // Act
     b.ensureDebugId("myDebugId");
 
     // Assert

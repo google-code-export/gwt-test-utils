@@ -32,7 +32,7 @@ public class VisitorObjectFinderTest extends GwtTestWithEasyMock {
 
   @Test
   public void checkFind() {
-    // Setup
+    // Arrange
     Button expectedB1 = GwtReflectionUtils.getPrivateFieldValue(app, "b1");
     Button expectedB2 = GwtReflectionUtils.getPrivateFieldValue(app, "b2");
     MyComposite myComposite = GwtReflectionUtils.getPrivateFieldValue(app,
@@ -42,7 +42,7 @@ public class VisitorObjectFinderTest extends GwtTestWithEasyMock {
 
     replay();
 
-    // Test
+    // Act
     Widget b1 = (Widget) finder.find(csvRunner, "Button1's HTML");
     Widget b2 = (Widget) finder.find(csvRunner, "Button2's HTML");
     Label compositeLabel = (Label) finder.find(csvRunner, "myComposite Label");

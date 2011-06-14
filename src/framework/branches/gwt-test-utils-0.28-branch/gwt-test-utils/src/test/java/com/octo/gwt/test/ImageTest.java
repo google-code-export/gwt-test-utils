@@ -15,7 +15,7 @@ public class ImageTest extends GwtTestTest {
   public void checkGetImageElement() {
     Image i = new Image();
 
-    // Test
+    // Act
     Element e = i.getElement();
 
     Assert.assertNotNull(e);
@@ -47,7 +47,7 @@ public class ImageTest extends GwtTestTest {
   public void checkImageConstructor() {
     ImageResource imageRessource = MyClientBundle.INSTANCE.testImageResource();
 
-    // Test
+    // Act
     Image i = new Image(imageRessource);
 
     // Assert

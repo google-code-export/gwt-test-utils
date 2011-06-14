@@ -39,13 +39,13 @@ public class GwtRpcWithMockitoTest extends GwtTestWithMockito {
   @SuppressWarnings("unchecked")
   @Test
   public void checkGwtRpcFailure() {
-    // Setup
+    // Arrange
 
     // mock future remote call
     doFailureCallback(new Exception()).when(mockedService).myMethod(
         eq("myParamValue"), any(AsyncCallback.class));
 
-    // Test
+    // Act
     MyGwtClass gwtClass = new MyGwtClass();
     gwtClass.myValue = "toto";
     Assert.assertEquals("toto", gwtClass.myValue);
@@ -58,11 +58,11 @@ public class GwtRpcWithMockitoTest extends GwtTestWithMockito {
   @SuppressWarnings("unchecked")
   @Test
   public void checkGwtRpcOk() {
-    // Setup : mock future remote call
+    // Arrange : mock future remote call
     doSuccessCallback("returnValue").when(mockedService).myMethod(
         eq("myParamValue"), any(AsyncCallback.class));
 
-    // Test
+    // Act
     MyGwtClass gwtClass = new MyGwtClass();
     gwtClass.myValue = "toto";
     Assert.assertEquals("toto", gwtClass.myValue);

@@ -10,12 +10,11 @@ import com.google.gwt.dom.client.Style.Unit;
 import com.octo.gwt.test.internal.utils.GwtStringUtils;
 import com.octo.gwt.test.internal.utils.JsoProperties;
 import com.octo.gwt.test.internal.utils.StyleUtils;
-import com.octo.gwt.test.patchers.OverlayPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
 @PatchClass(Style.class)
-public class StylePatcher extends OverlayPatcher {
+public class StylePatcher {
 
   @PatchMethod
   public static void clearBorderWidth(Style style) {

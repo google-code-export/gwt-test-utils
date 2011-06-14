@@ -9,7 +9,7 @@ import com.octo.gwt.test.utils.GwtReflectionUtils;
 import com.octo.gxt.test.internal.overrides.JsArrayJSO;
 
 @PatchClass(JsArray.class)
-public class JsArrayPatcher extends AutomaticPatcher {
+public class JsArrayPatcher {
 
   @PatchMethod
   public static void add(JsArray jsArray, boolean value) {

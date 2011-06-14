@@ -11,10 +11,10 @@ public class MyGXTAppTest extends GwtGxtTest {
 
   @Test
   public void checkOnModuleLoad() {
-    // Setup
+    // Arrange
     MyGXTApp app = new MyGXTApp();
 
-    // Test
+    // Act
     app.onModuleLoad();
 
     // Assert

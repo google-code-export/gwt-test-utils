@@ -20,7 +20,7 @@ public class WidgetUtilsTest extends GwtTestTest {
 
   @Test
   public void checkAssertListBoxDataDoNotMatchDifferentElement() {
-    // Setup
+    // Arrange
     ListBox lb = new ListBox();
     lb.addItem("item0");
     lb.addItem("item1");
@@ -28,26 +28,26 @@ public class WidgetUtilsTest extends GwtTestTest {
 
     String[] content = new String[]{"item0", "item1", "item2"};
 
-    // Test & Assert
+    // Act & Assert
     Assert.assertFalse(WidgetUtils.assertListBoxDataMatch(lb, content));
   }
 
   @Test
   public void checkAssertListBoxDataDoNotMatchMissingElement() {
-    // Setup
+    // Arrange
     ListBox lb = new ListBox();
     lb.addItem("item0");
     lb.addItem("item1");
 
     String[] content = new String[]{"item0", "item1", "item2"};
 
-    // Test & Assert
+    // Act & Assert
     Assert.assertFalse(WidgetUtils.assertListBoxDataMatch(lb, content));
   }
 
   @Test
   public void checkAssertListBoxDataMatch() {
-    // Setup
+    // Arrange
     ListBox lb = new ListBox();
     lb.addItem("item0");
     lb.addItem("item1");
@@ -55,13 +55,13 @@ public class WidgetUtilsTest extends GwtTestTest {
 
     String[] content = new String[]{"item0", "item1", "item2"};
 
-    // Test & Assert
+    // Act & Assert
     Assert.assertTrue(WidgetUtils.assertListBoxDataMatch(lb, content));
   }
 
   @Test
   public void checkGetListBoxContentToString() {
-    // Setup
+    // Arrange
     ListBox lb = new ListBox();
     lb.addItem("item0");
     lb.addItem("item1");
@@ -69,7 +69,7 @@ public class WidgetUtilsTest extends GwtTestTest {
 
     String expected = "item0 | item1 | item2 |";
 
-    // Test
+    // Act
     String actual = WidgetUtils.getListBoxContentToString(lb);
 
     Assert.assertEquals(expected, actual);
@@ -77,13 +77,13 @@ public class WidgetUtilsTest extends GwtTestTest {
 
   @Test
   public void checkListBoxIndex() {
-    // Setup
+    // Arrange
     ListBox lb = new ListBox();
     lb.addItem("item0");
     lb.addItem("item1");
     lb.addItem("item2");
 
-    // Test & Assert
+    // Act & Assert
     Assert.assertEquals(0, WidgetUtils.getIndexInListBox(lb, "item0"));
     Assert.assertEquals(1, WidgetUtils.getIndexInListBox(lb, "item1"));
     Assert.assertEquals(2, WidgetUtils.getIndexInListBox(lb, "item2"));
@@ -92,7 +92,7 @@ public class WidgetUtilsTest extends GwtTestTest {
 
   @Test
   public void checkMenuBarItems() {
-    // Setup
+    // Arrange
     MenuBar bar = new MenuBar();
 
     Command cmd = new Command() {
@@ -104,7 +104,7 @@ public class WidgetUtilsTest extends GwtTestTest {
     MenuItem item0 = bar.addItem("item0", cmd);
     MenuItem item1 = bar.addItem("item1", cmd);
 
-    // Test
+    // Act
     List<MenuItem> items = WidgetUtils.getMenuItems(bar);
 
     // Assert
@@ -115,13 +115,13 @@ public class WidgetUtilsTest extends GwtTestTest {
 
   @Test
   public void checkNewWidgetIsNotVisibleWhenParentIsNotVisible() {
-    // Setup
+    // Arrange
     SimplePanel sp = new SimplePanel();
     sp.setVisible(false);
     Button b = new Button();
     sp.add(b);
 
-    // Test
+    // Act
     Boolean isVisible = WidgetUtils.isWidgetVisible(b);
 
     // Assert
@@ -130,10 +130,10 @@ public class WidgetUtilsTest extends GwtTestTest {
 
   @Test
   public void checkNewWidgetIsVisible() {
-    // Setup
+    // Arrange
     Button b = new Button();
 
-    // Test
+    // Act
     Boolean isVisible = WidgetUtils.isWidgetVisible(b);
 
     // Assert
@@ -142,7 +142,7 @@ public class WidgetUtilsTest extends GwtTestTest {
 
   @Test
   public void checkSuggestBoxItems() {
-    // Setup
+    // Arrange
     SuggestBox box = new SuggestBox();
     SuggestionDisplay display = GwtReflectionUtils.getPrivateFieldValue(box,
         "display");
@@ -158,7 +158,7 @@ public class WidgetUtilsTest extends GwtTestTest {
     MenuItem item0 = bar.addItem("item0", cmd);
     MenuItem item1 = bar.addItem("item1", cmd);
 
-    // Test
+    // Act
     List<MenuItem> items = WidgetUtils.getMenuItems(box);
 
     // Assert
@@ -174,7 +174,7 @@ public class WidgetUtilsTest extends GwtTestTest {
     MenuItem item0 = bar.addItem("test0", (Command) null);
     item0.setVisible(true);
 
-    // Test
+    // Act
     Boolean isVisible = WidgetUtils.isWidgetVisible(item0);
 
     // Assert

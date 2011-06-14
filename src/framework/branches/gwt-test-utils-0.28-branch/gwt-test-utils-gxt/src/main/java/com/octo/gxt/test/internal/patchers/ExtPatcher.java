@@ -5,7 +5,7 @@ import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
 @PatchClass(classes = {"com.extjs.gxt.ui.client.core.Ext"})
-public class ExtPatcher extends AutomaticPatcher {
+public class ExtPatcher {
 
   @PatchMethod
   public static void loadDomHelper() {

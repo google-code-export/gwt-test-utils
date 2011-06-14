@@ -4,7 +4,6 @@ import java.io.File;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.util.Enumeration;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -25,9 +24,9 @@ import com.octo.gwt.test.exceptions.GwtTestPatchException;
  */
 class ClassesScanner {
 
-  static interface ClassFilter {
+  static interface ClassVisitor {
 
-    boolean accept(CtClass ctClass);
+    void visit(CtClass ctClass);
   }
 
   private static final ClassesScanner INSTANCE = new ClassesScanner();
@@ -41,9 +40,7 @@ class ClassesScanner {
   private ClassesScanner() {
   }
 
-  public Set<CtClass> findClasses(ClassFilter classFilter,
-      Set<String> rootPackages) {
-    Set<CtClass> resultSet = new HashSet<CtClass>();
+  public void scanPackages(ClassVisitor classVisitor, Set<String> rootPackages) {
 
     for (String rootPackage : rootPackages) {
       String path = rootPackage.replaceAll("\\.", "/");
@@ -57,11 +54,11 @@ class ClassesScanner {
           if (u.startsWith("file:")) {
             String directoryName = u.substring("file:".length());
             directoryName = URLDecoder.decode(directoryName, "UTF-8");
-            loadClassesFromDirectory(new File(directoryName), rootPackage,
-                classFilter, resultSet);
+            scanClassesFromDirectory(new File(directoryName), rootPackage,
+                classVisitor);
           } else if (u.startsWith("jar:file:")) {
-            loadClassesFromJarFile(u.substring("jar:file:".length()),
-                rootPackage, classFilter, resultSet);
+            scanClassesFromJarFile(u.substring("jar:file:".length()),
+                rootPackage, classVisitor);
           } else {
             throw new IllegalArgumentException("Not managed class container "
                 + u);
@@ -72,54 +69,28 @@ class ClassesScanner {
             + rootPackage + "'", e);
       }
     }
-    return resultSet;
   }
 
-  private Set<CtClass> getCtClasses(String classFileName,
-      ClassFilter classFilter) {
-    Set<CtClass> set = new HashSet<CtClass>();
-
-    try {
-      CtClass current = GwtClassPool.getClass(classFileName.substring(0,
-          classFileName.length() - ".class".length()));
-
-      if (classFilter.accept(current)) {
-        set.add(current);
-      }
-
-      for (CtClass innerClass : current.getNestedClasses()) {
-        if (classFilter.accept(innerClass)) {
-          set.add(innerClass);
-        }
-      }
-
-    } catch (NotFoundException e) {
-      // do nothing
-    }
-
-    return set;
-  }
-
-  private void loadClassesFromDirectory(File directoryToScan,
-      String scanPackage, ClassFilter classFilter, Set<CtClass> set) {
+  private void scanClassesFromDirectory(File directoryToScan,
+      String scanPackage, ClassVisitor classVisitor) {
     logger.debug("Scan directory " + directoryToScan);
     for (File f : directoryToScan.listFiles()) {
       if (f.isDirectory()) {
         if (!".".equals(f.getName()) && !"..".equals(f.getName())) {
-          loadClassesFromDirectory(f, scanPackage + "." + f.getName(),
-              classFilter, set);
+          scanClassesFromDirectory(f, scanPackage + "." + f.getName(),
+              classVisitor);
         }
       } else {
         if (f.getName().endsWith(".class")) {
-          set.addAll(getCtClasses(scanPackage + "." + f.getName(), classFilter));
+          visitClass(scanPackage + "." + f.getName(), classVisitor);
         }
       }
     }
     logger.debug("Directory scanned " + directoryToScan);
   }
 
-  private void loadClassesFromJarFile(String path, String scanPackage,
-      ClassFilter classFilter, Set<CtClass> set) throws Exception {
+  private void scanClassesFromJarFile(String path, String scanPackage,
+      ClassVisitor classVisitor) throws Exception {
     String prefix = path.substring(path.indexOf("!") + 2);
     String jarName = path.substring(0, path.indexOf("!"));
     jarName = URLDecoder.decode(jarName, "UTF-8");
@@ -130,11 +101,26 @@ class ClassesScanner {
       JarEntry entry = entries.nextElement();
       if (entry.getName().startsWith(prefix)
           && entry.getName().endsWith(".class")) {
-        set.addAll(getCtClasses(entry.getName().replaceAll("\\/", "."),
-            classFilter));
+        visitClass(entry.getName().replaceAll("\\/", "."), classVisitor);
       }
     }
     logger.debug("Classes loaded from jar " + jarName);
+  }
+
+  private void visitClass(String classFileName, ClassVisitor classVisitor) {
+    try {
+      CtClass current = GwtClassPool.getClass(classFileName.substring(0,
+          classFileName.length() - ".class".length()));
+
+      classVisitor.visit(current);
+
+      for (CtClass innerClass : current.getNestedClasses()) {
+        classVisitor.visit(innerClass);
+      }
+
+    } catch (NotFoundException e) {
+      // do nothing
+    }
   }
 
 }

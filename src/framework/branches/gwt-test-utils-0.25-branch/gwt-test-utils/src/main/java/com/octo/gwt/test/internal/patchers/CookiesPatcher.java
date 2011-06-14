@@ -4,13 +4,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.google.gwt.user.client.Cookies;
-import com.octo.gwt.test.patchers.AutomaticPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 @PatchClass(Cookies.class)
-public class CookiesPatcher extends AutomaticPatcher {
+class CookiesPatcher {
 
   @PatchMethod
   public static void loadCookies(HashMap<String, String> m) {

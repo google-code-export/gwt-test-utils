@@ -1,12 +1,11 @@
 package com.octo.gwt.test.internal.patchers;
 
 import com.google.gwt.core.client.Scheduler;
-import com.octo.gwt.test.patchers.AutomaticPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
 @PatchClass(Scheduler.class)
-public class SchedulerPatcher extends AutomaticPatcher {
+public class SchedulerPatcher {
 
   static class OverrideScheduler extends Scheduler {
 

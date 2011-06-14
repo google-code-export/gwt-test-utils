@@ -10,13 +10,13 @@ public class TreeGridViewTest extends GwtGxtTest {
 
   @Test
   public void checkAutoFill() {
-    // Setup
+    // Arrange
     TreeGridView view = new TreeGridView();
 
-    // Test
+    // Act
     view.setAutoFill(true);
 
-    // Asserts
+    // Assert
     Assert.assertTrue(view.isAutoFill());
   }
 

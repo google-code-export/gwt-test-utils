@@ -1,12 +1,11 @@
 package com.octo.gwt.test.internal.patchers;
 
 import com.google.gwt.user.client.Window.Navigator;
-import com.octo.gwt.test.patchers.AutomaticPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
 @PatchClass(Navigator.class)
-public class NavigatorPatcher extends AutomaticPatcher {
+public class NavigatorPatcher {
 
   @PatchMethod
   public static String getAppCodeName() {

@@ -14,7 +14,7 @@ import com.octo.gwt.test.patchers.PatchMethod;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 @PatchClass(El.class)
-public class ElPatcher extends AutomaticPatcher {
+public class ElPatcher {
 
   private static Pattern UNIT_PATTERN = Pattern.compile("^(\\d+)[(px|em|%|en|ex|pt|in|cm|mm|pc)]{0,1}$");
 

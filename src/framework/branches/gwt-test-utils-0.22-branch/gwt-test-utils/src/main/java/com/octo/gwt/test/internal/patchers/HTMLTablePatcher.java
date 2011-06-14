@@ -4,13 +4,12 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.HTMLTable;
-import com.octo.gwt.test.patchers.AutomaticPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 @PatchClass(HTMLTable.class)
-public class HTMLTablePatcher extends AutomaticPatcher {
+public class HTMLTablePatcher {
 
   @PatchMethod
   public static int getDOMCellCount(HTMLTable table, Element element, int row) {

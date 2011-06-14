@@ -36,7 +36,7 @@ public class GwtRpcWithEasyMockTest extends GwtTestWithEasyMock {
   @SuppressWarnings("unchecked")
   @Test
   public void checkGwtRpcFailure() {
-    // Setup
+    // Arrange
 
     // mock future remote call
     mockedService.myMethod(EasyMock.eq("myParamValue"),
@@ -45,7 +45,7 @@ public class GwtRpcWithEasyMockTest extends GwtTestWithEasyMock {
 
     replay();
 
-    // Test
+    // Act
     MyGwtClass gwtClass = new MyGwtClass();
     gwtClass.myValue = "toto";
     Assert.assertEquals("toto", gwtClass.myValue);
@@ -60,7 +60,7 @@ public class GwtRpcWithEasyMockTest extends GwtTestWithEasyMock {
   @SuppressWarnings("unchecked")
   @Test
   public void checkGwtRpcOk() {
-    // Setup
+    // Arrange
 
     // mock future remote call
     mockedService.myMethod(EasyMock.eq("myParamValue"),
@@ -69,7 +69,7 @@ public class GwtRpcWithEasyMockTest extends GwtTestWithEasyMock {
 
     replay();
 
-    // Test
+    // Act
     MyGwtClass gwtClass = new MyGwtClass();
     gwtClass.myValue = "toto";
     Assert.assertEquals("toto", gwtClass.myValue);

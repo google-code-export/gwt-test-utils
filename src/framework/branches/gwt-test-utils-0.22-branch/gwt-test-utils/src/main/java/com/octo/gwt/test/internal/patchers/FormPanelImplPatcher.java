@@ -4,12 +4,11 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.impl.FormPanelImpl;
 import com.google.gwt.user.client.ui.impl.FormPanelImplHost;
 import com.octo.gwt.test.internal.patchers.dom.JavaScriptObjects;
-import com.octo.gwt.test.patchers.AutomaticPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
 @PatchClass(FormPanelImpl.class)
-public class FormPanelImplPatcher extends AutomaticPatcher {
+public class FormPanelImplPatcher {
 
   @PatchMethod
   public static String getContents(FormPanelImpl panelImpl, Element iframe) {

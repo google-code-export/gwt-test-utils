@@ -1,4 +1,4 @@
-package com.octo.gwt.test.patchers;
+package com.octo.gwt.test.internal;
 
 import java.lang.reflect.Modifier;
 
@@ -8,19 +8,19 @@ import javassist.NotFoundException;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.octo.gwt.test.exceptions.GwtTestPatchException;
-import com.octo.gwt.test.internal.GwtClassPool;
 import com.octo.gwt.test.internal.patchers.dom.JavaScriptObjects;
 import com.octo.gwt.test.internal.utils.JsoProperties;
 
 /**
  * 
- * Base Patcher to use for all {@link JavaScriptObject} subclasses.
+ * {@link Patcher} decorator to use for all {@link JavaScriptObject} subclasses
+ * (also known as "overlay types"). It automatically adds an implementation for
+ * getter and setter written in JSNI.
  * 
- * @author Bertrand Paquet
  * @author Gael Lazzari
  * 
  */
-public class OverlayPatcher extends AutomaticPatcher {
+class OverlayPatcher implements Patcher {
 
   private static CtClass STRING_TYPE;
 
@@ -34,10 +34,24 @@ public class OverlayPatcher extends AutomaticPatcher {
     }
   }
 
+  private final Patcher decoratedPatcher;
+
+  OverlayPatcher(Patcher patcher) {
+    this.decoratedPatcher = patcher;
+  }
+
+  public void finalizeClass(CtClass c) throws Exception {
+    if (decoratedPatcher != null) {
+      decoratedPatcher.finalizeClass(c);
+    }
+  }
+
   public String getNewBody(CtMethod m) throws Exception {
-    String superNewBody = super.getNewBody(m);
-    if (superNewBody != null || !Modifier.isNative(m.getModifiers())) {
-      return superNewBody;
+    String newBody = (decoratedPatcher != null)
+        ? decoratedPatcher.getNewBody(m) : null;
+
+    if (newBody != null || !Modifier.isNative(m.getModifiers())) {
+      return newBody;
     }
 
     String propertyName = getPropertyName(m);
@@ -53,6 +67,12 @@ public class OverlayPatcher extends AutomaticPatcher {
     } else {
       return "return "
           + getCodeGetProperty("this", propertyName, m.getReturnType());
+    }
+  }
+
+  public void initClass(CtClass c) throws Exception {
+    if (decoratedPatcher != null) {
+      decoratedPatcher.initClass(c);
     }
   }
 
@@ -88,6 +108,7 @@ public class OverlayPatcher extends AutomaticPatcher {
   private String getPropertyName(CtMethod m) throws Exception {
     String fieldName = null;
     String name = m.getName();
+
     if (!CtClass.voidType.equals(m.getReturnType())
         && m.getParameterTypes().length == 0) {
       if (name.startsWith("get")) {

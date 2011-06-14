@@ -22,7 +22,7 @@ public class FocusImplTest extends GwtTestTest {
 
   @Test
   public void checkCreateFocusable() {
-    // Test
+    // Act
     Element elem = focusImpl.createFocusable();
 
     // Assert

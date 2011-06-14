@@ -10,7 +10,8 @@ import javassist.CtMethod;
 import com.octo.gwt.test.GwtCreateHandler;
 import com.octo.gwt.test.internal.GwtClassLoader;
 import com.octo.gwt.test.internal.GwtClassPool;
-import com.octo.gwt.test.internal.utils.GwtPatcherUtils;
+import com.octo.gwt.test.internal.GwtPatcherUtils;
+import com.octo.gwt.test.utils.JavassistUtils;
 
 class AbstractClassCreateHandler implements GwtCreateHandler {
 
@@ -39,7 +40,7 @@ class AbstractClassCreateHandler implements GwtCreateHandler {
     subClass.setSuperclass(ctClass);
 
     // set default constructor to public
-    GwtPatcherUtils.findConstructor(subClass).setModifiers(Modifier.PUBLIC);
+    JavassistUtils.findConstructor(subClass).setModifiers(Modifier.PUBLIC);
 
     for (CtMethod m : ctClass.getDeclaredMethods()) {
       if (javassist.Modifier.isAbstract(m.getModifiers())) {

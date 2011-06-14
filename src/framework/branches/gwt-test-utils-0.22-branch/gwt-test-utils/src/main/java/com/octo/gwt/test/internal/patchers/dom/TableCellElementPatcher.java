@@ -2,12 +2,11 @@ package com.octo.gwt.test.internal.patchers.dom;
 
 import com.google.gwt.dom.client.TableCellElement;
 import com.google.gwt.dom.client.TableRowElement;
-import com.octo.gwt.test.patchers.OverlayPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
 @PatchClass(TableCellElement.class)
-public class TableCellElementPatcher extends OverlayPatcher {
+public class TableCellElementPatcher {
 
   @PatchMethod
   public static int getCellIndex(TableCellElement element) {

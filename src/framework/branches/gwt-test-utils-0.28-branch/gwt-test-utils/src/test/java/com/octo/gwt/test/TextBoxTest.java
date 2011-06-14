@@ -28,7 +28,7 @@ public class TextBoxTest extends GwtTestTest {
     t.setText("myText");
     GwtReflectionUtils.setPrivateFieldValue(t, "attached", true);
 
-    // Test
+    // Act
     t.setCursorPos(2);
 
     Assert.assertEquals(2, t.getCursorPos());
@@ -51,7 +51,7 @@ public class TextBoxTest extends GwtTestTest {
 
   @Test
   public void checkPressKey() {
-    // Setup
+    // Arrange
     final List<KeyPressEventData> events = new ArrayList<KeyPressEventData>();
     TextBox tb = new TextBox();
 
@@ -65,7 +65,7 @@ public class TextBoxTest extends GwtTestTest {
       }
     });
 
-    // Test
+    // Act
     Browser.fillText(tb, "gael");
 
     // Assert

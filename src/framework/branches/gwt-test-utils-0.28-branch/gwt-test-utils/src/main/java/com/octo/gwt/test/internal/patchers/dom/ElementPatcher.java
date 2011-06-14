@@ -10,12 +10,11 @@ import com.octo.gwt.test.internal.utils.GwtHtmlParser;
 import com.octo.gwt.test.internal.utils.GwtStringUtils;
 import com.octo.gwt.test.internal.utils.JsoProperties;
 import com.octo.gwt.test.internal.utils.PropertyContainer;
-import com.octo.gwt.test.patchers.OverlayPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
 @PatchClass(Element.class)
-public class ElementPatcher extends OverlayPatcher {
+public class ElementPatcher {
 
   @PatchMethod
   public static void blur(Element element) {

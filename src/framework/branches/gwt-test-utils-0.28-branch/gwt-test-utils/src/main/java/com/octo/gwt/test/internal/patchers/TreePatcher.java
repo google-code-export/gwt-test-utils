@@ -13,12 +13,11 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.TreeItem;
-import com.octo.gwt.test.patchers.AutomaticPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
 @PatchClass(Tree.class)
-public class TreePatcher extends AutomaticPatcher {
+public class TreePatcher {
 
   @PatchMethod
   public static boolean shouldTreeDelegateFocusToElement(Element elem) {

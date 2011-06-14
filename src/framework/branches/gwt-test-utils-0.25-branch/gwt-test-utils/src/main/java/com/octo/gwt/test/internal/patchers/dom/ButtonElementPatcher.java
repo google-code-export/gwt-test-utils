@@ -3,12 +3,11 @@ package com.octo.gwt.test.internal.patchers.dom;
 import com.google.gwt.dom.client.ButtonElement;
 import com.octo.gwt.test.internal.utils.JsoProperties;
 import com.octo.gwt.test.internal.utils.PropertyContainer;
-import com.octo.gwt.test.patchers.OverlayPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
 @PatchClass(ButtonElement.class)
-public class ButtonElementPatcher extends OverlayPatcher {
+public class ButtonElementPatcher {
 
   @PatchMethod
   public static String getType(ButtonElement buttonElement) {

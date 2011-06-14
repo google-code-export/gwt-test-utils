@@ -13,13 +13,13 @@ public class UiBinderWithDockLayoutPanelTest extends GwtTestTest {
 
   @Test
   public void checkUiBinderWithDocLayoutPanel() {
-    // Setup
+    // Arrange
     UiBinderWithDockLayoutPanel panel = new UiBinderWithDockLayoutPanel();
 
-    // Test
+    // Act
     RootLayoutPanel.get().add(panel);
 
-    // Asserts
+    // Assert
     Assert.assertEquals("North", panel.northLabel.getText());
     Assert.assertEquals("Center", panel.centerLabel.getText());
     Assert.assertEquals("East", panel.eastLabel.getText());

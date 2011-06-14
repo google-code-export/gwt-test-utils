@@ -4,12 +4,11 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.impl.DOMImpl;
 import com.octo.gwt.test.internal.utils.EventUtils;
-import com.octo.gwt.test.patchers.AutomaticPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
 @PatchClass(DOMImpl.class)
-public class DOMImplUserPatcher extends AutomaticPatcher {
+public class DOMImplUserPatcher {
 
   @PatchMethod
   public static int eventGetTypeInt(DOMImpl domImpl, String type) {

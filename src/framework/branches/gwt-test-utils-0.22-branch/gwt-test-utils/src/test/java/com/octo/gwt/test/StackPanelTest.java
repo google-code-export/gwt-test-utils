@@ -29,7 +29,7 @@ public class StackPanelTest extends GwtTestTest {
     panel.add(new Anchor());
     panel.add(new Anchor());
 
-    // Test
+    // Act
     Browser.click(panel, 1);
 
     // Assert that the "AbstractGWTTest.click(ComplexPanel, index)" method

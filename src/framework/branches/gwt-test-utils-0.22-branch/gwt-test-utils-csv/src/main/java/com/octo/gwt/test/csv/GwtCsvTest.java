@@ -149,10 +149,6 @@ public abstract class GwtCsvTest extends GwtTest {
    */
   @CsvMethod
   public void assertExact(String value, String... params) {
-    if ("/view/errorMessageBlockContainer/contentPanel/widget(0)".equals(params[0])) {
-      System.out.println("ok");
-    }
-
     value = GwtStringUtils.resolveBackSlash(value);
 
     String actualValue = getString(params);

@@ -7,7 +7,7 @@ import com.octo.gwt.test.patchers.PatchMethod;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 @PatchClass(XTemplate.class)
-public class XTemplatePatcher extends AutomaticPatcher {
+public class XTemplatePatcher {
 
   @PatchMethod
   public static XTemplate create(String html) {

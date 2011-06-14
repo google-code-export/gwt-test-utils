@@ -13,10 +13,10 @@ public class MyOverridedClientBundleTest extends GwtTestTest {
 
   @Test
   public void checkChildNoOverride() {
-    // Setup
+    // Arrange
     DataResource testDataResource = MyOverridedClientBundle.INSTANCE.testDataResource();
 
-    // Test
+    // Act
     String name = testDataResource.getName();
     String url = testDataResource.getUrl();
 
@@ -29,10 +29,10 @@ public class MyOverridedClientBundleTest extends GwtTestTest {
 
   @Test
   public void checkChildOverrideWithAnnotation() {
-    // Setup
+    // Arrange
     ImageResource testImageResource = MyOverridedClientBundle.INSTANCE.testImageResource();
 
-    // Test
+    // Act
     String name = testImageResource.getName();
     String url = testImageResource.getURL();
     int heigh = testImageResource.getHeight();
@@ -53,11 +53,11 @@ public class MyOverridedClientBundleTest extends GwtTestTest {
 
   @Test
   public void checkChildOverrideWithoutAnnotation() {
-    // Setup
+    // Arrange
     TextResource textResource = MyOverridedClientBundle.INSTANCE.textResourceTxt();
     String expectedText = "Overrided text resource !";
 
-    // Test
+    // Act
     String name = textResource.getName();
     String text = textResource.getText();
 

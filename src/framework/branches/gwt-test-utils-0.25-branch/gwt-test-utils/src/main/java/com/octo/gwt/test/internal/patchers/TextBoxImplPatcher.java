@@ -4,12 +4,11 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.impl.TextBoxImpl;
 import com.octo.gwt.test.internal.patchers.dom.JavaScriptObjects;
 import com.octo.gwt.test.internal.utils.JsoProperties;
-import com.octo.gwt.test.patchers.AutomaticPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
 @PatchClass(TextBoxImpl.class)
-public class TextBoxImplPatcher extends AutomaticPatcher {
+public class TextBoxImplPatcher {
 
   @PatchMethod
   public static int getCursorPos(TextBoxImpl textBoxImpl, Element e) {

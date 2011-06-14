@@ -1,4 +1,4 @@
-package com.octo.gwt.test;
+package com.octo.gwt.test.internal;
 
 import javassist.CtClass;
 import javassist.CtMethod;
@@ -35,7 +35,7 @@ import javassist.CtMethod;
  * @author Gael Lazzari
  * 
  */
-public interface Patcher {
+interface Patcher {
 
   /**
    * Finalizes the patching mechanism for the specified class.
@@ -43,7 +43,7 @@ public interface Patcher {
    * @param c the javassist representation for the current class to patch.
    * @throws Exception If any error occurs during the finalization.
    */
-  public void finalizeClass(CtClass c) throws Exception;
+  void finalizeClass(CtClass c) throws Exception;
 
   /**
    * Returns the new body for the specified method.
@@ -53,7 +53,7 @@ public interface Patcher {
    *         be modified.
    * @throws Exception If any error occurs when getting the new java code.
    */
-  public String getNewBody(CtMethod m) throws Exception;
+  String getNewBody(CtMethod m) throws Exception;
 
   /**
    * Initializes patching for the specified class. If you want to add some
@@ -63,6 +63,6 @@ public interface Patcher {
    * @param c the javassist representation for the current class to patch.
    * @throws Exception If any error occurs during the initialization.
    */
-  public void initClass(CtClass c) throws Exception;
+  void initClass(CtClass c) throws Exception;
 
 }

@@ -8,7 +8,7 @@ import com.octo.gwt.test.patchers.PatchMethod;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 @PatchClass(ComponentHelper.class)
-public class ComponentHelperPatcher extends AutomaticPatcher {
+public class ComponentHelperPatcher {
 
   @PatchMethod
   public static void doAttachNative(Widget widget) {

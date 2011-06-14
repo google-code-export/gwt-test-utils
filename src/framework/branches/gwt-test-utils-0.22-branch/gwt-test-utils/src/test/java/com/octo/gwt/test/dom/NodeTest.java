@@ -16,8 +16,8 @@ import com.google.gwt.dom.client.OptionElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Text;
 import com.octo.gwt.test.GwtTestTest;
+import com.octo.gwt.test.internal.GwtPatcherUtils;
 import com.octo.gwt.test.internal.patchers.dom.JavaScriptObjects;
-import com.octo.gwt.test.internal.utils.GwtPatcherUtils;
 
 @SuppressWarnings("deprecation")
 public class NodeTest extends GwtTestTest {
@@ -46,13 +46,13 @@ public class NodeTest extends GwtTestTest {
 
   @Test
   public void checkCloneDeep() {
-    // Setup
+    // Arrange
     AnchorElement child = Document.get().createAnchorElement();
     child.setInnerText("child inner text");
     child.getStyle().setBackgroundColor("black");
     n.appendChild(child);
 
-    // Test
+    // Act
     DivElement newNode = n.cloneNode(true).cast();
 
     // Assert
@@ -78,7 +78,7 @@ public class NodeTest extends GwtTestTest {
 
   @Test
   public void checkCloneNotDeep() {
-    // Setup
+    // Arrange
     Element e = n.cast();
     e.setInnerText("text");
     e.getStyle().setBackgroundColor("black");
@@ -87,7 +87,7 @@ public class NodeTest extends GwtTestTest {
     child.setInnerText("child inner text");
     n.appendChild(child);
 
-    // Test
+    // Act
     DivElement newNode = n.cloneNode(false).cast();
 
     // Assert
@@ -110,7 +110,7 @@ public class NodeTest extends GwtTestTest {
     n.appendChild(be0);
     n.appendChild(be1);
 
-    // Test & Assert
+    // Act & Assert
     Assert.assertEquals(be0, n.getFirstChild());
   }
 
@@ -124,7 +124,7 @@ public class NodeTest extends GwtTestTest {
     n.appendChild(be0);
     n.appendChild(be1);
 
-    // Test & Assert
+    // Act & Assert
     Assert.assertEquals(be1, n.getLastChild());
   }
 
@@ -138,7 +138,7 @@ public class NodeTest extends GwtTestTest {
     n.appendChild(be0);
     n.appendChild(be1);
 
-    // Test & Assert
+    // Act & Assert
     Assert.assertEquals(be1, be0.getNextSibling());
   }
 
@@ -155,7 +155,7 @@ public class NodeTest extends GwtTestTest {
     BaseElement be = Document.get().createBaseElement();
     n.appendChild(be);
 
-    // Test and assert
+    // Act and assert
     Assert.assertEquals(n, be.getParentNode());
   }
 
@@ -169,7 +169,7 @@ public class NodeTest extends GwtTestTest {
     n.appendChild(be0);
     n.appendChild(be1);
 
-    // Test & Assert
+    // Act & Assert
     Assert.assertEquals(be0, be1.getPreviousSibling());
   }
 
@@ -182,7 +182,7 @@ public class NodeTest extends GwtTestTest {
     BaseElement be = Document.get().createBaseElement();
     n.appendChild(be);
 
-    // Test and Assert
+    // Act and Assert
     Assert.assertTrue("Element should have a child node", n.hasChildNodes());
   }
 
@@ -199,7 +199,7 @@ public class NodeTest extends GwtTestTest {
     n.appendChild(be0);
     n.appendChild(be2);
 
-    // Test & Assert
+    // Act & Assert
     n.insertBefore(be1, be2);
     n.insertBefore(be3, null);
     n.insertBefore(be4, be5);
@@ -243,12 +243,12 @@ public class NodeTest extends GwtTestTest {
 
   @Test
   public void checkNodeValueOnDocument() {
-    // Setup
+    // Arrange
     Node documentNode = Document.get();
     // Pre-Assert
     Assert.assertNull(documentNode.getNodeValue());
 
-    // Test
+    // Act
     documentNode.setNodeValue("node");
 
     // Assert
@@ -257,12 +257,12 @@ public class NodeTest extends GwtTestTest {
 
   @Test
   public void checkNodeValueOnElement() {
-    // Setup
+    // Arrange
     Node doucmentNode = Document.get().getDocumentElement();
     // Pre-Assert
     Assert.assertNull(doucmentNode.getNodeValue());
 
-    // Test
+    // Act
     doucmentNode.setNodeValue("node");
 
     // Assert
@@ -271,12 +271,12 @@ public class NodeTest extends GwtTestTest {
 
   @Test
   public void checkNodeValueOnText() {
-    // Setup
+    // Arrange
     Text textNode = Document.get().createTextNode("data");
     // Pre-Assert
     Assert.assertEquals("data", textNode.getNodeValue());
 
-    // Test
+    // Act
     textNode.setNodeValue("node");
 
     // Assert
@@ -292,7 +292,7 @@ public class NodeTest extends GwtTestTest {
     n.appendChild(c0);
     n.appendChild(c1);
 
-    // Test
+    // Act
     n.removeChild(c1);
 
     // Assert
@@ -309,7 +309,7 @@ public class NodeTest extends GwtTestTest {
     n.appendChild(c0);
     n.appendChild(c1);
 
-    // Test
+    // Act
     Node replaced = n.replaceChild(c2, c1);
     Node nullReplaced = n.replaceChild(c2, c1);
     Node nullReplaced2 = n.replaceChild(c2, null);

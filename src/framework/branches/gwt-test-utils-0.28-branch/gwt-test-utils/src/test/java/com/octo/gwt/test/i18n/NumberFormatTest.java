@@ -33,7 +33,7 @@ public class NumberFormatTest extends GwtTestTest {
     GwtConfig.get().setLocale(Locale.FRENCH);
     NumberFormat numberFormat = NumberFormat.getFormat("0000000000");
 
-    // Test
+    // Act
     String numberString = numberFormat.format(1234);
 
     // Assert
@@ -46,7 +46,7 @@ public class NumberFormatTest extends GwtTestTest {
     GwtConfig.get().setLocale(Locale.FRENCH);
     NumberFormat numberFormat = NumberFormat.getFormat("0000000000");
 
-    // Test
+    // Act
     String numberString = numberFormat.format(42147482);
 
     // Assert

@@ -13,7 +13,7 @@ import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
 @PatchClass(ComputedStyleImpl.class)
-public class ComputedStyleImplPatcher extends AutomaticPatcher {
+public class ComputedStyleImplPatcher {
 
   @PatchMethod
   public static FastMap<String> getComputedStyle(ComputedStyleImpl impl,

@@ -9,11 +9,11 @@ public class PopupPanelTest extends GwtTestTest {
 
   @Test
   public void chechShow() {
-    // Setup
+    // Arrange
     PopupPanel popup = new PopupPanel();
     Assert.assertFalse(popup.isShowing());
 
-    // Test
+    // Act
     popup.show();
 
     // Assert
@@ -22,12 +22,12 @@ public class PopupPanelTest extends GwtTestTest {
 
   @Test
   public void chechShowGlass() {
-    // Setup
+    // Arrange
     PopupPanel popup = new PopupPanel();
     popup.setGlassEnabled(true);
     Assert.assertFalse(popup.isShowing());
 
-    // Test
+    // Act
     popup.show();
 
     // Assert
@@ -36,13 +36,13 @@ public class PopupPanelTest extends GwtTestTest {
 
   @Test
   public void chechVisible() {
-    // Setup
+    // Arrange
     PopupPanel popup = new PopupPanel();
     Assert.assertFalse(popup.isVisible());
     Assert.assertEquals("hidden",
         popup.getElement().getStyle().getProperty("visibility"));
 
-    // Test
+    // Act
     popup.setVisible(true);
 
     // Assert

@@ -5,12 +5,11 @@ import java.util.List;
 import com.google.gwt.core.client.JsArrayString;
 import com.octo.gwt.test.internal.patchers.dom.JavaScriptObjects;
 import com.octo.gwt.test.internal.utils.JsoProperties;
-import com.octo.gwt.test.patchers.AutomaticPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
 @PatchClass(JsArrayString.class)
-public class JsArrayStringPatcher extends AutomaticPatcher {
+public class JsArrayStringPatcher {
 
   @PatchMethod
   public static String get(JsArrayString array, int index) {

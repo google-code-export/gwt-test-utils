@@ -12,12 +12,11 @@ import com.google.gwt.i18n.client.CurrencyList;
 import com.google.gwt.i18n.client.impl.CurrencyDataImpl;
 import com.octo.gwt.test.internal.GwtConfig;
 import com.octo.gwt.test.internal.utils.GwtPropertiesHelper;
-import com.octo.gwt.test.patchers.AutomaticPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
 @PatchClass(CurrencyList.class)
-public class CurrencyListPatcher extends AutomaticPatcher {
+public class CurrencyListPatcher {
 
   private static Map<Locale, CurrencyData> currencyDatas = new HashMap<Locale, CurrencyData>();
 

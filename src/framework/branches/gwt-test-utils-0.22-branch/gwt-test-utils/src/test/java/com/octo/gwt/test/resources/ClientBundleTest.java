@@ -15,10 +15,10 @@ public class ClientBundleTest extends GwtTestTest {
 
   @Test
   public void checkCssResource() {
-    // Setup
+    // Arrange
     TestCssResource testCssResource = MyClientBundle.INSTANCE.testCssResource();
 
-    // Test
+    // Act
     String name = testCssResource.getName();
     String testStyle = testCssResource.testStyle();
     String testStyleWithHover = testCssResource.testStyleWithHover();
@@ -38,20 +38,20 @@ public class ClientBundleTest extends GwtTestTest {
 
   @Test
   public void checkCssResourceEnsureInjected() {
-    // Setup
+    // Arrange
     TestCssResource testCssResource = MyClientBundle.INSTANCE.testCssResource();
 
-    // Tests & Assert
+    // Act & Assert
     Assert.assertTrue(testCssResource.ensureInjected());
     Assert.assertFalse(testCssResource.ensureInjected());
   }
 
   @Test
   public void checkDataResource() {
-    // Setup
+    // Arrange
     DataResource testDataResource = MyClientBundle.INSTANCE.testDataResource();
 
-    // Test
+    // Act
     String name = testDataResource.getName();
     String url = testDataResource.getUrl();
 
@@ -64,10 +64,10 @@ public class ClientBundleTest extends GwtTestTest {
 
   @Test
   public void checkGetExternalResourceText() {
-    // Setup
+    // Arrange
     com.google.gwt.user.client.impl.WindowImplIE.Resources treeResources = GWT.create(com.google.gwt.user.client.impl.WindowImplIE.Resources.class);
 
-    // Test
+    // Act
     String name = treeResources.initWindowCloseHandler().getName();
     String text = treeResources.initWindowCloseHandler().getText();
 
@@ -78,10 +78,10 @@ public class ClientBundleTest extends GwtTestTest {
 
   @Test
   public void checkGetExternalResourceUrl() {
-    // Setup
+    // Arrange
     Resources treeResources = GWT.create(Resources.class);
 
-    // Test
+    // Act
     String name = treeResources.treeOpen().getName();
     String url = treeResources.treeLeaf().getURL();
 
@@ -94,10 +94,10 @@ public class ClientBundleTest extends GwtTestTest {
 
   @Test
   public void checkImageResource() {
-    // Setup
+    // Arrange
     ImageResource testImageResource = MyClientBundle.INSTANCE.testImageResource();
 
-    // Test
+    // Act
     String name = testImageResource.getName();
     String url = testImageResource.getURL();
     int heigh = testImageResource.getHeight();
@@ -118,10 +118,10 @@ public class ClientBundleTest extends GwtTestTest {
 
   @Test
   public void checkImageResourceShouldThrowExceptionWhenMultipleMatchingResourceFile() {
-    // Setup
+    // Arrange
     String expectedMessage = "Too many resource files found for method 'com.octo.gwt.test.resources.MyClientBundle.doubleShouldThrowException()'";
     try {
-      // Test
+      // Act
       MyClientBundle.INSTANCE.doubleShouldThrowException();
       Assert.fail("An exception should have been thrown since there are multiple matching file for the tested ClientBundle method");
     } catch (Exception e) {
@@ -133,11 +133,11 @@ public class ClientBundleTest extends GwtTestTest {
 
   @Test
   public void checkTextResourceTxt() {
-    // Setup
+    // Arrange
     TextResource textResource = MyClientBundle.INSTANCE.textResourceTxt();
     String expectedText = "Hello gwt-test-utils !\r\nThis is a test with a simple text file";
 
-    // Test
+    // Act
     String name = textResource.getName();
     String text = textResource.getText();
 
@@ -148,11 +148,11 @@ public class ClientBundleTest extends GwtTestTest {
 
   @Test
   public void checkTResourceXml() {
-    // Setup
+    // Arrange
     TextResource textResource = MyClientBundle.INSTANCE.textResourceXml();
     String expectedText = "<gwt-test-utils>\r\n\t<test>this is a test</test>\r\n</gwt-test-utils>";
 
-    // Test
+    // Act
     String name = textResource.getName();
     String text = textResource.getText();
 

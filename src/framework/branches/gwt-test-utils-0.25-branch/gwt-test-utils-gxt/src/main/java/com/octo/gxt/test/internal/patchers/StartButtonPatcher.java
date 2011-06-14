@@ -5,7 +5,7 @@ import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
 @PatchClass(classes = {"com.extjs.gxt.desktop.client.StartButton"})
-public class StartButtonPatcher extends AutomaticPatcher {
+public class StartButtonPatcher {
 
   @PatchMethod
   public static String getButtonTemplate(Object startButton) {

@@ -4,12 +4,11 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.impl.FocusImpl;
 import com.octo.gwt.test.internal.patchers.dom.JavaScriptObjects;
 import com.octo.gwt.test.internal.utils.JsoProperties;
-import com.octo.gwt.test.patchers.AutomaticPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
 @PatchClass(FocusImpl.class)
-public class FocusImplPatcher extends AutomaticPatcher {
+public class FocusImplPatcher {
 
   @PatchMethod
   public static void blur(FocusImpl focusImpl, Element element) {

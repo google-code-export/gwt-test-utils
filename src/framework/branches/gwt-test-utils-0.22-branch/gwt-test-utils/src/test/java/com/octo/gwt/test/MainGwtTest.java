@@ -57,7 +57,7 @@ public class MainGwtTest extends GwtTestTest {
 
   @Test
   public void checkRunAsync() {
-    // Setup
+    // Arrange
     Button b = new Button();
     b.addClickHandler(new ClickHandler() {
 
@@ -77,7 +77,7 @@ public class MainGwtTest extends GwtTestTest {
       }
     });
 
-    // Test
+    // Act
     Browser.click(b);
 
     // Assert

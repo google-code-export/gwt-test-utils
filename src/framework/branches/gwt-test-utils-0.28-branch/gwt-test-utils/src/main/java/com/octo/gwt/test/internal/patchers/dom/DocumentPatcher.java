@@ -23,12 +23,11 @@ import com.octo.gwt.test.internal.GwtConfig;
 import com.octo.gwt.test.internal.utils.DoubleMap;
 import com.octo.gwt.test.internal.utils.GwtHtmlParser;
 import com.octo.gwt.test.internal.utils.JsoProperties;
-import com.octo.gwt.test.patchers.OverlayPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
 @PatchClass(Document.class)
-public class DocumentPatcher extends OverlayPatcher {
+public class DocumentPatcher {
 
 	public static Document DOCUMENT;
 

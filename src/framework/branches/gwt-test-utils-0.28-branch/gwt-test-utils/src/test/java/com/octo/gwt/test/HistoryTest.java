@@ -47,7 +47,7 @@ public class HistoryTest extends GwtTestWithEasyMock {
 
   @Test
   public void checkHistory() {
-    // Setup
+    // Arrange
 
     listener2.onValueChange(ValueChangeEventMatcher.eq("init"));
     EasyMock.expectLastCall();
@@ -56,7 +56,7 @@ public class HistoryTest extends GwtTestWithEasyMock {
     EasyMock.expectLastCall();
 
     replay();
-    // Test
+    // Act
     History.addValueChangeHandler(listener2);
 
     History.newItem("init");
@@ -67,13 +67,13 @@ public class HistoryTest extends GwtTestWithEasyMock {
 
     reset();
 
-    // Setup
+    // Arrange
 
     listener2.onValueChange(ValueChangeEventMatcher.eq("init"));
     EasyMock.expectLastCall();
 
     replay();
-    // Test
+    // Act
     History.back();
 
     // Assert
@@ -82,7 +82,7 @@ public class HistoryTest extends GwtTestWithEasyMock {
 
   @Test
   public void checkHistoryOldSchool() {
-    // Setup
+    // Arrange
 
     listener.onHistoryChanged(EasyMock.eq("init"));
     EasyMock.expectLastCall();
@@ -91,7 +91,7 @@ public class HistoryTest extends GwtTestWithEasyMock {
     EasyMock.expectLastCall();
 
     replay();
-    // Test
+    // Act
     History.addHistoryListener(listener);
 
     History.newItem("init");
@@ -102,13 +102,13 @@ public class HistoryTest extends GwtTestWithEasyMock {
 
     reset();
 
-    // Setup
+    // Arrange
 
     listener.onHistoryChanged(EasyMock.eq("init"));
     EasyMock.expectLastCall();
 
     replay();
-    // Test
+    // Act
     History.back();
 
     History.removeHistoryListener(listener);

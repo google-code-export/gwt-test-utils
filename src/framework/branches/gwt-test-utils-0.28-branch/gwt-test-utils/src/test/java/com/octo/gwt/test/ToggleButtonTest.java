@@ -15,7 +15,7 @@ public class ToggleButtonTest extends GwtTestTest {
 
   @Test
   public void checkClick() {
-    // Setup
+    // Arrange
     final ToggleButton toggleButton = new ToggleButton("Up", "Down");
     clicked = false;
 
@@ -30,7 +30,7 @@ public class ToggleButtonTest extends GwtTestTest {
         toggleButton.isDown());
     Assert.assertEquals("Up", toggleButton.getText());
 
-    // Test
+    // Act
     Browser.click(toggleButton);
 
     // Assert
@@ -40,7 +40,7 @@ public class ToggleButtonTest extends GwtTestTest {
         toggleButton.isDown());
     Assert.assertEquals("Down", toggleButton.getText());
 
-    // Test 2
+    // Act 2
     Browser.click(toggleButton);
     Assert.assertFalse(
         "ToggleButton should not be toggled after being clicked twice",

@@ -11,10 +11,10 @@ public class ListViewTest extends GwtGxtTest {
 
   @Test
   public void checkSimpleTemplate() {
-    // Setup
+    // Arrange
     ListView<ModelData> list = new ListView<ModelData>();
 
-    // Test
+    // Act
     list.setSimpleTemplate("<ul><li>1</li><li>2</li></ul>");
 
     // Assert

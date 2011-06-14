@@ -21,7 +21,7 @@ public class DocumentTest extends GwtTestTest {
 
   @Test
   public void checkBodyLeft() {
-    // Test
+    // Act
     int result = d.getBodyOffsetLeft();
 
     // Assert
@@ -30,7 +30,7 @@ public class DocumentTest extends GwtTestTest {
 
   @Test
   public void checkBodyTop() {
-    // Test
+    // Act
     int result = d.getBodyOffsetTop();
 
     // Assert
@@ -98,7 +98,7 @@ public class DocumentTest extends GwtTestTest {
 
   @Test
   public void checkCreateImageInputElement() {
-    // Test
+    // Act
     InputElement e = d.createImageInputElement();
 
     // Assert
@@ -107,7 +107,7 @@ public class DocumentTest extends GwtTestTest {
 
   @Test
   public void checkCreatePushButtonElement() {
-    // Test
+    // Act
     ButtonElement e = d.createPushButtonElement();
 
     // Assert
@@ -117,7 +117,7 @@ public class DocumentTest extends GwtTestTest {
 
   @Test
   public void checkCreateRadioInputElement() {
-    // Test
+    // Act
     InputElement e = d.createRadioInputElement("test");
 
     // Assert
@@ -127,7 +127,7 @@ public class DocumentTest extends GwtTestTest {
 
   @Test
   public void checkCreateResetButtonElement() {
-    // Test
+    // Act
     ButtonElement e = d.createResetButtonElement();
 
     // Assert
@@ -137,7 +137,7 @@ public class DocumentTest extends GwtTestTest {
 
   @Test
   public void checkCreateSubmitButtonElement() {
-    // Test
+    // Act
     ButtonElement e = d.createSubmitButtonElement();
 
     // Assert
@@ -147,7 +147,7 @@ public class DocumentTest extends GwtTestTest {
 
   @Test
   public void checkCreateTextNode() {
-    // Test
+    // Act
     String data = "myData";
     Text text = d.createTextNode(data);
 
@@ -158,7 +158,7 @@ public class DocumentTest extends GwtTestTest {
 
   @Test
   public void checkGetDocumentElement() {
-    // Test
+    // Act
     Element e = d.getDocumentElement();
 
     // Assert
@@ -175,7 +175,7 @@ public class DocumentTest extends GwtTestTest {
 
   @Test
   public void checkGetElementByIdFound() {
-    // Setup
+    // Arrange
     AnchorElement a1 = Document.get().createAnchorElement();
     AnchorElement a2 = Document.get().createAnchorElement();
     AnchorElement a3 = Document.get().createAnchorElement();
@@ -187,7 +187,7 @@ public class DocumentTest extends GwtTestTest {
     a2.appendChild(a3);
     d.appendChild(d1);
 
-    // Test
+    // Act
     Element result = d.getElementById("myId");
 
     // Assert
@@ -196,14 +196,14 @@ public class DocumentTest extends GwtTestTest {
 
   @Test
   public void checkGetElementByIdInBody() {
-    // Setup
+    // Arrange
     AnchorElement a = Document.get().createAnchorElement();
     a.setId("myId");
     DivElement div = Document.get().createDivElement();
     div.appendChild(a);
     d.getBody().appendChild(div);
 
-    // Test
+    // Act
     Element result = d.getElementById("myId");
 
     // Assert
@@ -212,7 +212,7 @@ public class DocumentTest extends GwtTestTest {
 
   @Test
   public void checkGetElementByIdNotFound() {
-    // Setup
+    // Arrange
     AnchorElement a1 = Document.get().createAnchorElement();
     AnchorElement a2 = Document.get().createAnchorElement();
     AnchorElement a3 = Document.get().createAnchorElement();
@@ -223,7 +223,7 @@ public class DocumentTest extends GwtTestTest {
     a2.appendChild(a3);
     d.appendChild(d1);
 
-    // Test
+    // Act
     Element result = d.getElementById("myId");
 
     // Assert
@@ -232,7 +232,7 @@ public class DocumentTest extends GwtTestTest {
 
   @Test
   public void checkGetElementByTagName() {
-    // Setup
+    // Arrange
     AnchorElement a1 = Document.get().createAnchorElement();
     AnchorElement a2 = Document.get().createAnchorElement();
     AnchorElement a3 = Document.get().createAnchorElement();
@@ -243,7 +243,7 @@ public class DocumentTest extends GwtTestTest {
     a2.appendChild(a3);
     d.appendChild(d1);
 
-    // Test
+    // Act
     NodeList<Element> nodes = d.getElementsByTagName("a");
 
     // Assert
@@ -260,7 +260,7 @@ public class DocumentTest extends GwtTestTest {
 
   @Test
   public void checkIsCompat() {
-    // Test
+    // Act
     boolean result = d.isCSS1Compat();
 
     // Assert
@@ -285,7 +285,7 @@ public class DocumentTest extends GwtTestTest {
 
   @Test
   public void checkToString() {
-    // Test
+    // Act
     String toString = Document.get().toString();
 
     // Assert

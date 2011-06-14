@@ -16,7 +16,7 @@ public class RemoteServiceTest extends GwtTestTest {
 
   @Test
   public void checkRemoteServiceCallWithException() {
-    // Setup
+    // Arrange
     MyServiceAsync myService = GWT.create(MyService.class);
 
     // test
@@ -42,7 +42,7 @@ public class RemoteServiceTest extends GwtTestTest {
 
   @Test
   public void checkRemoteServiceCallWithSuccess() {
-    // Setup
+    // Arrange
     MyObject object = new MyObject("my field initialized during test setup");
 
     MyServiceAsync myService = GWT.create(MyService.class);

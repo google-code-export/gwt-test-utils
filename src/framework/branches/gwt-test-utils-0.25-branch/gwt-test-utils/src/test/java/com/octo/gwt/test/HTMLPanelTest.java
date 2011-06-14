@@ -11,11 +11,11 @@ public class HTMLPanelTest extends GwtTestTest {
 
   @Test
   public void checkGetElementById() {
-    // Setup
+    // Arrange
     HTMLPanel panel = new HTMLPanel(
         "<div id=\"childDiv\" class=\"myClass\">some text</div>");
 
-    // Test
+    // Act
     DivElement childDiv = panel.getElementById("childDiv").cast();
 
     // Assert

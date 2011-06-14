@@ -21,14 +21,13 @@ import com.google.gwt.user.client.ui.UIObject;
 import com.octo.gwt.test.internal.utils.EventUtils;
 import com.octo.gwt.test.internal.utils.JsoProperties;
 import com.octo.gwt.test.internal.utils.PropertyContainer;
-import com.octo.gwt.test.patchers.AutomaticPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 import com.octo.gwt.test.utils.events.EventBuilder;
 
 @PatchClass(classes = {"com.google.gwt.dom.client.DOMImpl"})
-public class DOMImplPatcher extends AutomaticPatcher {
+public class DOMImplPatcher {
 
   @PatchMethod
   public static ButtonElement createButtonElement(Object domImpl, Document doc,

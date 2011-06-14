@@ -10,7 +10,7 @@ public class ElTest extends GwtGxtTest {
 
   @Test
   public void checkAddUnitsAuto() {
-    // Test
+    // Act
     String result = El.addUnits("auto", "px");
 
     // Assert
@@ -19,7 +19,7 @@ public class ElTest extends GwtGxtTest {
 
   @Test
   public void checkAddUnitsComplete() {
-    // Test
+    // Act
     String result = El.addUnits("350em", "%");
 
     // Assert
@@ -28,7 +28,7 @@ public class ElTest extends GwtGxtTest {
 
   @Test
   public void checkAddUnitsEmpty() {
-    // Test
+    // Act
     String result = El.addUnits("", "px");
 
     // Assert
@@ -37,7 +37,7 @@ public class ElTest extends GwtGxtTest {
 
   @Test
   public void checkAddUnitsNoUnit() {
-    // Test
+    // Act
     String result = El.addUnits("200", "em");
 
     // Assert
@@ -46,7 +46,7 @@ public class ElTest extends GwtGxtTest {
 
   @Test
   public void checkAddUnitsNoUnitAndEmptyDefault() {
-    // Test
+    // Act
     String result = El.addUnits("250", "");
 
     // Assert
@@ -55,7 +55,7 @@ public class ElTest extends GwtGxtTest {
 
   @Test
   public void checkAddUnitsNoUnitAndNoDefault() {
-    // Test
+    // Act
     String result = El.addUnits("250", null);
 
     // Assert
@@ -64,7 +64,7 @@ public class ElTest extends GwtGxtTest {
 
   @Test
   public void checkAddUnitsNull() {
-    // Test
+    // Act
     String result = El.addUnits(null, "px");
 
     // Assert
@@ -73,7 +73,7 @@ public class ElTest extends GwtGxtTest {
 
   @Test
   public void checkAddUnitsUndefined() {
-    // Test
+    // Act
     String result = El.addUnits("undefined", "px");
 
     // Assert
@@ -82,7 +82,7 @@ public class ElTest extends GwtGxtTest {
 
   @Test
   public void checkAddUnitsWithWhitespaces() {
-    // Test
+    // Act
     String result = El.addUnits(" 350 em ", "pt");
 
     // Assert

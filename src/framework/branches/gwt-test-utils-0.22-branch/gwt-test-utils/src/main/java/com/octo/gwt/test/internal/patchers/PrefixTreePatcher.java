@@ -5,17 +5,18 @@ import java.util.Collection;
 import java.util.Set;
 import java.util.TreeSet;
 
+import javassist.CannotCompileException;
 import javassist.CtClass;
 import javassist.CtField;
 
 import com.octo.gwt.test.internal.GwtClassPool;
-import com.octo.gwt.test.patchers.AutomaticPatcher;
+import com.octo.gwt.test.patchers.InitMethod;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 @PatchClass(classes = {"com.google.gwt.user.client.ui.PrefixTree"})
-public class PrefixTreePatcher extends AutomaticPatcher {
+public class PrefixTreePatcher {
 
   private static final String PREFIXES_SET_PROPERTY = "PREFIXES_SET";
 
@@ -27,6 +28,15 @@ public class PrefixTreePatcher extends AutomaticPatcher {
   @PatchMethod
   public static void clear(Object prefixTree) {
     GwtReflectionUtils.setPrivateFieldValue(prefixTree, "size", 0);
+  }
+
+  @InitMethod
+  public static void initClass(CtClass c) throws CannotCompileException {
+    // add field "private Set<?> PREFIXES_SET;"
+    CtClass pcType = GwtClassPool.getCtClass(Set.class);
+    CtField field = new CtField(pcType, PREFIXES_SET_PROPERTY, c);
+    field.setModifiers(Modifier.PRIVATE);
+    c.addField(field);
   }
 
   @PatchMethod
@@ -49,17 +59,6 @@ public class PrefixTreePatcher extends AutomaticPatcher {
           PREFIXES_SET_PROPERTY, set);
     }
     return set;
-  }
-
-  @Override
-  public void initClass(CtClass c) throws Exception {
-    super.initClass(c);
-
-    // add field "private Set<?> PREFIXES_SET;"
-    CtClass pcType = GwtClassPool.getCtClass(Set.class);
-    CtField field = new CtField(pcType, PREFIXES_SET_PROPERTY, c);
-    field.setModifiers(Modifier.PRIVATE);
-    c.addField(field);
   }
 
 }

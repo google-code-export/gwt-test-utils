@@ -3,12 +3,11 @@ package com.octo.gwt.test.internal.patchers.dom;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.SelectElement;
 import com.octo.gwt.test.internal.utils.JsoProperties;
-import com.octo.gwt.test.patchers.OverlayPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
 @PatchClass(SelectElement.class)
-public class SelectElementPatcher extends OverlayPatcher {
+public class SelectElementPatcher {
 
   @PatchMethod
   public static int getSize(SelectElement select) {

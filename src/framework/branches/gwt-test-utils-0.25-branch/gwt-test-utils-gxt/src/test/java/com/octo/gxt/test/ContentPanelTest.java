@@ -14,19 +14,19 @@ public class ContentPanelTest extends GwtGxtTest {
 
   @Test
   public void checkParent() {
-    // Setup
+    // Arrange
     Button b = new Button();
 
-    // Test 1
+    // Act 1
     panel.add(b);
 
     // Assert 1
     Assert.assertEquals(panel, b.getParent());
 
-    // Test 2
+    // Act 2
     panel.removeAll();
 
-    // Asserts 2
+    // Assert 2
     Assert.assertEquals(0, panel.getItemCount());
     Assert.assertNull(b.getParent());
   }

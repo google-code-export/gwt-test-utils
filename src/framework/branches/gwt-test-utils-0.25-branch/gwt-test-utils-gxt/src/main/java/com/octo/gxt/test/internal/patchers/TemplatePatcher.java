@@ -8,7 +8,7 @@ import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
 @PatchClass(Template.class)
-public class TemplatePatcher extends AutomaticPatcher {
+public class TemplatePatcher {
 
   public static class TemplateJSO extends JavaScriptObject {
 

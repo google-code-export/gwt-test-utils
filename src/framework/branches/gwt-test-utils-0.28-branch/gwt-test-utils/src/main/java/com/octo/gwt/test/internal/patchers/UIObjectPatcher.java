@@ -3,13 +3,12 @@ package com.octo.gwt.test.internal.patchers;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.user.client.ui.UIObject;
-import com.octo.gwt.test.patchers.AutomaticPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 @PatchClass(UIObject.class)
-public class UIObjectPatcher extends AutomaticPatcher {
+public class UIObjectPatcher {
 
   @PatchMethod
   public static double extractLengthValue(UIObject uiObject, String s) {

@@ -11,10 +11,10 @@ public class TextTest extends GwtTestTest {
 
   @Test
   public void checkToString() {
-    // Setup
+    // Arrange
     Text text = Document.get().createTextNode("some text");
 
-    // Test
+    // Act
     String toString = text.toString();
 
     // Assert

@@ -115,14 +115,14 @@ public class ButtonTest extends GwtTestTest {
 
   @Test
   public void checkToString() {
-    // Setup
+    // Arrange
     Button b = new Button("test button");
     b.setEnabled(false);
     b.setFocus(false);
     b.setAccessKey('h');
     b.setStyleName("my-style");
 
-    // Test
+    // Act
     String toString = b.toString();
 
     // Assert
@@ -148,13 +148,13 @@ public class ButtonTest extends GwtTestTest {
     ButtonElement element = Document.get().createButtonElement();
     element.setTabIndex(3);
 
-    // Test
+    // Act
     Button b = Button.wrap(element);
 
     // Assert 1
     Assert.assertEquals(0, b.getTabIndex());
 
-    // Test 2
+    // Act 2
     b.setTabIndex(1);
 
     // Assert 2

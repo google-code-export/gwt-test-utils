@@ -9,12 +9,11 @@ import com.octo.gwt.test.exceptions.GwtTestException;
 import com.octo.gwt.test.exceptions.GwtTestPatchException;
 import com.octo.gwt.test.internal.GwtConfig;
 import com.octo.gwt.test.internal.handlers.GwtCreateHandlerManager;
-import com.octo.gwt.test.patchers.AutomaticPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
 @PatchClass(GWT.class)
-public class GwtPatcher extends AutomaticPatcher {
+public class GwtPatcher {
 
   @PatchMethod
   public static Object create(Class<?> classLiteral) {
