@@ -23,13 +23,13 @@ public class FormPanelTest extends GwtTestTest {
 
   @Test
   public void checkAdd() {
-    // Setup
+    // Arrange
     Button b1 = new Button();
     Button b2 = new Button();
     Assert.assertFalse(b1.isAttached());
     Assert.assertFalse(b2.isAttached());
 
-    // Test 1
+    // Act 1
     form.add(b1);
 
     // Assert 1
@@ -37,7 +37,7 @@ public class FormPanelTest extends GwtTestTest {
     Assert.assertTrue(b1.isAttached());
     Assert.assertFalse(b2.isAttached());
 
-    // Test 2
+    // Act 2
     try {
       form.add(b2);
       Assert.fail("Simple panel can only contain one child widget");
@@ -49,20 +49,20 @@ public class FormPanelTest extends GwtTestTest {
 
   @Test
   public void checkFormDimension() {
-    // Test 1
+    // Act 1
     form.setHeight("10");
     form.setWidth("20");
     // Assert 1
     Assert.assertEquals("10", form.getElement().getStyle().getHeight());
     Assert.assertEquals("20", form.getElement().getStyle().getWidth());
 
-    // Test 2
+    // Act 2
     form.setSize("30", "40");
     // Assert 2
     Assert.assertEquals("40", form.getElement().getStyle().getHeight());
     Assert.assertEquals("30", form.getElement().getStyle().getWidth());
 
-    // Test 3
+    // Act 3
     form.setPixelSize(30, 40);
     // Assert 3
     Assert.assertEquals("40px", form.getElement().getStyle().getHeight());
@@ -71,7 +71,7 @@ public class FormPanelTest extends GwtTestTest {
 
   @Test
   public void checkFormSetup() {
-    // Test
+    // Act
     form.setAction("/myFormHandler");
     form.setEncoding(FormPanel.ENCODING_MULTIPART);
 
@@ -90,7 +90,7 @@ public class FormPanelTest extends GwtTestTest {
 
   @Test
   public void checkRemoveFromParent() {
-    // Test
+    // Act
     form.removeFromParent();
 
     // Assert
@@ -99,13 +99,13 @@ public class FormPanelTest extends GwtTestTest {
 
   @Test
   public void checkSetWidget() {
-    // Setup
+    // Arrange
     Button b1 = new Button();
     Button b2 = new Button();
     Assert.assertFalse(b1.isAttached());
     Assert.assertFalse(b2.isAttached());
 
-    // Test 1
+    // Act 1
     form.setWidget(b1);
 
     // Assert 1
@@ -113,7 +113,7 @@ public class FormPanelTest extends GwtTestTest {
     Assert.assertTrue(b1.isAttached());
     Assert.assertFalse(b2.isAttached());
 
-    // Test 2
+    // Act 2
     form.setWidget(b2);
 
     // Assert 2
@@ -132,7 +132,7 @@ public class FormPanelTest extends GwtTestTest {
 
   @Test
   public void testSubmit() {
-    // Setup
+    // Arrange
     TextBox tb = new TextBox();
     setupFormForSubmitTest(tb);
     submitted = false;
@@ -146,14 +146,14 @@ public class FormPanelTest extends GwtTestTest {
 
   @Test
   public void testSubmitComplete() {
-    // Setup
+    // Arrange
     TextBox tb = new TextBox();
     tb.setText("some text");
     setupFormForSubmitTest(tb);
     submitted = false;
     completeSubmitted = false;
 
-    // Test
+    // Act
     form.submit();
 
     Assert.assertTrue(submitted);

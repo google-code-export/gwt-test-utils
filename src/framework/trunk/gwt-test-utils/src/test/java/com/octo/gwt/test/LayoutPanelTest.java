@@ -21,11 +21,11 @@ public class LayoutPanelTest extends GwtTestTest {
 
   @Test
   public void checkAdd() {
-    // Setup
+    // Arrange
     Button b = new Button();
     Assert.assertFalse(b.isAttached());
 
-    // Test
+    // Act
     panel.add(b);
 
     // Assert
@@ -54,12 +54,12 @@ public class LayoutPanelTest extends GwtTestTest {
 
   @Test
   public void checkGetWidgetContainerElement() {
-    // Setup
+    // Arrange
     FlowPanel fp1 = new FlowPanel();
     panel.add(fp1);
     Element fp1Element = fp1.getElement();
 
-    // Test
+    // Act
     Element fp1Container = panel.getWidgetContainerElement(fp1);
 
     // Assert

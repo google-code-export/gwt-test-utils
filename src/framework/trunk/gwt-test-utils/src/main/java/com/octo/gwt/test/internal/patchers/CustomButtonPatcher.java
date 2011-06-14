@@ -2,14 +2,13 @@ package com.octo.gwt.test.internal.patchers;
 
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.CustomButton;
-import com.octo.gwt.test.patchers.AutomaticPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 import com.octo.gwt.test.utils.events.EventBuilder;
 
 @PatchClass(CustomButton.class)
-public class CustomButtonPatcher extends AutomaticPatcher {
+public class CustomButtonPatcher {
 
   @PatchMethod
   public static void onClick(CustomButton button) {

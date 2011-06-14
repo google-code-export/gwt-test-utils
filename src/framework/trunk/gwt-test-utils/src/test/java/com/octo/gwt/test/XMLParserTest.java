@@ -24,13 +24,13 @@ public class XMLParserTest extends GwtTestTest {
 
   @Test
   public void checkParse() throws Exception {
-    // Setup
+    // Arrange
     String xmlContent = convertXMLFileToString("/someXML.xml");
 
-    // Test
+    // Act
     Document document = XMLParser.parse(xmlContent);
 
-    // Asserts
+    // Assert
     Element documentElement = document.getDocumentElement();
     Assert.assertEquals("beans", documentElement.getTagName());
 
@@ -88,13 +88,13 @@ public class XMLParserTest extends GwtTestTest {
 
   @Test
   public void checkParseSimple() {
-    // Setup
+    // Arrange
     String simpleXML = "<tags><tag>value</tag></tags>";
 
-    // Test
+    // Act
     Document doc = XMLParser.parse(simpleXML);
 
-    // Asserts
+    // Assert
     NodeList tags = doc.getElementsByTagName("tag");
     Assert.assertEquals("<tag>value</tag>", tags.item(0).toString());
     Text text = (Text) tags.item(0).getChildNodes().item(0);
@@ -106,7 +106,7 @@ public class XMLParserTest extends GwtTestTest {
 
   @Test
   public void checkRemoveWhitespace() throws Exception {
-    // Setup
+    // Arrange
     Document document = XMLParser.createDocument();
     Element child = document.createElement("child");
     child.setNodeValue("     ");
@@ -119,10 +119,10 @@ public class XMLParserTest extends GwtTestTest {
     Assert.assertEquals(1, child.getChildNodes().getLength());
     Assert.assertEquals(1, child2.getChildNodes().getLength());
 
-    // Test
+    // Act
     XMLParser.removeWhitespace(document);
 
-    // Asserts
+    // Assert
     Assert.assertEquals(0, child.getChildNodes().getLength());
     // empty cdata is not removed
     Assert.assertEquals(1, child2.getChildNodes().getLength());

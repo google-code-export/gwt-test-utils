@@ -7,7 +7,7 @@ import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
 @PatchClass(Util.class)
-public class UtilPatcher extends AutomaticPatcher {
+public class UtilPatcher {
 
   @PatchMethod
   public static int parseInt(String value, int defaultValue) {

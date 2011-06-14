@@ -17,10 +17,10 @@ public class MyConstantsWithLookupTest extends GwtTestTest {
 
   @Test
   public void checkMyConstantsDefaultValue() {
-    // Setup
+    // Arrange
     String expectedErrorMessage = "No matching property \"goodbye\" for Constants class [com.octo.gwt.test.i18n.MyConstantsWithLookup]. Please check the corresponding properties files or use @DefaultStringValue";
 
-    // Test 1
+    // Act 1
     String hello = constants.hello();
     String[] stringArray = constants.stringArray();
     Map<String, Object> map = constants.map();
@@ -68,7 +68,7 @@ public class MyConstantsWithLookupTest extends GwtTestTest {
     Assert.assertEquals(functionFloat, getFloat, 0);
     Assert.assertEquals(functionBoolean, getBoolean);
 
-    // Test 2 : no @DefaultStringValue
+    // Act 2 : no @DefaultStringValue
     try {
       constants.goodbye();
       Assert.fail("i18n patching mechanism should throw an exception if no locale and no @DefaultStringValue is set");
@@ -82,7 +82,7 @@ public class MyConstantsWithLookupTest extends GwtTestTest {
   public void checkMyConstantsWithSpecialChar() {
     GwtConfig.get().setLocale(Locale.FRENCH);
 
-    // Test
+    // Act
     String hello = constants.hello();
     String goodbye = constants.goodbye();
     String[] stringArray = constants.stringArray();

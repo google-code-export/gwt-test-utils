@@ -68,12 +68,12 @@ public class LabelTest extends GwtTestTest {
 
   @Test
   public void checkWrapLabel() {
-    // Setup
+    // Arrange
     // Element.setInnerHTML & Document.get().getElementById are supposed to work
     Document.get().getBody().setInnerHTML("<div id=\"anId\"></div>");
     DivElement div = Document.get().getElementById("anId").cast();
 
-    // Test
+    // Act
     Label label = Label.wrap(div);
     label.setText("My wrapped label !");
 

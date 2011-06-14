@@ -11,7 +11,7 @@ public class SimplePanelTest extends GwtTestTest {
 
   @Test
   public void checkAdd() {
-    // Setup
+    // Arrange
     SimplePanel panel = new SimplePanel();
     RootPanel.get().add(panel);
     Assert.assertTrue(panel.isAttached());
@@ -20,7 +20,7 @@ public class SimplePanelTest extends GwtTestTest {
     Assert.assertFalse(b1.isAttached());
     Assert.assertNull(b1.getParent());
 
-    // Test
+    // Act
     panel.add(b1);
 
     // Assert

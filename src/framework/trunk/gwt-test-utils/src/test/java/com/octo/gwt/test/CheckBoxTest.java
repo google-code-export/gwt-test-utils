@@ -33,12 +33,12 @@ public class CheckBoxTest extends GwtTestTest {
 
   @Test
   public void checkFormValue() {
-    // Setup
+    // Arrange
     CheckBox cb = new CheckBox();
     Assert.assertEquals("", cb.getFormValue());
     cb.setFormValue("whatever");
 
-    // Test
+    // Act
     String formValue = cb.getFormValue();
 
     // Assert

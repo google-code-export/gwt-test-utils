@@ -11,13 +11,13 @@ public class UiBinderWithWidgetsChildTest extends GwtTestTest {
 
   @Test
   public void checkUiBinderWidget() {
-    // Setup
+    // Arrange
     UiBinderWithWidgetsChild w = new UiBinderWithWidgetsChild("gael", "eric");
 
-    // Test
+    // Act
     RootPanel.get().add(w);
 
-    // Asserts
+    // Assert
     Assert.assertEquals(1, w.listBox.getVisibleItemCount());
 
     Assert.assertEquals("my provided label", w.providedLabel.getText());
@@ -51,16 +51,16 @@ public class UiBinderWithWidgetsChildTest extends GwtTestTest {
 
   @Test
   public void checkUiHandlerClick() {
-    // Setup
+    // Arrange
     UiBinderWithWidgetsChild w = new UiBinderWithWidgetsChild("gael", "eric");
 
     // Pre-Assert
     Assert.assertEquals(1, w.listBox.getVisibleItemCount());
 
-    // Test
+    // Act
     Browser.click(w.button);
 
-    // Asserts
+    // Assert
     Assert.assertEquals(2, w.listBox.getVisibleItemCount());
   }
 

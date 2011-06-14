@@ -77,7 +77,7 @@ public class GridTest extends GwtTestTest {
 
   @Test
   public void checkClickListenerNestedWidget() {
-    // Setup
+    // Arrange
     // Grids must be sized explicitly, though they can be resized later.
     Grid g = new Grid(1, 1);
 
@@ -95,7 +95,7 @@ public class GridTest extends GwtTestTest {
 
     Assert.assertEquals(false, clicked);
 
-    // Test : simule the click
+    // Act : simule the click
     Browser.click(g.getWidget(0, 0));
 
     // Assert

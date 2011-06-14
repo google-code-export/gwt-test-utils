@@ -16,16 +16,16 @@ public class MyChildConstantsTest extends GwtTestTest {
 
   @Test
   public void checkChildConstant() {
-    // Setup
+    // Arrange
     GwtConfig.get().setLocale(Locale.ENGLISH);
 
-    // Test
+    // Act
     String hello = childConstants.hello();
     String valueWithoutDefaultAnnotationInChild = childConstants.valueWithoutDefaultAnnotationInChild();
     String valueWithoutLocale = childConstants.valueWithoutLocale();
     String valueWithoutLocaleToBeOverride = childConstants.valueWithoutLocaleToBeOverride();
 
-    // Asserts
+    // Assert
     Assert.assertEquals("Hello english !", hello);
     Assert.assertEquals("Value in child default .properties",
         valueWithoutDefaultAnnotationInChild);

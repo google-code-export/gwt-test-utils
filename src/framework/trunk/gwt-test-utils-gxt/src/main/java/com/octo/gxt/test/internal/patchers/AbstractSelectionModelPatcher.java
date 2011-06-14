@@ -12,7 +12,7 @@ import com.octo.gwt.test.patchers.PatchMethod;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 @PatchClass(AbstractSelectionModel.class)
-public class AbstractSelectionModelPatcher extends AutomaticPatcher {
+public class AbstractSelectionModelPatcher {
 
   @SuppressWarnings("unchecked")
   @PatchMethod

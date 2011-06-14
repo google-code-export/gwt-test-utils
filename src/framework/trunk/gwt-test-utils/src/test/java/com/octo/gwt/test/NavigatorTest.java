@@ -33,7 +33,7 @@ public class NavigatorTest extends GwtTestTest {
 
   @Test
   public void checkGetUserAgent() {
-    // Test
+    // Act
     String userAgent = Navigator.getUserAgent();
     Assert.assertNotNull(userAgent);
   }

@@ -15,7 +15,7 @@ public class TextAreaTest extends GwtTestTest {
     t.setText("myText");
     GwtReflectionUtils.setPrivateFieldValue(t, "attached", true);
 
-    // Test
+    // Act
     t.setCursorPos(2);
 
     Assert.assertEquals(2, t.getCursorPos());
@@ -28,7 +28,7 @@ public class TextAreaTest extends GwtTestTest {
     t.setText("myText");
     GwtReflectionUtils.setPrivateFieldValue(t, "attached", true);
 
-    // Test
+    // Act
     t.setSelectionRange(1, 3);
 
     Assert.assertEquals(3, t.getSelectionLength());

@@ -12,7 +12,7 @@ public class ComplexPanelTest extends GwtTestTest {
 
   @Test
   public void checkAdd() {
-    // Setup
+    // Arrange
     ComplexPanel panel = new FlowPanel();
     RootPanel.get().add(panel);
     Assert.assertTrue(panel.isAttached());
@@ -21,7 +21,7 @@ public class ComplexPanelTest extends GwtTestTest {
     Assert.assertFalse(b1.isAttached());
     Assert.assertNull(b1.getParent());
 
-    // Test
+    // Act
     panel.add(b1);
 
     // Assert

@@ -14,7 +14,7 @@ public class ListBoxTest extends GwtTestTest {
     Assert.assertEquals(2, listBox.getVisibleItemCount());
     listBox.setSelectedIndex(1);
 
-    // Test
+    // Act
     listBox.clear();
 
     // Assert

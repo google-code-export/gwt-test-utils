@@ -13,14 +13,14 @@ public class UiBinderWithDomTest extends GwtTestTest {
 
   @Test
   public void checkUiBinderDom() {
-    // Setup
+    // Arrange
     UiBinderWithDom helloWorld = new UiBinderWithDom();
     Document.get().getBody().appendChild(helloWorld.getElement());
 
-    // Test
+    // Act
     helloWorld.setName("World");
 
-    // Asserts
+    // Assert
     SpanElement nameSpan = GwtReflectionUtils.getPrivateFieldValue(helloWorld,
         "nameSpan");
     Assert.assertEquals("World", nameSpan.getInnerText());

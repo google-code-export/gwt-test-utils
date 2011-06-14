@@ -19,9 +19,9 @@ import javassist.CtClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.octo.gwt.test.Patcher;
 import com.octo.gwt.test.exceptions.GwtTestConfigurationException;
-import com.octo.gwt.test.internal.ClassesScanner.ClassFilter;
+import com.octo.gwt.test.exceptions.GwtTestPatchException;
+import com.octo.gwt.test.internal.ClassesScanner.ClassVisitor;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
@@ -62,8 +62,9 @@ class ConfigurationLoader {
 
   private final List<String> delegateList;
   private final MethodRemover methodRemover;
-  private final Map<String, Patcher> patchers;
+  private PatcherFactory patcherFactory;
   private boolean processedModuleFile = false;
+
   private final Set<String> scanPackageSet;
 
   private ConfigurationLoader(ClassLoader classLoader) {
@@ -72,10 +73,9 @@ class ConfigurationLoader {
     this.delegateList = new ArrayList<String>();
     this.scanPackageSet = new HashSet<String>();
     this.methodRemover = new MethodRemover();
-    this.patchers = new HashMap<String, Patcher>();
 
     readFiles();
-    loadPatchersAndJavaScriptObjects();
+    visitPatchClasses();
   }
 
   public JavaClassModifier getClassSubstituer() {
@@ -90,32 +90,8 @@ class ConfigurationLoader {
     return methodRemover;
   }
 
-  public Map<String, Patcher> getPatchers() {
-    return patchers;
-  }
-
-  private boolean hasDefaultConstructor(Class<?> clazz) {
-    try {
-      return clazz.getDeclaredConstructor() != null;
-    } catch (NoSuchMethodException e) {
-      return false;
-    }
-  }
-
-  private void loadPatchersAndJavaScriptObjects() {
-    ClassFilter patchClassFilter = new ClassFilter() {
-
-      public boolean accept(CtClass ctClass) {
-        return ctClass.hasAnnotation(PatchClass.class);
-      }
-    };
-
-    Set<CtClass> patchClasses = ClassesScanner.getInstance().findClasses(
-        patchClassFilter, scanPackageSet);
-
-    for (CtClass patchClass : patchClasses) {
-      treatPatchClass(patchClass);
-    }
+  public PatcherFactory getPatcherFactory() {
+    return patcherFactory;
   }
 
   private void process(Properties p, URL url) {
@@ -202,55 +178,54 @@ class ConfigurationLoader {
     }
   }
 
-  private void treatPatchClass(CtClass patchCtClass) {
-    Class<?> clazz = null;
-    try {
-      clazz = Class.forName(patchCtClass.getName(), true, classLoader);
-    } catch (ClassNotFoundException e) {
-      throw new GwtTestConfigurationException(
-          "Cannot find class in the classpath : '" + patchCtClass.getName()
-              + "'");
-    } catch (NoClassDefFoundError e) {
-      throw new GwtTestConfigurationException(
-          "No class definition found in the classpath for : '" + e.getMessage()
-              + "'");
-    }
-    PatchClass patchClass = GwtReflectionUtils.getAnnotation(clazz,
-        PatchClass.class);
+  private void visitPatchClasses() {
+    final Map<String, Set<CtClass>> patchClassMap = new HashMap<String, Set<CtClass>>();
+    ClassVisitor patchClassVisitor = new ClassVisitor() {
 
-    if (!Patcher.class.isAssignableFrom(clazz) || !hasDefaultConstructor(clazz)) {
-      throw new GwtTestConfigurationException("The @"
-          + PatchClass.class.getSimpleName() + " annotated class '"
-          + clazz.getName() + "' must implements "
-          + Patcher.class.getSimpleName()
-          + " interface and provide an empty constructor");
-    }
+      public void visit(CtClass ctClass) {
+        PatchClass annotation = null;
+        try {
+          if (ctClass.hasAnnotation(PatchClass.class)) {
+            // load the Patch class in the main classloader
+            Class<?> patchClass = Class.forName(ctClass.getName(), false,
+                classLoader);
+            annotation = GwtReflectionUtils.getAnnotation(patchClass,
+                PatchClass.class);
+          }
+        } catch (ClassNotFoundException e) {
+          // should never happen
+          throw new GwtTestPatchException(e);
+        }
 
-    Patcher patcher = (Patcher) GwtReflectionUtils.instantiateClass(clazz);
+        if (annotation != null) {
+          for (Class<?> c : annotation.value()) {
+            addPatchClass(c.getName(), ctClass);
+          }
 
-    for (Class<?> c : patchClass.value()) {
-      String targetName = c.isMemberClass()
-          ? c.getDeclaringClass().getCanonicalName() + "$" + c.getSimpleName()
-          : c.getCanonicalName();
-      if (patchers.get(targetName) != null) {
-        logger.error("Two patches for same class " + targetName);
-        throw new GwtTestConfigurationException("Two patches for same class "
-            + targetName);
+          for (String className : annotation.classes()) {
+            addPatchClass(className, ctClass);
+          }
+        }
       }
-      patchers.put(targetName, patcher);
-      logger.debug("Add patch for class " + targetName + " : "
-          + clazz.getCanonicalName());
-    }
-    for (String s : patchClass.classes()) {
-      if (patchers.get(s) != null) {
-        logger.error("Two patches for same class " + s);
-        throw new GwtTestConfigurationException("Two patches for same class "
-            + s);
+
+      private void addPatchClass(String targetName, CtClass patchClass) {
+        Set<CtClass> patchClasses = patchClassMap.get(targetName);
+        if (patchClasses == null) {
+          patchClasses = new HashSet<CtClass>();
+          patchClassMap.put(targetName, patchClasses);
+        }
+
+        patchClasses.add(patchClass);
+
+        logger.debug("Add patch for class '" + targetName + "' : '"
+            + patchClass.getName() + "'");
       }
-      patchers.put(s, patcher);
-      logger.debug("Add patch for class " + s + " : "
-          + clazz.getCanonicalName());
-    }
+    };
+
+    ClassesScanner.getInstance().scanPackages(patchClassVisitor, scanPackageSet);
+
+    // create all patchers
+    patcherFactory = new PatcherFactory(patchClassMap);
   }
 
 }

@@ -10,11 +10,11 @@ public class RootPanelTest extends GwtTestWithEasyMock {
 
   @Test
   public void checkAdd() {
-    // Setup
+    // Arrange
     Label label = new Label();
     Assert.assertFalse(label.isAttached());
 
-    // Test
+    // Act
     RootPanel.get().add(label);
 
     // Assert
@@ -27,12 +27,12 @@ public class RootPanelTest extends GwtTestWithEasyMock {
   //
   // @Test
   // public void checkRootPanel1() throws Exception {
-  // // Setup
+  // // Arrange
   // mockAddToParent(myWidget, RootPanel.get());
   //
   // replay();
   //
-  // // Test
+  // // Act
   // RootPanel.get().add(myWidget);
   //
   // // Assert
@@ -43,11 +43,11 @@ public class RootPanelTest extends GwtTestWithEasyMock {
   //
   // @Test
   // public void checkRootPanel2() throws Exception {
-  // // Setup
+  // // Arrange
   // mockAddToParent(myWidget, RootPanel.get());
   //
   // replay();
-  // // Test
+  // // Act
   // RootPanel.get().add(myWidget);
   //
   // // Assert

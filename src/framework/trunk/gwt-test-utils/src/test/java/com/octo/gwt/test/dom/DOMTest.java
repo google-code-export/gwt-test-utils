@@ -32,7 +32,7 @@ public class DOMTest extends GwtTestTest {
 
   @Test
   public void checkCreateAnchor() {
-    // Test
+    // Act
     AnchorElement elem = AnchorElement.as(DOM.createAnchor());
 
     // Assert
@@ -41,7 +41,7 @@ public class DOMTest extends GwtTestTest {
 
   @Test
   public void checkCreateButton() {
-    // Test
+    // Act
     ButtonElement elem = ButtonElement.as(DOM.createButton());
 
     // Assert
@@ -50,7 +50,7 @@ public class DOMTest extends GwtTestTest {
 
   @Test
   public void checkCreateCaption() {
-    // Test
+    // Act
     TableCaptionElement elem = TableCaptionElement.as(DOM.createCaption());
 
     // Assert
@@ -59,7 +59,7 @@ public class DOMTest extends GwtTestTest {
 
   @Test
   public void checkCreateCol() {
-    // Test
+    // Act
     TableColElement elem = TableColElement.as(DOM.createCol());
 
     // Assert
@@ -68,7 +68,7 @@ public class DOMTest extends GwtTestTest {
 
   @Test
   public void checkCreateColGroup() {
-    // Test
+    // Act
     TableColElement elem = TableColElement.as(DOM.createColGroup());
 
     // Assert
@@ -77,7 +77,7 @@ public class DOMTest extends GwtTestTest {
 
   @Test
   public void checkCreateDiv() {
-    // Test
+    // Act
     DivElement elem = DivElement.as(DOM.createDiv());
 
     // Assert
@@ -86,7 +86,7 @@ public class DOMTest extends GwtTestTest {
 
   @Test
   public void checkCreateElement() {
-    // Test
+    // Act
     DivElement elem = DivElement.as(DOM.createElement("div"));
 
     // Assert
@@ -95,7 +95,7 @@ public class DOMTest extends GwtTestTest {
 
   @Test
   public void checkCreateFieldSet() {
-    // Test
+    // Act
     FieldSetElement elem = FieldSetElement.as(DOM.createFieldSet());
 
     // Assert
@@ -104,7 +104,7 @@ public class DOMTest extends GwtTestTest {
 
   @Test
   public void checkCreateForm() {
-    // Test
+    // Act
     FormElement elem = FormElement.as(DOM.createForm());
 
     // Assert
@@ -113,7 +113,7 @@ public class DOMTest extends GwtTestTest {
 
   @Test
   public void checkCreateIFrame() {
-    // Test
+    // Act
     IFrameElement elem = IFrameElement.as(DOM.createIFrame());
 
     // Assert
@@ -122,7 +122,7 @@ public class DOMTest extends GwtTestTest {
 
   @Test
   public void checkCreateImg() {
-    // Test
+    // Act
     ImageElement elem = ImageElement.as(DOM.createImg());
 
     // Assert
@@ -131,7 +131,7 @@ public class DOMTest extends GwtTestTest {
 
   @Test
   public void checkCreateInputCheck() {
-    // Test
+    // Act
     InputElement elem = InputElement.as(DOM.createInputCheck());
 
     // Assert
@@ -141,7 +141,7 @@ public class DOMTest extends GwtTestTest {
 
   @Test
   public void checkCreateInputPassword() {
-    // Test
+    // Act
     InputElement elem = InputElement.as(DOM.createInputPassword());
 
     // Assert
@@ -151,7 +151,7 @@ public class DOMTest extends GwtTestTest {
 
   @Test
   public void checkCreateInputRadio() {
-    // Test
+    // Act
     InputElement elem = InputElement.as(DOM.createInputRadio("test"));
 
     // Assert
@@ -161,7 +161,7 @@ public class DOMTest extends GwtTestTest {
 
   @Test
   public void checkCreateInputText() {
-    // Test
+    // Act
     InputElement elem = InputElement.as(DOM.createInputText());
 
     // Assert
@@ -171,7 +171,7 @@ public class DOMTest extends GwtTestTest {
 
   @Test
   public void checkCreateLabel() {
-    // Test
+    // Act
     LabelElement elem = LabelElement.as(DOM.createLabel());
 
     // Assert
@@ -180,7 +180,7 @@ public class DOMTest extends GwtTestTest {
 
   @Test
   public void checkCreateLegend() {
-    // Test
+    // Act
     LegendElement elem = LegendElement.as(DOM.createLegend());
 
     // Assert
@@ -189,7 +189,7 @@ public class DOMTest extends GwtTestTest {
 
   @Test
   public void checkCreateOption() {
-    // Test
+    // Act
     OptionElement elem = OptionElement.as(DOM.createOption());
 
     // Assert
@@ -199,7 +199,7 @@ public class DOMTest extends GwtTestTest {
   @SuppressWarnings("deprecation")
   @Test
   public void checkCreateOptions() {
-    // Test
+    // Act
     OptionElement elem = OptionElement.as(DOM.createOptions());
 
     // Assert
@@ -208,7 +208,7 @@ public class DOMTest extends GwtTestTest {
 
   @Test
   public void checkCreateSelect() {
-    // Test
+    // Act
     SelectElement elem = SelectElement.as(DOM.createSelect());
 
     // Assert
@@ -219,7 +219,7 @@ public class DOMTest extends GwtTestTest {
 
   @Test
   public void checkCreateSelectMultiple() {
-    // Test
+    // Act
     SelectElement elem = SelectElement.as(DOM.createSelect(true));
 
     // Assert
@@ -229,7 +229,7 @@ public class DOMTest extends GwtTestTest {
 
   @Test
   public void checkCreateSpan() {
-    // Test
+    // Act
     SpanElement elem = SpanElement.as(DOM.createSpan());
 
     // Assert
@@ -238,7 +238,7 @@ public class DOMTest extends GwtTestTest {
 
   @Test
   public void checkCreateTable() {
-    // Test
+    // Act
     TableElement elem = TableElement.as(DOM.createTable());
 
     // Assert
@@ -247,7 +247,7 @@ public class DOMTest extends GwtTestTest {
 
   @Test
   public void checkCreateTBody() {
-    // Test
+    // Act
     TableSectionElement elem = TableSectionElement.as(DOM.createTBody());
 
     // Assert
@@ -256,7 +256,7 @@ public class DOMTest extends GwtTestTest {
 
   @Test
   public void checkCreateTD() {
-    // Test
+    // Act
     TableCellElement elem = TableCellElement.as(DOM.createTD());
 
     // Assert
@@ -265,7 +265,7 @@ public class DOMTest extends GwtTestTest {
 
   @Test
   public void checkCreateTextArea() {
-    // Test
+    // Act
     TextAreaElement elem = TextAreaElement.as(DOM.createTextArea());
 
     // Assert
@@ -274,7 +274,7 @@ public class DOMTest extends GwtTestTest {
 
   @Test
   public void checkCreateTFoot() {
-    // Test
+    // Act
     TableSectionElement elem = TableSectionElement.as(DOM.createTFoot());
 
     // Assert
@@ -283,7 +283,7 @@ public class DOMTest extends GwtTestTest {
 
   @Test
   public void checkCreateTH() {
-    // Test
+    // Act
     TableCellElement elem = TableCellElement.as(DOM.createTH());
 
     // Assert
@@ -292,7 +292,7 @@ public class DOMTest extends GwtTestTest {
 
   @Test
   public void checkCreateTHead() {
-    // Test
+    // Act
     TableSectionElement elem = TableSectionElement.as(DOM.createTHead());
 
     // Assert
@@ -301,7 +301,7 @@ public class DOMTest extends GwtTestTest {
 
   @Test
   public void checkCreateTR() {
-    // Test
+    // Act
     TableRowElement elem = TableRowElement.as(DOM.createTR());
 
     // Assert
@@ -310,11 +310,11 @@ public class DOMTest extends GwtTestTest {
 
   @Test
   public void checkImageSrc() {
-    // Setup
+    // Arrange
     Image img = new Image();
     ImageElement elem = img.getElement().cast();
 
-    // Test
+    // Act
     DOM.setImgSrc(img.getElement(), "http://test/image.gif");
     String imageSrc = DOM.getImgSrc(img.getElement());
 

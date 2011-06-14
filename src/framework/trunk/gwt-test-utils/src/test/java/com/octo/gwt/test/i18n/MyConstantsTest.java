@@ -17,10 +17,10 @@ public class MyConstantsTest extends GwtTestTest {
 
   @Test
   public void checkMyConstantsChange() {
-    // Setup
+    // Arrange
     GwtConfig.get().setLocale(Locale.ENGLISH);
 
-    // Test 1
+    // Act 1
     String hello = constants.hello();
     String goodbye = constants.goodbye();
     String[] stringArray = constants.stringArray();
@@ -50,7 +50,7 @@ public class MyConstantsTest extends GwtTestTest {
     Assert.assertEquals("Value from parent default .properties",
         valueWithoutLocaleToBeOverride);
 
-    // Test 2
+    // Act 2
     GwtConfig.get().setLocale(Locale.US);
     hello = constants.hello();
     goodbye = constants.goodbye();
@@ -77,10 +77,10 @@ public class MyConstantsTest extends GwtTestTest {
 
   @Test
   public void checkMyConstantsDefaultValue() {
-    // Setup
+    // Arrange
     String expectedErrorMessage = "No matching property \"goodbye\" for Constants class [com.octo.gwt.test.i18n.MyConstants]. Please check the corresponding properties files or use @DefaultStringValue";
 
-    // Test 1
+    // Act 1
     String hello = constants.hello();
     String[] stringArray = constants.stringArray();
     Map<String, Object> map = constants.map();
@@ -104,7 +104,7 @@ public class MyConstantsTest extends GwtTestTest {
     Assert.assertEquals((float) 6.66, functionFloat, 0);
     Assert.assertTrue(functionBoolean);
 
-    // Test 2 : no @DefaultStringValue
+    // Act 2 : no @DefaultStringValue
     try {
       constants.goodbye();
       Assert.fail("i18n patching mechanism should throw an exception if no locale, no default .properties file and no @DefaultStringValue is set");
@@ -118,7 +118,7 @@ public class MyConstantsTest extends GwtTestTest {
   public void checkMyConstantsWithSpecialChar() {
     GwtConfig.get().setLocale(Locale.FRENCH);
 
-    // Test
+    // Act
     String hello = constants.hello();
     String goodbye = constants.goodbye();
     String[] stringArray = constants.stringArray();

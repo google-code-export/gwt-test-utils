@@ -124,7 +124,7 @@ public class BrowserTest extends GwtTestTest {
 
     panel.add(a);
 
-    // Test
+    // Act
     Browser.click(panel, 0);
 
     // Assert
@@ -133,7 +133,7 @@ public class BrowserTest extends GwtTestTest {
 
   @Test
   public void checkClickOnGrid() {
-    // Setup
+    // Arrange
     final Grid g = new Grid(2, 2);
     final Anchor a = new Anchor();
     g.setWidget(1, 1, a);
@@ -149,7 +149,7 @@ public class BrowserTest extends GwtTestTest {
       }
     });
 
-    // Test
+    // Act
     Browser.click(g, 1, 1);
 
     // Assert
@@ -159,13 +159,13 @@ public class BrowserTest extends GwtTestTest {
 
   @Test
   public void checkClickOnSuggestBox() {
-    // Setup
+    // Arrange
     MultiWordSuggestOracle oracle = new MultiWordSuggestOracle();
     oracle.add("suggestion 1");
     oracle.add("suggestion 2");
     SuggestBox box = new SuggestBox(oracle);
 
-    // Test
+    // Act
     Browser.fillText(box, "sug");
     Browser.click(box, 1);
 
@@ -175,7 +175,7 @@ public class BrowserTest extends GwtTestTest {
 
   @Test
   public void checkEmptyText_LongPressFalse() {
-    // Setup
+    // Arrange
     onChangeTriggered = false;
     onBlurTriggered = false;
     keyDownCount = 0;
@@ -222,10 +222,10 @@ public class BrowserTest extends GwtTestTest {
       }
     });
 
-    // Test
+    // Act
     Browser.emptyText(tb, false);
 
-    // Asserts
+    // Assert
     // the textbox value should be updated
     Assert.assertEquals("", tb.getText());
     Assert.assertEquals(4, keyDownCount);
@@ -236,7 +236,7 @@ public class BrowserTest extends GwtTestTest {
 
   @Test
   public void checkEmptyText_LongPressTrue() {
-    // Setup
+    // Arrange
     onChangeTriggered = false;
     onBlurTriggered = false;
     keyDownCount = 0;
@@ -283,10 +283,10 @@ public class BrowserTest extends GwtTestTest {
       }
     });
 
-    // Test
+    // Act
     Browser.emptyText(tb, true);
 
-    // Asserts
+    // Assert
     // the textbox value should be updated
     Assert.assertEquals("", tb.getText());
     Assert.assertEquals(4, keyDownCount);
@@ -297,7 +297,7 @@ public class BrowserTest extends GwtTestTest {
 
   @Test
   public void checkEmptyText_LongPressTrue_Does_Not_Update_When_KeyDown_PreventDefault() {
-    // Setup
+    // Arrange
     onChangeTriggered = false;
     onBlurTriggered = false;
     keyDownCount = 0;
@@ -346,10 +346,10 @@ public class BrowserTest extends GwtTestTest {
       }
     });
 
-    // Test
+    // Act
     Browser.emptyText(tb, true);
 
-    // Asserts
+    // Assert
     // the textbox value should not be updated
     Assert.assertEquals("1234", tb.getText());
     Assert.assertEquals(4, keyDownCount);
@@ -360,7 +360,7 @@ public class BrowserTest extends GwtTestTest {
 
   @Test
   public void checkFillText() {
-    // Setup
+    // Arrange
     onChangeTriggered = false;
     onBlurTriggered = false;
     String textToFill = "some text";
@@ -419,10 +419,10 @@ public class BrowserTest extends GwtTestTest {
       }
     });
 
-    // Test
+    // Act
     Browser.fillText(tb, textToFill);
 
-    // Asserts
+    // Assert
     Assert.assertEquals(textToFill, tb.getText());
     Assert.assertEquals(textToFill, tb.getValue());
     assertTextFilledCorrectly(textToFill, keyDownChars);
@@ -434,7 +434,7 @@ public class BrowserTest extends GwtTestTest {
 
   @Test
   public void checkFillText_Does_Not_Update_When_KeyDown_PreventDefault() {
-    // Setup
+    // Arrange
     onChangeTriggered = false;
     onBlurTriggered = false;
     String initialText = "intial text";
@@ -498,10 +498,10 @@ public class BrowserTest extends GwtTestTest {
       }
     });
 
-    // Test
+    // Act
     Browser.fillText(tb, textToFill);
 
-    // Asserts
+    // Assert
     // the textbox value should not be updated
     Assert.assertEquals(initialText, tb.getText());
     Assert.assertEquals(initialText, tb.getValue());
@@ -515,7 +515,7 @@ public class BrowserTest extends GwtTestTest {
 
   @Test
   public void checkFillText_Does_Not_Update_When_KeyPress_PreventDefault() {
-    // Setup
+    // Arrange
     onChangeTriggered = false;
     onBlurTriggered = false;
     String initialText = "intial text";
@@ -579,10 +579,10 @@ public class BrowserTest extends GwtTestTest {
       }
     });
 
-    // Test
+    // Act
     Browser.fillText(tb, textToFill);
 
-    // Asserts
+    // Assert
     // the textbox value should not be updated
     Assert.assertEquals(initialText, tb.getText());
     Assert.assertEquals(initialText, tb.getValue());
@@ -596,11 +596,11 @@ public class BrowserTest extends GwtTestTest {
 
   @Test
   public void checkFillText_EmptyShouldThrowsAnError() {
-    // Setup
+    // Arrange
     final TextBox tb = new TextBox();
     tb.setText("test");
 
-    // Test
+    // Act
     try {
       Browser.fillText(tb, "");
       Assert.fail();
@@ -614,11 +614,11 @@ public class BrowserTest extends GwtTestTest {
 
   @Test
   public void checkFillText_NullShouldThrowsAnError() {
-    // Setup
+    // Arrange
     final TextBox tb = new TextBox();
     tb.setText("test");
 
-    // Test
+    // Act
     try {
       Browser.fillText(tb, null);
       Assert.fail();
@@ -632,7 +632,7 @@ public class BrowserTest extends GwtTestTest {
 
   @Test
   public void checkFillText_Still_Update_When_KeyUp_PreventDefault() {
-    // Setup
+    // Arrange
     onChangeTriggered = false;
     onBlurTriggered = false;
     String initialText = "intial text";
@@ -696,10 +696,10 @@ public class BrowserTest extends GwtTestTest {
       }
     });
 
-    // Test
+    // Act
     Browser.fillText(tb, textToFill);
 
-    // Asserts
+    // Assert
     // the textbox value should be updated
     Assert.assertEquals(textToFill, tb.getText());
     Assert.assertEquals(textToFill, tb.getValue());
@@ -748,12 +748,12 @@ public class BrowserTest extends GwtTestTest {
       }
     });
 
-    // Test
+    // Act
     Browser.keyDown(b, KeyCodes.KEY_ESCAPE);
     // Assert
     Assert.assertFalse("onKeyDown event should not be triggered", tested);
 
-    // Test 2
+    // Act 2
     Browser.keyDown(b, KeyCodes.KEY_ENTER);
     // Assert 2
     Assert.assertTrue("onKeyDown event was not triggered", tested);
@@ -775,12 +775,12 @@ public class BrowserTest extends GwtTestTest {
       }
     });
 
-    // Test
+    // Act
     Browser.keyDown(b, KeyCodes.KEY_ESCAPE);
     // Assert
     Assert.assertFalse("onKeyPress event should not be triggered", tested);
 
-    // Test 2
+    // Act 2
     Browser.keyPress(b, KeyCodes.KEY_ENTER);
     // Assert 2
     Assert.assertTrue("onKeyPress event was not triggered", tested);
@@ -802,12 +802,12 @@ public class BrowserTest extends GwtTestTest {
       }
     });
 
-    // Test
+    // Act
     Browser.keyDown(b, KeyCodes.KEY_ESCAPE);
     // Assert
     Assert.assertFalse("onKeyUp event should not be triggered", tested);
 
-    // Test 2
+    // Act 2
     Browser.keyUp(b, KeyCodes.KEY_ENTER);
     // Assert 2
     Assert.assertTrue("onKeyUp event was not triggered", tested);
@@ -944,7 +944,7 @@ public class BrowserTest extends GwtTestTest {
 
   @Test
   public void checkRemoveText() {
-    // Setup
+    // Arrange
     onChangeTriggered = false;
     onBlurTriggered = false;
     keyDownCount = 0;
@@ -991,10 +991,10 @@ public class BrowserTest extends GwtTestTest {
       }
     });
 
-    // Test
+    // Act
     Browser.removeText(tb, 2);
 
-    // Asserts
+    // Assert
     // the textbox value should be updated
     Assert.assertEquals("12", tb.getText());
     Assert.assertEquals(2, keyDownCount);
@@ -1005,7 +1005,7 @@ public class BrowserTest extends GwtTestTest {
 
   @Test
   public void checkRemoveText_Does_Not_Update_When_KeyDown_PreventDefault() {
-    // Setup
+    // Arrange
     onChangeTriggered = false;
     onBlurTriggered = false;
     keyDownCount = 0;
@@ -1054,10 +1054,10 @@ public class BrowserTest extends GwtTestTest {
       }
     });
 
-    // Test
+    // Act
     Browser.removeText(tb, 2);
 
-    // Asserts
+    // Assert
     // the textbox value should be updated
     Assert.assertEquals("1234", tb.getText());
     Assert.assertEquals(2, keyDownCount);

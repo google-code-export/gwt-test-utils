@@ -16,12 +16,11 @@ import com.octo.gwt.test.internal.patchers.dom.JavaScriptObjects;
 import com.octo.gwt.test.internal.utils.GwtXMLParser;
 import com.octo.gwt.test.internal.utils.JsoProperties;
 import com.octo.gwt.test.internal.utils.PropertyContainer;
-import com.octo.gwt.test.patchers.AutomaticPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
 @PatchClass(XMLParserImpl.class)
-public class XMLParserImplPatcher extends AutomaticPatcher {
+public class XMLParserImplPatcher {
 
   @PatchMethod
   public static JavaScriptObject appendChild(JavaScriptObject jsObject,

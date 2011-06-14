@@ -11,7 +11,7 @@ import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
 @PatchClass(DomHelper.class)
-public class DomHelperPatcher extends AutomaticPatcher {
+public class DomHelperPatcher {
 
   @PatchMethod
   public static Element append(Element elem, String html) {

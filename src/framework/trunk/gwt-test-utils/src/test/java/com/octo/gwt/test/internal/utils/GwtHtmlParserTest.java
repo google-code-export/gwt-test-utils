@@ -16,10 +16,10 @@ public class GwtHtmlParserTest extends GwtTestTest {
 
   @Test
   public void checkParse() throws Exception {
-    // Setup
+    // Arrange
     String html = "<div id=\"parent0\"></div><div id=\"parent1\"><div id=\"child0\"><span class=\"spanClass\" >test</span></div><BR><DIV id=\"child2\" style=\"color:red; font-style:italic; font-weight:bold; font-family:Arial\"></div>";
 
-    // Test
+    // Act
     NodeList<Node> nodes = GwtHtmlParser.parse(html);
 
     // Assert

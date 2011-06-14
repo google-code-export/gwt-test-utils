@@ -17,11 +17,11 @@ public class MyMessagesTest extends GwtTestTest {
 
   @Test
   public void checkAMessage() {
-    // Setup
+    // Arrange
     String result = null;
     String expectedException = "Unable to find a Locale specific resource file to bind with i18n interface 'com.octo.gwt.test.i18n.MyMessages' and there is no @DefaultXXXValue annotation on 'a_message' called method";
 
-    // Test 1
+    // Act 1
     try {
       result = messages.a_message("Gael", 23, true);
       Assert.fail("The test is expected to throw an execption since 'a_message' can't be retrieve in the default property file and no @DefaultMessage is set on the method");
@@ -30,10 +30,10 @@ public class MyMessagesTest extends GwtTestTest {
 
     }
 
-    // Setup 2
+    // Arrange 2
     GwtConfig.get().setLocale(Locale.FRANCE);
 
-    // Test 2
+    // Act 2
     result = messages.a_message("Gael", 23, true);
 
     // Assert2
@@ -43,10 +43,10 @@ public class MyMessagesTest extends GwtTestTest {
 
   @Test
   public void checkMeaningAnnotation() {
-    // Setup 1
+    // Arrange 1
     GwtConfig.get().setLocale(Locale.FRANCE);
 
-    // Test 1
+    // Act 1
     String orangeColor = messages.orangeColor();
     String orangeFruit = messages.orangeFruit();
 
@@ -54,10 +54,10 @@ public class MyMessagesTest extends GwtTestTest {
     Assert.assertEquals("Orange", orangeColor);
     Assert.assertEquals("Orange", orangeFruit);
 
-    // Setup 2
+    // Arrange 2
     GwtConfig.get().setLocale(Locale.ENGLISH);
 
-    // Test 2
+    // Act 2
     orangeColor = messages.orangeColor();
     orangeFruit = messages.orangeFruit();
 
@@ -69,19 +69,19 @@ public class MyMessagesTest extends GwtTestTest {
 
   @Test
   public void checkTotalAmount() {
-    // Setup 1
+    // Arrange 1
     GwtConfig.get().setLocale(Locale.US);
 
-    // Test
+    // Act
     String totalAmount = messages.totalAmount(6);
 
     // Assert 1
     Assert.assertEquals("Your cart total is $6.00", totalAmount);
 
-    // Setup 2
+    // Arrange 2
     GwtConfig.get().setLocale(Locale.FRANCE);
 
-    // Test 2
+    // Act 2
     totalAmount = messages.totalAmount(6);
 
     // Assert 2
@@ -90,7 +90,7 @@ public class MyMessagesTest extends GwtTestTest {
 
   @Test
   public void checkWidgetCount_default_en() {
-    // Test
+    // Act
     String result0 = messages.widgetCount(0);
     String result1 = messages.widgetCount(1);
     String result2 = messages.widgetCount(2);
@@ -103,10 +103,10 @@ public class MyMessagesTest extends GwtTestTest {
 
   @Test
   public void checkWidgetCount_fr() {
-    // Setup
+    // Arrange
     GwtConfig.get().setLocale(Locale.FRANCE);
 
-    // Test
+    // Act
     String result0 = messages.widgetCount(0);
     String result1 = messages.widgetCount(1);
     String result2 = messages.widgetCount(2);
@@ -119,7 +119,7 @@ public class MyMessagesTest extends GwtTestTest {
 
   // @Test
   // public void checkAlternateMessageWithSelect_default_en() {
-  // // Test
+  // // Act
   // String resultFEMALE = messages.alternateMessageWithSelect("Jenny",
   // Gender.FEMALE);
   // String resultMALE = messages.alternateMessageWithSelect("Brian",
@@ -135,10 +135,10 @@ public class MyMessagesTest extends GwtTestTest {
   //
   // @Test
   // public void checkAlternateMessageWithSelect_fr() {
-  // // Setup
+  // // Arrange
   // GwtConfig.get().setLocale(Locale.FRANCE);
   //
-  // // Test
+  // // Act
   // String resultFEMALE = messages.alternateMessageWithSelect("Jenny",
   // Gender.FEMALE);
   // String resultMALE = messages.alternateMessageWithSelect("Brian",
@@ -154,7 +154,7 @@ public class MyMessagesTest extends GwtTestTest {
   //
   // @Test
   // public void checkAlternateMessageWithSelectAndPluralCount_default_en() {
-  // // Test
+  // // Act
   // String resultFEMALE_ONE =
   // messages.alternateMessageWithSelectAndPluralCount("Jenny", Gender.FEMALE,
   // 1);
@@ -179,10 +179,10 @@ public class MyMessagesTest extends GwtTestTest {
   //
   // @Test
   // public void checkAlternateMessageWithSelectAndPluralCount_fr() {
-  // // Setup
+  // // Arrange
   // GwtConfig.get().setLocale(Locale.FRANCE);
   //
-  // // Test
+  // // Act
   // String resultFEMALE_ONE =
   // messages.alternateMessageWithSelectAndPluralCount("Jenny", Gender.FEMALE,
   // 1);
