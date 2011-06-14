@@ -9,7 +9,7 @@ import com.octo.gwt.test.utils.events.Browser;
 class ButtonPatcher {
 
   @PatchMethod
-  public static void click(Button button) {
+  static void click(Button button) {
     Browser.click(button);
   }
 

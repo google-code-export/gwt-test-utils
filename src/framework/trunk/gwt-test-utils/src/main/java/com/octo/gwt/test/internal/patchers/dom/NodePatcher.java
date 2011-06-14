@@ -16,15 +16,15 @@ import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
 @PatchClass(Node.class)
-public class NodePatcher {
+class NodePatcher {
 
   @PatchMethod
-  public static Node appendChild(Node parent, Node newChild) {
+  static Node appendChild(Node parent, Node newChild) {
     return insertAtIndex(parent, newChild, -1);
   }
 
   @PatchMethod
-  public static Node cloneNode(Node node, boolean deep) {
+  static Node cloneNode(Node node, boolean deep) {
     Node newNode;
     switch (node.getNodeType()) {
       case Node.ELEMENT_NODE:
@@ -47,12 +47,8 @@ public class NodePatcher {
     return newNode;
   }
 
-  public static NodeList<Node> getChildNodes(Node node) {
-    return JavaScriptObjects.getObject(node, JsoProperties.NODE_LIST_FIELD);
-  }
-
   @PatchMethod
-  public static Node getFirstChild(Node node) {
+  static Node getFirstChild(Node node) {
     List<Node> list = getChildNodeList(node);
 
     if (list.size() == 0) {
@@ -63,7 +59,7 @@ public class NodePatcher {
   }
 
   @PatchMethod
-  public static Node getLastChild(Node node) {
+  static Node getLastChild(Node node) {
     List<Node> list = getChildNodeList(node);
 
     if (list.size() == 0) {
@@ -74,7 +70,7 @@ public class NodePatcher {
   }
 
   @PatchMethod
-  public static Node getNextSibling(Node node) {
+  static Node getNextSibling(Node node) {
     Node parent = node.getParentNode();
     if (parent == null)
       return null;
@@ -92,7 +88,7 @@ public class NodePatcher {
   }
 
   @PatchMethod
-  public static String getNodeName(Node node) {
+  static String getNodeName(Node node) {
     switch (node.getNodeType()) {
       case Node.DOCUMENT_NODE:
         return "#document";
@@ -111,7 +107,7 @@ public class NodePatcher {
   }
 
   @PatchMethod
-  public static short getNodeType(Node node) {
+  static short getNodeType(Node node) {
     short nodeType = JavaScriptObjects.getShort(node,
         JsoProperties.NODE_TYPE_FIELD);
 
@@ -119,7 +115,7 @@ public class NodePatcher {
   }
 
   @PatchMethod
-  public static String getNodeValue(Node node) {
+  static String getNodeValue(Node node) {
     switch (node.getNodeType()) {
       case Node.DOCUMENT_NODE:
         return null;
@@ -136,12 +132,12 @@ public class NodePatcher {
   }
 
   @PatchMethod
-  public static Document getOwnerDocument(Node node) {
+  static Document getOwnerDocument(Node node) {
     return Document.get();
   }
 
   @PatchMethod
-  public static Node getPreviousSibling(Node node) {
+  static Node getPreviousSibling(Node node) {
     Node parent = node.getParentNode();
     if (parent == null)
       return null;
@@ -159,11 +155,11 @@ public class NodePatcher {
   }
 
   @PatchMethod
-  public static boolean hasChildNodes(Node node) {
+  static boolean hasChildNodes(Node node) {
     return getChildNodeList(node).size() > 0;
   }
 
-  public static Node insertAtIndex(Node parent, Node newChild, int index) {
+  static Node insertAtIndex(Node parent, Node newChild, int index) {
     List<Node> list = getChildNodeList(parent);
 
     // First, remove from old parent
@@ -190,7 +186,7 @@ public class NodePatcher {
   }
 
   @PatchMethod
-  public static Node insertBefore(Node parent, Node newChild, Node refChild) {
+  static Node insertBefore(Node parent, Node newChild, Node refChild) {
     List<Node> list = getChildNodeList(parent);
 
     // get the index of refChild
@@ -210,7 +206,7 @@ public class NodePatcher {
   }
 
   @PatchMethod
-  public static boolean is(JavaScriptObject object) {
+  static boolean is(JavaScriptObject object) {
     if (object == null || !(object instanceof Node)) {
       return false;
     }
@@ -219,7 +215,7 @@ public class NodePatcher {
   }
 
   @PatchMethod
-  public static Node removeChild(Node oldParent, Node oldChild) {
+  static Node removeChild(Node oldParent, Node oldChild) {
     List<Node> list = getChildNodeList(oldParent);
 
     if (list.remove(oldChild)) {
@@ -230,7 +226,7 @@ public class NodePatcher {
   }
 
   @PatchMethod
-  public static Node replaceChild(Node parent, Node newChild, Node oldChild) {
+  static Node replaceChild(Node parent, Node newChild, Node oldChild) {
     if (oldChild != null) {
       List<Node> list = getChildNodeList(parent);
 
@@ -247,7 +243,7 @@ public class NodePatcher {
   }
 
   @PatchMethod
-  public static void setNodeValue(Node node, String nodeValue) {
+  static void setNodeValue(Node node, String nodeValue) {
     switch (node.getNodeType()) {
       case Node.DOCUMENT_NODE:
         // nothing to do

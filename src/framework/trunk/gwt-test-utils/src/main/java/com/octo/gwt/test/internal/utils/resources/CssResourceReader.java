@@ -48,6 +48,25 @@ public class CssResourceReader {
     cache = new HashMap<URL, CssParsingResult>();
   }
 
+  public CssParsingResult readCss(String text) throws IOException {
+    return parse(new StringReader(text));
+  }
+
+  public CssParsingResult readCss(URL url) throws IOException {
+
+    CssParsingResult parsingResult = cache.get(url);
+    if (parsingResult == null) {
+      parsingResult = parse(new InputStreamReader(url.openStream(), "UTF-8"));
+      cache.put(url, parsingResult);
+    }
+
+    return parsingResult;
+  }
+
+  public void reset() {
+    cache.clear();
+  }
+
   private CssParsingResult parse(Reader reader) throws IOException {
 
     Map<String, String> constants = new HashMap<String, String>();
@@ -74,25 +93,6 @@ public class CssResourceReader {
         br.close();
       }
     }
-  }
-
-  public CssParsingResult readCss(String text) throws IOException {
-    return parse(new StringReader(text));
-  }
-
-  public CssParsingResult readCss(URL url) throws IOException {
-
-    CssParsingResult parsingResult = cache.get(url);
-    if (parsingResult == null) {
-      parsingResult = parse(new InputStreamReader(url.openStream(), "UTF-8"));
-      cache.put(url, parsingResult);
-    }
-
-    return parsingResult;
-  }
-
-  public void reset() {
-    cache.clear();
   }
 
 }

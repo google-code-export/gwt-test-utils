@@ -10,10 +10,10 @@ import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.utils.JavassistUtils;
 
 @PatchClass(PopupPanel.class)
-public class PopupPanelPatcher {
+class PopupPanelPatcher {
 
   @InitMethod
-  public static void initClass(CtClass c) throws CannotCompileException {
+  static void initClass(CtClass c) throws CannotCompileException {
     CtConstructor cons = JavassistUtils.findConstructor(c);
 
     cons.insertAfter("getElement().getStyle().setProperty(\"visibility\", \"hidden\");");

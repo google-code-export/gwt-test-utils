@@ -7,10 +7,10 @@ import com.octo.gwt.test.patchers.PatchMethod;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 @PatchClass(StackPanel.class)
-public class StackPanelPatcher {
+class StackPanelPatcher {
 
   @PatchMethod
-  public static int findDividerIndex(StackPanel panel,
+  static int findDividerIndex(StackPanel panel,
       com.google.gwt.user.client.Element child) {
     WidgetCollection children = GwtReflectionUtils.getPrivateFieldValue(panel,
         "children");

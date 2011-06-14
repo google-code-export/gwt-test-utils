@@ -5,15 +5,15 @@ import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
 @PatchClass(Duration.class)
-public class DurationPatcher {
+class DurationPatcher {
 
   @PatchMethod
-  public static double currentTimeMillis() {
+  static double currentTimeMillis() {
     return System.currentTimeMillis();
   }
 
   @PatchMethod
-  public static int uncheckedConversion(double elapsed) {
+  static int uncheckedConversion(double elapsed) {
     return (int) elapsed;
   }
 

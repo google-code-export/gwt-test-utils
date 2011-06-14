@@ -16,22 +16,22 @@ import com.octo.gwt.test.patchers.PatchMethod;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 @PatchClass(classes = {"com.google.gwt.user.client.ui.PrefixTree"})
-public class PrefixTreePatcher {
+class PrefixTreePatcher {
 
   private static final String PREFIXES_SET_PROPERTY = "PREFIXES_SET";
 
   @PatchMethod
-  public static boolean add(Object prefixTree, String s) {
+  static boolean add(Object prefixTree, String s) {
     return getPrefixSet(prefixTree).add(s);
   }
 
   @PatchMethod
-  public static void clear(Object prefixTree) {
+  static void clear(Object prefixTree) {
     GwtReflectionUtils.setPrivateFieldValue(prefixTree, "size", 0);
   }
 
   @InitMethod
-  public static void initClass(CtClass c) throws CannotCompileException {
+  static void initClass(CtClass c) throws CannotCompileException {
     // add field "private Set<?> PREFIXES_SET;"
     CtClass pcType = GwtClassPool.getCtClass(Set.class);
     CtField field = new CtField(pcType, PREFIXES_SET_PROPERTY, c);
@@ -40,8 +40,8 @@ public class PrefixTreePatcher {
   }
 
   @PatchMethod
-  public static void suggestImpl(Object prefixTree, String search,
-      String prefix, Collection<String> output, int limit) {
+  static void suggestImpl(Object prefixTree, String search, String prefix,
+      Collection<String> output, int limit) {
 
     for (String record : getPrefixSet(prefixTree)) {
       if (search == null || record.contains(search.trim().toLowerCase())) {

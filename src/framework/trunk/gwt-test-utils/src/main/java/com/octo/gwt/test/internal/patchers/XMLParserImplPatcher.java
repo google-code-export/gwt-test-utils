@@ -20,10 +20,10 @@ import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
 @PatchClass(XMLParserImpl.class)
-public class XMLParserImplPatcher {
+class XMLParserImplPatcher {
 
   @PatchMethod
-  public static JavaScriptObject appendChild(JavaScriptObject jsObject,
+  static JavaScriptObject appendChild(JavaScriptObject jsObject,
       JavaScriptObject newChildJs) {
     Node n = jsObject.cast();
     Node newChildNode = newChildJs.cast();
@@ -31,7 +31,7 @@ public class XMLParserImplPatcher {
   }
 
   @PatchMethod
-  public static JavaScriptObject createCDATASection(JavaScriptObject jsObject,
+  static JavaScriptObject createCDATASection(JavaScriptObject jsObject,
       String data) {
     Text text = JavaScriptObjects.newObject(Text.class);
 
@@ -45,19 +45,19 @@ public class XMLParserImplPatcher {
   }
 
   @PatchMethod
-  public static JavaScriptObject createDocumentImpl(XMLParserImpl xmlParserImpl) {
+  static JavaScriptObject createDocumentImpl(XMLParserImpl xmlParserImpl) {
     return JavaScriptObjects.newObject(Document.class);
   }
 
   @PatchMethod
-  public static JavaScriptObject createElement(JavaScriptObject jsObject,
+  static JavaScriptObject createElement(JavaScriptObject jsObject,
       String tagName) {
     Document document = jsObject.cast();
     return document.createElement(tagName);
   }
 
   @PatchMethod
-  public static String getAttribute(JavaScriptObject o, String name) {
+  static String getAttribute(JavaScriptObject o, String name) {
     // Attribute return by XML node can be null
     PropertyContainer properties = JavaScriptObjects.getObject(o,
         JsoProperties.ELEM_PROPERTIES);
@@ -65,8 +65,7 @@ public class XMLParserImplPatcher {
   }
 
   @PatchMethod
-  public static JavaScriptObject getAttributeNode(JavaScriptObject o,
-      String name) {
+  static JavaScriptObject getAttributeNode(JavaScriptObject o, String name) {
     String value = getAttribute(o, name);
 
     // create the JavaScriptObject which will simulate an google.xml.Attr
@@ -82,7 +81,7 @@ public class XMLParserImplPatcher {
   }
 
   @PatchMethod
-  public static JavaScriptObject getAttributes(JavaScriptObject t) {
+  static JavaScriptObject getAttributes(JavaScriptObject t) {
     Set<String> attrSet = JavaScriptObjects.getObject(t,
         JsoProperties.XML_ATTR_SET);
 
@@ -97,33 +96,33 @@ public class XMLParserImplPatcher {
   }
 
   @PatchMethod
-  public static JavaScriptObject getChildNodes(JavaScriptObject t) {
+  static JavaScriptObject getChildNodes(JavaScriptObject t) {
     Node n = t.cast();
     return n.getChildNodes();
   }
 
   @PatchMethod
-  public static String getData(JavaScriptObject o) {
+  static String getData(JavaScriptObject o) {
     Text text = o.cast();
     return text.getData();
   }
 
   @PatchMethod
-  public static JavaScriptObject getDocumentElement(JavaScriptObject o) {
+  static JavaScriptObject getDocumentElement(JavaScriptObject o) {
     Document document = o.cast();
     return document.getFirstChild();
   }
 
   @PatchMethod
-  public static JavaScriptObject getElementByIdImpl(
-      XMLParserImpl xmlParserImpl, JavaScriptObject jsoDocument, String id) {
+  static JavaScriptObject getElementByIdImpl(XMLParserImpl xmlParserImpl,
+      JavaScriptObject jsoDocument, String id) {
     Document document = jsoDocument.cast();
     return document.getElementById(id);
   }
 
   @PatchMethod
-  public static JavaScriptObject getElementsByTagNameImpl(
-      XMLParserImpl xmlParserImpl, JavaScriptObject o, String tagName) {
+  static JavaScriptObject getElementsByTagNameImpl(XMLParserImpl xmlParserImpl,
+      JavaScriptObject o, String tagName) {
     Node node = o.cast();
     NodeList<Element> nodeList;
 
@@ -145,18 +144,18 @@ public class XMLParserImplPatcher {
   }
 
   @PatchMethod
-  public static int getLength(JavaScriptObject o) {
+  static int getLength(JavaScriptObject o) {
     NodeList<Node> nodeList = o.cast();
     return nodeList.getLength();
   }
 
   @PatchMethod
-  public static String getName(JavaScriptObject o) {
+  static String getName(JavaScriptObject o) {
     return JavaScriptObjects.getString(o, JsoProperties.XML_ATTR_NAME);
   }
 
   @PatchMethod
-  public static JavaScriptObject getNamedItem(JavaScriptObject t, String name) {
+  static JavaScriptObject getNamedItem(JavaScriptObject t, String name) {
     NodeList<Node> attrs = t.cast();
 
     for (int i = 0; i < attrs.getLength(); i++) {
@@ -170,18 +169,18 @@ public class XMLParserImplPatcher {
   }
 
   @PatchMethod
-  public static String getNamespaceURI(JavaScriptObject o) {
+  static String getNamespaceURI(JavaScriptObject o) {
     return JavaScriptObjects.getString(o, JsoProperties.NODE_NAMESPACE_URI);
   }
 
   @PatchMethod
-  public static JavaScriptObject getNextSibling(JavaScriptObject o) {
+  static JavaScriptObject getNextSibling(JavaScriptObject o) {
     Node n = o.cast();
     return n.getNextSibling();
   }
 
   @PatchMethod
-  public static String getNodeName(JavaScriptObject o) {
+  static String getNodeName(JavaScriptObject o) {
     try {
       Node node = o.cast();
       return node.getNodeName();
@@ -192,13 +191,13 @@ public class XMLParserImplPatcher {
   }
 
   @PatchMethod
-  public static short getNodeType(JavaScriptObject jsObject) {
+  static short getNodeType(JavaScriptObject jsObject) {
     Node node = jsObject.cast();
     return node.getNodeType();
   }
 
   @PatchMethod
-  public static String getNodeValue(JavaScriptObject o) {
+  static String getNodeValue(JavaScriptObject o) {
     Node n = o.cast();
     switch (n.getNodeType()) {
       case com.google.gwt.xml.client.Node.ATTRIBUTE_NODE:
@@ -212,37 +211,36 @@ public class XMLParserImplPatcher {
   }
 
   @PatchMethod
-  public static JavaScriptObject getPreviousSibling(JavaScriptObject o) {
+  static JavaScriptObject getPreviousSibling(JavaScriptObject o) {
     Node n = o.cast();
     return n.getPreviousSibling();
   }
 
   @PatchMethod
-  public static String getTagName(JavaScriptObject o) {
+  static String getTagName(JavaScriptObject o) {
     Element e = o.cast();
     return e.getTagName();
   }
 
   @PatchMethod
-  public static String getValue(JavaScriptObject o) {
+  static String getValue(JavaScriptObject o) {
     return JavaScriptObjects.getString(o, JsoProperties.XML_ATTR_VALUE);
   }
 
   @PatchMethod
-  public static boolean hasChildNodes(JavaScriptObject jsObject) {
+  static boolean hasChildNodes(JavaScriptObject jsObject) {
     Node n = jsObject.cast();
     return n.hasChildNodes();
   }
 
   @PatchMethod
-  public static JavaScriptObject item(JavaScriptObject t, int index) {
+  static JavaScriptObject item(JavaScriptObject t, int index) {
     NodeList<Node> nodeList = t.cast();
     return nodeList.getItem(index);
   }
 
   @PatchMethod
-  public static JavaScriptObject parseImpl(XMLParserImpl xmlParserImpl,
-      String contents) {
+  static JavaScriptObject parseImpl(XMLParserImpl xmlParserImpl, String contents) {
 
     try {
       return GwtXMLParser.parse(contents);
@@ -252,7 +250,7 @@ public class XMLParserImplPatcher {
   }
 
   @PatchMethod
-  public static JavaScriptObject removeChild(JavaScriptObject jsObject,
+  static JavaScriptObject removeChild(JavaScriptObject jsObject,
       JavaScriptObject oldChildJs) {
     Node node = jsObject.cast();
     Node oldChildNode = oldChildJs.cast();
@@ -261,7 +259,7 @@ public class XMLParserImplPatcher {
   }
 
   @PatchMethod
-  public static void setNodeValue(JavaScriptObject jsObject, String nodeValue) {
+  static void setNodeValue(JavaScriptObject jsObject, String nodeValue) {
     Node n = jsObject.cast();
     switch (n.getNodeType()) {
       case Node.TEXT_NODE:

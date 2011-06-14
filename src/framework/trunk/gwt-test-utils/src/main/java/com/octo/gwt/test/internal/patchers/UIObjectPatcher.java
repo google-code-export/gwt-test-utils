@@ -8,10 +8,10 @@ import com.octo.gwt.test.patchers.PatchMethod;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 @PatchClass(UIObject.class)
-public class UIObjectPatcher {
+class UIObjectPatcher {
 
   @PatchMethod
-  public static double extractLengthValue(UIObject uiObject, String s) {
+  static double extractLengthValue(UIObject uiObject, String s) {
     if ("auto".equals(s) || "inherit".equals(s) || "".equals(s)) {
       return 0;
     }
@@ -26,19 +26,19 @@ public class UIObjectPatcher {
   }
 
   @PatchMethod
-  public static String getStyleName(Element elem) {
+  static String getStyleName(Element elem) {
     return elem.getAttribute("class");
   }
 
   @PatchMethod
-  public static boolean isVisible(Element elem) {
+  static boolean isVisible(Element elem) {
     String display = elem.getStyle().getProperty("display");
 
     return !display.equals("none");
   }
 
   @PatchMethod
-  public static void replaceElement(UIObject uiObject, Element elem) {
+  static void replaceElement(UIObject uiObject, Element elem) {
     Element element = GwtReflectionUtils.getPrivateFieldValue(uiObject,
         "element");
     if (element != null) {
@@ -50,8 +50,7 @@ public class UIObjectPatcher {
   }
 
   @PatchMethod
-  public static void replaceNode(UIObject uiObject, Element node,
-      Element newNode) {
+  static void replaceNode(UIObject uiObject, Element node, Element newNode) {
     Node parent = node.getParentNode();
 
     if (parent != null) {
@@ -61,18 +60,18 @@ public class UIObjectPatcher {
   }
 
   @PatchMethod
-  public static void setStyleName(Element elem, String styleName) {
+  static void setStyleName(Element elem, String styleName) {
     elem.setAttribute("class", styleName);
   }
 
   @PatchMethod
-  public static void setVisible(Element elem, boolean visible) {
+  static void setVisible(Element elem, boolean visible) {
     String display = visible ? "" : "none";
     elem.getStyle().setProperty("display", display);
   }
 
   @PatchMethod
-  public static void updatePrimaryAndDependentStyleNames(Element elem,
+  static void updatePrimaryAndDependentStyleNames(Element elem,
       String newPrimaryStyle) {
 
     String[] classes = getStyleName(elem).split(" ");

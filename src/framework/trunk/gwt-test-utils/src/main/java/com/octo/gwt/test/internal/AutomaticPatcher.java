@@ -19,6 +19,7 @@ import javassist.bytecode.Descriptor;
 import com.octo.gwt.test.exceptions.GwtTestPatchException;
 import com.octo.gwt.test.patchers.InitMethod;
 import com.octo.gwt.test.patchers.PatchMethod;
+import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 /**
  * <p>
@@ -100,6 +101,9 @@ class AutomaticPatcher implements Patcher {
     Class<?> clazz = Class.forName(initMethod.getDeclaringClass().getName());
     Method compiledMethod = clazz.getDeclaredMethod(initMethod.getName(),
         CtClass.class);
+    // TODO : this should not be mandatory since AutomaticPatcher set every
+    // initMethod to public when loaded by GwtClassLoader
+    GwtReflectionUtils.makeAccessible(compiledMethod);
     try {
       compiledMethod.invoke(null, c);
     } catch (InvocationTargetException e) {
@@ -152,7 +156,14 @@ class AutomaticPatcher implements Patcher {
       }
     }
 
-    return getMethodToUse(initMethods, InitMethod.class);
+    CtMethod initMethod = getMethodToUse(initMethods, InitMethod.class);
+    if (initMethod != null) {
+      if (initMethod.getDeclaringClass().getName().contains("ImagePatcher")) {
+        System.out.println("ok");
+      }
+      initMethod.setModifiers(Modifier.PUBLIC + Modifier.STATIC);
+    }
+    return initMethod;
 
   }
 
@@ -243,7 +254,9 @@ class AutomaticPatcher implements Patcher {
     // for each @PatchMethod with the same signature, filter to get one with
     // override=true
     for (Map.Entry<String, List<CtMethod>> entry : temp.entrySet()) {
-      result.add(getMethodToUse(entry.getValue(), PatchMethod.class));
+      CtMethod methodToUse = getMethodToUse(entry.getValue(), PatchMethod.class);
+      methodToUse.setModifiers(Modifier.PUBLIC + Modifier.STATIC);
+      result.add(methodToUse);
     }
 
     return result;
