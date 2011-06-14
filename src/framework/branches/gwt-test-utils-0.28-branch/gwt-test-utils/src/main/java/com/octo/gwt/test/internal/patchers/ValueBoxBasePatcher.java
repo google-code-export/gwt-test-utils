@@ -13,10 +13,10 @@ import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.utils.JavassistUtils;
 
 @PatchClass(ValueBoxBase.class)
-public class ValueBoxBasePatcher {
+class ValueBoxBasePatcher {
 
   @InitMethod
-  public static void initClass(CtClass c) throws CannotCompileException {
+  static void initClass(CtClass c) throws CannotCompileException {
     CtConstructor cons = JavassistUtils.findConstructor(c, Element.class,
         Renderer.class, Parser.class);
     cons.insertAfter("setText(\"\");");

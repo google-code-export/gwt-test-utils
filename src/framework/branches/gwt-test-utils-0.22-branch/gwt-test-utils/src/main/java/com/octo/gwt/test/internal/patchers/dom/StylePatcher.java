@@ -14,7 +14,7 @@ import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
 @PatchClass(Style.class)
-public class StylePatcher {
+class StylePatcher {
 
   @PatchMethod
   public static void clearBorderWidth(Style style) {
@@ -25,22 +25,22 @@ public class StylePatcher {
   }
 
   @PatchMethod
-  public static void clearFloat(Style style) {
+  static void clearFloat(Style style) {
     setPropertyImpl(style, "float", "");
   }
 
   @PatchMethod
-  public static String getBorderWidth(Style style) {
+  static String getBorderWidth(Style style) {
     return getPropertyImpl(style, JsoProperties.STYLE_BORDER_TOP_WIDTH);
   }
 
   @PatchMethod
-  public static String getPropertyImpl(Style style, String propertyName) {
+  static String getPropertyImpl(Style style, String propertyName) {
     return JavaScriptObjects.getString(style, propertyName);
   }
 
   @PatchMethod
-  public static void setBorderWidth(Style style, double value, Unit unit) {
+  static void setBorderWidth(Style style, double value, Unit unit) {
     double modulo = value % 1;
     String completeValue = (modulo == 0) ? Integer.toString((int) value)
         + unit.getType() : Double.toString(value) + unit.getType();
@@ -55,12 +55,12 @@ public class StylePatcher {
   }
 
   @PatchMethod
-  public static void setFloat(Style style, Float value) {
+  static void setFloat(Style style, Float value) {
     setPropertyImpl(style, "float", value.getCssName());
   }
 
   @PatchMethod
-  public static void setPropertyImpl(Style style, String propertyName,
+  static void setPropertyImpl(Style style, String propertyName,
       String propertyValue) {
     // treat case when propertyValue = "250.0px" => "250px" instead
     propertyValue = GwtStringUtils.treatDoubleValue(propertyValue);

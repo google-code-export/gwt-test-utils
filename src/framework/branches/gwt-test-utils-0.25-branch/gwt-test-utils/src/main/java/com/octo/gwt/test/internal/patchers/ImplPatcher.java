@@ -8,25 +8,25 @@ import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
 @PatchClass(Impl.class)
-public class ImplPatcher {
+class ImplPatcher {
 
   @PatchMethod
-  public static int getHashCode(Object o) {
+  static int getHashCode(Object o) {
     return HashCodeBuilder.reflectionHashCode(o);
   }
 
   @PatchMethod
-  public static String getHostPageBaseURL() {
+  static String getHostPageBaseURL() {
     return "http://127.0.0.1:8888/";
   }
 
   @PatchMethod
-  public static String getModuleBaseURL() {
+  static String getModuleBaseURL() {
     return getHostPageBaseURL() + getModuleName() + "/";
   }
 
   @PatchMethod
-  public static String getModuleName() {
+  static String getModuleName() {
     return GwtConfig.get().getModuleName();
   }
 

@@ -9,10 +9,10 @@ import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
 @PatchClass(JsArrayString.class)
-public class JsArrayStringPatcher {
+class JsArrayStringPatcher {
 
   @PatchMethod
-  public static String get(JsArrayString array, int index) {
+  static String get(JsArrayString array, int index) {
     List<String> wrapped = getWrappedList(array);
 
     if (index >= wrapped.size()) {
@@ -23,7 +23,7 @@ public class JsArrayStringPatcher {
   }
 
   @PatchMethod
-  public static String join(JsArrayString array, String separator) {
+  static String join(JsArrayString array, String separator) {
     StringBuilder sb = new StringBuilder();
 
     for (String s : getWrappedList(array)) {
@@ -37,17 +37,17 @@ public class JsArrayStringPatcher {
   }
 
   @PatchMethod
-  public static int length(JsArrayString array) {
+  static int length(JsArrayString array) {
     return getWrappedList(array).size();
   }
 
   @PatchMethod
-  public static void push(JsArrayString array, String value) {
+  static void push(JsArrayString array, String value) {
     getWrappedList(array).add(value);
   }
 
   @PatchMethod
-  public static void set(JsArrayString array, int index, String value) {
+  static void set(JsArrayString array, int index, String value) {
     List<String> wrapped = getWrappedList(array);
     int currentSize = wrapped.size();
 
@@ -61,7 +61,7 @@ public class JsArrayStringPatcher {
   }
 
   @PatchMethod
-  public static void setLength(JsArrayString array, int newLength) {
+  static void setLength(JsArrayString array, int newLength) {
     List<String> wrapped = getWrappedList(array);
 
     int currentSize = wrapped.size();
@@ -77,13 +77,13 @@ public class JsArrayStringPatcher {
   }
 
   @PatchMethod
-  public static String shift(JsArrayString array) {
+  static String shift(JsArrayString array) {
     List<String> wrapped = getWrappedList(array);
     return (wrapped.size() > 0) ? wrapped.remove(0) : null;
   }
 
   @PatchMethod
-  public static void unshift(JsArrayString array, String value) {
+  static void unshift(JsArrayString array, String value) {
     getWrappedList(array).add(0, value);
   }
 

@@ -6,24 +6,24 @@ import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
 @PatchClass(ElementMapperImpl.class)
-public class ElementMapperImplPatcher {
+class ElementMapperImplPatcher {
 
   private static final String widgetId = "__uiObjectID";
 
   @PatchMethod
-  public static void clearIndex(Element e) {
+  static void clearIndex(Element e) {
     JavaScriptObjects.setProperty(e, widgetId, null);
     e.setPropertyString(widgetId, null);
   }
 
   @PatchMethod
-  public static int getIndex(Element e) {
+  static int getIndex(Element e) {
     String index = JavaScriptObjects.getObject(e, widgetId);
     return index == null ? -1 : Integer.parseInt(index);
   }
 
   @PatchMethod
-  public static void setIndex(Element e, int index) {
+  static void setIndex(Element e, int index) {
     JavaScriptObjects.setProperty(e, widgetId, Integer.toString(index));
   }
 

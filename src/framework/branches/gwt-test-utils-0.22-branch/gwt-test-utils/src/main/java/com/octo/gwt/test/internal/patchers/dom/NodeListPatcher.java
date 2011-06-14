@@ -9,10 +9,10 @@ import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
 @PatchClass(NodeList.class)
-public class NodeListPatcher {
+class NodeListPatcher {
 
   @PatchMethod
-  public static <T extends Node> T getItem(NodeList<T> nodeList, int index) {
+  static <T extends Node> T getItem(NodeList<T> nodeList, int index) {
     if (nodeList.getLength() <= index) {
       return null;
     } else {
@@ -23,7 +23,7 @@ public class NodeListPatcher {
   }
 
   @PatchMethod
-  public static <T extends Node> int getLength(NodeList<T> nodeList) {
+  static <T extends Node> int getLength(NodeList<T> nodeList) {
     List<T> innerList = JavaScriptObjects.getObject(nodeList,
         JsoProperties.NODE_LIST_INNER_LIST);
     return innerList.size();

@@ -8,10 +8,10 @@ import com.octo.gwt.test.utils.events.Browser;
 import com.octo.gwt.test.utils.events.EventBuilder;
 
 @PatchClass(classes = {"com.google.gwt.user.client.ui.Image$State"})
-public class ImageStatePatcher {
+class ImageStatePatcher {
 
   @PatchMethod
-  public static void fireSyntheticLoadEvent(Object state, Image image) {
+  static void fireSyntheticLoadEvent(Object state, Image image) {
     Event loadEvent = EventBuilder.create(Event.ONLOAD).build();
     Browser.dispatchEvent(image, loadEvent);
   }

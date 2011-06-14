@@ -20,8 +20,12 @@ public class CurrencyListPatcher {
 
   private static Map<Locale, CurrencyData> currencyDatas = new HashMap<Locale, CurrencyData>();
 
+  public static void reset() {
+    currencyDatas.clear();
+  }
+
   @PatchMethod
-  public static CurrencyData getDefaultJava(CurrencyList currencyList) {
+  static CurrencyData getDefaultJava(CurrencyList currencyList) {
     Locale locale = GwtConfig.get().getLocale();
     if (locale == null) {
       locale = Locale.ENGLISH;
@@ -34,10 +38,6 @@ public class CurrencyListPatcher {
     }
 
     return currencyData;
-  }
-
-  public static void reset() {
-    currencyDatas.clear();
   }
 
   private static CurrencyData createCurrencyData(Locale locale) {

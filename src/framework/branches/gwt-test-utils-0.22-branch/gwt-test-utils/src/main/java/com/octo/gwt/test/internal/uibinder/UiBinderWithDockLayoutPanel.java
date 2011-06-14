@@ -17,6 +17,23 @@ class UiBinderWithDockLayoutPanel extends UiBinderWidget<DockLayoutPanel> {
     super(wrapped, attributes, parentTag, owner, resourceManager);
   }
 
+  @Override
+  protected void appendElement(DockLayoutPanel wrapped, Element child) {
+    String nsURI = JavaScriptObjects.getString(child,
+        JsoProperties.XML_NAMESPACE);
+
+    if (nsURI.length() == 0) {
+      super.appendElement(wrapped, child);
+    } else {
+      List<Widget> childWidgets = JavaScriptObjects.getObject(child,
+          JsoProperties.UIBINDER_CHILD_WIDGETS_LIST);
+
+      if (childWidgets != null && childWidgets.size() > 0) {
+        handleDockLayoutPanelSpecifics(wrapped, child, childWidgets);
+      }
+    }
+  }
+
   private void handleDockLayoutPanelSpecifics(DockLayoutPanel wrapped,
       Element child, List<Widget> childWidgets) {
     String tagName = child.getTagName();
@@ -38,22 +55,5 @@ class UiBinderWithDockLayoutPanel extends UiBinderWidget<DockLayoutPanel> {
       wrapped.addEast(childWidgets.get(0), size);
     }
 
-  }
-
-  @Override
-  protected void appendElement(DockLayoutPanel wrapped, Element child) {
-    String nsURI = JavaScriptObjects.getString(child,
-        JsoProperties.XML_NAMESPACE);
-
-    if (nsURI.length() == 0) {
-      super.appendElement(wrapped, child);
-    } else {
-      List<Widget> childWidgets = JavaScriptObjects.getObject(child,
-          JsoProperties.UIBINDER_CHILD_WIDGETS_LIST);
-
-      if (childWidgets != null && childWidgets.size() > 0) {
-        handleDockLayoutPanelSpecifics(wrapped, child, childWidgets);
-      }
-    }
   }
 }

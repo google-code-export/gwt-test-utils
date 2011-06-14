@@ -7,48 +7,47 @@ import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
 @PatchClass(SchedulerImpl.class)
-public class SchedulerImplPatcher {
+class SchedulerImplPatcher {
 
   @PatchMethod
-  public static void scheduleDeferred(SchedulerImpl impl, ScheduledCommand cmd) {
+  static void scheduleDeferred(SchedulerImpl impl, ScheduledCommand cmd) {
     cmd.execute();
   }
 
   @PatchMethod
-  public static void scheduleEntry(SchedulerImpl impl, RepeatingCommand cmd) {
+  static void scheduleEntry(SchedulerImpl impl, RepeatingCommand cmd) {
     cmd.execute();
   }
 
   @PatchMethod
-  public static void scheduleEntry(SchedulerImpl impl, ScheduledCommand cmd) {
+  static void scheduleEntry(SchedulerImpl impl, ScheduledCommand cmd) {
     cmd.execute();
   }
 
   @PatchMethod
-  public static void scheduleFinally(SchedulerImpl impl, RepeatingCommand cmd) {
+  static void scheduleFinally(SchedulerImpl impl, RepeatingCommand cmd) {
     cmd.execute();
   }
 
   @PatchMethod
-  public static void scheduleFinally(SchedulerImpl impl, ScheduledCommand cmd) {
+  static void scheduleFinally(SchedulerImpl impl, ScheduledCommand cmd) {
     cmd.execute();
   }
 
   @PatchMethod
-  public static void scheduleFixedDelay(SchedulerImpl impl,
-      RepeatingCommand cmd, int delayMs) {
+  static void scheduleFixedDelay(SchedulerImpl impl, RepeatingCommand cmd,
+      int delayMs) {
     cmd.execute();
   }
 
   @PatchMethod
-  public static void scheduleFixedPeriod(SchedulerImpl impl,
-      RepeatingCommand cmd, int delayMs) {
+  static void scheduleFixedPeriod(SchedulerImpl impl, RepeatingCommand cmd,
+      int delayMs) {
     cmd.execute();
   }
 
   @PatchMethod
-  public static void scheduleIncremental(SchedulerImpl impl,
-      RepeatingCommand cmd) {
+  static void scheduleIncremental(SchedulerImpl impl, RepeatingCommand cmd) {
     cmd.execute();
   }
 

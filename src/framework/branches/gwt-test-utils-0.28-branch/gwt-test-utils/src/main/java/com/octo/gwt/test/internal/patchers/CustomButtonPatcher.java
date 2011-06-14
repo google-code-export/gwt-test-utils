@@ -8,10 +8,10 @@ import com.octo.gwt.test.utils.GwtReflectionUtils;
 import com.octo.gwt.test.utils.events.EventBuilder;
 
 @PatchClass(CustomButton.class)
-public class CustomButtonPatcher {
+class CustomButtonPatcher {
 
   @PatchMethod
-  public static void onClick(CustomButton button) {
+  static void onClick(CustomButton button) {
 
     // Allow the click we're about to synthesize to pass through to the
     // superclass and containing elements. Element.dispatchEvent() is

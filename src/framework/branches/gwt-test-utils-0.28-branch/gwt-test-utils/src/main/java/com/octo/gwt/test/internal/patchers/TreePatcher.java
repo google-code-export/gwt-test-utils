@@ -17,10 +17,10 @@ import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
 @PatchClass(Tree.class)
-public class TreePatcher {
+class TreePatcher {
 
   @PatchMethod
-  public static boolean shouldTreeDelegateFocusToElement(Element elem) {
+  static boolean shouldTreeDelegateFocusToElement(Element elem) {
     List<Class<?>> focusElementClasses = getFocusElementClasses();
     int i = 0;
     boolean shouldDelegate = false;
@@ -34,7 +34,7 @@ public class TreePatcher {
   }
 
   @PatchMethod
-  public static void showImage(Tree tree, TreeItem treeItem,
+  static void showImage(Tree tree, TreeItem treeItem,
       AbstractImagePrototype proto) {
 
   }

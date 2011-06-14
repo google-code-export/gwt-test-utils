@@ -8,25 +8,25 @@ import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
 @PatchClass(FocusImpl.class)
-public class FocusImplPatcher {
+class FocusImplPatcher {
 
   @PatchMethod
-  public static void blur(FocusImpl focusImpl, Element element) {
+  static void blur(FocusImpl focusImpl, Element element) {
 
   }
 
   @PatchMethod
-  public static void focus(FocusImpl focusImpl, Element element) {
+  static void focus(FocusImpl focusImpl, Element element) {
 
   }
 
   @PatchMethod
-  public static int getTabIndex(FocusImpl focusImpl, Element elem) {
+  static int getTabIndex(FocusImpl focusImpl, Element elem) {
     return JavaScriptObjects.getInteger(elem, JsoProperties.TAB_INDEX);
   }
 
   @PatchMethod
-  public static void setTabIndex(FocusImpl focusImpl, Element elem, int index) {
+  static void setTabIndex(FocusImpl focusImpl, Element elem, int index) {
     JavaScriptObjects.setProperty(elem, JsoProperties.TAB_INDEX, index);
   }
 

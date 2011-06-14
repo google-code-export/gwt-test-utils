@@ -5,20 +5,20 @@ import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
 @PatchClass(StyleInjector.class)
-public class StyleInjectorPatcher {
+class StyleInjectorPatcher {
 
   @PatchMethod
-  public static void inject(String css, boolean immediate) {
+  static void inject(String css, boolean immediate) {
 
   }
 
   @PatchMethod
-  public static void injectAtEnd(String css, boolean immediate) {
+  static void injectAtEnd(String css, boolean immediate) {
 
   }
 
   @PatchMethod
-  public static void injectAtStart(String css, boolean immediate) {
+  static void injectAtStart(String css, boolean immediate) {
 
   }
 

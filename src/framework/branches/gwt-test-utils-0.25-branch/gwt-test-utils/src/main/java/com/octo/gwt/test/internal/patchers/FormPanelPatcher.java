@@ -13,10 +13,10 @@ import com.octo.gwt.test.patchers.PatchMethod;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 @PatchClass(FormPanel.class)
-public class FormPanelPatcher {
+class FormPanelPatcher {
 
   @PatchMethod
-  public static void submit(FormPanel formPanel) {
+  static void submit(FormPanel formPanel) {
     FormPanel.SubmitEvent event = new FormPanel.SubmitEvent();
     formPanel.fireEvent(event);
     if (!event.isCanceled()) {

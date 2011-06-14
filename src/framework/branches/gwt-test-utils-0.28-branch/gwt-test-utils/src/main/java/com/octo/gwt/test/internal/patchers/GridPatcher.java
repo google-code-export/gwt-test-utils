@@ -8,10 +8,10 @@ import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
 @PatchClass(Grid.class)
-public class GridPatcher {
+class GridPatcher {
 
   @PatchMethod
-  public static void addRows(Element table, int rows, int columns) {
+  static void addRows(Element table, int rows, int columns) {
     for (int i = 0; i < rows; i++) {
       table.appendChild(createRow(columns));
     }

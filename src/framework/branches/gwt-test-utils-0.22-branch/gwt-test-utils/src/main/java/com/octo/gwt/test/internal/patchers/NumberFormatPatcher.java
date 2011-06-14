@@ -7,10 +7,10 @@ import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
 @PatchClass(NumberFormat.class)
-public class NumberFormatPatcher {
+class NumberFormatPatcher {
 
   @PatchMethod
-  public static String toFixed(double d, int digits) {
+  static String toFixed(double d, int digits) {
     return new BigDecimal(d).setScale(digits, BigDecimal.ROUND_DOWN).toString();
   }
 

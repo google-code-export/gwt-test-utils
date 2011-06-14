@@ -20,15 +20,15 @@ import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
 @PatchClass(JavaScriptObject.class)
-public class JavaScriptObjectPatcher {
+class JavaScriptObjectPatcher {
 
   @PatchMethod
-  public static JavaScriptObject createArray() {
+  static JavaScriptObject createArray() {
     return JavaScriptObjects.newObject(JsArrayString.class);
   }
 
   @InitMethod
-  public static void initClass(CtClass c) throws CannotCompileException {
+  static void initClass(CtClass c) throws CannotCompileException {
     // add field "protected PropertyContainer JSO_PROPERTIES;"
     CtField propertiesField = CtField.make(
         "protected final " + PropertyContainer.class.getName() + " "
@@ -39,7 +39,7 @@ public class JavaScriptObjectPatcher {
   }
 
   @PatchMethod
-  public static String toString(JavaScriptObject jso) {
+  static String toString(JavaScriptObject jso) {
     // TODO : remove this code when overlay will be OK
     if (Text.class.isInstance(jso)) {
       Text text = jso.cast();

@@ -23,6 +23,52 @@ class MessagesInvocationHandler extends LocalizableResourcesInvocationHandler {
     super(proxiedClass);
   }
 
+  @Override
+  protected Object extractDefaultValue(Method method, Object[] args)
+      throws Throwable {
+    DefaultMessage defaultMessage = method.getAnnotation(DefaultMessage.class);
+    Annotation messageAnnotation = getMessageAnnotation(method);
+    String valuePattern = null;
+    if (messageAnnotation != null) {
+      String key = extractPluralCountAndSelectValues(messageAnnotation, method,
+          args, getLocale());
+      String[] values = getMessageAnnotationValues(messageAnnotation);
+      valuePattern = getAnnotationValues(values).get(key);
+    }
+    if (valuePattern == null && defaultMessage != null) {
+      valuePattern = defaultMessage.value();
+    }
+    if (valuePattern != null) {
+      return format(valuePattern, args, getLocale());
+    }
+
+    return null;
+  }
+
+  @Override
+  protected Object extractFromProperties(Properties localizedProperties,
+      Method method, Object[] args, Locale locale) throws Throwable {
+    Annotation messageAnnotation = getMessageAnnotation(method);
+
+    String key = (messageAnnotation == null) ? method.getName()
+        : getSpecificKey(messageAnnotation, method, args, locale);
+
+    String result = extractProperty(localizedProperties, key);
+    if (result != null) {
+      return format(result, args, locale);
+    }
+
+    return null;
+  }
+
+  protected String extractProperty(Properties properties, String key) {
+    String result = properties.getProperty(key);
+    if (result == null) {
+      result = properties.getProperty(key.replaceAll("_", "."));
+    }
+    return result;
+  }
+
   /**
    * Get the {@link PluralCount} and/or {@link Select} value which correspond to
    * the method call. if there are many @PluralCount and/or @Select annotated
@@ -143,52 +189,6 @@ class MessagesInvocationHandler extends LocalizableResourcesInvocationHandler {
         specificMessageAnnotation, method, args, locale);
 
     return method.getName() + "[" + pluralCountValue + "]";
-  }
-
-  @Override
-  protected Object extractDefaultValue(Method method, Object[] args)
-      throws Throwable {
-    DefaultMessage defaultMessage = method.getAnnotation(DefaultMessage.class);
-    Annotation messageAnnotation = getMessageAnnotation(method);
-    String valuePattern = null;
-    if (messageAnnotation != null) {
-      String key = extractPluralCountAndSelectValues(messageAnnotation, method,
-          args, getLocale());
-      String[] values = getMessageAnnotationValues(messageAnnotation);
-      valuePattern = getAnnotationValues(values).get(key);
-    }
-    if (valuePattern == null && defaultMessage != null) {
-      valuePattern = defaultMessage.value();
-    }
-    if (valuePattern != null) {
-      return format(valuePattern, args, getLocale());
-    }
-
-    return null;
-  }
-
-  @Override
-  protected Object extractFromProperties(Properties localizedProperties,
-      Method method, Object[] args, Locale locale) throws Throwable {
-    Annotation messageAnnotation = getMessageAnnotation(method);
-
-    String key = (messageAnnotation == null) ? method.getName()
-        : getSpecificKey(messageAnnotation, method, args, locale);
-
-    String result = extractProperty(localizedProperties, key);
-    if (result != null) {
-      return format(result, args, locale);
-    }
-
-    return null;
-  }
-
-  protected String extractProperty(Properties properties, String key) {
-    String result = properties.getProperty(key);
-    if (result == null) {
-      result = properties.getProperty(key.replaceAll("_", "."));
-    }
-    return result;
   }
 
 }

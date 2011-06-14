@@ -18,12 +18,12 @@ import com.octo.gwt.test.patchers.PatchMethod;
 import com.octo.gwt.test.utils.JavassistUtils;
 
 @PatchClass(Image.class)
-public class ImagePatcher {
+class ImagePatcher {
 
   private static final Pattern PATTERN = Pattern.compile("^(\\d+).*$");
 
   @InitMethod
-  public static void addImageElement(CtClass c) throws CannotCompileException {
+  static void addImageElement(CtClass c) throws CannotCompileException {
 
     List<CtConstructor> constructors = getConstructorsToModify(c);
 
@@ -34,12 +34,12 @@ public class ImagePatcher {
   }
 
   @PatchMethod
-  public static int getHeight(Image image) {
+  static int getHeight(Image image) {
     return getDim(image, "height");
   }
 
   @PatchMethod
-  public static int getWidth(Image image) {
+  static int getWidth(Image image) {
     return getDim(image, "width");
   }
 

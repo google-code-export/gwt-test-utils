@@ -7,10 +7,10 @@ import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
 @PatchClass(SelectElement.class)
-public class SelectElementPatcher {
+class SelectElementPatcher {
 
   @PatchMethod
-  public static int getSize(SelectElement select) {
+  static int getSize(SelectElement select) {
     int visibleSize = JavaScriptObjects.getInteger(select,
         JsoProperties.SELECTED_SIZE);
     int actualSize = select.getChildNodes().getLength();
@@ -22,7 +22,7 @@ public class SelectElementPatcher {
     return visibleSize;
   }
 
-  public static void refreshSelect(SelectElement select) {
+  static void refreshSelect(SelectElement select) {
     int visibleSize = select.getSize();
 
     for (int i = 0; i < select.getChildNodes().getLength(); i++) {
@@ -40,7 +40,7 @@ public class SelectElementPatcher {
   }
 
   @PatchMethod
-  public static void setSize(SelectElement select, int size) {
+  static void setSize(SelectElement select, int size) {
     JavaScriptObjects.setProperty(select, JsoProperties.SELECTED_SIZE, size);
     refreshSelect(select);
   }

@@ -13,10 +13,10 @@ import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
 @PatchClass(GWT.class)
-public class GwtPatcher {
+class GwtPatcher {
 
   @PatchMethod
-  public static Object create(Class<?> classLiteral) {
+  static Object create(Class<?> classLiteral) {
     for (GwtCreateHandler gwtCreateHandler : GwtCreateHandlerManager.get().getGwtCreateHandlers()) {
       try {
         Object o = gwtCreateHandler.create(classLiteral);
@@ -44,17 +44,17 @@ public class GwtPatcher {
   }
 
   @PatchMethod
-  public static String getVersion() {
+  static String getVersion() {
     return "GWT 2 by gwt-test-utils";
   }
 
   @PatchMethod
-  public static boolean isClient() {
+  static boolean isClient() {
     return true;
   }
 
   @PatchMethod
-  public static void log(String message, Throwable t) {
+  static void log(String message, Throwable t) {
     GwtLogHandler logHandler = GwtConfig.get().getLogHandler();
     if (logHandler != null) {
       logHandler.log(message, t);

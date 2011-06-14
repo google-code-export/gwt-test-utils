@@ -32,6 +32,10 @@ public class PropertyContainer {
     map.clear();
   }
 
+  public boolean contains(String key) {
+    return map.containsKey(key);
+  }
+
   public Set<Map.Entry<String, Object>> entrySet() {
     return map.entrySet();
   }

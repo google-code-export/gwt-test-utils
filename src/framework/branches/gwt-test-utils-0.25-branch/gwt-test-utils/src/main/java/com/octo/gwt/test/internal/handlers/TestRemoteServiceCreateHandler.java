@@ -23,6 +23,21 @@ class TestRemoteServiceCreateHandler extends RemoteServiceCreateHandler {
     cachedServices.clear();
   }
 
+  @Override
+  protected Object findService(Class<?> remoteServiceClass,
+      String remoteServiceRelativePath) {
+
+    Object remoteServiceInstance = cachedServices.get(remoteServiceRelativePath);
+
+    if (remoteServiceInstance == null) {
+      remoteServiceInstance = instanciateRemoteServiceInstance(
+          remoteServiceClass, remoteServiceRelativePath);
+      cachedServices.put(remoteServiceRelativePath, remoteServiceInstance);
+    }
+
+    return remoteServiceInstance;
+  }
+
   @SuppressWarnings("unchecked")
   private <T> T instanciateRemoteServiceInstance(Class<T> remoteServiceClass,
       String remoteServiceRelativePath) {
@@ -50,21 +65,6 @@ class TestRemoteServiceCreateHandler extends RemoteServiceCreateHandler {
       }
     }
 
-  }
-
-  @Override
-  protected Object findService(Class<?> remoteServiceClass,
-      String remoteServiceRelativePath) {
-
-    Object remoteServiceInstance = cachedServices.get(remoteServiceRelativePath);
-
-    if (remoteServiceInstance == null) {
-      remoteServiceInstance = instanciateRemoteServiceInstance(
-          remoteServiceClass, remoteServiceRelativePath);
-      cachedServices.put(remoteServiceRelativePath, remoteServiceInstance);
-    }
-
-    return remoteServiceInstance;
   }
 
 }

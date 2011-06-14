@@ -26,14 +26,6 @@ class PatcherFactory {
     }
   }
 
-  private Patcher createPatcher(Set<CtClass> patchClasses) {
-    if (patchClasses != null && patchClasses.size() > 0) {
-      return new AutomaticPatcher(patchClasses);
-    } else {
-      return null;
-    }
-  }
-
   Patcher createPatcher(CtClass classToPatch) {
     Patcher patcher = patchers.get(classToPatch.getName());
 
@@ -48,6 +40,14 @@ class PatcherFactory {
 
     return patcher;
 
+  }
+
+  private Patcher createPatcher(Set<CtClass> patchClasses) {
+    if (patchClasses != null && patchClasses.size() > 0) {
+      return new AutomaticPatcher(patchClasses);
+    } else {
+      return null;
+    }
   }
 
 }

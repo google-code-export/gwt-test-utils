@@ -6,10 +6,10 @@ import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
 @PatchClass(TableCellElement.class)
-public class TableCellElementPatcher {
+class TableCellElementPatcher {
 
   @PatchMethod
-  public static int getCellIndex(TableCellElement element) {
+  static int getCellIndex(TableCellElement element) {
     TableRowElement row = TableRowElement.as(element.getParentElement());
 
     for (int i = 0; i < row.getCells().getLength(); i++) {

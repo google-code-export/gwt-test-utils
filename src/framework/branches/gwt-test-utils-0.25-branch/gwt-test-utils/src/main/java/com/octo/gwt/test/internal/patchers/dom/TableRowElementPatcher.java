@@ -12,10 +12,10 @@ import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
 @PatchClass(TableRowElement.class)
-public class TableRowElementPatcher {
+class TableRowElementPatcher {
 
   @PatchMethod
-  public static NodeList<TableCellElement> getCells(TableRowElement element) {
+  static NodeList<TableCellElement> getCells(TableRowElement element) {
     List<TableCellElement> cells = new ArrayList<TableCellElement>();
 
     for (int i = 0; i < element.getChildCount(); i++) {
@@ -29,7 +29,7 @@ public class TableRowElementPatcher {
   }
 
   @PatchMethod
-  public static int getSectionRowIndex(TableRowElement element) {
+  static int getSectionRowIndex(TableRowElement element) {
     if (element == null) {
       return -1;
     }

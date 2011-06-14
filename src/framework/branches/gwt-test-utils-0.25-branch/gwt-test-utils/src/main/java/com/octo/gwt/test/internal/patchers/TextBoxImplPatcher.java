@@ -8,15 +8,15 @@ import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
 @PatchClass(TextBoxImpl.class)
-public class TextBoxImplPatcher {
+class TextBoxImplPatcher {
 
   @PatchMethod
-  public static int getCursorPos(TextBoxImpl textBoxImpl, Element e) {
+  static int getCursorPos(TextBoxImpl textBoxImpl, Element e) {
     return JavaScriptObjects.getInteger(e, JsoProperties.SELECTION_START);
   }
 
   @PatchMethod
-  public static int getSelectionLength(TextBoxImpl textBoxImpl, Element e) {
+  static int getSelectionLength(TextBoxImpl textBoxImpl, Element e) {
     int selectionStart = JavaScriptObjects.getInteger(e,
         JsoProperties.SELECTION_START);
     int selectionEnd = JavaScriptObjects.getInteger(e,
@@ -25,8 +25,8 @@ public class TextBoxImplPatcher {
   }
 
   @PatchMethod
-  public static void setSelectionRange(TextBoxImpl textBoxImpl, Element e,
-      int pos, int length) {
+  static void setSelectionRange(TextBoxImpl textBoxImpl, Element e, int pos,
+      int length) {
     JavaScriptObjects.setProperty(e, JsoProperties.SELECTION_START, pos);
     JavaScriptObjects.setProperty(e, JsoProperties.SELECTION_END, pos + length);
   }

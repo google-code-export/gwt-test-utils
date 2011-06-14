@@ -21,6 +21,26 @@ public class CurrencyListPatcher {
 
   private static Map<Locale, CurrencyData> currencyDatas = new HashMap<Locale, CurrencyData>();
 
+  public static void reset() {
+    currencyDatas.clear();
+  }
+
+  @PatchMethod
+  static CurrencyData getDefault(CurrencyList currencyList) {
+    Locale locale = GwtConfig.get().getLocale();
+    if (locale == null) {
+      locale = Locale.ENGLISH;
+    }
+
+    CurrencyData currencyData = currencyDatas.get(locale);
+    if (currencyData == null) {
+      currencyData = createCurrencyData(locale);
+      currencyDatas.put(locale, currencyData);
+    }
+
+    return currencyData;
+  }
+
   private static CurrencyData createCurrencyData(Locale locale) {
     Properties currencyData = GwtPropertiesHelper.get().getLocalizedProperties(
         "com/google/gwt/i18n/client/impl/cldr/CurrencyData", locale);
@@ -105,22 +125,6 @@ public class CurrencyListPatcher {
     return defCurrencyData;
   }
 
-  @PatchMethod
-  public static CurrencyData getDefault(CurrencyList currencyList) {
-    Locale locale = GwtConfig.get().getLocale();
-    if (locale == null) {
-      locale = Locale.ENGLISH;
-    }
-
-    CurrencyData currencyData = currencyDatas.get(locale);
-    if (currencyData == null) {
-      currencyData = createCurrencyData(locale);
-      currencyDatas.put(locale, currencyData);
-    }
-
-    return currencyData;
-  }
-
   // hack for GWT 2.0.4
   private static CurrencyData instanciateCurrencyData(String currencyCode,
       String currencySymbol, int flagsAndPrecision,
@@ -135,10 +139,6 @@ public class CurrencyListPatcher {
         portableCurrencySymbol);
 
     return defImpl;
-  }
-
-  public static void reset() {
-    currencyDatas.clear();
   }
 
 }

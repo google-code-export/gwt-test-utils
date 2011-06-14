@@ -25,24 +25,6 @@ class ConstantsInvocationHandler extends LocalizableResourcesInvocationHandler {
     super(proxiedClass);
   }
 
-  private <T extends Annotation> T getCheckedAnnotation(Method method,
-      Class<T> defaultAnnotation) {
-    T v = method.getAnnotation(defaultAnnotation);
-    if (v == null) {
-      throw new GwtTestI18NException("No matching property \""
-          + method.getName() + "\" for Constants class ["
-          + getProxiedClass().getCanonicalName()
-          + "]. Please check the corresponding properties files or use @"
-          + defaultAnnotation.getSimpleName());
-    }
-
-    return v;
-  }
-
-  private String treatLine(String line) {
-    return GwtPropertiesHelper.get().treatString(line);
-  }
-
   @Override
   protected Object extractDefaultValue(Method method, Object[] args)
       throws Throwable {
@@ -141,5 +123,23 @@ class ConstantsInvocationHandler extends LocalizableResourcesInvocationHandler {
         + method.getDeclaringClass().getSimpleName() + "." + method.getName()
         + "()' is not managed");
 
+  }
+
+  private <T extends Annotation> T getCheckedAnnotation(Method method,
+      Class<T> defaultAnnotation) {
+    T v = method.getAnnotation(defaultAnnotation);
+    if (v == null) {
+      throw new GwtTestI18NException("No matching property \""
+          + method.getName() + "\" for Constants class ["
+          + getProxiedClass().getCanonicalName()
+          + "]. Please check the corresponding properties files or use @"
+          + defaultAnnotation.getSimpleName());
+    }
+
+    return v;
+  }
+
+  private String treatLine(String line) {
+    return GwtPropertiesHelper.get().treatString(line);
   }
 }

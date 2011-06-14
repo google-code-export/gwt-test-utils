@@ -35,19 +35,29 @@ public class DocumentPatcher {
 
   private static int ID = 0;
 
+  public static void reset() {
+    if (DOCUMENT != null) {
+      if (DOCUMENT.getBody() != null) {
+        JavaScriptObjects.clearProperties(DOCUMENT.getBody());
+      }
+      JavaScriptObjects.clearProperties(DOCUMENT);
+      DOCUMENT = null;
+    }
+  }
+
   @PatchMethod
-  public static Text createTextNode(Document document, String data) {
+  static Text createTextNode(Document document, String data) {
     return JavaScriptObjects.newText(data);
   }
 
   @PatchMethod
-  public static String createUniqueId(Document document) {
+  static String createUniqueId(Document document) {
     ID++;
     return "elem_" + Long.toString(ID);
   }
 
   @PatchMethod
-  public static Document get() {
+  static Document get() {
     if (DOCUMENT == null) {
       try {
         DOCUMENT = JavaScriptObjects.newObject(Document.class);
@@ -69,7 +79,7 @@ public class DocumentPatcher {
   }
 
   @PatchMethod
-  public static BodyElement getBody(Document document) {
+  static BodyElement getBody(Document document) {
     NodeList<Element> bodyList = getElementsByTagName(document, "body");
     if (bodyList.getLength() < 1) {
       return null;
@@ -79,17 +89,17 @@ public class DocumentPatcher {
   }
 
   @PatchMethod
-  public static String getCompatMode(Document document) {
+  static String getCompatMode(Document document) {
     return "toto";
   }
 
   @PatchMethod
-  public static String getDomain(Document document) {
+  static String getDomain(Document document) {
     return null;
   }
 
   @PatchMethod
-  public static Element getElementById(Node document, String elementId) {
+  static Element getElementById(Node document, String elementId) {
     NodeList<Node> childs = getChildNodeList(document);
 
     for (int i = 0; i < childs.getLength(); i++) {
@@ -110,7 +120,7 @@ public class DocumentPatcher {
   }
 
   @PatchMethod
-  public static NodeList<Element> getElementsByTagName(Node node, String tagName) {
+  static NodeList<Element> getElementsByTagName(Node node, String tagName) {
     NodeList<Element> result = JavaScriptObjects.newNodeList();
 
     inspectDomForTag(node, tagName, result);
@@ -119,18 +129,8 @@ public class DocumentPatcher {
   }
 
   @PatchMethod
-  public static String getReferrer(Document document) {
+  static String getReferrer(Document document) {
     return "";
-  }
-
-  public static void reset() {
-    if (DOCUMENT != null) {
-      if (DOCUMENT.getBody() != null) {
-        JavaScriptObjects.clearProperties(DOCUMENT.getBody());
-      }
-      JavaScriptObjects.clearProperties(DOCUMENT);
-      DOCUMENT = null;
-    }
   }
 
   private static Element findHTMLElement(String hostPagePath,

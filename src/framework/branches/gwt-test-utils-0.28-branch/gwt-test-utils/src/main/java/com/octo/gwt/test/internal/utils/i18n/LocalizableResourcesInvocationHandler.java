@@ -72,6 +72,39 @@ abstract class LocalizableResourcesInvocationHandler implements
             + method.getName() + "' called method");
   }
 
+  protected abstract Object extractDefaultValue(Method method, Object[] args)
+      throws Throwable;
+
+  protected abstract Object extractFromProperties(
+      Properties localizedProperties, Method method, Object[] args,
+      Locale locale) throws Throwable;
+
+  protected Locale getLocale() {
+    if (GwtConfig.get().getLocale() != null) {
+      return GwtConfig.get().getLocale();
+    }
+
+    DefaultLocale annotation = GwtReflectionUtils.getAnnotation(proxiedClass,
+        DefaultLocale.class);
+    if (annotation != null) {
+      String[] localeCodes = annotation.value().split("_");
+      switch (localeCodes.length) {
+        case 1:
+          return new Locale(localeCodes[0]);
+        case 2:
+          return new Locale(localeCodes[0], localeCodes[1]);
+        default:
+          throw new GwtTestI18NException(
+              "Cannot parse Locale value in annoted class ["
+                  + proxiedClass.getSimpleName() + "] : @"
+                  + DefaultLocale.class.getSimpleName() + "("
+                  + annotation.value() + ")");
+      }
+    } else {
+      return null;
+    }
+  }
+
   private Object extractFromDefaultProperties(Class<?> clazz, Method method,
       Object[] args) throws Throwable {
     // try to get the value from a .properties without locale
@@ -138,39 +171,6 @@ abstract class LocalizableResourcesInvocationHandler implements
     }
 
     return null;
-  }
-
-  protected abstract Object extractDefaultValue(Method method, Object[] args)
-      throws Throwable;
-
-  protected abstract Object extractFromProperties(
-      Properties localizedProperties, Method method, Object[] args,
-      Locale locale) throws Throwable;
-
-  protected Locale getLocale() {
-    if (GwtConfig.get().getLocale() != null) {
-      return GwtConfig.get().getLocale();
-    }
-
-    DefaultLocale annotation = GwtReflectionUtils.getAnnotation(proxiedClass,
-        DefaultLocale.class);
-    if (annotation != null) {
-      String[] localeCodes = annotation.value().split("_");
-      switch (localeCodes.length) {
-        case 1:
-          return new Locale(localeCodes[0]);
-        case 2:
-          return new Locale(localeCodes[0], localeCodes[1]);
-        default:
-          throw new GwtTestI18NException(
-              "Cannot parse Locale value in annoted class ["
-                  + proxiedClass.getSimpleName() + "] : @"
-                  + DefaultLocale.class.getSimpleName() + "("
-                  + annotation.value() + ")");
-      }
-    } else {
-      return null;
-    }
   }
 
 }

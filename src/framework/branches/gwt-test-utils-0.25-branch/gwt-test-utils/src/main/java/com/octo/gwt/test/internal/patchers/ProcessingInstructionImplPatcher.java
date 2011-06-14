@@ -7,10 +7,10 @@ import com.octo.gwt.test.patchers.PatchMethod;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 @PatchClass(classes = {"com.google.gwt.xml.client.impl.ProcessingInstructionImpl"})
-public class ProcessingInstructionImplPatcher {
+class ProcessingInstructionImplPatcher {
 
   @PatchMethod
-  public static String toString(ProcessingInstruction processingInstruction) {
+  static String toString(ProcessingInstruction processingInstruction) {
     JavaScriptObject jso = GwtReflectionUtils.getPrivateFieldValue(
         processingInstruction, "jsObject");
     return jso.toString();

@@ -13,17 +13,17 @@ public class TimerPatcher {
   public static int DEFAULT_REPEAT_TIME = 5;
   private static Map<Timer, Integer> CACHE = new HashMap<Timer, Integer>();
 
-  @PatchMethod
-  public static void clearTimeout(int id) {
-
-  }
-
   public static void reset() {
     CACHE.clear();
   }
 
   @PatchMethod
-  public static void schedule(Timer timer, int delayMillis) throws Exception {
+  static void clearTimeout(int id) {
+
+  }
+
+  @PatchMethod
+  static void schedule(Timer timer, int delayMillis) throws Exception {
     if (delayMillis <= 0) {
       throw new IllegalArgumentException("must be positive");
     }
@@ -41,8 +41,7 @@ public class TimerPatcher {
   }
 
   @PatchMethod
-  public static void scheduleRepeating(Timer timer, int periodMillis)
-      throws Exception {
+  static void scheduleRepeating(Timer timer, int periodMillis) throws Exception {
     if (periodMillis <= 0) {
       throw new IllegalArgumentException("must be positive");
     }

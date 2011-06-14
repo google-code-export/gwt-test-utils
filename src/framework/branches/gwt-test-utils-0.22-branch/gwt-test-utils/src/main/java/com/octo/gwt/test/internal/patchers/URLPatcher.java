@@ -9,10 +9,10 @@ import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
 @PatchClass(URL.class)
-public class URLPatcher {
+class URLPatcher {
 
   @PatchMethod
-  public static String encodeImpl(String decodedURLComponent) {
+  static String encodeImpl(String decodedURLComponent) {
     try {
       return URLEncoder.encode(decodedURLComponent, "UTF-8");
     } catch (UnsupportedEncodingException e) {

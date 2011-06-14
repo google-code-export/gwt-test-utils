@@ -6,10 +6,10 @@ import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
 @PatchClass(RowFormatter.class)
-public class HTMLTableRowFormatterPatcher {
+class HTMLTableRowFormatterPatcher {
 
   @PatchMethod
-  public static Element getRow(RowFormatter rowFormatter, Element elem, int row) {
+  static Element getRow(RowFormatter rowFormatter, Element elem, int row) {
     return elem.getChildNodes().getItem(row).cast();
   }
 

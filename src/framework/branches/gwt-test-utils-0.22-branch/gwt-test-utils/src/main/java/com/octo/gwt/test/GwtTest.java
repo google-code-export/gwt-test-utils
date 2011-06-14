@@ -80,25 +80,6 @@ public abstract class GwtTest {
     resetPatchGwt();
   }
 
-  private String getCheckedModuleName() {
-    String moduleName = getModuleName();
-    if (moduleName == null || "".equals(moduleName.trim())) {
-      throw new GwtTestConfigurationException(
-          "The tested module name returned by " + this.getClass().getName()
-              + ".getModuleName() should not be null or empty");
-    }
-
-    String moduleAlias = ModuleData.get().getModuleAlias(moduleName);
-    if (moduleAlias == null) {
-      throw new GwtTestConfigurationException(
-          "The tested module '"
-              + moduleName
-              + "' has not been found. Did you forget to declare a 'module-file' property in your 'META-INF/gwt-test-utils.properties' configuration file ?");
-    }
-
-    return moduleAlias;
-  }
-
   protected boolean addGwtCreateHandler(GwtCreateHandler gwtCreateHandler) {
     return GwtCreateHandlerManager.get().addGwtCreateHandler(gwtCreateHandler);
   }
@@ -177,6 +158,25 @@ public abstract class GwtTest {
   protected void resetPatchGwt() throws Exception {
     // reinit GWT
     GwtReset.reset();
+  }
+
+  private String getCheckedModuleName() {
+    String moduleName = getModuleName();
+    if (moduleName == null || "".equals(moduleName.trim())) {
+      throw new GwtTestConfigurationException(
+          "The tested module name returned by " + this.getClass().getName()
+              + ".getModuleName() should not be null or empty");
+    }
+
+    String moduleAlias = ModuleData.get().getModuleAlias(moduleName);
+    if (moduleAlias == null) {
+      throw new GwtTestConfigurationException(
+          "The tested module '"
+              + moduleName
+              + "' has not been found. Did you forget to declare a 'module-file' property in your 'META-INF/gwt-test-utils.properties' configuration file ?");
+    }
+
+    return moduleAlias;
   }
 
 }

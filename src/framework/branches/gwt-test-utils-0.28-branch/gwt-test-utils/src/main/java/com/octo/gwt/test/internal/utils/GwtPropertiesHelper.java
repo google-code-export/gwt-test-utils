@@ -24,22 +24,6 @@ import com.octo.gwt.test.exceptions.GwtTestI18NException;
  */
 public class GwtPropertiesHelper {
 
-  private static class SequenceReplacement {
-
-    private final String regex;
-
-    private final String to;
-
-    public SequenceReplacement(String regex, String to) {
-      this.regex = regex;
-      this.to = to;
-    }
-
-    public String treat(String s) {
-      return s.replaceAll(regex, to);
-    }
-
-  }
   /*
    * Read in a "logical line" from an InputStream/Reader, skip all comment and
    * blank lines and filter out those leading whitespace characters ( , and )
@@ -170,6 +154,22 @@ public class GwtPropertiesHelper {
         }
       }
     }
+  }
+  private static class SequenceReplacement {
+
+    private final String regex;
+
+    private final String to;
+
+    public SequenceReplacement(String regex, String to) {
+      this.regex = regex;
+      this.to = to;
+    }
+
+    public String treat(String s) {
+      return s.replaceAll(regex, to);
+    }
+
   }
 
   private static final GwtPropertiesHelper INSTANCE = new GwtPropertiesHelper();

@@ -8,10 +8,10 @@ import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
 @PatchClass(Window.class)
-public class WindowPatcher {
+class WindowPatcher {
 
   @PatchMethod
-  public static void alert(String msg) {
+  static void alert(String msg) {
     WindowOperationsHandler handler = GwtConfig.get().getWindowOperationsHandler();
     if (handler != null) {
       handler.alert(msg);
@@ -19,7 +19,7 @@ public class WindowPatcher {
   }
 
   @PatchMethod
-  public static boolean confirm(String msg) {
+  static boolean confirm(String msg) {
     WindowOperationsHandler handler = GwtConfig.get().getWindowOperationsHandler();
     if (handler != null) {
       return handler.confirm(msg);
@@ -29,12 +29,12 @@ public class WindowPatcher {
   }
 
   @PatchMethod
-  public static String getTitle() {
+  static String getTitle() {
     return Document.get().getTitle();
   }
 
   @PatchMethod
-  public static void open(String url, String name, String features) {
+  static void open(String url, String name, String features) {
     WindowOperationsHandler handler = GwtConfig.get().getWindowOperationsHandler();
     if (handler != null) {
       handler.open(url, name, features);
@@ -42,7 +42,7 @@ public class WindowPatcher {
   }
 
   @PatchMethod
-  public static void print() {
+  static void print() {
     WindowOperationsHandler handler = GwtConfig.get().getWindowOperationsHandler();
     if (handler != null) {
       handler.print();
@@ -50,7 +50,7 @@ public class WindowPatcher {
   }
 
   @PatchMethod
-  public static String prompt(String msg, String initialValue) {
+  static String prompt(String msg, String initialValue) {
     WindowOperationsHandler handler = GwtConfig.get().getWindowOperationsHandler();
     if (handler != null) {
       return handler.prompt(msg, initialValue);
@@ -60,22 +60,22 @@ public class WindowPatcher {
   }
 
   @PatchMethod
-  public static void scrollTo(int left, int top) {
+  static void scrollTo(int left, int top) {
 
   }
 
   @PatchMethod
-  public static void setMargin(String size) {
+  static void setMargin(String size) {
     Document.get().getBody().getStyle().setProperty("margin", size);
   }
 
   @PatchMethod
-  public static void setStatus(String status) {
+  static void setStatus(String status) {
 
   }
 
   @PatchMethod
-  public static void setTitle(String title) {
+  static void setTitle(String title) {
     Document.get().setTitle(title);
   }
 

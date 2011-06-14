@@ -12,22 +12,22 @@ import com.octo.gwt.test.utils.GwtReflectionUtils;
 class CookiesPatcher {
 
   @PatchMethod
-  public static void loadCookies(HashMap<String, String> m) {
+  static void loadCookies(HashMap<String, String> m) {
   }
 
   @PatchMethod
-  public static boolean needsRefresh() {
+  static boolean needsRefresh() {
     return false;
   }
 
   @PatchMethod
-  public static void removeCookieNative(String name) {
+  static void removeCookieNative(String name) {
     Map<String, String> cachedCookies = getCookiesMap();
     cachedCookies.remove(name);
   }
 
   @PatchMethod
-  public static void setCookieImpl(String name, String value, double expires,
+  static void setCookieImpl(String name, String value, double expires,
       String domain, String path, boolean secure) {
 
     Map<String, String> cachedCookies = getCookiesMap();
@@ -41,7 +41,7 @@ class CookiesPatcher {
   }
 
   @PatchMethod
-  public static String uriEncode(String s) {
+  static String uriEncode(String s) {
     return s;
   }
 

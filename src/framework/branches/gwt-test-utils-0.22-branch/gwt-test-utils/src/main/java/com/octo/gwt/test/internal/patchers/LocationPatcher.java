@@ -5,15 +5,15 @@ import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
 @PatchClass(Location.class)
-public class LocationPatcher {
+class LocationPatcher {
 
   @PatchMethod
-  public static String getPort() {
+  static String getPort() {
     return "80";
   }
 
   @PatchMethod
-  public static String getProtocol() {
+  static String getProtocol() {
     return "http";
   }
 

@@ -29,6 +29,16 @@ class ClientBundleProxyFactory {
       ctClass = GwtClassPool.getCtClass(clazz);
     }
 
+    public URL getResourceURL(Method method) throws Exception {
+      URL resourceURL = resourceURLs.get(method);
+      if (resourceURL == null) {
+        resourceURL = computeResourceURL(method);
+        resourceURLs.put(method, resourceURL);
+      }
+
+      return resourceURL;
+    }
+
     private URL computeResourceURL(Method method) throws NotFoundException,
         URISyntaxException {
 
@@ -104,16 +114,6 @@ class ClientBundleProxyFactory {
       } else {
         return annotation.value();
       }
-    }
-
-    public URL getResourceURL(Method method) throws Exception {
-      URL resourceURL = resourceURLs.get(method);
-      if (resourceURL == null) {
-        resourceURL = computeResourceURL(method);
-        resourceURLs.put(method, resourceURL);
-      }
-
-      return resourceURL;
     }
 
   }

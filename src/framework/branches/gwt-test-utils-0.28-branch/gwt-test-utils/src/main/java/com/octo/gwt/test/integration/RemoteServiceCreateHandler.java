@@ -95,24 +95,6 @@ public abstract class RemoteServiceCreateHandler implements GwtCreateHandler {
         new Class[]{asyncClazz}, handler);
   }
 
-  private String getRemoveServiceRelativePath(Class<?> clazz) {
-    CtClass ctClass = GwtClassPool.getCtClass((clazz));
-    Object[] annotations = ctClass.getAvailableAnnotations();
-    for (Object o : annotations) {
-      if (Proxy.isProxyClass(o.getClass())) {
-        AnnotationImpl annotation = (AnnotationImpl) Proxy.getInvocationHandler(o);
-        if (annotation.getTypeName().equals(
-            RemoteServiceRelativePath.class.getName())) {
-          return ((StringMemberValue) annotation.getAnnotation().getMemberValue(
-              "value")).getValue();
-        }
-      }
-    }
-    throw new GwtTestRpcException("Cannot find the '@"
-        + RemoteServiceRelativePath.class.getSimpleName()
-        + "' annotation on RemoteService interface '" + clazz.getName() + "'");
-  }
-
   /**
    * Method which actually is responsible for getting the {@link RemoteService}
    * sub-interface implementation.
@@ -142,6 +124,24 @@ public abstract class RemoteServiceCreateHandler implements GwtCreateHandler {
    */
   protected GwtRpcSerializerHandler getSerializerHandler() {
     return new DefaultGwtRpcSerializerHandler();
+  }
+
+  private String getRemoveServiceRelativePath(Class<?> clazz) {
+    CtClass ctClass = GwtClassPool.getCtClass((clazz));
+    Object[] annotations = ctClass.getAvailableAnnotations();
+    for (Object o : annotations) {
+      if (Proxy.isProxyClass(o.getClass())) {
+        AnnotationImpl annotation = (AnnotationImpl) Proxy.getInvocationHandler(o);
+        if (annotation.getTypeName().equals(
+            RemoteServiceRelativePath.class.getName())) {
+          return ((StringMemberValue) annotation.getAnnotation().getMemberValue(
+              "value")).getValue();
+        }
+      }
+    }
+    throw new GwtTestRpcException("Cannot find the '@"
+        + RemoteServiceRelativePath.class.getSimpleName()
+        + "' annotation on RemoteService interface '" + clazz.getName() + "'");
   }
 
 }

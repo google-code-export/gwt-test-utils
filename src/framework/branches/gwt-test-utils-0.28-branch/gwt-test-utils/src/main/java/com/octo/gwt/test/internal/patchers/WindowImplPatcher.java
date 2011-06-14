@@ -5,30 +5,30 @@ import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
 @PatchClass(WindowImpl.class)
-public class WindowImplPatcher {
+class WindowImplPatcher {
 
   @PatchMethod
-  public static String getHash(WindowImpl windowImpl) {
+  static String getHash(WindowImpl windowImpl) {
     return "";
   }
 
   @PatchMethod
-  public static String getQueryString(WindowImpl windowImpl) {
+  static String getQueryString(WindowImpl windowImpl) {
     return "";
   }
 
   @PatchMethod
-  public static void initWindowCloseHandler(WindowImpl windowImpl) {
+  static void initWindowCloseHandler(WindowImpl windowImpl) {
 
   }
 
   @PatchMethod
-  public static void initWindowResizeHandler(WindowImpl windowImpl) {
+  static void initWindowResizeHandler(WindowImpl windowImpl) {
 
   }
 
   @PatchMethod
-  public static void initWindowScrollHandler(WindowImpl windowImpl) {
+  static void initWindowScrollHandler(WindowImpl windowImpl) {
 
   }
 

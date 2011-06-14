@@ -9,20 +9,20 @@ import com.octo.gwt.test.patchers.PatchMethod;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 @PatchClass(HTMLTable.class)
-public class HTMLTablePatcher {
+class HTMLTablePatcher {
 
   @PatchMethod
-  public static int getDOMCellCount(HTMLTable table, Element element, int row) {
+  static int getDOMCellCount(HTMLTable table, Element element, int row) {
     return element.getChildNodes().getItem(row).getChildNodes().getLength();
   }
 
   @PatchMethod
-  public static int getDOMRowCount(HTMLTable table, Element element) {
+  static int getDOMRowCount(HTMLTable table, Element element) {
     return element.getChildNodes().getLength();
   }
 
   @PatchMethod
-  public static Element getEventTargetCell(HTMLTable table, Event event) {
+  static Element getEventTargetCell(HTMLTable table, Event event) {
     Object bodyElem = GwtReflectionUtils.getPrivateFieldValue(table, "bodyElem");
 
     Element td = DOM.eventGetTarget(event);

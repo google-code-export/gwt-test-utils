@@ -10,7 +10,7 @@ import com.octo.gwt.test.utils.GwtReflectionUtils;
 class HistoryPatcher {
 
   @PatchMethod
-  public static void back() {
+  static void back() {
     HistoryImplPatcher.stack.pop();
     String token = HistoryImplPatcher.stack.pop();
     HistoryImpl impl = GwtReflectionUtils.getStaticFieldValue(History.class,

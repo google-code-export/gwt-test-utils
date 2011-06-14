@@ -70,6 +70,21 @@ public class ResourcePrototypeProxyBuilder {
         new Class<?>[]{proxiedClass}, resourceInvocationHandler);
   }
 
+  public ResourcePrototypeProxyBuilder name(String name) {
+    this.name = name;
+    return this;
+  }
+
+  public ResourcePrototypeProxyBuilder resourceURL(URL url) {
+    this.url = url;
+    return this;
+  }
+
+  public ResourcePrototypeProxyBuilder text(String text) {
+    this.text = text;
+    return this;
+  }
+
   private String computeUrl(URL resourceURL, Class<?> resourceClass) {
     String packagePath = resourceClass.getPackage().getName().replaceAll("\\.",
         "/");
@@ -110,20 +125,5 @@ public class ResourcePrototypeProxyBuilder {
     };
 
     return ih;
-  }
-
-  public ResourcePrototypeProxyBuilder name(String name) {
-    this.name = name;
-    return this;
-  }
-
-  public ResourcePrototypeProxyBuilder resourceURL(URL url) {
-    this.url = url;
-    return this;
-  }
-
-  public ResourcePrototypeProxyBuilder text(String text) {
-    this.text = text;
-    return this;
   }
 }

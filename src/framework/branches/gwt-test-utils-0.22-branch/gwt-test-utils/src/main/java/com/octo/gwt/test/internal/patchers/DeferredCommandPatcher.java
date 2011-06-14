@@ -7,15 +7,15 @@ import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
 @PatchClass(DeferredCommand.class)
-public class DeferredCommandPatcher {
+class DeferredCommandPatcher {
 
   @PatchMethod
-  public static void addCommand(Command command) {
+  static void addCommand(Command command) {
     command.execute();
   }
 
   @PatchMethod
-  public static void addCommand(IncrementalCommand command) {
+  static void addCommand(IncrementalCommand command) {
     command.execute();
   }
 

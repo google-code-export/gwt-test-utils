@@ -36,6 +36,42 @@ class WebXmlRemoteServiceCreateHandler extends RemoteServiceCreateHandler {
   // a map with servletUrl as key and serviceImpl className as value
   private Map<String, String> servletClassMap;
 
+  @Override
+  protected Object findService(Class<?> remoteServiceClass,
+      String remoteServiceRelativePath) {
+
+    String servletPath = "/" + GWT.getModuleName() + "/"
+        + remoteServiceRelativePath;
+
+    Object serviceImpl = servicesImplMap.get("servletPath");
+
+    if (serviceImpl != null) {
+      return serviceImpl;
+    }
+
+    if (servletClassMap == null) {
+      servletClassMap = parseWebXmlFile();
+    }
+
+    String className = servletClassMap.get(servletPath);
+
+    if (className == null) {
+      return null;
+    }
+
+    try {
+      serviceImpl = GwtReflectionUtils.instantiateClass(Class.forName(className));
+    } catch (ClassNotFoundException e) {
+      // should not happen..
+      throw new GwtTestConfigurationException(e);
+    }
+
+    // cache the implementation
+    servicesImplMap.put(servletPath, serviceImpl);
+
+    return serviceImpl;
+  }
+
   private InputStream getWebXmlAsStream() {
     for (String warRoot : WAR_ROOTS) {
       try {
@@ -122,42 +158,6 @@ class WebXmlRemoteServiceCreateHandler extends RemoteServiceCreateHandler {
         // nothing to do
       }
     }
-  }
-
-  @Override
-  protected Object findService(Class<?> remoteServiceClass,
-      String remoteServiceRelativePath) {
-
-    String servletPath = "/" + GWT.getModuleName() + "/"
-        + remoteServiceRelativePath;
-
-    Object serviceImpl = servicesImplMap.get("servletPath");
-
-    if (serviceImpl != null) {
-      return serviceImpl;
-    }
-
-    if (servletClassMap == null) {
-      servletClassMap = parseWebXmlFile();
-    }
-
-    String className = servletClassMap.get(servletPath);
-
-    if (className == null) {
-      return null;
-    }
-
-    try {
-      serviceImpl = GwtReflectionUtils.instantiateClass(Class.forName(className));
-    } catch (ClassNotFoundException e) {
-      // should not happen..
-      throw new GwtTestConfigurationException(e);
-    }
-
-    // cache the implementation
-    servicesImplMap.put(servletPath, serviceImpl);
-
-    return serviceImpl;
   }
 
 }

@@ -8,10 +8,10 @@ import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
 @PatchClass(FlexTable.class)
-public class FlexTablePatcher {
+class FlexTablePatcher {
 
   @PatchMethod
-  public static void addCells(Element table, int row, int num) {
+  static void addCells(Element table, int row, int num) {
     TableRowElement trCell = getCellElement(table, row);
     for (int i = 0; i < num; i++) {
       trCell.appendChild(Document.get().createTDElement());
