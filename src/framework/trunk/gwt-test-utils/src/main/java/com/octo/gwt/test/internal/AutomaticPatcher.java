@@ -158,9 +158,6 @@ class AutomaticPatcher implements Patcher {
 
     CtMethod initMethod = getMethodToUse(initMethods, InitMethod.class);
     if (initMethod != null) {
-      if (initMethod.getDeclaringClass().getName().contains("ImagePatcher")) {
-        System.out.println("ok");
-      }
       initMethod.setModifiers(Modifier.PUBLIC + Modifier.STATIC);
     }
     return initMethod;
