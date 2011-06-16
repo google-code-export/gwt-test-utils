@@ -1,4 +1,0 @@
-start
-initApp
-click;/app/b4
-assertExact;titi transient field;/app/l
