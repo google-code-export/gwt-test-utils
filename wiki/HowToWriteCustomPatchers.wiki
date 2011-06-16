@@ -98,7 +98,7 @@ class MyPrivateClassPatcher {
 }
 }}}
 
-*When you want to patch a classes you don't have directly access to, use the {{{classes}}} attribute of {{{@PatchClass}}} which takes a string array representing the name of the classes you want to apply the patcher to.*
+Just use the {{{classes}}} attribute of {{{@PatchClass}}} which takes a string array representing the full name of the classes you want to apply the patcher to.
 
 == Overriding existing patchers ==
 
