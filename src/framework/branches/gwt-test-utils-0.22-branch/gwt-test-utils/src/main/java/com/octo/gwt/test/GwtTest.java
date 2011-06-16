@@ -4,11 +4,14 @@ import java.io.File;
 import java.util.Locale;
 
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 
 import com.google.gwt.user.client.Window;
 import com.octo.gwt.test.exceptions.GwtTestConfigurationException;
+import com.octo.gwt.test.internal.GwtClassLoader;
 import com.octo.gwt.test.internal.GwtConfig;
 import com.octo.gwt.test.internal.GwtReset;
 import com.octo.gwt.test.internal.ModuleData;
@@ -43,6 +46,24 @@ public abstract class GwtTest {
   private static final String MAVEN_DEFAULT_WEB_DIR = "src/main/webapp/";
 
   /**
+   * Bind the GwtClassLoader to the current thread
+   */
+  @BeforeClass
+  public static final void bindClassLoader() {
+    Thread.currentThread().setContextClassLoader(GwtClassLoader.get());
+  }
+
+  /**
+   * Unbind the static classloader instance from the current thread by binding
+   * the system classloader instead.
+   */
+  @AfterClass
+  public static final void unbindClassLoader() {
+    Thread.currentThread().setContextClassLoader(
+        GwtClassLoader.get().getParent());
+  }
+
+  /**
    * <p>
    * Specifies a module to use when running this test case. Subclasses must
    * return the name of a module that will cause the source for that subclass to
@@ -63,7 +84,7 @@ public abstract class GwtTest {
   public abstract String getModuleName();
 
   @Before
-  public void setUpGwtTest() throws Exception {
+  public final void setUpGwtTest() throws Exception {
     GwtConfig.get().setLocale(getLocale());
     GwtConfig.get().setLogHandler(getLogHandler());
     GwtConfig.get().setWindowOperationsHandler(getWindowOperationsHandler());
@@ -76,7 +97,7 @@ public abstract class GwtTest {
   }
 
   @After
-  public void tearDownGwtTest() throws Exception {
+  public final void tearDownGwtTest() throws Exception {
     resetPatchGwt();
   }
 

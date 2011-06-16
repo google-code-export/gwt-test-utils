@@ -4,11 +4,14 @@ import java.io.File;
 import java.util.Locale;
 
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 
 import com.google.gwt.user.client.Window;
 import com.octo.gwt.test.exceptions.GwtTestConfigurationException;
+import com.octo.gwt.test.internal.GwtClassLoader;
 import com.octo.gwt.test.internal.GwtConfig;
 import com.octo.gwt.test.internal.GwtReset;
 import com.octo.gwt.test.internal.ModuleData;
@@ -42,28 +45,46 @@ public abstract class GwtTest {
 	private static final String MAVEN_DEFAULT_RES_DIR = "src/main/resources/";
 	private static final String MAVEN_DEFAULT_WEB_DIR = "src/main/webapp/";
 
-	/**
-	 * <p>
-	 * Specifies a module to use when running this test case. Subclasses must
-	 * return the name of a module that will cause the source for that subclass
-	 * to be included.
-	 * </p>
-	 * 
-	 * <p>
-	 * If the return module name is not present in the gwt-test-utils
-	 * configuration file (e.g. "META-INF/gwt-test-utils.properties"), an
-	 * exception will be thrown.
-	 * </p>
-	 * 
-	 * @return the fully qualified name of a module. <strong>It cannot be null
-	 *         or empty</strong>.
-	 * 
-	 * 
-	 */
-	public abstract String getModuleName();
+  /**
+   * Bind the GwtClassLoader to the current thread
+   */
+  @BeforeClass
+  public static final void bindClassLoader() {
+    Thread.currentThread().setContextClassLoader(GwtClassLoader.get());
+  }
+
+  /**
+   * Unbind the static classloader instance from the current thread by binding
+   * the system classloader instead.
+   */
+  @AfterClass
+  public static final void unbindClassLoader() {
+    Thread.currentThread().setContextClassLoader(
+        GwtClassLoader.get().getParent());
+  }
+
+  /**
+   * <p>
+   * Specifies a module to use when running this test case. Subclasses must
+   * return the name of a module that will cause the source for that subclass to
+   * be included.
+   * </p>
+   * 
+   * <p>
+   * If the return module name is not present in the gwt-test-utils
+   * configuration file (e.g. "META-INF/gwt-test-utils.properties"), an
+   * exception will be thrown.
+   * </p>
+   * 
+   * @return the fully qualified name of a module. <strong>It cannot be null or
+   *         empty</strong>.
+   * 
+   * 
+   */
+  public abstract String getModuleName();
 
   @Before
-  public void setUpGwtTest() throws Exception {
+  public final void setUpGwtTest() throws Exception {
     GwtConfig.get().setLocale(getLocale());
     GwtConfig.get().setLogHandler(getLogHandler());
     GwtConfig.get().setWindowOperationsHandler(getWindowOperationsHandler());
@@ -75,10 +96,10 @@ public abstract class GwtTest {
 		GwtConfig.get().setHostPagePath(getHostPagePath(getModuleName()));
 	}
 
-	@After
-	public void tearDownGwtTest() throws Exception {
-		resetPatchGwt();
-	}
+  @After
+  public final void tearDownGwtTest() throws Exception {
+    resetPatchGwt();
+  }
 
 	protected boolean addGwtCreateHandler(GwtCreateHandler gwtCreateHandler) {
 		return GwtCreateHandlerManager.get().addGwtCreateHandler(gwtCreateHandler);

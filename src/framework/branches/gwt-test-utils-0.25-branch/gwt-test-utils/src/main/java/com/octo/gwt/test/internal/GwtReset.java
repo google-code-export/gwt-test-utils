@@ -35,7 +35,6 @@ public class GwtReset {
     CurrencyListPatcher.reset();
     DocumentPatcher.reset();
     HistoryImplPatcher.reset();
-    GwtClassLoader.reset();
     TimerPatcher.reset();
     GwtCreateHandlerManager.get().reset();
     TextResourceReader.get().reset();

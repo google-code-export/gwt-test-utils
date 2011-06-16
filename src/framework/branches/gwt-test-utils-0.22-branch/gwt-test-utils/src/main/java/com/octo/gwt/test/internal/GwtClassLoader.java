@@ -43,27 +43,8 @@ public class GwtClassLoader extends Loader {
     }
   }
 
-  /**
-   * Bind a static instance of the classloader to the current thread and return
-   * it.
-   * 
-   * @return the static classloader instance.
-   * 
-   * @see Thread#currentThread()
-   * @see Thread#setContextClassLoader(ClassLoader)
-   */
   public static GwtClassLoader get() {
-    Thread.currentThread().setContextClassLoader(INSTANCE);
-
     return INSTANCE;
-  }
-
-  /**
-   * Unbind the static classloader instance from the current thread by binding
-   * the system classloader instead.
-   */
-  public static void reset() {
-    Thread.currentThread().setContextClassLoader(INSTANCE.getParent());
   }
 
   private GwtClassLoader() throws NotFoundException, CannotCompileException {

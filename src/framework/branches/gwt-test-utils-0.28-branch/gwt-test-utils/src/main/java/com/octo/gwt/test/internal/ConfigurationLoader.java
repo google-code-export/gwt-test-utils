@@ -96,8 +96,8 @@ class ConfigurationLoader {
 
   private void process(Properties p, URL url) {
     for (Entry<Object, Object> entry : p.entrySet()) {
-      String key = (String) entry.getKey();
-      String value = (String) entry.getValue();
+      String key = ((String) entry.getKey()).trim();
+      String value = ((String) entry.getValue()).trim();
       if ("scan-package".equals(value)) {
         if (!scanPackageSet.add(key)) {
           throw new GwtTestConfigurationException(
