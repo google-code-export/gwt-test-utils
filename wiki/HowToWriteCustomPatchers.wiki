@@ -27,6 +27,7 @@ my.patcher.package = scan-class
 
 As you may have guessed, *my.patcher.package* must by the package of your {{{@PatchClass}}} annotated classes.
 Before loading any class, _gwt-test-utils_ will scan every file and directory within {{{my/patcher/package}}} to find classes with the {{{@PatchClass}}} annotation.
+
 You also could have declared {{{my.patcher}}} as the root package to scan, but you should considere performance concerns when scanning a to large number of files.
 
 == Non-trivial patchers ==
