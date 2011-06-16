@@ -10,13 +10,13 @@ But don't worry, even if you are interested in writing your own custom bytecode 
 
 = The Patcher API =
  
-Provide a "patch" for an existing class is done in two steps : 
- * write some {{{PatchClass}}} for this class
- * register thoses patch classes to _gwt-test-utils_
+Providing a "patch" for an existing class is done in two steps : 
+ * writing some {{{PatchClass}}} for this class
+ * registering thoses patch classes to _gwt-test-utils_
 
 == Writing a custom patcher ==
 
-The patching mechanism relies on 2 annotations and some convention. Let's introduce them with an example extract from the {{{UiObject}}} class from the GWT API :
+The patching mechanism relies on 2 annotations and some convention. Let's introduce them with an example taken from the {{{UiObject}}} class from the GWT API :
 
 
 {{{
@@ -33,9 +33,9 @@ public abstract class UIObject {
 
 }}}
 
-The private method {{{replaceNode}}} implementation is written in [http://code.google.com/intl/en-EN/webtoolkit/doc/latest/DevGuideCodingBasicsJSNI.html JSNI], so it can't be execute in a standard JVM. 
+The private method {{{replaceNode}}} implementation is written in [http://code.google.com/intl/en-EN/webtoolkit/doc/latest/DevGuideCodingBasicsJSNI.html JSNI], so it can't be executed in a standard JVM. 
 
-That's why we need to replace it by a Java implementation. This done with a {{{PatchClass}}} : 
+That's why we need to replace it by a Java implementation. This is done with a {{{PatchClass}}} : 
 
 {{{
 @PatchClass(UIObject.class)
@@ -53,7 +53,7 @@ class UIObjectPatcher {
 }
 }}}
 
- * Mark your class with {{{@PatchClass}}} to tell _gwt-test-utils_ on which classes it would be applied. 
+ * Mark your class with {{{@PatchClass}}} to tell _gwt-test-utils_ on which classes it should be applied. 
  * Mark your substitution method with {{{@PatchMethod}}}. A patch method must follow several conventions :
  # Static method only.
  # Same name as the method to substitute.
@@ -61,7 +61,7 @@ class UIObjectPatcher {
  # If the method to substitute was static, the patcher method must declare exactly the same parameters in its signature.
  # Otherwise, it must take a reference to the initial caller (or any compatible type) as its first argument, followed by the same parameters as the method to substitute.
 
-Also note that a single {{{@PatchClass}}} can be applied to many class. For example : 
+Also note that a single {{{@PatchClass}}} can be applied to many classes. For example : 
 
 {{{
 @PatchClass({MyWidget1.class, MyWidget2.class})
@@ -81,13 +81,13 @@ my.patcher.package = scan-class
 As you may have guessed, *my.patcher.package* must by the package of your {{{@PatchClass}}} annotated classes.
 Before loading any class, _gwt-test-utils_ will scan every file and directory within {{{my/patcher/package}}} to find classes with the {{{@PatchClass}}} annotation.
 
-You also could have declared {{{my.patcher}}} as the root package to scan, but you should considere performance concerns when scanning a to large number of files.
+You could also have declared {{{my.patcher}}} as the root package to scan, but you should consider performance concerns when scanning a large number of files.
 
-Note that your patch classes and patch methods can by either public or private. The framework will make them public at runtime, regardless of their declared visibility.
+Note that your patch classes and patch methods can either be public or private. The framework will make them public at runtime, regardless of their declared visibility.
 
 == Patching private classes ==
 
-You may want to patch a private class. In this case, The annotation parameter {{{@PatchClass(MyPrivateClass.class)}}} won't feet since you can't make a reference to {{{MyPrivateClass}}}.
+You may want to patch a private class. In this case, the annotation parameter {{{@PatchClass(MyPrivateClass.class)}}} won't fit since you can't reference {{{MyPrivateClass}}}.
 
 Well, just use it this way : 
 
@@ -98,7 +98,7 @@ class MyPrivateClassPatcher {
 }
 }}}
 
-Just use the {{{classes}}} attribute of {{{@PatchClass}}} which takes a string array representing the full name of the classes you want to apply the patcher to.
+The {{{classes}}} attribute of {{{@PatchClass}}} takes a string array representing the full names of the classes you want the patcher to be applied on.
 
 == Overriding existing patchers ==
 
