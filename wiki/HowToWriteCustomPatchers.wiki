@@ -16,10 +16,63 @@ Provide a "patch" for an existing class is done in two steps :
 
 == Writing a custom patcher ==
 
+The patching mechanism relies on 2 annotations and some convention. Let's introduce them with an example extract from the {{{UiObject}}} class from the GWT API :
+
+
+{{{
+public abstract class UIObject {
+
+   private native void replaceNode(Element node, Element newNode) /*-{
+      var p = node.parentNode;
+      if (!p) {
+      return;
+      }
+      p.insertBefore(newNode, node);
+      p.removeChild(node);
+   }-*/;
+
+}}}
+
+The private method {{{replaceNode}}} implementation is written in [http://code.google.com/intl/en-EN/webtoolkit/doc/latest/DevGuideCodingBasicsJSNI.html JSNI], so it can't be execute in a standard JVM. 
+
+That's why we need to replace it by a Java implementation. This done with a {{{PatchClass}}} : 
+
+{{{
+@PatchClass(UIObject.class)
+class UIObjectPatcher {
+
+   @PatchMethod
+   static void replaceNode(UIObject uiObject, Element node, Element newNode) {
+      Node parent = node.getParentNode();
+
+      if (parent != null) {
+         parent.insertBefore(newNode, node);
+         parent.removeChild(node);
+      }
+   }
+}
+}}}
+
+ * Mark your class with {{{@PatchClass}}} to tell _gwt-test-utils_ on which classes it would be applied. 
+ * Mark your substitution method with {{{@PatchMethod}}}. A patch method must follow several conventions :
+ # Static method only.
+ # Same name as the method to substitute.
+ # Same return type.
+ # If the method to substitute was static, the patcher method must declare exactly the same parameters in its signature.
+ # Otherwise, it must take a reference to the initial caller (or any compatible type) as its first argument, followed by the same parameters as the method to substitute.
+
+Also note that a single {{{@PatchClass}}} can be applied to many class. For example : 
+
+{{{
+@PatchClass({MyWidget1.class, MyWidget2.class})
+class MyWidget1and2Patcher {
+  
+}
+}}}
 
 == Registering custom patchers ==
 
-This part is *even more simpler* ! In your {{{META-INF/gwt-test-utils.properties}}} file (which must be available in your test classpath), simply add this line :
+In your {{{META-INF/gwt-test-utils.properties}}} file (which must be available in your test classpath), simply add this line :
 
 {{{
 my.patcher.package = scan-class
@@ -30,46 +83,9 @@ Before loading any class, _gwt-test-utils_ will scan every file and directory wi
 
 You also could have declared {{{my.patcher}}} as the root package to scan, but you should considere performance concerns when scanning a to large number of files.
 
-== Non-trivial patchers ==
+Note that your patch classes and patch methods can by either public or private. The framework will make them public at runtime, regardless of their declared visibility.
 
-In some cases, this example would not suit. This section explains what to do when facing one of them.
-
-=== Patching static methods ===
-
-Assume we want to patch {{{UiObject.isVisible(..)}}} method, which is static :
-{{{
-public abstract class UIObject {
-
-  public static native boolean isVisible(Element elem) /*-{
-    return (elem.style.display != 'none');
-  }-*/;
-  
-}
-}}}
-
-It is simply done with this patcher : 
-
-
-{{{
-@PatchClass(UIObject.class)
-class UIObjectPatcher {
-  
-  @PatchMethod
-  static boolean isVisible(Element elem) {
-    String display = elem.getStyle().getProperty("display");
-
-    return !display.equals("none");
-  }
-  
-}
-}}}
-
-The patch method must have exactly the same name and parameters as the original one.
-
-*Just ignore the rule "a patch method must take the initial caller instance as its first parameter" when patching static methods.*
-
-
-=== Patching private classes ===
+== Patching private classes ==
 
 You may want to patch a private class. In this case, The annotation parameter {{{@PatchClass(MyPrivateClass.class)}}} won't feet since you can't make a reference to {{{MyPrivateClass}}}.
 
@@ -84,4 +100,21 @@ class MyPrivateClassPatcher {
 
 *When you want to patch a classes you don't have directly access to, use the {{{classes}}} attribute of {{{@PatchClass}}} which takes a string array representing the name of the classes you want to apply the patcher to.*
 
-=== Overriding existing patchers ===
+== Overriding existing patchers ==
+
+In some case, you might want to override an already provided patch method. This example shows how to override the {{{UiObject.replaceNode()}}} java implementation provided by _gwt-test-utils_ :
+
+{{{
+@PatchClass(UIObject.class)
+class MyUiObjectOverridenPatcher {
+
+   @PatchMethod(override = true)
+   static void replaceNode(UIObject uiObject, Element node, Element newNode) {
+      // new java code here
+   }
+}
+}}}
+
+Simply add an {{{override = true}}} attribute to your new implementation and the trick is done !
+
+Just remember there can only be one override {{{PatchMethod}}} in your patch classes.
