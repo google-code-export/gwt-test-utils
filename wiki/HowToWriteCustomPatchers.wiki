@@ -4,7 +4,7 @@
 = Introduction =
 
 The main challenge for _gwt-test-utils_ has been to enable the instanciation of all GWT client side widgets in a standalone JVM and to simulate their behaviours in Java rather than in JavaScript.
-This is done by modifying GWT classes as they are loaded in the JVM by a custom classloader *gwt-test-utils* provides to launch JUnit tests.
+This is done by modifying GWT classes as they are loaded in the JVM by a custom classloader _gwt-test-utils_ provides to launch JUnit tests.
 
 But don't worry, even if you are interested in writing your own custom bytecode modifications, you will never have to deal with classloading stuff : _gwt-test-utils_ provide a very simple "Patcher" API, which handle all loading and bytecode modification issues behind the scene.
 
@@ -61,15 +61,6 @@ class UIObjectPatcher {
  # If the method to substitute was static, the patcher method must declare exactly the same parameters in its signature.
  # Otherwise, it must take a reference to the initial caller (or any compatible type) as its first argument, followed by the same parameters as the method to substitute.
 
-Also note that a single {{{@PatchClass}}} can be applied to many classes. For example : 
-
-{{{
-@PatchClass({MyWidget1.class, MyWidget2.class})
-class MyWidget1and2Patcher {
-  
-}
-}}}
-
 == Registering custom patchers ==
 
 In your {{{META-INF/gwt-test-utils.properties}}} file (which must be available in your test classpath), simply add this line :
@@ -92,13 +83,13 @@ You may want to patch a private class. In this case, the annotation parameter {{
 Well, just use it this way : 
 
 {{{
-@PatchClass(classes = {"my.package.MyPrivateClass"})
+@PatchClass(target = "my.package.MyPrivateClass")
 class MyPrivateClassPatcher {
   ...
 }
 }}}
 
-The {{{classes}}} attribute of {{{@PatchClass}}} takes a string array representing the full names of the classes you want the patcher to be applied on.
+The {{{target}}} attribute of {{{@PatchClass}}} simply takes the full name of the class you want the patcher to be applied on instead of the {Class} type itself.
 
 == Overriding existing patchers ==
 
