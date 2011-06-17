@@ -1,4 +1,0 @@
-start
-runmacro;InitialisationMacro
-click;Create a FooBean
-assertExact;Bean "OCTO" has been created;labelId
