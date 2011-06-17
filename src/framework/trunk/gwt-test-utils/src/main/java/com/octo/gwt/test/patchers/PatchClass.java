@@ -6,28 +6,29 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Indicates that the annotated class can be used to generate a JVM-compliant
+ * Indicates that the annotated class is used to generate a JVM-compliant
  * version of a particular class.
  * 
  * @author Bertrand Paquet
+ * @author Gael Lazzari
+ * 
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface PatchClass {
 
   /**
-   * Name of the classes to patch, in case some of the class to patch are
-   * internal.
+   * Name of the class to patch, in case it is internal.
    * 
-   * @return An array containing the name of classes to patch.
+   * @return The name of the class to patch.
    */
-  String[] classes() default {};
+  String target() default "";
 
   /**
-   * Classes to patch.
+   * Class to patch.
    * 
-   * @return An array containing the classes to patch.
+   * @return The class to patch
    */
-  Class<?>[] value() default {};
+  Class<?> value() default PatchClass.class;
 
 }

@@ -198,12 +198,11 @@ class ConfigurationLoader {
         }
 
         if (annotation != null) {
-          for (Class<?> c : annotation.value()) {
-            addPatchClass(c.getName(), ctClass);
-          }
+          String classToPatchName = (annotation.value() != PatchClass.class)
+              ? annotation.value().getName() : annotation.target().trim();
 
-          for (String className : annotation.classes()) {
-            addPatchClass(className, ctClass);
+          if (!"".equals(classToPatchName)) {
+            addPatchClass(classToPatchName, ctClass);
           }
         }
       }
@@ -220,6 +219,7 @@ class ConfigurationLoader {
         logger.debug("Add patch for class '" + targetName + "' : '"
             + patchClass.getName() + "'");
       }
+
     };
 
     ClassesScanner.getInstance().scanPackages(patchClassVisitor, scanPackageSet);
