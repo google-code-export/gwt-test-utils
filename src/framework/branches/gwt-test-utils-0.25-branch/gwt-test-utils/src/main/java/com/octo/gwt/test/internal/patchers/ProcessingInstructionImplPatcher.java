@@ -6,7 +6,7 @@ import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
-@PatchClass(classes = {"com.google.gwt.xml.client.impl.ProcessingInstructionImpl"})
+@PatchClass(target = "com.google.gwt.xml.client.impl.ProcessingInstructionImpl")
 class ProcessingInstructionImplPatcher {
 
   @PatchMethod

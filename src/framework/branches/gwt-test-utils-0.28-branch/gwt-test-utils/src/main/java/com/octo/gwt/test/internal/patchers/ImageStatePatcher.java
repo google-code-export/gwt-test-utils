@@ -7,7 +7,7 @@ import com.octo.gwt.test.patchers.PatchMethod;
 import com.octo.gwt.test.utils.events.Browser;
 import com.octo.gwt.test.utils.events.EventBuilder;
 
-@PatchClass(classes = {"com.google.gwt.user.client.ui.Image$State"})
+@PatchClass(target = "com.google.gwt.user.client.ui.Image$State")
 class ImageStatePatcher {
 
   @PatchMethod

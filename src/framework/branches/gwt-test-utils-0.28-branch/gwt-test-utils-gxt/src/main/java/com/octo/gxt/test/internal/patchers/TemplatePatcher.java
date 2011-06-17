@@ -3,7 +3,6 @@ package com.octo.gxt.test.internal.patchers;
 import com.extjs.gxt.ui.client.core.Template;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.user.client.Element;
-import com.octo.gwt.test.patchers.AutomaticPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 

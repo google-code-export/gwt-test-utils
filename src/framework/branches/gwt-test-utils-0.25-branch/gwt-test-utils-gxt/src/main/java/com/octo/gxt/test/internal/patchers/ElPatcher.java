@@ -8,7 +8,6 @@ import java.util.regex.Pattern;
 import com.extjs.gxt.ui.client.core.El;
 import com.google.gwt.dom.client.Element;
 import com.octo.gwt.test.internal.utils.StyleUtils;
-import com.octo.gwt.test.patchers.AutomaticPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 import com.octo.gwt.test.utils.GwtReflectionUtils;

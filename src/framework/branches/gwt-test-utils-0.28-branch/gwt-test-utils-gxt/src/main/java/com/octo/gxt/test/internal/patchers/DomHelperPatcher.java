@@ -6,7 +6,6 @@ import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.user.client.Element;
 import com.octo.gwt.test.exceptions.GwtTestPatchException;
 import com.octo.gwt.test.internal.utils.GwtHtmlParser;
-import com.octo.gwt.test.patchers.AutomaticPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 

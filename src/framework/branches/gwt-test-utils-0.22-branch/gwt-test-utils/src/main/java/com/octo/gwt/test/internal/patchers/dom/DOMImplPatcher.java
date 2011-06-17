@@ -26,7 +26,7 @@ import com.octo.gwt.test.patchers.PatchMethod;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 import com.octo.gwt.test.utils.events.EventBuilder;
 
-@PatchClass(classes = {"com.google.gwt.dom.client.DOMImpl"})
+@PatchClass(target = "com.google.gwt.dom.client.DOMImpl")
 class DOMImplPatcher {
 
   @PatchMethod

@@ -15,7 +15,7 @@ import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
-@PatchClass(classes = {"com.google.gwt.user.client.ui.PrefixTree"})
+@PatchClass(target = "com.google.gwt.user.client.ui.PrefixTree")
 class PrefixTreePatcher {
 
   private static final String PREFIXES_SET_PROPERTY = "PREFIXES_SET";

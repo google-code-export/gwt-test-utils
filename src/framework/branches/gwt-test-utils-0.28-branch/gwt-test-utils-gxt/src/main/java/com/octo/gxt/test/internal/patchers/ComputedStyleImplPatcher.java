@@ -8,7 +8,6 @@ import com.extjs.gxt.ui.client.core.impl.ComputedStyleImpl;
 import com.google.gwt.user.client.Element;
 import com.octo.gwt.test.internal.utils.GwtStringUtils;
 import com.octo.gwt.test.internal.utils.StyleUtils;
-import com.octo.gwt.test.patchers.AutomaticPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
