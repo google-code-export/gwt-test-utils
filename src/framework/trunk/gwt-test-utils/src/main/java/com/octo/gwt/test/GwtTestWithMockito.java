@@ -67,32 +67,6 @@ public abstract class GwtTestWithMockito extends GwtTestWithMocks {
 
   }
 
-  /**
-   * Prepares a Mockito stubber that simulates a remote service failure by
-   * calling the onFailure() method of the corresponding AsyncCallback object.
-   * 
-   * @param exception The exception thrown by the stubbed remote service and
-   *          passed to the callback onFailure() method
-   * 
-   * @return a Mockito stubber which will call the callback onFailure() method
-   */
-  public <T> Stubber doFailureCallback(final Throwable exception) {
-    return Mockito.doAnswer(new FailureAnswer<Object>(exception));
-  }
-
-  /**
-   * Prepares a Mockito stubber that simulates a remote service success by
-   * calling the onSuccess() method of the corresponding AsyncCallback object.
-   * 
-   * @param object The object returned by the stubbed remote service and passed
-   *          to the callback onSuccess() method
-   * 
-   * @return a Mockito stubber which will call the callback onFailure() method
-   */
-  public <T> Stubber doSuccessCallback(final T object) {
-    return Mockito.doAnswer(new SuccessAnswer<Object>(object));
-  }
-
   @Before
   public void setupGwtTestWithMockito() {
     MockitoAnnotations.initMocks(this);
@@ -105,6 +79,32 @@ public abstract class GwtTestWithMockito extends GwtTestWithMocks {
             "Could not register Mockito mocks declared in test class", e);
       }
     }
+  }
+
+  /**
+   * Prepares a Mockito stubber that simulates a remote service failure by
+   * calling the onFailure() method of the corresponding AsyncCallback object.
+   * 
+   * @param exception The exception thrown by the stubbed remote service and
+   *          passed to the callback onFailure() method
+   * 
+   * @return a Mockito stubber which will call the callback onFailure() method
+   */
+  protected <T> Stubber doFailureCallback(final Throwable exception) {
+    return Mockito.doAnswer(new FailureAnswer<Object>(exception));
+  }
+
+  /**
+   * Prepares a Mockito stubber that simulates a remote service success by
+   * calling the onSuccess() method of the corresponding AsyncCallback object.
+   * 
+   * @param object The object returned by the stubbed remote service and passed
+   *          to the callback onSuccess() method
+   * 
+   * @return a Mockito stubber which will call the callback onFailure() method
+   */
+  protected <T> Stubber doSuccessCallback(final T object) {
+    return Mockito.doAnswer(new SuccessAnswer<Object>(object));
   }
 
   @Override
