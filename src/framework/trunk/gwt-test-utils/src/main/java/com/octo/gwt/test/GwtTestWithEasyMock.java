@@ -143,7 +143,7 @@ public abstract class GwtTestWithEasyMock extends GwtTestWithMocks {
   protected <T> T createMockAndKeepOneMethod(Class<T> clazz, String methodName,
       Class<?>... paramsTypes) {
     return createMockAndKeepMethods(clazz, true,
-        GwtReflectionUtils.findMethod(clazz, methodName));
+        GwtReflectionUtils.findMethod(clazz, methodName, paramsTypes));
   }
 
   /**
