@@ -10,13 +10,13 @@ import com.octo.gwt.test.patchers.PatchMethod;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 @PatchClass(JsArray.class)
-public class JsArrayPatcher {
+class JsArrayPatcher {
 
   private static class JsArrayJSO extends JavaScriptObject {
 
     private final List<Object> list;
 
-    public JsArrayJSO() {
+    JsArrayJSO() {
       list = new ArrayList<Object>();
     }
 
@@ -25,7 +25,7 @@ public class JsArrayPatcher {
      * 
      * @param value the value to add
      */
-    public void add(boolean value) {
+    void add(boolean value) {
       list.add(value);
     }
 
@@ -34,7 +34,7 @@ public class JsArrayPatcher {
      * 
      * @param value the value to add
      */
-    public void add(byte value) {
+    void add(byte value) {
       list.add(value);
     }
 
@@ -43,7 +43,7 @@ public class JsArrayPatcher {
      * 
      * @param value the value to add
      */
-    public void add(char value) {
+    void add(char value) {
       list.add(value);
     }
 
@@ -52,7 +52,7 @@ public class JsArrayPatcher {
      * 
      * @param value the value to add
      */
-    public void add(double value) {
+    void add(double value) {
       list.add(value);
     }
 
@@ -61,7 +61,7 @@ public class JsArrayPatcher {
      * 
      * @param value the value to add
      */
-    public void add(float value) {
+    void add(float value) {
       list.add(value);
     }
 
@@ -70,7 +70,7 @@ public class JsArrayPatcher {
      * 
      * @param value the value to add
      */
-    public void add(int value) {
+    void add(int value) {
       list.add(value);
     }
 
@@ -79,7 +79,7 @@ public class JsArrayPatcher {
      * 
      * @param object the object to add
      */
-    public void add(JavaScriptObject object) {
+    void add(JavaScriptObject object) {
       list.add(object);
     }
 
@@ -88,7 +88,7 @@ public class JsArrayPatcher {
      * 
      * @param value the value to add
      */
-    public void add(short value) {
+    void add(short value) {
       list.add(value);
     }
 
@@ -97,11 +97,11 @@ public class JsArrayPatcher {
      * 
      * @param value the value to add
      */
-    public void add(String value) {
+    void add(String value) {
       list.add(value);
     }
 
-    public void addObject(Object object) {
+    void addObject(Object object) {
       list.add(object);
     }
 
@@ -111,14 +111,14 @@ public class JsArrayPatcher {
      * @param index the index
      * @return the value
      */
-    public Object get(int index) {
+    Object get(int index) {
       if (list.size() <= index) {
         return null;
       }
       return list.get(index);
     }
 
-    public boolean getBoolean(int index) {
+    boolean getBoolean(int index) {
       if (list.size() <= index) {
         return false;
       }
@@ -131,7 +131,7 @@ public class JsArrayPatcher {
       }
     }
 
-    public byte getByte(int index) {
+    byte getByte(int index) {
       if (list.size() <= index) {
         return 0;
       }
@@ -144,7 +144,7 @@ public class JsArrayPatcher {
       }
     }
 
-    public char getChar(int index) {
+    char getChar(int index) {
       if (list.size() <= index) {
         return 0;
       }
@@ -157,7 +157,7 @@ public class JsArrayPatcher {
       }
     }
 
-    public double getDouble(int index) {
+    double getDouble(int index) {
       if (list.size() <= index) {
         return 0;
       }
@@ -170,7 +170,7 @@ public class JsArrayPatcher {
       }
     }
 
-    public float getFloat(int index) {
+    float getFloat(int index) {
       if (list.size() <= index) {
         return 0;
       }
@@ -189,7 +189,7 @@ public class JsArrayPatcher {
      * @param index the index
      * @return the value
      */
-    public int getInt(int index) {
+    int getInt(int index) {
       if (list.size() <= index) {
         return 0;
       }
@@ -202,7 +202,7 @@ public class JsArrayPatcher {
       }
     }
 
-    public short getShort(int index) {
+    short getShort(int index) {
       if (list.size() <= index) {
         return 0;
       }
@@ -221,7 +221,7 @@ public class JsArrayPatcher {
      * @param index the index
      * @return the value
      */
-    public String getString(int index) {
+    String getString(int index) {
       if (list.size() <= index) {
         return "";
       }
@@ -239,113 +239,113 @@ public class JsArrayPatcher {
      * 
      * @return the size
      */
-    public int size() {
+    int size() {
       return list.size();
     }
   }
 
   @PatchMethod
-  public static void add(JsArray jsArray, boolean value) {
+  static void add(JsArray jsArray, boolean value) {
     getJsArrayJSO(jsArray).add(value);
   }
 
   @PatchMethod
-  public static void add(JsArray jsArray, byte value) {
+  static void add(JsArray jsArray, byte value) {
     getJsArrayJSO(jsArray).add(value);
   }
 
   @PatchMethod
-  public static void add(JsArray jsArray, char value) {
+  static void add(JsArray jsArray, char value) {
     getJsArrayJSO(jsArray).add(value);
   }
 
   @PatchMethod
-  public static void add(JsArray jsArray, double value) {
+  static void add(JsArray jsArray, double value) {
     getJsArrayJSO(jsArray).add(value);
   }
 
   @PatchMethod
-  public static void add(JsArray jsArray, float value) {
+  static void add(JsArray jsArray, float value) {
     getJsArrayJSO(jsArray).add(value);
   }
 
   @PatchMethod
-  public static void add(JsArray jsArray, int value) {
+  static void add(JsArray jsArray, int value) {
     getJsArrayJSO(jsArray).add(value);
   }
 
   @PatchMethod
-  public static void add(JsArray jsArray, JavaScriptObject value) {
+  static void add(JsArray jsArray, JavaScriptObject value) {
     getJsArrayJSO(jsArray).add(value);
   }
 
   @PatchMethod
-  public static void add(JsArray jsArray, short value) {
+  static void add(JsArray jsArray, short value) {
     getJsArrayJSO(jsArray).add(value);
   }
 
   @PatchMethod
-  public static void add(JsArray jsArray, String value) {
+  static void add(JsArray jsArray, String value) {
     getJsArrayJSO(jsArray).add(value);
   }
 
   @PatchMethod
-  public static void addObjectInternal(JsArray jsArray, Object value) {
+  static void addObjectInternal(JsArray jsArray, Object value) {
     getJsArrayJSO(jsArray).addObject(value);
   }
 
   @PatchMethod
-  public static JavaScriptObject create(JsArray jsArray) {
+  static JavaScriptObject create(JsArray jsArray) {
     return new JsArrayJSO();
   }
 
   @PatchMethod
-  public static Object get(JsArray jsArray, int index) {
+  static Object get(JsArray jsArray, int index) {
     return getJsArrayJSO(jsArray).get(index);
   }
 
   @PatchMethod
-  public static boolean getBoolean(JsArray jsArray, int index) {
+  static boolean getBoolean(JsArray jsArray, int index) {
     return getJsArrayJSO(jsArray).getBoolean(index);
   }
 
   @PatchMethod
-  public static byte getByte(JsArray jsArray, int index) {
+  static byte getByte(JsArray jsArray, int index) {
     return getJsArrayJSO(jsArray).getByte(index);
   }
 
   @PatchMethod
-  public static char getChar(JsArray jsArray, int index) {
+  static char getChar(JsArray jsArray, int index) {
     return getJsArrayJSO(jsArray).getChar(index);
   }
 
   @PatchMethod
-  public static double getDouble(JsArray jsArray, int index) {
+  static double getDouble(JsArray jsArray, int index) {
     return getJsArrayJSO(jsArray).getDouble(index);
   }
 
   @PatchMethod
-  public static float getFloat(JsArray jsArray, int index) {
+  static float getFloat(JsArray jsArray, int index) {
     return getJsArrayJSO(jsArray).getFloat(index);
   }
 
   @PatchMethod
-  public static int getInt(JsArray jsArray, int index) {
+  static int getInt(JsArray jsArray, int index) {
     return getJsArrayJSO(jsArray).getInt(index);
   }
 
   @PatchMethod
-  public static short getShort(JsArray jsArray, int index) {
+  static short getShort(JsArray jsArray, int index) {
     return getJsArrayJSO(jsArray).getShort(index);
   }
 
   @PatchMethod
-  public static String getString(JsArray jsArray, int index) {
+  static String getString(JsArray jsArray, int index) {
     return getJsArrayJSO(jsArray).getString(index);
   }
 
   @PatchMethod
-  public static int size(JsArray jsArray) {
+  static int size(JsArray jsArray) {
     return getJsArrayJSO(jsArray).size();
   }
 

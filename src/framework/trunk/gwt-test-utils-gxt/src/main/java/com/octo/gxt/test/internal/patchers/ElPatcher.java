@@ -13,12 +13,12 @@ import com.octo.gwt.test.patchers.PatchMethod;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 @PatchClass(El.class)
-public class ElPatcher {
+class ElPatcher {
 
   private static Pattern UNIT_PATTERN = Pattern.compile("^(\\d+)[(px|em|%|en|ex|pt|in|cm|mm|pc)]{0,1}$");
 
   @PatchMethod
-  public static String addUnits(String v, String defaultUnit) {
+  static String addUnits(String v, String defaultUnit) {
     if (v == null)
       return "";
 
@@ -40,7 +40,7 @@ public class ElPatcher {
   }
 
   @PatchMethod
-  public static El applyStyles(El el, String styles) {
+  static El applyStyles(El el, String styles) {
     Element elem = getWrappedElement(el);
     LinkedHashMap<String, String> styleProperties = StyleUtils.getStyleProperties(elem.getAttribute("style"));
 
@@ -52,18 +52,18 @@ public class ElPatcher {
   }
 
   @PatchMethod
-  public static void disableTextSelectInternal(
-      com.google.gwt.user.client.Element e, boolean disable) {
+  static void disableTextSelectInternal(com.google.gwt.user.client.Element e,
+      boolean disable) {
 
   }
 
   @PatchMethod
-  public static boolean isLeftorRight(El el, String s) {
+  static boolean isLeftorRight(El el, String s) {
     return s != null && (s.contains("Left") || s.contains("Right"));
   }
 
   @PatchMethod
-  public static El removeStyleName(El el, String styleName) {
+  static El removeStyleName(El el, String styleName) {
     Element elem = getWrappedElement(el);
     elem.removeClassName(styleName);
 
@@ -71,7 +71,20 @@ public class ElPatcher {
   }
 
   @PatchMethod
-  public static El repaint(El el) {
+  static El repaint(El el) {
+    return el;
+  }
+
+  @PatchMethod
+  static El setFocus(El el, boolean focus) {
+    Element dom = getWrappedElement(el);
+
+    if (focus) {
+      dom.focus();
+    } else {
+      dom.blur();
+    }
+
     return el;
   }
 

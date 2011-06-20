@@ -17,16 +17,16 @@ import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
 @PatchClass(DomQuery.class)
-public class DomQueryPatcher {
+class DomQueryPatcher {
 
   @PatchMethod
-  public static JavaScriptObject internalSelect(String selector) {
+  static JavaScriptObject internalSelect(String selector) {
     Element body = Document.get().getBody().cast();
     return internalSelect(selector, body);
   }
 
   @PatchMethod
-  public static JavaScriptObject internalSelect(String selector, Element root) {
+  static JavaScriptObject internalSelect(String selector, Element root) {
     try {
       Set<Node> nodeSet = new DOMNodeSelector(root).querySelectorAll(selector);
       return JavaScriptObjects.newNodeList(new ArrayList<Node>(nodeSet));

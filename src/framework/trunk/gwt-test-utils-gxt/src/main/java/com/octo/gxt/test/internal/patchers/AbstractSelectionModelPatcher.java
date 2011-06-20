@@ -11,11 +11,11 @@ import com.octo.gwt.test.patchers.PatchMethod;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 @PatchClass(AbstractSelectionModel.class)
-public class AbstractSelectionModelPatcher {
+class AbstractSelectionModelPatcher {
 
   @SuppressWarnings("unchecked")
   @PatchMethod
-  public static ContainerEvent<Container<Component>, Component> createContainerEvent(
+  static ContainerEvent<Container<Component>, Component> createContainerEvent(
       AbstractSelectionModel<Container<Component>, Component> absm,
       Container<Component> container) {
 

@@ -12,6 +12,7 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Text;
 import com.octo.gwt.test.exceptions.GwtTestDomException;
 import com.octo.gwt.test.internal.utils.JsoProperties;
+import com.octo.gwt.test.internal.utils.PropertyContainer;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
@@ -270,6 +271,15 @@ class NodePatcher {
         Node newNode = newJso.cast();
         Node oldNode = oldJso.cast();
         setupChildNodes(newNode, oldNode, deep);
+      } else if (JsoProperties.ELEM_PROPERTIES.equals(entry.getKey())) {
+        PropertyContainer newPc = JavaScriptObjects.getObject(newJso,
+            JsoProperties.ELEM_PROPERTIES);
+        PropertyContainer oldPc = JavaScriptObjects.getObject(oldJso,
+            JsoProperties.ELEM_PROPERTIES);
+
+        for (Map.Entry<String, Object> entry2 : oldPc.entrySet()) {
+          newPc.put(entry2.getKey(), entry2.getValue());
+        }
       } else if (JavaScriptObject.class.isInstance(entry.getValue())) {
         JavaScriptObject oldChildJso = (JavaScriptObject) entry.getValue();
         JavaScriptObject newChildJso = JavaScriptObjects.newObject(oldChildJso.getClass());

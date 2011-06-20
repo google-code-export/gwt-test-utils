@@ -10,10 +10,10 @@ import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
 @PatchClass(DomHelper.class)
-public class DomHelperPatcher {
+class DomHelperPatcher {
 
   @PatchMethod
-  public static Element append(Element elem, String html) {
+  static Element append(Element elem, String html) {
     NodeList<Node> parsedNodes = GwtHtmlParser.parse(html);
 
     for (int i = 0; i < parsedNodes.getLength(); i++) {
@@ -25,7 +25,7 @@ public class DomHelperPatcher {
   }
 
   @PatchMethod
-  public static Element insertAfter(Element elem, String html) {
+  static Element insertAfter(Element elem, String html) {
     Element parent = elem.getParentElement().cast();
     NodeList<Node> parsedNodes = GwtHtmlParser.parse(html);
 
@@ -41,7 +41,7 @@ public class DomHelperPatcher {
   }
 
   @PatchMethod
-  public static Element insertBefore(Element elem, String html) {
+  static Element insertBefore(Element elem, String html) {
     Element parent = elem.getParentElement().cast();
     NodeList<Node> parsedNodes = GwtHtmlParser.parse(html);
 
@@ -58,7 +58,7 @@ public class DomHelperPatcher {
   }
 
   @PatchMethod
-  public static Element insertFirst(Element elem, String html) {
+  static Element insertFirst(Element elem, String html) {
     NodeList<Node> parsedNodes = GwtHtmlParser.parse(html);
 
     elem.insertFirst(parsedNodes.getItem(0));
@@ -72,7 +72,7 @@ public class DomHelperPatcher {
   }
 
   @PatchMethod
-  public static Element insertHtml(String where, Element el, String html) {
+  static Element insertHtml(String where, Element el, String html) {
     // not sure about what I'm doing here..
     if ("beforeBegin".equals(where)) {
       return insertBefore(el, html);

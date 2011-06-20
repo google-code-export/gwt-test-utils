@@ -6,10 +6,10 @@ import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
 @PatchClass(Util.class)
-public class UtilPatcher {
+class UtilPatcher {
 
   @PatchMethod
-  public static int parseInt(String value, int defaultValue) {
+  static int parseInt(String value, int defaultValue) {
     return GwtStringUtils.parseInt(value, defaultValue);
   }
 

@@ -37,14 +37,8 @@ public class DocumentPatcher {
   private static int ID = 0;
 
   public static void reset() {
-    if (DOCUMENT != null) {
-      if (DOCUMENT.getBody() != null) {
-        JavaScriptObjects.clearProperties(DOCUMENT.getBody());
-      }
-      JavaScriptObjects.clearProperties(DOCUMENT);
-      DOCUMENT = null;
-      GwtReflectionUtils.setStaticField(Document.class, "doc", null);
-    }
+    DOCUMENT = null;
+    GwtReflectionUtils.setStaticField(Document.class, "doc", null);
   }
 
   @PatchMethod
@@ -121,7 +115,6 @@ public class DocumentPatcher {
         DOCUMENT.appendChild(e);
         JavaScriptObjects.setProperty(DOCUMENT, JsoProperties.DOCUMENT_ELEMENT,
             e);
-
         return DOCUMENT;
       } catch (Exception e) {
         if (GwtTestException.class.isInstance(e)) {
@@ -242,6 +235,7 @@ public class DocumentPatcher {
 
       htmlPrototype = findHTMLElement(hostPagePath, list);
       HTML_ELEMENT_PROTOTYPES.put(moduleName, hostPagePath, htmlPrototype);
+      // return htmlPrototype;
     }
 
     return htmlPrototype.cloneNode(true).cast();

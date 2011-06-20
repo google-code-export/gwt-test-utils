@@ -7,21 +7,55 @@ import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
 @PatchClass(XDOM.class)
-public class XDOMPatcher {
+class XDOMPatcher {
 
   @PatchMethod
-  public static Element getBody() {
+  static Element getBody() {
     return Document.get().getBody().cast();
   }
 
   @PatchMethod
-  public static String getComputedStyle(Element e, String style) {
+  static int getBodyScrollLeft() {
+    return 0;
+  }
+
+  @PatchMethod
+  static int getBodyScrollTop() {
+    return 0;
+  }
+
+  @PatchMethod
+  static String getComputedStyle(Element e, String style) {
     return "";
   }
 
   @PatchMethod
-  public static Element getDocument() {
+  static Element getDocument() {
     return Document.get().getDocumentElement().cast();
   }
 
+  @PatchMethod
+  static int getDocumentHeight() {
+    return 0;
+  }
+
+  @PatchMethod
+  static int getDocumentWidth() {
+    return 0;
+  }
+
+  @PatchMethod
+  static int getScrollBarWidthInternal() {
+    return 0;
+  }
+
+  @PatchMethod
+  static int getViewportHeight() {
+    return 0;
+  }
+
+  @PatchMethod
+  static int getViewportWidth() {
+    return 0;
+  }
 }
