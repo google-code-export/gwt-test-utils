@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javassist.CtClass;
+import javassist.CtConstructor;
 import javassist.CtMethod;
 
 import com.octo.gwt.test.GwtCreateHandler;
@@ -39,8 +40,18 @@ class AbstractClassCreateHandler implements GwtCreateHandler {
 
     subClass.setSuperclass(ctClass);
 
-    // set default constructor to public
-    JavassistUtils.findConstructor(subClass).setModifiers(Modifier.PUBLIC);
+    subClass.setModifiers(Modifier.PUBLIC);
+
+    // handle case where the default constructor is declared in a super class
+    CtConstructor defaultConstructor = JavassistUtils.findConstructor(subClass);
+    if (defaultConstructor.getDeclaringClass() != subClass) {
+      defaultConstructor = new CtConstructor(defaultConstructor, subClass, null);
+      subClass.addConstructor(defaultConstructor);
+    }
+
+    if (!Modifier.isPublic(defaultConstructor.getModifiers())) {
+      defaultConstructor.setModifiers(Modifier.PUBLIC);
+    }
 
     for (CtMethod m : ctClass.getDeclaredMethods()) {
       if (javassist.Modifier.isAbstract(m.getModifiers())) {
