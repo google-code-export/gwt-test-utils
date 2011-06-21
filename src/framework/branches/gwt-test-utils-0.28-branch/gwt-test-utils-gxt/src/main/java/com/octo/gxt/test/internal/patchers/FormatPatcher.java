@@ -6,15 +6,15 @@ import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
 @PatchClass(Format.class)
-public class FormatPatcher {
+class FormatPatcher {
 
   @PatchMethod
-  public static String camelize(String s) {
+  static String camelize(String s) {
     return GwtStringUtils.camelize(s);
   }
 
   @PatchMethod
-  public static String hyphenize(String name) {
+  static String hyphenize(String name) {
     return GwtStringUtils.hyphenize(name);
   }
 

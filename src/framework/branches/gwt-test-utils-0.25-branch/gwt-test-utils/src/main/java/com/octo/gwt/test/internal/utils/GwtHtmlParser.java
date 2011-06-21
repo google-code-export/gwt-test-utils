@@ -12,7 +12,6 @@ import org.htmlparser.Text;
 import org.htmlparser.util.ParserException;
 import org.htmlparser.visitors.NodeVisitor;
 
-import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
@@ -58,7 +57,7 @@ public class GwtHtmlParser {
         // comment or !DOCTYPE
         return;
       }
-      Element e = Document.get().createElement(tag.getTagName());
+      Element e = JavaScriptObjects.newElement(tag.getTagName());
       tagMap.put(tag, e);
       for (Object o : tag.getAttributesEx()) {
         Attribute a = (Attribute) o;

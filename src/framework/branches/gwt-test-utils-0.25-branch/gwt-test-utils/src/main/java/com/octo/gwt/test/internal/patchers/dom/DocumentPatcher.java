@@ -36,13 +36,7 @@ public class DocumentPatcher {
   private static int ID = 0;
 
   public static void reset() {
-    if (DOCUMENT != null) {
-      if (DOCUMENT.getBody() != null) {
-        JavaScriptObjects.clearProperties(DOCUMENT.getBody());
-      }
-      JavaScriptObjects.clearProperties(DOCUMENT);
-      DOCUMENT = null;
-    }
+    DOCUMENT = null;
   }
 
   @PatchMethod
@@ -239,6 +233,7 @@ public class DocumentPatcher {
 
       htmlPrototype = findHTMLElement(hostPagePath, list);
       HTML_ELEMENT_PROTOTYPES.put(moduleName, hostPagePath, htmlPrototype);
+      // return htmlPrototype;
     }
 
     return htmlPrototype.cloneNode(true).cast();

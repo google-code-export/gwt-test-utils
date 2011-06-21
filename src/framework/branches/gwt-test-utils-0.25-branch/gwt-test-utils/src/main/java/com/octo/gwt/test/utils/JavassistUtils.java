@@ -1,12 +1,12 @@
 package com.octo.gwt.test.utils;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
 
 import javassist.CtClass;
 import javassist.CtConstructor;
 import javassist.NotFoundException;
 
+import com.google.gwt.dev.util.collect.HashSet;
 import com.octo.gwt.test.exceptions.GwtTestPatchException;
 
 /**
@@ -19,23 +19,60 @@ public class JavassistUtils {
 
   public static CtConstructor findConstructor(CtClass ctClass,
       Class<?>... argsClasses) {
-    List<CtConstructor> l = new ArrayList<CtConstructor>();
 
+    if (ctClass.getName().contains("CellBasedWi")) {
+      System.out.println(ctClass);
+    }
+
+    Set<CtConstructor> set = new HashSet<CtConstructor>();
+
+    findConstructors(ctClass, set);
+
+    switch (set.size()) {
+      case 0:
+        return null;
+      case 1:
+        return set.iterator().next();
+      default:
+        throw new GwtTestPatchException("Multiple constructors (" + set.size()
+            + ") in class " + ctClass.getName()
+            + ", you have to set parameter types discriminators");
+    }
+  }
+
+  private static void findConstructors(CtClass ctClass, Set<CtConstructor> set,
+      Class<?>... argsClasses) {
     try {
-      for (CtConstructor c : ctClass.getDeclaredConstructors()) {
-        if (argsClasses == null
-            || argsClasses.length == c.getParameterTypes().length) {
-          l.add(c);
 
-          if (argsClasses != null) {
-            int i = 0;
-            for (Class<?> argClass : argsClasses) {
-              if (!argClass.getName().equals(c.getParameterTypes()[i].getName())) {
-                l.remove(c);
-                continue;
-              }
-              i++;
+      if (ctClass == null) {
+        return;
+      }
+
+      CtConstructor[] constructors = ctClass.getDeclaredConstructors();
+
+      if (constructors.length == 0) {
+        findConstructors(ctClass.getSuperclass(), set, argsClasses);
+      } else if (constructors.length == 1 && argsClasses.length == 0) {
+        set.add(constructors[0]);
+      } else {
+        for (CtConstructor c : constructors) {
+
+          if (c.getParameterTypes().length != argsClasses.length) {
+            continue;
+          }
+
+          boolean sameArgs = true;
+          for (int i = 0; i < argsClasses.length; i++) {
+            String requestedClassName = argsClasses[i].getName();
+            String currentClassName = c.getParameterTypes()[i].getName();
+
+            if (!requestedClassName.equals(currentClassName)) {
+              sameArgs = false;
             }
+          }
+
+          if (sameArgs) {
+            set.add(c);
           }
         }
       }
@@ -45,18 +82,6 @@ public class JavassistUtils {
           "Error while trying find a constructor in class '"
               + ctClass.getName() + "'", e);
     }
-
-    if (l.size() == 1) {
-      return l.get(0);
-    }
-    if (l.size() == 0) {
-      throw new GwtTestPatchException(
-          "Unable to find a constructor with the specifed parameter types in class "
-              + ctClass.getName());
-    }
-    throw new GwtTestPatchException("Multiple constructor in class "
-        + ctClass.getName()
-        + ", you have to set parameter types discriminators");
   }
 
   private JavassistUtils() {

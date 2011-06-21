@@ -32,6 +32,8 @@
 	<modules>
 		<module>gwt-test-utils</module>
 		<module>gwt-test-utils-csv</module>
+		<module>gwt-test-utils-gxt</module>
+		<module>gwt-css-selectors</module>
 		<module>gwt-test-utils-spring2</module>
 		<module>gwt-test-utils-spring3</module>
 	</modules>

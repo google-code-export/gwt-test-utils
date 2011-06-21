@@ -78,87 +78,6 @@ public abstract class GwtTestWithEasyMock extends GwtTestWithMocks {
 
   }
 
-  /**
-   * Creates a mock object for a given class, where all methods are mocked
-   * except the ones given as parameters.
-   * 
-   * @param clazz The class for which a mock object will be created
-   * @param keepSetters False if setters should be mocked, true otherwise
-   * @param list List of methods that should not be mocked
-   */
-  public <T> T createMockAndKeepMethods(Class<T> clazz,
-      final boolean keepSetters, final Method... list) {
-    final List<Method> l = new ArrayList<Method>();
-    GwtReflectionUtils.doWithMethods(clazz, new MethodCallback() {
-
-      public void doWith(Method method) throws IllegalArgumentException,
-          IllegalAccessException {
-        if (!ArrayUtils.contains(list, method)) {
-          if (!keepSetters || !method.getName().startsWith("set")
-              || method.getReturnType() != void.class) {
-            l.add(method);
-          }
-        }
-      }
-
-    });
-    T o = EasyMock.createMockBuilder(clazz).addMockedMethods(
-        l.toArray(new Method[]{})).createMock();
-    addMockedObject(clazz, o);
-    return o;
-  }
-
-  /**
-   * Creates a mock object for a given class, where all methods are mocked
-   * except the one with the name given as a parameter.
-   */
-  public <T> T createMockAndKeepOneMethod(Class<T> clazz, String methodName) {
-    return createMockAndKeepMethods(clazz, true,
-        GwtReflectionUtils.findMethod(clazz, methodName));
-  }
-
-  /**
-   * Records a call to an asynchronous service and simulates a failure by
-   * calling the onFailure() method of the corresponding AsyncCallback object.
-   * 
-   * @param exception The exception thrown by the stubbed remote service and
-   *          passed to the callback onFailure() method
-   */
-  public void expectServiceAndCallbackOnFailure(final Throwable exception) {
-    IAnswer<Object> answer = new FailureAnswer<Object>(exception);
-    EasyMock.expectLastCall().andAnswer(answer);
-  }
-
-  /**
-   * Records a call to an asynchronous service and simulates a success by
-   * calling the onSuccess() method of the corresponding AsyncCallback object.
-   * 
-   * @param object The object returned by the stubbed remote service and passed
-   *          to the callback onSuccess() method
-   */
-  public <T> void expectServiceAndCallbackOnSuccess(final T object) {
-    IAnswer<T> answer = new SuccessAnswer<T>(object);
-    EasyMock.expectLastCall().andAnswer(answer);
-  }
-
-  /**
-   * Set all declared mocks to replay state.
-   */
-  public void replay() {
-    for (Object o : mockObjects.values()) {
-      EasyMock.replay(o);
-    }
-  }
-
-  /**
-   * Reset all declared mocks.
-   */
-  public void reset() {
-    for (Object o : mockObjects.values()) {
-      EasyMock.reset(o);
-    }
-  }
-
   @Before
   public void setupGwtTestWithEasyMock() {
     for (Class<?> clazz : mockedClasses) {
@@ -182,10 +101,98 @@ public abstract class GwtTestWithEasyMock extends GwtTestWithMocks {
   }
 
   /**
+   * Creates a mock object for a given class, where all methods are mocked
+   * except the ones given as parameters.
+   * 
+   * @param clazz The class for which a mock object will be created
+   * @param keepSetters False if setters should be mocked, true otherwise
+   * @param list List of methods that should not be mocked
+   */
+  protected <T> T createMockAndKeepMethods(Class<T> clazz,
+      final boolean keepSetters, final Method... list) {
+    final List<Method> l = new ArrayList<Method>();
+    GwtReflectionUtils.doWithMethods(clazz, new MethodCallback() {
+
+      public void doWith(Method method) throws IllegalArgumentException,
+          IllegalAccessException {
+        if (!ArrayUtils.contains(list, method)) {
+          if (!keepSetters || !method.getName().startsWith("set")
+              || method.getReturnType() != void.class) {
+            l.add(method);
+          }
+        }
+      }
+
+    });
+    T o = EasyMock.createMockBuilder(clazz).addMockedMethods(
+        l.toArray(new Method[]{})).createMock();
+    addMockedObject(clazz, o);
+    return o;
+  }
+
+  /**
+   * Creates a mock object for a given class, where all methods are mocked
+   * except the one with specifics name and parameter types.
+   * 
+   * @param <T> The result mock type.
+   * @param clazz The result mock type.
+   * @param methodName The name of the method to keep.
+   * @param paramsTypes The parameter of the method to keep.
+   * @return The resulting mock object.
+   */
+  protected <T> T createMockAndKeepOneMethod(Class<T> clazz, String methodName,
+      Class<?>... paramsTypes) {
+    return createMockAndKeepMethods(clazz, true,
+        GwtReflectionUtils.findMethod(clazz, methodName, paramsTypes));
+  }
+
+  /**
+   * Records a call to an asynchronous service and simulates a failure by
+   * calling the onFailure() method of the corresponding AsyncCallback object.
+   * 
+   * @param exception The exception thrown by the stubbed remote service and
+   *          passed to the callback onFailure() method
+   */
+  protected void expectServiceAndCallbackOnFailure(final Throwable exception) {
+    IAnswer<Object> answer = new FailureAnswer<Object>(exception);
+    EasyMock.expectLastCall().andAnswer(answer);
+  }
+
+  /**
+   * Records a call to an asynchronous service and simulates a success by
+   * calling the onSuccess() method of the corresponding AsyncCallback object.
+   * 
+   * @param object The object returned by the stubbed remote service and passed
+   *          to the callback onSuccess() method
+   */
+  protected <T> void expectServiceAndCallbackOnSuccess(final T object) {
+    IAnswer<T> answer = new SuccessAnswer<T>(object);
+    EasyMock.expectLastCall().andAnswer(answer);
+  }
+
+  /**
+   * Set all declared mocks to replay state.
+   */
+  protected void replay() {
+    for (Object o : mockObjects.values()) {
+      EasyMock.replay(o);
+    }
+  }
+
+  /**
+   * Reset all declared mocks.
+   */
+  protected void reset() {
+    for (Object o : mockObjects.values()) {
+      EasyMock.reset(o);
+    }
+  }
+
+  /**
    * Verifies that all recorded behaviors for every declared mock has actually
    * been used.
    */
-  public void verify() {
+  protected void verify() {
     for (Object o : mockObjects.values()) {
       EasyMock.verify(o);
     }

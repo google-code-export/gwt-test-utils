@@ -7,10 +7,10 @@ import com.octo.gwt.test.patchers.PatchMethod;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 @PatchClass(Component.class)
-public class ComponentPatcher {
+class ComponentPatcher {
 
   @PatchMethod
-  public static void setParent(Component component, Widget parent) {
+  static void setParent(Component component, Widget parent) {
     GwtReflectionUtils.setPrivateFieldValue(component, "parent", parent);
   }
 

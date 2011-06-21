@@ -64,6 +64,11 @@ public abstract class GwtTestWithMocks extends GwtTest {
     }
   }
 
+  @After
+  public void teardownGwtTestWithMocks() {
+    mockObjects.clear();
+  }
+
   /**
    * Adds a mock object to the list of mocks used in the context of this test
    * class.
@@ -71,13 +76,8 @@ public abstract class GwtTestWithMocks extends GwtTest {
    * @param clazz The class for which a mock object is being defined
    * @param mock the mock instance
    */
-  public Object addMockedObject(Class<?> createClass, Object mock) {
+  protected Object addMockedObject(Class<?> createClass, Object mock) {
     return mockObjects.put(createClass, mock);
-  }
-
-  @After
-  public void teardownGwtTestWithMocks() {
-    mockObjects.clear();
   }
 
   protected Set<Field> getMockFields() {

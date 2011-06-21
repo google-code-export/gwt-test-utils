@@ -7,20 +7,20 @@ import com.octo.gwt.test.patchers.PatchMethod;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 @PatchClass(ComponentHelper.class)
-public class ComponentHelperPatcher {
+class ComponentHelperPatcher {
 
   @PatchMethod
-  public static void doAttachNative(Widget widget) {
+  static void doAttachNative(Widget widget) {
     GwtReflectionUtils.callPrivateMethod(widget, "onAttach");
   }
 
   @PatchMethod
-  public static void doDetachNative(Widget widget) {
+  static void doDetachNative(Widget widget) {
     GwtReflectionUtils.callPrivateMethod(widget, "onDetach");
   }
 
   @PatchMethod
-  public static void setParent(Widget parent, Widget child) {
+  static void setParent(Widget parent, Widget child) {
     GwtReflectionUtils.callPrivateMethod(child, "setParent", parent);
   }
 

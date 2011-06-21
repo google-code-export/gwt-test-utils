@@ -4,35 +4,35 @@ import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
 @PatchClass(target = "com.extjs.gxt.ui.client.core.Ext")
-public class ExtPatcher {
+class ExtPatcher {
 
   @PatchMethod
-  public static void loadDomHelper() {
+  static void loadDomHelper() {
 
   }
 
   @PatchMethod
-  public static void loadDomQuery() {
+  static void loadDomQuery() {
 
   }
 
   @PatchMethod
-  public static void loadExt() {
+  static void loadExt() {
 
   }
 
   @PatchMethod
-  public static void loadFormat() {
+  static void loadFormat() {
 
   }
 
   @PatchMethod
-  public static void loadTemplate() {
+  static void loadTemplate() {
 
   }
 
   @PatchMethod
-  public static void loadXTemplate() {
+  static void loadXTemplate() {
 
   }
 }

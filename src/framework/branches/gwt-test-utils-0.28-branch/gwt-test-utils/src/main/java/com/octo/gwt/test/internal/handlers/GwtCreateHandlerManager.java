@@ -20,6 +20,7 @@ public class GwtCreateHandlerManager {
 
   private final GwtCreateHandler abstractClassCreateHandler;
   private final List<GwtCreateHandler> addedHandlers;
+  private final GwtCreateHandler cellBasedWidgetImplCreateHandler;
   private final GwtCreateHandler clientBundleCreateHander;
   private final GwtCreateHandler debugIdImplCreateHandler;
   private final GwtCreateHandler defaultGwtCreateHandler;
@@ -36,6 +37,7 @@ public class GwtCreateHandlerManager {
     // TODO : all createHandler should be singleton ?
     abstractClassCreateHandler = new AbstractClassCreateHandler();
     addedHandlers = new ArrayList<GwtCreateHandler>();
+    cellBasedWidgetImplCreateHandler = new CellBasedWidgetImplCreateHandler();
     clientBundleCreateHander = new ClientBundleCreateHandler();
     debugIdImplCreateHandler = new DebugIdImplCreateHandler();
     defaultGwtCreateHandler = new DefaultGwtCreateHandler();
@@ -75,6 +77,7 @@ public class GwtCreateHandlerManager {
     list.add(uiBinderCreateHandler);
     list.add(testRemoteServiceCreateHandler);
     list.add(webXmlRemoteServiceCreateHandler);
+    list.add(cellBasedWidgetImplCreateHandler);
     list.add(defaultGwtCreateHandler);
     list.add(abstractClassCreateHandler);
 

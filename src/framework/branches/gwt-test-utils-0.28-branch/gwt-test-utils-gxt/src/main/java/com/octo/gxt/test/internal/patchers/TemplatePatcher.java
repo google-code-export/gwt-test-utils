@@ -7,19 +7,19 @@ import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
 @PatchClass(Template.class)
-public class TemplatePatcher {
+class TemplatePatcher {
 
-  public static class TemplateJSO extends JavaScriptObject {
+  static class TemplateJSO extends JavaScriptObject {
 
     private final String html;
 
-    public TemplateJSO(String html) {
+    TemplateJSO(String html) {
       this.html = html;
     }
   }
 
   @PatchMethod
-  public static Element appendInternal(JavaScriptObject t, Element el,
+  static Element appendInternal(JavaScriptObject t, Element el,
       JavaScriptObject values) {
     TemplateJSO tjso = t.cast();
     el.setInnerHTML(tjso.html);
@@ -29,31 +29,31 @@ public class TemplatePatcher {
   }
 
   @PatchMethod
-  public static String applyInternal(JavaScriptObject t, JavaScriptObject values) {
+  static String applyInternal(JavaScriptObject t, JavaScriptObject values) {
     TemplateJSO tjso = t.cast();
     return tjso.html;
   }
 
   @PatchMethod
-  public static void compile(Template tem) {
+  static void compile(Template tem) {
     //
   }
 
   @PatchMethod
-  public static JavaScriptObject create(String html) {
+  static JavaScriptObject create(String html) {
     return new TemplateJSO(html);
   }
 
   @PatchMethod
-  public static String getHtml(JavaScriptObject t) {
+  static String getHtml(JavaScriptObject t) {
     TemplateJSO tjso = t.cast();
     return tjso.html;
 
   }
 
   @PatchMethod
-  public static Element insertInternal(String method, JavaScriptObject t,
-      Element el, JavaScriptObject values) {
+  static Element insertInternal(String method, JavaScriptObject t, Element el,
+      JavaScriptObject values) {
     TemplateJSO tjso = t.cast();
     el.setInnerHTML(tjso.html);
 

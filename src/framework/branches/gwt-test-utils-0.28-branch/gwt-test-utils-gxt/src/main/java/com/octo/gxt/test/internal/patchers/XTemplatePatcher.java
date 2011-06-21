@@ -6,10 +6,10 @@ import com.octo.gwt.test.patchers.PatchMethod;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 @PatchClass(XTemplate.class)
-public class XTemplatePatcher {
+class XTemplatePatcher {
 
   @PatchMethod
-  public static XTemplate create(String html) {
+  static XTemplate create(String html) {
     return GwtReflectionUtils.instantiateClass(XTemplate.class);
   }
 }

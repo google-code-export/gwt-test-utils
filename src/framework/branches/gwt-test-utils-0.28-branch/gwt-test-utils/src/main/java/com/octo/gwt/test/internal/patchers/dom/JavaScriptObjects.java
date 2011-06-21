@@ -231,7 +231,8 @@ public class JavaScriptObjects {
     } else if (Text.class.isAssignableFrom(jsoClass)) {
       nodeType = Node.TEXT_NODE;
     } else if (JsArrayString.class.isAssignableFrom(jsoClass)) {
-      setProperty(o, JsoProperties.JSARRAY_WRAPPED_LIST, new ArrayList<String>());
+      setProperty(o, JsoProperties.JSARRAY_WRAPPED_LIST,
+          new ArrayList<String>());
     }
 
     setProperty(o, JsoProperties.NODE_TYPE_FIELD, nodeType);

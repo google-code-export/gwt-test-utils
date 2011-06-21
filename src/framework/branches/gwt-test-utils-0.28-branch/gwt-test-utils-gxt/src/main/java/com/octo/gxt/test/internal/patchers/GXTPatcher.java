@@ -6,10 +6,10 @@ import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
 @PatchClass(GXT.class)
-public class GXTPatcher {
+class GXTPatcher {
 
   @PatchMethod
-  public static String getUserAgent() {
+  static String getUserAgent() {
     return Navigator.getUserAgent();
   }
 

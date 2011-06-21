@@ -12,11 +12,11 @@ import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
 @PatchClass(ComputedStyleImpl.class)
-public class ComputedStyleImplPatcher {
+class ComputedStyleImplPatcher {
 
   @PatchMethod
-  public static FastMap<String> getComputedStyle(ComputedStyleImpl impl,
-      Element elem, List<String> orginalNames, List<String> hyphenizedNames,
+  static FastMap<String> getComputedStyle(ComputedStyleImpl impl, Element elem,
+      List<String> orginalNames, List<String> hyphenizedNames,
       List<String> camelizedNames, String pseudo) {
 
     FastMap<String> result = new FastMap<String>();
