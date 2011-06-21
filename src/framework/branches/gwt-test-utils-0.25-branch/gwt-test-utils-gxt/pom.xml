@@ -23,8 +23,7 @@
 		<dependency>
 			<groupId>com.extjs</groupId>
 			<artifactId>gxt</artifactId>
-			<version>2.2.4</version>
-			<classifier>gwt2</classifier>
+			<classifier>${gxt.classifier}</classifier>
 		</dependency>
 	</dependencies>
 

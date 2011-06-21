@@ -9,6 +9,7 @@
 	<properties>
 		<encoding>UTF-8</encoding>
 		<gwt.version>2.0.4</gwt.version>
+		<gxt.classifier>gwt2</gxt.classifier>
 		<java.version>1.5</java.version>
 		<spring2.version>2.5.6</spring2.version>
 		<spring3.version>3.0.5.RELEASE</spring3.version>
@@ -107,6 +108,12 @@
 			<groupId>com.google.gwt</groupId>
 			<artifactId>gwt-dev</artifactId>
 			<version>${gwt.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.extjs</groupId>
+			<artifactId>gxt</artifactId>
+			<version>2.2.4</version>
+			<classifier>${gxt.classifier}</classifier>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
