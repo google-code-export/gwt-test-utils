@@ -35,3 +35,37 @@ But you also might want to test your entire stack. That's why *gwt-test-utils* c
 }}}
 
 = How to use =
+
+{{{spring-2}}} and {{{spring-3}}} modules provide the same API, which can be used this way :
+
+{{{
+
+@ContextConfiguration(locations = {"classpath:applicationContext-test.xml"})
+public class RPCCompositeWithSpringTest extends GwtSpringTest {
+
+  @Override
+  public String getModuleName() {
+    return "com.octo.gwt.test.demo.Application";
+  }
+
+  @Override
+  protected Object findRpcServiceInSpringContext(
+      ApplicationContext applicationContext, Class<?> remoteServiceClass,
+      String remoteServiceRelativePath) {
+
+    if ("rpc/myService".equals(remoteServiceRelativePath)) {
+      return applicationContext.getBean("myService");
+    }
+    return null;
+  }
+}
+}}}
+
+ # First, extend GwtSpringTest, the base class for test with spring.
+ # Use the {{{ContextConfiguration}}} annotation from _spring-test_ to configure your test context.
+ # Like in {{{GwtTest}}}, override the getModuleName() method.
+ # Finally, implement the abstract method *findRpcServiceInSpringContext* to retrieve a GWT RemoteService from the given spring context.
+
+Your GwtSpringTest subclasses can be injected with {{{@Autowired}}} bean, and hold a reference to the test {{{ApplicationContext}}} through the {{{GwtSpringTest.getApplicationContext()}}} protected method.
+
+If you want to write a [http://code.google.com/p/gwt-test-utils/wiki/HowToWriteCsvScenario CSV test scenario] which should be integrated with spring, just extend {{{GwtSpringCsvTest}}} instead of {{{GwtSpringTest}}} :-) 
