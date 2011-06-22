@@ -17,8 +17,8 @@ import com.octo.gwt.test.csv.data.MyBeautifulApp;
 import com.octo.gwt.test.csv.data.MyComposite;
 import com.octo.gwt.test.csv.runner.CsvRunner;
 import com.octo.gwt.test.csv.tools.VisitorObjectFinder;
-import com.octo.gwt.test.csv.tools.WidgetVisitor;
 import com.octo.gwt.test.csv.tools.VisitorObjectFinder.WidgetRepository;
+import com.octo.gwt.test.csv.tools.WidgetVisitor;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 public class VisitorObjectFinderTest extends GwtTestWithEasyMock {
@@ -91,11 +91,6 @@ public class VisitorObjectFinderTest extends GwtTestWithEasyMock {
     };
 
     finder = new VisitorObjectFinder(myVisitor);
-  }
-
-  @Override
-  protected String getHostPagePath(String moduleFullQualifiedName) {
-    return "test.html";
   }
 
 }

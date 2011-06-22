@@ -8,6 +8,8 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.gwt.user.client.Window;
 import com.octo.gwt.test.exceptions.GwtTestConfigurationException;
@@ -42,7 +44,9 @@ import com.octo.gwt.test.internal.handlers.GwtCreateHandlerManager;
 public abstract class GwtTest {
 
   private static final String DEFAULT_WAR_DIR = "war/";
+  private static final Logger logger = LoggerFactory.getLogger(GwtTest.class);
   private static final String MAVEN_DEFAULT_RES_DIR = "src/main/resources/";
+
   private static final String MAVEN_DEFAULT_WEB_DIR = "src/main/webapp/";
 
   /**
@@ -147,6 +151,12 @@ public abstract class GwtTest {
     if (new File(fileRelativePath).exists()) {
       return fileRelativePath;
     }
+
+    logger.warn("Cannot find the actual HTML host page for module '"
+        + moduleFullQualifiedName
+        + "'. You should override "
+        + GwtTest.class.getName()
+        + ".getHostPagePath(String moduleFullQualifiedName) method to specify it.");
 
     return null;
   }

@@ -36,9 +36,7 @@ public class Spring3JUnit4ClassRunner extends SpringJUnit4ClassRunner {
   @Override
   protected Object createTest() throws Exception {
     Object testInstance = reader.createObject();
-    Method m = GwtReflectionUtils.findMethod(testInstance.getClass(),
-        "setReader");
-    m.invoke(testInstance, reader);
+    GwtReflectionUtils.callPrivateMethod(testInstance, "setReader", reader);
     getTestContextManager().prepareTestInstance(testInstance);
     return testInstance;
   }
