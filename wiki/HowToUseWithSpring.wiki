@@ -36,7 +36,7 @@ But you also might want to test your entire stack. That's why *gwt-test-utils* c
 
 = How to use =
 
-{{{spring-2}}} and {{{spring-3}}} modules provide the same API, which can be used this way :
+*spring-2* and *spring-3* modules provide the same API, which can be used this way :
 
 {{{
 
@@ -61,7 +61,7 @@ public class RPCCompositeWithSpringTest extends GwtSpringTest {
 }
 }}}
 
- # First, extend GwtSpringTest, the base class for test with spring.
+ # First, extend {{{GwtSpringTest}}}, the base class for test with spring.
  # Use the {{{ContextConfiguration}}} annotation from _spring-test_ to configure your test context.
  # Like in {{{GwtTest}}}, override the getModuleName() method.
  # Finally, implement the abstract method *findRpcServiceInSpringContext* to retrieve a GWT RemoteService from the given spring context.
