@@ -28,6 +28,9 @@ import com.octo.gwt.test.utils.GwtReflectionUtils;
  * bytecode initialization callback and {link PatchMethod} which marks a method
  * to be a substitution for another one following a simple convention.
  * </p>
+ * <p>
+ * <strong>For internal use only.</strong>
+ * </p>
  * 
  * @author Bertrand Paquet
  * @author Gael Lazzari

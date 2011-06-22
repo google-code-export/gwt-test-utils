@@ -1,4 +1,4 @@
-package com.octo.gwt.test.spring;
+package com.octo.gwt.test.spring.internal;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;

@@ -16,10 +16,10 @@ import com.octo.gwt.test.internal.GwtClassLoader;
 
 /**
  * <p>
- * The base gwt-test-utils test {@link Runner}. It provide a mecanism to wrap
- * another JUnit Runner which will be loaded by the {@link GwtClassLoader}. This
- * way, all classes referenced by the current test class will be loaded by the
- * custom classloader.
+ * The base gwt-test-utils JUnit test {@link Runner}. It provide a mechanism to
+ * wrap another JUnit Runner which will be loaded by the {@link GwtClassLoader}.
+ * This way, all classes referenced by the current test class will be loaded by
+ * the custom classloader.
  * </p>
  * 
  * @author Gael Lazzari
