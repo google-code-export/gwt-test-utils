@@ -17,7 +17,7 @@ public class SimpleCompositeTest2 extends DemoSimpleTest {
 
   @Test
   public void checkDisplayClick() {
-    // Setup
+    // Arrange
     TextBox textBox = GwtReflectionUtils.getPrivateFieldValue(composite2,
         "textBox");
     Button button = GwtReflectionUtils.getPrivateFieldValue(composite2,
@@ -35,7 +35,7 @@ public class SimpleCompositeTest2 extends DemoSimpleTest {
     Assert.assertEquals("Good morning",
         listBox.getItemText(listBox.getSelectedIndex()));
 
-    // Test
+    // Act
     Browser.click(button);
 
     // Assert

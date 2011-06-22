@@ -10,7 +10,7 @@
 	<parent>
 		<groupId>com.octo.gwt.test</groupId>
 		<artifactId>demos-parent</artifactId>
-		<version>0.29-SNAPSHOT</version>
+		<version>1.0-SNAPSHOT</version>
 	</parent>
 
 	<properties>
@@ -22,39 +22,32 @@
 		<dependency>
 			<groupId>com.google.gwt</groupId>
 			<artifactId>gwt-servlet</artifactId>
-			<version>${gwt.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.gwt</groupId>
 			<artifactId>gwt-user</artifactId>
-			<version>${gwt.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-			<version>${slf4j.version}</version>
+			<artifactId>slf4j-simple</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-web</artifactId>
-			<version>${spring.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-test</artifactId>
-			<version>${spring.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.gwtrpcspring</groupId>
 			<artifactId>gwtrpc-spring</artifactId>
-			<version>1.01</version>
 		</dependency>
 
 		<!-- test -->
 		<dependency>
 			<groupId>com.octo.gwt.test</groupId>
 			<artifactId>gwt-test-utils-spring3</artifactId>
-			<version>${gwt.test.utils.version}</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>

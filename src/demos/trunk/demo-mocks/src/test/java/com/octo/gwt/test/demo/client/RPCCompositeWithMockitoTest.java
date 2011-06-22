@@ -27,7 +27,7 @@ public class RPCCompositeWithMockitoTest extends GwtTestWithMockito {
   @SuppressWarnings("unchecked")
   @Test
   public void checkRPCCallFailure() {
-    // Setup
+    // Arrange
     Button button = GwtReflectionUtils.getPrivateFieldValue(composite, "button");
     Label label = GwtReflectionUtils.getPrivateFieldValue(composite, "label");
 
@@ -37,7 +37,7 @@ public class RPCCompositeWithMockitoTest extends GwtTestWithMockito {
 
     Assert.assertEquals("", label.getText());
 
-    // Test
+    // Act
     Browser.click(button);
 
     // Assert
@@ -49,7 +49,7 @@ public class RPCCompositeWithMockitoTest extends GwtTestWithMockito {
   @SuppressWarnings("unchecked")
   @Test
   public void checkRPCCallSuccess() {
-    // Setup
+    // Arrange
     Button button = GwtReflectionUtils.getPrivateFieldValue(composite, "button");
     Label label = GwtReflectionUtils.getPrivateFieldValue(composite, "label");
 
@@ -62,7 +62,7 @@ public class RPCCompositeWithMockitoTest extends GwtTestWithMockito {
 
     Assert.assertEquals("", label.getText());
 
-    // Test
+    // Act
     Browser.click(button);
 
     // Assert

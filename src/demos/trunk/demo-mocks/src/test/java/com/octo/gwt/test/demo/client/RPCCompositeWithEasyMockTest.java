@@ -24,7 +24,7 @@ public class RPCCompositeWithEasyMockTest extends GwtTestWithEasyMock {
   @SuppressWarnings("unchecked")
   @Test
   public void checkRPCCallFailure() {
-    // Setup
+    // Arrange
     Button button = GwtReflectionUtils.getPrivateFieldValue(composite, "button");
     Label label = GwtReflectionUtils.getPrivateFieldValue(composite, "label");
 
@@ -37,7 +37,7 @@ public class RPCCompositeWithEasyMockTest extends GwtTestWithEasyMock {
 
     Assert.assertEquals("", label.getText());
 
-    // Test
+    // Act
     Browser.click(button);
 
     // Assert
@@ -49,7 +49,7 @@ public class RPCCompositeWithEasyMockTest extends GwtTestWithEasyMock {
   @SuppressWarnings("unchecked")
   @Test
   public void checkRPCCallSuccess() {
-    // Setup
+    // Arrange
     Button button = GwtReflectionUtils.getPrivateFieldValue(composite, "button");
     Label label = GwtReflectionUtils.getPrivateFieldValue(composite, "label");
 
@@ -65,7 +65,7 @@ public class RPCCompositeWithEasyMockTest extends GwtTestWithEasyMock {
 
     Assert.assertEquals("", label.getText());
 
-    // Test
+    // Act
     Browser.click(button);
 
     // Assert

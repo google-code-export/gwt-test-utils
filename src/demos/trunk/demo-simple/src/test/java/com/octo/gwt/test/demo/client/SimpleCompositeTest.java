@@ -15,13 +15,13 @@ public class SimpleCompositeTest extends DemoSimpleTest {
 
   @Test
   public void checkMouseMoveOnPicture() {
-    // Setup
+    // Arrange
     Image img = GwtReflectionUtils.getPrivateFieldValue(composite, "img");
     Label label = GwtReflectionUtils.getPrivateFieldValue(composite, "label");
 
     Assert.assertEquals("", label.getText());
 
-    // Test
+    // Act
     Browser.mouseMove(img);
 
     // Assert
