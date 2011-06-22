@@ -32,6 +32,14 @@ public class UiBinderWithWidgetsTest extends GwtTestTest {
         "getWidget");
     Assert.assertEquals(w.listBox, wrappedPanel.getWidget(0));
 
+    Assert.assertEquals("Test radio 1", w.radioButton1.getText());
+    Assert.assertEquals("MyRadioGroup", w.radioButton1.getName());
+    Assert.assertTrue(w.radioButton1.getValue());
+
+    Assert.assertEquals("Test radio 2", w.radioButton2.getText());
+    Assert.assertEquals("MyRadioGroup", w.radioButton2.getName());
+    Assert.assertFalse(w.radioButton2.getValue());
+
     Assert.assertEquals(MyClientBundle.INSTANCE.testImageResource().getURL(),
         w.image.getUrl());
 
@@ -65,7 +73,7 @@ public class UiBinderWithWidgetsTest extends GwtTestTest {
         w.msgLabel.getText());
 
     Assert.assertEquals("9'00", w.msgInnerWidget.getText());
-    Assert.assertEquals(w.msgInnerWidget, wrappedPanel.getWidget(3));
+    Assert.assertEquals(w.msgInnerWidget, wrappedPanel.getWidget(4));
 
     Assert.assertEquals(HasHorizontalAlignment.ALIGN_LEFT,
         w.verticalPanel.getHorizontalAlignment());

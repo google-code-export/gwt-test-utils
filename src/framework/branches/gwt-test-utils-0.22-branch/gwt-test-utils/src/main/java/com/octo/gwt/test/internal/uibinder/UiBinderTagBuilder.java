@@ -14,6 +14,7 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.uibinder.client.UiConstructor;
 import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.Widget;
 import com.octo.gwt.test.exceptions.GwtTestConfigurationException;
 import com.octo.gwt.test.exceptions.GwtTestUiBinderException;
@@ -129,6 +130,23 @@ public class UiBinderTagBuilder<T> {
     return this;
   }
 
+  private <U> U createSpecificWidget(Class<U> clazz, Attributes attributes) {
+
+    if (clazz == RadioButton.class) {
+      String name = attributes.getValue("name");
+      if (name == null) {
+        throw new GwtTestUiBinderException(
+            "Error during the instanciation of a RadioButton declared in "
+                + owner.getClass().getSimpleName()
+                + ".ui.xml' : missing required attribute 'name'");
+      }
+
+      return (U) new RadioButton(name);
+    }
+
+    return null;
+  }
+
   private UiBinderTag createUiBinderTag(String nameSpaceURI, String localName,
       Attributes attributes, UiBinderTag parentTag) {
 
@@ -174,6 +192,11 @@ public class UiBinderTagBuilder<T> {
     U instance = getProvidedUiField(clazz);
 
     if (instance == null) {
+      // delegate to specific widgets instanciator
+      instance = createSpecificWidget(clazz, attributes);
+    }
+
+    if (instance == null) {
       try {
         // try to create it with any custom GwtCreateHandler or with
         // DefaultGwtCreateHandler (if there is an empty constructor)
@@ -205,19 +228,37 @@ public class UiBinderTagBuilder<T> {
     for (Constructor<?> cons : clazz.getDeclaredConstructors()) {
       if (cons.getAnnotation(UiConstructor.class) != null) {
         Constructor<U> uiConstructor = (Constructor<U>) cons;
-        String[] args = getUiConstructorArgs(clazz, attributes);
+        String[] args = getUiConstructorArgs(clazz, attributes, false);
+
+        if (args.length != uiConstructor.getParameterTypes().length) {
+          args = getUiConstructorArgs(clazz, attributes, true);
+        }
+
+        if (args.length != uiConstructor.getParameterTypes().length) {
+          throw new GwtTestUiBinderException(
+              "Cannot invoke @UiConstructor '"
+                  + uiConstructor.toGenericString()
+                  + "' : gwt-test-utils is not able to determine which XML attributes are intented to be passed as parameters of this constructor");
+        }
+
         try {
           return GwtReflectionUtils.instantiateClass(uiConstructor,
               (Object[]) args);
         } catch (Exception e) {
           StringBuilder sb = new StringBuilder();
-          sb.append("Error while executing instruction 'new ").append(
+          sb.append("Error while calling @UiConstructor 'new ").append(
               clazz.getSimpleName()).append("(");
+
           for (String arg : args) {
             sb.append("\"" + arg + "\"");
             sb.append(", ");
           }
-          sb.replace(sb.length() - 2, sb.length() - 1, ");'");
+
+          if (args.length > 0) {
+            sb.delete(sb.length() - 2, sb.length() - 1);
+          }
+
+          sb.append(");'");
 
           throw new GwtTestUiBinderException(sb.toString(), e);
         }
@@ -275,14 +316,17 @@ public class UiBinderTagBuilder<T> {
     return null;
   }
 
-  private String[] getUiConstructorArgs(Class<?> clazz, Attributes attributes) {
+  private String[] getUiConstructorArgs(Class<?> clazz, Attributes attributes,
+      boolean inclueSetters) {
     List<String> argsList = new ArrayList<String>();
 
     for (int i = 0; i < attributes.getLength(); i++) {
       String attrName = attributes.getLocalName(i);
-      if (!UiBinderUtils.isUiFieldAttribute(attributes.getURI(i), attrName)
-          && !isBeanProperty(clazz, attrName)) {
-        argsList.add(attributes.getValue(i));
+      if (!UiBinderUtils.isUiFieldAttribute(attributes.getURI(i), attrName)) {
+
+        if (inclueSetters || !isBeanProperty(clazz, attrName)) {
+          argsList.add(attributes.getValue(i));
+        }
       }
     }
 

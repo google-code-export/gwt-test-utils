@@ -14,6 +14,7 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.PushButton;
+import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class UiBinderWithWidgets extends Composite {
@@ -28,8 +29,6 @@ public class UiBinderWithWidgets extends Composite {
   }
 
   private static MyUiBinder uiBinder = GWT.create(MyUiBinder.class);
-
-  private final String uiFactoryLabelText;
 
   @UiField
   Button button;
@@ -53,6 +52,12 @@ public class UiBinderWithWidgets extends Composite {
   PushButton pushButton;
 
   @UiField
+  RadioButton radioButton1;
+
+  @UiField
+  RadioButton radioButton2;
+
+  @UiField
   MyStyle style;
 
   @UiField
@@ -63,6 +68,8 @@ public class UiBinderWithWidgets extends Composite {
 
   @UiField
   VerticalPanel verticalPanel;
+
+  private final String uiFactoryLabelText;
 
   public UiBinderWithWidgets(String... names) {
     providedLabel = new ProvidedLabel("my provided string");
