@@ -32,6 +32,11 @@
 		<g:Label ui:field='msgLabel'>
 			<ui:msg description="Greeting">We <b>strongly</b> urge you to reconsider.</ui:msg>
 		</g:Label>
+		
+		<g:FlowPanel>
+			<g:RadioButton ui:field="radioButton1" name="MyRadioGroup" checked="true" >Test radio 1</g:RadioButton>
+			<g:RadioButton ui:field="radioButton2" name="MyRadioGroup" checked="false" >Test radio 2</g:RadioButton>
+		</g:FlowPanel>
 
 		<ui:msg>
 			Meeting starts at
