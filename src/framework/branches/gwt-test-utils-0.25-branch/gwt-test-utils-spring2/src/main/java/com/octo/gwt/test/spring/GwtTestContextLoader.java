@@ -8,7 +8,8 @@ import org.springframework.test.context.support.GenericXmlContextLoader;
 
 import com.octo.gwt.test.internal.GwtClassLoader;
 
-public class GwtTestContextLoader extends GenericXmlContextLoader {
+// TODO: remove?
+class GwtTestContextLoader extends GenericXmlContextLoader {
 
   @Override
   protected BeanDefinitionReader createBeanDefinitionReader(

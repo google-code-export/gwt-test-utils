@@ -56,7 +56,7 @@ public abstract class MyGwtShell extends GwtCsvTest {
 
   @Override
   protected String getHostPagePath(String moduleFullQualifiedName) {
-    return "test.html";
+    return null;
   }
 
   @Override

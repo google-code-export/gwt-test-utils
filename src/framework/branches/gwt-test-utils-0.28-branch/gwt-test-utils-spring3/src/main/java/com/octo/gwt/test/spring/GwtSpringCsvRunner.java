@@ -4,7 +4,7 @@ import com.octo.gwt.test.GwtRunnerBase;
 
 public class GwtSpringCsvRunner extends GwtRunnerBase {
 
-  private static final String classRunnerName = "com.octo.gwt.test.spring.Spring3JUnit4ClassRunner";
+  private static final String classRunnerName = "com.octo.gwt.test.spring.internal.Spring3CsvJUnit4ClassRunner";
 
   public GwtSpringCsvRunner(Class<?> clazz) throws Exception {
     super(clazz);

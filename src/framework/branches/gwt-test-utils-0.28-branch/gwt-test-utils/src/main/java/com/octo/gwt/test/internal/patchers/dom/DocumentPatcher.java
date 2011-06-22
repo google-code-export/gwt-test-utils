@@ -8,7 +8,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.BodyElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
@@ -215,12 +214,10 @@ public class DocumentPatcher {
     String hostPagePath = GwtConfig.get().getHostPagePath();
 
     if (hostPagePath == null) {
-      throw new GwtTestConfigurationException(
-          "Cannot find the actual HTML host page for module '"
-              + GWT.getModuleName()
-              + "'. You should override "
-              + GwtTest.class.getName()
-              + ".getHostPagePath(String moduleFullQualifiedName) method to specify it.");
+      // return a default empty HTML element
+      Element defaultHTMLElement = JavaScriptObjects.newElement("HTML");
+      defaultHTMLElement.appendChild(JavaScriptObjects.newElement("body"));
+      return defaultHTMLElement;
     }
 
     Element htmlPrototype = HTML_ELEMENT_PROTOTYPES.get(moduleName,
