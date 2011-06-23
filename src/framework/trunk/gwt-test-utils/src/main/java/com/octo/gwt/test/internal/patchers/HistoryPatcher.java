@@ -11,8 +11,8 @@ class HistoryPatcher {
 
   @PatchMethod
   static void back() {
-    HistoryImplPatcher.stack.pop();
-    String token = HistoryImplPatcher.stack.pop();
+    HistoryImplPatcher.HISTORY_HOLDER.stack.pop();
+    String token = HistoryImplPatcher.HISTORY_HOLDER.stack.pop();
     HistoryImpl impl = GwtReflectionUtils.getStaticFieldValue(History.class,
         "impl");
     impl.fireHistoryChangedImpl(token);

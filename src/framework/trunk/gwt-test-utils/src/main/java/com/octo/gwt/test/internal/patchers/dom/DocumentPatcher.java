@@ -18,6 +18,8 @@ import com.octo.gwt.test.GwtTest;
 import com.octo.gwt.test.exceptions.GwtTestConfigurationException;
 import com.octo.gwt.test.exceptions.GwtTestDomException;
 import com.octo.gwt.test.exceptions.GwtTestException;
+import com.octo.gwt.test.internal.AfterTestCallback;
+import com.octo.gwt.test.internal.AfterTestCallbackManager;
 import com.octo.gwt.test.internal.GwtConfig;
 import com.octo.gwt.test.internal.utils.DoubleMap;
 import com.octo.gwt.test.internal.utils.GwtHtmlParser;
@@ -27,18 +29,28 @@ import com.octo.gwt.test.patchers.PatchMethod;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 @PatchClass(Document.class)
-public class DocumentPatcher {
+class DocumentPatcher {
 
-  private static Document DOCUMENT;
+  private static class DocumentHolder implements AfterTestCallback {
+
+    private Document document;
+
+    private DocumentHolder() {
+      AfterTestCallbackManager.get().registerCallback(this);
+    }
+
+    public void afterTest() throws Throwable {
+      document = null;
+      GwtReflectionUtils.setStaticField(Document.class, "doc", null);
+    }
+
+  }
+
+  private static DocumentHolder DOCUMENT_HOLDER = new DocumentHolder();
 
   private static final DoubleMap<String, String, Element> HTML_ELEMENT_PROTOTYPES = new DoubleMap<String, String, Element>();
 
   private static int ID = 0;
-
-  public static void reset() {
-    DOCUMENT = null;
-    GwtReflectionUtils.setStaticField(Document.class, "doc", null);
-  }
 
   @PatchMethod
   static Text createTextNode(Document document, String data) {
@@ -107,14 +119,14 @@ public class DocumentPatcher {
 
   @PatchMethod
   static Document nativeGet() {
-    if (DOCUMENT == null) {
+    if (DOCUMENT_HOLDER.document == null) {
       try {
-        DOCUMENT = JavaScriptObjects.newObject(Document.class);
+        DOCUMENT_HOLDER.document = JavaScriptObjects.newObject(Document.class);
         Element e = parseHTMLElement();
-        DOCUMENT.appendChild(e);
-        JavaScriptObjects.setProperty(DOCUMENT, JsoProperties.DOCUMENT_ELEMENT,
-            e);
-        return DOCUMENT;
+        DOCUMENT_HOLDER.document.appendChild(e);
+        JavaScriptObjects.setProperty(DOCUMENT_HOLDER.document,
+            JsoProperties.DOCUMENT_ELEMENT, e);
+        return DOCUMENT_HOLDER.document;
       } catch (Exception e) {
         if (GwtTestException.class.isInstance(e)) {
           throw (GwtTestException) e;
@@ -123,7 +135,7 @@ public class DocumentPatcher {
         }
       }
     }
-    return DOCUMENT;
+    return DOCUMENT_HOLDER.document;
   }
 
   private static Element findHTMLElement(String hostPagePath,

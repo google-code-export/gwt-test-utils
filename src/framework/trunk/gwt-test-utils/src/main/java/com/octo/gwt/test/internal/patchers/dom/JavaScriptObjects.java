@@ -73,68 +73,68 @@ public class JavaScriptObjects {
 
   public static CtClass STRING_TYPE;
 
-  private static final Map<String, Class<? extends Element>> elementMap = new TreeMap<String, Class<? extends Element>>();
+  private static final Map<String, Class<? extends Element>> ELEMENT_TAGS = new TreeMap<String, Class<? extends Element>>();
 
   static {
-    elementMap.put("a", AnchorElement.class);
-    elementMap.put("area", AreaElement.class);
-    elementMap.put("base", BaseElement.class);
-    elementMap.put("body", BodyElement.class);
-    elementMap.put("br", BRElement.class);
-    elementMap.put("button", ButtonElement.class);
-    elementMap.put("div", DivElement.class);
-    elementMap.put("dl", DListElement.class);
-    elementMap.put("fieldset", FieldSetElement.class);
-    elementMap.put("form", FormElement.class);
-    elementMap.put("frame", FrameElement.class);
-    elementMap.put("frameset", FrameSetElement.class);
-    elementMap.put("head", HeadElement.class);
-    elementMap.put("hr", HRElement.class);
-    elementMap.put("h1", HeadingElement.class);
-    elementMap.put("h2", HeadingElement.class);
-    elementMap.put("h3", HeadingElement.class);
-    elementMap.put("h4", HeadingElement.class);
-    elementMap.put("h5", HeadingElement.class);
-    elementMap.put("h6", HeadingElement.class);
-    elementMap.put("hr", HRElement.class);
-    elementMap.put("iframe", IFrameElement.class);
-    elementMap.put("img", ImageElement.class);
-    elementMap.put("ins", ModElement.class);
-    elementMap.put("del", ModElement.class);
-    elementMap.put("input", InputElement.class);
-    elementMap.put("label", LabelElement.class);
-    elementMap.put("legend", LegendElement.class);
-    elementMap.put("li", LIElement.class);
-    elementMap.put("link", LinkElement.class);
-    elementMap.put("map", MapElement.class);
-    elementMap.put("meta", MetaElement.class);
-    elementMap.put("object", ObjectElement.class);
-    elementMap.put("ol", OListElement.class);
-    elementMap.put("optgroup", OptGroupElement.class);
-    elementMap.put("option", OptionElement.class);
-    elementMap.put("options", OptionElement.class);
-    elementMap.put("p", ParagraphElement.class);
-    elementMap.put("param", ParamElement.class);
-    elementMap.put("pre", PreElement.class);
-    elementMap.put("q", QuoteElement.class);
-    elementMap.put("blockquote", QuoteElement.class);
-    elementMap.put("script", ScriptElement.class);
-    elementMap.put("select", SelectElement.class);
-    elementMap.put("span", SpanElement.class);
-    elementMap.put("style", StyleElement.class);
-    elementMap.put("caption", TableCaptionElement.class);
-    elementMap.put("td", TableCellElement.class);
-    elementMap.put("th", TableCellElement.class);
-    elementMap.put("col", TableColElement.class);
-    elementMap.put("colgroup", TableColElement.class);
-    elementMap.put("table", TableElement.class);
-    elementMap.put("tr", TableRowElement.class);
-    elementMap.put("tbody", TableSectionElement.class);
-    elementMap.put("tfoot", TableSectionElement.class);
-    elementMap.put("thead", TableSectionElement.class);
-    elementMap.put("textarea", TextAreaElement.class);
-    elementMap.put("title", TitleElement.class);
-    elementMap.put("ul", UListElement.class);
+    ELEMENT_TAGS.put("a", AnchorElement.class);
+    ELEMENT_TAGS.put("area", AreaElement.class);
+    ELEMENT_TAGS.put("base", BaseElement.class);
+    ELEMENT_TAGS.put("body", BodyElement.class);
+    ELEMENT_TAGS.put("br", BRElement.class);
+    ELEMENT_TAGS.put("button", ButtonElement.class);
+    ELEMENT_TAGS.put("div", DivElement.class);
+    ELEMENT_TAGS.put("dl", DListElement.class);
+    ELEMENT_TAGS.put("fieldset", FieldSetElement.class);
+    ELEMENT_TAGS.put("form", FormElement.class);
+    ELEMENT_TAGS.put("frame", FrameElement.class);
+    ELEMENT_TAGS.put("frameset", FrameSetElement.class);
+    ELEMENT_TAGS.put("head", HeadElement.class);
+    ELEMENT_TAGS.put("hr", HRElement.class);
+    ELEMENT_TAGS.put("h1", HeadingElement.class);
+    ELEMENT_TAGS.put("h2", HeadingElement.class);
+    ELEMENT_TAGS.put("h3", HeadingElement.class);
+    ELEMENT_TAGS.put("h4", HeadingElement.class);
+    ELEMENT_TAGS.put("h5", HeadingElement.class);
+    ELEMENT_TAGS.put("h6", HeadingElement.class);
+    ELEMENT_TAGS.put("hr", HRElement.class);
+    ELEMENT_TAGS.put("iframe", IFrameElement.class);
+    ELEMENT_TAGS.put("img", ImageElement.class);
+    ELEMENT_TAGS.put("ins", ModElement.class);
+    ELEMENT_TAGS.put("del", ModElement.class);
+    ELEMENT_TAGS.put("input", InputElement.class);
+    ELEMENT_TAGS.put("label", LabelElement.class);
+    ELEMENT_TAGS.put("legend", LegendElement.class);
+    ELEMENT_TAGS.put("li", LIElement.class);
+    ELEMENT_TAGS.put("link", LinkElement.class);
+    ELEMENT_TAGS.put("map", MapElement.class);
+    ELEMENT_TAGS.put("meta", MetaElement.class);
+    ELEMENT_TAGS.put("object", ObjectElement.class);
+    ELEMENT_TAGS.put("ol", OListElement.class);
+    ELEMENT_TAGS.put("optgroup", OptGroupElement.class);
+    ELEMENT_TAGS.put("option", OptionElement.class);
+    ELEMENT_TAGS.put("options", OptionElement.class);
+    ELEMENT_TAGS.put("p", ParagraphElement.class);
+    ELEMENT_TAGS.put("param", ParamElement.class);
+    ELEMENT_TAGS.put("pre", PreElement.class);
+    ELEMENT_TAGS.put("q", QuoteElement.class);
+    ELEMENT_TAGS.put("blockquote", QuoteElement.class);
+    ELEMENT_TAGS.put("script", ScriptElement.class);
+    ELEMENT_TAGS.put("select", SelectElement.class);
+    ELEMENT_TAGS.put("span", SpanElement.class);
+    ELEMENT_TAGS.put("style", StyleElement.class);
+    ELEMENT_TAGS.put("caption", TableCaptionElement.class);
+    ELEMENT_TAGS.put("td", TableCellElement.class);
+    ELEMENT_TAGS.put("th", TableCellElement.class);
+    ELEMENT_TAGS.put("col", TableColElement.class);
+    ELEMENT_TAGS.put("colgroup", TableColElement.class);
+    ELEMENT_TAGS.put("table", TableElement.class);
+    ELEMENT_TAGS.put("tr", TableRowElement.class);
+    ELEMENT_TAGS.put("tbody", TableSectionElement.class);
+    ELEMENT_TAGS.put("tfoot", TableSectionElement.class);
+    ELEMENT_TAGS.put("thead", TableSectionElement.class);
+    ELEMENT_TAGS.put("textarea", TextAreaElement.class);
+    ELEMENT_TAGS.put("title", TitleElement.class);
+    ELEMENT_TAGS.put("ul", UListElement.class);
   }
 
   public static void clearProperties(JavaScriptObject jso) {
@@ -171,7 +171,7 @@ public class JavaScriptObjects {
   }
 
   public static Element newElement(String tag) {
-    Class<? extends Element> clazz = elementMap.get(tag.toLowerCase());
+    Class<? extends Element> clazz = ELEMENT_TAGS.get(tag.toLowerCase());
 
     if (clazz == null) {
       clazz = Element.class;

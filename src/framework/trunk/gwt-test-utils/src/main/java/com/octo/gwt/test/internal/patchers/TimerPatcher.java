@@ -4,18 +4,31 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.google.gwt.user.client.Timer;
+import com.octo.gwt.test.internal.AfterTestCallback;
+import com.octo.gwt.test.internal.AfterTestCallbackManager;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
 @PatchClass(Timer.class)
-public class TimerPatcher {
+class TimerPatcher {
 
-  public static int DEFAULT_REPEAT_TIME = 5;
-  private static Map<Timer, Integer> CACHE = new HashMap<Timer, Integer>();
+  static class TimerHolder implements AfterTestCallback {
 
-  public static void reset() {
-    CACHE.clear();
+    private final Map<Timer, Integer> cache = new HashMap<Timer, Integer>();
+
+    TimerHolder() {
+      AfterTestCallbackManager.get().registerCallback(this);
+    }
+
+    public void afterTest() throws Throwable {
+      cache.clear();
+    }
+
   }
+
+  private static int DEFAULT_REPEAT_TIME = 5;
+
+  private static final TimerHolder TIMER_HOLDER = new TimerHolder();
 
   @PatchMethod
   static void clearTimeout(int id) {
@@ -28,13 +41,13 @@ public class TimerPatcher {
       throw new IllegalArgumentException("must be positive");
     }
 
-    if (!CACHE.containsKey(timer)) {
-      CACHE.put(timer, 0);
+    if (!TIMER_HOLDER.cache.containsKey(timer)) {
+      TIMER_HOLDER.cache.put(timer, 0);
     }
 
-    int runTimes = CACHE.get(timer);
+    int runTimes = TIMER_HOLDER.cache.get(timer);
     if (runTimes < DEFAULT_REPEAT_TIME) {
-      CACHE.put(timer, ++runTimes);
+      TIMER_HOLDER.cache.put(timer, ++runTimes);
       timer.run();
     }
 
@@ -46,14 +59,14 @@ public class TimerPatcher {
       throw new IllegalArgumentException("must be positive");
     }
 
-    if (!CACHE.containsKey(timer)) {
-      CACHE.put(timer, 0);
+    if (!TIMER_HOLDER.cache.containsKey(timer)) {
+      TIMER_HOLDER.cache.put(timer, 0);
     }
 
-    int runTimes = CACHE.get(timer);
+    int runTimes = TIMER_HOLDER.cache.get(timer);
     while (runTimes < DEFAULT_REPEAT_TIME
-        && CACHE.get(timer) < DEFAULT_REPEAT_TIME) {
-      CACHE.put(timer, ++runTimes);
+        && TIMER_HOLDER.cache.get(timer) < DEFAULT_REPEAT_TIME) {
+      TIMER_HOLDER.cache.put(timer, ++runTimes);
       timer.run();
     }
 

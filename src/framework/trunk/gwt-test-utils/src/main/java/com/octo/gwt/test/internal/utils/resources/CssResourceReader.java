@@ -13,13 +13,16 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.octo.gwt.test.internal.AfterTestCallback;
+import com.octo.gwt.test.internal.AfterTestCallbackManager;
+
 /**
  * Utility class to parse CSS files.<strong>For internal use only.</strong>
  * 
  * @author Gael Lazzari
  * 
  */
-public class CssResourceReader {
+class CssResourceReader implements AfterTestCallback {
 
   public static class CssParsingResult {
 
@@ -46,6 +49,11 @@ public class CssResourceReader {
 
   private CssResourceReader() {
     cache = new HashMap<URL, CssParsingResult>();
+    AfterTestCallbackManager.get().registerCallback(this);
+  }
+
+  public void afterTest() throws Throwable {
+    cache.clear();
   }
 
   public CssParsingResult readCss(String text) throws IOException {
@@ -61,10 +69,6 @@ public class CssResourceReader {
     }
 
     return parsingResult;
-  }
-
-  public void reset() {
-    cache.clear();
   }
 
   private CssParsingResult parse(Reader reader) throws IOException {
