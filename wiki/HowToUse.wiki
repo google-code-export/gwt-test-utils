@@ -53,7 +53,7 @@ Same dependencies as _gwt-test-utils_ module  plus :
 Same dependencies as _gwt-test-utils_ module plus :
 
  * gwt-css-selector-X.jar
- * gxt-2.2.0.jar
+ * gxt-2.2.x.jar
 
 
 ==== gwt-test-utils-spring2 : ====
