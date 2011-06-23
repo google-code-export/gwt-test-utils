@@ -8,13 +8,16 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.octo.gwt.test.internal.AfterTestCallback;
+import com.octo.gwt.test.internal.AfterTestCallbackManager;
+
 /**
  * Utility class to parse text files.<strong>For internal use only.</strong>
  * 
  * @author Gael Lazzari
  * 
  */
-public class TextResourceReader {
+class TextResourceReader implements AfterTestCallback {
 
   private static final TextResourceReader INSTANCE = new TextResourceReader();
 
@@ -26,6 +29,11 @@ public class TextResourceReader {
 
   private TextResourceReader() {
     cache = new HashMap<URL, String>();
+    AfterTestCallbackManager.get().registerCallback(this);
+  }
+
+  public void afterTest() throws Throwable {
+    cache.clear();
   }
 
   public String readFile(URL url) throws UnsupportedEncodingException,
@@ -57,10 +65,6 @@ public class TextResourceReader {
     }
 
     return cache.get(url);
-  }
-
-  public void reset() {
-    cache.clear();
   }
 
 }

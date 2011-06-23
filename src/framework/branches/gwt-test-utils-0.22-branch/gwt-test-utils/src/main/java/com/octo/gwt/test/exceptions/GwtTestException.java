@@ -6,7 +6,7 @@ package com.octo.gwt.test.exceptions;
  * @author Gael Lazzari
  * 
  */
-public abstract class GwtTestException extends RuntimeException {
+public class GwtTestException extends RuntimeException {
 
   private static final long serialVersionUID = 5806774621682061491L;
 

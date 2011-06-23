@@ -5,12 +5,14 @@ import java.util.Collections;
 import java.util.List;
 
 import com.octo.gwt.test.GwtCreateHandler;
+import com.octo.gwt.test.internal.AfterTestCallback;
+import com.octo.gwt.test.internal.AfterTestCallbackManager;
 import com.octo.gwt.test.internal.uibinder.UiBinderCreateHandler;
 import com.octo.gwt.test.internal.utils.i18n.LocalizableCreateHandler;
 import com.octo.gwt.test.internal.utils.resources.ClientBundleCreateHandler;
 import com.octo.gwt.test.internal.utils.resources.ImageBundleCreateHandler;
 
-public class GwtCreateHandlerManager {
+public class GwtCreateHandlerManager implements AfterTestCallback {
 
   private static final GwtCreateHandlerManager INSTANCE = new GwtCreateHandlerManager();
 
@@ -46,10 +48,17 @@ public class GwtCreateHandlerManager {
     uiBinderCreateHandler = new UiBinderCreateHandler();
     testRemoteServiceCreateHandler = TestRemoteServiceCreateHandler.get();
     webXmlRemoteServiceCreateHandler = new WebXmlRemoteServiceCreateHandler();
+
+    AfterTestCallbackManager.get().registerCallback(this);
   }
 
   public boolean addGwtCreateHandler(GwtCreateHandler gwtCreateHandler) {
     return addedHandlers.add(gwtCreateHandler);
+  }
+
+  public void afterTest() throws Throwable {
+    addedHandlers.clear();
+    testRemoteServiceCreateHandler.reset();
   }
 
   public List<GwtCreateHandler> getGwtCreateHandlers() {
@@ -79,11 +88,6 @@ public class GwtCreateHandlerManager {
     list.add(abstractClassCreateHandler);
 
     return Collections.unmodifiableList(list);
-  }
-
-  public void reset() {
-    addedHandlers.clear();
-    testRemoteServiceCreateHandler.reset();
   }
 
   public void setMockCreateHandler(GwtCreateHandler mockCreateHandler) {

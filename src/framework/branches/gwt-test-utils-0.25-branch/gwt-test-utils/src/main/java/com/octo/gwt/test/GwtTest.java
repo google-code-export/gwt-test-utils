@@ -1,6 +1,7 @@
 package com.octo.gwt.test;
 
 import java.io.File;
+import java.util.List;
 import java.util.Locale;
 
 import org.junit.After;
@@ -13,9 +14,10 @@ import org.slf4j.LoggerFactory;
 
 import com.google.gwt.user.client.Window;
 import com.octo.gwt.test.exceptions.GwtTestConfigurationException;
+import com.octo.gwt.test.exceptions.GwtTestException;
+import com.octo.gwt.test.internal.AfterTestCallbackManager;
 import com.octo.gwt.test.internal.GwtClassLoader;
 import com.octo.gwt.test.internal.GwtConfig;
-import com.octo.gwt.test.internal.GwtReset;
 import com.octo.gwt.test.internal.ModuleData;
 import com.octo.gwt.test.internal.handlers.GwtCreateHandlerManager;
 
@@ -89,6 +91,8 @@ public abstract class GwtTest {
 
   @Before
   public final void setUpGwtTest() throws Exception {
+    GwtReset.initialize();
+
     GwtConfig.get().setLocale(getLocale());
     GwtConfig.get().setLogHandler(getLogHandler());
     GwtConfig.get().setWindowOperationsHandler(getWindowOperationsHandler());
@@ -102,7 +106,16 @@ public abstract class GwtTest {
 
   @After
   public final void tearDownGwtTest() throws Exception {
-    resetPatchGwt();
+
+    List<Throwable> throwables = AfterTestCallbackManager.get().triggerCallbacks();
+
+    if (throwables.size() > 0) {
+      throw new GwtTestException(
+          throwables.size()
+              + " exception(s) thrown during JUnit @After callback. First one is thrown :",
+          throwables.get(0));
+    }
+
   }
 
 	protected boolean addGwtCreateHandler(GwtCreateHandler gwtCreateHandler) {
@@ -182,11 +195,6 @@ public abstract class GwtTest {
 	 */
 	protected WindowOperationsHandler getWindowOperationsHandler() {
 		return null;
-	}
-
-	protected void resetPatchGwt() throws Exception {
-		// reinit GWT
-		GwtReset.reset();
 	}
 
   private String getCheckedModuleName() {

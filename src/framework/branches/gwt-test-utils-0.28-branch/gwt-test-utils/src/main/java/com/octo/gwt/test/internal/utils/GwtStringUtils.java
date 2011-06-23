@@ -129,7 +129,7 @@ public class GwtStringUtils {
     }
 
     Matcher m = DOUBLE_PATTERN.matcher(string);
-    if (m.matches() && Integer.valueOf(m.group(1)) == 0) {
+    if (m.matches() && Double.valueOf(m.group(1)) == 0) {
       return string.replace("." + m.group(1), "");
     } else {
       return string;

@@ -16,7 +16,7 @@ import com.octo.gwt.test.utils.GwtReflectionUtils;
  * @author Gael Lazzari
  * 
  */
-public class GwtConfig {
+public class GwtConfig implements AfterTestCallback {
 
   private static final GwtConfig INSTANCE = new GwtConfig();
 
@@ -32,7 +32,16 @@ public class GwtConfig {
   private WindowOperationsHandler windowOperationsHandler;
 
   private GwtConfig() {
+    AfterTestCallbackManager.get().registerCallback(this);
 
+  }
+
+  public void afterTest() throws Throwable {
+    locale = null;
+    logHandler = null;
+    hostPagePath = null;
+    moduleName = null;
+    ensureDebugId = false;
   }
 
   public boolean ensureDebugId() {
@@ -57,14 +66,6 @@ public class GwtConfig {
 
   public WindowOperationsHandler getWindowOperationsHandler() {
     return windowOperationsHandler;
-  }
-
-  public void reset() {
-    locale = null;
-    logHandler = null;
-    hostPagePath = null;
-    moduleName = null;
-    ensureDebugId = false;
   }
 
   public void setEnsureDebugId(boolean ensureDebugId) {

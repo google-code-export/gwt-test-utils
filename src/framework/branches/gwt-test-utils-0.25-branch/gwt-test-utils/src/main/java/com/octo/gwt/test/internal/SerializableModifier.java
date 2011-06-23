@@ -23,7 +23,7 @@ import com.octo.gwt.test.utils.GwtReflectionUtils;
 /**
  * <p>
  * The {@link JavaClassModifier} which enable the simulation of GWT-RPC
- * serialization.
+ * serialization. <strong>For internal use only.</strong>
  * </p>
  * 
  * <p>

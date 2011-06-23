@@ -1,4 +1,4 @@
-package com.octo.gwt.test.internal;
+package com.octo.gwt.test;
 
 import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.user.client.Event;
@@ -7,39 +7,31 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.impl.HistoryImpl;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.octo.gwt.test.internal.handlers.GwtCreateHandlerManager;
-import com.octo.gwt.test.internal.patchers.CurrencyListPatcher;
-import com.octo.gwt.test.internal.patchers.HistoryImplPatcher;
-import com.octo.gwt.test.internal.patchers.TimerPatcher;
-import com.octo.gwt.test.internal.patchers.dom.DocumentPatcher;
-import com.octo.gwt.test.internal.utils.GwtPropertiesHelper;
-import com.octo.gwt.test.internal.utils.resources.CssResourceReader;
-import com.octo.gwt.test.internal.utils.resources.TextResourceReader;
+import com.octo.gwt.test.internal.AfterTestCallback;
+import com.octo.gwt.test.internal.AfterTestCallbackManager;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 /**
- * Class in charge of reseting all necessary objects after the execution of a
- * unit test. <strong>For internal use only.</strong>
+ * Class in charge of reseting all necessary GWT internal objects after the
+ * execution of a unit test. <strong>For internal use only.</strong>
  * 
  * @author Bertrand Paquet
  * @author Gael Lazzari
  * 
  */
-// TODO : refactor this to have a resetable interface, maybe with the observable
-// pattern ?
-public class GwtReset {
+class GwtReset implements AfterTestCallback {
 
-  public static void reset() throws Exception {
-    GwtConfig.get().reset();
-    GwtPropertiesHelper.get().reset();
-    CurrencyListPatcher.reset();
-    DocumentPatcher.reset();
-    HistoryImplPatcher.reset();
-    TimerPatcher.reset();
-    GwtCreateHandlerManager.get().reset();
-    TextResourceReader.get().reset();
-    CssResourceReader.get().reset();
+  private static final GwtReset INSTANCE = new GwtReset();
 
+  static GwtReset initialize() {
+    return INSTANCE;
+  }
+
+  private GwtReset() {
+    AfterTestCallbackManager.get().registerCallback(this);
+  }
+
+  public void afterTest() throws Throwable {
     GwtReflectionUtils.getStaticAndCallClear(Timer.class, "timers");
     GwtReflectionUtils.getStaticAndCallClear(RootPanel.class, "rootPanels");
     GwtReflectionUtils.getStaticAndCallClear(RootPanel.class, "widgetsToDetach");
@@ -57,7 +49,7 @@ public class GwtReset {
         GwtReflectionUtils.getPrivateFieldValue(
             GwtReflectionUtils.getPrivateFieldValue(
                 GwtReflectionUtils.getPrivateFieldValue(historyImpl, "handlers"),
-                "registry"), "map"), "clear");
+                "eventBus"), "map"), "clear");
 
     GwtReflectionUtils.setStaticField(NumberFormat.class,
         "cachedDecimalFormat", null);

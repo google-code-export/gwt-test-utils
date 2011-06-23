@@ -12,6 +12,8 @@ import java.util.Map;
 import java.util.Properties;
 
 import com.octo.gwt.test.exceptions.GwtTestI18NException;
+import com.octo.gwt.test.internal.AfterTestCallback;
+import com.octo.gwt.test.internal.AfterTestCallbackManager;
 
 /**
  * 
@@ -22,7 +24,7 @@ import com.octo.gwt.test.exceptions.GwtTestI18NException;
  * @author Gael Lazzari
  * 
  */
-public class GwtPropertiesHelper {
+public class GwtPropertiesHelper implements AfterTestCallback {
 
   /*
    * Read in a "logical line" from an InputStream/Reader, skip all comment and
@@ -186,6 +188,14 @@ public class GwtPropertiesHelper {
     cachedProperties = new HashMap<String, Properties>();
     sequenceReplacements = new ArrayList<GwtPropertiesHelper.SequenceReplacement>();
     initSequenceReplacements();
+
+    AfterTestCallbackManager.get().registerCallback(this);
+  }
+
+  public void afterTest() throws Throwable {
+    cachedProperties.clear();
+    sequenceReplacements.clear();
+    initSequenceReplacements();
   }
 
   public Properties getLocalizedProperties(String prefix, Locale locale) {
@@ -222,12 +232,6 @@ public class GwtPropertiesHelper {
 
   public void replaceSequence(String regex, String to) {
     sequenceReplacements.add(new SequenceReplacement(regex, to));
-  }
-
-  public void reset() {
-    cachedProperties.clear();
-    sequenceReplacements.clear();
-    initSequenceReplacements();
   }
 
   public String treatString(String string) {
