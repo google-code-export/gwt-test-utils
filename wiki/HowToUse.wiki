@@ -24,15 +24,12 @@ Note that those modules all directly depend on *gwt-test-utils-X.jar* and can be
 
 You can download _gwt-test-utils_ X version jars through the [http://code.google.com/p/gwt-test-utils/downloads/list Download section].
 
-The framework requiers some third-party librairies you should add to your project test classpath :
+In addition to _GWT_ jars, the framework requiers some other third-party librairies you should add to your project test classpath :
 
 ==== gwt-test-utils : ====
 
  * commons-beanutils-1.8.3.jar
  * commons-logging-1.1.1.jar
- * gwt-dev-2.2.0.jar
- * gwt-servlet-2.2.0.jar
- * gwt-user-2.2.0.jar
  * htmlparser-1.6.jar
  * javassist-3.12.1.GA.jar
  * junit-4.8.2.jar
