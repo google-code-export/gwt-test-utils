@@ -81,7 +81,8 @@ public class TagChecker extends NodeTraversalChecker {
       Node n = DOMHelper.getNextSiblingElement(node);
       if (n != null) {
         String tag = selector.getTagName();
-        if (tag.equals(n.getNodeName()) || tag.equals(Selector.UNIVERSAL_TAG)) {
+        if (tag.equalsIgnoreCase(n.getNodeName())
+            || tag.equals(Selector.UNIVERSAL_TAG)) {
           result.add(n);
         }
       }
@@ -152,7 +153,7 @@ public class TagChecker extends NodeTraversalChecker {
     for (Node node : nodes) {
       Node n = DOMHelper.getNextSiblingElement(node);
       while (n != null) {
-        if (selector.getTagName().equals(n.getNodeName())
+        if (selector.getTagName().equalsIgnoreCase(n.getNodeName())
             || selector.getTagName().equals(Selector.UNIVERSAL_TAG)) {
           result.add(n);
         }
