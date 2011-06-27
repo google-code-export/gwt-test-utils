@@ -1,5 +1,6 @@
 package com.octo.gwt.test.utils.events;
 
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.EventTarget;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.UIObject;
@@ -82,8 +83,14 @@ public class EventBuilder {
     return this;
   }
 
-  public EventBuilder setTarget(UIObject target) {
+  public EventBuilder setTarget(Element target) {
     JavaScriptObjects.setProperty(event, JsoProperties.EVENT_TARGET, target);
+    return this;
+  }
+
+  public EventBuilder setTarget(UIObject target) {
+    JavaScriptObjects.setProperty(event, JsoProperties.EVENT_TARGET,
+        target.getElement());
     return this;
   }
 

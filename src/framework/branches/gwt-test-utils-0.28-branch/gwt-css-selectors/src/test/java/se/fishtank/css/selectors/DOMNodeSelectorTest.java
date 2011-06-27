@@ -7,6 +7,8 @@ import java.util.Set;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import se.fishtank.css.selectors.dom.DOMNodeSelector;
 
@@ -17,12 +19,14 @@ import com.octo.gwt.test.GwtTest;
 
 public class DOMNodeSelectorTest extends GwtTest {
 
+  private static Logger logger = LoggerFactory.getLogger(DOMNodeSelectorTest.class);
+
   private static final Map<String, Integer> testDataMap = new LinkedHashMap<String, Integer>();
 
   static {
     testDataMap.put("*", 251);
     testDataMap.put(":root", 1);
-    testDataMap.put(":empty", 2);
+    testDataMap.put(":empty", 3);
     testDataMap.put("div:first-child", 51);
     testDataMap.put("div:nth-child(even)", 106);
     testDataMap.put("div:nth-child(2n)", 106);
@@ -92,11 +96,11 @@ public class DOMNodeSelectorTest extends GwtTest {
     Assert.assertEquals(meta, new DOMNodeSelector(meta).querySelector(":root"));
   }
 
-  // @Test
+  @Test
   public void checkSelectors() throws Exception {
     for (Map.Entry<String, Integer> entry : testDataMap.entrySet()) {
-      System.out.printf("selector: %s, expected: %d%n", entry.getKey(),
-          entry.getValue());
+      logger.info("selector: " + entry.getKey() + ", expected: "
+          + entry.getValue());
       Set<Node> result = nodeSelector.querySelectorAll(entry.getKey());
       Assert.assertEquals(entry.getKey(), (int) entry.getValue(), result.size());
     }

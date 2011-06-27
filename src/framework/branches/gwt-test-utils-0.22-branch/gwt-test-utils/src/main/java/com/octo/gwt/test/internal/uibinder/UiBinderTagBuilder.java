@@ -14,6 +14,7 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.uibinder.client.UiConstructor;
 import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.NamedFrame;
 import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.Widget;
 import com.octo.gwt.test.exceptions.GwtTestConfigurationException;
@@ -140,8 +141,18 @@ public class UiBinderTagBuilder<T> {
                 + owner.getClass().getSimpleName()
                 + ".ui.xml' : missing required attribute 'name'");
       }
-
       return (U) new RadioButton(name);
+
+    } else if (clazz == NamedFrame.class) {
+      String name = attributes.getValue("name");
+      if (name == null) {
+        throw new GwtTestUiBinderException(
+            "Error during the instanciation of a NamedFrame declared in "
+                + owner.getClass().getSimpleName()
+                + ".ui.xml' : missing required attribute 'name'");
+      }
+      return (U) new NamedFrame(name);
+
     }
 
     return null;

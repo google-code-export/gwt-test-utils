@@ -169,10 +169,7 @@ class NodePatcher {
       oldParent.removeChild(newChild);
     }
 
-    // Then, check parent doesn't contain newChild and remove it if necessary
-    list.remove(newChild);
-
-    // Finally, add
+    // Then, add
     if (index == -1 || index >= list.size()) {
       list.add(newChild);
     } else {

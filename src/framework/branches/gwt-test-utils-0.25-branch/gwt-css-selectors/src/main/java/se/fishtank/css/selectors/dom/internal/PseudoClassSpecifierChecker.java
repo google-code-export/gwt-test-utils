@@ -95,8 +95,7 @@ public class PseudoClassSpecifierChecker extends NodeTraversalChecker {
           empty = false;
           break;
         } else if (n.getNodeType() == Node.TEXT_NODE) {
-          // TODO: Should we trim the text and see if it's length 0?
-          String value = n.getNodeValue();
+          String value = n.getNodeValue().trim();
           if (value.length() > 0) {
             empty = false;
             break;

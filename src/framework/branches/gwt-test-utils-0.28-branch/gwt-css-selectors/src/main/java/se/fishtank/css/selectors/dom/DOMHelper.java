@@ -41,7 +41,11 @@ public class DOMHelper {
       n = n.getNextSibling();
     }
 
-    return n.cast();
+    if (n == null) {
+      return null;
+    } else {
+      return n.cast();
+    }
   }
 
   /**
@@ -56,7 +60,11 @@ public class DOMHelper {
       n = n.getPreviousSibling();
     }
 
-    return n.cast();
+    if (n == null) {
+      return null;
+    } else {
+      return n.cast();
+    }
   }
 
   /**
