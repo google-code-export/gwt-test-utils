@@ -52,9 +52,8 @@ public class GwtReflectionUtils {
       if (GwtTestException.class.isInstance(e.getCause())) {
         throw (GwtTestException) e.getCause();
       }
-      throw new ReflectionException("Error while calling '"
-          + target.getClass().getSimpleName() + "." + method.getName()
-          + "(..)'", e.getCause());
+      throw new ReflectionException("Error while calling method '"
+          + method.toString() + "'", e.getCause());
     } catch (Exception e) {
       throw new ReflectionException("Unable to call method '"
           + target.getClass().getSimpleName() + "." + method.getName()
@@ -86,8 +85,8 @@ public class GwtReflectionUtils {
       Object res = m.invoke(null, args);
       return (T) res;
     } catch (Exception e) {
-      throw new ReflectionException("Unable to call static method \""
-          + clazz.getSimpleName() + "." + methodName + "\"", e);
+      throw new ReflectionException("Unable to call static method '"
+          + m.toString() + "'", e);
     }
   }
 

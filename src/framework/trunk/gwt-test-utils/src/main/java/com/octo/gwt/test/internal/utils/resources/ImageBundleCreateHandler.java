@@ -9,6 +9,7 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.ImageBundle;
 import com.octo.gwt.test.GwtCreateHandler;
 import com.octo.gwt.test.exceptions.GwtTestResourcesException;
+import com.octo.gwt.test.internal.patchers.dom.JavaScriptObjects;
 
 /**
  * Class in charge of the instanciation of all {@link ImageBundle}
@@ -24,6 +25,10 @@ public class ImageBundleCreateHandler implements GwtCreateHandler {
   private static class OverrideImagePrototype extends AbstractImagePrototype {
 
     public void applyTo(Image arg0) {
+    }
+
+    public ImagePrototypeElement createElement() {
+      return JavaScriptObjects.newObject(ImagePrototypeElement.class);
     }
 
     public Image createImage() {
