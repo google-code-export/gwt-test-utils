@@ -9,10 +9,11 @@ import org.springframework.test.context.ContextConfiguration;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Label;
 import com.octo.gwt.test.spring.GwtSpringTest;
+import com.octo.gwt.test.spring.GwtTestContextLoader;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 import com.octo.gwt.test.utils.events.Browser;
 
-@ContextConfiguration(locations = {"classpath:applicationContext.xml"})
+@ContextConfiguration(locations = {"classpath:applicationContext.xml"}, loader = GwtTestContextLoader.class)
 public class RPCCompositeWithSpringTest extends GwtSpringTest {
 
   private RPCComposite composite;
