@@ -52,19 +52,23 @@ public class JsoProperties {
   public static final String SELECTED_INDEX_FIELD = "selectedIndex";
   public static final String SELECTED_SIZE = "SELECTED_SIZE";
   public static final String SELECTION_END = "SELECTION_END";
-  public static final String SELECTION_START = "SELECTION_START";
 
+  public static final String SELECTION_START = "SELECTION_START";
   public static final String STYLE_BORDER_BOTTOM_WIDTH = "border-bottom-width";
   public static final String STYLE_BORDER_LEFT_WIDTH = "border-left-width";
   public static final String STYLE_BORDER_RIGHT_WIDTH = "border-right-width";
+
   public static final String STYLE_BORDER_TOP_WIDTH = "border-top-width";
   public static final String STYLE_OBJECT_FIELD = "STYLE_OBJECT";
   public static final String STYLE_TARGET_ELEMENT = "STYLE_TARGET_ELEMENT";
   public static final String STYLE_WHITESPACE_PROPERTY = "whiteSpace";
-
   public static final String TAB_INDEX = "tabIndex";
-
   public static final String TAG_NAME = "tagName";
+
+  // for TableElement
+  public static final String TCAPTION = "TCAPTION";
+  public static final String TFOOT = "tFoot";
+  public static final String THEAD = "tHead";
 
   public static final String UIBINDER_CHILD_WIDGETS_LIST = "UIBINDER_CHILD_WIDGETS_LIST";
 

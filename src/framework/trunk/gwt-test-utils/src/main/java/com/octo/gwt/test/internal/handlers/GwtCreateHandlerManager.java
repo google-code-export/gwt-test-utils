@@ -31,6 +31,7 @@ public class GwtCreateHandlerManager implements AfterTestCallback {
   private final GwtCreateHandler imageBundleCreateHandler;
   private final GwtCreateHandler localizableResourceCreateHandler;
   private GwtCreateHandler mockCreateHandler;
+  private final GwtCreateHandler safeHtmlTemplatesCreateHandler;
   private final TestRemoteServiceCreateHandler testRemoteServiceCreateHandler;
   private final GwtCreateHandler uiBinderCreateHandler;
   private final WebXmlRemoteServiceCreateHandler webXmlRemoteServiceCreateHandler;
@@ -47,6 +48,7 @@ public class GwtCreateHandlerManager implements AfterTestCallback {
     htmlPanelCreateHandler = new HTMLPanelCreateHandler();
     imageBundleCreateHandler = new ImageBundleCreateHandler();
     localizableResourceCreateHandler = new LocalizableCreateHandler();
+    safeHtmlTemplatesCreateHandler = new SafeHtmlTemplatesCreateHandler();
     uiBinderCreateHandler = new UiBinderCreateHandler();
     testRemoteServiceCreateHandler = TestRemoteServiceCreateHandler.get();
     webXmlRemoteServiceCreateHandler = new WebXmlRemoteServiceCreateHandler();
@@ -89,6 +91,7 @@ public class GwtCreateHandlerManager implements AfterTestCallback {
     list.add(cellBasedWidgetImplCreateHandler);
     list.add(defaultGwtCreateHandler);
     list.add(abstractClassCreateHandler);
+    list.add(safeHtmlTemplatesCreateHandler);
 
     return Collections.unmodifiableList(list);
   }

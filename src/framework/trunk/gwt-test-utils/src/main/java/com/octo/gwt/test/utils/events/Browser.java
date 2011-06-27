@@ -8,6 +8,7 @@ import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Grid;
@@ -55,6 +56,19 @@ public class Browser {
    */
   public static void change(Widget target) {
     DISPATCHER.change(target);
+  }
+
+  /**
+   * 
+   * Simulate a click on a specific cell in a cell list. <strong>DO NOT USE !
+   * DON'T WORK ON TRUNK !!</strong>
+   * 
+   * @param <T> The {@link CellList} type.
+   * @param cellList The cell list.
+   * @param cellContent The object rendered by the cell to click.
+   */
+  public static <T> void click(CellList<T> cellList, T cellContent) {
+    DISPATCHER.click(cellList, cellContent);
   }
 
   /**

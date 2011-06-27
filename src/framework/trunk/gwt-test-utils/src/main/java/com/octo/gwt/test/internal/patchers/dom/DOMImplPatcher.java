@@ -17,7 +17,6 @@ import com.google.gwt.dom.client.SelectElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Text;
 import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.ui.UIObject;
 import com.octo.gwt.test.internal.utils.EventUtils;
 import com.octo.gwt.test.internal.utils.JsoProperties;
 import com.octo.gwt.test.internal.utils.PropertyContainer;
@@ -134,9 +133,9 @@ class DOMImplPatcher {
 
   @PatchMethod
   static EventTarget eventGetTarget(Object domImpl, NativeEvent nativeEvent) {
-    UIObject target = JavaScriptObjects.getObject(nativeEvent,
+    Element target = JavaScriptObjects.getObject(nativeEvent,
         JsoProperties.EVENT_TARGET);
-    return target.getElement().cast();
+    return target.cast();
   }
 
   @PatchMethod

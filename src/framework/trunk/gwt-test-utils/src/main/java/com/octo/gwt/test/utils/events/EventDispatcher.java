@@ -4,10 +4,10 @@ import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.shared.UmbrellaException;
+import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.ComplexPanel;
-import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.MenuBar;
@@ -64,6 +64,11 @@ public class EventDispatcher {
 
   public void change(Widget target) {
     dispatchEvent(target, EventBuilder.create(Event.ONCHANGE).build());
+  }
+
+  public <T> void click(CellList<T> cellList, T cellContent) {
+    System.out.println(cellList.getElement().toString());
+
   }
 
   public void click(ComplexPanel panel, int index) {
@@ -298,15 +303,16 @@ public class EventDispatcher {
   }
 
   private void assertCanApplyEvent(Event event) {
-    UIObject target = JavaScriptObjects.getObject(event,
-        JsoProperties.EVENT_TARGET);
+    Element targetElement = event.getEventTarget().cast();
 
-    if (!WidgetUtils.isWidgetVisible(target)) {
-      browserErrorHandler.onError(createFailureMessage(target, event, "visible"));
-    }
-
-    if (target instanceof FocusWidget && !((FocusWidget) target).isEnabled()) {
-      browserErrorHandler.onError(createFailureMessage(target, event, "enabled"));
+    if (!isVisible(targetElement)) {
+      browserErrorHandler.onError("Cannot dispatch '"
+          + event.getType()
+          + "' event : the targeted widget and its possible parents have to be visible");
+    } else if (isDisabled(targetElement)) {
+      browserErrorHandler.onError("Cannot dispatch '" + event.getType()
+          + "' event : the targeted widget has to be enabled : "
+          + targetElement.toString());
     }
   }
 
@@ -319,20 +325,6 @@ public class EventDispatcher {
     Event onClick = EventBuilder.create(Event.ONCLICK).setTarget(target).build();
 
     dispatchEvent(parent, onMouseOver, onMouseDown, onMouseUp, onClick);
-  }
-
-  private String createFailureMessage(UIObject target, Event event,
-      String attribut) {
-    StringBuilder sb = new StringBuilder();
-
-    String className = target.getClass().isAnonymousClass()
-        ? target.getClass().getName() : target.getClass().getSimpleName();
-    sb.append("The targeted widget (").append(className);
-    sb.append(") and its possible parents have to be ").append(attribut);
-    sb.append(" to apply a browser '").append(event.getType()).append(
-        "\' event");
-
-    return sb.toString();
   }
 
   private void dispatchEventInternal(Widget target, Event... events) {
@@ -380,13 +372,26 @@ public class EventDispatcher {
     }
   }
 
+  private boolean isDisabled(Element element) {
+    return element.getPropertyBoolean("disabled");
+  }
+
+  private boolean isVisible(Element element) {
+    if (element == null) {
+      return true;
+    }
+
+    return UIObject.isVisible(element) ? isVisible(element.getParentElement())
+        : false;
+  }
+
   private void prepareEvents(Widget target, Event... events) {
     for (Event event : events) {
-      UIObject effectiveTarget = JavaScriptObjects.getObject(event,
+      Element effectiveTarget = JavaScriptObjects.getObject(event,
           JsoProperties.EVENT_TARGET);
 
       if (effectiveTarget == null) {
-        effectiveTarget = target;
+        effectiveTarget = target.getElement();
         JavaScriptObjects.setProperty(event, JsoProperties.EVENT_TARGET,
             effectiveTarget);
       }

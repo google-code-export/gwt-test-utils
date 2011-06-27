@@ -49,10 +49,12 @@ public class AfterTestCallbackManager {
     List<Throwable> throwables = new ArrayList<Throwable>();
 
     for (AfterTestCallback callback : callbacks) {
-      try {
-        callback.afterTest();
-      } catch (Throwable t) {
-        throwables.add(t);
+      if (callback != null) {
+        try {
+          callback.afterTest();
+        } catch (Throwable t) {
+          throwables.add(t);
+        }
       }
     }
 
