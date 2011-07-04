@@ -104,7 +104,7 @@ public class SerializableModifier implements JavaClassModifier {
 
     for (Field field : GwtReflectionUtils.getFields(o.getClass())) {
       int fieldModifier = field.getModifiers();
-      if (!Modifier.isFinal(fieldModifier) && !Modifier.isStatic(fieldModifier)
+      if (!Modifier.isStatic(fieldModifier)
           && !Modifier.isTransient(fieldModifier)) {
         result.put(field, field.get(o));
       }

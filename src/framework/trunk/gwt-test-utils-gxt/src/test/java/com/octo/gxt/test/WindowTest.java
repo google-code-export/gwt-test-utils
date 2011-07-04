@@ -6,11 +6,7 @@ import org.junit.Test;
 
 import com.extjs.gxt.ui.client.event.WindowEvent;
 import com.extjs.gxt.ui.client.event.WindowListener;
-import com.extjs.gxt.ui.client.widget.ContentPanel;
 import com.extjs.gxt.ui.client.widget.Window;
-import com.extjs.gxt.ui.client.widget.button.Button;
-import com.extjs.gxt.ui.client.widget.toolbar.PagingToolBar;
-import com.google.gwt.user.client.ui.AbstractImagePrototype;
 
 public class WindowTest extends GwtGxtTest {
 
@@ -42,23 +38,6 @@ public class WindowTest extends GwtGxtTest {
 
     // Assert
     Assert.assertTrue(activate);
-  }
-
-  @Test
-  public void checkIcon() {
-    // Arrange
-    Window window = new Window();
-    ContentPanel panel = new ContentPanel();
-    Button button = new Button();
-    AbstractImagePrototype imagePrototype = new PagingToolBar.PagingToolBarImages().getRefresh();
-    button.setIcon(imagePrototype);
-    panel.add(button);
-    window.add(panel);
-    window.show();
-
-    // Assert
-    Assert.assertEquals(imagePrototype, button.getIcon());
-    Assert.assertTrue(window.isVisible());
   }
 
   @Test
