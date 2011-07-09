@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.ToggleButton;
 import com.octo.gwt.test.utils.events.Browser;
 
@@ -17,6 +18,10 @@ public class ToggleButtonTest extends GwtTestTest {
   public void checkClick() {
     // Arrange
     final ToggleButton toggleButton = new ToggleButton("Up", "Down");
+
+    // needs to be attached
+    RootPanel.get().add(toggleButton);
+
     clicked = false;
 
     toggleButton.addClickHandler(new ClickHandler() {

@@ -12,10 +12,8 @@ import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
-import com.octo.gwt.test.internal.EventDispatcher;
-import com.octo.gwt.test.internal.EventDispatcher.BrowserErrorHandler;
-import com.octo.gwt.test.utils.GwtReflectionUtils;
 import com.octo.gwt.test.utils.events.Browser;
+import com.octo.gwt.test.utils.events.Browser.BrowserErrorHandler;
 
 public class CellListTest extends GwtTestTest {
 
@@ -24,8 +22,12 @@ public class CellListTest extends GwtTestTest {
 
   private CellList<String> cellList;
 
+  private final StringBuilder sb = new StringBuilder();
+
   @Before
   public void beforeCellListTest() {
+    sb.delete(0, sb.length());
+
     // Create a cell to render each value.
     TextCell textCell = new TextCell();
 
@@ -86,19 +88,6 @@ public class CellListTest extends GwtTestTest {
   @Test
   public void selectWithClick_OutOfRange() {
     // Arrange
-    final StringBuilder sb = new StringBuilder();
-
-    // Set a new BrowserErrorHandler in Browser
-    BrowserErrorHandler mock = new BrowserErrorHandler() {
-
-      public void onError(String errorMessage) {
-        sb.append(errorMessage);
-      }
-    };
-
-    GwtReflectionUtils.setStaticField(Browser.class, "DISPATCHER",
-        EventDispatcher.newInstance(mock));
-
     final SingleSelectionModel<String> selectionModel = new SingleSelectionModel<String>();
     cellList.setSelectionModel(selectionModel);
     selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
@@ -117,5 +106,15 @@ public class CellListTest extends GwtTestTest {
         "the item to click is now visible in the targeted CellList instance",
         sb.toString());
     Assert.assertFalse(cellList.getSelectionModel().isSelected("Saturday"));
+  }
+
+  @Override
+  protected BrowserErrorHandler getBrowserErrorHandler() {
+    return new BrowserErrorHandler() {
+
+      public void onError(String errorMessage) {
+        sb.append(errorMessage);
+      }
+    };
   }
 }

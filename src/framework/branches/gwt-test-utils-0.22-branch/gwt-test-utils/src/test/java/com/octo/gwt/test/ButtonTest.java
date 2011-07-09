@@ -1,6 +1,7 @@
 package com.octo.gwt.test;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 import com.google.gwt.dom.client.ButtonElement;
@@ -9,16 +10,26 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 @SuppressWarnings("deprecation")
 public class ButtonTest extends GwtTestTest {
 
+  private Button b;
+
+  @Before
+  public void beforeButtonTest() {
+    // create the button in a standard JVM
+    b = new Button();
+
+    // needs to be attached
+    RootPanel.get().add(b);
+  }
+
   @Test
   public void checkClickWithHander() {
-
-    // create the button in a standard JVM
-    final Button b = new Button();
+    // Arrange
     // add a handler to test the click
     b.addClickHandler(new ClickHandler() {
 
@@ -28,20 +39,19 @@ public class ButtonTest extends GwtTestTest {
 
     });
 
+    // Pre-Assert
     Assert.assertEquals("", b.getHTML());
 
-    // simulate click
+    // Act
     b.click();
 
-    // assert that the "AbstractGWTTest.click(Widget)" method trigger the
-    // "onClick" handler's method
+    // Assert
     Assert.assertEquals("clicked", b.getHTML());
   }
 
   @Test
   public void checkClickWithListener() {
-    final Button b = new Button();
-
+    // Arrange
     b.addClickListener(new ClickListener() {
 
       public void onClick(Widget sender) {
@@ -50,73 +60,83 @@ public class ButtonTest extends GwtTestTest {
       }
     });
 
+    // Pre-Assert
     Assert.assertEquals("", b.getHTML());
 
-    // simulate click
+    // Act
     b.click();
 
+    // Assert
     Assert.assertEquals("clicked", b.getHTML());
   }
 
   @Test
   public void checkEnable() {
-    Button b = new Button();
+    // Pre-Assert
     Assert.assertEquals(true, b.isEnabled());
 
+    // Act
     b.setEnabled(false);
 
+    // Assert
     Assert.assertEquals(false, b.isEnabled());
   }
 
   @Test
   public void checkHTML() {
-    Button b = new Button("test");
-    Assert.assertEquals("test", b.getHTML());
+    // Pre-Assert
+    Assert.assertEquals("", b.getHTML());
 
+    // Act
     b.setHTML("test-html");
 
+    // Assert
     Assert.assertEquals("test-html", b.getHTML());
   }
 
   @Test
   public void checkStyleName() {
-    Button b = new Button();
+    // Pre-Assert
     Assert.assertEquals("gwt-Button", b.getStyleName());
 
+    // Act
     b.setStyleName("test-button-style");
 
+    // Assert
     Assert.assertEquals("test-button-style", b.getStyleName());
   }
 
   @Test
   public void checkStylePrimaryName() {
-    Button b = new Button();
-
+    // Act
     b.setStylePrimaryName("test-button-styleP");
 
+    // Assert
     Assert.assertEquals("test-button-styleP", b.getStylePrimaryName());
   }
 
   @Test
   public void checkText() {
-    Button b = new Button();
+    // Act
     b.setText("toto");
 
+    // Assert
     Assert.assertEquals("toto", b.getText());
   }
 
   @Test
   public void checkTitle() {
-    Button b = new Button();
+    // Act
     b.setTitle("title");
 
+    // Assert
     Assert.assertEquals("title", b.getTitle());
   }
 
   @Test
   public void checkToString() {
     // Arrange
-    Button b = new Button("test button");
+    b.setHTML("test button");
     b.setEnabled(false);
     b.setFocus(false);
     b.setAccessKey('h');
@@ -133,18 +153,19 @@ public class ButtonTest extends GwtTestTest {
 
   @Test
   public void checkVisible() {
-    Button b = new Button();
+    // Pre-Assert
     Assert.assertEquals(true, b.isVisible());
 
+    // Act
     b.setVisible(false);
 
+    // Assert
     Assert.assertEquals(false, b.isVisible());
   }
 
   @Test
   public void checkWrap() {
-    // Set up
-
+    // Arrange
     ButtonElement element = Document.get().createButtonElement();
     element.setTabIndex(3);
 

@@ -8,6 +8,7 @@ import com.google.gwt.user.client.ui.UIObject.DebugIdImpl;
 import com.octo.gwt.test.GwtLogHandler;
 import com.octo.gwt.test.WindowOperationsHandler;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
+import com.octo.gwt.test.utils.events.Browser.BrowserErrorHandler;
 
 /**
  * Internal configuration of gwt-test-utils. <strong>For internal use
@@ -24,6 +25,7 @@ public class GwtConfig implements AfterTestCallback {
     return INSTANCE;
   }
 
+  private BrowserErrorHandler browserErrorHandler;
   private boolean ensureDebugId;
   private String hostPagePath;
   private Locale locale;
@@ -48,6 +50,10 @@ public class GwtConfig implements AfterTestCallback {
     return ensureDebugId;
   }
 
+  public BrowserErrorHandler getBrowserErrorHandler() {
+    return browserErrorHandler;
+  }
+
   public String getHostPagePath() {
     return hostPagePath;
   }
@@ -66,6 +72,10 @@ public class GwtConfig implements AfterTestCallback {
 
   public WindowOperationsHandler getWindowOperationsHandler() {
     return windowOperationsHandler;
+  }
+
+  public void setBrowserErrorHandler(BrowserErrorHandler browserErrorHandler) {
+    this.browserErrorHandler = browserErrorHandler;
   }
 
   public void setEnsureDebugId(boolean ensureDebugId) {

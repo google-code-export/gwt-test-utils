@@ -56,6 +56,18 @@ public class EventBuilder {
     return this;
   }
 
+  public EventBuilder setCanBubble(boolean canBubble) {
+    JavaScriptObjects.setProperty(event, JsoProperties.EVENT_CANBUBBLE,
+        canBubble);
+    return this;
+  }
+
+  public EventBuilder setCancelable(boolean cancelable) {
+    JavaScriptObjects.setProperty(event, JsoProperties.EVENT_CANCELABLE,
+        cancelable);
+    return this;
+  }
+
   public EventBuilder setCtrlKey(boolean ctrlKey) {
     JavaScriptObjects.setProperty(event, JsoProperties.EVENT_KEY_CTRL, ctrlKey);
     return this;

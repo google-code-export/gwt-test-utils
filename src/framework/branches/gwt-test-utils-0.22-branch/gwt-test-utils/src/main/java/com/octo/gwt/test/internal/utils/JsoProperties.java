@@ -29,7 +29,8 @@ public class JsoProperties {
   public static final String ELEM_TYPE = "type";
   // EVENT PROPERTIES
   public static final String EVENT_BUTTON = "EVENT_button";
-
+  public static final String EVENT_CANBUBBLE = "EVENT_canBubble";
+  public static final String EVENT_CANCELABLE = "EVENT_cancelable";
   public static final String EVENT_KEY_ALT = "EVENT_altKey";
   public static final String EVENT_KEY_CTRL = "EVENT_ctrlKey";
   public static final String EVENT_KEY_META = "EVENT_metaKey";

@@ -6,12 +6,14 @@ import java.util.Locale;
 
 import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
 import com.octo.gwt.test.exceptions.GwtTestConfigurationException;
 import com.octo.gwt.test.exceptions.GwtTestException;
@@ -20,6 +22,7 @@ import com.octo.gwt.test.internal.GwtClassLoader;
 import com.octo.gwt.test.internal.GwtConfig;
 import com.octo.gwt.test.internal.ModuleData;
 import com.octo.gwt.test.internal.handlers.GwtCreateHandlerManager;
+import com.octo.gwt.test.utils.events.Browser.BrowserErrorHandler;
 
 /**
  * <p>
@@ -93,6 +96,7 @@ public abstract class GwtTest {
   public final void setUpGwtTest() throws Exception {
     GwtReset.initialize();
 
+    GwtConfig.get().setBrowserErrorHandler(getBrowserErrorHandler());
     GwtConfig.get().setLocale(getLocale());
     GwtConfig.get().setLogHandler(getLogHandler());
     GwtConfig.get().setWindowOperationsHandler(getWindowOperationsHandler());
@@ -132,17 +136,38 @@ public abstract class GwtTest {
 		return false;
 	}
 
-	/**
-	 * Return the relative path in the project of the HTML file which is used by
-	 * the corresponding GWT module.
-	 * 
-	 * @param moduleFullQualifiedName
-	 *            The full qualifed name of the corresponding GWT module.
-	 * @return The relative path of the HTML file used.
-	 */
-	protected String getHostPagePath(String moduleFullQualifiedName) {
-		// try with gwt default structure
-		String fileSimpleName = moduleFullQualifiedName.substring(moduleFullQualifiedName.lastIndexOf('.') + 1) + ".html";
+  /**
+   * Override this method if you want to customize error handling when
+   * dispatching a browser {@link Event}. New BrowserErrorHandler
+   * <strong>must</strong> call
+   * {@link FinallyCommandTrigger#clearPendingCommands()}.
+   * 
+   * @return The custom browser error handler callback.
+   */
+  protected BrowserErrorHandler getBrowserErrorHandler() {
+    return new BrowserErrorHandler() {
+
+      public void onError(String errorMessage) {
+        // remove pending tasks, no need to execute
+        FinallyCommandTrigger.clearPendingCommands();
+
+        Assert.fail(errorMessage);
+      }
+    };
+  }
+
+  /**
+   * Return the relative path in the project of the HTML file which is used by
+   * the corresponding GWT module.
+   * 
+   * @param moduleFullQualifiedName The full qualifed name of the corresponding
+   *          GWT module.
+   * @return The relative path of the HTML file used.
+   */
+  protected String getHostPagePath(String moduleFullQualifiedName) {
+    // try with gwt default structure
+    String fileSimpleName = moduleFullQualifiedName.substring(moduleFullQualifiedName.lastIndexOf('.') + 1)
+        + ".html";
 
 		String fileRelativePath = DEFAULT_WAR_DIR + fileSimpleName;
 		if (new File(fileRelativePath).exists()) {
