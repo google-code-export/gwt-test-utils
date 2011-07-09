@@ -1,13 +1,12 @@
-package com.octo.gwt.test.utils.events;
+package com.octo.gwt.test.internal;
 
-import com.google.gwt.cell.client.Cell;
-import com.google.gwt.cell.client.Cell.Context;
+import java.util.Iterator;
+
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.shared.UmbrellaException;
-import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
-import com.google.gwt.user.cellview.client.CellList;
+import com.google.gwt.user.cellview.client.AbstractHasData;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.ComplexPanel;
@@ -23,12 +22,14 @@ import com.google.gwt.user.client.ui.Widget;
 import com.octo.gwt.test.FinallyCommandTrigger;
 import com.octo.gwt.test.internal.patchers.dom.JavaScriptObjects;
 import com.octo.gwt.test.internal.utils.JsoProperties;
-import com.octo.gwt.test.utils.GwtReflectionUtils;
 import com.octo.gwt.test.utils.WidgetUtils;
+import com.octo.gwt.test.utils.events.Browser;
+import com.octo.gwt.test.utils.events.EventBuilder;
 
 /**
  * 
  * Class responsible of dispatching {@link Event} object to {@link Widget}.
+ * <strong>For internal use only.</strong>
  * 
  * @author Gael Lazzari
  * 
@@ -37,7 +38,7 @@ public class EventDispatcher {
 
   /**
    * An callback interface to handle error when dispatching a browser
-   * {@link Event}.
+   * {@link Event}. <strong>For internal use only.</strong>
    * 
    * @author Gael Lazzari
    * 
@@ -71,32 +72,35 @@ public class EventDispatcher {
     dispatchEvent(target, EventBuilder.create(Event.ONCHANGE).build());
   }
 
-  public <T> void click(CellList<T> cellList, String cellContent) {
+  public <T> void click(AbstractHasData<T> hasData, T item) {
     // trigger finally scheduled command first
     FinallyCommandTrigger.triggerCommands();
 
-    Cell<T> cell = GwtReflectionUtils.getPrivateFieldValue(cellList, "cell");
+    // compute the key for the item to click
+    Object itemKey = (hasData.getKeyProvider() != null)
+        ? hasData.getKeyProvider().getKey(item) : item;
 
-    for (int i = 0; i < cellList.getVisibleItemCount(); i++) {
+    Iterator<T> it = hasData.getVisibleItems().iterator();
+    while (it.hasNext()) {
+      // compute the key for the current visible item
+      T visibleContent = it.next();
+      Object visibleKey = (hasData.getKeyProvider() != null)
+          ? hasData.getKeyProvider().getKey(visibleContent) : visibleContent;
 
-      T current = cellList.getVisibleItem(i);
+      if (visibleKey.equals(itemKey)) {
+        hasData.getSelectionModel().setSelected(item,
+            !hasData.getSelectionModel().isSelected(item));
 
-      Object valueKey = GwtReflectionUtils.callPrivateMethod(cellList,
-          "getValueKey", current);
+        // run finally scheduled commands because some could have been scheduled
+        // when the event was dispatched.
+        FinallyCommandTrigger.triggerCommands();
 
-      Context currentContext = new Context(i, 0, valueKey);
-      SafeHtmlBuilder currentBuilder = new SafeHtmlBuilder();
-
-      cell.render(currentContext, current, currentBuilder);
-      if (currentBuilder.toSafeHtml().asString().equals(cellContent)) {
-        cellList.getSelectionModel().setSelected(current,
-            !cellList.getSelectionModel().isSelected(current));
+        return;
       }
     }
 
-    // run finally scheduled commands because some could have been scheduled
-    // when the event was dispatched.
-    FinallyCommandTrigger.triggerCommands();
+    browserErrorHandler.onError("the item to click is now visible in the targeted "
+        + hasData.getClass().getSimpleName() + " instance");
 
   }
 

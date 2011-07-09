@@ -12,6 +12,9 @@ import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
+import com.octo.gwt.test.internal.EventDispatcher;
+import com.octo.gwt.test.internal.EventDispatcher.BrowserErrorHandler;
+import com.octo.gwt.test.utils.GwtReflectionUtils;
 import com.octo.gwt.test.utils.events.Browser;
 
 public class CellListTest extends GwtTestTest {
@@ -41,7 +44,7 @@ public class CellListTest extends GwtTestTest {
     // Add it to the root panel.
     RootPanel.get().add(cellList);
 
-    // Assert
+    // Pre-Assert
     Assert.assertEquals(DAYS.size(), cellList.getRowCount());
     Assert.assertEquals(5, cellList.getVisibleItemCount());
     Assert.assertEquals("Thursday",
@@ -85,6 +88,17 @@ public class CellListTest extends GwtTestTest {
     // Arrange
     final StringBuilder sb = new StringBuilder();
 
+    // Set a new BrowserErrorHandler in Browser
+    BrowserErrorHandler mock = new BrowserErrorHandler() {
+
+      public void onError(String errorMessage) {
+        sb.append(errorMessage);
+      }
+    };
+
+    GwtReflectionUtils.setStaticField(Browser.class, "DISPATCHER",
+        EventDispatcher.newInstance(mock));
+
     final SingleSelectionModel<String> selectionModel = new SingleSelectionModel<String>();
     cellList.setSelectionModel(selectionModel);
     selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
@@ -99,7 +113,9 @@ public class CellListTest extends GwtTestTest {
     Browser.click(cellList, "Saturday");
 
     // Assert : no trigger because "Saturday" is not visible
-    Assert.assertEquals("", sb.toString());
+    Assert.assertEquals(
+        "the item to click is now visible in the targeted CellList instance",
+        sb.toString());
     Assert.assertFalse(cellList.getSelectionModel().isSelected("Saturday"));
   }
 }

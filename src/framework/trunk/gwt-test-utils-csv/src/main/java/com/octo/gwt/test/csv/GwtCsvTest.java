@@ -39,11 +39,11 @@ import com.octo.gwt.test.csv.tools.NodeObjectFinder;
 import com.octo.gwt.test.csv.tools.ObjectFinder;
 import com.octo.gwt.test.csv.tools.VisitorObjectFinder;
 import com.octo.gwt.test.csv.tools.WidgetVisitor;
+import com.octo.gwt.test.internal.EventDispatcher;
+import com.octo.gwt.test.internal.EventDispatcher.BrowserErrorHandler;
 import com.octo.gwt.test.internal.utils.ArrayUtils;
 import com.octo.gwt.test.internal.utils.GwtStringUtils;
 import com.octo.gwt.test.utils.WidgetUtils;
-import com.octo.gwt.test.utils.events.EventDispatcher;
-import com.octo.gwt.test.utils.events.EventDispatcher.BrowserErrorHandler;
 
 public abstract class GwtCsvTest extends GwtTest {
 
