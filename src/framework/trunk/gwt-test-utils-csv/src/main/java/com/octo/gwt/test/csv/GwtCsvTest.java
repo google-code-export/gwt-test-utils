@@ -92,17 +92,17 @@ public abstract class GwtCsvTest extends GwtTest {
   private static final Class<?>[] baseList = {
       String.class, Integer.class, int.class, Class.class};
 
+  protected CsvRunner csvRunner;
+
   private final EventDispatcher dispatcher = EventDispatcher.newInstance(new BrowserErrorHandler() {
 
     public void onError(String errorMessage) {
       Assert.fail(csvRunner.getAssertionErrorMessagePrefix() + errorMessage);
     }
   });
-
   private MacroReader macroReader;
-  private DirectoryTestReader reader;
 
-  protected CsvRunner csvRunner;
+  private DirectoryTestReader reader;
 
   @CsvMethod
   public void assertBiggerThan(String value, String... params) {
@@ -133,7 +133,7 @@ public abstract class GwtCsvTest extends GwtTest {
     containedValue = GwtStringUtils.resolveBackSlash(containedValue);
     String actual = getString(params);
     Assert.assertTrue(csvRunner.getAssertionErrorMessagePrefix()
-        + " not containing string " + containedValue,
+        + " not containing string '" + containedValue + "'",
         actual.contains(containedValue));
   }
 
@@ -574,6 +574,87 @@ public abstract class GwtCsvTest extends GwtTest {
     }
   }
 
+  protected EventDispatcher getEventDispatcher() {
+    return dispatcher;
+  }
+
+  protected FocusWidget getFocusWidget(String... params) {
+    return getObject(FocusWidget.class, params);
+  }
+
+  protected NodeObjectFinder getNodeObjectFinder(String prefix) {
+    if ("root".equals(prefix)) {
+      return new NodeObjectFinder() {
+
+        public Object find(CsvRunner csvRunner, Node node) {
+          return csvRunner.getNodeValue(RootPanel.get(), node);
+        }
+      };
+    }
+
+    return null;
+  }
+
+  protected <T> T getObject(Class<T> clazz, boolean failOnError,
+      String... params) {
+    return csvRunner.getObject(clazz, failOnError, params);
+  }
+
+  protected <T> T getObject(Class<T> clazz, String... params) {
+    return csvRunner.getObject(clazz, params);
+  }
+
+  protected String getString(Object o) {
+    String actualValue;
+    if (o == null) {
+      return null;
+    } else if (HasHTML.class.isInstance(o)) {
+      HasHTML hasHTML = (HasHTML) o;
+      String html = hasHTML.getHTML();
+      actualValue = (html != null && html.length() > 0) ? html
+          : hasHTML.getText();
+    } else if (HasText.class.isInstance(o)) {
+      actualValue = ((HasText) o).getText();
+    } else {
+      actualValue = "" + o;
+    }
+
+    return actualValue;
+  }
+
+  protected String getString(String... params) {
+    Object o = getObject(Object.class, false, params);
+    return getString(o);
+  }
+
+  protected WidgetVisitor getWidgetVisitor() {
+    return new DefaultWidgetVisitor();
+  }
+
+  protected void selectInListBox(ListBox listBox, String regex,
+      String... params) {
+    int selectedIndex;
+    String errorMessage;
+    if (regex.matches("^\\d*$")) {
+      selectedIndex = Integer.parseInt(regex);
+      errorMessage = "Cannot select negative index in ListBox <" + regex
+          + "> in ListBox with values : ";
+    } else {
+      selectedIndex = WidgetUtils.getIndexInListBox(listBox, regex);
+      errorMessage = "Regex <" + regex
+          + "> has not been matched in ListBox values : ";
+    }
+
+    if (selectedIndex > -1) {
+      listBox.setSelectedIndex(selectedIndex);
+      dispatcher.click(listBox);
+      dispatcher.change(listBox);
+    } else {
+      errorMessage += WidgetUtils.getListBoxContentToString(listBox);
+      Assert.fail(csvRunner.getAssertionErrorMessagePrefix() + errorMessage);
+    }
+  }
+
   private ObjectFinder createDefaultFinder(
       final ObjectFinder visitorObjectFinder) {
     ObjectFinder finder = new ObjectFinder() {
@@ -658,87 +739,6 @@ public abstract class GwtCsvTest extends GwtTest {
     }
     if (clazz.getSuperclass() != null) {
       printGetter(o, clazz.getSuperclass(), os);
-    }
-  }
-
-  protected EventDispatcher getEventDispatcher() {
-    return dispatcher;
-  }
-
-  protected FocusWidget getFocusWidget(String... params) {
-    return getObject(FocusWidget.class, params);
-  }
-
-  protected NodeObjectFinder getNodeObjectFinder(String prefix) {
-    if ("root".equals(prefix)) {
-      return new NodeObjectFinder() {
-
-        public Object find(CsvRunner csvRunner, Node node) {
-          return csvRunner.getNodeValue(RootPanel.get(), node);
-        }
-      };
-    }
-
-    return null;
-  }
-
-  protected <T> T getObject(Class<T> clazz, boolean failOnError,
-      String... params) {
-    return csvRunner.getObject(clazz, failOnError, params);
-  }
-
-  protected <T> T getObject(Class<T> clazz, String... params) {
-    return csvRunner.getObject(clazz, params);
-  }
-
-  protected String getString(Object o) {
-    String actualValue;
-    if (o == null) {
-      return null;
-    } else if (HasHTML.class.isInstance(o)) {
-      HasHTML hasHTML = (HasHTML) o;
-      String html = hasHTML.getHTML();
-      actualValue = (html != null && html.length() > 0) ? html
-          : hasHTML.getText();
-    } else if (HasText.class.isInstance(o)) {
-      actualValue = ((HasText) o).getText();
-    } else {
-      actualValue = "" + o;
-    }
-
-    return actualValue;
-  }
-
-  protected String getString(String... params) {
-    Object o = getObject(Object.class, false, params);
-    return getString(o);
-  }
-
-  protected WidgetVisitor getWidgetVisitor() {
-    return new DefaultWidgetVisitor();
-  }
-
-  protected void selectInListBox(ListBox listBox, String regex,
-      String... params) {
-    int selectedIndex;
-    String errorMessage;
-    if (regex.matches("^\\d*$")) {
-      selectedIndex = Integer.parseInt(regex);
-      errorMessage = "Cannot select negative index in ListBox <" + regex
-          + "> in ListBox with values : ";
-    } else {
-      selectedIndex = WidgetUtils.getIndexInListBox(listBox, regex);
-      errorMessage = "Regex <" + regex
-          + "> has not been matched in ListBox values : ";
-    }
-
-    if (selectedIndex > -1) {
-      listBox.setSelectedIndex(selectedIndex);
-      dispatcher.click(listBox);
-      dispatcher.change(listBox);
-    } else {
-      errorMessage += WidgetUtils.getListBoxContentToString(listBox);
-      Assert.fail(csvRunner.getAssertionErrorMessagePrefix() + errorMessage);
     }
   }
 

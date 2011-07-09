@@ -3,6 +3,7 @@ package com.octo.gwt.test;
 import java.util.Arrays;
 import java.util.List;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -35,8 +36,16 @@ public class CellListTest extends GwtTestTest {
     // Push the data into the widget.
     cellList.setRowData(0, DAYS);
 
+    cellList.setVisibleRange(0, 5);
+
     // Add it to the root panel.
     RootPanel.get().add(cellList);
+
+    // Assert
+    Assert.assertEquals(DAYS.size(), cellList.getRowCount());
+    Assert.assertEquals(5, cellList.getVisibleItemCount());
+    Assert.assertEquals("Thursday",
+        cellList.getVisibleItem(cellList.getVisibleItemCount() - 1));
   }
 
   @Test
@@ -50,16 +59,47 @@ public class CellListTest extends GwtTestTest {
       public void onSelectionChange(SelectionChangeEvent event) {
         String selected = selectionModel.getSelectedObject();
         if (selected != null) {
-          sb.append("selected: " + selected);
+          sb.append("selected : " + selected);
         }
       }
     });
 
-    // Act
+    // Act 1
     Browser.click(cellList, "Wednesday");
 
-    // Assert
-    // Assert.assertEquals("selected : Wednesday", sb.toString());
+    // Assert 1
+    Assert.assertEquals("selected : Wednesday", sb.toString());
+    Assert.assertTrue(cellList.getSelectionModel().isSelected("Wednesday"));
+
+    // Act 2 : deselect
+
+    Browser.click(cellList, "Wednesday");
+
+    // Assert 2
+    Assert.assertEquals("selected : Wednesday", sb.toString());
+    Assert.assertFalse(cellList.getSelectionModel().isSelected("Wednesday"));
   }
 
+  @Test
+  public void selectWithClick_OutOfRange() {
+    // Arrange
+    final StringBuilder sb = new StringBuilder();
+
+    final SingleSelectionModel<String> selectionModel = new SingleSelectionModel<String>();
+    cellList.setSelectionModel(selectionModel);
+    selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
+      public void onSelectionChange(SelectionChangeEvent event) {
+        String selected = selectionModel.getSelectedObject();
+        if (selected != null) {
+          sb.append("selected : " + selected);
+        }
+      }
+    });
+
+    Browser.click(cellList, "Saturday");
+
+    // Assert : no trigger because "Saturday" is not visible
+    Assert.assertEquals("", sb.toString());
+    Assert.assertFalse(cellList.getSelectionModel().isSelected("Saturday"));
+  }
 }
