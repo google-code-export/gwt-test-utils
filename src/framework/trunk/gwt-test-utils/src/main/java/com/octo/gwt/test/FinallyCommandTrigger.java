@@ -32,6 +32,11 @@ public class FinallyCommandTrigger implements AfterTestCallback {
     INSTANCE.scheduledCommands.add(scheduledCommand);
   }
 
+  public static void clearPendingCommands() {
+    INSTANCE.repeatingCommands.clear();
+    INSTANCE.scheduledCommands.clear();
+  }
+
   public static void triggerCommands() {
     while (!INSTANCE.repeatingCommands.isEmpty()) {
       INSTANCE.repeatingCommands.poll().execute();

@@ -17,6 +17,7 @@ import com.google.gwt.dom.client.SelectElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Text;
 import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.EventListener;
 import com.octo.gwt.test.internal.utils.EventUtils;
 import com.octo.gwt.test.internal.utils.JsoProperties;
 import com.octo.gwt.test.internal.utils.PropertyContainer;
@@ -27,6 +28,28 @@ import com.octo.gwt.test.utils.events.EventBuilder;
 
 @PatchClass(target = "com.google.gwt.dom.client.DOMImpl")
 class DOMImplPatcher {
+
+  @PatchMethod
+  static void buttonClick(Object domImpl, ButtonElement button) {
+
+    EventTarget relatedTarget = button.cast();
+    Event onMouseOver = EventBuilder.create(Event.ONMOUSEOVER).setTarget(button).setRelatedTarget(
+        relatedTarget).build();
+    dispatchEvent(domImpl, button, onMouseOver);
+
+    Event onMouseDown = EventBuilder.create(Event.ONMOUSEDOWN).setTarget(button).setRelatedTarget(
+        relatedTarget).setButton(Event.BUTTON_LEFT).build();
+    dispatchEvent(domImpl, button, onMouseDown);
+
+    Event onMouseUp = EventBuilder.create(Event.ONMOUSEUP).setTarget(button).setRelatedTarget(
+        relatedTarget).setButton(Event.BUTTON_LEFT).build();
+    dispatchEvent(domImpl, button, onMouseUp);
+
+    Event onClick = EventBuilder.create(Event.ONCLICK).setTarget(button).setRelatedTarget(
+        relatedTarget).build();
+    dispatchEvent(domImpl, button, onClick);
+
+  }
 
   @PatchMethod
   static ButtonElement createButtonElement(Object domImpl, Document doc,
@@ -54,7 +77,10 @@ class DOMImplPatcher {
   @PatchMethod
   static NativeEvent createHtmlEvent(Object domImpl, Document doc, String type,
       boolean canBubble, boolean cancelable) {
-    return EventBuilder.create(Event.getTypeInt(type)).build();
+
+    int typeInt = EventUtils.getEventTypeInt(type);
+    return EventBuilder.create(typeInt).setCanBubble(canBubble).setCancelable(
+        cancelable).build();
   }
 
   @PatchMethod
@@ -70,6 +96,39 @@ class DOMImplPatcher {
   }
 
   @PatchMethod
+  static NativeEvent createKeyCodeEvent(Object domImpl, Document document,
+      String type, boolean ctrlKey, boolean altKey, boolean shiftKey,
+      boolean metaKey, int keyCode) {
+
+    int typeInt = EventUtils.getEventTypeInt(type);
+    return EventBuilder.create(typeInt).setCtrlKey(ctrlKey).setAltKey(altKey).setShiftKey(
+        shiftKey).setMetaKey(metaKey).setKeyCode(keyCode).build();
+
+  }
+
+  @PatchMethod
+  static NativeEvent createKeyPressEvent(Object domImpl, Document document,
+      boolean ctrlKey, boolean altKey, boolean shiftKey, boolean metaKey,
+      int charCode) {
+
+    return EventBuilder.create(Event.ONKEYPRESS).setCtrlKey(ctrlKey).setAltKey(
+        altKey).setShiftKey(shiftKey).setMetaKey(metaKey).setKeyCode(charCode).build();
+  }
+
+  @PatchMethod
+  static NativeEvent createMouseEvent(Object domImpl, Document doc,
+      String type, boolean canBubble, boolean cancelable, int detail,
+      int screenX, int screenY, int clientX, int clientY, boolean ctrlKey,
+      boolean altKey, boolean shiftKey, boolean metaKey, int button,
+      Element relatedTarget) {
+
+    int typeInt = EventUtils.getEventTypeInt(type);
+
+    return EventBuilder.create(typeInt).setCtrlKey(ctrlKey).setAltKey(altKey).setShiftKey(
+        shiftKey).setMetaKey(metaKey).setButton(button).setTarget(relatedTarget).build();
+  }
+
+  @PatchMethod
   static void cssClearOpacity(Object domImpl, Style style) {
     style.setProperty("opacity", "");
   }
@@ -80,6 +139,15 @@ class DOMImplPatcher {
     String stringValue = (modulo == 0) ? String.valueOf((int) value)
         : String.valueOf(value);
     style.setProperty("opacity", stringValue);
+  }
+
+  @PatchMethod
+  static void dispatchEvent(Object domImpl, Element target, NativeEvent evt) {
+    EventListener listener = JavaScriptObjects.getObject(target,
+        JsoProperties.ELEM_EVENTLISTENER);
+    if (listener != null && evt instanceof Event) {
+      listener.onBrowserEvent((Event) evt);
+    }
   }
 
   @PatchMethod

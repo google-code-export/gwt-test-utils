@@ -6,12 +6,14 @@ import java.util.Locale;
 
 import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
 import com.octo.gwt.test.exceptions.GwtTestConfigurationException;
 import com.octo.gwt.test.exceptions.GwtTestException;
@@ -20,6 +22,7 @@ import com.octo.gwt.test.internal.GwtClassLoader;
 import com.octo.gwt.test.internal.GwtConfig;
 import com.octo.gwt.test.internal.ModuleData;
 import com.octo.gwt.test.internal.handlers.GwtCreateHandlerManager;
+import com.octo.gwt.test.utils.events.Browser.BrowserErrorHandler;
 
 /**
  * <p>
@@ -93,6 +96,7 @@ public abstract class GwtTest {
   public final void setUpGwtTest() throws Exception {
     GwtReset.initialize();
 
+    GwtConfig.get().setBrowserErrorHandler(getBrowserErrorHandler());
     GwtConfig.get().setLocale(getLocale());
     GwtConfig.get().setLogHandler(getLogHandler());
     GwtConfig.get().setWindowOperationsHandler(getWindowOperationsHandler());
@@ -129,6 +133,26 @@ public abstract class GwtTest {
    */
   protected boolean ensureDebugId() {
     return false;
+  }
+
+  /**
+   * Override this method if you want to customize error handling when
+   * dispatching a browser {@link Event}. New BrowserErrorHandler
+   * <strong>must</strong> call
+   * {@link FinallyCommandTrigger#clearPendingCommands()}.
+   * 
+   * @return The custom browser error handler callback.
+   */
+  protected BrowserErrorHandler getBrowserErrorHandler() {
+    return new BrowserErrorHandler() {
+
+      public void onError(String errorMessage) {
+        // remove pending tasks, no need to execute
+        FinallyCommandTrigger.clearPendingCommands();
+
+        Assert.fail(errorMessage);
+      }
+    };
   }
 
   /**
