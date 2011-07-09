@@ -1,9 +1,12 @@
 package com.octo.gwt.test.utils.events;
 
+import com.google.gwt.cell.client.Cell;
+import com.google.gwt.cell.client.Cell.Context;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.shared.UmbrellaException;
+import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.CheckBox;
@@ -17,8 +20,10 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
+import com.octo.gwt.test.FinallyCommandTrigger;
 import com.octo.gwt.test.internal.patchers.dom.JavaScriptObjects;
 import com.octo.gwt.test.internal.utils.JsoProperties;
+import com.octo.gwt.test.utils.GwtReflectionUtils;
 import com.octo.gwt.test.utils.WidgetUtils;
 
 /**
@@ -66,8 +71,32 @@ public class EventDispatcher {
     dispatchEvent(target, EventBuilder.create(Event.ONCHANGE).build());
   }
 
-  public <T> void click(CellList<T> cellList, T cellContent) {
-    System.out.println(cellList.getElement().toString());
+  public <T> void click(CellList<T> cellList, String cellContent) {
+    // trigger finally scheduled command first
+    FinallyCommandTrigger.triggerCommands();
+
+    Cell<T> cell = GwtReflectionUtils.getPrivateFieldValue(cellList, "cell");
+
+    for (int i = 0; i < cellList.getVisibleItemCount(); i++) {
+
+      T current = cellList.getVisibleItem(i);
+
+      Object valueKey = GwtReflectionUtils.callPrivateMethod(cellList,
+          "getValueKey", current);
+
+      Context currentContext = new Context(i, 0, valueKey);
+      SafeHtmlBuilder currentBuilder = new SafeHtmlBuilder();
+
+      cell.render(currentContext, current, currentBuilder);
+      if (currentBuilder.toSafeHtml().asString().equals(cellContent)) {
+        cellList.getSelectionModel().setSelected(current,
+            !cellList.getSelectionModel().isSelected(current));
+      }
+    }
+
+    // run finally scheduled commands because some could have been scheduled
+    // when the event was dispatched.
+    FinallyCommandTrigger.triggerCommands();
 
   }
 
@@ -114,6 +143,10 @@ public class EventDispatcher {
 
   public void dispatchEvent(Widget target, boolean check, Event... events) {
 
+    // run finally scheduled commands first because they may modify the DOM
+    // structure
+    FinallyCommandTrigger.triggerCommands();
+
     if (events.length == 0) {
       return;
     }
@@ -123,6 +156,10 @@ public class EventDispatcher {
       assertCanApplyEvent(events[0]);
     }
     dispatchEventInternal(target, events);
+
+    // run finally scheduled commands because some could have been scheduled
+    // when the event was dispatched.
+    FinallyCommandTrigger.triggerCommands();
   }
 
   public void dispatchEvent(Widget target, Event... events) {

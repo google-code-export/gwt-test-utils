@@ -3,6 +3,7 @@ package com.octo.gwt.test.internal.patchers;
 import com.google.gwt.core.client.Scheduler.RepeatingCommand;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.core.client.impl.SchedulerImpl;
+import com.octo.gwt.test.FinallyCommandTrigger;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
@@ -26,12 +27,12 @@ class SchedulerImplPatcher {
 
   @PatchMethod
   static void scheduleFinally(SchedulerImpl impl, RepeatingCommand cmd) {
-    cmd.execute();
+    FinallyCommandTrigger.add(cmd);
   }
 
   @PatchMethod
   static void scheduleFinally(SchedulerImpl impl, ScheduledCommand cmd) {
-    cmd.execute();
+    FinallyCommandTrigger.add(cmd);
   }
 
   @PatchMethod

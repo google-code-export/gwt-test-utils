@@ -15,6 +15,7 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
+import com.octo.gwt.test.FinallyCommandTrigger;
 import com.octo.gwt.test.internal.patchers.dom.JavaScriptObjects;
 import com.octo.gwt.test.internal.utils.JsoProperties;
 import com.octo.gwt.test.utils.WidgetUtils;
@@ -107,6 +108,10 @@ public class EventDispatcher {
 
   public void dispatchEvent(Widget target, boolean check, Event... events) {
 
+    // run finally scheduled commands first because they may modify the DOM
+    // structure
+    FinallyCommandTrigger.triggerCommands();
+
     if (events.length == 0) {
       return;
     }
@@ -116,6 +121,10 @@ public class EventDispatcher {
       assertCanApplyEvent(events[0]);
     }
     dispatchEventInternal(target, events);
+
+    // run finally scheduled commands because some could have been scheduled
+    // when the event was dispatched.
+    FinallyCommandTrigger.triggerCommands();
   }
 
   public void dispatchEvent(Widget target, Event... events) {

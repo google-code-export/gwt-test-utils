@@ -7,9 +7,7 @@ import com.google.gwt.user.client.rpc.IsSerializable;
 
 public class MyObject implements IsSerializable {
 
-  private static final long serialVersionUID = -4047482702956475369L;
-
-  private List<MyChildObject> myChildObjects = new ArrayList<MyChildObject>();
+  private final List<MyChildObject> myChildObjects = new ArrayList<MyChildObject>();
   private String myField;
   private transient String myTransientField = "transient field";
 

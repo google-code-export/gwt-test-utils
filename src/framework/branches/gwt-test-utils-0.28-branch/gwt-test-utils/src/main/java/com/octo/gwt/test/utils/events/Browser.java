@@ -65,9 +65,9 @@ public class Browser {
    * 
    * @param <T> The {@link CellList} type.
    * @param cellList The cell list.
-   * @param cellContent The object rendered by the cell to click.
+   * @param cellContent The String rendered by the cell to click.
    */
-  public static <T> void click(CellList<T> cellList, T cellContent) {
+  public static <T> void click(CellList<T> cellList, String cellContent) {
     DISPATCHER.click(cellList, cellContent);
   }
 

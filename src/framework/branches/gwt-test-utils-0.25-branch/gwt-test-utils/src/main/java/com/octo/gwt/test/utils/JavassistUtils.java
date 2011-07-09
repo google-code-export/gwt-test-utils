@@ -20,10 +20,6 @@ public class JavassistUtils {
   public static CtConstructor findConstructor(CtClass ctClass,
       Class<?>... argsClasses) {
 
-    if (ctClass.getName().contains("CellBasedWi")) {
-      System.out.println(ctClass);
-    }
-
     Set<CtConstructor> set = new HashSet<CtConstructor>();
 
     findConstructors(ctClass, set);

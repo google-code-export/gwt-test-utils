@@ -1,5 +1,6 @@
 package com.octo.gwt.test.internal.utils;
 
+import java.io.Serializable;
 import java.util.Map;
 import java.util.Set;
 
@@ -14,9 +15,9 @@ import com.google.gwt.core.client.JavaScriptObject;
  * @author Bertrand Paquet
  * 
  */
-public class PropertyContainer {
+public class PropertyContainer implements Serializable {
 
-  private static final long serialVersionUID = -2421991095282208998L;
+  private static final long serialVersionUID = -5044826131951960161L;
 
   public static PropertyContainer newInstance(Map<String, Object> map) {
     return new PropertyContainer(map);

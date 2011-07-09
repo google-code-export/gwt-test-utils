@@ -4,9 +4,13 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.resources.ext.DefaultExtensions;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.ImageBundle;
+import com.google.gwt.user.client.ui.ImageBundle.Resource;
+import com.google.gwt.user.client.ui.impl.ClippedImagePrototype;
 import com.octo.gwt.test.GwtCreateHandler;
 import com.octo.gwt.test.exceptions.GwtTestResourcesException;
 
@@ -21,21 +25,8 @@ import com.octo.gwt.test.exceptions.GwtTestResourcesException;
 @SuppressWarnings("deprecation")
 public class ImageBundleCreateHandler implements GwtCreateHandler {
 
-  private static class OverrideImagePrototype extends AbstractImagePrototype {
-
-    public void applyTo(Image arg0) {
-    }
-
-    public Image createImage() {
-      Image image = new Image();
-      return image;
-    }
-
-    public String getHTML() {
-      return "<img/>";
-    }
-
-  }
+  private static final String[] IMAGE_DEFAULT_EXTENSIONS = ImageResource.class.getAnnotation(
+      DefaultExtensions.class).value();
 
   public Object create(Class<?> classLiteral) throws Exception {
     if (!ImageBundle.class.isAssignableFrom(classLiteral)) {
@@ -51,16 +42,46 @@ public class ImageBundleCreateHandler implements GwtCreateHandler {
       public Object invoke(Object proxy, Method method, Object[] args)
           throws Throwable {
         if (method.getReturnType() == AbstractImagePrototype.class) {
-          return new OverrideImagePrototype();
+          String url = getImageUrl(method);
+          return new ClippedImagePrototype(url, 0, 0, 0, 0);
         }
         throw new GwtTestResourcesException(
             "Not managed return type for image bundle : "
                 + method.getReturnType().getSimpleName());
       }
 
+      private String computeFileSimpleName(Method method) {
+        String packagePath = method.getDeclaringClass().getPackage().getName().replaceAll(
+            "\\.", "/");
+
+        String relativePath = packagePath + "/" + method.getName();
+
+        for (String extension : IMAGE_DEFAULT_EXTENSIONS) {
+          String possiblePath = relativePath + extension;
+          if (this.getClass().getResource("/" + possiblePath) != null) {
+            return method.getName() + extension;
+          }
+        }
+
+        // should never happened
+        throw new GwtTestResourcesException(
+            "Cannot find an image with path relative to '" + relativePath + "'");
+      }
+
+      private String getImageUrl(Method method) {
+        String fileName;
+        Resource resource = method.getAnnotation(Resource.class);
+        if (resource != null) {
+          fileName = resource.value();
+        } else {
+          fileName = computeFileSimpleName(method);
+        }
+
+        return GWT.getModuleBaseURL() + fileName;
+      }
+
     };
     return Proxy.newProxyInstance(clazz.getClassLoader(),
         new Class<?>[]{clazz}, ih);
   }
-
 }

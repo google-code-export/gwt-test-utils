@@ -41,10 +41,10 @@ public class DirectoryTestReader {
         if (line == null) {
           break;
         }
-        line = new String(line.getBytes(), "UTF-8");
+        line = new String(line.getBytes(), "UTF-8").trim();
         if ("".equals(line)) {
           l.add(new ArrayList<String>());
-        } else {
+        } else if (!line.startsWith("//")) {
           String[] tab = line.split(";");
           l.add(Arrays.asList(tab));
         }
