@@ -8,7 +8,7 @@ import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
-import com.google.gwt.user.cellview.client.CellList;
+import com.google.gwt.user.cellview.client.AbstractHasData;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Grid;
@@ -17,7 +17,9 @@ import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.Widget;
-import com.octo.gwt.test.utils.events.EventDispatcher.BrowserErrorHandler;
+import com.google.gwt.view.client.HasData;
+import com.octo.gwt.test.internal.EventDispatcher;
+import com.octo.gwt.test.internal.EventDispatcher.BrowserErrorHandler;
 
 /**
  * Provides several methods to simulate the occurring of browser events
@@ -33,7 +35,7 @@ import com.octo.gwt.test.utils.events.EventDispatcher.BrowserErrorHandler;
  */
 public class Browser {
 
-  private static final EventDispatcher DISPATCHER = EventDispatcher.newInstance(new BrowserErrorHandler() {
+  private static EventDispatcher DISPATCHER = EventDispatcher.newInstance(new BrowserErrorHandler() {
 
     public void onError(String errorMessage) {
       Assert.fail(errorMessage);
@@ -59,16 +61,14 @@ public class Browser {
   }
 
   /**
+   * Simulate a click on a specific element of a cell widget.
    * 
-   * Simulate a click on a specific cell in a cell list. <strong>DO NOT USE !
-   * DON'T WORK ON TRUNK !!</strong>
-   * 
-   * @param <T> The {@link CellList} type.
-   * @param cellList The cell list.
-   * @param cellContent The String rendered by the cell to click.
+   * @param <T> The {@link HasData} generic type.
+   * @param hasData The cell widget.
+   * @param item The content of the row to click.
    */
-  public static <T> void click(CellList<T> cellList, String cellContent) {
-    DISPATCHER.click(cellList, cellContent);
+  public static <T> void click(AbstractHasData<T> hasData, T item) {
+    DISPATCHER.click(hasData, item);
   }
 
   /**

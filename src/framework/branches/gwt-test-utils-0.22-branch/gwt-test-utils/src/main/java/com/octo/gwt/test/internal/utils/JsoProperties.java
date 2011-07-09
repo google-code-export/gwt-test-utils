@@ -18,6 +18,7 @@ public class JsoProperties {
   public static final String DOCUMENT_ELEMENT = "documentElement";
 
   public static final String ELEM_CLASS = "class";
+  public static final String ELEM_EVENTLISTENER = "ELEM_EVENTLISTENER";
   public static final String ELEM_ID = "id";
   public static final String ELEM_IMG_SRC = "src";
   public static final String ELEM_LANG = "lang";

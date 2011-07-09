@@ -4,6 +4,7 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.impl.DOMImpl;
 import com.octo.gwt.test.internal.utils.EventUtils;
+import com.octo.gwt.test.internal.utils.JsoProperties;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
@@ -72,6 +73,8 @@ class DOMImplUserPatcher {
   @PatchMethod
   static void setEventListener(DOMImpl domImpl, Element elem,
       EventListener listener) {
+    JavaScriptObjects.setProperty(elem, JsoProperties.ELEM_EVENTLISTENER,
+        listener);
 
   }
 

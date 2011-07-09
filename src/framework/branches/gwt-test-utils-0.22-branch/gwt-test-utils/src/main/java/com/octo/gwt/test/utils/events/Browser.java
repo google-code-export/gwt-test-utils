@@ -16,7 +16,8 @@ import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.Widget;
-import com.octo.gwt.test.utils.events.EventDispatcher.BrowserErrorHandler;
+import com.octo.gwt.test.internal.EventDispatcher;
+import com.octo.gwt.test.internal.EventDispatcher.BrowserErrorHandler;
 
 /**
  * Provides several methods to simulate the occurring of browser events
@@ -32,7 +33,7 @@ import com.octo.gwt.test.utils.events.EventDispatcher.BrowserErrorHandler;
  */
 public class Browser {
 
-  private static final EventDispatcher DISPATCHER = EventDispatcher.newInstance(new BrowserErrorHandler() {
+  private static EventDispatcher DISPATCHER = EventDispatcher.newInstance(new BrowserErrorHandler() {
 
     public void onError(String errorMessage) {
       Assert.fail(errorMessage);

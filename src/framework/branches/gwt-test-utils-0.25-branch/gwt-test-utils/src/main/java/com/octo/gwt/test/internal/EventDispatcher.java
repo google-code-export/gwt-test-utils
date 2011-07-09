@@ -1,8 +1,12 @@
-package com.octo.gwt.test.utils.events;
+package com.octo.gwt.test.internal;
+
+import java.util.Iterator;
 
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.shared.UmbrellaException;
+import com.google.gwt.user.cellview.client.AbstractHasData;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.ComplexPanel;
@@ -19,10 +23,13 @@ import com.octo.gwt.test.FinallyCommandTrigger;
 import com.octo.gwt.test.internal.patchers.dom.JavaScriptObjects;
 import com.octo.gwt.test.internal.utils.JsoProperties;
 import com.octo.gwt.test.utils.WidgetUtils;
+import com.octo.gwt.test.utils.events.Browser;
+import com.octo.gwt.test.utils.events.EventBuilder;
 
 /**
  * 
  * Class responsible of dispatching {@link Event} object to {@link Widget}.
+ * <strong>For internal use only.</strong>
  * 
  * @author Gael Lazzari
  * 
@@ -31,7 +38,7 @@ public class EventDispatcher {
 
   /**
    * An callback interface to handle error when dispatching a browser
-   * {@link Event}.
+   * {@link Event}. <strong>For internal use only.</strong>
    * 
    * @author Gael Lazzari
    * 
@@ -63,6 +70,38 @@ public class EventDispatcher {
 
   public void change(Widget target) {
     dispatchEvent(target, EventBuilder.create(Event.ONCHANGE).build());
+  }
+
+  public <T> void click(AbstractHasData<T> hasData, T item) {
+    // trigger finally scheduled command first
+    FinallyCommandTrigger.triggerCommands();
+
+    // compute the key for the item to click
+    Object itemKey = (hasData.getKeyProvider() != null)
+        ? hasData.getKeyProvider().getKey(item) : item;
+
+    Iterator<T> it = hasData.getVisibleItems().iterator();
+    while (it.hasNext()) {
+      // compute the key for the current visible item
+      T visibleContent = it.next();
+      Object visibleKey = (hasData.getKeyProvider() != null)
+          ? hasData.getKeyProvider().getKey(visibleContent) : visibleContent;
+
+      if (visibleKey.equals(itemKey)) {
+        hasData.getSelectionModel().setSelected(item,
+            !hasData.getSelectionModel().isSelected(item));
+
+        // run finally scheduled commands because some could have been scheduled
+        // when the event was dispatched.
+        FinallyCommandTrigger.triggerCommands();
+
+        return;
+      }
+    }
+
+    browserErrorHandler.onError("the item to click is now visible in the targeted "
+        + hasData.getClass().getSimpleName() + " instance");
+
   }
 
   public void click(ComplexPanel panel, int index) {
@@ -330,39 +369,47 @@ public class EventDispatcher {
   }
 
   private void dispatchEventInternal(Widget target, Event... events) {
-    for (Event event : events) {
-      // set the related target
-      Element relatedTargetElement = JavaScriptObjects.getObject(event,
-          JsoProperties.EVENT_RELATEDTARGET);
+    try {
+      for (Event event : events) {
+        // set the related target
+        Element relatedTargetElement = JavaScriptObjects.getObject(event,
+            JsoProperties.EVENT_RELATEDTARGET);
 
-      if (relatedTargetElement == null) {
-        switch (event.getTypeInt()) {
-          case Event.ONMOUSEOVER:
-          case Event.ONMOUSEOUT:
-            Widget parent = target.getParent();
-            if (parent != null) {
-              relatedTargetElement = parent.getElement();
-            } else {
-              relatedTargetElement = Document.get().getDocumentElement();
-            }
+        if (relatedTargetElement == null) {
+          switch (event.getTypeInt()) {
+            case Event.ONMOUSEOVER:
+            case Event.ONMOUSEOUT:
+              Widget parent = target.getParent();
+              if (parent != null) {
+                relatedTargetElement = parent.getElement();
+              } else {
+                relatedTargetElement = Document.get().getDocumentElement();
+              }
 
-            JavaScriptObjects.setProperty(event,
-                JsoProperties.EVENT_RELATEDTARGET, relatedTargetElement);
+              JavaScriptObjects.setProperty(event,
+                  JsoProperties.EVENT_RELATEDTARGET, relatedTargetElement);
 
-            break;
+              break;
+          }
         }
-      }
 
-      if (CheckBox.class.isInstance(target)
-          && event.getTypeInt() == Event.ONCLICK) {
-        CheckBox checkBox = (CheckBox) target;
-        if (RadioButton.class.isInstance(target)) {
-          checkBox.setValue(true);
-        } else {
-          checkBox.setValue(!checkBox.getValue());
+        if (CheckBox.class.isInstance(target)
+            && event.getTypeInt() == Event.ONCLICK) {
+          CheckBox checkBox = (CheckBox) target;
+          if (RadioButton.class.isInstance(target)) {
+            checkBox.setValue(true);
+          } else {
+            checkBox.setValue(!checkBox.getValue());
+          }
         }
+        target.onBrowserEvent(event);
       }
-      target.onBrowserEvent(event);
+    } catch (UmbrellaException e) {
+      if (AssertionError.class.isInstance(e.getCause())) {
+        throw (AssertionError) e.getCause();
+      } else {
+        throw e;
+      }
     }
   }
 
