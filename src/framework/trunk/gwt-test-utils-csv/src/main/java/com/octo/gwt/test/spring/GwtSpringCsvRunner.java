@@ -1,17 +1,17 @@
-package com.octo.gwt.test.csv;
+package com.octo.gwt.test.spring;
 
 import com.octo.gwt.test.internal.runner.AbstractGwtRunner;
 import com.octo.gwt.test.internal.runner.AbstractGwtRunnerFactory;
 
-public class GwtCsvRunner extends AbstractGwtRunner {
+public class GwtSpringCsvRunner extends AbstractGwtRunner {
 
-  public GwtCsvRunner(Class<?> clazz) throws Exception {
+  public GwtSpringCsvRunner(Class<?> clazz) throws Exception {
     super(clazz);
   }
 
   @Override
   protected AbstractGwtRunnerFactory getRunnerFactory() {
-    return new GwtCsvRunnerFactory();
+    return new GwtSpringCsvRunnerFactory();
   }
 
 }
