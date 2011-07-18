@@ -10,6 +10,7 @@
 	
 	<modules>
 		<module>demo-csv</module>
+		<module>demo-csv-spring</module>
 		<module>demo-mocks</module>
 		<module>demo-simple</module>
 		<module>demo-spring</module>
@@ -25,7 +26,6 @@
 		<gwt.maven.plugin.version>2.3.0</gwt.maven.plugin.version>
 		<gwt.test.utils.version>0.31-SNAPSHOT</gwt.test.utils.version>
 		<java.version>1.5</java.version>
-		<spring.version>3.0.5.RELEASE</spring.version>
 	</properties>
 
 	<repositories>
@@ -96,16 +96,6 @@
 			<classifier>${gxt.classifier}</classifier>
 		</dependency>
 		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-web</artifactId>
-			<version>${spring.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-test</artifactId>
-			<version>${spring.version}</version>
-		</dependency>
-		<dependency>
 			<groupId>org.gwtrpcspring</groupId>
 			<artifactId>gwtrpc-spring</artifactId>
 			<version>1.01</version>
@@ -137,15 +127,6 @@
 		</dependency>
 		</dependencies>
 	</dependencyManagement>
-	
-	<dependencies>
-		<!-- test -->
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<scope>test</scope>
-		</dependency>
-	</dependencies>
 
 	<build>
 		<plugins>
@@ -161,7 +142,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-resources-plugin</artifactId>
-				<version>2.4.1</version>
 				<configuration>
 					<encoding>${encoding}</encoding>
 				</configuration>
@@ -180,7 +160,6 @@
 					<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.0.2</version>
 				<configuration>
 					<encoding>${encoding}</encoding>
 					<source>${java.version}</source>

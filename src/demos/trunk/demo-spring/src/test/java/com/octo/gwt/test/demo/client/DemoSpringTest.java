@@ -14,7 +14,7 @@ import com.octo.gwt.test.utils.GwtReflectionUtils;
 import com.octo.gwt.test.utils.events.Browser;
 
 @ContextConfiguration(locations = {"classpath:applicationContext.xml"}, loader = GwtTestContextLoader.class)
-public class RPCCompositeWithSpringTest extends GwtSpringTest {
+public class DemoSpringTest extends GwtSpringTest {
 
   private RPCComposite composite;
 

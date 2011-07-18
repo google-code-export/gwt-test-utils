@@ -14,12 +14,12 @@ import com.octo.gwt.test.csv.runner.CsvRunner;
 import com.octo.gwt.test.csv.runner.Node;
 import com.octo.gwt.test.csv.tools.NodeObjectFinder;
 import com.octo.gwt.test.demo.server.MyServiceImpl;
-import com.octo.gwt.test.integration.RemoteServiceCreateHandler;
+import com.octo.gwt.test.server.RemoteServiceCreateHandler;
 
 @CsvDirectory(value = "functional-tests", extension = ".csv")
 @CsvMacros(value = "functional-tests", pattern = "^macro.*\\.csv$")
 @RunWith(GwtCsvRunner.class)
-public class MyTestShell extends GwtCsvTest {
+public class DemoCsvTest extends GwtCsvTest {
 
   private final Application application = new Application();
 
@@ -37,21 +37,6 @@ public class MyTestShell extends GwtCsvTest {
   public void setUpMyTestShell() throws Exception {
     // add a GwtCreateHandler for our RemoteService
     addGwtCreateHandler(createRemoteServiceCreateHandler());
-  }
-
-  private GwtCreateHandler createRemoteServiceCreateHandler() {
-    return new RemoteServiceCreateHandler() {
-
-      @Override
-      public Object findService(Class<?> remoteServiceClass,
-          String remoteServiceRelativePath) {
-        if (remoteServiceClass == MyService.class
-            && "myService".equals(remoteServiceRelativePath)) {
-          return new MyServiceImpl();
-        }
-        return null;
-      }
-    };
   }
 
   @Override
@@ -91,5 +76,20 @@ public class MyTestShell extends GwtCsvTest {
     }
 
     return super.getNodeObjectFinder(prefix);
+  }
+
+  private GwtCreateHandler createRemoteServiceCreateHandler() {
+    return new RemoteServiceCreateHandler() {
+
+      @Override
+      public Object findService(Class<?> remoteServiceClass,
+          String remoteServiceRelativePath) {
+        if (remoteServiceClass == MyService.class
+            && "myService".equals(remoteServiceRelativePath)) {
+          return new MyServiceImpl();
+        }
+        return null;
+      }
+    };
   }
 }

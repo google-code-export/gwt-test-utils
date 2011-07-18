@@ -17,7 +17,7 @@ import com.octo.gwt.test.demo.beans.FooBean;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 import com.octo.gwt.test.utils.events.Browser;
 
-public class RPCCompositeWithMockitoTest extends GwtTestWithMockito {
+public class DemoMockitoTest extends GwtTestWithMockito {
 
   private RPCComposite composite;
 
