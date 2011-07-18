@@ -8,7 +8,6 @@ import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
 
-import com.octo.gwt.test.internal.GwtClassLoader;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 /**
@@ -22,7 +21,7 @@ public class BlockJUnit4CsvRunner extends BlockJUnit4ClassRunner {
 
   public BlockJUnit4CsvRunner(Class<?> clazz) throws InitializationError,
       ClassNotFoundException {
-    super(GwtClassLoader.get().loadClass(clazz.getName()));
+    super(clazz);
   }
 
   @Override

@@ -2,11 +2,19 @@ package com.octo.gwt.test.internal;
 
 import java.util.Locale;
 
-import com.google.gwt.core.client.GWT;
+import javax.servlet.ServletConfig;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.UIObject.DebugIdImpl;
+import com.google.gwt.user.client.ui.UIObject.DebugIdImplEnabled;
 import com.octo.gwt.test.GwtLogHandler;
+import com.octo.gwt.test.GwtModuleRunner;
 import com.octo.gwt.test.WindowOperationsHandler;
+import com.octo.gwt.test.exceptions.GwtTestConfigurationException;
+import com.octo.gwt.test.exceptions.GwtTestException;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 import com.octo.gwt.test.utils.events.Browser.BrowserErrorHandler;
 
@@ -21,41 +29,49 @@ public class GwtConfig implements AfterTestCallback {
 
   private static final GwtConfig INSTANCE = new GwtConfig();
 
+  private static final Logger LOGGER = LoggerFactory.getLogger(GwtConfig.class);
+
   public static GwtConfig get() {
     return INSTANCE;
   }
 
-  private BrowserErrorHandler browserErrorHandler;
-  private boolean ensureDebugId;
-  private String hostPagePath;
+  /**
+   * Setup a GWT module to be run. <strong>This method must be run only once, at
+   * the very beginning of the GWT module emulation.</strong>
+   * 
+   * @param gwtModuleRunner The configuration of the module to be run.
+   */
+  public static void setup(GwtModuleRunner gwtModuleRunner) {
+    INSTANCE.setupInstance(gwtModuleRunner);
+  }
+
+  private String checkedModuleName;
+
+  private final DebugIdImpl disabledInstance = new DebugIdImpl();
+
+  private final DebugIdImpl enabledInstance = new DebugIdImplEnabled();
+
+  private GwtModuleRunner gwtModuleRunner;
+
   private Locale locale;
-  private GwtLogHandler logHandler;
-  private String moduleName;
-  private WindowOperationsHandler windowOperationsHandler;
 
   private GwtConfig() {
-    AfterTestCallbackManager.get().registerCallback(this);
 
   }
 
   public void afterTest() throws Throwable {
-    locale = null;
-    logHandler = null;
-    hostPagePath = null;
-    moduleName = null;
-    ensureDebugId = false;
-  }
+    gwtModuleRunner = null;
 
-  public boolean ensureDebugId() {
-    return ensureDebugId;
+    GwtReset.get().reset();
+
   }
 
   public BrowserErrorHandler getBrowserErrorHandler() {
-    return browserErrorHandler;
+    return gwtModuleRunner.getBrowserErrorHandler();
   }
 
   public String getHostPagePath() {
-    return hostPagePath;
+    return gwtModuleRunner.getHostPagePath();
   }
 
   public Locale getLocale() {
@@ -63,47 +79,79 @@ public class GwtConfig implements AfterTestCallback {
   }
 
   public GwtLogHandler getLogHandler() {
-    return logHandler;
+    return gwtModuleRunner.getLogHandler();
   }
 
   public String getModuleName() {
-    return moduleName;
+    return checkedModuleName;
+  }
+
+  public ServletConfig getServletConfig() {
+    return gwtModuleRunner.getServletConfig();
   }
 
   public WindowOperationsHandler getWindowOperationsHandler() {
-    return windowOperationsHandler;
+    return gwtModuleRunner.getWindowOperationsHandler();
   }
 
-  public void setBrowserErrorHandler(BrowserErrorHandler browserErrorHandler) {
-    this.browserErrorHandler = browserErrorHandler;
-  }
-
-  public void setEnsureDebugId(boolean ensureDebugId) {
-    this.ensureDebugId = ensureDebugId;
-    // refresh the static instance in UIObject
-    GwtReflectionUtils.setStaticField(UIObject.class, "debugIdImpl",
-        GWT.create(DebugIdImpl.class));
-  }
-
-  public void setHostPagePath(String hostPagePath) {
-    this.hostPagePath = hostPagePath;
-  }
-
+  /**
+   * For internal testing purpose
+   * 
+   * @param locale
+   */
   public void setLocale(Locale locale) {
     this.locale = locale;
   }
 
-  public void setLogHandler(GwtLogHandler logHandler) {
-    this.logHandler = logHandler;
+  private String getCheckedModuleName() {
+    String moduleName = gwtModuleRunner.getModuleName();
+    if (moduleName == null || "".equals(moduleName.trim())) {
+      throw new GwtTestConfigurationException(
+          "The tested module name returned by "
+              + gwtModuleRunner.getClass().getName()
+              + ".getModuleName() should not be null or empty");
+    }
+
+    String moduleAlias = ModuleData.get().getModuleAlias(moduleName);
+    if (moduleAlias == null) {
+      throw new GwtTestConfigurationException(
+          "The tested module '"
+              + moduleName
+              + "' has not been found. Did you forget to declare a 'module-file' property in your 'META-INF/gwt-test-utils.properties' configuration file ?");
+    }
+
+    return moduleAlias;
   }
 
-  public void setModuleName(String moduleName) {
-    this.moduleName = moduleName;
+  private void setupDebugIdImpl(GwtModuleRunner gwtModuleRunner) {
+    DebugIdImpl debugIdImplToUse = gwtModuleRunner.ensureDebugId()
+        ? enabledInstance : disabledInstance;
+
+    GwtReflectionUtils.setStaticField(UIObject.class, "debugIdImpl",
+        debugIdImplToUse);
   }
 
-  public void setWindowOperationsHandler(
-      WindowOperationsHandler windowOperationsHandler) {
-    this.windowOperationsHandler = windowOperationsHandler;
+  private void setupInstance(GwtModuleRunner gwtModuleRunner) {
+    if (this.gwtModuleRunner != null) {
+      throw new GwtTestException(
+          "Because of the single-threaded nature of the GWT environment, gwt-test-utils tests can not be run in multiple thread at the same time");
+    }
+
+    this.gwtModuleRunner = gwtModuleRunner;
+    this.checkedModuleName = getCheckedModuleName();
+
+    setLocale(gwtModuleRunner.getLocale());
+    setupDebugIdImpl(gwtModuleRunner);
+
+    if (gwtModuleRunner.getHostPagePath() == null) {
+      LOGGER.warn("Cannot find the actual HTML host page for module '"
+          + gwtModuleRunner.getModuleName()
+          + "'. You should override "
+          + GwtModuleRunner.class.getName()
+          + ".getHostPagePath(String moduleFullQualifiedName) method to specify it.");
+    }
+
+    AfterTestCallbackManager.get().registerCallback(this);
   }
 
 }

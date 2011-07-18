@@ -1,4 +1,4 @@
-package com.octo.gwt.test.integration;
+package com.octo.gwt.test.server;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;

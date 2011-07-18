@@ -17,7 +17,6 @@ import org.junit.runner.Runner;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.octo.gwt.test.csv.internal.DirectoryTestReader;
-import com.octo.gwt.test.internal.GwtClassLoader;
 import com.octo.gwt.test.spring.GwtSpringCsvRunner;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
@@ -107,7 +106,7 @@ public class Spring2CsvJUnit4ClassRunner extends SpringJUnit4ClassRunner {
   private DirectoryTestReader reader;
 
   public Spring2CsvJUnit4ClassRunner(Class<?> clazz) throws Exception {
-    super(GwtClassLoader.get().loadClass(clazz.getCanonicalName()));
+    super(clazz);
   }
 
   protected Object createTest() throws Exception {
@@ -119,15 +118,23 @@ public class Spring2CsvJUnit4ClassRunner extends SpringJUnit4ClassRunner {
 
   protected List<Method> getTestMethods() {
     if (reader == null) {
-      reader = new DirectoryTestReader(getTestClass().getJavaClass());
+      reader = new DirectoryTestReader(hackyGetTestClass().getJavaClass());
     }
     return reader.getTestMethods();
   }
 
   protected void validate() throws InitializationError {
-    CsvMethodValidator methodValidator = new CsvMethodValidator(getTestClass());
+    CsvMethodValidator methodValidator = new CsvMethodValidator(
+        hackyGetTestClass());
     methodValidator.validateMethodsForDefaultRunner();
     methodValidator.assertValid();
+  }
+
+  /*
+   * Hack for JUnit 4.4 or lower
+   */
+  private TestClass hackyGetTestClass() {
+    return GwtReflectionUtils.callPrivateMethod(this, "getTestClass");
   }
 
 }

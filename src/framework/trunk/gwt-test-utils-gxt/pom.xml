@@ -16,13 +16,10 @@
 			<artifactId>gwt-test-utils</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>gwt-css-selectors</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>com.extjs</groupId>
 			<artifactId>gxt</artifactId>
 			<classifier>${gxt.classifier}</classifier>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 

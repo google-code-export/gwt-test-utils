@@ -15,7 +15,7 @@ import com.octo.gwt.test.internal.runner.AbstractGwtRunnerFactory;
  */
 public class GwtRunner extends AbstractGwtRunner {
 
-  public GwtRunner(Class<?> clazz) throws Exception {
+  public GwtRunner(Class<?> clazz) throws Throwable {
     super(clazz);
   }
 

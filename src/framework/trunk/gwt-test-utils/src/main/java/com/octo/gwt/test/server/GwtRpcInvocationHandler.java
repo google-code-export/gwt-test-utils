@@ -1,4 +1,4 @@
-package com.octo.gwt.test.integration;
+package com.octo.gwt.test.server;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.StatusCodeException;
+import com.octo.gwt.test.exceptions.GwtTestException;
 import com.octo.gwt.test.exceptions.GwtTestRpcException;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
@@ -42,8 +43,7 @@ class GwtRpcInvocationHandler implements InvocationHandler {
   }
 
   @SuppressWarnings("unchecked")
-  public Object invoke(Object proxy, Method method, Object[] args)
-      throws Throwable {
+  public Object invoke(Object proxy, Method method, Object[] args) {
     Object[] subArgs = new Object[args.length - 1];
     for (int i = 0; i < args.length - 1; i++) {
       subArgs[i] = args[i];
@@ -86,10 +86,14 @@ class GwtRpcInvocationHandler implements InvocationHandler {
       callback.onSuccess(returnObject);
 
     } catch (InvocationTargetException e) {
+      if (GwtTestException.class.isInstance(e.getCause())) {
+        // it can be a gwt-test-utils exception
+        throw (GwtTestException) e.getCause();
+      }
+
       logger.error("Exception when invoking service throw to handler : "
-          + e.getMessage());
+          + e.getCause());
       exceptionHandler.handle(e.getCause(), callback);
-      return null;
     } catch (IllegalAccessException e) {
       logger.error("GWT RPC invokation error : ", e);
       callback.onFailure(new StatusCodeException(500, e.toString()));
@@ -97,6 +101,8 @@ class GwtRpcInvocationHandler implements InvocationHandler {
       logger.error("GWT RPC invokation error : ", e);
       callback.onFailure(new StatusCodeException(500, e.toString()));
     }
+
+    // Async calls always return void
     return null;
   }
 

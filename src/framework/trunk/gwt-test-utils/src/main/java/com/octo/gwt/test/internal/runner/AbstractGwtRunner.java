@@ -20,7 +20,7 @@ public abstract class AbstractGwtRunner extends Runner implements Filterable {
 
   private final Runner runner;
 
-  public AbstractGwtRunner(Class<?> clazz) throws Exception {
+  public AbstractGwtRunner(Class<?> clazz) throws Throwable {
     runner = getRunnerFactory().create(clazz);
   }
 

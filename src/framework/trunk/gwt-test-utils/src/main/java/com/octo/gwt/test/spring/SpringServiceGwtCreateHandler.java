@@ -4,7 +4,7 @@ import org.springframework.context.ApplicationContext;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.octo.gwt.test.GwtCreateHandler;
-import com.octo.gwt.test.integration.RemoteServiceCreateHandler;
+import com.octo.gwt.test.server.RemoteServiceCreateHandler;
 
 /**
  * {@link GwtCreateHandler} to retrieve {@link RemoteService} beans in a Spring

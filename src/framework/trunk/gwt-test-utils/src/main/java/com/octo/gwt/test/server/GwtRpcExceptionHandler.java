@@ -1,4 +1,4 @@
-package com.octo.gwt.test.integration;
+package com.octo.gwt.test.server;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 

@@ -15,7 +15,6 @@ import org.junit.internal.runners.InitializationError;
 import org.junit.internal.runners.JUnit4ClassRunner;
 import org.junit.internal.runners.TestClass;
 
-import com.octo.gwt.test.internal.GwtClassLoader;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 @SuppressWarnings("deprecation")
@@ -96,7 +95,7 @@ public class JUnit4CsvClassRunner extends JUnit4ClassRunner {
 
   public JUnit4CsvClassRunner(Class<?> clazz) throws InitializationError,
       ClassNotFoundException {
-    super(GwtClassLoader.get().loadClass(clazz.getCanonicalName()));
+    super(clazz);
   }
 
   @Override
@@ -109,16 +108,24 @@ public class JUnit4CsvClassRunner extends JUnit4ClassRunner {
   @Override
   protected List<Method> getTestMethods() {
     if (reader == null) {
-      reader = new DirectoryTestReader(getTestClass().getJavaClass());
+      reader = new DirectoryTestReader(hackyGetTestClass().getJavaClass());
     }
     return reader.getTestMethods();
   }
 
   @Override
   protected void validate() throws InitializationError {
-    CsvMethodValidator methodValidator = new CsvMethodValidator(getTestClass());
+    CsvMethodValidator methodValidator = new CsvMethodValidator(
+        hackyGetTestClass());
     methodValidator.validateMethodsForDefaultRunner();
     methodValidator.assertValid();
+  }
+
+  /*
+   * Hack for JUnit 4.4 or lower
+   */
+  private TestClass hackyGetTestClass() {
+    return GwtReflectionUtils.callPrivateMethod(this, "getTestClass");
   }
 
 }

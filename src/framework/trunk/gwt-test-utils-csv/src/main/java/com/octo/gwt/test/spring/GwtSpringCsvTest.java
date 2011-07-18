@@ -1,15 +1,17 @@
 package com.octo.gwt.test.spring;
 
+import javax.servlet.ServletConfig;
+
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.mock.web.MockServletConfig;
 import org.springframework.test.context.ContextConfiguration;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.octo.gwt.test.csv.GwtCsvTest;
-import com.octo.gwt.test.spring.SpringServiceGwtCreateHandler;
 
 /**
  * <p>
@@ -36,6 +38,16 @@ public abstract class GwtSpringCsvTest extends GwtCsvTest implements
     ApplicationContextAware {
 
   private ApplicationContext applicationContext;
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.octo.gwt.test.GwtModuleRunnerAdapter#getServletConfig()
+   */
+  @Override
+  public ServletConfig getServletConfig() {
+    return new MockServletConfig();
+  }
 
   /**
    * Test initialization method.

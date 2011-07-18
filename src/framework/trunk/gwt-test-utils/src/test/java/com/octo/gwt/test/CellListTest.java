@@ -53,6 +53,16 @@ public class CellListTest extends GwtTestTest {
         cellList.getVisibleItem(cellList.getVisibleItemCount() - 1));
   }
 
+  @Override
+  public BrowserErrorHandler getBrowserErrorHandler() {
+    return new BrowserErrorHandler() {
+
+      public void onError(String errorMessage) {
+        sb.append(errorMessage);
+      }
+    };
+  }
+
   @Test
   public void selectWithClick() {
     // Arrange
@@ -106,15 +116,5 @@ public class CellListTest extends GwtTestTest {
         "the item to click is now visible in the targeted CellList instance",
         sb.toString());
     Assert.assertFalse(cellList.getSelectionModel().isSelected("Saturday"));
-  }
-
-  @Override
-  protected BrowserErrorHandler getBrowserErrorHandler() {
-    return new BrowserErrorHandler() {
-
-      public void onError(String errorMessage) {
-        sb.append(errorMessage);
-      }
-    };
   }
 }

@@ -24,7 +24,6 @@ public class GwtCreateHandlerManager implements AfterTestCallback {
   private final List<GwtCreateHandler> addedHandlers;
   private final GwtCreateHandler cellBasedWidgetImplCreateHandler;
   private final GwtCreateHandler clientBundleCreateHander;
-  private final GwtCreateHandler debugIdImplCreateHandler;
   private final GwtCreateHandler defaultGwtCreateHandler;
   private final GwtCreateHandler dockLayoutPanelCreateHandler;
   private final GwtCreateHandler htmlPanelCreateHandler;
@@ -42,7 +41,6 @@ public class GwtCreateHandlerManager implements AfterTestCallback {
     addedHandlers = new ArrayList<GwtCreateHandler>();
     cellBasedWidgetImplCreateHandler = new CellBasedWidgetImplCreateHandler();
     clientBundleCreateHander = new ClientBundleCreateHandler();
-    debugIdImplCreateHandler = new DebugIdImplCreateHandler();
     defaultGwtCreateHandler = new DefaultGwtCreateHandler();
     dockLayoutPanelCreateHandler = new DefaultDockLayoutPanelHandler();
     htmlPanelCreateHandler = new HTMLPanelCreateHandler();
@@ -67,9 +65,6 @@ public class GwtCreateHandlerManager implements AfterTestCallback {
 
   public List<GwtCreateHandler> getGwtCreateHandlers() {
     List<GwtCreateHandler> list = new ArrayList<GwtCreateHandler>();
-
-    // debug always configure first
-    list.add(debugIdImplCreateHandler);
 
     // than, declared @Mock objects creation
     if (mockCreateHandler != null) {

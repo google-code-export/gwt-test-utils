@@ -5,7 +5,7 @@ import com.octo.gwt.test.internal.runner.AbstractGwtRunnerFactory;
 
 public class GwtSpringRunner extends AbstractGwtRunner {
 
-  public GwtSpringRunner(Class<?> clazz) throws Exception {
+  public GwtSpringRunner(Class<?> clazz) throws Throwable {
     super(clazz);
   }
 

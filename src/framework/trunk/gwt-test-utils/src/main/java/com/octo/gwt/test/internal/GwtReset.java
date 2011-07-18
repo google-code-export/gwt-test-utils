@@ -1,4 +1,4 @@
-package com.octo.gwt.test;
+package com.octo.gwt.test.internal;
 
 import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.user.client.Event;
@@ -7,8 +7,6 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.impl.HistoryImpl;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.octo.gwt.test.internal.AfterTestCallback;
-import com.octo.gwt.test.internal.AfterTestCallbackManager;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 /**
@@ -19,19 +17,18 @@ import com.octo.gwt.test.utils.GwtReflectionUtils;
  * @author Gael Lazzari
  * 
  */
-class GwtReset implements AfterTestCallback {
+class GwtReset {
 
   private static final GwtReset INSTANCE = new GwtReset();
 
-  static GwtReset initialize() {
+  static GwtReset get() {
     return INSTANCE;
   }
 
   private GwtReset() {
-    AfterTestCallbackManager.get().registerCallback(this);
   }
 
-  public void afterTest() throws Throwable {
+  void reset() throws Exception {
     GwtReflectionUtils.getStaticAndCallClear(Timer.class, "timers");
     GwtReflectionUtils.getStaticAndCallClear(RootPanel.class, "rootPanels");
     GwtReflectionUtils.getStaticAndCallClear(RootPanel.class, "widgetsToDetach");
