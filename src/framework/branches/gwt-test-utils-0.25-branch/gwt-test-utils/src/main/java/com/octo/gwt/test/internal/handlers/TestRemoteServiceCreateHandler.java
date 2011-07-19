@@ -5,8 +5,8 @@ import java.util.Map;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.octo.gwt.test.exceptions.GwtTestConfigurationException;
-import com.octo.gwt.test.integration.RemoteServiceCreateHandler;
 import com.octo.gwt.test.internal.ModuleData;
+import com.octo.gwt.test.server.RemoteServiceCreateHandler;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 class TestRemoteServiceCreateHandler extends RemoteServiceCreateHandler {

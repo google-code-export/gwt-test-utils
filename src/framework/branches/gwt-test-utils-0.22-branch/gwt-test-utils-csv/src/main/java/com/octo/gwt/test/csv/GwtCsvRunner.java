@@ -1,18 +1,17 @@
 package com.octo.gwt.test.csv;
 
-import com.octo.gwt.test.GwtRunnerBase;
+import com.octo.gwt.test.internal.runner.AbstractGwtRunner;
+import com.octo.gwt.test.internal.runner.AbstractGwtRunnerFactory;
 
-public class GwtCsvRunner extends GwtRunnerBase {
+public class GwtCsvRunner extends AbstractGwtRunner {
 
-  private static final String classRunnerName = "com.octo.gwt.test.csv.internal.BlockJUnit4CsvRunner";
-
-  public GwtCsvRunner(Class<?> clazz) throws Exception {
+  public GwtCsvRunner(Class<?> clazz) throws Throwable {
     super(clazz);
   }
 
   @Override
-  protected String getClassRunnerClassName() {
-    return classRunnerName;
+  protected AbstractGwtRunnerFactory getRunnerFactory() {
+    return new GwtCsvRunnerFactory();
   }
 
 }

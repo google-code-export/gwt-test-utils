@@ -8,16 +8,20 @@ import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
 
-import com.octo.gwt.test.internal.GwtClassLoader;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
+/**
+ * 
+ * @author Gael Lazzari
+ * 
+ */
 public class BlockJUnit4CsvRunner extends BlockJUnit4ClassRunner {
 
   private DirectoryTestReader reader;
 
   public BlockJUnit4CsvRunner(Class<?> clazz) throws InitializationError,
       ClassNotFoundException {
-    super(GwtClassLoader.get().loadClass(clazz.getName()));
+    super(clazz);
   }
 
   @Override
@@ -26,9 +30,10 @@ public class BlockJUnit4CsvRunner extends BlockJUnit4ClassRunner {
       reader = new DirectoryTestReader(getTestClass().getJavaClass());
     }
     List<FrameworkMethod> frameworkMethods = new ArrayList<FrameworkMethod>();
-    for (Method m : reader.getTestMethods()) {
-      frameworkMethods.add(new FrameworkMethod(m));
+    for (Method csvMethod : reader.getTestMethods()) {
+      frameworkMethods.add(new FrameworkMethod(csvMethod));
     }
+
     return frameworkMethods;
   }
 

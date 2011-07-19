@@ -27,6 +27,8 @@ public class JsoProperties {
   public static final String ELEM_STYLE = "style";
   public static final String ELEM_TITLE = "title";
   public static final String ELEM_TYPE = "type";
+  public static final String ELEMENT_CLIENT_HEIGHT = "ELEMENT_CLIENT_HEIGHT";
+  public static final String ELEMENT_CLIENT_WIDTH = "ELEMENT_CLIENT_WIDTH";
   // EVENT PROPERTIES
   public static final String EVENT_BUTTON = "EVENT_button";
   public static final String EVENT_CANBUBBLE = "EVENT_canBubble";

@@ -11,8 +11,7 @@
 		<gwt.version>2.2.0</gwt.version>
 		<gxt.classifier>gwt22</gxt.classifier>
 		<java.version>1.5</java.version>
-		<spring2.version>2.5.6</spring2.version>
-		<spring3.version>3.0.5.RELEASE</spring3.version>
+		<spring.version>3.0.5.RELEASE</spring.version>
 	</properties>
 
 	<scm>
@@ -41,19 +40,13 @@
 		<module>gwt-test-utils</module>
 		<module>gwt-test-utils-csv</module>
 		<module>gwt-test-utils-gxt</module>
-		<module>gwt-css-selectors</module>
-		<module>gwt-test-utils-spring2</module>
-		<module>gwt-test-utils-spring3</module>
 	</modules>
 
 	<dependencies>
-			<dependency>
-			<groupId>org.antlr</groupId>
-			<artifactId>antlr-runtime</artifactId>
-		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -159,6 +152,16 @@
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-simple</artifactId>
 			<version>1.6.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<version>${spring.version}</version>
 		</dependency>
 		</dependencies>
 	</dependencyManagement>

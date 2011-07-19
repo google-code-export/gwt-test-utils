@@ -10,7 +10,7 @@ import com.octo.gwt.test.csv.data.MyStringStore;
 import com.octo.gwt.test.csv.runner.CsvRunner;
 import com.octo.gwt.test.csv.runner.Node;
 import com.octo.gwt.test.csv.tools.NodeObjectFinder;
-import com.octo.gwt.test.integration.RemoteServiceCreateHandler;
+import com.octo.gwt.test.server.RemoteServiceCreateHandler;
 
 @RunWith(GwtCsvRunner.class)
 public abstract class MyGwtShell extends GwtCsvTest {

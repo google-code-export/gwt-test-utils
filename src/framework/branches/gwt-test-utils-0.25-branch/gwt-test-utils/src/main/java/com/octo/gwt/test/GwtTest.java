@@ -1,28 +1,17 @@
 package com.octo.gwt.test;
 
-import java.io.File;
 import java.util.List;
-import java.util.Locale;
 
 import org.junit.After;
 import org.junit.AfterClass;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.Window;
-import com.octo.gwt.test.exceptions.GwtTestConfigurationException;
 import com.octo.gwt.test.exceptions.GwtTestException;
 import com.octo.gwt.test.internal.AfterTestCallbackManager;
 import com.octo.gwt.test.internal.GwtClassLoader;
 import com.octo.gwt.test.internal.GwtConfig;
-import com.octo.gwt.test.internal.ModuleData;
-import com.octo.gwt.test.internal.handlers.GwtCreateHandlerManager;
-import com.octo.gwt.test.utils.events.Browser.BrowserErrorHandler;
 
 /**
  * <p>
@@ -46,13 +35,7 @@ import com.octo.gwt.test.utils.events.Browser.BrowserErrorHandler;
  * 
  */
 @RunWith(GwtRunner.class)
-public abstract class GwtTest {
-
-  private static final String DEFAULT_WAR_DIR = "war/";
-  private static final Logger logger = LoggerFactory.getLogger(GwtTest.class);
-  private static final String MAVEN_DEFAULT_RES_DIR = "src/main/resources/";
-
-  private static final String MAVEN_DEFAULT_WEB_DIR = "src/main/webapp/";
+public abstract class GwtTest extends GwtModuleRunnerAdapter {
 
   /**
    * Bind the GwtClassLoader to the current thread
@@ -72,41 +55,10 @@ public abstract class GwtTest {
         GwtClassLoader.get().getParent());
   }
 
-  /**
-   * <p>
-   * Specifies a module to use when running this test case. Subclasses must
-   * return the name of a module that will cause the source for that subclass to
-   * be included.
-   * </p>
-   * 
-   * <p>
-   * If the return module name is not present in the gwt-test-utils
-   * configuration file (e.g. "META-INF/gwt-test-utils.properties"), an
-   * exception will be thrown.
-   * </p>
-   * 
-   * @return the fully qualified name of a module. <strong>It cannot be null or
-   *         empty</strong>.
-   * 
-   * 
-   */
-  public abstract String getModuleName();
-
   @Before
   public final void setUpGwtTest() throws Exception {
-    GwtReset.initialize();
-
-    GwtConfig.get().setBrowserErrorHandler(getBrowserErrorHandler());
-    GwtConfig.get().setLocale(getLocale());
-    GwtConfig.get().setLogHandler(getLogHandler());
-    GwtConfig.get().setWindowOperationsHandler(getWindowOperationsHandler());
-    GwtConfig.get().setEnsureDebugId(ensureDebugId());
-
-		String moduleName = getCheckedModuleName();
-		GwtConfig.get().setModuleName(moduleName);
-
-		GwtConfig.get().setHostPagePath(getHostPagePath(getModuleName()));
-	}
+    GwtConfig.setup(this);
+  }
 
   @After
   public final void tearDownGwtTest() throws Exception {
@@ -120,125 +72,6 @@ public abstract class GwtTest {
           throwables.get(0));
     }
 
-  }
-
-	protected boolean addGwtCreateHandler(GwtCreateHandler gwtCreateHandler) {
-		return GwtCreateHandlerManager.get().addGwtCreateHandler(gwtCreateHandler);
-	}
-
-	/**
-	 * Override this method if you want your test to allow the setup of debug
-	 * id.
-	 * 
-	 * @return true if setting debug id should be enabled, false otherwise.
-	 */
-	protected boolean ensureDebugId() {
-		return false;
-	}
-
-  /**
-   * Override this method if you want to customize error handling when
-   * dispatching a browser {@link Event}. New BrowserErrorHandler
-   * <strong>must</strong> call
-   * {@link FinallyCommandTrigger#clearPendingCommands()}.
-   * 
-   * @return The custom browser error handler callback.
-   */
-  protected BrowserErrorHandler getBrowserErrorHandler() {
-    return new BrowserErrorHandler() {
-
-      public void onError(String errorMessage) {
-        // remove pending tasks, no need to execute
-        FinallyCommandTrigger.clearPendingCommands();
-
-        Assert.fail(errorMessage);
-      }
-    };
-  }
-
-  /**
-   * Return the relative path in the project of the HTML file which is used by
-   * the corresponding GWT module.
-   * 
-   * @param moduleFullQualifiedName The full qualifed name of the corresponding
-   *          GWT module.
-   * @return The relative path of the HTML file used.
-   */
-  protected String getHostPagePath(String moduleFullQualifiedName) {
-    // try with gwt default structure
-    String fileSimpleName = moduleFullQualifiedName.substring(moduleFullQualifiedName.lastIndexOf('.') + 1)
-        + ".html";
-
-		String fileRelativePath = DEFAULT_WAR_DIR + fileSimpleName;
-		if (new File(fileRelativePath).exists()) {
-			return fileRelativePath;
-		}
-
-		// try with the new maven archetype default path
-		fileRelativePath = MAVEN_DEFAULT_WEB_DIR + fileSimpleName;
-		if (new File(fileRelativePath).exists()) {
-			return fileRelativePath;
-		}
-
-		// try with the old maven archetype default path
-		String packagePath = moduleFullQualifiedName.substring(0, moduleFullQualifiedName.lastIndexOf('.') + 1).replaceAll("\\.", "/");
-
-		fileRelativePath = MAVEN_DEFAULT_RES_DIR + packagePath + "public/" + fileSimpleName;
-		if (new File(fileRelativePath).exists()) {
-			return fileRelativePath;
-		}
-
-    logger.warn("Cannot find the actual HTML host page for module '"
-        + moduleFullQualifiedName
-        + "'. You should override "
-        + GwtTest.class.getName()
-        + ".getHostPagePath(String moduleFullQualifiedName) method to specify it.");
-
-    return null;
-  }
-
-	protected Locale getLocale() {
-		// this method can be overrided by subclass
-		return null;
-	}
-
-	protected GwtLogHandler getLogHandler() {
-		// this method can be overrided by subclass
-		return null;
-	}
-
-	/**
-	 * Override this method to provide a custom {@link WindowOperationsHandler}.
-	 * 
-	 * <p>
-	 * This default implementation return null.
-	 * </p>
-	 * .
-	 * 
-	 * @return A custom Window to which static method calls from {@link Window}
-	 *         are delegate.
-	 */
-	protected WindowOperationsHandler getWindowOperationsHandler() {
-		return null;
-	}
-
-  private String getCheckedModuleName() {
-    String moduleName = getModuleName();
-    if (moduleName == null || "".equals(moduleName.trim())) {
-      throw new GwtTestConfigurationException(
-          "The tested module name returned by " + this.getClass().getName()
-              + ".getModuleName() should not be null or empty");
-    }
-
-    String moduleAlias = ModuleData.get().getModuleAlias(moduleName);
-    if (moduleAlias == null) {
-      throw new GwtTestConfigurationException(
-          "The tested module '"
-              + moduleName
-              + "' has not been found. Did you forget to declare a 'module-file' property in your 'META-INF/gwt-test-utils.properties' configuration file ?");
-    }
-
-    return moduleAlias;
   }
 
 }

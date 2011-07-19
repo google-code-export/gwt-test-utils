@@ -656,8 +656,8 @@ public class Browser {
         target.onBrowserEvent(event);
       }
     } catch (UmbrellaException e) {
-      if (AssertionError.class.isInstance(e.getCause())) {
-        throw (AssertionError) e.getCause();
+      if (RuntimeException.class.isInstance(e.getCause())) {
+        throw (RuntimeException) e.getCause();
       } else {
         throw e;
       }

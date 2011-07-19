@@ -8,7 +8,6 @@ import org.junit.Test;
 
 import com.google.gwt.core.client.GWT;
 import com.octo.gwt.test.GwtTestTest;
-import com.octo.gwt.test.internal.GwtConfig;
 
 public class MyChildChildConstantsTest extends GwtTestTest {
 
@@ -16,9 +15,6 @@ public class MyChildChildConstantsTest extends GwtTestTest {
 
   @Test
   public void checkChildConstant() {
-    // Arrange
-    GwtConfig.get().setLocale(Locale.ENGLISH);
-
     // Act
     String hello = childChildConstants.hello();
     String valueWithoutDefaultAnnotationInChild = childChildConstants.valueWithoutDefaultAnnotationInChild();
@@ -34,6 +30,11 @@ public class MyChildChildConstantsTest extends GwtTestTest {
         valueWithoutLocale);
     Assert.assertEquals("Value overriden by child in default .properties",
         valueWithoutLocaleToBeOverride);
+  }
+
+  @Override
+  public Locale getLocale() {
+    return Locale.ENGLISH;
   }
 
   @Before

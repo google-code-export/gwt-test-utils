@@ -32,6 +32,18 @@ class ElementPatcher {
   }
 
   @PatchMethod
+  static int getClientHeight(Element element) {
+    return JavaScriptObjects.getInteger(element,
+        JsoProperties.ELEMENT_CLIENT_HEIGHT);
+  }
+
+  @PatchMethod
+  static int getClientWidth(Element element) {
+    return JavaScriptObjects.getInteger(element,
+        JsoProperties.ELEMENT_CLIENT_WIDTH);
+  }
+
+  @PatchMethod
   static NodeList<Element> getElementsByTagName(Element elem, String tagName) {
     return DocumentPatcher.getElementsByTagName(elem, tagName);
   }

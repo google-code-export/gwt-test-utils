@@ -19,8 +19,8 @@ import org.w3c.dom.NodeList;
 import com.google.gwt.core.client.GWT;
 import com.octo.gwt.test.exceptions.GwtTestConfigurationException;
 import com.octo.gwt.test.exceptions.GwtTestException;
-import com.octo.gwt.test.integration.RemoteServiceCreateHandler;
 import com.octo.gwt.test.internal.utils.XmlUtils;
+import com.octo.gwt.test.server.RemoteServiceCreateHandler;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 class WebXmlRemoteServiceCreateHandler extends RemoteServiceCreateHandler {
@@ -43,7 +43,7 @@ class WebXmlRemoteServiceCreateHandler extends RemoteServiceCreateHandler {
     String servletPath = "/" + GWT.getModuleName() + "/"
         + remoteServiceRelativePath;
 
-    Object serviceImpl = servicesImplMap.get("servletPath");
+    Object serviceImpl = servicesImplMap.get(servletPath);
 
     if (serviceImpl != null) {
       return serviceImpl;

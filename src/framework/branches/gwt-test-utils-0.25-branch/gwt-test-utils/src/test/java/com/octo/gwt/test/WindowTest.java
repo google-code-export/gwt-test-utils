@@ -124,14 +124,14 @@ public class WindowTest extends GwtTestTest {
     Assert.assertEquals("my title", Document.get().getTitle());
   }
 
+  @Override
+  public WindowOperationsHandler getWindowOperationsHandler() {
+    return mockedHandler;
+  }
+
   @Before
   public void setupWindowTest() {
     EasyMock.reset(mockedHandler);
-  }
-
-  @Override
-  protected WindowOperationsHandler getWindowOperationsHandler() {
-    return mockedHandler;
   }
 
 }

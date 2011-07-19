@@ -21,7 +21,7 @@ public class DebugIdDisabledTest extends GwtTestTest {
   }
 
   @Override
-  protected boolean ensureDebugId() {
+  public boolean ensureDebugId() {
     return false;
   }
 

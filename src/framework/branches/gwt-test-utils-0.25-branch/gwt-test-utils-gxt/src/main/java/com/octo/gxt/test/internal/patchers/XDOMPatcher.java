@@ -36,12 +36,12 @@ class XDOMPatcher {
 
   @PatchMethod
   static int getDocumentHeight() {
-    return 0;
+    return Document.get().getDocumentElement().getClientHeight();
   }
 
   @PatchMethod
   static int getDocumentWidth() {
-    return 0;
+    return Document.get().getDocumentElement().getClientWidth();
   }
 
   @PatchMethod
@@ -51,11 +51,11 @@ class XDOMPatcher {
 
   @PatchMethod
   static int getViewportHeight() {
-    return 0;
+    return Document.get().getClientHeight();
   }
 
   @PatchMethod
   static int getViewportWidth() {
-    return 0;
+    return Document.get().getClientWidth();
   }
 }

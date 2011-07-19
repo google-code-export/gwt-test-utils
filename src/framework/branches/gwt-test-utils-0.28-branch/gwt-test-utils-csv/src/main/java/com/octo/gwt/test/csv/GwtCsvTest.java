@@ -366,6 +366,18 @@ public abstract class GwtCsvTest extends GwtTest {
     Browser.focus(target);
   }
 
+  @Override
+  public BrowserErrorHandler getBrowserErrorHandler() {
+    return new BrowserErrorHandler() {
+
+      public void onError(String errorMessage) {
+        // remove pending tasks, no need to execute
+        FinallyCommandTrigger.clearPendingCommands();
+        Assert.fail(csvRunner.getAssertionErrorMessagePrefix() + errorMessage);
+      }
+    };
+  }
+
   @CsvMethod
   public void hasStyle(String style, String identifier) {
     UIObject object = getObject(UIObject.class, identifier);
@@ -567,18 +579,6 @@ public abstract class GwtCsvTest extends GwtTest {
     for (String name : reader.getMacroFileList()) {
       macroReader.read(reader.getMacroFile(name));
     }
-  }
-
-  @Override
-  protected BrowserErrorHandler getBrowserErrorHandler() {
-    return new BrowserErrorHandler() {
-
-      public void onError(String errorMessage) {
-        // remove pending tasks, no need to execute
-        FinallyCommandTrigger.clearPendingCommands();
-        Assert.fail(csvRunner.getAssertionErrorMessagePrefix() + errorMessage);
-      }
-    };
   }
 
   protected FocusWidget getFocusWidget(String... params) {
