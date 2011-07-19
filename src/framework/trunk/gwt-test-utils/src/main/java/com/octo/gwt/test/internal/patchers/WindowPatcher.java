@@ -1,11 +1,14 @@
 package com.octo.gwt.test.internal.patchers;
 
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.Window;
 import com.octo.gwt.test.WindowOperationsHandler;
 import com.octo.gwt.test.internal.GwtConfig;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
+import com.octo.gwt.test.utils.GwtDomUtils;
+import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 @PatchClass(Window.class)
 class WindowPatcher {
@@ -71,12 +74,22 @@ class WindowPatcher {
 
   @PatchMethod
   static void resizeBy(int width, int height) {
+    Element viewportElement = GwtReflectionUtils.callPrivateMethod(
+        Document.get(), "getViewportElement");
+    int currentWidth = Document.get().getClientWidth();
+    GwtDomUtils.setClientWidth(viewportElement, currentWidth + width);
 
+    int currentHeight = Document.get().getClientHeight();
+    GwtDomUtils.setClientHeight(viewportElement, currentHeight + height);
   }
 
   @PatchMethod
   static void resizeTo(int width, int height) {
+    Element viewportElement = GwtReflectionUtils.callPrivateMethod(
+        Document.get(), "getViewportElement");
 
+    GwtDomUtils.setClientWidth(viewportElement, width);
+    GwtDomUtils.setClientHeight(viewportElement, height);
   }
 
   @PatchMethod
