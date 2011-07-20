@@ -189,8 +189,9 @@ public class Browser {
   public static void click(SuggestBox parent, MenuItem clickedItem) {
     Event onClick = EventBuilder.create(Event.ONCLICK).setTarget(clickedItem).build();
 
-    assertCanApplyEvent(onClick);
-    clickedItem.getCommand().execute();
+    if (canApplyEvent(onClick)) {
+      clickedItem.getCommand().execute();
+    }
   }
 
   /**
@@ -570,20 +571,26 @@ public class Browser {
     }
 	}
 
-  private static void assertCanApplyEvent(Event event) {
+  private static boolean canApplyEvent(Event event) {
     Element targetElement = event.getEventTarget().cast();
 
     if (!isVisible(targetElement)) {
       GwtConfig.get().getBrowserErrorHandler().onError(
           "Cannot dispatch '"
               + event.getType()
-              + "' event : the targeted widget and its possible parents have to be visible");
+              + "' event : the targeted element and its possible parents have to be visible");
+
+      return false;
     } else if (isDisabled(targetElement)) {
       GwtConfig.get().getBrowserErrorHandler().onError(
           "Cannot dispatch '" + event.getType()
-              + "' event : the targeted widget has to be enabled : "
+              + "' event : the targeted element has to be enabled : "
               + targetElement.toString());
+
+      return false;
     }
+
+    return true;
   }
 
   private static void clickInternal(Widget parent, UIObject target) {
@@ -609,10 +616,12 @@ public class Browser {
     }
 
     prepareEvents(target, events);
-    if (check) {
-      assertCanApplyEvent(events[0]);
+
+    boolean dipsatch = check ? canApplyEvent(events[0]) : true;
+
+    if (dipsatch) {
+      dispatchEventInternal(target, events);
     }
-    dispatchEventInternal(target, events);
 
     // run finally scheduled commands because some could have been scheduled
     // when the event was dispatched.
@@ -665,7 +674,8 @@ public class Browser {
   }
 
   private static boolean isDisabled(Element element) {
-    return element.getPropertyBoolean("disabled");
+    return element.getPropertyBoolean("disabled")
+        || element.getClassName().contains("gwt-CheckBox-disabled");
   }
 
   private static boolean isVisible(Element element) {

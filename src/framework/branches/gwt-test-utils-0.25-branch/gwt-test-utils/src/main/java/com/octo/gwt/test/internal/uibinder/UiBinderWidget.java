@@ -15,6 +15,7 @@ import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
 import com.octo.gwt.test.exceptions.GwtTestException;
 import com.octo.gwt.test.exceptions.GwtTestUiBinderException;
+import com.octo.gwt.test.exceptions.ReflectionException;
 import com.octo.gwt.test.internal.patchers.dom.JavaScriptObjects;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
@@ -40,7 +41,12 @@ class UiBinderWidget<T extends Widget> implements UiBinderTag {
       String attrUri = attributes.getURI(i);
 
       if (UiBinderUtils.isUiFieldAttribute(attrUri, attrName)) {
-        GwtReflectionUtils.setPrivateFieldValue(owner, attrValue, this.wrapped);
+        try {
+          GwtReflectionUtils.setPrivateFieldValue(owner, attrValue,
+              this.wrapped);
+        } catch (ReflectionException e) {
+          // ui:field has no corresponding @UiField declared : just ignore it
+        }
       } else if (attrName.contains("tyleName")) {
         attributesMap.put(attrName,
             UiBinderUtils.getEffectiveClassName(attrValue));

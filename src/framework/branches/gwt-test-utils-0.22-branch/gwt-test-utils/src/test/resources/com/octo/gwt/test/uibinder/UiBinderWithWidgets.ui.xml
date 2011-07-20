@@ -58,6 +58,8 @@
 			<test:UiFactoryLabel ui:field="uiFactoryLabel" customText="custom text setup in ui.xml">my UiFactory label</test:UiFactoryLabel>
 			<test:UiConstructorLabel ui:field="uiConstructorLabel" uiConstructorLabel="uiConstructor property" customText="custom text setup in ui.xml">my UiConstructor label</test:UiConstructorLabel>
 		</g:VerticalPanel>
+		
+		<g:Label ui:field="noCorrespondingUiFieldInJavaClass">No Corresponding @UiField in java class</g:Label>
 
 	</g:HTMLPanel>
 
