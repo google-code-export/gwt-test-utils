@@ -68,9 +68,8 @@ public class CheckBoxTest extends GwtTestTest {
 
     // Assert
     assertFalse(cb.getValue());
-    assertEquals(
-        "Cannot dispatch 'mouseover' event : the targeted element has to be enabled : <span class=\"gwt-CheckBox gwt-CheckBox-disabled\"><input type=\"checkbox\" id=\"elem_1\"></input><label></label></span>",
-        errorStringBuilder.toString());
+    assertTrue(errorStringBuilder.toString().startsWith(
+        "Cannot dispatch 'mouseover' event : the targeted element has to be enabled : <span class=\"gwt-CheckBox gwt-CheckBox-disabled\"><input type=\"checkbox\""));
   }
 
   @Test
