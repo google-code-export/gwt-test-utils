@@ -1,6 +1,7 @@
 package com.octo.gwt.test.internal.utils;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
 import com.google.gwt.dom.client.BRElement;
@@ -23,35 +24,35 @@ public class GwtHtmlParserTest extends GwtTestTest {
     NodeList<Node> nodes = GwtHtmlParser.parse(html);
 
     // Assert
-    Assert.assertEquals(2, nodes.getLength());
+    assertEquals(2, nodes.getLength());
     DivElement parent0 = (DivElement) nodes.getItem(0);
-    Assert.assertEquals("parent0", parent0.getId());
-    Assert.assertEquals(0, parent0.getChildCount());
+    assertEquals("parent0", parent0.getId());
+    assertEquals(0, parent0.getChildCount());
 
     DivElement parent1 = (DivElement) nodes.getItem(1);
-    Assert.assertEquals("parent1", parent1.getId());
-    Assert.assertEquals(3, parent1.getChildCount());
+    assertEquals("parent1", parent1.getId());
+    assertEquals(3, parent1.getChildCount());
 
     DivElement child0 = (DivElement) parent1.getChild(0);
-    Assert.assertEquals("child0", child0.getId());
-    Assert.assertEquals(1, child0.getChildCount());
+    assertEquals("child0", child0.getId());
+    assertEquals(1, child0.getChildCount());
 
     SpanElement span = (SpanElement) child0.getChild(0);
-    Assert.assertEquals("", span.getId());
-    Assert.assertEquals("spanClass", span.getClassName());
-    Assert.assertEquals(1, span.getChildCount());
-    Assert.assertEquals(Node.TEXT_NODE, span.getChild(0).getNodeType());
+    assertEquals("", span.getId());
+    assertEquals("spanClass", span.getClassName());
+    assertEquals(1, span.getChildCount());
+    assertEquals(Node.TEXT_NODE, span.getChild(0).getNodeType());
     Text text = span.getChild(0).cast();
-    Assert.assertEquals("test", text.getData());
-    Assert.assertEquals("test", span.getInnerText());
+    assertEquals("test", text.getData());
+    assertEquals("test", span.getInnerText());
 
     BRElement br = (BRElement) parent1.getChild(1);
-    Assert.assertEquals("", br.getId());
+    assertEquals("", br.getId());
 
     DivElement child2 = (DivElement) parent1.getChild(2);
-    Assert.assertEquals("child2", child2.getId());
-    Assert.assertEquals(0, child2.getChildCount());
+    assertEquals("child2", child2.getId());
+    assertEquals(0, child2.getChildCount());
     Style style = child2.getStyle();
-    Assert.assertEquals("red", style.getColor());
+    assertEquals("red", style.getColor());
   }
 }

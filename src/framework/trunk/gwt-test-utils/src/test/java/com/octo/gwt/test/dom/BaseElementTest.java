@@ -1,6 +1,6 @@
 package com.octo.gwt.test.dom;
 
-import junit.framework.Assert;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -14,34 +14,41 @@ public class BaseElementTest extends GwtTestTest {
   private BaseElement b;
 
   @Test
-  public void checkAs() {
+  public void as() {
+    // Act
     BaseElement asElement = BaseElement.as(b);
-    Assert.assertEquals(b, asElement);
+
+    // Assert
+    assertEquals(b, asElement);
   }
 
   @Test
-  public void checkHref() {
-    Assert.assertEquals("", b.getHref());
-    // Set up
+  public void href() {
+    // Pre-Assert
+    assertEquals("", b.getHref());
+
+    // Act
     b.setHref("Href");
 
     // Assert
-    Assert.assertEquals("Href", b.getHref());
-  }
-
-  @Test
-  public void checkTarget() {
-    Assert.assertEquals("", b.getTarget());
-    // Set up
-    b.setTarget("Target");
-
-    // Assert
-    Assert.assertEquals("Target", b.getTarget());
+    assertEquals("Href", b.getHref());
   }
 
   @Before
   public void initDocument() {
     b = Document.get().createBaseElement();
+  }
+
+  @Test
+  public void target() {
+    // Pre-Assert
+    assertEquals("", b.getTarget());
+
+    // Act
+    b.setTarget("Target");
+
+    // Assert
+    assertEquals("Target", b.getTarget());
   }
 
 }

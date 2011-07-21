@@ -45,45 +45,14 @@ public class HistoryTest extends GwtTestWithEasyMock {
   @Mock
   private ValueChangeHandler<String> listener2;
 
-  @Test
-  public void checkHistory() {
-    // Arrange
-
-    listener2.onValueChange(ValueChangeEventMatcher.eq("init"));
-    EasyMock.expectLastCall();
-
-    listener2.onValueChange(ValueChangeEventMatcher.eq("myToken"));
-    EasyMock.expectLastCall();
-
-    replay();
-    // Act
-    History.addValueChangeHandler(listener2);
-
-    History.newItem("init");
-    History.newItem("myToken");
-
-    // Assert
-    verify();
-
-    reset();
-
-    // Arrange
-
-    listener2.onValueChange(ValueChangeEventMatcher.eq("init"));
-    EasyMock.expectLastCall();
-
-    replay();
-    // Act
-    History.back();
-
-    // Assert
-    verify();
+  @Override
+  public String getModuleName() {
+    return "com.octo.gwt.test.GwtTestUtils";
   }
 
   @Test
-  public void checkHistoryOldSchool() {
+  public void newItem_HistoryListener() {
     // Arrange
-
     listener.onHistoryChanged(EasyMock.eq("init"));
     EasyMock.expectLastCall();
 
@@ -119,9 +88,37 @@ public class HistoryTest extends GwtTestWithEasyMock {
     verify();
   }
 
-  @Override
-  public String getModuleName() {
-    return "com.octo.gwt.test.GwtTestUtils";
+  @Test
+  public void newItem_ValueChangeHandler() {
+    // Arrange 1
+    listener2.onValueChange(ValueChangeEventMatcher.eq("init"));
+    EasyMock.expectLastCall();
+
+    listener2.onValueChange(ValueChangeEventMatcher.eq("myToken"));
+    EasyMock.expectLastCall();
+
+    replay();
+    // Act 1
+    History.addValueChangeHandler(listener2);
+
+    History.newItem("init");
+    History.newItem("myToken");
+
+    // Assert 1
+    verify();
+
+    reset();
+
+    // Arrange 2
+    listener2.onValueChange(ValueChangeEventMatcher.eq("init"));
+    EasyMock.expectLastCall();
+
+    replay();
+    // Act
+    History.back();
+
+    // Assert
+    verify();
   }
 
   @Override

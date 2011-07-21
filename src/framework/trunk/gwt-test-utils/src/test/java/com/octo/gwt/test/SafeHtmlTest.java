@@ -1,6 +1,7 @@
 package com.octo.gwt.test;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
 import com.google.gwt.core.client.GWT;
@@ -41,7 +42,7 @@ public class SafeHtmlTest extends GwtTestTest {
   private static MyTemplate TEMPLATE = GWT.create(MyTemplate.class);
 
   @Test
-  public void checkTemplate() {
+  public void template() {
     // Arrange
     SafeHtmlBuilder builder = new SafeHtmlBuilder();
     builder.appendEscaped("this is a test");
@@ -50,7 +51,7 @@ public class SafeHtmlTest extends GwtTestTest {
     SafeHtml result = TEMPLATE.div(builder.toSafeHtml());
 
     // Assert
-    Assert.assertEquals("<div style=\"outline:none;\">this is a test</div>",
+    assertEquals("<div style=\"outline:none;\">this is a test</div>",
         result.asString());
   }
 

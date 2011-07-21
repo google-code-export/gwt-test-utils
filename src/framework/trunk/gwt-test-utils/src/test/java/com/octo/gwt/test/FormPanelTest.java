@@ -1,6 +1,9 @@
 package com.octo.gwt.test;
 
-import junit.framework.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -22,55 +25,72 @@ public class FormPanelTest extends GwtTestTest {
   private boolean submitted;
 
   @Test
-  public void checkAdd() {
+  public void add() {
     // Arrange
     Button b1 = new Button();
     Button b2 = new Button();
-    Assert.assertFalse(b1.isAttached());
-    Assert.assertFalse(b2.isAttached());
+    assertFalse(b1.isAttached());
+    assertFalse(b2.isAttached());
 
     // Act 1
     form.add(b1);
 
     // Assert 1
-    Assert.assertEquals(b1, form.getWidget());
-    Assert.assertTrue(b1.isAttached());
-    Assert.assertFalse(b2.isAttached());
+    assertEquals(b1, form.getWidget());
+    assertTrue(b1.isAttached());
+    assertFalse(b2.isAttached());
 
     // Act 2
     try {
       form.add(b2);
-      Assert.fail("Simple panel can only contain one child widget");
+      fail("Simple panel can only contain one child widget");
     } catch (Exception e) {
       // Assert 2
-      Assert.assertTrue(e instanceof IllegalStateException);
+      assertTrue(e instanceof IllegalStateException);
     }
   }
 
+  @Before
+  public void beforeFormPanel() {
+    form = new FormPanel();
+    assertFalse(form.isAttached());
+    RootPanel.get().add(form);
+    assertTrue(form.isAttached());
+  }
+
   @Test
-  public void checkFormDimension() {
+  public void dimensions() {
     // Act 1
     form.setHeight("10");
     form.setWidth("20");
     // Assert 1
-    Assert.assertEquals("10", form.getElement().getStyle().getHeight());
-    Assert.assertEquals("20", form.getElement().getStyle().getWidth());
+    assertEquals("10", form.getElement().getStyle().getHeight());
+    assertEquals("20", form.getElement().getStyle().getWidth());
 
     // Act 2
     form.setSize("30", "40");
     // Assert 2
-    Assert.assertEquals("40", form.getElement().getStyle().getHeight());
-    Assert.assertEquals("30", form.getElement().getStyle().getWidth());
+    assertEquals("40", form.getElement().getStyle().getHeight());
+    assertEquals("30", form.getElement().getStyle().getWidth());
 
     // Act 3
     form.setPixelSize(30, 40);
     // Assert 3
-    Assert.assertEquals("40px", form.getElement().getStyle().getHeight());
-    Assert.assertEquals("30px", form.getElement().getStyle().getWidth());
+    assertEquals("40px", form.getElement().getStyle().getHeight());
+    assertEquals("30px", form.getElement().getStyle().getWidth());
   }
 
   @Test
-  public void checkFormSetup() {
+  public void removeFromParent() {
+    // Act
+    form.removeFromParent();
+
+    // Assert
+    assertFalse(form.isAttached());
+  }
+
+  @Test
+  public void setup() {
     // Act
     form.setAction("/myFormHandler");
     form.setEncoding(FormPanel.ENCODING_MULTIPART);
@@ -81,71 +101,56 @@ public class FormPanelTest extends GwtTestTest {
     form.addStyleName("addition");
 
     // Assert
-    Assert.assertEquals("/myFormHandler", form.getAction());
-    Assert.assertEquals(FormPanel.ENCODING_MULTIPART, form.getEncoding());
-    Assert.assertEquals(FormPanel.METHOD_POST, form.getMethod());
-    Assert.assertEquals("formTitle", form.getTitle());
-    Assert.assertEquals("formStyleName addition", form.getStyleName());
+    assertEquals("/myFormHandler", form.getAction());
+    assertEquals(FormPanel.ENCODING_MULTIPART, form.getEncoding());
+    assertEquals(FormPanel.METHOD_POST, form.getMethod());
+    assertEquals("formTitle", form.getTitle());
+    assertEquals("formStyleName addition", form.getStyleName());
   }
 
   @Test
-  public void checkRemoveFromParent() {
-    // Act
-    form.removeFromParent();
-
-    // Assert
-    Assert.assertFalse(form.isAttached());
-  }
-
-  @Test
-  public void checkSetWidget() {
+  public void setWidget() {
     // Arrange
     Button b1 = new Button();
     Button b2 = new Button();
-    Assert.assertFalse(b1.isAttached());
-    Assert.assertFalse(b2.isAttached());
+    assertFalse(b1.isAttached());
+    assertFalse(b2.isAttached());
 
     // Act 1
     form.setWidget(b1);
 
     // Assert 1
-    Assert.assertEquals(b1, form.getWidget());
-    Assert.assertTrue(b1.isAttached());
-    Assert.assertFalse(b2.isAttached());
+    assertEquals(b1, form.getWidget());
+    assertTrue(b1.isAttached());
+    assertFalse(b2.isAttached());
 
     // Act 2
     form.setWidget(b2);
 
     // Assert 2
-    Assert.assertEquals(b2, form.getWidget());
-    Assert.assertFalse(b1.isAttached());
-    Assert.assertTrue(b2.isAttached());
-  }
-
-  @Before
-  public void setupFormPanel() {
-    form = new FormPanel();
-    Assert.assertFalse(form.isAttached());
-    RootPanel.get().add(form);
-    Assert.assertTrue(form.isAttached());
+    assertEquals(b2, form.getWidget());
+    assertFalse(b1.isAttached());
+    assertTrue(b2.isAttached());
   }
 
   @Test
-  public void testSubmit() {
+  public void submit() {
     // Arrange
     TextBox tb = new TextBox();
     setupFormForSubmitTest(tb);
     submitted = false;
     completeSubmitted = false;
 
+    // Act
     form.submit();
 
-    Assert.assertTrue(submitted);
-    Assert.assertFalse(completeSubmitted);
+    // Assert
+    assertTrue(submitted);
+    assertFalse(completeSubmitted);
   }
 
   @Test
-  public void testSubmitComplete() {
+  public void submitComplete() {
     // Arrange
     TextBox tb = new TextBox();
     tb.setText("some text");
@@ -156,8 +161,9 @@ public class FormPanelTest extends GwtTestTest {
     // Act
     form.submit();
 
-    Assert.assertTrue(submitted);
-    Assert.assertTrue(completeSubmitted);
+    // Assert
+    assertTrue(submitted);
+    assertTrue(completeSubmitted);
   }
 
   private void setupFormForSubmitTest(final TextBox tb) {

@@ -1,9 +1,11 @@
 package com.octo.gwt.test;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -88,18 +90,23 @@ public class CustomEventTest extends GwtTestTest {
 
     @Override
     public boolean equals(Object obj) {
-      if (this == obj)
+      if (this == obj) {
         return true;
-      if (obj == null)
+      }
+      if (obj == null) {
         return false;
-      if (getClass() != obj.getClass())
+      }
+      if (getClass() != obj.getClass()) {
         return false;
+      }
       ListItem other = (ListItem) obj;
       if (text == null) {
-        if (other.text != null)
+        if (other.text != null) {
           return false;
-      } else if (!text.equals(other.text))
+        }
+      } else if (!text.equals(other.text)) {
         return false;
+      }
       return true;
     }
 
@@ -144,13 +151,13 @@ public class CustomEventTest extends GwtTestTest {
   private int removeCount;
 
   @Test
-  public void checkAdd() {
+  public void add() {
     // Arrange
     listModel.addItemAddedHandler(new ItemAddedHandler() {
 
       public void onItemAdded(ItemAddedEvent event) {
         addCount++;
-        Assert.assertEquals("addedItem", event.getListItem().getText());
+        assertEquals("addedItem", event.getListItem().getText());
 
       }
     });
@@ -158,7 +165,7 @@ public class CustomEventTest extends GwtTestTest {
     listModel.addItemRemovedHandler(new ItemRemovedHandler() {
 
       public void onItemRemoved(ItemRemovedEvent event) {
-        Assert.fail();
+        fail();
       }
     });
 
@@ -166,12 +173,19 @@ public class CustomEventTest extends GwtTestTest {
     listModel.addItem(new ListItem("addedItem"));
 
     // Assert
-    Assert.assertEquals(1, addCount);
-    Assert.assertEquals(0, removeCount);
+    assertEquals(1, addCount);
+    assertEquals(0, removeCount);
+  }
+
+  @Before
+  public void beforeCustomEventTest() {
+    listModel = new ListModel();
+    addCount = 0;
+    removeCount = 0;
   }
 
   @Test
-  public void checkRemove() {
+  public void remove() {
     // Arrange
     final ListItem itemToRemove = new ListItem("itemToRemove");
     listModel.addItem(itemToRemove);
@@ -180,7 +194,7 @@ public class CustomEventTest extends GwtTestTest {
 
       public void onItemRemoved(ItemRemovedEvent event) {
         removeCount++;
-        Assert.assertEquals(itemToRemove, event.getListItem());
+        assertEquals(itemToRemove, event.getListItem());
       }
 
     });
@@ -188,7 +202,7 @@ public class CustomEventTest extends GwtTestTest {
     listModel.addItemAddedHandler(new ItemAddedHandler() {
 
       public void onItemAdded(ItemAddedEvent event) {
-        Assert.fail();
+        fail();
 
       }
     });
@@ -197,14 +211,7 @@ public class CustomEventTest extends GwtTestTest {
     listModel.removeItem(itemToRemove);
 
     // Assert
-    Assert.assertEquals(1, removeCount);
-  }
-
-  @Before
-  public void setupCustomEventTest() {
-    listModel = new ListModel();
-    addCount = 0;
-    removeCount = 0;
+    assertEquals(1, removeCount);
   }
 
 }

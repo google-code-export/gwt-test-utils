@@ -1,15 +1,15 @@
 package se.fishtank.css.selectors;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
@@ -76,33 +76,9 @@ public class GwtNodeSelectorTest extends GwtTest {
 
   private GwtNodeSelector nodeSelector;
 
-  @Test
-  public void checkRoot() throws NodeSelectorException {
-    Node root = nodeSelector.querySelector(":root");
-    Assert.assertEquals(Node.ELEMENT_NODE, root.getNodeType());
-    Assert.assertEquals("HTML", root.getNodeName());
-
-    GwtNodeSelector subSelector = new GwtNodeSelector(
-        nodeSelector.querySelector("div#scene1"));
-    Set<Node> subRoot = subSelector.querySelectorAll(":root");
-    Assert.assertEquals(1, subRoot.size());
-    Element subChild = subRoot.iterator().next().cast();
-    Assert.assertEquals("scene1", subChild.getAttribute("id"));
-    Assert.assertEquals((int) testDataMap.get("div#scene1 div.dialog div"),
-        subSelector.querySelectorAll(":root div.dialog div").size());
-
-    Node meta = nodeSelector.querySelector(":root > head > meta");
-    Assert.assertEquals(meta, new GwtNodeSelector(meta).querySelector(":root"));
-  }
-
-  @Test
-  public void checkSelectors() throws Exception {
-    for (Map.Entry<String, Integer> entry : testDataMap.entrySet()) {
-      LOGGER.info("selector: " + entry.getKey() + ", expected: "
-          + entry.getValue());
-      Set<Node> result = nodeSelector.querySelectorAll(entry.getKey());
-      Assert.assertEquals(entry.getKey(), (int) entry.getValue(), result.size());
-    }
+  @Before
+  public void beforeDOMNodeSelectorTest() throws Exception {
+    nodeSelector = new GwtNodeSelector(Document.get());
   }
 
   @Override
@@ -110,9 +86,33 @@ public class GwtNodeSelectorTest extends GwtTest {
     return "se.fishtank.css.selectors.CssSelectorTest";
   }
 
-  @Before
-  public void setupDOMNodeSelectorTest() throws Exception {
-    nodeSelector = new GwtNodeSelector(Document.get());
+  @Test
+  public void root() throws NodeSelectorException {
+    Node root = nodeSelector.querySelector(":root");
+    assertEquals(Node.ELEMENT_NODE, root.getNodeType());
+    assertEquals("HTML", root.getNodeName());
+
+    GwtNodeSelector subSelector = new GwtNodeSelector(
+        nodeSelector.querySelector("div#scene1"));
+    Set<Node> subRoot = subSelector.querySelectorAll(":root");
+    assertEquals(1, subRoot.size());
+    Element subChild = subRoot.iterator().next().cast();
+    assertEquals("scene1", subChild.getAttribute("id"));
+    assertEquals((int) testDataMap.get("div#scene1 div.dialog div"),
+        subSelector.querySelectorAll(":root div.dialog div").size());
+
+    Node meta = nodeSelector.querySelector(":root > head > meta");
+    assertEquals(meta, new GwtNodeSelector(meta).querySelector(":root"));
+  }
+
+  @Test
+  public void selectors() throws Exception {
+    for (Map.Entry<String, Integer> entry : testDataMap.entrySet()) {
+      LOGGER.info("selector: " + entry.getKey() + ", expected: "
+          + entry.getValue());
+      Set<Node> result = nodeSelector.querySelectorAll(entry.getKey());
+      assertEquals(entry.getKey(), (int) entry.getValue(), result.size());
+    }
   }
 
   @Override

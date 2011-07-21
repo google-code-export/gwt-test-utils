@@ -155,19 +155,29 @@ class ClientBundleProxyFactory {
   public <T extends ClientBundle> T createProxy() {
     InvocationHandler ih = new InvocationHandler() {
 
+      private final Map<Method, Object> cache = new HashMap<Method, Object>();
+
       public Object invoke(Object proxy, Method method, Object[] args)
           throws Throwable {
 
-        // create a ResourcePrototypeProxyBuilder with the good args
-        Class<?> resourcePrototypeClass = method.getReturnType();
-        String name = method.getName();
-        URL resourceURL = methodRegistry.getResourceURL(method);
+        Object result = cache.get(method);
 
-        ResourcePrototypeProxyBuilder builder = ResourcePrototypeProxyBuilder.createBuilder(
-            resourcePrototypeClass, proxiedClass).name(name).resourceURL(
-            resourceURL);
+        if (result == null) {
+          // create a ResourcePrototypeProxyBuilder with the good args
+          Class<?> resourcePrototypeClass = method.getReturnType();
+          String name = method.getName();
+          URL resourceURL = methodRegistry.getResourceURL(method);
 
-        return builder.build();
+          ResourcePrototypeProxyBuilder builder = ResourcePrototypeProxyBuilder.createBuilder(
+              resourcePrototypeClass, proxiedClass).name(name).resourceURL(
+              resourceURL);
+
+          result = builder.build();
+          cache.put(method, result);
+        }
+
+        return result;
+
       }
 
     };

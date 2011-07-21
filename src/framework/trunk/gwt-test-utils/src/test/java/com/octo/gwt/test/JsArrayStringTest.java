@@ -1,6 +1,7 @@
 package com.octo.gwt.test;
 
-import junit.framework.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -12,17 +13,32 @@ public class JsArrayStringTest extends GwtTestTest {
 
   private JsArrayString jsArrayString;
 
+  @Before
+  public void beforeJsArrayStringTest() {
+    // Arrange
+    jsArrayString = JavaScriptObjects.newObject(JsArrayString.class);
+    assertEquals(0, jsArrayString.length());
+    assertNull(jsArrayString.get(100));
+
+    // Act
+    jsArrayString.set(4, "test");
+
+    // Assert
+    assertEquals(5, jsArrayString.length());
+    assertNull(jsArrayString.get(3));
+  }
+
   @Test
-  public void checkJoin() {
+  public void join() {
     // Act
     String join = jsArrayString.join();
 
     // Assert
-    Assert.assertEquals(",,,,test", join);
+    assertEquals(",,,,test", join);
   }
 
   @Test
-  public void checkJoinAfterResize() {
+  public void join_AfterResize() {
     // Arrange
     jsArrayString.setLength(3);
 
@@ -30,23 +46,23 @@ public class JsArrayStringTest extends GwtTestTest {
     String join = jsArrayString.join();
 
     // Assert
-    Assert.assertEquals(",,", join);
-    Assert.assertEquals(3, jsArrayString.length());
+    assertEquals(",,", join);
+    assertEquals(3, jsArrayString.length());
   }
 
   @Test
-  public void checkPush() {
+  public void push() {
     // Act
     jsArrayString.push("pushed");
 
     // Assert
-    Assert.assertEquals(",,,,test,pushed", jsArrayString.join());
-    Assert.assertEquals(6, jsArrayString.length());
-    Assert.assertEquals("pushed", jsArrayString.get(jsArrayString.length() - 1));
+    assertEquals(",,,,test,pushed", jsArrayString.join());
+    assertEquals(6, jsArrayString.length());
+    assertEquals("pushed", jsArrayString.get(jsArrayString.length() - 1));
   }
 
   @Test
-  public void checkShift() {
+  public void shift() {
     // Arrange
     jsArrayString.set(0, "toshift");
 
@@ -54,33 +70,18 @@ public class JsArrayStringTest extends GwtTestTest {
     String shift = jsArrayString.shift();
 
     // Assert
-    Assert.assertEquals("toshift", shift);
-    Assert.assertEquals(4, jsArrayString.length());
-    Assert.assertEquals(",,,test", jsArrayString.join());
+    assertEquals("toshift", shift);
+    assertEquals(4, jsArrayString.length());
+    assertEquals(",,,test", jsArrayString.join());
   }
 
   @Test
-  public void checkUnshift() {
+  public void unshift() {
     // Act
     jsArrayString.unshift("tounshift");
 
     // Assert
-    Assert.assertEquals(6, jsArrayString.length());
-    Assert.assertEquals("tounshift,,,,,test", jsArrayString.join());
-  }
-
-  @Before
-  public void setupJsArrayStringTest() {
-    // Arrange
-    jsArrayString = JavaScriptObjects.newObject(JsArrayString.class);
-    Assert.assertEquals(0, jsArrayString.length());
-    Assert.assertNull(jsArrayString.get(100));
-
-    // Act
-    jsArrayString.set(4, "test");
-
-    // Assert
-    Assert.assertEquals(5, jsArrayString.length());
-    Assert.assertNull(jsArrayString.get(3));
+    assertEquals(6, jsArrayString.length());
+    assertEquals("tounshift,,,,,test", jsArrayString.join());
   }
 }

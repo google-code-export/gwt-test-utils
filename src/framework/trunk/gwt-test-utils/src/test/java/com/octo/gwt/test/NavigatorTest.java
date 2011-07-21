@@ -1,6 +1,8 @@
 package com.octo.gwt.test;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 
 import com.google.gwt.user.client.Window.Navigator;
@@ -8,46 +10,66 @@ import com.google.gwt.user.client.Window.Navigator;
 public class NavigatorTest extends GwtTestTest {
 
   @Test
-  public void checkGetAppCodeName() {
+  public void getAppCodeName() {
+    // Act
     String appCodeName = Navigator.getAppCodeName();
-    Assert.assertNotNull(appCodeName);
+
+    // Assert
+    assertNotNull(appCodeName);
   }
 
   @Test
-  public void checkGetAppName() {
+  public void getAppName() {
+    // Act
     String appName = Navigator.getAppName();
-    Assert.assertNotNull(appName);
+
+    // Assert
+    assertNotNull(appName);
   }
 
   @Test
-  public void checkGetAppVersion() {
+  public void getAppVersion() {
+    // Act
     String appVersion = Navigator.getAppVersion();
-    Assert.assertNotNull(appVersion);
+
+    // Assert
+    assertNotNull(appVersion);
   }
 
   @Test
-  public void checkGetPlatform() {
+  public void getPlatform() {
+    // Act
     String platform = Navigator.getPlatform();
-    Assert.assertNotNull(platform);
+
+    // Assert
+    assertNotNull(platform);
   }
 
   @Test
-  public void checkGetUserAgent() {
+  public void getUserAgent() {
     // Act
     String userAgent = Navigator.getUserAgent();
-    Assert.assertNotNull(userAgent);
+
+    // Assert
+    assertNotNull(userAgent);
   }
 
   @Test
-  public void checkIsCookiesEnabled() {
+  public void isCookiesEnabled() {
+    // Act
     boolean isCookiesEnabled = Navigator.isCookieEnabled();
-    Assert.assertTrue(isCookiesEnabled);
+
+    // Assert
+    assertTrue(isCookiesEnabled);
   }
 
   @Test
-  public void checkIsJavaEnabled() {
+  public void isJavaEnabled() {
+    // Act
     boolean isJavaEnabled = Navigator.isJavaEnabled();
-    Assert.assertTrue(isJavaEnabled);
+
+    // Assert
+    assertTrue(isJavaEnabled);
   }
 
 }

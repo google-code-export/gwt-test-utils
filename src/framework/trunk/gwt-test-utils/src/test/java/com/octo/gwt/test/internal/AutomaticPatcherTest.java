@@ -1,6 +1,7 @@
 package com.octo.gwt.test.internal;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -20,13 +21,13 @@ public class AutomaticPatcherTest extends GwtTestTest {
     String result = instance.myStringMethod(innerObject);
 
     // Assert
-    Assert.assertEquals(
+    assertEquals(
         "myStringMethod has been patched by override patcher : patched by MyInnerClassOverridePatcher : new field added in overrided init",
         result);
   }
 
   @Before
-  public void setupAutomaticPatcherTest() {
+  public void beforeAutomaticPatcherTest() {
     instance = new MyClassToPatch();
   }
 

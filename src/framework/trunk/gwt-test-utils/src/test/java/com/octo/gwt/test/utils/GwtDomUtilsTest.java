@@ -1,6 +1,7 @@
 package com.octo.gwt.test.utils;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
 import com.google.gwt.dom.client.Document;
@@ -18,7 +19,7 @@ public class GwtDomUtilsTest extends GwtTestTest {
     GwtDomUtils.setClientHeight(e, 4);
 
     // Assert
-    Assert.assertEquals(4, e.getClientHeight());
+    assertEquals(4, e.getClientHeight());
   }
 
   @Test
@@ -30,7 +31,7 @@ public class GwtDomUtilsTest extends GwtTestTest {
     GwtDomUtils.setClientWidth(e, 4);
 
     // Assert
-    Assert.assertEquals(4, e.getClientWidth());
+    assertEquals(4, e.getClientWidth());
   }
 
 }

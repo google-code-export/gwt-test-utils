@@ -1,6 +1,7 @@
 package com.octo.gwt.test.dom;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
 import com.google.gwt.dom.client.Document;
@@ -18,7 +19,7 @@ public class TextTest extends GwtTestTest {
     String toString = text.toString();
 
     // Assert
-    Assert.assertEquals("'some text'", toString);
+    assertEquals("'some text'", toString);
 
   }
 

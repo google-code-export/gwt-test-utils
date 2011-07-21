@@ -1,6 +1,10 @@
 package com.octo.gwt.test.dom;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -19,33 +23,39 @@ import com.octo.gwt.test.GwtTestTest;
 import com.octo.gwt.test.internal.GwtPatcherUtils;
 import com.octo.gwt.test.internal.patchers.dom.JavaScriptObjects;
 
-@SuppressWarnings("deprecation")
 public class NodeTest extends GwtTestTest {
 
   private Node n;
 
   @Test
-  public void checkAppendChild() {
+  public void appendChilds() {
+    // Arrange
     BaseElement c0 = Document.get().createBaseElement();
-    ButtonElement c1 = Document.get().createButtonElement();
+    ButtonElement c1 = Document.get().createPushButtonElement();
+
+    // Act
     n.appendChild(c0);
     n.appendChild(c1);
 
-    Assert.assertEquals(2, n.getChildNodes().getLength());
-    Assert.assertEquals(c0, n.getChildNodes().getItem(0));
-    Assert.assertEquals(c1, n.getChildNodes().getItem(1));
+    // Assert
+    assertEquals(2, n.getChildNodes().getLength());
+    assertEquals(c0, n.getChildNodes().getItem(0));
+    assertEquals(c1, n.getChildNodes().getItem(1));
   }
 
   @Test
-  public void checkAs() {
-    Assert.assertEquals(n, Node.as(n));
+  public void as() {
+    // Act & Assert 1
+    assertEquals(n, Node.as(n));
+
+    // Act & Assert 2
     if (!GwtPatcherUtils.areAssertionEnabled()) {
-      Assert.assertNull(Node.as(null));
+      assertNull(Node.as(null));
     }
   }
 
   @Test
-  public void checkCloneDeep() {
+  public void clone_Deep() {
     // Arrange
     AnchorElement child = Document.get().createAnchorElement();
     child.setInnerText("child inner text");
@@ -56,28 +66,28 @@ public class NodeTest extends GwtTestTest {
     DivElement newNode = n.cloneNode(true).cast();
 
     // Assert
-    Assert.assertEquals(Node.ELEMENT_NODE, newNode.getNodeType());
+    assertEquals(Node.ELEMENT_NODE, newNode.getNodeType());
     DivElement source = n.cast();
-    Assert.assertEquals(source.getInnerText(), newNode.getInnerText());
-    Assert.assertEquals(source.getInnerHTML(), newNode.getInnerHTML());
-    Assert.assertEquals(source.toString(), newNode.toString());
+    assertEquals(source.getInnerText(), newNode.getInnerText());
+    assertEquals(source.getInnerHTML(), newNode.getInnerHTML());
+    assertEquals(source.toString(), newNode.toString());
 
-    Assert.assertNull(newNode.getParentNode());
-    Assert.assertEquals(n.getChildNodes().getLength(),
+    assertNull(newNode.getParentNode());
+    assertEquals(n.getChildNodes().getLength(),
         newNode.getChildNodes().getLength());
 
-    Assert.assertEquals(Node.ELEMENT_NODE,
+    assertEquals(Node.ELEMENT_NODE,
         newNode.getChildNodes().getItem(0).getNodeType());
     AnchorElement childElement = newNode.getChildNodes().getItem(0).cast();
-    Assert.assertEquals("child inner text", childElement.getInnerText());
+    assertEquals("child inner text", childElement.getInnerText());
 
     Style newStyle = childElement.getStyle();
-    Assert.assertTrue(newStyle != child.getStyle());
-    Assert.assertEquals("black", newStyle.getBackgroundColor());
+    assertTrue(newStyle != child.getStyle());
+    assertEquals("black", newStyle.getBackgroundColor());
   }
 
   @Test
-  public void checkCloneNotDeep() {
+  public void clone_NotDeep() {
     // Arrange
     Element e = n.cast();
     e.setInnerText("text");
@@ -91,111 +101,121 @@ public class NodeTest extends GwtTestTest {
     DivElement newNode = n.cloneNode(false).cast();
 
     // Assert
-    Assert.assertEquals(Node.ELEMENT_NODE, newNode.getNodeType());
-    Assert.assertTrue(e.getStyle() != newNode.getStyle());
-    Assert.assertEquals("black", newNode.getStyle().getBackgroundColor());
-    Assert.assertEquals("text", newNode.getInnerText());
-    Assert.assertNull(newNode.getParentNode());
-    Assert.assertEquals(2, n.getChildNodes().getLength());
-    Assert.assertEquals(1, newNode.getChildNodes().getLength());
+    assertEquals(Node.ELEMENT_NODE, newNode.getNodeType());
+    assertTrue(e.getStyle() != newNode.getStyle());
+    assertEquals("black", newNode.getStyle().getBackgroundColor());
+    assertEquals("text", newNode.getInnerText());
+    assertNull(newNode.getParentNode());
+    assertEquals(2, n.getChildNodes().getLength());
+    assertEquals(1, newNode.getChildNodes().getLength());
   }
 
   @Test
-  public void checkGetFirstChild() {
-    Assert.assertNull(n.getFirstChild());
+  public void getFirstChild() {
+    // Pre-Assert
+    assertNull(n.getFirstChild());
 
-    // Set up
-    ButtonElement be0 = Document.get().createButtonElement();
-    ButtonElement be1 = Document.get().createButtonElement();
+    // Arrange
+    ButtonElement be0 = Document.get().createPushButtonElement();
+    ButtonElement be1 = Document.get().createPushButtonElement();
     n.appendChild(be0);
     n.appendChild(be1);
 
     // Act & Assert
-    Assert.assertEquals(be0, n.getFirstChild());
+    assertEquals(be0, n.getFirstChild());
   }
 
   @Test
-  public void checkGetLastChild() {
-    Assert.assertNull(n.getLastChild());
+  public void getLastChild() {
+    // Pre-Assert
+    assertNull(n.getLastChild());
 
-    // Set up
-    ButtonElement be0 = Document.get().createButtonElement();
-    ButtonElement be1 = Document.get().createButtonElement();
+    // Arrange
+    ButtonElement be0 = Document.get().createPushButtonElement();
+    ButtonElement be1 = Document.get().createPushButtonElement();
     n.appendChild(be0);
     n.appendChild(be1);
 
     // Act & Assert
-    Assert.assertEquals(be1, n.getLastChild());
+    assertEquals(be1, n.getLastChild());
   }
 
   @Test
-  public void checkGetNextSibling() {
-    Assert.assertNull(n.getNextSibling());
+  public void getNextSibling() {
+    // Pre-Assert
+    assertNull(n.getNextSibling());
 
-    // Set up
-    ButtonElement be0 = Document.get().createButtonElement();
-    ButtonElement be1 = Document.get().createButtonElement();
+    // Arrange
+    ButtonElement be0 = Document.get().createPushButtonElement();
+    ButtonElement be1 = Document.get().createPushButtonElement();
     n.appendChild(be0);
     n.appendChild(be1);
 
     // Act & Assert
-    Assert.assertEquals(be1, be0.getNextSibling());
+    assertEquals(be1, be0.getNextSibling());
   }
 
   @Test
-  public void checkGetOwnerDocument() {
-    Assert.assertEquals(Document.get(), n.getOwnerDocument());
+  public void getOwnerDocument() {
+    // Act & Assert
+    assertEquals(Document.get(), n.getOwnerDocument());
   }
 
   @Test
-  public void checkGetParentNode() {
-    Assert.assertNull(n.getParentNode());
+  public void getParentNode() {
+    // Pre-Assert
+    assertNull(n.getParentNode());
 
-    // Set up
+    // Arrange
     BaseElement be = Document.get().createBaseElement();
     n.appendChild(be);
 
-    // Act and assert
-    Assert.assertEquals(n, be.getParentNode());
+    // Act & assert
+    assertEquals(n, be.getParentNode());
   }
 
   @Test
-  public void checkGetPreviousSibling() {
-    Assert.assertNull(n.getPreviousSibling());
+  public void getPreviousSibling() {
+    // Pre-Assert
+    assertNull(n.getPreviousSibling());
 
-    // Set up
-    ButtonElement be0 = Document.get().createButtonElement();
-    ButtonElement be1 = Document.get().createButtonElement();
+    // Arrange
+    ButtonElement be0 = Document.get().createPushButtonElement();
+    ButtonElement be1 = Document.get().createPushButtonElement();
     n.appendChild(be0);
     n.appendChild(be1);
 
     // Act & Assert
-    Assert.assertEquals(be0, be1.getPreviousSibling());
+    assertEquals(be0, be1.getPreviousSibling());
   }
 
   @Test
-  public void checkHasChildNodes() {
-    Assert.assertFalse("New element should not have child nodes",
-        n.hasChildNodes());
+  public void hasChildNodes() {
+    // Pre-Assert
+    assertFalse("New element should not have child nodes", n.hasChildNodes());
 
-    // Set up
+    // Arrange
     BaseElement be = Document.get().createBaseElement();
     n.appendChild(be);
 
-    // Act and Assert
-    Assert.assertTrue("Element should have a child node", n.hasChildNodes());
+    // Act & Assert
+    assertTrue("Element should have a child node", n.hasChildNodes());
+  }
+
+  @Before
+  public void initElement() {
+    n = Document.get().createDivElement();
   }
 
   @Test
-  public void checkInsertBefore() {
-
-    // Set up
-    ButtonElement be0 = Document.get().createButtonElement();
-    ButtonElement be1 = Document.get().createButtonElement();
-    ButtonElement be2 = Document.get().createButtonElement();
-    ButtonElement be3 = Document.get().createButtonElement();
-    ButtonElement be4 = Document.get().createButtonElement();
-    ButtonElement be5 = Document.get().createButtonElement();
+  public void insertBefore() {
+    // Arrange
+    ButtonElement be0 = Document.get().createPushButtonElement();
+    ButtonElement be1 = Document.get().createPushButtonElement();
+    ButtonElement be2 = Document.get().createPushButtonElement();
+    ButtonElement be3 = Document.get().createPushButtonElement();
+    ButtonElement be4 = Document.get().createPushButtonElement();
+    ButtonElement be5 = Document.get().createPushButtonElement();
     n.appendChild(be0);
     n.appendChild(be2);
 
@@ -204,91 +224,94 @@ public class NodeTest extends GwtTestTest {
     n.insertBefore(be3, null);
     n.insertBefore(be4, be5);
 
-    Assert.assertEquals(be0, n.getChildNodes().getItem(0));
-    Assert.assertEquals(be1, n.getChildNodes().getItem(1));
-    Assert.assertEquals(be2, n.getChildNodes().getItem(2));
-    Assert.assertEquals(be3, n.getChildNodes().getItem(3));
-    Assert.assertEquals(be4, n.getChildNodes().getItem(4));
+    assertEquals(be0, n.getChildNodes().getItem(0));
+    assertEquals(be1, n.getChildNodes().getItem(1));
+    assertEquals(be2, n.getChildNodes().getItem(2));
+    assertEquals(be3, n.getChildNodes().getItem(3));
+    assertEquals(be4, n.getChildNodes().getItem(4));
   }
 
   @Test
-  public void checkIs() {
+  public void is() {
+    // Arrange
     NodeList<OptionElement> list = JavaScriptObjects.newNodeList();
-    Assert.assertFalse("null is not a DOM node", Node.is(null));
-    Assert.assertFalse("NodeList is not a DOM node", Node.is(list));
-    Assert.assertTrue("AnchorElement is a DOM node",
+
+    // Act & Assert
+    assertFalse("null is not a DOM node", Node.is(null));
+    assertFalse("NodeList is not a DOM node", Node.is(list));
+    assertTrue("AnchorElement is a DOM node",
         Node.is(Document.get().createAnchorElement()));
   }
 
   @Test
-  public void checkNodeName() {
-    Assert.assertEquals("#document", Document.get().getNodeName());
-    Assert.assertEquals("HTML",
-        Document.get().getDocumentElement().getNodeName());
-    Assert.assertEquals("a", Document.get().createAnchorElement().getNodeName());
-    Assert.assertEquals("#text",
-        JavaScriptObjects.newText("test").getNodeName());
+  public void nodeName() {
+    // Act & Assert
+    assertEquals("#document", Document.get().getNodeName());
+    assertEquals("HTML", Document.get().getDocumentElement().getNodeName());
+    assertEquals("a", Document.get().createAnchorElement().getNodeName());
+    assertEquals("#text", JavaScriptObjects.newText("test").getNodeName());
   }
 
   @Test
-  public void checkNodeType() {
-    Assert.assertEquals(Node.DOCUMENT_NODE, Document.get().getNodeType());
-    Assert.assertEquals(Node.ELEMENT_NODE,
+  public void nodeType() {
+    // Act & Assert
+    assertEquals(Node.DOCUMENT_NODE, Document.get().getNodeType());
+    assertEquals(Node.ELEMENT_NODE,
         Document.get().getDocumentElement().getNodeType());
-    Assert.assertEquals(Node.ELEMENT_NODE,
+    assertEquals(Node.ELEMENT_NODE,
         Document.get().createAnchorElement().getNodeType());
-    Assert.assertEquals(Node.TEXT_NODE,
+    assertEquals(Node.TEXT_NODE,
         JavaScriptObjects.newText("test").getNodeType());
   }
 
   @Test
-  public void checkNodeValueOnDocument() {
+  public void nodeValue_Document() {
     // Arrange
     Node documentNode = Document.get();
     // Pre-Assert
-    Assert.assertNull(documentNode.getNodeValue());
+    assertNull(documentNode.getNodeValue());
 
     // Act
     documentNode.setNodeValue("node");
 
     // Assert
-    Assert.assertNull(documentNode.getNodeValue());
+    assertNull(documentNode.getNodeValue());
   }
 
   @Test
-  public void checkNodeValueOnElement() {
+  public void nodeValue_Element() {
     // Arrange
     Node doucmentNode = Document.get().getDocumentElement();
     // Pre-Assert
-    Assert.assertNull(doucmentNode.getNodeValue());
+    assertNull(doucmentNode.getNodeValue());
 
     // Act
     doucmentNode.setNodeValue("node");
 
     // Assert
-    Assert.assertNull(doucmentNode.getNodeValue());
+    assertNull(doucmentNode.getNodeValue());
   }
 
   @Test
-  public void checkNodeValueOnText() {
+  public void nodeValue_Text() {
     // Arrange
     Text textNode = Document.get().createTextNode("data");
     // Pre-Assert
-    Assert.assertEquals("data", textNode.getNodeValue());
+    assertEquals("data", textNode.getNodeValue());
 
     // Act
     textNode.setNodeValue("node");
 
     // Assert
-    Assert.assertEquals("node", textNode.getNodeValue());
-    Assert.assertEquals("node", textNode.getData());
+    assertEquals("node", textNode.getNodeValue());
+    assertEquals("node", textNode.getData());
   }
 
   @Test
-  public void checkRemoveChild() {
-    // Set up
+  public void removeChild() {
+    // Arrange
     BaseElement c0 = Document.get().createBaseElement();
-    ButtonElement c1 = Document.get().createButtonElement();
+    ButtonElement c1 = Document.get().createPushButtonElement();
     n.appendChild(c0);
     n.appendChild(c1);
 
@@ -296,15 +319,15 @@ public class NodeTest extends GwtTestTest {
     n.removeChild(c1);
 
     // Assert
-    Assert.assertEquals(1, n.getChildNodes().getLength());
-    Assert.assertEquals(c0, n.getChildNodes().getItem(0));
+    assertEquals(1, n.getChildNodes().getLength());
+    assertEquals(c0, n.getChildNodes().getItem(0));
   }
 
   @Test
-  public void checkReplaceChild() {
-    // Set up
+  public void replaceChild() {
+    // Arrange
     BaseElement c0 = Document.get().createBaseElement();
-    ButtonElement c1 = Document.get().createButtonElement();
+    ButtonElement c1 = Document.get().createPushButtonElement();
     AnchorElement c2 = Document.get().createAnchorElement();
     n.appendChild(c0);
     n.appendChild(c1);
@@ -315,17 +338,12 @@ public class NodeTest extends GwtTestTest {
     Node nullReplaced2 = n.replaceChild(c2, null);
 
     // Assert
-    Assert.assertEquals(2, n.getChildNodes().getLength());
-    Assert.assertEquals(c0, n.getChildNodes().getItem(0));
-    Assert.assertEquals(c2, n.getChildNodes().getItem(1));
-    Assert.assertEquals(c1, replaced);
-    Assert.assertNull(nullReplaced);
-    Assert.assertNull(nullReplaced2);
-  }
-
-  @Before
-  public void initElement() {
-    n = Document.get().createDivElement();
+    assertEquals(2, n.getChildNodes().getLength());
+    assertEquals(c0, n.getChildNodes().getItem(0));
+    assertEquals(c2, n.getChildNodes().getItem(1));
+    assertEquals(c1, replaced);
+    assertNull(nullReplaced);
+    assertNull(nullReplaced2);
   }
 
 }

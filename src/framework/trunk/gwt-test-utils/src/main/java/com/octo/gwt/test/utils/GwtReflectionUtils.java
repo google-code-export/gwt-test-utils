@@ -15,6 +15,13 @@ import com.octo.gwt.test.exceptions.GwtTestException;
 import com.octo.gwt.test.exceptions.ReflectionException;
 import com.octo.gwt.test.internal.utils.DoubleMap;
 
+/**
+ * Class which provides reflection utilities.
+ * 
+ * @author Bertrand Paquet
+ * @author Gael Lazzari
+ * 
+ */
 @SuppressWarnings("unchecked")
 public class GwtReflectionUtils {
 

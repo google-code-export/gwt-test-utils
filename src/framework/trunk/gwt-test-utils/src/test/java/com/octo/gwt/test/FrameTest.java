@@ -1,6 +1,6 @@
 package com.octo.gwt.test;
 
-import junit.framework.Assert;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
@@ -9,22 +9,29 @@ import com.google.gwt.user.client.ui.Frame;
 public class FrameTest extends GwtTestTest {
 
   @Test
-  public void checkTitle() {
+  public void title() {
+    // Arrange
     Frame f = new Frame();
+
+    // Act
     f.setTitle("title");
 
-    Assert.assertEquals("title", f.getTitle());
+    // Assert
+    assertEquals("title", f.getTitle());
   }
 
   @Test
-  public void checkUrl() {
+  public void url() {
+    // Arrange
     Frame f = new Frame("url");
+    // Pre-Assert
+    assertEquals("url", f.getUrl());
 
-    Assert.assertEquals("url", f.getUrl());
-
+    // Act
     f.setUrl("newURL");
 
-    Assert.assertEquals("newURL", f.getUrl());
+    // Assert
+    assertEquals("newURL", f.getUrl());
   }
 
 }

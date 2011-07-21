@@ -1,6 +1,7 @@
 package com.octo.gwt.test;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
 import com.google.gwt.dom.client.Element;
@@ -19,8 +20,8 @@ public class FlexTableTest extends GwtTestTest {
   private boolean clicked = false;
 
   @Test
-  public void checkClickHandlerNestedWidget() {
-
+  public void click_ClickHandler_NestedWidget() {
+    // Arrange
     clicked = false;
     FlexTable t = new FlexTable();
 
@@ -35,16 +36,19 @@ public class FlexTableTest extends GwtTestTest {
     // add the button
     t.setWidget(0, 0, b);
 
-    Assert.assertEquals(false, clicked);
-    // simule the click
+    // Pre-Assert
+    assertEquals(false, clicked);
+
+    // Act
     Browser.click(t.getWidget(0, 0));
 
-    Assert.assertEquals(true, clicked);
+    // Assert
+    assertEquals(true, clicked);
   }
 
   @Test
-  public void checkClickListenerNestedWidget() {
-
+  public void click_ClickkListener_NestedWidget() {
+    // Arrange
     clicked = false;
     FlexTable t = new FlexTable();
 
@@ -59,16 +63,35 @@ public class FlexTableTest extends GwtTestTest {
     // add the button
     t.setWidget(0, 0, b);
 
-    Assert.assertEquals(false, clicked);
-    // simule the click
+    // Pre-Assert
+    assertEquals(false, clicked);
+
+    // Act
     Browser.click(t.getWidget(0, 0));
 
-    Assert.assertEquals(true, clicked);
+    // Assert
+    assertEquals(true, clicked);
   }
 
   @Test
-  public void checkFlexTable() {
+  public void html() {
+    // Arrange
+    FlexTable t = new FlexTable();
 
+    // Act
+    t.setHTML(1, 1, "<h1>test</h1>");
+
+    // Assert
+    assertEquals("<h1>test</h1>", t.getHTML(1, 1));
+    Element e = t.getCellFormatter().getElement(1, 1);
+    assertEquals(1, e.getChildCount());
+    HeadingElement h1 = e.getChild(0).cast();
+    assertEquals("H1", h1.getTagName());
+    assertEquals("test", h1.getInnerText());
+  }
+
+  @Test
+  public void setText_setWidget() {
     // Tables have no explicit size -- they resize automatically on demand.
     FlexTable t = new FlexTable();
 
@@ -84,43 +107,48 @@ public class FlexTableTest extends GwtTestTest {
     // ...and set it's column span so that it takes up the whole row.
     t.getFlexCellFormatter().setColSpan(1, 0, 3);
 
-    Assert.assertEquals(3, t.getRowCount());
-    Assert.assertEquals("bottom-right corner", t.getText(2, 2));
-    Assert.assertEquals(b, t.getWidget(1, 0));
+    // Assert
+    assertEquals(3, t.getRowCount());
+    assertEquals("bottom-right corner", t.getText(2, 2));
+    assertEquals(b, t.getWidget(1, 0));
   }
 
   @Test
-  public void checkHTML() {
+  public void text() {
+    // Arrange
     FlexTable t = new FlexTable();
-    t.setHTML(1, 1, "<h1>test</h1>");
-    Assert.assertEquals("<h1>test</h1>", t.getHTML(1, 1));
-    Element e = t.getCellFormatter().getElement(1, 1);
-    Assert.assertEquals(1, e.getChildCount());
-    HeadingElement h1 = e.getChild(0).cast();
-    Assert.assertEquals("H1", h1.getTagName());
-    Assert.assertEquals("test", h1.getInnerText());
-  }
 
-  @Test
-  public void checkText() {
-    FlexTable t = new FlexTable();
+    // Act
     t.setText(1, 1, "text");
-    Assert.assertEquals("text", t.getText(1, 1));
+
+    // Assert
+    assertEquals("text", t.getText(1, 1));
   }
 
   @Test
-  public void checkTitle() {
+  public void title() {
+    // Arrange
     FlexTable t = new FlexTable();
+
+    // Act
     t.setTitle("title");
-    Assert.assertEquals("title", t.getTitle());
+
+    // Assert
+    assertEquals("title", t.getTitle());
   }
 
   @Test
-  public void checkVisible() {
+  public void visible() {
+    // Arrange
     FlexTable t = new FlexTable();
-    Assert.assertEquals(true, t.isVisible());
+    // Pre-Assert
+    assertEquals(true, t.isVisible());
+
+    // Act
     t.setVisible(false);
-    Assert.assertEquals(false, t.isVisible());
+
+    // Assert
+    assertEquals(false, t.isVisible());
   }
 
 }

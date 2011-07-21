@@ -1,10 +1,10 @@
 package com.octo.gwt.test;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.google.gwt.core.client.GWT;
@@ -36,9 +36,14 @@ public class GwtRpcWithMockitoTest extends GwtTestWithMockito {
   @org.mockito.Mock
   private MyRemoteServiceAsync mockedService;
 
+  @Override
+  public String getModuleName() {
+    return "com.octo.gwt.test.GwtTestUtils";
+  }
+
   @SuppressWarnings("unchecked")
   @Test
-  public void checkGwtRpcFailure() {
+  public void rpcCall_KO() {
     // Arrange
 
     // mock future remote call
@@ -48,16 +53,16 @@ public class GwtRpcWithMockitoTest extends GwtTestWithMockito {
     // Act
     MyGwtClass gwtClass = new MyGwtClass();
     gwtClass.myValue = "toto";
-    Assert.assertEquals("toto", gwtClass.myValue);
+    assertEquals("toto", gwtClass.myValue);
     gwtClass.run();
 
     // Assert
-    Assert.assertEquals("error", gwtClass.myValue);
+    assertEquals("error", gwtClass.myValue);
   }
 
   @SuppressWarnings("unchecked")
   @Test
-  public void checkGwtRpcOk() {
+  public void rpcCall_OK() {
     // Arrange : mock future remote call
     doSuccessCallback("returnValue").when(mockedService).myMethod(
         eq("myParamValue"), any(AsyncCallback.class));
@@ -65,18 +70,13 @@ public class GwtRpcWithMockitoTest extends GwtTestWithMockito {
     // Act
     MyGwtClass gwtClass = new MyGwtClass();
     gwtClass.myValue = "toto";
-    Assert.assertEquals("toto", gwtClass.myValue);
+    assertEquals("toto", gwtClass.myValue);
     gwtClass.run();
 
     // Assert
     verify(mockedService).myMethod(eq("myParamValue"), any(AsyncCallback.class));
 
-    Assert.assertEquals("returnValue", gwtClass.myValue);
-  }
-
-  @Override
-  public String getModuleName() {
-    return "com.octo.gwt.test.GwtTestUtils";
+    assertEquals("returnValue", gwtClass.myValue);
   }
 
   @Override

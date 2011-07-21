@@ -1,6 +1,7 @@
 package com.octo.gwt.test.dom;
 
-import junit.framework.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -27,8 +28,8 @@ public class TableElementTest extends GwtTestTest {
   @Test
   public void caption() {
     // Pre Assert
-    Assert.assertNull(e.getCaption());
-    Assert.assertEquals(0, e.getChildCount());
+    assertNull(e.getCaption());
+    assertEquals(0, e.getChildCount());
 
     // Arrange
     e.createTHead();
@@ -38,17 +39,17 @@ public class TableElementTest extends GwtTestTest {
     TableCaptionElement caption = e.createCaption();
 
     // Assert
-    Assert.assertEquals(caption, e.getCaption());
-    Assert.assertEquals("caption", caption.getTagName());
-    Assert.assertEquals(3, e.getChildCount());
+    assertEquals(caption, e.getCaption());
+    assertEquals("caption", caption.getTagName());
+    assertEquals(3, e.getChildCount());
     // caption should be inserted at first rank
-    Assert.assertEquals(caption, e.getChild(0));
+    assertEquals(caption, e.getChild(0));
 
     // Act 2
     e.deleteCaption();
-    Assert.assertNull(e.getCaption());
-    Assert.assertEquals(2, e.getChildCount());
-    Assert.assertEquals("thead", e.getChild(0).getNodeName());
+    assertNull(e.getCaption());
+    assertEquals(2, e.getChildCount());
+    assertEquals("thead", e.getChild(0).getNodeName());
   }
 
   @Test
@@ -61,7 +62,7 @@ public class TableElementTest extends GwtTestTest {
     e.createTHead();
 
     // Assert 1
-    Assert.assertEquals("<table><thead></thead><tr id=\"r0\"></tr></table>",
+    assertEquals("<table><thead></thead><tr id=\"r0\"></tr></table>",
         e.toString());
 
     // Act 2
@@ -73,7 +74,7 @@ public class TableElementTest extends GwtTestTest {
     e.appendChild(tbody2);
 
     // Assert 2
-    Assert.assertEquals(
+    assertEquals(
         "<table><thead></thead><tr id=\"r0\"></tr><tbody id=\"tbody1\"></tbody><tbody id=\"tbody2\"></tbody></table>",
         e.toString());
 
@@ -84,7 +85,7 @@ public class TableElementTest extends GwtTestTest {
     r2.setId("r2");
 
     // Assert 3
-    Assert.assertEquals(
+    assertEquals(
         "<table><thead></thead><tr id=\"r2\"></tr><tr id=\"r1\"></tr><tr id=\"r0\"></tr><tbody id=\"tbody1\"></tbody><tbody id=\"tbody2\"></tbody></table>",
         e.toString());
 
@@ -94,7 +95,7 @@ public class TableElementTest extends GwtTestTest {
     tbody1.appendChild(trBody1);
 
     // Assert 4
-    Assert.assertEquals(
+    assertEquals(
         "<table><thead></thead><tr id=\"r2\"></tr><tr id=\"r1\"></tr><tr id=\"r0\"></tr><tbody id=\"tbody1\"><tr id=\"trBody1\"></tr></tbody><tbody id=\"tbody2\"></tbody></table>",
         e.toString());
 
@@ -103,7 +104,7 @@ public class TableElementTest extends GwtTestTest {
     tfoot.setId("tfoot");
 
     // Assert 5
-    Assert.assertEquals(
+    assertEquals(
         "<table><thead></thead><tfoot id=\"tfoot\"></tfoot><tr id=\"r2\"></tr><tr id=\"r1\"></tr><tr id=\"r0\"></tr><tbody id=\"tbody1\"><tr id=\"trBody1\"></tr></tbody><tbody id=\"tbody2\"></tbody></table>",
         e.toString());
 
@@ -112,12 +113,12 @@ public class TableElementTest extends GwtTestTest {
     lastRow.setId("lastRow");
 
     // Assert 6
-    Assert.assertEquals(
+    assertEquals(
         "<table><thead></thead><tfoot id=\"tfoot\"></tfoot><tr id=\"r2\"></tr><tr id=\"r1\"></tr><tr id=\"r0\"></tr><tbody id=\"tbody1\"><tr id=\"trBody1\"></tr><tr id=\"lastRow\"></tr></tbody><tbody id=\"tbody2\"></tbody></table>",
         e.toString());
 
-    Assert.assertEquals(7, e.getChildCount());
-    Assert.assertEquals(5, e.getRows().getLength());
+    assertEquals(7, e.getChildCount());
+    assertEquals(5, e.getRows().getLength());
   }
 
   @Test
@@ -127,15 +128,15 @@ public class TableElementTest extends GwtTestTest {
     Element tbody2 = Document.get().createTBodyElement();
     e.appendChild(tbody1);
     e.appendChild(tbody2);
-    Assert.assertEquals(2, e.getChildCount());
+    assertEquals(2, e.getChildCount());
 
     // Act
     NodeList<TableSectionElement> tbodies = e.getTBodies();
 
     // Assert
-    Assert.assertEquals(2, tbodies.getLength());
-    Assert.assertEquals(tbody1, tbodies.getItem(0));
-    Assert.assertEquals(tbody2, tbodies.getItem(1));
+    assertEquals(2, tbodies.getLength());
+    assertEquals(tbody1, tbodies.getItem(0));
+    assertEquals(tbody2, tbodies.getItem(1));
   }
 
   @Test
@@ -144,9 +145,9 @@ public class TableElementTest extends GwtTestTest {
     TableRowElement r0 = e.insertRow(0);
 
     // Assert
-    Assert.assertEquals(1, e.getChildCount());
-    Assert.assertEquals("tbody", e.getChild(0).getNodeName());
-    Assert.assertEquals(r0, e.getChild(0).getChild(0));
+    assertEquals(1, e.getChildCount());
+    assertEquals("tbody", e.getChild(0).getNodeName());
+    assertEquals(r0, e.getChild(0).getChild(0));
   }
 
   @Test
@@ -176,10 +177,10 @@ public class TableElementTest extends GwtTestTest {
     e.appendChild(tr2);
 
     // Assert
-    Assert.assertEquals(2, e.getRows().getLength());
-    Assert.assertEquals(tr1, e.getRows().getItem(0));
-    Assert.assertEquals(4, e.getChildCount());
-    Assert.assertEquals(
+    assertEquals(2, e.getRows().getLength());
+    assertEquals(tr1, e.getRows().getItem(0));
+    assertEquals(4, e.getChildCount());
+    assertEquals(
         "<table><thead></thead><tfoot></tfoot><tr><td>1</td><td>2</td></tr><tr><td>3</td><td>4</td></tr></table>",
         e.toString());
 
@@ -187,10 +188,10 @@ public class TableElementTest extends GwtTestTest {
     e.deleteRow(0);
 
     // Assert 2
-    Assert.assertEquals(1, e.getRows().getLength());
-    Assert.assertEquals(tr2, e.getRows().getItem(0));
-    Assert.assertEquals(3, e.getChildCount());
-    Assert.assertEquals(
+    assertEquals(1, e.getRows().getLength());
+    assertEquals(tr2, e.getRows().getItem(0));
+    assertEquals(3, e.getChildCount());
+    assertEquals(
         "<table><thead></thead><tfoot></tfoot><tr><td>3</td><td>4</td></tr></table>",
         e.toString());
   }
@@ -198,24 +199,24 @@ public class TableElementTest extends GwtTestTest {
   @Test
   public void tfoot() {
     // Pre Assert
-    Assert.assertNull(e.getTFoot());
-    Assert.assertEquals(0, e.getChildCount());
+    assertNull(e.getTFoot());
+    assertEquals(0, e.getChildCount());
 
     // Act
     TableSectionElement tfoot = e.createTFoot();
 
     // Assert
-    Assert.assertEquals(tfoot, e.getTFoot());
-    Assert.assertEquals("tfoot", tfoot.getTagName());
-    Assert.assertEquals(1, e.getChildCount());
-    Assert.assertEquals(tfoot, e.getChild(0));
+    assertEquals(tfoot, e.getTFoot());
+    assertEquals("tfoot", tfoot.getTagName());
+    assertEquals(1, e.getChildCount());
+    assertEquals(tfoot, e.getChild(0));
 
     // Act 2
     e.deleteTFoot();
 
     // Assert2
-    Assert.assertNull(e.getTFoot());
-    Assert.assertEquals(0, e.getChildCount());
+    assertNull(e.getTFoot());
+    assertEquals(0, e.getChildCount());
 
     // Act 3
     TableSectionElement newTFoot = Document.get().createTFootElement();
@@ -223,41 +224,41 @@ public class TableElementTest extends GwtTestTest {
     e.setTFoot(newTFoot);
 
     // Assert 3
-    Assert.assertEquals(newTFoot, e.getTFoot());
-    Assert.assertEquals("tfoot", newTFoot.getTagName());
-    Assert.assertEquals(1, e.getChildCount());
-    Assert.assertEquals(newTFoot, e.getChild(0));
-    Assert.assertEquals("<table><tfoot>new</tfoot></table>", e.toString());
+    assertEquals(newTFoot, e.getTFoot());
+    assertEquals("tfoot", newTFoot.getTagName());
+    assertEquals(1, e.getChildCount());
+    assertEquals(newTFoot, e.getChild(0));
+    assertEquals("<table><tfoot>new</tfoot></table>", e.toString());
 
     // Act 4
     e.setTFoot(null);
 
     // Assert 4
-    Assert.assertNull(e.getTFoot());
-    Assert.assertEquals(0, e.getChildCount());
+    assertNull(e.getTFoot());
+    assertEquals(0, e.getChildCount());
   }
 
   @Test
   public void thead() {
     // Pre Assert
-    Assert.assertNull(e.getTHead());
-    Assert.assertEquals(0, e.getChildCount());
+    assertNull(e.getTHead());
+    assertEquals(0, e.getChildCount());
 
     // Act
     TableSectionElement thead = e.createTHead();
 
     // Assert
-    Assert.assertEquals(thead, e.getTHead());
-    Assert.assertEquals("thead", thead.getTagName());
-    Assert.assertEquals(1, e.getChildCount());
-    Assert.assertEquals(thead, e.getChild(0));
+    assertEquals(thead, e.getTHead());
+    assertEquals("thead", thead.getTagName());
+    assertEquals(1, e.getChildCount());
+    assertEquals(thead, e.getChild(0));
 
     // Act 2
     e.deleteTHead();
 
     // Assert 2
-    Assert.assertNull(e.getTHead());
-    Assert.assertEquals(0, e.getChildCount());
+    assertNull(e.getTHead());
+    assertEquals(0, e.getChildCount());
 
     // Act 3
     TableSectionElement newTHead = Document.get().createTHeadElement();
@@ -265,18 +266,18 @@ public class TableElementTest extends GwtTestTest {
     e.setTHead(newTHead);
 
     // Assert 3
-    Assert.assertEquals(newTHead, e.getTHead());
-    Assert.assertEquals("thead", newTHead.getTagName());
-    Assert.assertEquals(1, e.getChildCount());
-    Assert.assertEquals(newTHead, e.getChild(0));
-    Assert.assertEquals("<table><thead>new</thead></table>", e.toString());
+    assertEquals(newTHead, e.getTHead());
+    assertEquals("thead", newTHead.getTagName());
+    assertEquals(1, e.getChildCount());
+    assertEquals(newTHead, e.getChild(0));
+    assertEquals("<table><thead>new</thead></table>", e.toString());
 
     // Act 4
     e.setTHead(null);
 
     // Assert 4
-    Assert.assertNull(e.getTHead());
-    Assert.assertEquals(0, e.getChildCount());
+    assertNull(e.getTHead());
+    assertEquals(0, e.getChildCount());
   }
 
 }

@@ -79,7 +79,7 @@ public abstract class GwtTestWithEasyMock extends GwtTestWithMocks {
   }
 
   @Before
-  public void setupGwtTestWithEasyMock() {
+  public void beforeGwtTestWithEasyMock() {
     for (Class<?> clazz : mockedClasses) {
       Object mock = EasyMock.createMock(clazz);
       addMockedObject(clazz, mock);
