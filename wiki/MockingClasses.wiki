@@ -1,4 +1,5 @@
 #summary How to write unit tests that make use of mock objects
+#labels EasyMock,Mockito
 #sidebar TableOfContents
 
 = Using mock objects =
