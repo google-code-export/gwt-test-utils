@@ -1,46 +1,17 @@
 #summary This page explains how to test your GWT / spring applications.
-#labels spring
+#labels Phase-Implementation,spring
 
 = Introduction =
 
 Since a GWT application usually deals with a backend server, you may be interested in using spring to manage your RPC services. A lot of simple frameworks, like [http://code.google.com/p/gwtrpc-spring/ gwtrpc-spring] will handle the glue code beetwen spring and GWT remote services for you.
 
-But you also might want to test your entire stack. That's why *gwt-test-utils* comes with some classes to do it very easily.
-
-= Maven dependencies =
-
-*gwt-test-utils* provides 2 different modules respectively designed to work with [http://static.springframework.org/spring/docs/2.5.x/reference/index.html Spring 2] and [http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html Spring3].
-
-==== For spring2 : ====
-
-{{{
-   <dependency>
-      <groupId>com.octo.gwt.test</groupId>
-      <artifactId>gwt-test-utils-spring2</artifactId>
-      <version>${gwt.test.utils.version}</version>
-      <scope>test</scope>
-   </dependency>
-}}}
-
-
-==== For spring3 : ==== 
-
-{{{
-   <dependency>
-      <groupId>com.octo.gwt.test</groupId>
-      <artifactId>gwt-test-utils-spring3</artifactId>
-      <version>${gwt.test.utils.version}</version>
-      <scope>test</scope>
-   </dependency>
-}}}
+But you also might want to test your entire stack. That's why _gwt-test-utils_ comes with some classes to do it very easily.
 
 = How to use =
 
-*spring-2* and *spring-3* modules provide the same API, which can be used this way :
-
 {{{
 
-@ContextConfiguration(locations = {"classpath:applicationContext-test.xml"})
+@ContextConfiguration(locations = {"classpath:applicationContext-test.xml"}, loader = GwtTestContextLoader.class)
 public class RPCCompositeWithSpringTest extends GwtSpringTest {
 
   @Override
@@ -62,7 +33,7 @@ public class RPCCompositeWithSpringTest extends GwtSpringTest {
 }}}
 
  # First, extend {{{GwtSpringTest}}}, the base class for test with spring.
- # Use the {{{ContextConfiguration}}} annotation from _spring-test_ to configure your test context.
+ # Use the {{{ContextConfiguration}}} annotation from _spring-test_ to configure your test context. _gwt-test-utils_ provides a custom Spring {{{ContextLoader}}} you *must* declare : {{{GwtTestContextLoader}}}.
  # Like in {{{GwtTest}}}, override the getModuleName() method.
  # Finally, implement the abstract method *findRpcServiceInSpringContext* to retrieve a GWT {{{RemoteService}}} from the given spring context.
 
