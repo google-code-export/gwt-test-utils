@@ -10,11 +10,11 @@ We maintain a branch for each version since GWT 2.0.1.
 Here is a recap of the latest versions of the frameworks compatible with a given _GWT_ version :
 
 || GWT version || Latest gwt-test-utils compatible version ||
-|| *GWT 2.3.0* || gwt-test-utils-0.30 ||
-|| *GWT 2.2.0* || gwt-test-utils-0.28.4 ||
-|| *GWT 2.1.1* || gwt-test-utils-0.25.1 ||
-|| *GWT 2.1.0* || gwt-test-utils-0.25.1 ||
-|| *GWT 2.0.4* || gwt-test-utils-0.22.1 ||
-|| *GWT 2.0.3* || gwt-test-utils-0.22.1 ||
-|| *GWT 2.0.2* || gwt-test-utils-0.22.1 ||
-|| *GWT 2.0.1* || gwt-test-utils-0.22.1 ||
+|| *GWT 2.3.0* || gwt-test-utils-0.31 ||
+|| *GWT 2.2.0* || gwt-test-utils-0.28.5 ||
+|| *GWT 2.1.1* || gwt-test-utils-0.25.2 ||
+|| *GWT 2.1.0* || gwt-test-utils-0.25.2 ||
+|| *GWT 2.0.4* || gwt-test-utils-0.22.2 ||
+|| *GWT 2.0.3* || gwt-test-utils-0.22.2 ||
+|| *GWT 2.0.2* || gwt-test-utils-0.22.2 ||
+|| *GWT 2.0.1* || gwt-test-utils-0.22.2 ||
