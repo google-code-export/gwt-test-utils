@@ -1,6 +1,8 @@
 package com.octo.gwt.test;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 
 import com.google.gwt.dom.client.Element;
@@ -21,17 +23,21 @@ public class GridTest extends GwtTestTest {
   private boolean clicked = false;
 
   @Test
-  public void checkAddStyleName() {
+  public void addStyleName() {
+    // Arrange
     // Grids must be sized explicitly, though they can be resized later.
     Grid g = new Grid(1, 1);
 
+    // Act
     g.getRowFormatter().addStyleName(0, "style");
 
-    Assert.assertEquals("style", g.getRowFormatter().getStyleName(0));
+    // Assert
+    assertEquals("style", g.getRowFormatter().getStyleName(0));
   }
 
   @Test
-  public void checkClickHander() {
+  public void click_ClickHander() {
+    // Arrange
     clicked = false;
     final Grid g = new Grid(1, 1);
     final Button b = new Button("Does nothing, but could");
@@ -40,19 +46,22 @@ public class GridTest extends GwtTestTest {
 
       public void onClick(ClickEvent event) {
         clicked = !clicked;
-        Assert.assertEquals(b, ((Grid) event.getSource()).getWidget(0, 0));
+        assertEquals(b, ((Grid) event.getSource()).getWidget(0, 0));
 
       }
     });
 
+    // Act
     Browser.click(g, 0, 0);
 
-    Assert.assertTrue("TableListener should have been notified", clicked);
+    // Assert
+    assertTrue("TableListener should have been notified", clicked);
 
   }
 
   @Test
-  public void checkClickHandlerNestedWidget() {
+  public void click_ClickHandler_NestedWidget() {
+    // Arrange
     // Grids must be sized explicitly, though they can be resized later.
     Grid g = new Grid(1, 1);
 
@@ -68,15 +77,18 @@ public class GridTest extends GwtTestTest {
     // add the button
     g.setWidget(0, 0, b);
 
-    Assert.assertEquals(false, clicked);
-    // simule the click
+    // Pre-Assert
+    assertEquals(false, clicked);
+
+    // Act
     Browser.click(g.getWidget(0, 0));
 
-    Assert.assertEquals(true, clicked);
+    // Assert
+    assertEquals(true, clicked);
   }
 
   @Test
-  public void checkClickListenerNestedWidget() {
+  public void click_ClickListener_NestedWidget() {
     // Arrange
     // Grids must be sized explicitly, though they can be resized later.
     Grid g = new Grid(1, 1);
@@ -93,59 +105,19 @@ public class GridTest extends GwtTestTest {
     // add the button
     g.setWidget(0, 0, b);
 
-    Assert.assertEquals(false, clicked);
+    // Pre-Assert
+    assertEquals(false, clicked);
 
-    // Act : simule the click
+    // Act
     Browser.click(g.getWidget(0, 0));
 
     // Assert
-    Assert.assertEquals(true, clicked);
+    assertEquals(true, clicked);
   }
 
   @Test
-  public void checkGrid() {
-    // Grids must be sized explicitly, though they can be resized later.
-    Grid g = new Grid(5, 5);
-
-    // Put some values in the grid cells.
-    for (int row = 0; row < 5; ++row) {
-      for (int col = 0; col < 5; ++col)
-        g.setText(row, col, "" + row + ", " + col);
-    }
-
-    Assert.assertEquals("3, 2", g.getText(3, 2));
-
-    Button b = new Button("Does nothing, but could");
-    g.setWidget(2, 2, b);
-
-    Assert.assertEquals(b, g.getWidget(2, 2));
-  }
-
-  @Test
-  public void checkHTML() {
-    Grid g = new Grid(1, 1);
-    g.setHTML(0, 0, "<h1>test</h1>");
-    Assert.assertEquals("<h1>test</h1>", g.getHTML(0, 0));
-    Element e = g.getCellFormatter().getElement(0, 0);
-    Assert.assertEquals(1, e.getChildCount());
-    HeadingElement h1 = e.getChild(0).cast();
-    Assert.assertEquals("H1", h1.getTagName());
-    Assert.assertEquals("test", h1.getInnerText());
-  }
-
-  @Test
-  public void checkRemoveFromGrid() {
-    // Grids must be sized explicitly, though they can be resized later.
-    Grid g = new Grid(1, 1);
-
-    Button b = new Button("Does nothing, but could");
-    g.setWidget(0, 0, b);
-
-    Assert.assertTrue("The button has not been removed from grid", g.remove(b));
-  }
-
-  @Test
-  public void checkTableListner() {
+  public void click_TableListner() {
+    // Arrange
     clicked = false;
     Grid g = new Grid(1, 1);
     Button b = new Button("Does nothing, but could");
@@ -158,32 +130,110 @@ public class GridTest extends GwtTestTest {
 
     });
 
+    // Act
     Browser.click(g, 0, 0);
 
-    Assert.assertTrue("TableListener should have been notified", clicked);
-
+    // Assert
+    assertTrue("TableListener should have been notified", clicked);
   }
 
   @Test
-  public void checkText() {
+  public void html() {
+    // Arrange
     Grid g = new Grid(1, 1);
+
+    // Act
+    g.setHTML(0, 0, "<h1>test</h1>");
+
+    // Assert
+    assertEquals("<h1>test</h1>", g.getHTML(0, 0));
+    Element e = g.getCellFormatter().getElement(0, 0);
+    assertEquals(1, e.getChildCount());
+    HeadingElement h1 = e.getChild(0).cast();
+    assertEquals("H1", h1.getTagName());
+    assertEquals("test", h1.getInnerText());
+  }
+
+  @Test
+  public void removeFromGrid() {
+    // Arrange
+    // Grids must be sized explicitly, though they can be resized later.
+    Grid g = new Grid(1, 1);
+    Button b = new Button("Does nothing, but could");
+    g.setWidget(0, 0, b);
+
+    // Act & Assert
+    assertTrue("The button has not been removed from grid", g.remove(b));
+  }
+
+  @Test
+  public void setText() {
+    // Arrange
+    // Grids must be sized explicitly, though they can be resized later.
+    Grid g = new Grid(5, 5);
+
+    // Put some values in the grid cells.
+    for (int row = 0; row < 5; ++row) {
+      for (int col = 0; col < 5; ++col)
+        // Act
+        g.setText(row, col, "" + row + ", " + col);
+    }
+
+    // Assert
+    assertEquals("0, 0", g.getText(0, 0));
+    assertEquals("3, 2", g.getText(3, 2));
+    assertEquals("4, 4", g.getText(4, 4));
+  }
+
+  @Test
+  public void setWidget() {
+    // Arrange
+    Grid g = new Grid(3, 3);
+    Button b = new Button("Does nothing, but could");
+
+    // Act
+    g.setWidget(2, 2, b);
+
+    // Assert
+    assertEquals(b, g.getWidget(2, 2));
+  }
+
+  @Test
+  public void text() {
+    // Arrange
+    Grid g = new Grid(1, 1);
+
+    // Act
     g.setText(0, 0, "text");
-    Assert.assertEquals("text", g.getText(0, 0));
+
+    // Assert
+    assertEquals("text", g.getText(0, 0));
   }
 
   @Test
-  public void checkTitle() {
+  public void title() {
+    // Arrange
     Grid g = new Grid(1, 1);
+
+    // Act
     g.setTitle("title");
-    Assert.assertEquals("title", g.getTitle());
+
+    // Assert
+    assertEquals("title", g.getTitle());
   }
 
   @Test
-  public void checkVisible() {
+  public void visible() {
+    // Arrange
     Grid g = new Grid(1, 1);
-    Assert.assertEquals(true, g.isVisible());
+    // Pre-Assert
+    assertEquals(true, g.isVisible());
+
+    // Act
     g.setVisible(false);
-    Assert.assertEquals(false, g.isVisible());
+
+    // Assert
+    assertEquals(false, g.isVisible());
   }
 
 }

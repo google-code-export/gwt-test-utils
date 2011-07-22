@@ -1,6 +1,8 @@
 package com.octo.gwt.test;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -14,8 +16,7 @@ public class PushButtonTest extends GwtTestTest {
   private boolean clicked;
 
   @Test
-  public void checkClick() {
-
+  public void click() {
     // Arrange
     clicked = false;
 
@@ -32,14 +33,14 @@ public class PushButtonTest extends GwtTestTest {
     });
 
     // Pre-Assert
-    Assert.assertEquals("Up", b.getText());
+    assertEquals("Up", b.getText());
 
     // Act
     Browser.click(b);
 
     // Assert
-    Assert.assertTrue("PushedButton onClick was not triggered", clicked);
-    Assert.assertEquals("Up", b.getText());
+    assertTrue("PushedButton onClick was not triggered", clicked);
+    assertEquals("Up", b.getText());
   }
 
 }

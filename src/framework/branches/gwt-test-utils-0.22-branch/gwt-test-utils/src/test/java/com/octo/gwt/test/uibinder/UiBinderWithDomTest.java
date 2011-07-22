@@ -1,6 +1,6 @@
 package com.octo.gwt.test.uibinder;
 
-import junit.framework.Assert;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
@@ -12,7 +12,7 @@ import com.octo.gwt.test.utils.GwtReflectionUtils;
 public class UiBinderWithDomTest extends GwtTestTest {
 
   @Test
-  public void checkUiBinderDom() {
+  public void uiBinderDom() {
     // Arrange
     UiBinderWithDom helloWorld = new UiBinderWithDom();
     Document.get().getBody().appendChild(helloWorld.getElement());
@@ -23,8 +23,7 @@ public class UiBinderWithDomTest extends GwtTestTest {
     // Assert
     SpanElement nameSpan = GwtReflectionUtils.getPrivateFieldValue(helloWorld,
         "nameSpan");
-    Assert.assertEquals("World", nameSpan.getInnerText());
-    Assert.assertEquals("World",
-        Document.get().getElementById("name").getInnerText());
+    assertEquals("World", nameSpan.getInnerText());
+    assertEquals("World", Document.get().getElementById("name").getInnerText());
   }
 }

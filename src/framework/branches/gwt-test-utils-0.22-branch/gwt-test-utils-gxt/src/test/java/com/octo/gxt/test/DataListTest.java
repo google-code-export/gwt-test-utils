@@ -1,6 +1,6 @@
 package com.octo.gxt.test;
 
-import junit.framework.Assert;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -14,8 +14,13 @@ public class DataListTest extends GwtGxtTest {
 
   private DataList dataList;
 
+  @Before
+  public void beforeDataList() {
+    dataList = new DataList();
+  }
+
   @Test
-  public void checkSelectedItem() {
+  public void selectedItem() {
     // Arrange
     DataListItem item0 = new DataListItem("item 0");
     dataList.add(item0);
@@ -26,13 +31,8 @@ public class DataListTest extends GwtGxtTest {
     dataList.setSelectedItem(item1);
 
     // Assert
-    Assert.assertEquals(item1, dataList.getSelectedItem());
+    assertEquals(item1, dataList.getSelectedItem());
 
-  }
-
-  @Before
-  public void setupDataList() {
-    dataList = new DataList();
   }
 
 }

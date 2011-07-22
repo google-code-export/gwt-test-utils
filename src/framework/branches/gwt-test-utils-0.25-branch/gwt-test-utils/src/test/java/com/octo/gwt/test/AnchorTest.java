@@ -1,6 +1,7 @@
 package com.octo.gwt.test;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
 import com.google.gwt.dom.client.HeadingElement;
@@ -9,99 +10,136 @@ import com.google.gwt.user.client.ui.Anchor;
 public class AnchorTest extends GwtTestTest {
 
   @Test
-  public void checkAbsoluteLeft() {
+  public void absoluteLeft() {
+    // Arrange
     Anchor a = new Anchor();
 
-    Assert.assertEquals(0, a.getAbsoluteLeft());
+    // Assert
+    assertEquals(0, a.getAbsoluteLeft());
   }
 
   @Test
-  public void checkAbsoluteTop() {
+  public void absoluteTop() {
+    // Arrange
     Anchor a = new Anchor();
 
-    Assert.assertEquals(0, a.getAbsoluteTop());
+    // Assert
+    assertEquals(0, a.getAbsoluteTop());
   }
 
   @Test
-  public void checkHref() {
+  public void href() {
+    // Arrange
     Anchor a = new Anchor("toto", "href");
-    a.setFocus(true);
-    a.setAccessKey('k');
+    // Pre-Assert
+    assertEquals("toto", a.getText());
+    assertEquals("href", a.getHref());
 
-    Assert.assertEquals("toto", a.getText());
-    Assert.assertEquals("href", a.getHref());
+    // Act
+    a.setHref("new");
+
+    // Assert
+    assertEquals("new", a.getHref());
   }
 
   @Test
-  public void checkHTML() {
+  public void html() {
+    // Arrange
     Anchor a = new Anchor("<h1>foo</h1>", true);
-    Assert.assertEquals("<h1>foo</h1>", a.getHTML());
+    assertEquals("<h1>foo</h1>", a.getHTML());
 
+    // Act
     a.setHTML("<h1>test</h1>");
 
-    Assert.assertEquals("<h1>test</h1>", a.getHTML());
-    Assert.assertEquals(1, a.getElement().getChildCount());
+    // Assert
+    assertEquals("<h1>test</h1>", a.getHTML());
+    assertEquals(1, a.getElement().getChildCount());
     HeadingElement h1 = a.getElement().getChild(0).cast();
-    Assert.assertEquals("H1", h1.getTagName());
-    Assert.assertEquals("test", h1.getInnerText());
+    assertEquals("H1", h1.getTagName());
+    assertEquals("test", h1.getInnerText());
   }
 
   @Test
-  public void checkName() {
+  public void name() {
+    // Arrange
     Anchor a = new Anchor();
+
+    // Act
     a.setName("toto");
 
-    Assert.assertEquals("toto", a.getName());
+    // Assert
+    assertEquals("toto", a.getName());
   }
 
   @Test
-  public void checkTabIndex() {
+  public void tabIndex() {
+    // Arrange
     Anchor a = new Anchor();
+
+    // Act
     a.setTabIndex(1);
 
-    Assert.assertEquals(1, a.getTabIndex());
+    // Assert
+    assertEquals(1, a.getTabIndex());
   }
 
   @Test
-  public void checkTagName() {
+  public void tagName() {
+    // Arrange
     Anchor a = new Anchor();
 
-    Assert.assertEquals("a", a.getElement().getTagName());
+    // Assert
+    assertEquals("a", a.getElement().getTagName());
   }
 
   @Test
-  public void checkTarget() {
+  public void target() {
+    // Arrange
     Anchor a = new Anchor();
-    a.setFocus(true);
 
+    // Act
     a.setTarget("myTarget");
-    Assert.assertEquals("myTarget", a.getTarget());
+
+    // Assert
+    assertEquals("myTarget", a.getTarget());
   }
 
   @Test
-  public void checkText() {
+  public void text() {
+    // Arrange
     Anchor a = new Anchor("foo");
-    Assert.assertEquals("foo", a.getText());
-    a.setText("toto");
-    a.setFocus(true);
+    assertEquals("foo", a.getText());
 
-    Assert.assertEquals("toto", a.getText());
+    // Act
+    a.setText("toto");
+
+    // Assert
+    assertEquals("toto", a.getText());
   }
 
   @Test
-  public void checkTitle() {
+  public void title() {
+    // Arrange
     Anchor a = new Anchor();
+
+    // Act
     a.setTitle("title");
 
-    Assert.assertEquals("title", a.getTitle());
+    // Assert
+    assertEquals("title", a.getTitle());
   }
 
   @Test
-  public void checkVisible() {
+  public void visible() {
+    // Arrange
     Anchor a = new Anchor();
-    Assert.assertEquals(true, a.isVisible());
+    assertEquals(true, a.isVisible());
+
+    // Act
     a.setVisible(false);
-    Assert.assertEquals(false, a.isVisible());
+
+    // Assert
+    assertEquals(false, a.isVisible());
   }
 
 }

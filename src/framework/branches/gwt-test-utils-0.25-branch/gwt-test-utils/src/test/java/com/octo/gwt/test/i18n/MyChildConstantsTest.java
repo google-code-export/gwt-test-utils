@@ -1,8 +1,9 @@
 package com.octo.gwt.test.i18n;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.Locale;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -13,8 +14,13 @@ public class MyChildConstantsTest extends GwtTestTest {
 
   private MyChildConstants childConstants;
 
+  @Before
+  public void beforeMyChildConstantsTest() {
+    childConstants = GWT.create(MyChildConstants.class);
+  }
+
   @Test
-  public void checkChildConstant() {
+  public void childConstant() {
     // Act
     String hello = childConstants.hello();
     String valueWithoutDefaultAnnotationInChild = childConstants.valueWithoutDefaultAnnotationInChild();
@@ -22,23 +28,17 @@ public class MyChildConstantsTest extends GwtTestTest {
     String valueWithoutLocaleToBeOverride = childConstants.valueWithoutLocaleToBeOverride();
 
     // Assert
-    Assert.assertEquals("Hello english !", hello);
-    Assert.assertEquals("Value in child default .properties",
+    assertEquals("Hello english !", hello);
+    assertEquals("Value in child default .properties",
         valueWithoutDefaultAnnotationInChild);
-    Assert.assertEquals(
-        "Value from a default .properties file, without locale",
+    assertEquals("Value from a default .properties file, without locale",
         valueWithoutLocale);
-    Assert.assertEquals("Value overriden by child in default .properties",
+    assertEquals("Value overriden by child in default .properties",
         valueWithoutLocaleToBeOverride);
   }
 
   @Override
   public Locale getLocale() {
     return Locale.ENGLISH;
-  }
-
-  @Before
-  public void setupMyChildConstantsTest() {
-    childConstants = GWT.create(MyChildConstants.class);
   }
 }

@@ -1,6 +1,7 @@
 package com.octo.gxt.test;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 
 import com.extjs.gxt.ui.client.widget.treegrid.TreeGridView;
@@ -9,7 +10,7 @@ import com.extjs.gxt.ui.client.widget.treegrid.TreeGridView;
 public class TreeGridViewTest extends GwtGxtTest {
 
   @Test
-  public void checkAutoFill() {
+  public void autoFill() {
     // Arrange
     TreeGridView view = new TreeGridView();
 
@@ -17,7 +18,7 @@ public class TreeGridViewTest extends GwtGxtTest {
     view.setAutoFill(true);
 
     // Assert
-    Assert.assertTrue(view.isAutoFill());
+    assertTrue(view.isAutoFill());
   }
 
 }

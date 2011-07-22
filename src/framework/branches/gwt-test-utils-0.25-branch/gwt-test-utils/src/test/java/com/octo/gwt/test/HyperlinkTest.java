@@ -1,6 +1,7 @@
 package com.octo.gwt.test;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
 import com.google.gwt.dom.client.HeadingElement;
@@ -13,9 +14,25 @@ public class HyperlinkTest extends GwtTestTest {
 
   private Boolean bool = false;
 
+  @Test
+  public void checkVisible() {
+    // Act
+    Hyperlink link = new Hyperlink();
+    // Pre-Assert
+    assertEquals(true, link.isVisible());
+
+    // Act
+    link.setVisible(false);
+
+    // Assert
+    assertEquals(false, link.isVisible());
+  }
+
   @SuppressWarnings("deprecation")
   @Test
-  public void checkClick() {
+  public void click_ClickHandler() {
+    // Arrange
+    bool = false;
     Hyperlink link = new Hyperlink();
     link.addClickHandler(new ClickHandler() {
 
@@ -25,56 +42,60 @@ public class HyperlinkTest extends GwtTestTest {
 
     });
 
-    // simule the mouse click
-    Assert.assertEquals(false, bool);
+    // Act
     Browser.click(link);
 
-    Assert.assertEquals(true, bool);
+    // Assert
+    assertEquals(true, bool);
   }
 
   @Test
-  public void checkHTML() {
-    Hyperlink link = new Hyperlink();
-    link.setHTML("link-HTML");
-
-    Assert.assertEquals("link-HTML", link.getHTML());
-  }
-
-  @Test
-  public void checkHTMLAndToken() {
+  public void constructor_HTML_Token() {
+    // Act
     Hyperlink link = new Hyperlink("<h1>foo</h1>", true, "test-history-token");
-    Assert.assertEquals("test-history-token", link.getTargetHistoryToken());
-    Assert.assertEquals("<h1>foo</h1>", link.getHTML());
-    link.setHTML("<h1>test</h1>");
-    Assert.assertEquals("<h1>test</h1>", link.getHTML());
-    // Check the anchorElem childs
-    Assert.assertEquals(1, link.getElement().getChild(0).getChildCount());
-    HeadingElement h1 = link.getElement().getChild(0).getChild(0).cast();
-    Assert.assertEquals("H1", h1.getTagName());
-    Assert.assertEquals("test", h1.getInnerText());
+
+    // Assert
+    assertEquals("test-history-token", link.getTargetHistoryToken());
+    assertEquals("<h1>foo</h1>", link.getHTML());
+
   }
 
   @Test
-  public void checkTextAndToken() {
+  public void constructor_Text_Token() {
+    // Act
     Hyperlink link = new Hyperlink("test-text", "test-history-token");
 
-    Assert.assertEquals("test-text", link.getText());
-    Assert.assertEquals("test-history-token", link.getTargetHistoryToken());
+    // Assert
+    assertEquals("test-text", link.getText());
+    assertEquals("test-history-token", link.getTargetHistoryToken());
   }
 
   @Test
-  public void checkTitle() {
+  public void html() {
+    // Arrange
     Hyperlink link = new Hyperlink();
+
+    // Act
+    link.setHTML("<h1>test</h1>");
+
+    // Assert
+    assertEquals("<h1>test</h1>", link.getHTML());
+    assertEquals(1, link.getElement().getChild(0).getChildCount());
+    HeadingElement h1 = link.getElement().getChild(0).getChild(0).cast();
+    assertEquals("H1", h1.getTagName());
+    assertEquals("test", h1.getInnerText());
+  }
+
+  @Test
+  public void title() {
+    // Act
+    Hyperlink link = new Hyperlink();
+
+    // Act
     link.setTitle("title");
-    Assert.assertEquals("title", link.getTitle());
-  }
 
-  @Test
-  public void checkVisible() {
-    Hyperlink link = new Hyperlink();
-    Assert.assertEquals(true, link.isVisible());
-    link.setVisible(false);
-    Assert.assertEquals(false, link.isVisible());
+    // Assert
+    assertEquals("title", link.getTitle());
   }
 
 }

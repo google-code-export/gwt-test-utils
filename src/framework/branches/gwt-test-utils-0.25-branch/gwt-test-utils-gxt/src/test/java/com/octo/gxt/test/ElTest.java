@@ -1,6 +1,6 @@
 package com.octo.gxt.test;
 
-import junit.framework.Assert;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
@@ -9,83 +9,83 @@ import com.extjs.gxt.ui.client.core.El;
 public class ElTest extends GwtGxtTest {
 
   @Test
-  public void checkAddUnitsAuto() {
+  public void addUnitsAuto() {
     // Act
     String result = El.addUnits("auto", "px");
 
     // Assert
-    Assert.assertEquals("auto", result);
+    assertEquals("auto", result);
   }
 
   @Test
-  public void checkAddUnitsComplete() {
+  public void addUnitsComplete() {
     // Act
     String result = El.addUnits("350em", "%");
 
     // Assert
-    Assert.assertEquals("350em", result);
+    assertEquals("350em", result);
   }
 
   @Test
-  public void checkAddUnitsEmpty() {
+  public void addUnitsEmpty() {
     // Act
     String result = El.addUnits("", "px");
 
     // Assert
-    Assert.assertEquals("", result);
+    assertEquals("", result);
   }
 
   @Test
-  public void checkAddUnitsNoUnit() {
+  public void addUnitsNoUnit() {
     // Act
     String result = El.addUnits("200", "em");
 
     // Assert
-    Assert.assertEquals("200em", result);
+    assertEquals("200em", result);
   }
 
   @Test
-  public void checkAddUnitsNoUnitAndEmptyDefault() {
+  public void addUnitsNoUnitAndEmptyDefault() {
     // Act
     String result = El.addUnits("250", "");
 
     // Assert
-    Assert.assertEquals("250px", result);
+    assertEquals("250px", result);
   }
 
   @Test
-  public void checkAddUnitsNoUnitAndNoDefault() {
+  public void addUnitsNoUnitAndNoDefault() {
     // Act
     String result = El.addUnits("250", null);
 
     // Assert
-    Assert.assertEquals("250px", result);
+    assertEquals("250px", result);
   }
 
   @Test
-  public void checkAddUnitsNull() {
+  public void addUnitsNull() {
     // Act
     String result = El.addUnits(null, "px");
 
     // Assert
-    Assert.assertEquals("", result);
+    assertEquals("", result);
   }
 
   @Test
-  public void checkAddUnitsUndefined() {
+  public void addUnitsUndefined() {
     // Act
     String result = El.addUnits("undefined", "px");
 
     // Assert
-    Assert.assertEquals("", result);
+    assertEquals("", result);
   }
 
   @Test
-  public void checkAddUnitsWithWhitespaces() {
+  public void addUnitsWithWhitespaces() {
     // Act
     String result = El.addUnits(" 350 em ", "pt");
 
     // Assert
-    Assert.assertEquals("350em", result);
+    assertEquals("350em", result);
   }
 }

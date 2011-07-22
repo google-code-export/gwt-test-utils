@@ -1,6 +1,6 @@
 package com.octo.gwt.test;
 
-import junit.framework.Assert;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
@@ -10,7 +10,7 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 public class HTMLPanelTest extends GwtTestTest {
 
   @Test
-  public void checkGetElementById() {
+  public void getElementById() {
     // Arrange
     HTMLPanel panel = new HTMLPanel(
         "<div id=\"childDiv\" class=\"myClass\">some text</div>");
@@ -19,14 +19,16 @@ public class HTMLPanelTest extends GwtTestTest {
     DivElement childDiv = panel.getElementById("childDiv").cast();
 
     // Assert
-    Assert.assertEquals("myClass", childDiv.getClassName());
-    Assert.assertEquals("some text", childDiv.getInnerText());
+    assertEquals("myClass", childDiv.getClassName());
+    assertEquals("some text", childDiv.getInnerText());
   }
 
   @Test
-  public void checkInstanciation() {
+  public void getInnerHTML() {
+    // Arrange
     HTMLPanel panel = new HTMLPanel("<h1>Test</h1>");
 
-    Assert.assertEquals("<h1>Test</h1>", panel.getElement().getInnerHTML());
+    // Act & Assert
+    assertEquals("<h1>Test</h1>", panel.getElement().getInnerHTML());
   }
 }

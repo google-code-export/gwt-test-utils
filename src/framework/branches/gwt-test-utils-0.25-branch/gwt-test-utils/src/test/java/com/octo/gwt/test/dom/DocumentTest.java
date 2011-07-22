@@ -1,6 +1,8 @@
 package com.octo.gwt.test.dom;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -20,161 +22,209 @@ public class DocumentTest extends GwtTestTest {
   private Document d;
 
   @Test
-  public void checkBodyLeft() {
+  public void checkToString() {
     // Act
-    int result = d.getBodyOffsetLeft();
+    String toString = Document.get().toString();
 
     // Assert
-    Assert.assertEquals(0, result);
+    assertEquals("[object HTMLDocument]", toString);
+
   }
 
   @Test
-  public void checkBodyTop() {
-    // Act
-    int result = d.getBodyOffsetTop();
-
-    // Assert
-    Assert.assertEquals(0, result);
+  public void createElement() {
+    // Act & Assert
+    assertEquals("a", d.createAnchorElement().getTagName());
+    assertEquals("area", d.createAreaElement().getTagName());
+    assertEquals("base", d.createBaseElement().getTagName());
+    assertEquals("body", d.createElement("body").getTagName());
+    assertEquals("br", d.createBRElement().getTagName());
+    assertEquals("div", d.createDivElement().getTagName());
+    assertEquals("dl", d.createDLElement().getTagName());
+    assertEquals("fieldset", d.createFieldSetElement().getTagName());
+    assertEquals("form", d.createFormElement().getTagName());
+    assertEquals("frame", d.createFrameElement().getTagName());
+    assertEquals("frameset", d.createFrameSetElement().getTagName());
+    assertEquals("head", d.createHeadElement().getTagName());
+    assertEquals("h1", d.createHElement(1).getTagName());
+    assertEquals("h2", d.createHElement(2).getTagName());
+    assertEquals("h3", d.createHElement(3).getTagName());
+    assertEquals("h4", d.createHElement(4).getTagName());
+    assertEquals("h5", d.createHElement(5).getTagName());
+    assertEquals("h6", d.createHElement(6).getTagName());
+    assertEquals("hr", d.createHRElement().getTagName());
+    assertEquals("iframe", d.createIFrameElement().getTagName());
+    assertEquals("img", d.createImageElement().getTagName());
+    assertEquals("input", d.createElement("input").getTagName());
+    assertEquals("label", d.createLabelElement().getTagName());
+    assertEquals("legend", d.createLegendElement().getTagName());
+    assertEquals("li", d.createLIElement().getTagName());
+    assertEquals("link", d.createLinkElement().getTagName());
+    assertEquals("map", d.createMapElement().getTagName());
+    assertEquals("meta", d.createMetaElement().getTagName());
+    assertEquals("ins", d.createInsElement().getTagName());
+    assertEquals("del", d.createDelElement().getTagName());
+    assertEquals("object", d.createObjectElement().getTagName());
+    assertEquals("ol", d.createOLElement().getTagName());
+    assertEquals("optgroup", d.createOptGroupElement().getTagName());
+    assertEquals("option", d.createOptionElement().getTagName());
+    assertEquals("p", d.createPElement().getTagName());
+    assertEquals("param", d.createParamElement().getTagName());
+    assertEquals("pre", d.createPreElement().getTagName());
+    assertEquals("q", d.createQElement().getTagName());
+    assertEquals("blockquote", d.createBlockQuoteElement().getTagName());
+    assertEquals("script", d.createScriptElement().getTagName());
+    assertEquals("select", d.createSelectElement().getTagName());
+    assertEquals("span", d.createSpanElement().getTagName());
+    assertEquals("style", d.createStyleElement().getTagName());
+    assertEquals("caption", d.createCaptionElement().getTagName());
+    assertEquals("td", d.createTDElement().getTagName());
+    assertEquals("th", d.createTHElement().getTagName());
+    assertEquals("col", d.createColElement().getTagName());
+    assertEquals("colgroup", d.createColGroupElement().getTagName());
+    assertEquals("table", d.createTableElement().getTagName());
+    assertEquals("tbody", d.createTBodyElement().getTagName());
+    assertEquals("tfoot", d.createTFootElement().getTagName());
+    assertEquals("thead", d.createTHeadElement().getTagName());
+    assertEquals("textarea", d.createTextAreaElement().getTagName());
+    assertEquals("title", d.createTitleElement().getTagName());
+    assertEquals("ul", d.createULElement().getTagName());
   }
 
   @Test
-  public void checkCreateElement() {
-    Assert.assertEquals("a", d.createAnchorElement().getTagName());
-    Assert.assertEquals("area", d.createAreaElement().getTagName());
-    Assert.assertEquals("base", d.createBaseElement().getTagName());
-    Assert.assertEquals("body", d.createElement("body").getTagName());
-    Assert.assertEquals("br", d.createBRElement().getTagName());
-    Assert.assertEquals("div", d.createDivElement().getTagName());
-    Assert.assertEquals("dl", d.createDLElement().getTagName());
-    Assert.assertEquals("fieldset", d.createFieldSetElement().getTagName());
-    Assert.assertEquals("form", d.createFormElement().getTagName());
-    Assert.assertEquals("frame", d.createFrameElement().getTagName());
-    Assert.assertEquals("frameset", d.createFrameSetElement().getTagName());
-    Assert.assertEquals("head", d.createHeadElement().getTagName());
-    Assert.assertEquals("h1", d.createHElement(1).getTagName());
-    Assert.assertEquals("h2", d.createHElement(2).getTagName());
-    Assert.assertEquals("h3", d.createHElement(3).getTagName());
-    Assert.assertEquals("h4", d.createHElement(4).getTagName());
-    Assert.assertEquals("h5", d.createHElement(5).getTagName());
-    Assert.assertEquals("h6", d.createHElement(6).getTagName());
-    Assert.assertEquals("hr", d.createHRElement().getTagName());
-    Assert.assertEquals("iframe", d.createIFrameElement().getTagName());
-    Assert.assertEquals("img", d.createImageElement().getTagName());
-    Assert.assertEquals("input", d.createElement("input").getTagName());
-    Assert.assertEquals("label", d.createLabelElement().getTagName());
-    Assert.assertEquals("legend", d.createLegendElement().getTagName());
-    Assert.assertEquals("li", d.createLIElement().getTagName());
-    Assert.assertEquals("link", d.createLinkElement().getTagName());
-    Assert.assertEquals("map", d.createMapElement().getTagName());
-    Assert.assertEquals("meta", d.createMetaElement().getTagName());
-    Assert.assertEquals("ins", d.createInsElement().getTagName());
-    Assert.assertEquals("del", d.createDelElement().getTagName());
-    Assert.assertEquals("object", d.createObjectElement().getTagName());
-    Assert.assertEquals("ol", d.createOLElement().getTagName());
-    Assert.assertEquals("optgroup", d.createOptGroupElement().getTagName());
-    Assert.assertEquals("option", d.createOptionElement().getTagName());
-    Assert.assertEquals("p", d.createPElement().getTagName());
-    Assert.assertEquals("param", d.createParamElement().getTagName());
-    Assert.assertEquals("pre", d.createPreElement().getTagName());
-    Assert.assertEquals("q", d.createQElement().getTagName());
-    Assert.assertEquals("blockquote", d.createBlockQuoteElement().getTagName());
-    Assert.assertEquals("script", d.createScriptElement().getTagName());
-    Assert.assertEquals("select", d.createSelectElement().getTagName());
-    Assert.assertEquals("span", d.createSpanElement().getTagName());
-    Assert.assertEquals("style", d.createStyleElement().getTagName());
-    Assert.assertEquals("caption", d.createCaptionElement().getTagName());
-    Assert.assertEquals("td", d.createTDElement().getTagName());
-    Assert.assertEquals("th", d.createTHElement().getTagName());
-    Assert.assertEquals("col", d.createColElement().getTagName());
-    Assert.assertEquals("colgroup", d.createColGroupElement().getTagName());
-    Assert.assertEquals("table", d.createTableElement().getTagName());
-    Assert.assertEquals("tbody", d.createTBodyElement().getTagName());
-    Assert.assertEquals("tfoot", d.createTFootElement().getTagName());
-    Assert.assertEquals("thead", d.createTHeadElement().getTagName());
-    Assert.assertEquals("textarea", d.createTextAreaElement().getTagName());
-    Assert.assertEquals("title", d.createTitleElement().getTagName());
-    Assert.assertEquals("ul", d.createULElement().getTagName());
-  }
-
-  @Test
-  public void checkCreateImageInputElement() {
+  public void createImageInputElement() {
     // Act
     InputElement e = d.createImageInputElement();
 
     // Assert
-    Assert.assertEquals("image", e.getType());
+    assertEquals("image", e.getType());
   }
 
   @Test
-  public void checkCreatePushButtonElement() {
+  public void createPushButtonElement() {
     // Act
     ButtonElement e = d.createPushButtonElement();
 
     // Assert
-    Assert.assertEquals("button", e.getTagName());
-    Assert.assertEquals("button", e.getType());
+    assertEquals("button", e.getTagName());
+    assertEquals("button", e.getType());
   }
 
   @Test
-  public void checkCreateRadioInputElement() {
+  public void createRadioInputElement() {
     // Act
     InputElement e = d.createRadioInputElement("test");
 
     // Assert
-    Assert.assertEquals("RADIO", e.getType());
-    Assert.assertEquals("test", e.getName());
+    assertEquals("RADIO", e.getType());
+    assertEquals("test", e.getName());
   }
 
   @Test
-  public void checkCreateResetButtonElement() {
+  public void createResetButtonElement() {
     // Act
     ButtonElement e = d.createResetButtonElement();
 
     // Assert
-    Assert.assertEquals("button", e.getTagName());
-    Assert.assertEquals("reset", e.getType());
+    assertEquals("button", e.getTagName());
+    assertEquals("reset", e.getType());
   }
 
   @Test
-  public void checkCreateSubmitButtonElement() {
+  public void createSubmitButtonElement() {
     // Act
     ButtonElement e = d.createSubmitButtonElement();
 
     // Assert
-    Assert.assertEquals("button", e.getTagName());
-    Assert.assertEquals("submit", e.getType());
+    assertEquals("button", e.getTagName());
+    assertEquals("submit", e.getType());
   }
 
   @Test
-  public void checkCreateTextNode() {
+  public void createTextNode() {
     // Act
     String data = "myData";
     Text text = d.createTextNode(data);
 
     // Assert
-    Assert.assertEquals(Node.TEXT_NODE, text.getNodeType());
-    Assert.assertEquals(data, text.getData());
+    assertEquals(Node.TEXT_NODE, text.getNodeType());
+    assertEquals(data, text.getData());
   }
 
   @Test
-  public void checkGetDocumentElement() {
+  public void getBodyOffsetLeft() {
+    // Act
+    int result = d.getBodyOffsetLeft();
+
+    // Assert
+    assertEquals(0, result);
+  }
+
+  @Test
+  public void getBodyOffsetTop() {
+    // Act
+    int result = d.getBodyOffsetTop();
+
+    // Assert
+    assertEquals(0, result);
+  }
+
+  @Test
+  public void getDocumentElement() {
     // Act
     Element e = d.getDocumentElement();
 
     // Assert
-    Assert.assertEquals("HTML", e.getTagName());
-    Assert.assertEquals("HTML", e.getNodeName());
-    Assert.assertEquals(Node.ELEMENT_NODE, e.getNodeType());
-    Assert.assertEquals(d.getChild(0), e);
+    assertEquals("HTML", e.getTagName());
+    assertEquals("HTML", e.getNodeName());
+    assertEquals(Node.ELEMENT_NODE, e.getNodeType());
+    assertEquals(d.getChild(0), e);
   }
 
   @Test
-  public void checkGetDomain() {
-    Assert.assertNull(d.getDomain());
+  public void getDomain() {
+    // Act & Assert
+    assertNull(d.getDomain());
   }
 
   @Test
-  public void checkGetElementByIdFound() {
+  public void getElementById_InBody() {
+    // Arrange
+    AnchorElement a = Document.get().createAnchorElement();
+    a.setId("myId");
+    DivElement div = Document.get().createDivElement();
+    div.appendChild(a);
+    d.getBody().appendChild(div);
+
+    // Act
+    Element result = d.getElementById("myId");
+
+    // Assert
+    assertEquals(a, result);
+  }
+
+  @Test
+  public void getElementById_NotFound() {
+    // Arrange
+    AnchorElement a1 = Document.get().createAnchorElement();
+    AnchorElement a2 = Document.get().createAnchorElement();
+    AnchorElement a3 = Document.get().createAnchorElement();
+    DivElement d1 = Document.get().createDivElement();
+    d.appendChild(a1);
+    d.appendChild(a1);
+    d.appendChild(a2);
+    a2.appendChild(a3);
+    d.appendChild(d1);
+
+    // Act
+    Element result = d.getElementById("myId");
+
+    // Assert
+    assertNull(result);
+  }
+
+  @Test
+  public void getElementByIdFound() {
     // Arrange
     AnchorElement a1 = Document.get().createAnchorElement();
     AnchorElement a2 = Document.get().createAnchorElement();
@@ -191,47 +241,11 @@ public class DocumentTest extends GwtTestTest {
     Element result = d.getElementById("myId");
 
     // Assert
-    Assert.assertEquals(a3, result);
+    assertEquals(a3, result);
   }
 
   @Test
-  public void checkGetElementByIdInBody() {
-    // Arrange
-    AnchorElement a = Document.get().createAnchorElement();
-    a.setId("myId");
-    DivElement div = Document.get().createDivElement();
-    div.appendChild(a);
-    d.getBody().appendChild(div);
-
-    // Act
-    Element result = d.getElementById("myId");
-
-    // Assert
-    Assert.assertEquals(a, result);
-  }
-
-  @Test
-  public void checkGetElementByIdNotFound() {
-    // Arrange
-    AnchorElement a1 = Document.get().createAnchorElement();
-    AnchorElement a2 = Document.get().createAnchorElement();
-    AnchorElement a3 = Document.get().createAnchorElement();
-    DivElement d1 = Document.get().createDivElement();
-    d.appendChild(a1);
-    d.appendChild(a1);
-    d.appendChild(a2);
-    a2.appendChild(a3);
-    d.appendChild(d1);
-
-    // Act
-    Element result = d.getElementById("myId");
-
-    // Assert
-    Assert.assertNull(result);
-  }
-
-  @Test
-  public void checkGetElementByTagName() {
+  public void getElementByTagName() {
     // Arrange
     AnchorElement a1 = Document.get().createAnchorElement();
     AnchorElement a2 = Document.get().createAnchorElement();
@@ -247,55 +261,53 @@ public class DocumentTest extends GwtTestTest {
     NodeList<Element> nodes = d.getElementsByTagName("a");
 
     // Assert
-    Assert.assertEquals(3, nodes.getLength());
-    Assert.assertEquals(a1, nodes.getItem(0));
-    Assert.assertEquals(a2, nodes.getItem(1));
-    Assert.assertEquals(a3, nodes.getItem(2));
+    assertEquals(3, nodes.getLength());
+    assertEquals(a1, nodes.getItem(0));
+    assertEquals(a2, nodes.getItem(1));
+    assertEquals(a3, nodes.getItem(2));
   }
 
   @Test
-  public void checkGetReferrer() {
-    Assert.assertEquals("", d.getReferrer());
-  }
-
-  @Test
-  public void checkIsCompat() {
-    // Act
-    boolean result = d.isCSS1Compat();
-
-    // Assert
-    Assert.assertEquals(false, result);
-  }
-
-  @Test
-  public void checkSetScrollLeft() {
-    Assert.assertEquals(0, d.getScrollLeft());
-    d.setScrollLeft(3);
-
-    Assert.assertEquals(3, d.getScrollLeft());
-  }
-
-  @Test
-  public void checkSetScrollTop() {
-    Assert.assertEquals(0, d.getScrollTop());
-    d.setScrollTop(3);
-
-    Assert.assertEquals(3, d.getScrollTop());
-  }
-
-  @Test
-  public void checkToString() {
-    // Act
-    String toString = Document.get().toString();
-
-    // Assert
-    Assert.assertEquals("[object HTMLDocument]", toString);
-
+  public void getReferrer() {
+    assertEquals("", d.getReferrer());
   }
 
   @Before
   public void initDocument() {
     d = Document.get();
+  }
+
+  @Test
+  public void isCSS1Compat() {
+    // Act
+    boolean result = d.isCSS1Compat();
+
+    // Assert
+    assertEquals(false, result);
+  }
+
+  @Test
+  public void scrollLeft() {
+    // Pre-Assert
+    assertEquals(0, d.getScrollLeft());
+
+    // Act
+    d.setScrollLeft(3);
+
+    // Assert
+    assertEquals(3, d.getScrollLeft());
+  }
+
+  @Test
+  public void scrollTop() {
+    // Pre-Assert
+    assertEquals(0, d.getScrollTop());
+
+    // Act
+    d.setScrollTop(3);
+
+    // Assert
+    assertEquals(3, d.getScrollTop());
   }
 
 }

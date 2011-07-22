@@ -22,6 +22,55 @@ import com.octo.gwt.test.exceptions.GwtTestResourcesException;
  */
 public class ResourcePrototypeProxyBuilder {
 
+  private static class ResourcePrototypeInvocationHandler implements
+      InvocationHandler {
+
+    private ResourcePrototypeCallback callback;
+    private String name;
+    private Class<?> ownerClass;
+    private Class<?> proxiedClass;
+
+    public Object invoke(Object proxy, Method method, Object[] args)
+        throws Throwable {
+      if ("getName".equals(method.getName())) {
+        return name;
+      } else if ("toString".equals(method.getName())) {
+        return callback.getClass().getName() + " generated for '"
+            + ownerClass.getName() + "." + name + "()'";
+      } else if ("hashCode".equals(method.getName())) {
+        return callback.hashCode();
+      } else if ("equals".equals(method.getName())) {
+        return areEqual(callback, args[0]);
+      } else {
+        Object result = callback.call(method, args);
+        if (result != null) {
+          return result;
+        } else {
+          throw new GwtTestResourcesException("Not managed method '"
+              + method.getName() + "' for generated '" + proxiedClass.getName()
+              + "' proxy");
+        }
+      }
+    }
+
+    private boolean areEqual(ResourcePrototypeCallback myCallback, Object object) {
+      if (!Proxy.isProxyClass(object.getClass())) {
+        return false;
+      }
+
+      InvocationHandler ih = Proxy.getInvocationHandler(object);
+
+      if (ResourcePrototypeInvocationHandler.class != ih.getClass()) {
+        return false;
+      }
+
+      ResourcePrototypeCallback itsCallback = ((ResourcePrototypeInvocationHandler) ih).callback;
+
+      return myCallback.equals(itsCallback);
+    }
+
+  }
+
   public static ResourcePrototypeProxyBuilder createBuilder(
       Class<?> proxiedClass, Class<?> ownerClass) {
     return new ResourcePrototypeProxyBuilder(proxiedClass, ownerClass);
@@ -31,7 +80,6 @@ public class ResourcePrototypeProxyBuilder {
   private final Class<?> ownerClass;
   private final Class<?> proxiedClass;
   private String text;
-
   private URL url;
 
   private ResourcePrototypeProxyBuilder(Class<?> proxiedClass,
@@ -107,22 +155,12 @@ public class ResourcePrototypeProxyBuilder {
 
   private InvocationHandler generateInvocationHandler(
       final ResourcePrototypeCallback callback) {
-    InvocationHandler ih = new InvocationHandler() {
-      public Object invoke(Object proxy, Method method, Object[] args)
-          throws Throwable {
-        if (method.getName().equals("getName")) {
-          return name;
-        } else if (callback != null) {
-          Object result = callback.call(method, args);
-          if (result != null) {
-            return result;
-          }
-        }
-        throw new GwtTestResourcesException("Not managed method '"
-            + method.getName() + "' for generated '" + proxiedClass.getName()
-            + "' proxy");
-      }
-    };
+
+    ResourcePrototypeInvocationHandler ih = new ResourcePrototypeInvocationHandler();
+    ih.callback = callback;
+    ih.name = name;
+    ih.ownerClass = ownerClass;
+    ih.proxiedClass = proxiedClass;
 
     return ih;
   }

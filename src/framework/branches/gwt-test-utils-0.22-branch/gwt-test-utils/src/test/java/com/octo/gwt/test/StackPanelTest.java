@@ -1,6 +1,6 @@
 package com.octo.gwt.test;
 
-import junit.framework.Assert;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
@@ -14,9 +14,8 @@ public class StackPanelTest extends GwtTestTest {
   private int index = -1;
 
   @Test
-  public void checkClick() {
-
-    // Set up
+  public void click() {
+    // Arrange
     index = -1;
     StackPanel panel = new StackPanel() {
 
@@ -32,39 +31,53 @@ public class StackPanelTest extends GwtTestTest {
     // Act
     Browser.click(panel, 1);
 
-    // Assert that the "AbstractGWTTest.click(ComplexPanel, index)" method
-    // trigger the "showStack" method
-    Assert.assertEquals(1, index);
+    // Assert
+    assertEquals(1, index);
   }
 
   @Test
-  public void checkStackPanel() {
+  public void stackPanel() {
+    // Arrange
     StackPanel panel = new StackPanel();
-    panel.add(new Label("Foo"), "foo");
 
+    // Act
+    panel.add(new Label("Foo"), "foo");
     Label label = new Label("Bar");
     panel.add(label, "bar");
-
     panel.add(new Label("Baz"), "baz");
 
-    Assert.assertEquals(3, panel.getWidgetCount());
-    Assert.assertEquals(label, panel.getWidget(1));
-    Assert.assertEquals(1, panel.getWidgetIndex(label));
+    // Assert
+    assertEquals(3, panel.getWidgetCount());
+    assertEquals(label, panel.getWidget(1));
+    assertEquals(1, panel.getWidgetIndex(label));
   }
 
   @Test
-  public void checkTitle() {
+  public void title() {
+    // Arrange
     StackPanel sp = new StackPanel();
+    // Pre-Assert
+    assertEquals("", sp.getTitle());
+
+    // Act
     sp.setTitle("title");
-    Assert.assertEquals("title", sp.getTitle());
+
+    // Assert
+    assertEquals("title", sp.getTitle());
   }
 
   @Test
-  public void checkVisible() {
+  public void visible() {
+    // Arrange
     StackPanel sp = new StackPanel();
-    Assert.assertEquals(true, sp.isVisible());
+    // Pre-Assert
+    assertEquals(true, sp.isVisible());
+
+    // Act
     sp.setVisible(false);
-    Assert.assertEquals(false, sp.isVisible());
+
+    // Assert
+    assertEquals(false, sp.isVisible());
   }
 
 }

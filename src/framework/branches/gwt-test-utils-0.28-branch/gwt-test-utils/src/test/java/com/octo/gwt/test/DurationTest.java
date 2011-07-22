@@ -1,6 +1,7 @@
 package com.octo.gwt.test;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -10,27 +11,27 @@ public class DurationTest extends GwtTestTest {
 
   Duration duration;
 
+  @Before
+  public void beforeDurationTest() {
+    duration = new Duration();
+  }
+
   @Test
-  public void checkCurrentTimeMillis() {
+  public void currentTimeMillis() {
     // Act
     double currentTimeMillis = Duration.currentTimeMillis();
 
     // Assert
-    Assert.assertTrue(currentTimeMillis > 0);
+    assertTrue(currentTimeMillis > 0);
   }
 
   @Test
-  public void checkElapsedMillis() {
+  public void elapsedMillis() {
     // Act
     int elapsed = duration.elapsedMillis();
 
     // Assert
-    Assert.assertTrue(elapsed > -1);
-  }
-
-  @Before
-  public void setupDurationTest() {
-    duration = new Duration();
+    assertTrue(elapsed > -1);
   }
 
 }

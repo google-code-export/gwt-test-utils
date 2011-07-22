@@ -1,9 +1,10 @@
 package com.octo.gwt.test;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.google.gwt.event.dom.client.KeyPressEvent;
@@ -22,8 +23,8 @@ public class TextBoxTest extends GwtTestTest {
   }
 
   @Test
-  public void checkGetCursorPos() {
-    // Set up
+  public void getCursorPos() {
+    // Arrange
     TextBox t = new TextBox();
     t.setText("myText");
     GwtReflectionUtils.setPrivateFieldValue(t, "attached", true);
@@ -31,26 +32,40 @@ public class TextBoxTest extends GwtTestTest {
     // Act
     t.setCursorPos(2);
 
-    Assert.assertEquals(2, t.getCursorPos());
+    // Assert
+    assertEquals(2, t.getCursorPos());
   }
 
   @Test
-  public void checkMaxLength() {
+  public void maxLength() {
+    // Arrange
     TextBox t = new TextBox();
+    // Pre-Assert
+    assertEquals(0, t.getMaxLength());
+
+    // Act
     t.setMaxLength(10);
 
-    Assert.assertEquals(10, t.getMaxLength());
+    // Assert
+    assertEquals(10, t.getMaxLength());
   }
 
   @Test
-  public void checkName() {
+  public void name() {
+    // Arrange
     TextBox t = new TextBox();
+    // Pre-Assert
+    assertEquals("", t.getName());
+
+    // Act
     t.setName("name");
-    Assert.assertEquals("name", t.getName());
+
+    // Assert
+    assertEquals("name", t.getName());
   }
 
   @Test
-  public void checkPressKey() {
+  public void pressKey() {
     // Arrange
     final List<KeyPressEventData> events = new ArrayList<KeyPressEventData>();
     TextBox tb = new TextBox();
@@ -69,20 +84,20 @@ public class TextBoxTest extends GwtTestTest {
     Browser.fillText(tb, "gael");
 
     // Assert
-    Assert.assertEquals("gael", tb.getValue());
-    Assert.assertEquals(4, events.size());
-    Assert.assertEquals('g', events.get(0).charCode);
-    Assert.assertEquals(103, events.get(0).keyCode);
-    Assert.assertEquals('a', events.get(1).charCode);
-    Assert.assertEquals(97, events.get(1).keyCode);
-    Assert.assertEquals('e', events.get(2).charCode);
-    Assert.assertEquals(101, events.get(2).keyCode);
-    Assert.assertEquals('l', events.get(3).charCode);
-    Assert.assertEquals(108, events.get(3).keyCode);
+    assertEquals("gael", tb.getValue());
+    assertEquals(4, events.size());
+    assertEquals('g', events.get(0).charCode);
+    assertEquals(103, events.get(0).keyCode);
+    assertEquals('a', events.get(1).charCode);
+    assertEquals(97, events.get(1).keyCode);
+    assertEquals('e', events.get(2).charCode);
+    assertEquals(101, events.get(2).keyCode);
+    assertEquals('l', events.get(3).charCode);
+    assertEquals(108, events.get(3).keyCode);
   }
 
   @Test
-  public void checkSelectAll() {
+  public void selectAll() {
     // Arrange
     TextBox t = new TextBox();
     t.setValue("0123456789");
@@ -92,12 +107,12 @@ public class TextBoxTest extends GwtTestTest {
     t.selectAll();
 
     // Assert
-    Assert.assertEquals(10, t.getSelectionLength());
-    Assert.assertEquals("0123456789", t.getSelectedText());
+    assertEquals(10, t.getSelectionLength());
+    assertEquals("0123456789", t.getSelectedText());
   }
 
   @Test
-  public void checkSelectionRange() {
+  public void selectionRange() {
     // Arrange
     TextBox t = new TextBox();
     t.setValue("0123456789");
@@ -107,35 +122,63 @@ public class TextBoxTest extends GwtTestTest {
     t.setSelectionRange(4, 3);
 
     // Assert
-    Assert.assertEquals(3, t.getSelectionLength());
-    Assert.assertEquals("456", t.getSelectedText());
+    assertEquals(3, t.getSelectionLength());
+    assertEquals("456", t.getSelectedText());
   }
 
   @Test
-  public void checkText() {
+  public void text() {
+    // Arrange
     TextBox t = new TextBox();
+    // Pre-Assert
+    assertEquals("", t.getText());
+
+    // Act
     t.setText("text");
-    Assert.assertEquals("text", t.getText());
+
+    // Assert
+    assertEquals("text", t.getText());
   }
 
   @Test
-  public void checkTitle() {
+  public void title() {
+    // Arrange
     TextBox t = new TextBox();
+    // Pre-Assert
+    assertEquals("", t.getTitle());
+
+    // Act
     t.setTitle("title");
-    Assert.assertEquals("title", t.getTitle());
+
+    // Assert
+    assertEquals("title", t.getTitle());
   }
 
   @Test
-  public void checkValue() {
+  public void value() {
+    // Arrange
     TextBox t = new TextBox();
-    Assert.assertEquals("", t.getValue());
+    // Pre-Assert
+    assertEquals("", t.getValue());
+
+    // Act
+    t.setValue("value");
+
+    // Assert
+    assertEquals("value", t.getValue());
   }
 
   @Test
-  public void checkVisible() {
+  public void visible() {
+    // Arrange
     TextBox t = new TextBox();
-    Assert.assertEquals(true, t.isVisible());
+    // Pre-Assert
+    assertEquals(true, t.isVisible());
+
+    // Act
     t.setVisible(false);
-    Assert.assertEquals(false, t.isVisible());
+
+    // Assert
+    assertEquals(false, t.isVisible());
   }
 }

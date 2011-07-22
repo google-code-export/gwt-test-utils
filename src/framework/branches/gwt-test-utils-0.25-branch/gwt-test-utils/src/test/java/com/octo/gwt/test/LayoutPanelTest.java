@@ -1,6 +1,8 @@
 package com.octo.gwt.test;
 
-import junit.framework.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -20,22 +22,23 @@ public class LayoutPanelTest extends GwtTestTest {
   private LayoutPanel panel;
 
   @Test
-  public void checkAdd() {
+  public void add() {
     // Arrange
     Button b = new Button();
-    Assert.assertFalse(b.isAttached());
+    assertFalse(b.isAttached());
 
     // Act
     panel.add(b);
 
     // Assert
-    Assert.assertEquals(1, panel.getWidgetCount());
-    Assert.assertEquals(b, panel.getWidget(0));
-    Assert.assertTrue(b.isAttached());
+    assertEquals(1, panel.getWidgetCount());
+    assertEquals(b, panel.getWidget(0));
+    assertTrue(b.isAttached());
   }
 
   @Test
-  public void checkAnimateWithCallback() {
+  public void animate() {
+    // Arrange
     AnimationCallback callback = new AnimationCallback() {
 
       public void onAnimationComplete() {
@@ -47,13 +50,26 @@ public class LayoutPanelTest extends GwtTestTest {
       }
     };
 
+    // Act
     panel.animate(4, callback);
 
-    Assert.assertTrue(onAnimationComplete);
+    // Assert
+    assertTrue(onAnimationComplete);
+  }
+
+  @Before
+  public void beforeLayoutPanel() {
+    onAnimationComplete = false;
+
+    panel = new LayoutPanel();
+    assertFalse(panel.isAttached());
+    RootPanel.get().add(panel);
+    assertTrue(panel.isAttached());
+    assertEquals(0, panel.getWidgetCount());
   }
 
   @Test
-  public void checkGetWidgetContainerElement() {
+  public void getWidgetContainerElement() {
     // Arrange
     FlowPanel fp1 = new FlowPanel();
     panel.add(fp1);
@@ -63,18 +79,7 @@ public class LayoutPanelTest extends GwtTestTest {
     Element fp1Container = panel.getWidgetContainerElement(fp1);
 
     // Assert
-    Assert.assertEquals(fp1Element, fp1Container.getFirstChildElement());
-  }
-
-  @Before
-  public void setUpLayoutPanel() {
-    onAnimationComplete = false;
-
-    panel = new LayoutPanel();
-    Assert.assertFalse(panel.isAttached());
-    RootPanel.get().add(panel);
-    Assert.assertTrue(panel.isAttached());
-    Assert.assertEquals(0, panel.getWidgetCount());
+    assertEquals(fp1Element, fp1Container.getFirstChildElement());
   }
 
 }

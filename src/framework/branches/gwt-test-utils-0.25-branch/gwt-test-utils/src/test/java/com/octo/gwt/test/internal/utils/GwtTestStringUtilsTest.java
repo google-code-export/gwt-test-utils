@@ -1,30 +1,31 @@
 package com.octo.gwt.test.internal.utils;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
 public class GwtTestStringUtilsTest {
 
   @Test
   public void dehyphenize() throws Exception {
-    Assert.assertEquals("foo", GwtStringUtils.dehyphenize("foo"));
-    Assert.assertEquals("fooBar", GwtStringUtils.dehyphenize("foo-bar"));
+    assertEquals("foo", GwtStringUtils.dehyphenize("foo"));
+    assertEquals("fooBar", GwtStringUtils.dehyphenize("foo-bar"));
   }
 
   @Test
   public void hyphenize() throws Exception {
-    Assert.assertEquals("foo", GwtStringUtils.hyphenize("foo"));
-    Assert.assertEquals("foo-bar", GwtStringUtils.hyphenize("fooBar"));
+    assertEquals("foo", GwtStringUtils.hyphenize("foo"));
+    assertEquals("foo-bar", GwtStringUtils.hyphenize("fooBar"));
   }
 
   @Test
   public void treatDoubleValue() {
-    Assert.assertEquals("250px", GwtStringUtils.treatDoubleValue("250px"));
-    Assert.assertEquals("250.1px", GwtStringUtils.treatDoubleValue("250.1px"));
-    Assert.assertEquals("250px", GwtStringUtils.treatDoubleValue("250.0px"));
-    Assert.assertEquals("250.1 px", GwtStringUtils.treatDoubleValue("250.1 px"));
-    Assert.assertEquals("250 px", GwtStringUtils.treatDoubleValue("250.0 px"));
-    Assert.assertEquals("120.20202020202021px",
+    assertEquals("250px", GwtStringUtils.treatDoubleValue("250px"));
+    assertEquals("250.1px", GwtStringUtils.treatDoubleValue("250.1px"));
+    assertEquals("250px", GwtStringUtils.treatDoubleValue("250.0px"));
+    assertEquals("250.1 px", GwtStringUtils.treatDoubleValue("250.1 px"));
+    assertEquals("250 px", GwtStringUtils.treatDoubleValue("250.0 px"));
+    assertEquals("120.20202020202021px",
         GwtStringUtils.treatDoubleValue("120.20202020202021px"));
   }
 

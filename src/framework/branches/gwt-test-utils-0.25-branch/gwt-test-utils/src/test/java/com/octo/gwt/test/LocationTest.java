@@ -1,6 +1,7 @@
 package com.octo.gwt.test;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
 import com.google.gwt.user.client.Window.Location;
@@ -8,9 +9,10 @@ import com.google.gwt.user.client.Window.Location;
 public class LocationTest extends GwtTestTest {
 
   @Test
-  public void checkLocationInformations() {
-    Assert.assertEquals("http", Location.getProtocol());
-    Assert.assertEquals("80", Location.getPort());
+  public void locationInformations() {
+    // Act & Assert
+    assertEquals("http", Location.getProtocol());
+    assertEquals("80", Location.getPort());
   }
 
 }

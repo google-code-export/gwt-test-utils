@@ -535,10 +535,11 @@ public abstract class GwtCsvTest extends GwtTest {
         String replaced = s;
         for (int z = 0; z < params.length; z++) {
           String param = params[z];
-          if (param == null)
+          if (param == null) {
             param = "*null*";
-          else if ("".equals(param))
+          } else if ("".equals(param)) {
             param = "*empty*";
+          }
 
           replaced = replaced.replaceAll("\\{" + z + "\\}", param);
         }

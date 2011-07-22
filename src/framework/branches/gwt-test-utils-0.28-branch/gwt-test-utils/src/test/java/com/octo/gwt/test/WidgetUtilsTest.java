@@ -1,8 +1,11 @@
 package com.octo.gwt.test;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.google.gwt.user.client.Command;
@@ -19,7 +22,7 @@ import com.octo.gwt.test.utils.WidgetUtils;
 public class WidgetUtilsTest extends GwtTestTest {
 
   @Test
-  public void checkAssertListBoxDataDoNotMatchDifferentElement() {
+  public void assertListBoxDataDoNotMatchDifferentElement() {
     // Arrange
     ListBox lb = new ListBox();
     lb.addItem("item0");
@@ -29,11 +32,11 @@ public class WidgetUtilsTest extends GwtTestTest {
     String[] content = new String[]{"item0", "item1", "item2"};
 
     // Act & Assert
-    Assert.assertFalse(WidgetUtils.assertListBoxDataMatch(lb, content));
+    assertFalse(WidgetUtils.assertListBoxDataMatch(lb, content));
   }
 
   @Test
-  public void checkAssertListBoxDataDoNotMatchMissingElement() {
+  public void assertListBoxDataDoNotMatchMissingElement() {
     // Arrange
     ListBox lb = new ListBox();
     lb.addItem("item0");
@@ -42,11 +45,11 @@ public class WidgetUtilsTest extends GwtTestTest {
     String[] content = new String[]{"item0", "item1", "item2"};
 
     // Act & Assert
-    Assert.assertFalse(WidgetUtils.assertListBoxDataMatch(lb, content));
+    assertFalse(WidgetUtils.assertListBoxDataMatch(lb, content));
   }
 
   @Test
-  public void checkAssertListBoxDataMatch() {
+  public void assertListBoxDataMatch() {
     // Arrange
     ListBox lb = new ListBox();
     lb.addItem("item0");
@@ -56,11 +59,11 @@ public class WidgetUtilsTest extends GwtTestTest {
     String[] content = new String[]{"item0", "item1", "item2"};
 
     // Act & Assert
-    Assert.assertTrue(WidgetUtils.assertListBoxDataMatch(lb, content));
+    assertTrue(WidgetUtils.assertListBoxDataMatch(lb, content));
   }
 
   @Test
-  public void checkGetListBoxContentToString() {
+  public void getListBoxContentToString() {
     // Arrange
     ListBox lb = new ListBox();
     lb.addItem("item0");
@@ -72,11 +75,25 @@ public class WidgetUtilsTest extends GwtTestTest {
     // Act
     String actual = WidgetUtils.getListBoxContentToString(lb);
 
-    Assert.assertEquals(expected, actual);
+    assertEquals(expected, actual);
   }
 
   @Test
-  public void checkListBoxIndex() {
+  public void itemIsNotVisibleWhenParentIsNotVisible() {
+    MenuBar bar = new MenuBar();
+    bar.setVisible(false);
+    MenuItem item0 = bar.addItem("test0", (Command) null);
+    item0.setVisible(true);
+
+    // Act
+    Boolean isVisible = WidgetUtils.isWidgetVisible(item0);
+
+    // Assert
+    assertFalse(isVisible);
+  }
+
+  @Test
+  public void listBoxIndex() {
     // Arrange
     ListBox lb = new ListBox();
     lb.addItem("item0");
@@ -84,14 +101,14 @@ public class WidgetUtilsTest extends GwtTestTest {
     lb.addItem("item2");
 
     // Act & Assert
-    Assert.assertEquals(0, WidgetUtils.getIndexInListBox(lb, "item0"));
-    Assert.assertEquals(1, WidgetUtils.getIndexInListBox(lb, "item1"));
-    Assert.assertEquals(2, WidgetUtils.getIndexInListBox(lb, "item2"));
-    Assert.assertEquals(-1, WidgetUtils.getIndexInListBox(lb, "item3"));
+    assertEquals(0, WidgetUtils.getIndexInListBox(lb, "item0"));
+    assertEquals(1, WidgetUtils.getIndexInListBox(lb, "item1"));
+    assertEquals(2, WidgetUtils.getIndexInListBox(lb, "item2"));
+    assertEquals(-1, WidgetUtils.getIndexInListBox(lb, "item3"));
   }
 
   @Test
-  public void checkMenuBarItems() {
+  public void menuBarItems() {
     // Arrange
     MenuBar bar = new MenuBar();
 
@@ -108,13 +125,13 @@ public class WidgetUtilsTest extends GwtTestTest {
     List<MenuItem> items = WidgetUtils.getMenuItems(bar);
 
     // Assert
-    Assert.assertEquals(2, items.size());
-    Assert.assertEquals(item0, items.get(0));
-    Assert.assertEquals(item1, items.get(1));
+    assertEquals(2, items.size());
+    assertEquals(item0, items.get(0));
+    assertEquals(item1, items.get(1));
   }
 
   @Test
-  public void checkNewWidgetIsNotVisibleWhenParentIsNotVisible() {
+  public void newWidgetIsNotVisibleWhenParentIsNotVisible() {
     // Arrange
     SimplePanel sp = new SimplePanel();
     sp.setVisible(false);
@@ -125,11 +142,11 @@ public class WidgetUtilsTest extends GwtTestTest {
     Boolean isVisible = WidgetUtils.isWidgetVisible(b);
 
     // Assert
-    Assert.assertFalse(isVisible);
+    assertFalse(isVisible);
   }
 
   @Test
-  public void checkNewWidgetIsVisible() {
+  public void newWidgetIsVisible() {
     // Arrange
     Button b = new Button();
 
@@ -137,11 +154,11 @@ public class WidgetUtilsTest extends GwtTestTest {
     Boolean isVisible = WidgetUtils.isWidgetVisible(b);
 
     // Assert
-    Assert.assertTrue(isVisible);
+    assertTrue(isVisible);
   }
 
   @Test
-  public void checkSuggestBoxItems() {
+  public void suggestBoxItems() {
     // Arrange
     SuggestBox box = new SuggestBox();
     SuggestionDisplay display = GwtReflectionUtils.getPrivateFieldValue(box,
@@ -162,23 +179,9 @@ public class WidgetUtilsTest extends GwtTestTest {
     List<MenuItem> items = WidgetUtils.getMenuItems(box);
 
     // Assert
-    Assert.assertEquals(2, items.size());
-    Assert.assertEquals(item0, items.get(0));
-    Assert.assertEquals(item1, items.get(1));
-  }
-
-  @Test
-  public void checNewWidgetIsNotVisibleWhenParentIsNotVisible() {
-    MenuBar bar = new MenuBar();
-    bar.setVisible(false);
-    MenuItem item0 = bar.addItem("test0", (Command) null);
-    item0.setVisible(true);
-
-    // Act
-    Boolean isVisible = WidgetUtils.isWidgetVisible(item0);
-
-    // Assert
-    Assert.assertFalse(isVisible);
+    assertEquals(2, items.size());
+    assertEquals(item0, items.get(0));
+    assertEquals(item1, items.get(1));
   }
 
 }

@@ -8,7 +8,7 @@ import com.google.gwt.core.client.GWT;
 public class DesktopAppTest extends GwtGxtTest {
 
   @Test
-  public void checkOnModuleLoad() {
+  public void onModuleLoad() {
     // Arrange
     DesktopApp app = GWT.create(DesktopApp.class);
 

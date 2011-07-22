@@ -1,9 +1,12 @@
 package com.octo.gwt.test;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -47,9 +50,9 @@ public class CellListTest extends GwtTestTest {
     RootPanel.get().add(cellList);
 
     // Pre-Assert
-    Assert.assertEquals(DAYS.size(), cellList.getRowCount());
-    Assert.assertEquals(5, cellList.getVisibleItemCount());
-    Assert.assertEquals("Thursday",
+    assertEquals(DAYS.size(), cellList.getRowCount());
+    assertEquals(5, cellList.getVisibleItemCount());
+    assertEquals("Thursday",
         cellList.getVisibleItem(cellList.getVisibleItemCount() - 1));
   }
 
@@ -83,16 +86,16 @@ public class CellListTest extends GwtTestTest {
     Browser.click(cellList, "Wednesday");
 
     // Assert 1
-    Assert.assertEquals("selected : Wednesday", sb.toString());
-    Assert.assertTrue(cellList.getSelectionModel().isSelected("Wednesday"));
+    assertEquals("selected : Wednesday", sb.toString());
+    assertTrue(cellList.getSelectionModel().isSelected("Wednesday"));
 
     // Act 2 : deselect
 
     Browser.click(cellList, "Wednesday");
 
     // Assert 2
-    Assert.assertEquals("selected : Wednesday", sb.toString());
-    Assert.assertFalse(cellList.getSelectionModel().isSelected("Wednesday"));
+    assertEquals("selected : Wednesday", sb.toString());
+    assertFalse(cellList.getSelectionModel().isSelected("Wednesday"));
   }
 
   @Test
@@ -112,9 +115,9 @@ public class CellListTest extends GwtTestTest {
     Browser.click(cellList, "Saturday");
 
     // Assert : no trigger because "Saturday" is not visible
-    Assert.assertEquals(
+    assertEquals(
         "the item to click is now visible in the targeted CellList instance",
         sb.toString());
-    Assert.assertFalse(cellList.getSelectionModel().isSelected("Saturday"));
+    assertFalse(cellList.getSelectionModel().isSelected("Saturday"));
   }
 }

@@ -1,6 +1,6 @@
 package com.octo.gwt.test.dom;
 
-import junit.framework.Assert;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -14,84 +14,101 @@ public class AreaElementTest extends GwtTestTest {
   private AreaElement a;
 
   @Test
-  public void checkAccessKey() {
-    Assert.assertEquals("", a.getAccessKey());
-    // Set up
+  public void accessKey() {
+    // Pre-Assert
+    assertEquals("", a.getAccessKey());
+
+    // Act
     a.setAccessKey("k");
 
     // Assert
-    Assert.assertEquals("k", a.getAccessKey());
+    assertEquals("k", a.getAccessKey());
   }
 
   @Test
-  public void checkAlt() {
-    Assert.assertEquals("", a.getAlt());
-    // Set up
+  public void alt() {
+    // Pre-Assert
+    assertEquals("", a.getAlt());
+
+    // Act
     a.setAlt("Alt");
 
     // Assert
-    Assert.assertEquals("Alt", a.getAlt());
+    assertEquals("Alt", a.getAlt());
   }
 
   @Test
-  public void checkAs() {
+  public void as() {
+    // Act
     AreaElement asElement = AreaElement.as(a);
-    Assert.assertEquals(a, asElement);
+
+    // Assert
+    assertEquals(a, asElement);
   }
 
   @Test
-  public void checkCoords() {
-    Assert.assertEquals("", a.getCoords());
-    // Set up
+  public void coords() {
+    // Pre-Assert
+    assertEquals("", a.getCoords());
+
+    // Act
     a.setCoords("Coords");
 
     // Assert
-    Assert.assertEquals("Coords", a.getCoords());
+    assertEquals("Coords", a.getCoords());
   }
 
   @Test
-  public void checkHref() {
-    Assert.assertEquals("", a.getHref());
-    // Set up
+  public void href() {
+    // Pre-Assert
+    assertEquals("", a.getHref());
+
+    // Act
     a.setHref("Href");
 
     // Assert
-    Assert.assertEquals("Href", a.getHref());
-  }
-
-  @Test
-  public void checkShape() {
-    Assert.assertEquals("", a.getShape());
-    // Set up
-    a.setShape("Shape");
-
-    // Assert
-    Assert.assertEquals("Shape", a.getShape());
-  }
-
-  @Test
-  public void checkTabIndex() {
-    Assert.assertEquals(0, a.getTabIndex());
-    // Set up
-    a.setTabIndex(4);
-
-    // Assert
-    Assert.assertEquals(4, a.getTabIndex());
-  }
-
-  @Test
-  public void checkTarget() {
-    Assert.assertEquals("", a.getTarget());
-    // Set up
-    a.setTarget("Target");
-
-    // Assert
-    Assert.assertEquals("Target", a.getTarget());
+    assertEquals("Href", a.getHref());
   }
 
   @Before
   public void initDocument() {
     a = Document.get().createAreaElement();
+  }
+
+  @Test
+  public void shape() {
+    // Pre-Assert
+    assertEquals("", a.getShape());
+
+    // Act
+    a.setShape("Shape");
+
+    // Assert
+    assertEquals("Shape", a.getShape());
+  }
+
+  @Test
+  public void tabIndex() {
+    // Pre-Assert
+    assertEquals(0, a.getTabIndex());
+
+    // Act
+    a.setTabIndex(4);
+
+    // Assert
+    assertEquals(4, a.getTabIndex());
+  }
+
+  @Test
+  public void target() {
+    // Pre-Assert
+    assertEquals("", a.getTarget());
+
+    // Act
+    a.setTarget("Target");
+
+    // Assert
+    assertEquals("Target", a.getTarget());
   }
 
 }

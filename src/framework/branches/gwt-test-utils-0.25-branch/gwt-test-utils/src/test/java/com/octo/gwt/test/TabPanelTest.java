@@ -1,6 +1,8 @@
 package com.octo.gwt.test;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 
 import com.google.gwt.event.logical.shared.SelectionEvent;
@@ -14,17 +16,20 @@ public class TabPanelTest extends GwtTestTest {
   int selectedTabIndex = -1;
 
   @Test
-  public void checkDeck() {
+  public void deck() {
+    // Arrange
     TabPanel tp = createTabPanel();
 
-    // Show the 'bar' tab initially.
+    // Act
     tp.selectTab(2);
 
-    Assert.assertEquals(2, tp.getDeckPanel().getVisibleWidget());
+    // Assert
+    assertEquals(2, tp.getDeckPanel().getVisibleWidget());
   }
 
   @Test
-  public void checkSelection() {
+  public void selection() {
+    // Arrange
     TabPanel tp = createTabPanel();
 
     tp.addSelectionHandler(new SelectionHandler<Integer>() {
@@ -33,49 +38,69 @@ public class TabPanelTest extends GwtTestTest {
         selectedTabIndex = event.getSelectedItem();
       }
     });
+    // Pre-Assert
+    assertEquals(-1, selectedTabIndex);
 
-    Assert.assertEquals(-1, selectedTabIndex);
-
+    // Act
     tp.selectTab(1);
-    Assert.assertEquals(1, selectedTabIndex);
+
+    // Assert
+    assertEquals(1, selectedTabIndex);
   }
 
   @Test
-  public void checkTabPanel() {
+  public void tabPanel() {
+    // Arrange
     TabPanel tp = createTabPanel();
 
+    // Act
     Widget w = tp.getWidget(1);
 
-    Assert.assertTrue(w instanceof HTML);
+    // Assert
+    assertTrue(w instanceof HTML);
     HTML html = (HTML) w;
-
-    Assert.assertEquals("Bar", html.getHTML());
+    assertEquals("Bar", html.getHTML());
   }
 
   @Test
-  public void checkTitle() {
+  public void title() {
+    // Arrange
     TabPanel tp = new TabPanel();
+    // Pre-Assert
+    assertEquals("", tp.getTitle());
+
+    // Act
     tp.setTitle("title");
-    Assert.assertEquals("title", tp.getTitle());
+
+    // Assert
+    assertEquals("title", tp.getTitle());
   }
 
   @Test
-  public void checkVisible() {
+  public void visible() {
+    // Arrange
     TabPanel tp = new TabPanel();
-    Assert.assertEquals(true, tp.isVisible());
+    // Pre-Assert
+    assertEquals(true, tp.isVisible());
+
+    // Act
     tp.setVisible(false);
-    Assert.assertEquals(false, tp.isVisible());
+
+    // Assert
+    assertEquals(false, tp.isVisible());
   }
 
   @Test
-  public void checkWidgetIndex() {
+  public void widgetIndex() {
+    // Arrange
     TabPanel tp = new TabPanel();
     Widget widget0 = new HTML("Foo");
     tp.add(widget0, "foo");
     Widget widget1 = new HTML("Bar");
     tp.add(widget1, "bar");
 
-    Assert.assertEquals(1, tp.getWidgetIndex(widget1));
+    // Act & Assert
+    assertEquals(1, tp.getWidgetIndex(widget1));
   }
 
   private TabPanel createTabPanel() {

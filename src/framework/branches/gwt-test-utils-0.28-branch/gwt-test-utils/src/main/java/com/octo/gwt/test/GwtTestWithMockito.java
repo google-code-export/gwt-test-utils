@@ -68,7 +68,7 @@ public abstract class GwtTestWithMockito extends GwtTestWithMocks {
   }
 
   @Before
-  public void setupGwtTestWithMockito() {
+  public void beforeGwtTestWithMockito() {
     MockitoAnnotations.initMocks(this);
     for (Field f : mockFields) {
       GwtReflectionUtils.makeAccessible(f);

@@ -1,6 +1,6 @@
 package com.octo.gwt.test;
 
-import junit.framework.Assert;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
@@ -10,30 +10,30 @@ import com.google.gwt.dom.client.Element;
 public class DocumentTest extends GwtTestTest {
 
   @Test
-  public void checkGetDocumentElement() {
+  public void getDocumentElement() {
     // Act
     Element documentElement = Document.get().getDocumentElement();
 
     // Assert
-    Assert.assertEquals("HTML", documentElement.getNodeName());
+    assertEquals("HTML", documentElement.getNodeName());
   }
 
   @Test
-  public void checkGetNodeName() {
+  public void getNodeName() {
     // Act
     String nodeName = Document.get().getNodeName();
 
     // Assert
-    Assert.assertEquals("#document", nodeName);
+    assertEquals("#document", nodeName);
   }
 
   @Test
-  public void checkTitle() {
+  public void title() {
     // Act
     Document.get().setTitle("my title");
 
     // Assert
-    Assert.assertEquals("my title", Document.get().getTitle());
+    assertEquals("my title", Document.get().getTitle());
   }
 
 }

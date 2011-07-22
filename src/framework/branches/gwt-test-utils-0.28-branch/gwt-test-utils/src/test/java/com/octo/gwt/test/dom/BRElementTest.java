@@ -1,6 +1,6 @@
 package com.octo.gwt.test.dom;
 
-import junit.framework.Assert;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -14,9 +14,12 @@ public class BRElementTest extends GwtTestTest {
   private BRElement b;
 
   @Test
-  public void checkAs() {
+  public void as() {
+    // Act
     BRElement asElement = BRElement.as(b);
-    Assert.assertEquals(b, asElement);
+
+    // Assert
+    assertEquals(b, asElement);
   }
 
   @Before

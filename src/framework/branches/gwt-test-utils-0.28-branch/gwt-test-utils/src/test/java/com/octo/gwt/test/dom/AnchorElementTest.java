@@ -1,6 +1,6 @@
 package com.octo.gwt.test.dom;
 
-import junit.framework.Assert;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -14,105 +14,124 @@ public class AnchorElementTest extends GwtTestTest {
   private AnchorElement a;
 
   @Test
-  public void checkAccessKey() {
-    Assert.assertEquals("", a.getAccessKey());
-    // Set up
+  public void accessKey() {
+    // Pre-Assert
+    assertEquals("", a.getAccessKey());
+
+    // Act
     a.setAccessKey("k");
 
     // Assert
-    Assert.assertEquals("k", a.getAccessKey());
+    assertEquals("k", a.getAccessKey());
   }
 
   @Test
-  public void checkAs() {
+  public void as() {
+    // Act
     AnchorElement asElement = AnchorElement.as(a);
-    Assert.assertEquals(a, asElement);
+
+    // Assert
+    assertEquals(a, asElement);
   }
 
   @Test
-  public void checkBlur() {
+  public void blur() {
     // just check blur() does not throw any exception
     a.blur();
   }
 
   @Test
-  public void checkFocus() {
+  public void focus() {
     // just check focus() does not throw any exception
     a.focus();
   }
 
   @Test
-  public void checkHref() {
-    Assert.assertEquals("", a.getHref());
-    // Set up
+  public void href() {
+    // Pre-Assert
+    assertEquals("", a.getHref());
+
+    // Act
     a.setHref("Href");
 
     // Assert
-    Assert.assertEquals("Href", a.getHref());
+    assertEquals("Href", a.getHref());
   }
 
   @Test
-  public void checkHreflang() {
-    Assert.assertEquals("", a.getHreflang());
-    // Set up
+  public void hreflang() {
+    // Pre-Assert
+    assertEquals("", a.getHreflang());
+
+    // Act
     a.setHreflang("Href");
 
     // Assert
-    Assert.assertEquals("Href", a.getHreflang());
-  }
-
-  @Test
-  public void checkName() {
-    Assert.assertEquals("", a.getName());
-    // Set up
-    a.setName("Name");
-
-    // Assert
-    Assert.assertEquals("Name", a.getName());
-  }
-
-  @Test
-  public void checkRel() {
-    Assert.assertEquals("", a.getRel());
-    // Set up
-    a.setRel("Rel");
-
-    // Assert
-    Assert.assertEquals("Rel", a.getRel());
-  }
-
-  @Test
-  public void checkTabIndex() {
-    Assert.assertEquals(0, a.getTabIndex());
-    // Set up
-    a.setTabIndex(4);
-
-    // Assert
-    Assert.assertEquals(4, a.getTabIndex());
-  }
-
-  @Test
-  public void checkTarget() {
-    Assert.assertEquals("", a.getTarget());
-    // Set up
-    a.setTarget("Target");
-
-    // Assert
-    Assert.assertEquals("Target", a.getTarget());
-  }
-
-  @Test
-  public void checkType() {
-    Assert.assertEquals("", a.getType());
-    // Set up
-    a.setType("Type");
-
-    // Assert
-    Assert.assertEquals("Type", a.getType());
+    assertEquals("Href", a.getHreflang());
   }
 
   @Before
   public void initDocument() {
     a = Document.get().createAnchorElement();
+  }
+
+  @Test
+  public void name() {
+    // Pre-Assert
+    assertEquals("", a.getName());
+
+    // Act
+    a.setName("Name");
+
+    // Assert
+    assertEquals("Name", a.getName());
+  }
+
+  @Test
+  public void rel() {
+    // Pre-Assert
+    assertEquals("", a.getRel());
+
+    // Act
+    a.setRel("Rel");
+
+    // Assert
+    assertEquals("Rel", a.getRel());
+  }
+
+  @Test
+  public void tabIndex() {
+    // Pre-Assert
+    assertEquals(0, a.getTabIndex());
+
+    // Act
+    a.setTabIndex(4);
+
+    // Assert
+    assertEquals(4, a.getTabIndex());
+  }
+
+  @Test
+  public void target() {
+    // Pre-Assert
+    assertEquals("", a.getTarget());
+
+    // Act
+    a.setTarget("Target");
+
+    // Assert
+    assertEquals("Target", a.getTarget());
+  }
+
+  @Test
+  public void type() {
+    // Pre-Assert
+    assertEquals("", a.getType());
+
+    // Act
+    a.setType("Type");
+
+    // Assert
+    assertEquals("Type", a.getType());
   }
 }

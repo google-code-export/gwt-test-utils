@@ -1,6 +1,10 @@
 package com.octo.gwt.test.uibinder;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 
 import com.google.gwt.dom.client.Document;
@@ -18,7 +22,22 @@ import com.octo.gwt.test.utils.events.Browser;
 public class UiBinderWithWidgetsTest extends GwtTestTest {
 
   @Test
-  public void checkUiBinderWidget() {
+  public void click_UiHandler() {
+    // Arrange
+    UiBinderWithWidgets w = new UiBinderWithWidgets("gael", "eric");
+
+    // Pre-Assert
+    assertEquals(1, w.listBox.getVisibleItemCount());
+
+    // Act
+    Browser.click(w.button);
+
+    // Assert
+    assertEquals(2, w.listBox.getVisibleItemCount());
+  }
+
+  @Test
+  public void uiBinderWidget() {
     // Arrange
     UiBinderWithWidgets w = new UiBinderWithWidgets("gael", "eric");
 
@@ -26,80 +45,63 @@ public class UiBinderWithWidgetsTest extends GwtTestTest {
     RootPanel.get().add(w);
 
     // Assert
-    Assert.assertEquals(1, w.listBox.getVisibleItemCount());
+    assertEquals(1, w.listBox.getVisibleItemCount());
 
     HTMLPanel wrappedPanel = GwtReflectionUtils.callPrivateMethod(w,
         "getWidget");
-    Assert.assertEquals(w.listBox, wrappedPanel.getWidget(0));
+    assertEquals(w.listBox, wrappedPanel.getWidget(0));
 
-    Assert.assertEquals("Test radio 1", w.radioButton1.getText());
-    Assert.assertEquals("MyRadioGroup", w.radioButton1.getName());
-    Assert.assertTrue(w.radioButton1.getValue());
+    assertEquals("Test radio 1", w.radioButton1.getText());
+    assertEquals("MyRadioGroup", w.radioButton1.getName());
+    assertTrue(w.radioButton1.getValue());
 
-    Assert.assertEquals("Test radio 2", w.radioButton2.getText());
-    Assert.assertEquals("MyRadioGroup", w.radioButton2.getName());
-    Assert.assertFalse(w.radioButton2.getValue());
+    assertEquals("Test radio 2", w.radioButton2.getText());
+    assertEquals("MyRadioGroup", w.radioButton2.getName());
+    assertFalse(w.radioButton2.getValue());
 
-    Assert.assertEquals(MyClientBundle.INSTANCE.testImageResource().getURL(),
+    assertEquals(MyClientBundle.INSTANCE.testImageResource().getURL(),
         w.image.getUrl());
 
-    Assert.assertEquals("my provided label", w.providedLabel.getText());
-    Assert.assertEquals("custom text setup in ui.xml",
-        w.providedLabel.getCustomText());
-    Assert.assertEquals("my provided string", w.providedLabel.providedString);
-    Assert.assertEquals("disabled", w.providedLabel.getStyleName());
+    assertEquals("my provided label", w.providedLabel.getText());
+    assertEquals("custom text setup in ui.xml", w.providedLabel.getCustomText());
+    assertEquals("my provided string", w.providedLabel.providedString);
+    assertEquals("disabled", w.providedLabel.getStyleName());
 
-    Assert.assertEquals("my UiFactory label", w.uiFactoryLabel.getText());
-    Assert.assertEquals("custom text setup in ui.xml",
+    assertEquals("my UiFactory label", w.uiFactoryLabel.getText());
+    assertEquals("custom text setup in ui.xml",
         w.uiFactoryLabel.getCustomText());
-    Assert.assertEquals("gael", w.uiFactoryLabel.uiFactoryString);
+    assertEquals("gael", w.uiFactoryLabel.uiFactoryString);
 
-    Assert.assertEquals("my UiConstructor label",
-        w.uiConstructorLabel.getText());
-    Assert.assertEquals("custom text setup in ui.xml",
+    assertEquals("my UiConstructor label", w.uiConstructorLabel.getText());
+    assertEquals("custom text setup in ui.xml",
         w.uiConstructorLabel.getCustomText());
-    Assert.assertEquals("uiConstructor property",
+    assertEquals("uiConstructor property",
         w.uiConstructorLabel.uiConstructorLabel);
 
     Label label = (Label) wrappedPanel.getWidget(1);
-    Assert.assertNotNull(label);
-    Assert.assertEquals("Keep your ducks", label.getText());
+    assertNotNull(label);
+    assertEquals("Keep your ducks", label.getText());
 
     SpanElement spanElement = Document.get().getElementById("mySpan").cast();
-    Assert.assertEquals("some span for testing", spanElement.getInnerText());
-    Assert.assertEquals("pretty", spanElement.getClassName());
+    assertEquals("some span for testing", spanElement.getInnerText());
+    assertEquals("pretty", spanElement.getClassName());
 
-    Assert.assertEquals("We <b>strongly</b> urge you to reconsider.",
+    assertEquals("We <b>strongly</b> urge you to reconsider.",
         w.msgLabel.getText());
 
-    Assert.assertEquals("9'00", w.msgInnerWidget.getText());
-    Assert.assertEquals(w.msgInnerWidget, wrappedPanel.getWidget(4));
+    assertEquals("9'00", w.msgInnerWidget.getText());
+    assertEquals(w.msgInnerWidget, wrappedPanel.getWidget(4));
 
-    Assert.assertEquals(HasHorizontalAlignment.ALIGN_LEFT,
+    assertEquals(HasHorizontalAlignment.ALIGN_LEFT,
         w.verticalPanel.getHorizontalAlignment());
-    Assert.assertEquals(HasVerticalAlignment.ALIGN_MIDDLE,
+    assertEquals(HasVerticalAlignment.ALIGN_MIDDLE,
         w.verticalPanel.getVerticalAlignment());
 
     // Assertion on inner style
-    Assert.assertEquals("style", w.style.getName());
-    Assert.assertEquals(
+    assertEquals("style", w.style.getName());
+    assertEquals(
         ".redBox {background-color: pink;border: 1px solid red;}.enabled {color: black;}.disabled {color: gray;}",
         w.style.getText());
 
-  }
-
-  @Test
-  public void checkUiHandlerClick() {
-    // Arrange
-    UiBinderWithWidgets w = new UiBinderWithWidgets("gael", "eric");
-
-    // Pre-Assert
-    Assert.assertEquals(1, w.listBox.getVisibleItemCount());
-
-    // Act
-    Browser.click(w.button);
-
-    // Assert
-    Assert.assertEquals(2, w.listBox.getVisibleItemCount());
   }
 }

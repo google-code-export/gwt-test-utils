@@ -45,7 +45,7 @@ class GwtPatcher {
 
   @PatchMethod
   static String getVersion() {
-    return "GWT 2 by gwt-test-utils";
+    return "GWT by gwt-test-utils";
   }
 
   @PatchMethod

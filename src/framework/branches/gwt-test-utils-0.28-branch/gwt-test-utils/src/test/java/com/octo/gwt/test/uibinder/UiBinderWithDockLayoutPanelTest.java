@@ -1,6 +1,6 @@
 package com.octo.gwt.test.uibinder;
 
-import junit.framework.Assert;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
@@ -12,7 +12,7 @@ import com.octo.gwt.test.GwtTestTest;
 public class UiBinderWithDockLayoutPanelTest extends GwtTestTest {
 
   @Test
-  public void checkUiBinderWithDocLayoutPanel() {
+  public void uiBinderWithDockLayoutPanel() {
     // Arrange
     UiBinderWithDockLayoutPanel panel = new UiBinderWithDockLayoutPanel();
 
@@ -20,12 +20,12 @@ public class UiBinderWithDockLayoutPanelTest extends GwtTestTest {
     RootLayoutPanel.get().add(panel);
 
     // Assert
-    Assert.assertEquals("North", panel.northLabel.getText());
-    Assert.assertEquals("Center", panel.centerLabel.getText());
-    Assert.assertEquals("East", panel.eastLabel.getText());
-    Assert.assertEquals("South", panel.southLabel.getText());
-    Assert.assertEquals("Center", panel.centerLabel.getText());
-    Assert.assertEquals(
+    assertEquals("North", panel.northLabel.getText());
+    assertEquals("Center", panel.centerLabel.getText());
+    assertEquals("East", panel.eastLabel.getText());
+    assertEquals("South", panel.southLabel.getText());
+    assertEquals("Center", panel.centerLabel.getText());
+    assertEquals(
         "<ul><li id=\"li-west0\">west0</li><li id=\"li-west1\">west1</li></ul>",
         panel.westHTML.getHTML());
 
@@ -33,11 +33,11 @@ public class UiBinderWithDockLayoutPanelTest extends GwtTestTest {
         0).cast();
     LIElement li1 = panel.westHTML.getElement().getFirstChildElement().getChild(
         1).cast();
-    Assert.assertEquals("west0", li0.getInnerText());
-    Assert.assertEquals("west1", li1.getInnerText());
+    assertEquals("west0", li0.getInnerText());
+    assertEquals("west1", li1.getInnerText());
 
-    Assert.assertEquals(li0, Document.get().getElementById("li-west0"));
-    Assert.assertEquals(li1, Document.get().getElementById("li-west1"));
+    assertEquals(li0, Document.get().getElementById("li-west0"));
+    assertEquals(li1, Document.get().getElementById("li-west1"));
   }
 
 }

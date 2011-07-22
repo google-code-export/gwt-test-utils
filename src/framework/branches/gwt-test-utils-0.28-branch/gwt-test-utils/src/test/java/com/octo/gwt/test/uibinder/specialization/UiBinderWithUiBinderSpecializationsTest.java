@@ -1,6 +1,6 @@
 package com.octo.gwt.test.uibinder.specialization;
 
-import junit.framework.Assert;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
@@ -10,7 +10,7 @@ import com.octo.gwt.test.GwtTestTest;
 public class UiBinderWithUiBinderSpecializationsTest extends GwtTestTest {
 
   @Test
-  public void checkUiBinderWithUiBinderSpecializations() {
+  public void uiBinderWithDockLayoutPanel() {
     // Arrange
     UiBinderWithMoreThanOneUiBinderFactoriesForSameType w = new UiBinderWithMoreThanOneUiBinderFactoriesForSameType();
 
@@ -18,9 +18,9 @@ public class UiBinderWithUiBinderSpecializationsTest extends GwtTestTest {
     RootPanel.get().add(w);
 
     // Assert
-    Assert.assertEquals("item created by @UiFactory",
+    assertEquals("item created by @UiFactory",
         w.itemWidget.genericLabel.getText());
-    Assert.assertEquals("person created by @UiFactory",
+    assertEquals("person created by @UiFactory",
         w.personWidget.genericLabel.getText());
   }
 }

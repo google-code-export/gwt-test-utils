@@ -1,6 +1,6 @@
 package com.octo.gwt.test;
 
-import junit.framework.Assert;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
@@ -12,7 +12,8 @@ public class TimerTest extends GwtTestTest {
   int i;
 
   @Test
-  public void checkSchedule() throws Exception {
+  public void schedule() throws Exception {
+    // Arrange
     bool = false;
     Timer timer = new Timer() {
 
@@ -22,13 +23,16 @@ public class TimerTest extends GwtTestTest {
       }
     };
 
+    // Act
     timer.schedule(500);
 
-    Assert.assertTrue("The token was not set after Timer has run", bool);
+    // Assert
+    assertTrue("The token was not set after Timer has run", bool);
   }
 
   @Test
-  public void checkScheduleRepeating() throws Exception {
+  public void scheduleRepeating() throws Exception {
+    // Arrange
     i = 0;
     Timer timer = new Timer() {
 
@@ -38,8 +42,10 @@ public class TimerTest extends GwtTestTest {
       }
     };
 
+    // Act
     timer.scheduleRepeating(500);
 
-    Assert.assertTrue("timer should be run more than once", i > 1);
+    // Assert
+    assertTrue("timer should be run more than once", i > 1);
   }
 }

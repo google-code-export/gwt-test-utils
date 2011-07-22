@@ -1,6 +1,8 @@
 package com.octo.gxt.test;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -26,7 +28,7 @@ public class WindowTest extends GwtGxtTest {
 
       @Override
       public void windowActivate(WindowEvent we) {
-        Assert.assertEquals(window, we.getWindow());
+        assertEquals(window, we.getWindow());
         activate = true;
       }
     });
@@ -37,7 +39,7 @@ public class WindowTest extends GwtGxtTest {
     window.setActive(true);
 
     // Assert
-    Assert.assertTrue(activate);
+    assertTrue(activate);
   }
 
   @Test
@@ -47,7 +49,7 @@ public class WindowTest extends GwtGxtTest {
 
       @Override
       public void windowDeactivate(WindowEvent we) {
-        Assert.assertEquals(window, we.getWindow());
+        assertEquals(window, we.getWindow());
         deactivate = true;
       }
     });
@@ -58,7 +60,7 @@ public class WindowTest extends GwtGxtTest {
     window.setActive(false);
 
     // Assert
-    Assert.assertTrue(deactivate);
+    assertTrue(deactivate);
   }
 
   @Test
@@ -68,7 +70,7 @@ public class WindowTest extends GwtGxtTest {
 
       @Override
       public void windowHide(WindowEvent we) {
-        Assert.assertEquals(window, we.getWindow());
+        assertEquals(window, we.getWindow());
         hide = true;
       }
     });
@@ -79,7 +81,7 @@ public class WindowTest extends GwtGxtTest {
     window.hide();
 
     // Assert
-    Assert.assertTrue(hide);
+    assertTrue(hide);
   }
 
   @Test
@@ -89,7 +91,7 @@ public class WindowTest extends GwtGxtTest {
 
       @Override
       public void windowMaximize(WindowEvent we) {
-        Assert.assertEquals(window, we.getWindow());
+        assertEquals(window, we.getWindow());
         maximize = true;
       }
     });
@@ -100,7 +102,7 @@ public class WindowTest extends GwtGxtTest {
     window.maximize();
 
     // Assert
-    Assert.assertTrue(maximize);
+    assertTrue(maximize);
   }
 
   @Test
@@ -110,7 +112,7 @@ public class WindowTest extends GwtGxtTest {
 
       @Override
       public void windowMinimize(WindowEvent we) {
-        Assert.assertEquals(window, we.getWindow());
+        assertEquals(window, we.getWindow());
         minimize = true;
       }
     });
@@ -121,7 +123,7 @@ public class WindowTest extends GwtGxtTest {
     window.minimize();
 
     // Assert
-    Assert.assertTrue(minimize);
+    assertTrue(minimize);
   }
 
   @Test
@@ -131,7 +133,7 @@ public class WindowTest extends GwtGxtTest {
 
       @Override
       public void windowRestore(WindowEvent we) {
-        Assert.assertEquals(window, we.getWindow());
+        assertEquals(window, we.getWindow());
         restore = true;
       }
     });
@@ -143,11 +145,11 @@ public class WindowTest extends GwtGxtTest {
     window.restore();
 
     // Assert
-    Assert.assertTrue(restore);
+    assertTrue(restore);
   }
 
   @Before
-  public void setupWindowTest() {
+  public void beforeWindowTest() {
     window = new Window();
     activate = false;
     deactivate = false;
@@ -165,7 +167,7 @@ public class WindowTest extends GwtGxtTest {
 
       @Override
       public void windowShow(WindowEvent we) {
-        Assert.assertEquals(window, we.getWindow());
+        assertEquals(window, we.getWindow());
         show = true;
       }
     });
@@ -174,7 +176,7 @@ public class WindowTest extends GwtGxtTest {
     window.show();
 
     // Assert
-    Assert.assertTrue(show);
+    assertTrue(show);
   }
 
 }

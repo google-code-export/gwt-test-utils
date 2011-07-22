@@ -1,6 +1,7 @@
 package com.octo.gxt.test;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertNotNull;
+
 import org.junit.Test;
 
 import com.extjs.gxt.ui.client.data.ModelData;
@@ -10,7 +11,7 @@ import com.extjs.gxt.ui.client.widget.ListView;
 public class ListViewTest extends GwtGxtTest {
 
   @Test
-  public void checkSimpleTemplate() {
+  public void simpleTemplate() {
     // Arrange
     ListView<ModelData> list = new ListView<ModelData>();
 
@@ -18,7 +19,7 @@ public class ListViewTest extends GwtGxtTest {
     list.setSimpleTemplate("<ul><li>1</li><li>2</li></ul>");
 
     // Assert
-    Assert.assertNotNull(list.getTemplate());
+    assertNotNull(list.getTemplate());
   }
 
 }

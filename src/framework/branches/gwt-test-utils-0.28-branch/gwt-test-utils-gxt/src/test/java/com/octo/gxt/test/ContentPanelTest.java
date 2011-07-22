@@ -1,6 +1,8 @@
 package com.octo.gxt.test;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -12,8 +14,13 @@ public class ContentPanelTest extends GwtGxtTest {
 
   private ContentPanel panel;
 
+  @Before
+  public void beforeContentPanel() {
+    panel = new ContentPanel();
+  }
+
   @Test
-  public void checkParent() {
+  public void parent() {
     // Arrange
     Button b = new Button();
 
@@ -21,19 +28,14 @@ public class ContentPanelTest extends GwtGxtTest {
     panel.add(b);
 
     // Assert 1
-    Assert.assertEquals(panel, b.getParent());
+    assertEquals(panel, b.getParent());
 
     // Act 2
     panel.removeAll();
 
     // Assert 2
-    Assert.assertEquals(0, panel.getItemCount());
-    Assert.assertNull(b.getParent());
-  }
-
-  @Before
-  public void setupContentPanel() {
-    panel = new ContentPanel();
+    assertEquals(0, panel.getItemCount());
+    assertNull(b.getParent());
   }
 
 }

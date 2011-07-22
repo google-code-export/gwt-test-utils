@@ -21,7 +21,7 @@ import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
- * Class which provide reflection utilities on {@link Widget} classes.
+ * Class which provides utilities on {@link Widget} classes.
  * 
  * @author Gael Lazzari
  * 

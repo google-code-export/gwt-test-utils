@@ -34,7 +34,7 @@ public abstract class MyGwtShell extends GwtCsvTest {
   }
 
   @Before
-  public void setUp() throws Exception {
+  public void before() throws Exception {
     RemoteServiceCreateHandler remoteServiceCreateHandler = new RemoteServiceCreateHandler() {
 
       @Override

@@ -1,8 +1,9 @@
 package com.octo.gwt.test.i18n;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.Locale;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.google.gwt.i18n.client.NumberFormat;
@@ -12,24 +13,18 @@ import com.octo.gwt.test.internal.GwtConfig;
 public class NumberFormatTest extends GwtTestTest {
 
   @Test
-  public void checkNumberFormatFr() throws Exception {
+  public void numberFormat_Fr() throws Exception {
+    // Arrange
     GwtConfig.get().setLocale(Locale.FRENCH);
 
-    Assert.assertEquals("10,00 €", NumberFormat.getCurrencyFormat().format(10));
-    Assert.assertEquals("3,142", NumberFormat.getDecimalFormat().format(3.1416));
+    // Act & Assert
+    assertEquals("10,00 €", NumberFormat.getCurrencyFormat().format(10));
+    assertEquals("3,142", NumberFormat.getDecimalFormat().format(3.1416));
   }
 
   @Test
-  public void checkNumberFormatUs() {
-    GwtConfig.get().setLocale(Locale.ENGLISH);
-
-    Assert.assertEquals("$10.00", NumberFormat.getCurrencyFormat().format(10));
-    Assert.assertEquals("3.142", NumberFormat.getDecimalFormat().format(3.1416));
-  }
-
-  @Test
-  public void checkNumberFormatWithSpecificPattern() {
-    // Set Up
+  public void numberFormat_SpecificPattern() {
+    // Arrange
     GwtConfig.get().setLocale(Locale.FRENCH);
     NumberFormat numberFormat = NumberFormat.getFormat("0000000000");
 
@@ -37,12 +32,12 @@ public class NumberFormatTest extends GwtTestTest {
     String numberString = numberFormat.format(1234);
 
     // Assert
-    Assert.assertEquals("0000001234", numberString);
+    assertEquals("0000001234", numberString);
   }
 
   @Test
-  public void checkNumberFormatWithSpecificPatternWithDouble() {
-    // Set Up
+  public void numberFormat_SpecificPatternWithDouble() {
+    // Arrange
     GwtConfig.get().setLocale(Locale.FRENCH);
     NumberFormat numberFormat = NumberFormat.getFormat("0000000000");
 
@@ -50,7 +45,17 @@ public class NumberFormatTest extends GwtTestTest {
     String numberString = numberFormat.format(42147482);
 
     // Assert
-    Assert.assertEquals("0042147482", numberString);
+    assertEquals("0042147482", numberString);
+  }
+
+  @Test
+  public void numberFormat_Us() {
+    // Arrange
+    GwtConfig.get().setLocale(Locale.ENGLISH);
+
+    // Act & Assert
+    assertEquals("$10.00", NumberFormat.getCurrencyFormat().format(10));
+    assertEquals("3.142", NumberFormat.getDecimalFormat().format(3.1416));
   }
 
 }

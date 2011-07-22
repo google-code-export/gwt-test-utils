@@ -1,6 +1,7 @@
 package com.octo.gwt.test;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -28,112 +29,6 @@ public class ButtonTest extends GwtTestTest {
   }
 
   @Test
-  public void checkClickWithHander() {
-    // Arrange
-    // add a handler to test the click
-    b.addClickHandler(new ClickHandler() {
-
-      public void onClick(ClickEvent event) {
-        b.setHTML("clicked");
-      }
-
-    });
-
-    // Pre-Assert
-    Assert.assertEquals("", b.getHTML());
-
-    // Act
-    b.click();
-
-    // Assert
-    Assert.assertEquals("clicked", b.getHTML());
-  }
-
-  @Test
-  public void checkClickWithListener() {
-    // Arrange
-    b.addClickListener(new ClickListener() {
-
-      public void onClick(Widget sender) {
-        b.setHTML("clicked");
-
-      }
-    });
-
-    // Pre-Assert
-    Assert.assertEquals("", b.getHTML());
-
-    // Act
-    b.click();
-
-    // Assert
-    Assert.assertEquals("clicked", b.getHTML());
-  }
-
-  @Test
-  public void checkEnable() {
-    // Pre-Assert
-    Assert.assertEquals(true, b.isEnabled());
-
-    // Act
-    b.setEnabled(false);
-
-    // Assert
-    Assert.assertEquals(false, b.isEnabled());
-  }
-
-  @Test
-  public void checkHTML() {
-    // Pre-Assert
-    Assert.assertEquals("", b.getHTML());
-
-    // Act
-    b.setHTML("test-html");
-
-    // Assert
-    Assert.assertEquals("test-html", b.getHTML());
-  }
-
-  @Test
-  public void checkStyleName() {
-    // Pre-Assert
-    Assert.assertEquals("gwt-Button", b.getStyleName());
-
-    // Act
-    b.setStyleName("test-button-style");
-
-    // Assert
-    Assert.assertEquals("test-button-style", b.getStyleName());
-  }
-
-  @Test
-  public void checkStylePrimaryName() {
-    // Act
-    b.setStylePrimaryName("test-button-styleP");
-
-    // Assert
-    Assert.assertEquals("test-button-styleP", b.getStylePrimaryName());
-  }
-
-  @Test
-  public void checkText() {
-    // Act
-    b.setText("toto");
-
-    // Assert
-    Assert.assertEquals("toto", b.getText());
-  }
-
-  @Test
-  public void checkTitle() {
-    // Act
-    b.setTitle("title");
-
-    // Assert
-    Assert.assertEquals("title", b.getTitle());
-  }
-
-  @Test
   public void checkToString() {
     // Arrange
     b.setHTML("test button");
@@ -146,25 +41,131 @@ public class ButtonTest extends GwtTestTest {
     String toString = b.toString();
 
     // Assert
-    Assert.assertEquals(
+    assertEquals(
         "<button type=\"button\" class=\"my-style\" disabled=\"\" accesskey=\"h\">test button</button>",
         toString);
   }
 
   @Test
-  public void checkVisible() {
+  public void click_ClickHandler() {
+    // Arrange
+    // add a handler to test the click
+    b.addClickHandler(new ClickHandler() {
+
+      public void onClick(ClickEvent event) {
+        b.setHTML("clicked");
+      }
+
+    });
+
     // Pre-Assert
-    Assert.assertEquals(true, b.isVisible());
+    assertEquals("", b.getHTML());
+
+    // Act
+    b.click();
+
+    // Assert
+    assertEquals("clicked", b.getHTML());
+  }
+
+  @Test
+  public void click_ClickListener() {
+    // Arrange
+    b.addClickListener(new ClickListener() {
+
+      public void onClick(Widget sender) {
+        b.setHTML("clicked");
+
+      }
+    });
+
+    // Pre-Assert
+    assertEquals("", b.getHTML());
+
+    // Act
+    b.click();
+
+    // Assert
+    assertEquals("clicked", b.getHTML());
+  }
+
+  @Test
+  public void enabled() {
+    // Pre-Assert
+    assertEquals(true, b.isEnabled());
+
+    // Act
+    b.setEnabled(false);
+
+    // Assert
+    assertEquals(false, b.isEnabled());
+  }
+
+  @Test
+  public void html() {
+    // Pre-Assert
+    assertEquals("", b.getHTML());
+
+    // Act
+    b.setHTML("test-html");
+
+    // Assert
+    assertEquals("test-html", b.getHTML());
+  }
+
+  @Test
+  public void styleName() {
+    // Pre-Assert
+    assertEquals("gwt-Button", b.getStyleName());
+
+    // Act
+    b.setStyleName("test-button-style");
+
+    // Assert
+    assertEquals("test-button-style", b.getStyleName());
+  }
+
+  @Test
+  public void stylePrimaryName() {
+    // Act
+    b.setStylePrimaryName("test-button-styleP");
+
+    // Assert
+    assertEquals("test-button-styleP", b.getStylePrimaryName());
+  }
+
+  @Test
+  public void text() {
+    // Act
+    b.setText("toto");
+
+    // Assert
+    assertEquals("toto", b.getText());
+  }
+
+  @Test
+  public void title() {
+    // Act
+    b.setTitle("title");
+
+    // Assert
+    assertEquals("title", b.getTitle());
+  }
+
+  @Test
+  public void visible() {
+    // Pre-Assert
+    assertEquals(true, b.isVisible());
 
     // Act
     b.setVisible(false);
 
     // Assert
-    Assert.assertEquals(false, b.isVisible());
+    assertEquals(false, b.isVisible());
   }
 
   @Test
-  public void checkWrap() {
+  public void wrap() {
     // Arrange
     ButtonElement element = Document.get().createButtonElement();
     element.setTabIndex(3);
@@ -173,13 +174,13 @@ public class ButtonTest extends GwtTestTest {
     Button b = Button.wrap(element);
 
     // Assert 1
-    Assert.assertEquals(3, b.getTabIndex());
+    assertEquals(3, b.getTabIndex());
 
     // Act 2
     b.setTabIndex(1);
 
     // Assert 2
-    Assert.assertEquals(1, element.getTabIndex());
+    assertEquals(1, element.getTabIndex());
   }
 
 }

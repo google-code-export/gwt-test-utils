@@ -5,7 +5,7 @@ import java.util.Locale;
 
 import javax.servlet.ServletConfig;
 
-import org.junit.Assert;
+import static org.junit.Assert.*;
 
 import com.octo.gwt.test.exceptions.GwtTestPatchException;
 import com.octo.gwt.test.internal.handlers.GwtCreateHandlerManager;
@@ -49,7 +49,7 @@ public abstract class GwtModuleRunnerAdapter implements GwtModuleRunner {
         // remove pending tasks, no need to execute
         FinallyCommandTrigger.clearPendingCommands();
 
-        Assert.fail(errorMessage);
+        fail(errorMessage);
       }
     };
   }

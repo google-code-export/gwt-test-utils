@@ -1,6 +1,8 @@
 package com.octo.gwt.test;
 
-import junit.framework.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
@@ -15,7 +17,7 @@ public class ToggleButtonTest extends GwtTestTest {
   private boolean clicked;
 
   @Test
-  public void checkClick() {
+  public void click() {
     // Arrange
     final ToggleButton toggleButton = new ToggleButton("Up", "Down");
 
@@ -31,26 +33,24 @@ public class ToggleButtonTest extends GwtTestTest {
     });
 
     // Pre-Assert
-    Assert.assertFalse("ToggleButton should not be toggled by default",
+    assertFalse("ToggleButton should not be toggled by default",
         toggleButton.isDown());
-    Assert.assertEquals("Up", toggleButton.getText());
+    assertEquals("Up", toggleButton.getText());
 
     // Act
     Browser.click(toggleButton);
 
     // Assert
-    Assert.assertTrue("ToggleButton onClick was not triggered", clicked);
-    Assert.assertTrue(
-        "ToggleButton should be toggled after being clicked once",
+    assertTrue("ToggleButton onClick was not triggered", clicked);
+    assertTrue("ToggleButton should be toggled after being clicked once",
         toggleButton.isDown());
-    Assert.assertEquals("Down", toggleButton.getText());
+    assertEquals("Down", toggleButton.getText());
 
     // Act 2
     Browser.click(toggleButton);
-    Assert.assertFalse(
-        "ToggleButton should not be toggled after being clicked twice",
+    assertFalse("ToggleButton should not be toggled after being clicked twice",
         toggleButton.isDown());
-    Assert.assertEquals("Up", toggleButton.getText());
+    assertEquals("Up", toggleButton.getText());
   }
 
 }

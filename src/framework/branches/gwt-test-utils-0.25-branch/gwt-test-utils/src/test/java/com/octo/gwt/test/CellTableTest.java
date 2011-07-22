@@ -1,9 +1,11 @@
 package com.octo.gwt.test;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.util.Arrays;
 import java.util.List;
-
-import junit.framework.Assert;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -70,12 +72,12 @@ public class CellTableTest extends GwtTestTest {
     table.setVisibleRange(0, 2);
 
     // Pre-Assert
-    Assert.assertEquals(3, table.getRowCount());
-    Assert.assertEquals(2, table.getVisibleItemCount());
+    assertEquals(3, table.getRowCount());
+    assertEquals(2, table.getVisibleItemCount());
   }
 
   @Test
-  public void checkClick() {
+  public void click() {
     // Arrange
     final StringBuilder sb = new StringBuilder();
 
@@ -97,15 +99,15 @@ public class CellTableTest extends GwtTestTest {
     Browser.click(table, CONTACTS.get(0));
 
     // Assert 1
-    Assert.assertEquals("Gael : 666 Evil", sb.toString());
-    Assert.assertTrue(table.getSelectionModel().isSelected(CONTACTS.get(0)));
+    assertEquals("Gael : 666 Evil", sb.toString());
+    assertTrue(table.getSelectionModel().isSelected(CONTACTS.get(0)));
 
     // Act 2 : deselect
     Browser.click(table, CONTACTS.get(0));
 
     // Assert 2
-    Assert.assertEquals("Gael : 666 Evil", sb.toString());
-    Assert.assertFalse(table.getSelectionModel().isSelected(CONTACTS.get(0)));
+    assertEquals("Gael : 666 Evil", sb.toString());
+    assertFalse(table.getSelectionModel().isSelected(CONTACTS.get(0)));
 
   }
 }

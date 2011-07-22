@@ -1,5 +1,8 @@
 package com.octo.gwt.test.csv.runner;
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -11,7 +14,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,7 +48,7 @@ public class CsvRunner {
       transformArgs(filterArgs);
       Method m = getCsvMethod(fixture.getClass(), methodName);
       if (m == null) {
-        Assert.fail(getAssertionErrorMessagePrefix() + "@"
+        fail(getAssertionErrorMessagePrefix() + "@"
             + CsvMethod.class.getSimpleName() + " ' " + methodName
             + " ' not found in object " + fixture);
       }
@@ -59,7 +61,7 @@ public class CsvRunner {
           if (clazz.isArray()) {
             argList.add(new String[]{});
           } else {
-            Assert.fail(getAssertionErrorMessagePrefix() + "Too few args for "
+            fail(getAssertionErrorMessagePrefix() + "Too few args for "
                 + methodName);
           }
         } else {
@@ -73,7 +75,7 @@ public class CsvRunner {
         }
       }
       if (filterArgs.size() != 0) {
-        Assert.fail(getAssertionErrorMessagePrefix() + "Too many args for "
+        fail(getAssertionErrorMessagePrefix() + "Too many args for "
             + methodName);
       }
       try {
@@ -90,11 +92,11 @@ public class CsvRunner {
           throw createCsvExecutionException(e.getCause());
         }
         logger.error(getAssertionErrorMessagePrefix() + "Execution error", e);
-        Assert.fail(getAssertionErrorMessagePrefix() + "Error invoking "
+        fail(getAssertionErrorMessagePrefix() + "Error invoking "
             + methodName + " in fixture : " + e.toString());
       } catch (Exception e) {
         logger.error(getAssertionErrorMessagePrefix() + "Execution error", e);
-        Assert.fail(getAssertionErrorMessagePrefix() + "Error invoking "
+        fail(getAssertionErrorMessagePrefix() + "Error invoking "
             + methodName + " in fixture : " + e.toString());
       }
     } else {
@@ -160,7 +162,7 @@ public class CsvRunner {
           } catch (Exception e) {
             logger.error(getAssertionErrorMessagePrefix() + "Execution error",
                 e);
-            Assert.fail(getAssertionErrorMessagePrefix()
+            fail(getAssertionErrorMessagePrefix()
                 + "Unable to get method result on "
                 + o.getClass().getCanonicalName() + ", method " + m.getName()
                 + ", params " + currentNode.getParams());
@@ -176,7 +178,7 @@ public class CsvRunner {
           } catch (Exception e) {
             logger.error(getAssertionErrorMessagePrefix() + "Execution error",
                 e);
-            Assert.fail(getAssertionErrorMessagePrefix()
+            fail(getAssertionErrorMessagePrefix()
                 + "Unable to get field value on "
                 + o.getClass().getCanonicalName() + ", field " + f.getName()
                 + ", params " + node);
@@ -193,7 +195,7 @@ public class CsvRunner {
               current = findInIterable(list, currentNode.getMapEq(),
                   currentNode.getMap(), current, null);
             } else {
-              Assert.fail(getAssertionErrorMessagePrefix()
+              fail(getAssertionErrorMessagePrefix()
                   + "Not managed type for iteration "
                   + current.getClass().getCanonicalName());
             }
@@ -220,11 +222,11 @@ public class CsvRunner {
     }
 
     if (o == null) {
-      Assert.fail(getAssertionErrorMessagePrefix() + "Targeted object "
+      fail(getAssertionErrorMessagePrefix() + "Targeted object "
           + paramsToString(params) + " is null");
     }
 
-    Assert.fail(getAssertionErrorMessagePrefix() + "Wrong object type, not a "
+    fail(getAssertionErrorMessagePrefix() + "Wrong object type, not a "
         + clazz.getCanonicalName() + " : " + o.getClass().getCanonicalName());
     return null;
   }
@@ -241,7 +243,7 @@ public class CsvRunner {
 
   public int runSheet(List<List<String>> sheet, Object fixture)
       throws Exception {
-    Assert.assertNotNull("Fixture have to be not null", fixture);
+    assertNotNull("Fixture have to be not null", fixture);
     boolean execute = false;
     int lineExecuted = 0;
     lineNumber = 0;
@@ -286,13 +288,13 @@ public class CsvRunner {
     for (Object n : list) {
       if (checkCondition(n, before, after)) {
         if (found != null) {
-          Assert.fail("Not unique object with condition " + before + "="
+          fail("Not unique object with condition " + before + "="
               + after);
         }
         found = n;
       }
     }
-    Assert.assertNotNull(getAssertionErrorMessagePrefix() + "Not found "
+    assertNotNull(getAssertionErrorMessagePrefix() + "Not found "
         + before + "=" + after + " in " + current.getClass().getCanonicalName()
         + (m != null ? " method " + m.getName() : ""), found);
     return found;
@@ -303,17 +305,17 @@ public class CsvRunner {
       InvocationTargetException {
     if (m.getParameterTypes().length != 1
         && m.getParameterTypes()[0] != int.class) {
-      Assert.fail("Unable to navigate " + current.getClass().getCanonicalName()
+      fail("Unable to navigate " + current.getClass().getCanonicalName()
           + " with method " + m.getName());
     }
     Method countM = GwtReflectionUtils.getMethod(current.getClass(),
         m.getName() + "Count");
     if (countM == null) {
-      Assert.fail("Count method not found in "
+      fail("Count method not found in "
           + current.getClass().getCanonicalName() + " method " + m.getName());
     }
     if (countM.getParameterTypes().length > 0) {
-      Assert.fail("Too many parameter in count method "
+      fail("Too many parameter in count method "
           + current.getClass().getCanonicalName() + " method "
           + countM.getName());
     }
@@ -435,7 +437,7 @@ public class CsvRunner {
           || m.getParameterTypes()[index] == int.class) {
         tab[index] = Integer.parseInt(list.get(index));
       } else {
-        Assert.fail(getAssertionErrorMessagePrefix() + "Not managed type "
+        fail(getAssertionErrorMessagePrefix() + "Not managed type "
             + m.getParameterTypes()[index]);
       }
     }
@@ -463,7 +465,7 @@ public class CsvRunner {
       List<?> l = (List<?>) current;
       current = l.get(Integer.parseInt(map));
     } else {
-      Assert.fail(getAssertionErrorMessagePrefix() + "Object not a map "
+      fail(getAssertionErrorMessagePrefix() + "Object not a map "
           + current.getClass().getCanonicalName() + " : " + map);
     }
     return current;

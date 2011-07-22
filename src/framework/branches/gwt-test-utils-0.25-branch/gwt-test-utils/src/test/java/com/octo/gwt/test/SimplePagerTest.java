@@ -5,7 +5,7 @@ import org.junit.Test;
 public class SimplePagerTest extends GwtTestTest {
 
   @Test
-  public void checkSimplePager() {
+  public void simplePager() {
     // // Arrange
     // // Create a CellList.
     // CellList<String> cellList = new CellList<String>(new TextCell());
@@ -27,7 +27,7 @@ public class SimplePagerTest extends GwtTestTest {
     // // Act
     //
     // // Assert
-    // Assert.assertNotNull(pager);
+    // assertNotNull(pager);
   }
 
 }

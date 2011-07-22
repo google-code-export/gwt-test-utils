@@ -1,7 +1,8 @@
 package com.octo.gwt.test;
 
+import static org.junit.Assert.assertEquals;
+
 import org.easymock.EasyMock;
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.google.gwt.core.client.GWT;
@@ -33,9 +34,14 @@ public class GwtRpcWithEasyMockTest extends GwtTestWithEasyMock {
   @Mock
   private MyRemoteServiceAsync mockedService;
 
+  @Override
+  public String getModuleName() {
+    return "com.octo.gwt.test.GwtTestUtils";
+  }
+
   @SuppressWarnings("unchecked")
   @Test
-  public void checkGwtRpcFailure() {
+  public void rpcCall_KO() {
     // Arrange
 
     // mock future remote call
@@ -48,18 +54,18 @@ public class GwtRpcWithEasyMockTest extends GwtTestWithEasyMock {
     // Act
     MyGwtClass gwtClass = new MyGwtClass();
     gwtClass.myValue = "toto";
-    Assert.assertEquals("toto", gwtClass.myValue);
+    assertEquals("toto", gwtClass.myValue);
     gwtClass.run();
 
     // Assert
     verify();
 
-    Assert.assertEquals("error", gwtClass.myValue);
+    assertEquals("error", gwtClass.myValue);
   }
 
   @SuppressWarnings("unchecked")
   @Test
-  public void checkGwtRpcOk() {
+  public void rpcCall_OK() {
     // Arrange
 
     // mock future remote call
@@ -72,18 +78,13 @@ public class GwtRpcWithEasyMockTest extends GwtTestWithEasyMock {
     // Act
     MyGwtClass gwtClass = new MyGwtClass();
     gwtClass.myValue = "toto";
-    Assert.assertEquals("toto", gwtClass.myValue);
+    assertEquals("toto", gwtClass.myValue);
     gwtClass.run();
 
     // Assert
     verify();
 
-    Assert.assertEquals("returnValue", gwtClass.myValue);
-  }
-
-  @Override
-  public String getModuleName() {
-    return "com.octo.gwt.test.GwtTestUtils";
+    assertEquals("returnValue", gwtClass.myValue);
   }
 
   @Override

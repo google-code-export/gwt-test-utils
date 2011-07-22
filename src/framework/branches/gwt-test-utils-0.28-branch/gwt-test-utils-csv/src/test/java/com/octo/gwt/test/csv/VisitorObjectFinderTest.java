@@ -1,6 +1,7 @@
 package com.octo.gwt.test.csv;
 
-import junit.framework.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -30,40 +31,8 @@ public class VisitorObjectFinderTest extends GwtTestWithEasyMock {
 
   private VisitorObjectFinder finder;
 
-  @Test
-  public void checkFind() {
-    // Arrange
-    Button expectedB1 = GwtReflectionUtils.getPrivateFieldValue(app, "b1");
-    Button expectedB2 = GwtReflectionUtils.getPrivateFieldValue(app, "b2");
-    MyComposite myComposite = GwtReflectionUtils.getPrivateFieldValue(app,
-        "myComposite");
-    Label expectedCompositeLabel = GwtReflectionUtils.getPrivateFieldValue(
-        myComposite, "compositeLabel");
-
-    replay();
-
-    // Act
-    Widget b1 = (Widget) finder.find(csvRunner, "Button1's HTML");
-    Widget b2 = (Widget) finder.find(csvRunner, "Button2's HTML");
-    Label compositeLabel = (Label) finder.find(csvRunner, "myComposite Label");
-
-    // Assert
-    verify();
-    Assert.assertNotNull(b1);
-    Assert.assertEquals(expectedB1, b1);
-    Assert.assertNotNull(b2);
-    Assert.assertEquals(expectedB2, b2);
-    Assert.assertNotNull(compositeLabel);
-    Assert.assertEquals(expectedCompositeLabel, compositeLabel);
-  }
-
-  @Override
-  public String getModuleName() {
-    return "com.octo.gwt.test.csv.GwtCsvTest";
-  }
-
   @Before
-  public void setupVisitorObjectFinder() {
+  public void beforeVisitorObjectFinder() {
     app = new MyBeautifulApp();
     app.onModuleLoad();
 
@@ -91,6 +60,38 @@ public class VisitorObjectFinderTest extends GwtTestWithEasyMock {
     };
 
     finder = new VisitorObjectFinder(myVisitor);
+  }
+
+  @Test
+  public void find() {
+    // Arrange
+    Button expectedB1 = GwtReflectionUtils.getPrivateFieldValue(app, "b1");
+    Button expectedB2 = GwtReflectionUtils.getPrivateFieldValue(app, "b2");
+    MyComposite myComposite = GwtReflectionUtils.getPrivateFieldValue(app,
+        "myComposite");
+    Label expectedCompositeLabel = GwtReflectionUtils.getPrivateFieldValue(
+        myComposite, "compositeLabel");
+
+    replay();
+
+    // Act
+    Widget b1 = (Widget) finder.find(csvRunner, "Button1's HTML");
+    Widget b2 = (Widget) finder.find(csvRunner, "Button2's HTML");
+    Label compositeLabel = (Label) finder.find(csvRunner, "myComposite Label");
+
+    // Assert
+    verify();
+    assertNotNull(b1);
+    assertEquals(expectedB1, b1);
+    assertNotNull(b2);
+    assertEquals(expectedB2, b2);
+    assertNotNull(compositeLabel);
+    assertEquals(expectedCompositeLabel, compositeLabel);
+  }
+
+  @Override
+  public String getModuleName() {
+    return "com.octo.gwt.test.csv.GwtCsvTest";
   }
 
 }

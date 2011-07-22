@@ -1,9 +1,13 @@
 package com.octo.gwt.test.i18n;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.util.Locale;
 import java.util.Map;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -15,8 +19,13 @@ public class MyConstantsTest extends GwtTestTest {
 
   private MyConstants constants;
 
+  @Before
+  public void beforeMyConstantsTest() {
+    constants = GWT.create(MyConstants.class);
+  }
+
   @Test
-  public void checkMyConstantsChange() {
+  public void changeLocale() {
     // Arrange
     GwtConfig.get().setLocale(Locale.ENGLISH);
 
@@ -29,25 +38,24 @@ public class MyConstantsTest extends GwtTestTest {
     String valueWithoutLocaleToBeOverride = constants.valueWithoutLocaleToBeOverride();
 
     // Assert 1
-    Assert.assertEquals("Hello english !", hello);
-    Assert.assertEquals("Goodbye english !", goodbye);
+    assertEquals("Hello english !", hello);
+    assertEquals("Goodbye english !", goodbye);
 
-    Assert.assertEquals(3, stringArray.length);
-    Assert.assertEquals("one", stringArray[0]);
-    Assert.assertEquals("two", stringArray[1]);
-    Assert.assertEquals("three", stringArray[2]);
+    assertEquals(3, stringArray.length);
+    assertEquals("one", stringArray[0]);
+    assertEquals("two", stringArray[1]);
+    assertEquals("three", stringArray[2]);
 
-    Assert.assertEquals(5, map.size());
-    Assert.assertEquals("Hello english !", map.get("hello"));
-    Assert.assertEquals("Goodbye english !", map.get("goodbye"));
-    Assert.assertEquals("glad to work with gwt-test-utils", map.get("map1"));
-    Assert.assertEquals("hehe, it roxs !", map.get("map2"));
-    Assert.assertNull(map.get("map3"));
+    assertEquals(5, map.size());
+    assertEquals("Hello english !", map.get("hello"));
+    assertEquals("Goodbye english !", map.get("goodbye"));
+    assertEquals("glad to work with gwt-test-utils", map.get("map1"));
+    assertEquals("hehe, it roxs !", map.get("map2"));
+    assertNull(map.get("map3"));
 
-    Assert.assertEquals(
-        "Value from a default .properties file, without locale",
+    assertEquals("Value from a default .properties file, without locale",
         valueWithoutLocale);
-    Assert.assertEquals("Value from parent default .properties",
+    assertEquals("Value from parent default .properties",
         valueWithoutLocaleToBeOverride);
 
     // Act 2
@@ -58,25 +66,25 @@ public class MyConstantsTest extends GwtTestTest {
     map = constants.map();
 
     // Assert 2
-    Assert.assertEquals("Hello US !", hello);
-    Assert.assertEquals("Goodbye US !", goodbye);
+    assertEquals("Hello US !", hello);
+    assertEquals("Goodbye US !", goodbye);
 
-    Assert.assertEquals(4, stringArray.length);
-    Assert.assertEquals("one", stringArray[0]);
-    Assert.assertEquals("two", stringArray[1]);
-    Assert.assertEquals("three", stringArray[2]);
-    Assert.assertEquals("four", stringArray[3]);
+    assertEquals(4, stringArray.length);
+    assertEquals("one", stringArray[0]);
+    assertEquals("two", stringArray[1]);
+    assertEquals("three", stringArray[2]);
+    assertEquals("four", stringArray[3]);
 
     // "map" is not present in MyConstants_en_US.properties : loaded from
     // @DefaultStringMapMapValue
-    Assert.assertEquals(3, map.size());
-    Assert.assertEquals("default map1 value", map.get("map1"));
-    Assert.assertEquals("default map2 value", map.get("map2"));
-    Assert.assertEquals("default map3 value", map.get("map3"));
+    assertEquals(3, map.size());
+    assertEquals("default map1 value", map.get("map1"));
+    assertEquals("default map2 value", map.get("map2"));
+    assertEquals("default map3 value", map.get("map3"));
   }
 
   @Test
-  public void checkMyConstantsDefaultValue() {
+  public void defaultValues() {
     // Arrange
     String expectedErrorMessage = "No matching property \"goodbye\" for Constants class [com.octo.gwt.test.i18n.MyConstants]. Please check the corresponding properties files or use @DefaultStringValue";
 
@@ -90,32 +98,32 @@ public class MyConstantsTest extends GwtTestTest {
     boolean functionBoolean = constants.functionBoolean();
 
     // Assert
-    Assert.assertEquals("hello from @DefaultStringValue", hello);
-    Assert.assertEquals(2, stringArray.length);
-    Assert.assertEquals("default0", stringArray[0]);
-    Assert.assertEquals("default1", stringArray[1]);
-    Assert.assertEquals(3, map.size());
-    Assert.assertEquals("default map1 value", map.get("map1"));
-    Assert.assertEquals("default map2 value", map.get("map2"));
-    Assert.assertEquals("default map3 value", map.get("map3"));
+    assertEquals("hello from @DefaultStringValue", hello);
+    assertEquals(2, stringArray.length);
+    assertEquals("default0", stringArray[0]);
+    assertEquals("default1", stringArray[1]);
+    assertEquals(3, map.size());
+    assertEquals("default map1 value", map.get("map1"));
+    assertEquals("default map2 value", map.get("map2"));
+    assertEquals("default map3 value", map.get("map3"));
 
-    Assert.assertEquals(6, functionInt);
-    Assert.assertEquals(6.6, functionDouble, 0);
-    Assert.assertEquals((float) 6.66, functionFloat, 0);
-    Assert.assertTrue(functionBoolean);
+    assertEquals(6, functionInt);
+    assertEquals(6.6, functionDouble, 0);
+    assertEquals((float) 6.66, functionFloat, 0);
+    assertTrue(functionBoolean);
 
     // Act 2 : no @DefaultStringValue
     try {
       constants.goodbye();
-      Assert.fail("i18n patching mechanism should throw an exception if no locale, no default .properties file and no @DefaultStringValue is set");
+      fail("i18n patching mechanism should throw an exception if no locale, no default .properties file and no @DefaultStringValue is set");
     } catch (Exception e) {
       // Assert 2
-      Assert.assertEquals(expectedErrorMessage, e.getMessage());
+      assertEquals(expectedErrorMessage, e.getMessage());
     }
   }
 
   @Test
-  public void checkMyConstantsWithSpecialChar() {
+  public void specialChars() {
     GwtConfig.get().setLocale(Locale.FRENCH);
 
     // Act
@@ -129,30 +137,25 @@ public class MyConstantsTest extends GwtTestTest {
     boolean functionBoolean = constants.functionBoolean();
 
     // Assert
-    Assert.assertEquals("Bonjour", hello);
-    Assert.assertEquals("Au revoir et un caractère qui pue", goodbye);
+    assertEquals("Bonjour", hello);
+    assertEquals("Au revoir et un caractère qui pue", goodbye);
 
-    Assert.assertEquals(3, stringArray.length);
-    Assert.assertEquals("un", stringArray[0]);
-    Assert.assertEquals("deux", stringArray[1]);
-    Assert.assertEquals("trois", stringArray[2]);
+    assertEquals(3, stringArray.length);
+    assertEquals("un", stringArray[0]);
+    assertEquals("deux", stringArray[1]);
+    assertEquals("trois", stringArray[2]);
 
-    Assert.assertEquals(5, map.size());
-    Assert.assertEquals("Bonjour", map.get("hello"));
-    Assert.assertEquals("Au revoir et un caractère qui pue", map.get("goodbye"));
-    Assert.assertEquals("je suis content", map.get("map1"));
-    Assert.assertEquals("tout pareil !", map.get("map2"));
-    Assert.assertNull(map.get("map3"));
+    assertEquals(5, map.size());
+    assertEquals("Bonjour", map.get("hello"));
+    assertEquals("Au revoir et un caractère qui pue", map.get("goodbye"));
+    assertEquals("je suis content", map.get("map1"));
+    assertEquals("tout pareil !", map.get("map2"));
+    assertNull(map.get("map3"));
 
-    Assert.assertEquals(4, functionInt);
-    Assert.assertEquals(4.4, functionDouble, 0);
-    Assert.assertEquals((float) 5.55, functionFloat, 0);
-    Assert.assertTrue(functionBoolean);
-  }
-
-  @Before
-  public void setUpConstants() {
-    constants = GWT.create(MyConstants.class);
+    assertEquals(4, functionInt);
+    assertEquals(4.4, functionDouble, 0);
+    assertEquals((float) 5.55, functionFloat, 0);
+    assertTrue(functionBoolean);
   }
 
 }

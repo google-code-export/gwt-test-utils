@@ -1,6 +1,7 @@
 package com.octo.gwt.test;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
 import com.google.gwt.core.client.GWT;
@@ -10,18 +11,6 @@ public class GwtLogTest extends GwtTestTest {
   private String message;
 
   private Throwable t;
-
-  @Test
-  public void checkLog() {
-    message = null;
-    t = null;
-    GWT.log("toto", new Exception("e1"));
-    Throwable t2 = new Exception("e2");
-    GWT.log("titi", t2);
-
-    Assert.assertEquals("titi", message);
-    Assert.assertEquals(t2, t);
-  }
 
   @Override
   public GwtLogHandler getLogHandler() {
@@ -33,5 +22,20 @@ public class GwtLogTest extends GwtTestTest {
       }
 
     };
+  }
+
+  @Test
+  public void log() {
+    // Arrange
+    message = null;
+    t = null;
+    Throwable throwable = new Exception("test");
+
+    // Act
+    GWT.log("toto", throwable);
+
+    // Assert
+    assertEquals("toto", message);
+    assertEquals(throwable, t);
   }
 }
