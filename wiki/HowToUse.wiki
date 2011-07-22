@@ -12,12 +12,6 @@ _gwt-test-utils_ is an open source framework composed of several modules you can
 
  * *gwt-test-utils-gxt-X.jar* : use this module if you want to test UI designed with the popular third-party components librairy [http://www.sencha.com/products/extgwt/ ext-GWT]
 
- * *gwt-css-selector-X.jar* : this module is just an internal dependency of *gwt-test-utils-gxt-X.jar* to simulate CSS 3 selectors for GWT's DOM representation. Actually is just an adaptation of the nice [https://github.com/chrsan/css-selectors/tree css-selector API] from Christer Sandberg.
-
- * *gwt-test-utils-spring2-X.jar* : use this module if you want to test a GWT application which is connected to a Spring2-based backend
-
- * *gwt-test-utils-spring3-X.jar* : use this module if you want to test a GWT application which is connected to a Spring3-based backend
-
 Note that those modules all directly depend on *gwt-test-utils-X.jar* and can be combined in your project {{{pom.xml}}}. However, *you should always use the same version* when combining them in a single project.
 
 == Without Maven == 
@@ -40,6 +34,7 @@ If you are interested in using a java mock framework, _gwt-test-utils_ has been 
  * easymock-3.0.jar
  * mockito-core-1.8.5.jar
 
+_gwt-test-utils_ also provide a nice integration with [http://www.springsource.org/ Spring]. It relies on the spring-test-2.5+.
 
 ==== gwt-test-utils-csv : ====
 
@@ -52,23 +47,7 @@ Same dependencies as _gwt-test-utils_ module  plus :
 
 Same dependencies as _gwt-test-utils_ module plus :
 
- * gwt-css-selector-X.jar
  * gxt-2.2.x.jar
-
-
-==== gwt-test-utils-spring2 : ====
-
-Same dependencies as _gwt-test-utils_ module plus :
-
- * spring-2.5.x.jar
-
-
-==== gwt-test-utils-spring3 : ====
-
-Same dependencies as _gwt-test-utils_ module plus :
-
- * spring-3.0.x.jar
-
 
 == With Maven ==
 
