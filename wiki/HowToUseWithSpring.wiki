@@ -1,5 +1,5 @@
 #summary This page explains how to test your GWT / spring applications.
-#labels Phase-Implementation,spring
+#labels Spring
 
 = Introduction =
 
@@ -40,3 +40,5 @@ public class RPCCompositeWithSpringTest extends GwtSpringTest {
 Your {{{GwtSpringTest}}} subclasses can be injected with {{{@Autowired}}} beans, and hold a reference to the test {{{ApplicationContext}}} through the {{{GwtSpringTest.getApplicationContext()}}} protected method.
 
 If you want to write a [http://code.google.com/p/gwt-test-utils/wiki/HowToWriteCsvScenario CSV test scenario] which should be integrated with spring, just extend {{{GwtSpringCsvTest}}} instead of {{{GwtSpringTest}}} :-) 
+
+You can checkout [http://gwt-test-utils.googlecode.com/svn/src/demos/trunk/demo-spring demo-spring] and [http://gwt-test-utils.googlecode.com/svn/src/demos/trunk/demo-csv-spring demo-csv-spring] to see complete gwt+spring sample applications (integration with [http://code.google.com/p/gwtrpc-spring/ gwtrpc-spring]) and how to test them with _gwt-test-utils_.
