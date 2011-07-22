@@ -24,7 +24,7 @@
 		<encoding>UTF-8</encoding>
 		<gwt.version>2.3.0</gwt.version>
 		<gwt.maven.plugin.version>2.3.0</gwt.maven.plugin.version>
-		<gwt.test.utils.version>0.31-SNAPSHOT</gwt.test.utils.version>
+		<gwt.test.utils.version>0.31</gwt.test.utils.version>
 		<java.version>1.5</java.version>
 	</properties>
 
