@@ -29,7 +29,7 @@ public class MyTestShell extends GwtCsvTest {
   }
 
   @Before
-  public void setUpMyTestShell() throws Exception {
+  public void beforeMyTestShell() throws Exception {
     addGwtCreateHandler(createGwtCreateHandler());
   }
 

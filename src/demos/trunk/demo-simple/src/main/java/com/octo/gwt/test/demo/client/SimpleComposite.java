@@ -9,8 +9,8 @@ import com.google.gwt.user.client.ui.Label;
 
 public class SimpleComposite extends Composite {
 
-  private Image img;
-  private Label label;
+  private final Image img;
+  private final Label label;
 
   public SimpleComposite() {
 

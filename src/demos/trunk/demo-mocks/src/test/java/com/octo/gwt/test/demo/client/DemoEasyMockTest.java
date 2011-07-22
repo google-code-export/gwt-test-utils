@@ -1,7 +1,8 @@
 package com.octo.gwt.test.demo.client;
 
+import static org.junit.Assert.assertEquals;
+
 import org.easymock.EasyMock;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -21,9 +22,19 @@ public class DemoEasyMockTest extends GwtTestWithEasyMock {
   @Mock
   private MyServiceAsync service;
 
+  @Before
+  public void beforeDemoEasyMockTest() throws Exception {
+    composite = new RPCComposite();
+  }
+
+  @Override
+  public String getModuleName() {
+    return "com.octo.gwt.test.demo.Application";
+  }
+
   @SuppressWarnings("unchecked")
   @Test
-  public void checkRPCCallFailure() {
+  public void rpcCall_Failure() {
     // Arrange
     Button button = GwtReflectionUtils.getPrivateFieldValue(composite, "button");
     Label label = GwtReflectionUtils.getPrivateFieldValue(composite, "label");
@@ -35,7 +46,7 @@ public class DemoEasyMockTest extends GwtTestWithEasyMock {
     // replay all @Mock objects
     replay();
 
-    Assert.assertEquals("", label.getText());
+    assertEquals("", label.getText());
 
     // Act
     Browser.click(button);
@@ -43,12 +54,12 @@ public class DemoEasyMockTest extends GwtTestWithEasyMock {
     // Assert
     // verify all @Mock objects
     verify();
-    Assert.assertEquals("Failure : Mocked exception", label.getText());
+    assertEquals("Failure : Mocked exception", label.getText());
   }
 
   @SuppressWarnings("unchecked")
   @Test
-  public void checkRPCCallSuccess() {
+  public void rpcCall_Success() {
     // Arrange
     Button button = GwtReflectionUtils.getPrivateFieldValue(composite, "button");
     Label label = GwtReflectionUtils.getPrivateFieldValue(composite, "label");
@@ -63,7 +74,7 @@ public class DemoEasyMockTest extends GwtTestWithEasyMock {
     // replay all @Mock objects
     replay();
 
-    Assert.assertEquals("", label.getText());
+    assertEquals("", label.getText());
 
     // Act
     Browser.click(button);
@@ -72,17 +83,7 @@ public class DemoEasyMockTest extends GwtTestWithEasyMock {
     // verify all @Mock objects
     verify();
 
-    Assert.assertEquals("Bean \"mocked\" has been created", label.getText());
-  }
-
-  @Override
-  public String getModuleName() {
-    return "com.octo.gwt.test.demo.Application";
-  }
-
-  @Before
-  public void init() throws Exception {
-    composite = new RPCComposite();
+    assertEquals("Bean \"mocked\" has been created", label.getText());
   }
 
 }

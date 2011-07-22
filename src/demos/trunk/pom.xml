@@ -70,11 +70,6 @@
 			<version>${gwt.test.utils.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.octo.gwt.test</groupId>
-			<artifactId>gwt-test-utils-spring3</artifactId>
-			<version>${gwt.test.utils.version}</version>
-		</dependency>
-		<dependency>
 			<groupId>com.google.gwt</groupId>
 			<artifactId>gwt-user</artifactId>
 			<version>${gwt.version}</version>

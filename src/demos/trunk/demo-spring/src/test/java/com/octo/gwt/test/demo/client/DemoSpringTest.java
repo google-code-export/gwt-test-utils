@@ -1,6 +1,7 @@
 package com.octo.gwt.test.demo.client;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
@@ -19,17 +20,17 @@ public class DemoSpringTest extends GwtSpringTest {
   private RPCComposite composite;
 
   @Test
-  public void checkClick() {
+  public void click_button() {
     // Arrange
     Button button = GwtReflectionUtils.getPrivateFieldValue(composite, "button");
     Label label = GwtReflectionUtils.getPrivateFieldValue(composite, "label");
-    Assert.assertEquals("", label.getText());
+    assertEquals("", label.getText());
 
     // Act
     Browser.click(button);
 
     // Assert
-    Assert.assertEquals("Bean \"OCTO\" has been created", label.getText());
+    assertEquals("Bean \"OCTO\" has been created", label.getText());
   }
 
   @Override

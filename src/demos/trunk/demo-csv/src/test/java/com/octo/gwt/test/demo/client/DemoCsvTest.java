@@ -34,7 +34,7 @@ public class DemoCsvTest extends GwtCsvTest {
   }
 
   @Before
-  public void setUpMyTestShell() throws Exception {
+  public void beforeMyTestShell() throws Exception {
     // add a GwtCreateHandler for our RemoteService
     addGwtCreateHandler(createRemoteServiceCreateHandler());
   }

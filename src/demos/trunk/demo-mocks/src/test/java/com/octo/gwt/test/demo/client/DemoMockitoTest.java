@@ -1,10 +1,10 @@
 package com.octo.gwt.test.demo.client;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -24,9 +24,19 @@ public class DemoMockitoTest extends GwtTestWithMockito {
   @Mock
   private MyServiceAsync service;
 
+  @Before
+  public void beforeDemoMockitoTest() throws Exception {
+    composite = new RPCComposite();
+  }
+
+  @Override
+  public String getModuleName() {
+    return "com.octo.gwt.test.demo.Application";
+  }
+
   @SuppressWarnings("unchecked")
   @Test
-  public void checkRPCCallFailure() {
+  public void rpcCall_Failure() {
     // Arrange
     Button button = GwtReflectionUtils.getPrivateFieldValue(composite, "button");
     Label label = GwtReflectionUtils.getPrivateFieldValue(composite, "label");
@@ -35,7 +45,7 @@ public class DemoMockitoTest extends GwtTestWithMockito {
     doFailureCallback(new Exception("Mocked exception")).when(service).createBean(
         eq("OCTO"), any(AsyncCallback.class));
 
-    Assert.assertEquals("", label.getText());
+    assertEquals("", label.getText());
 
     // Act
     Browser.click(button);
@@ -43,12 +53,12 @@ public class DemoMockitoTest extends GwtTestWithMockito {
     // Assert
     // verify service invocation
     verify(service).createBean(eq("OCTO"), any(AsyncCallback.class));
-    Assert.assertEquals("Failure : Mocked exception", label.getText());
+    assertEquals("Failure : Mocked exception", label.getText());
   }
 
   @SuppressWarnings("unchecked")
   @Test
-  public void checkRPCCallSuccess() {
+  public void rpcCall_Success() {
     // Arrange
     Button button = GwtReflectionUtils.getPrivateFieldValue(composite, "button");
     Label label = GwtReflectionUtils.getPrivateFieldValue(composite, "label");
@@ -60,7 +70,7 @@ public class DemoMockitoTest extends GwtTestWithMockito {
     doSuccessCallback(expected).when(service).createBean(eq("OCTO"),
         any(AsyncCallback.class));
 
-    Assert.assertEquals("", label.getText());
+    assertEquals("", label.getText());
 
     // Act
     Browser.click(button);
@@ -69,17 +79,7 @@ public class DemoMockitoTest extends GwtTestWithMockito {
     // verify service invocation
     verify(service).createBean(eq("OCTO"), any(AsyncCallback.class));
 
-    Assert.assertEquals("Bean \"mocked\" has been created", label.getText());
-  }
-
-  @Override
-  public String getModuleName() {
-    return "com.octo.gwt.test.demo.Application";
-  }
-
-  @Before
-  public void init() throws Exception {
-    composite = new RPCComposite();
+    assertEquals("Bean \"mocked\" has been created", label.getText());
   }
 
 }

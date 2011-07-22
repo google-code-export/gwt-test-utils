@@ -1,6 +1,7 @@
 package com.octo.gwt.test.demo.client;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -16,7 +17,7 @@ public class SimpleCompositeTest2 extends DemoSimpleTest {
   private SimpleComposite2 composite2;
 
   @Test
-  public void checkDisplayClick() {
+  public void click_button() {
     // Arrange
     TextBox textBox = GwtReflectionUtils.getPrivateFieldValue(composite2,
         "textBox");
@@ -31,15 +32,15 @@ public class SimpleCompositeTest2 extends DemoSimpleTest {
     textBox.setText("Gael");
     Browser.change(textBox);
 
-    Assert.assertEquals("this label will be updated", label.getText());
-    Assert.assertEquals("Good morning",
+    assertEquals("this label will be updated", label.getText());
+    assertEquals("Good morning",
         listBox.getItemText(listBox.getSelectedIndex()));
 
     // Act
     Browser.click(button);
 
     // Assert
-    Assert.assertEquals("Good morning Gael", label.getText());
+    assertEquals("Good morning Gael", label.getText());
   }
 
   @Before

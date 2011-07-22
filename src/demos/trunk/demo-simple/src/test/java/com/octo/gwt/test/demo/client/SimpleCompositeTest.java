@@ -1,6 +1,7 @@
 package com.octo.gwt.test.demo.client;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -13,24 +14,24 @@ public class SimpleCompositeTest extends DemoSimpleTest {
 
   private SimpleComposite composite;
 
+  @Before
+  public void init() throws Exception {
+    composite = new SimpleComposite();
+  }
+
   @Test
-  public void checkMouseMoveOnPicture() {
+  public void mouseMove_Picture() {
     // Arrange
     Image img = GwtReflectionUtils.getPrivateFieldValue(composite, "img");
     Label label = GwtReflectionUtils.getPrivateFieldValue(composite, "label");
 
-    Assert.assertEquals("", label.getText());
+    assertEquals("", label.getText());
 
     // Act
     Browser.mouseMove(img);
 
     // Assert
-    Assert.assertEquals("mouse moved on picture !", label.getText());
-  }
-
-  @Before
-  public void init() throws Exception {
-    composite = new SimpleComposite();
+    assertEquals("mouse moved on picture !", label.getText());
   }
 
 }
