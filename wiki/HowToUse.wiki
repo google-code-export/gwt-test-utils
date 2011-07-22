@@ -8,7 +8,7 @@ _gwt-test-utils_ is an open source framework composed of several modules you can
 
  * *gwt-test-utils-X.jar* : the core module of gwt-test-utils. It enables to execute GWT client classes in a standalone JVM.
 
- * *gwt-test-utils-csv-X.jar* : use this module if you want [http://code.google.com/p/gwt-test-utils/wiki/HowToWriteCsvScenario to write complexe test scenario easily]
+ * *gwt-test-utils-csv-X.jar* : use this module if you want [http://code.google.com/p/gwt-test-utils/wiki/HowToWriteCsvScenario to write complex test scenario easily]
 
  * *gwt-test-utils-gxt-X.jar* : use this module if you want to test UI designed with the popular third-party components librairy [http://www.sencha.com/products/extgwt/ ext-GWT]
 
