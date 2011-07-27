@@ -1,19 +1,24 @@
 package com.octo.gwt.test;
 
+import static org.junit.Assert.fail;
+
 import java.io.File;
 import java.util.Locale;
 
 import javax.servlet.ServletConfig;
 
-import static org.junit.Assert.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.octo.gwt.test.exceptions.GwtTestPatchException;
+import com.octo.gwt.test.internal.GwtConfig;
 import com.octo.gwt.test.internal.handlers.GwtCreateHandlerManager;
 import com.octo.gwt.test.utils.events.Browser.BrowserErrorHandler;
 
 public abstract class GwtModuleRunnerAdapter implements GwtModuleRunner {
 
   private static final String DEFAULT_WAR_DIR = "war/";
+  private static final Logger LOGGER = LoggerFactory.getLogger(GwtConfig.class);
   private static final String MAVEN_DEFAULT_RES_DIR = "src/main/resources/";
   private static final String MAVEN_DEFAULT_WEB_DIR = "src/main/webapp/";
 
@@ -142,6 +147,11 @@ public abstract class GwtModuleRunnerAdapter implements GwtModuleRunner {
     if (new File(fileRelativePath).exists()) {
       return fileRelativePath;
     }
+
+    LOGGER.warn("Cannot find the actual HTML host page for module '"
+        + getModuleName() + "'. You should override "
+        + GwtModuleRunner.class.getName()
+        + ".getHostPagePath() method to specify it.");
 
     return null;
   }

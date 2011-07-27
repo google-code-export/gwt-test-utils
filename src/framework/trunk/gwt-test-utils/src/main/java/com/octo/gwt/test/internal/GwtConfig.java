@@ -4,9 +4,6 @@ import java.util.Locale;
 
 import javax.servlet.ServletConfig;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.UIObject.DebugIdImpl;
 import com.google.gwt.user.client.ui.UIObject.DebugIdImplEnabled;
@@ -28,8 +25,6 @@ import com.octo.gwt.test.utils.events.Browser.BrowserErrorHandler;
 public class GwtConfig implements AfterTestCallback {
 
   private static final GwtConfig INSTANCE = new GwtConfig();
-
-  private static final Logger LOGGER = LoggerFactory.getLogger(GwtConfig.class);
 
   public static GwtConfig get() {
     return INSTANCE;
@@ -142,14 +137,6 @@ public class GwtConfig implements AfterTestCallback {
 
     setLocale(gwtModuleRunner.getLocale());
     setupDebugIdImpl(gwtModuleRunner);
-
-    if (gwtModuleRunner.getHostPagePath() == null) {
-      LOGGER.warn("Cannot find the actual HTML host page for module '"
-          + gwtModuleRunner.getModuleName()
-          + "'. You should override "
-          + GwtModuleRunner.class.getName()
-          + ".getHostPagePath(String moduleFullQualifiedName) method to specify it.");
-    }
 
     AfterTestCallbackManager.get().registerCallback(this);
   }
