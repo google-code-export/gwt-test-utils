@@ -51,6 +51,22 @@ public class EventUtils {
       return Event.ONMOUSEWHEEL;
     } else if (type.equals("contextmenu")) {
       return Event.ONCONTEXTMENU;
+    } else if (type.equals("paste")) {
+      return Event.ONPASTE;
+    } else if (type.equals("touchstart")) {
+      return Event.ONTOUCHSTART;
+    } else if (type.equals("touchmove")) {
+      return Event.ONTOUCHMOVE;
+    } else if (type.equals("touchend")) {
+      return Event.ONTOUCHEND;
+    } else if (type.equals("touchcancel")) {
+      return Event.ONTOUCHCANCEL;
+    } else if (type.equals("gesturestart")) {
+      return Event.ONGESTURESTART;
+    } else if (type.equals("gesturechange")) {
+      return Event.ONGESTURECHANGE;
+    } else if (type.equals("gestureend")) {
+      return Event.ONGESTUREEND;
     }
 
     throw new GwtTestDomException("Unable to convert DOM Event \"" + type
@@ -97,6 +113,22 @@ public class EventUtils {
         return "mousewheel";
       case Event.ONCONTEXTMENU:
         return "contextmenu";
+      case Event.ONPASTE:
+        return "paste";
+      case Event.ONTOUCHSTART:
+        return "touchstart";
+      case Event.ONTOUCHMOVE:
+        return "touchmove";
+      case Event.ONTOUCHEND:
+        return "touchend";
+      case Event.ONTOUCHCANCEL:
+        return "touchcancel";
+      case Event.ONGESTURESTART:
+        return "gesturestart";
+      case Event.ONGESTURECHANGE:
+        return "gesturechange";
+      case Event.ONGESTUREEND:
+        return "gestureend";
       default:
         throw new GwtTestDomException(
             "Cannot get the String type of event with code [" + eventTypeInt

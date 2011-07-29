@@ -52,6 +52,7 @@ import com.google.gwt.user.client.ui.StackPanel;
 import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.octo.gwt.test.utils.events.Browser;
+import com.octo.gwt.test.utils.events.EventBuilder;
 
 public class BrowserTest extends GwtTestTest {
 
@@ -95,7 +96,7 @@ public class BrowserTest extends GwtTestTest {
   @Test
   public void click() {
     // Arrange
-    tested = false;;
+    tested = false;
     b.addClickHandler(new ClickHandler() {
 
       public void onClick(ClickEvent event) {
@@ -182,6 +183,40 @@ public class BrowserTest extends GwtTestTest {
 
     // Assert
     assertEquals("suggestion 2", box.getText());
+  }
+
+  @Test
+  public void click_WithPosition() {
+    // Arrange
+    tested = false;
+    b.addClickHandler(new ClickHandler() {
+
+      public void onClick(ClickEvent event) {
+        tested = !tested;
+
+        // Assert
+        assertEquals(b.getElement(), event.getNativeEvent().getEventTarget());
+        assertNull(event.getNativeEvent().getRelatedEventTarget());
+
+        // check positions
+        assertEquals(1, event.getX());
+        assertEquals(2, event.getY());
+        assertEquals(1, event.getClientX());
+        assertEquals(2, event.getClientY());
+        assertEquals(3, event.getScreenX());
+        assertEquals(4, event.getScreenY());
+      }
+
+    });
+
+    Event clickEvent = EventBuilder.create(Event.ONCLICK).setMouseX(1).setMouseY(
+        2).setMouseScreenX(3).setMouseScreenY(4).build();
+
+    // Act
+    Browser.dispatchEvent(b, clickEvent);
+
+    // Assert
+    assertTrue("onClick event was not triggered", tested);
   }
 
   @Test

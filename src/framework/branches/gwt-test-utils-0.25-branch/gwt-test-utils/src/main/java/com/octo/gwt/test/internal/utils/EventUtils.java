@@ -51,6 +51,8 @@ public class EventUtils {
       return Event.ONMOUSEWHEEL;
     } else if (type.equals("contextmenu")) {
       return Event.ONCONTEXTMENU;
+    } else if (type.equals("paste")) {
+      return Event.ONPASTE;
     }
 
     throw new GwtTestDomException("Unable to convert DOM Event \"" + type
@@ -97,6 +99,8 @@ public class EventUtils {
         return "mousewheel";
       case Event.ONCONTEXTMENU:
         return "contextmenu";
+      case Event.ONPASTE:
+        return "paste";
       default:
         throw new GwtTestDomException(
             "Cannot get the String type of event with code [" + eventTypeInt

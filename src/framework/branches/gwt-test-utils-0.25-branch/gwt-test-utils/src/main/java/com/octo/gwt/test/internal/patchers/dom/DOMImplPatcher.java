@@ -48,7 +48,6 @@ class DOMImplPatcher {
     Event onClick = EventBuilder.create(Event.ONCLICK).setTarget(button).setRelatedTarget(
         relatedTarget).build();
     dispatchEvent(domImpl, button, onClick);
-
   }
 
   @PatchMethod
@@ -173,6 +172,16 @@ class DOMImplPatcher {
   }
 
   @PatchMethod
+  static int eventGetClientX(Object domImpl, NativeEvent evt) {
+    return JavaScriptObjects.getInteger(evt, JsoProperties.MOUSEEVENT_CLIENTX);
+  }
+
+  @PatchMethod
+  static int eventGetClientY(Object domImpl, NativeEvent evt) {
+    return JavaScriptObjects.getInteger(evt, JsoProperties.MOUSEEVENT_CLIENTY);
+  }
+
+  @PatchMethod
   static boolean eventGetCtrlKey(Object domImpl, NativeEvent evt) {
     return JavaScriptObjects.getBoolean(evt, JsoProperties.EVENT_KEY_CTRL);
   }
@@ -199,6 +208,16 @@ class DOMImplPatcher {
     }
 
     return relatedTargetJSO.cast();
+  }
+
+  @PatchMethod
+  static int eventGetScreenX(Object domImpl, NativeEvent evt) {
+    return JavaScriptObjects.getInteger(evt, JsoProperties.MOUSEEVENT_SCREENX);
+  }
+
+  @PatchMethod
+  static int eventGetScreenY(Object domImpl, NativeEvent evt) {
+    return JavaScriptObjects.getInteger(evt, JsoProperties.MOUSEEVENT_SCREENY);
   }
 
   @PatchMethod

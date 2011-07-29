@@ -83,6 +83,28 @@ public class EventBuilder {
     return this;
   }
 
+  public EventBuilder setMouseScreenX(int screenX) {
+    JavaScriptObjects.setProperty(event, JsoProperties.MOUSEEVENT_SCREENX,
+        screenX);
+    return this;
+  }
+
+  public EventBuilder setMouseScreenY(int screenY) {
+    JavaScriptObjects.setProperty(event, JsoProperties.MOUSEEVENT_SCREENY,
+        screenY);
+    return this;
+  }
+
+  public EventBuilder setMouseX(int x) {
+    JavaScriptObjects.setProperty(event, JsoProperties.MOUSEEVENT_CLIENTX, x);
+    return this;
+  }
+
+  public EventBuilder setMouseY(int y) {
+    JavaScriptObjects.setProperty(event, JsoProperties.MOUSEEVENT_CLIENTY, y);
+    return this;
+  }
+
   public EventBuilder setRelatedTarget(EventTarget target) {
     JavaScriptObjects.setProperty(event, JsoProperties.EVENT_RELATEDTARGET,
         target);

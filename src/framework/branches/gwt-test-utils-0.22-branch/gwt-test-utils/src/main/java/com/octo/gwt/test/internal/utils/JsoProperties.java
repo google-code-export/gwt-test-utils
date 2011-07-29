@@ -29,6 +29,7 @@ public class JsoProperties {
   public static final String ELEM_TYPE = "type";
   public static final String ELEMENT_CLIENT_HEIGHT = "ELEMENT_CLIENT_HEIGHT";
   public static final String ELEMENT_CLIENT_WIDTH = "ELEMENT_CLIENT_WIDTH";
+
   // EVENT PROPERTIES
   public static final String EVENT_BUTTON = "EVENT_button";
   public static final String EVENT_CANBUBBLE = "EVENT_canBubble";
@@ -42,9 +43,16 @@ public class JsoProperties {
   public static final String EVENT_RELATEDTARGET = "EVENT_relatedTarget";
   public static final String EVENT_TARGET = "EVENT_target";
   public static final String EVENT_TYPE = "EVENT_type";
-  public static final String INPUT_ELEM_VALUE = "value";
 
+  public static final String INPUT_ELEM_VALUE = "value";
   public static final String JSARRAY_WRAPPED_LIST = "JSARRAY_WRAPPED_LIST";
+
+  // MOUSE EVENT PROPERTIES
+  public static final String MOUSEEVENT_CLIENTX = "EVENT_clientX";
+  public static final String MOUSEEVENT_CLIENTY = "EVENT_clientY";
+  public static final String MOUSEEVENT_SCREENX = "EVENT_screenX";
+  public static final String MOUSEEVENT_SCREENY = "EVENT_screenY";
+
   public static final String NODE_LIST_FIELD = "childNodes";
   public static final String NODE_LIST_INNER_LIST = "NODE_LIST_INNER_LIST";
   public static final String NODE_NAME = "nodeName";
