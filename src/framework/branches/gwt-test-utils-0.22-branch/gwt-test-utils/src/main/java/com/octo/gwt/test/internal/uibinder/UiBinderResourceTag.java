@@ -12,36 +12,40 @@ import com.octo.gwt.test.exceptions.ReflectionException;
 import com.octo.gwt.test.internal.utils.resources.ResourcePrototypeProxyBuilder;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
-class UiBinderInnerResource implements UiBinderTag {
+/**
+ * Base class for resource tags : <ui:style>, <ui:image> and <ui:data>
+ * 
+ * @author Gael Lazzari
+ * 
+ */
+abstract class UiBinderResourceTag implements UiBinderTag {
 
   private final String alias;
   private final ResourcePrototypeProxyBuilder builder;
   private final Object owner;
   private final UiBinderTag parentTag;
   private final Map<String, Object> resources;
-  private final StringBuilder text;
   private Object wrappedObject;
 
-  UiBinderInnerResource(ResourcePrototypeProxyBuilder builder, String alias,
+  UiBinderResourceTag(ResourcePrototypeProxyBuilder builder, String alias,
       UiBinderTag parentTag, Object owner, Map<String, Object> resources) {
     this.builder = builder;
     this.owner = owner;
     this.parentTag = parentTag;
     this.alias = alias;
     this.resources = resources;
-    this.text = new StringBuilder();
   }
 
   public void addElement(Element element) {
-    // nothing to do
+    // adapter method
   }
 
   public void addWidget(Widget widget) {
-    // nothing to do
+    // adapter method
   }
 
   public void appendText(String text) {
-    this.text.append(text.trim());
+    // adapter method
   }
 
   public UiBinderTag getParentTag() {
@@ -50,7 +54,8 @@ class UiBinderInnerResource implements UiBinderTag {
 
   public Object getWrapped() {
     if (wrappedObject == null) {
-      wrappedObject = builder.text(text.toString()).build();
+      // delegate the creation to subclasses
+      wrappedObject = buildObject(builder);
 
       // set the corresponding @UiField
       Field resourceUiField = getUniqueUiField(alias);
@@ -69,6 +74,8 @@ class UiBinderInnerResource implements UiBinderTag {
 
     return wrappedObject;
   }
+
+  protected abstract Object buildObject(ResourcePrototypeProxyBuilder builder);
 
   private Field getUniqueUiField(String alias) {
     Set<Field> resourceFields = GwtReflectionUtils.getFields(owner.getClass());
@@ -92,4 +99,5 @@ class UiBinderInnerResource implements UiBinderTag {
 
     return result;
   }
+
 }

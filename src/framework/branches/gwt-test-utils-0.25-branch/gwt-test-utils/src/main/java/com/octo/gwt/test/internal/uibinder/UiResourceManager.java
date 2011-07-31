@@ -6,6 +6,9 @@ import java.util.Map;
 import org.xml.sax.Attributes;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.resources.client.CssResource;
+import com.google.gwt.resources.client.DataResource;
+import com.google.gwt.resources.client.ImageResource;
 import com.octo.gwt.test.exceptions.GwtTestUiBinderException;
 import com.octo.gwt.test.internal.utils.resources.ResourcePrototypeProxyBuilder;
 
@@ -38,26 +41,38 @@ class UiResourceManager {
           + ".ui.xml. You should add a 'field' attribute to one of them");
     }
 
-    Class<?> clazz = getResourceClass(alias, localName, attributes);
-
-    if (clazz == null) {
-      return new UiBinderIgnoreTag(null);
-    }
-
-    Object resource;
+    Class<?> type = getResourceType(alias, localName, attributes);
 
     if ("with".equals(localName)) {
-      resource = GWT.create(clazz);
+      // special resource <ui:with>
+      Object resource = GWT.create(type);
       resources.put(alias, resource);
-      return new UiBinderIgnoreTag(resource);
+      return new UiBinderWith(resource);
+
+    }
+
+    ResourcePrototypeProxyBuilder builder = ResourcePrototypeProxyBuilder.createBuilder(
+        type, owner.getClass());
+    // common properties
+    builder.name(alias);
+
+    if ("style".equals(localName)) {
+      // <ui:style>
+      return new UiBinderStyle(builder, alias, parentTag, owner, resources);
+
+    } else if ("image".equals(localName)) {
+      // <ui:image>
+      return new UiBinderImage(builder, alias, parentTag, owner, resources,
+          attributes);
+
+    } else if ("data".equals(localName)) {
+      // <ui:data>
+      return new UiBinderData(builder, alias, parentTag, owner, resources,
+          attributes);
 
     } else {
-      ResourcePrototypeProxyBuilder builder = ResourcePrototypeProxyBuilder.createBuilder(
-          clazz, owner.getClass()).name(alias);
-
-      return new UiBinderInnerResource(builder, alias, parentTag, owner,
-          resources);
-
+      throw new GwtTestUiBinderException("resource <" + localName
+          + "> element is not yet implemented by gwt-test-utils");
     }
   }
 
@@ -76,14 +91,23 @@ class UiResourceManager {
     return alias;
   }
 
-  private Class<?> getResourceClass(String alias, String localName,
+  private Class<?> getResourceType(String alias, String localName,
       Attributes attributes) {
     String type = attributes.getValue("type");
 
-    if (type == null) {
-      // the resource here should be an inner <style> with no associated
-      // CssResource class
-      return null;
+    if (type == null && "image".equals(localName)) {
+      // special code for <ui:image> with no 'type' attribute
+      return ImageResource.class;
+    } else if (type == null && "style".equals(localName)) {
+      // special code for <ui:style> with no 'type' attribute
+      return CssResource.class;
+    } else if (type == null && "data".equals(localName)) {
+      // special code for <ui:data> with no 'type' attribute
+      return DataResource.class;
+    } else if (type == null) {
+      throw new GwtTestUiBinderException("<" + localName
+          + "> element declared in " + owner.getClass().getSimpleName()
+          + ".ui.xml must specify a 'type' attribute");
     }
 
     try {
@@ -102,5 +126,4 @@ class UiResourceManager {
       }
     }
   }
-
 }

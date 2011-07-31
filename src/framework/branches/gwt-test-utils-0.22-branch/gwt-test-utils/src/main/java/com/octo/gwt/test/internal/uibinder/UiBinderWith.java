@@ -3,12 +3,18 @@ package com.octo.gwt.test.internal.uibinder;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.Widget;
 
-class UiBinderIgnoreTag implements UiBinderTag {
+/**
+ * Handle <ui:with> tag
+ * 
+ * @author Gael Lazzari
+ * 
+ */
+class UiBinderWith implements UiBinderTag {
 
-  private final Object wrapped;
+  private final Object with;
 
-  public UiBinderIgnoreTag(Object wrapped) {
-    this.wrapped = wrapped;
+  public UiBinderWith(Object with) {
+    this.with = with;
   }
 
   public void addElement(Element element) {
@@ -29,7 +35,7 @@ class UiBinderIgnoreTag implements UiBinderTag {
   }
 
   public Object getWrapped() {
-    return wrapped;
+    return with;
   }
 
 }

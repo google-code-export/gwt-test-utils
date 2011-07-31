@@ -47,9 +47,23 @@ class UiBinderWidget<T extends Widget> implements UiBinderTag {
         } catch (ReflectionException e) {
           // ui:field has no corresponding @UiField declared : just ignore it
         }
-      } else if (attrName.contains("tyleName")) {
-        attributesMap.put(attrName,
-            UiBinderUtils.getEffectiveClassName(attrValue));
+      } else if ("styleName".equals(attrName)) {
+
+        // special case of style
+        attributesMap.put("styleName",
+            UiBinderUtils.getEffectiveStyleName(attrValue));
+
+      } else if ("addStyleNames".equals(attrName)) {
+
+        // special case of multiple style to add
+        String[] styles = attrValue.trim().split(" ");
+        String[] effectiveStyles = new String[styles.length];
+
+        for (int j = 0; j < styles.length; j++) {
+          effectiveStyles[j] = UiBinderUtils.getEffectiveStyleName(styles[j]);
+        }
+        attributesMap.put("addStyleNames", effectiveStyles);
+
       } else {
         Matcher m = ATTRIBUTE_PATTERN.matcher(attrValue);
         if (m.matches()) {

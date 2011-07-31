@@ -97,11 +97,28 @@ public class UiBinderWithWidgetsTest extends GwtTestTest {
     assertEquals(HasVerticalAlignment.ALIGN_MIDDLE,
         w.verticalPanel.getVerticalAlignment());
 
-    // Assertion on inner style
+    // Assertion on specific style
     assertEquals("style", w.style.getName());
+    assertEquals("disabled", w.style.disabled());
     assertEquals(
         ".redBox {background-color: pink;border: 1px solid red;}.enabled {color: black;}.disabled {color: gray;}",
         w.style.getText());
+
+    // Assertion on inner style
+    assertEquals("gwt-PushButton gwt-PushButton-up testStyle pretty",
+        w.pushButton.getStyleName());
+
+    // Assertion on inner image
+    assertEquals("img", w.img.getName());
+    assertEquals(
+        "http://127.0.0.1:8888/gwt_test_utils_module/com/octo/gwt/test/uibinder/img.jpg",
+        w.img.getURL());
+
+    // Assertion on inner data
+    assertEquals("data", w.data.getName());
+    assertEquals(
+        "http://127.0.0.1:8888/gwt_test_utils_module/com/octo/gwt/test/uibinder/data.test",
+        w.data.getUrl());
 
   }
 }

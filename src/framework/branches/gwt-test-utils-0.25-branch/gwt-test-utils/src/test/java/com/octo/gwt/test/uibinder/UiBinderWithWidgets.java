@@ -3,6 +3,8 @@ package com.octo.gwt.test.uibinder;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.resources.client.CssResource;
+import com.google.gwt.resources.client.DataResource;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
@@ -34,7 +36,13 @@ public class UiBinderWithWidgets extends Composite {
   Button button;
 
   @UiField
+  DataResource data;
+
+  @UiField
   Image image;
+
+  @UiField
+  ImageResource img;
 
   @UiField
   ListBox listBox;
