@@ -3,6 +3,12 @@ package com.octo.gwt.test.internal.uibinder;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.Widget;
 
+/**
+ * Handle <ui:msg> tag.
+ * 
+ * @author Gael Lazzari
+ * 
+ */
 class UiBinderMsg implements UiBinderTag {
 
   private final UiBinderTag parentTag;

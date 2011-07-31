@@ -33,7 +33,7 @@ class UiBinderElement implements UiBinderTag {
         GwtReflectionUtils.setPrivateFieldValue(owner, attrValue, this.wrapped);
       } else if ("class".equalsIgnoreCase(attrName)) {
         this.wrapped.setAttribute("class",
-            UiBinderUtils.getEffectiveClassName(attrValue));
+            UiBinderUtils.getEffectiveStyleName(attrValue));
       } else {
         this.wrapped.setAttribute(attrName, attrValue);
       }
