@@ -5,6 +5,9 @@ import java.util.Map;
 
 import javassist.CtClass;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * <p>
  * JavaClassModifier which substitute a class by another according to the
@@ -21,6 +24,8 @@ import javassist.CtClass;
  */
 class ClassSubstituer implements JavaClassModifier {
 
+  private static final Logger LOGGER = LoggerFactory.getLogger(ClassSubstituer.class);
+
   private final Map<String, String> map = new HashMap<String, String>();
 
   /*
@@ -29,6 +34,7 @@ class ClassSubstituer implements JavaClassModifier {
    * @see com.octo.gwt.test.internal.JavaClassModifier#modify(javassist.CtClass)
    */
   public void modify(CtClass classToModify) {
+    LOGGER.debug("Apply 'substitute-class' bytecode modifier");
     for (Map.Entry<String, String> entry : map.entrySet()) {
       if (!classToModify.getName().equals(entry.getKey())) {
         classToModify.getClassFile().renameClass(entry.getKey(),

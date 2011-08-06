@@ -182,6 +182,10 @@ public class ModuleData {
     NodeList sources = (NodeList) xpath.evaluate("/module/source", document,
         XPathConstants.NODESET);
 
+    // GWT default client paths
+    clientPaths.add(modulePackage + "client.");
+    clientPaths.add(modulePackage + "shared.");
+
     for (int i = 0; i < sources.getLength(); i++) {
       Node source = sources.item(i);
       String sourcePath = xpath.evaluate("@path", source).trim().replaceAll(
