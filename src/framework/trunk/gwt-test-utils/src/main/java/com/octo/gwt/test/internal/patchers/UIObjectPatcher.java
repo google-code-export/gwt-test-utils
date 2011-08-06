@@ -3,6 +3,8 @@ package com.octo.gwt.test.internal.patchers;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.user.client.ui.UIObject;
+import com.octo.gwt.test.internal.patchers.dom.JavaScriptObjects;
+import com.octo.gwt.test.internal.utils.JsoProperties;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
@@ -57,6 +59,18 @@ class UIObjectPatcher {
       parent.insertBefore(newNode, node);
       parent.removeChild(node);
     }
+  }
+
+  @PatchMethod
+  static void setElement(UIObject uiObject,
+      com.google.gwt.user.client.Element elem) {
+    assert (GwtReflectionUtils.getPrivateFieldValue(uiObject, "element") == null) : "Element may only be set once";
+
+    GwtReflectionUtils.setPrivateFieldValue(uiObject, "element", elem);
+
+    // Bind the widget to the element so we can trigger nativeEvent on it
+    JavaScriptObjects.setProperty(elem, JsoProperties.ELEM_BINDED_UIOBJECT,
+        uiObject);
   }
 
   @PatchMethod

@@ -1,6 +1,7 @@
 package com.octo.gwt.test.internal.patchers.dom;
 
 import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.impl.DOMImpl;
 import com.octo.gwt.test.internal.utils.EventUtils;
@@ -10,6 +11,11 @@ import com.octo.gwt.test.patchers.PatchMethod;
 
 @PatchClass(DOMImpl.class)
 class DOMImplUserPatcher {
+
+  @PatchMethod
+  static void eventCancelBubble(DOMImpl domImpl, Event evt, boolean cancel) {
+    JavaScriptObjects.setProperty(evt, JsoProperties.EVENT_IS_STOPPED, cancel);
+  }
 
   @PatchMethod
   static int eventGetTypeInt(DOMImpl domImpl, String type) {
