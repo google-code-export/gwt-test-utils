@@ -16,6 +16,9 @@ import javassist.Modifier;
 import javassist.NotFoundException;
 import javassist.bytecode.Descriptor;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.gwt.user.client.rpc.IsSerializable;
 import com.octo.gwt.test.exceptions.GwtTestRpcException;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
@@ -72,6 +75,7 @@ import com.octo.gwt.test.utils.GwtReflectionUtils;
 public class SerializableModifier implements JavaClassModifier {
 
   private static final String DEFAULT_CONS_METHOD_NAME = "DEFAULT_CONS_METHOD";
+  private static final Logger LOGGER = LoggerFactory.getLogger(SerializableModifier.class);
 
   public static void readObject(Serializable ex, ObjectInputStream ois) {
     try {
@@ -161,6 +165,8 @@ public class SerializableModifier implements JavaClassModifier {
     if (defaultCons == null) {
       return;
     }
+
+    LOGGER.debug("Apply serializable bytecode modifier");
 
     CtMethod defaultConstMethod = defaultCons.toMethod(
         DEFAULT_CONS_METHOD_NAME, classToModify);

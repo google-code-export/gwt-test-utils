@@ -15,7 +15,7 @@ import com.octo.gwt.test.exceptions.GwtTestPatchException;
 
 class GwtTranslator implements Translator {
 
-  public static final Logger logger = LoggerFactory.getLogger(GwtTranslator.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(GwtTranslator.class);
 
   private static final Pattern TEST_PATTERN = Pattern.compile("^.*[T|t][E|e][S|s][T|t].*$");
 
@@ -34,13 +34,13 @@ class GwtTranslator implements Translator {
 
   private void applyJavaClassModifier(CtClass ctClass) {
     try {
-      logger.debug("Apply method-remover");
+      // Apply remove-method
       ConfigurationLoader.get().getMethodRemover().modify(ctClass);
 
-      logger.debug("Apply class-substituers");
+      // Apply substitute-class
       ConfigurationLoader.get().getClassSubstituer().modify(ctClass);
 
-      logger.debug("Apply serializable modifier");
+      // Apply serializable modifier
       serializableModifier.modify(ctClass);
     } catch (Exception e) {
       if (GwtTestException.class.isInstance(e)) {
@@ -57,7 +57,7 @@ class GwtTranslator implements Translator {
         classToPatch);
 
     if (patcher != null) {
-      logger.debug("Patching '" + classToPatch.getName() + "'");
+      LOGGER.debug("Apply '" + patcher.getClass().getName() + "'");
       try {
         GwtPatcherUtils.patch(classToPatch, patcher);
       } catch (Exception e) {
@@ -94,9 +94,9 @@ class GwtTranslator implements Translator {
   }
 
   private void patchClass(CtClass classToModify) {
-    logger.debug("Load class '" + classToModify.getName() + "'");
+    LOGGER.debug("Load class '" + classToModify.getName() + "'");
     applyPatcher(classToModify);
     modifiyClass(classToModify);
-    logger.debug("Class '" + classToModify.getName() + "' has been loaded");
+    LOGGER.debug("Class '" + classToModify.getName() + "' has been loaded");
   }
 }

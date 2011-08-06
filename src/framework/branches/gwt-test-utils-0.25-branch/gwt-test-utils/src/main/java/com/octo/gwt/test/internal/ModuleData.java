@@ -169,9 +169,14 @@ public class ModuleData {
 	private void initializeClientPaths(String modulePackage, Document document, XPath xpath) throws XPathExpressionException {
 		NodeList sources = (NodeList) xpath.evaluate("/module/source", document, XPathConstants.NODESET);
 
-		for (int i = 0; i < sources.getLength(); i++) {
-			Node source = sources.item(i);
-			String sourcePath = xpath.evaluate("@path", source).trim().replaceAll("/", ".");
+    // GWT default client paths
+    clientPaths.add(modulePackage + "client.");
+    clientPaths.add(modulePackage + "shared.");
+
+    for (int i = 0; i < sources.getLength(); i++) {
+      Node source = sources.item(i);
+      String sourcePath = xpath.evaluate("@path", source).trim().replaceAll(
+          "/", ".");
 
 			if (sourcePath.length() < 1)
 				continue;

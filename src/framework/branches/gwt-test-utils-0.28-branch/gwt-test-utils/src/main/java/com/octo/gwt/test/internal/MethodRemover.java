@@ -8,6 +8,8 @@ import java.util.Map;
 import javassist.CtClass;
 import javassist.CtMethod;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 class MethodRemover implements JavaClassModifier {
 
@@ -35,9 +37,13 @@ class MethodRemover implements JavaClassModifier {
     }
   }
 
+  private static final Logger LOGGER = LoggerFactory.getLogger(MethodRemover.class);
+
   private final Map<String, List<RemovedMethod>> toRemoveByClass = new HashMap<String, List<RemovedMethod>>();
 
   public void modify(CtClass classToModify) throws Exception {
+
+    LOGGER.debug("Apply 'remove-method' bytecode modifier");
     List<RemovedMethod> list = toRemoveByClass.get(classToModify.getName());
     if (list != null) {
       for (RemovedMethod r : list) {

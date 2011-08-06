@@ -28,7 +28,7 @@ public class EventBuilder {
     JavaScriptObjects.setProperty(builder.event, JsoProperties.EVENT_TYPE,
         eventType);
 
-    return builder;
+    return builder.setCanBubble(true);
   }
 
   private final Event event;
@@ -57,14 +57,8 @@ public class EventBuilder {
   }
 
   public EventBuilder setCanBubble(boolean canBubble) {
-    JavaScriptObjects.setProperty(event, JsoProperties.EVENT_CANBUBBLE,
-        canBubble);
-    return this;
-  }
-
-  public EventBuilder setCancelable(boolean cancelable) {
-    JavaScriptObjects.setProperty(event, JsoProperties.EVENT_CANCELABLE,
-        cancelable);
+    JavaScriptObjects.setProperty(event, JsoProperties.EVENT_IS_STOPPED,
+        !canBubble);
     return this;
   }
 

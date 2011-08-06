@@ -76,6 +76,11 @@ public class LocalizableCreateHandler implements GwtCreateHandler {
   @SuppressWarnings("unchecked")
   public Object create(Class<?> classLiteral) throws Exception {
     if (LocalizableResource.class.isAssignableFrom(classLiteral)) {
+
+      if (!classLiteral.isInterface()) {
+        throw new GwtTestI18NException(classLiteral.getSimpleName()
+            + " must be an interface");
+      }
       return LocalizableResourceProxyFactory.getFactory(
           (Class<? extends LocalizableResource>) classLiteral).createProxy();
     } else if (CldrImpl.class == classLiteral) {

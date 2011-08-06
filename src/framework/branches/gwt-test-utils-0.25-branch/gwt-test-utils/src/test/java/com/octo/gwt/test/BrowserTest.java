@@ -44,6 +44,7 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ComplexPanel;
+import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTMLTable.Cell;
 import com.google.gwt.user.client.ui.MultiWordSuggestOracle;
@@ -62,19 +63,28 @@ public class BrowserTest extends GwtTestTest {
   private int keyUpCount;
   private boolean onBlurTriggered;
   private boolean onChangeTriggered;
-
+  private FocusPanel panel;
+  private boolean panelTested;
   private boolean tested;
 
   @Before
   public void beforeBrowserTest() {
+    panel = new FocusPanel();
+    RootPanel.get().add(panel);
     b = new Button();
-    RootPanel.get().add(b);
+    panel.add(b);
+
+    tested = false;
+    panelTested = false;
+    onChangeTriggered = false;
+    onBlurTriggered = false;
+    keyDownCount = 0;
+    keyUpCount = 0;
   }
 
   @Test
   public void blur() {
     // Arrange
-    tested = false;;
     b.addBlurHandler(new BlurHandler() {
 
       public void onBlur(BlurEvent event) {
@@ -94,31 +104,8 @@ public class BrowserTest extends GwtTestTest {
   }
 
   @Test
-  public void click() {
-    // Arrange
-    tested = false;
-    b.addClickHandler(new ClickHandler() {
-
-      public void onClick(ClickEvent event) {
-        tested = !tested;
-
-        assertEquals(b.getElement(), event.getNativeEvent().getEventTarget());
-        assertNull(event.getNativeEvent().getRelatedEventTarget());
-      }
-
-    });
-
-    // Act
-    Browser.click(b);
-
-    // Assert
-    assertTrue("onClick event was not triggered", tested);
-  }
-
-  @Test
   public void click_ComplexPanel() {
     // Arrange
-    tested = false;
     final Anchor a = new Anchor();
     final ComplexPanel panel = new StackPanel() {
 
@@ -170,6 +157,70 @@ public class BrowserTest extends GwtTestTest {
   }
 
   @Test
+  public void click_propagation() {
+    // Arrange
+    b.addClickHandler(new ClickHandler() {
+
+      public void onClick(ClickEvent event) {
+        tested = !tested;
+
+        assertEquals(b.getElement(), event.getNativeEvent().getEventTarget());
+        assertNull(event.getNativeEvent().getRelatedEventTarget());
+      }
+
+    });
+
+    panel.addClickHandler(new ClickHandler() {
+
+      public void onClick(ClickEvent event) {
+        panelTested = !panelTested;
+        assertEquals(b.getElement(), event.getNativeEvent().getEventTarget());
+        assertNull(event.getNativeEvent().getRelatedEventTarget());
+
+      }
+    });
+
+    // Act
+    Browser.click(b);
+
+    // Assert
+    assertTrue("onClick event was not triggered", tested);
+    assertTrue("onClick event was not triggered on target widget parents",
+        panelTested);
+  }
+
+  @Test
+  public void click_stopPropagation() {
+    // Arrange
+    b.addClickHandler(new ClickHandler() {
+
+      public void onClick(ClickEvent event) {
+        tested = !tested;
+        // stop event propagation : parent clickHandler should not be triggered
+        event.stopPropagation();
+
+        assertEquals(b.getElement(), event.getNativeEvent().getEventTarget());
+        assertNull(event.getNativeEvent().getRelatedEventTarget());
+      }
+
+    });
+
+    panel.addClickHandler(new ClickHandler() {
+
+      public void onClick(ClickEvent event) {
+        fail("parent click handler should not be triggered when event.stopPropagation() is called");
+
+      }
+    });
+
+    // Act
+    Browser.click(b);
+
+    // Assert
+    assertTrue("onClick event was not triggered", tested);
+  }
+
+  @Test
   public void click_SuggestBox() {
     // Arrange
     MultiWordSuggestOracle oracle = new MultiWordSuggestOracle();
@@ -188,7 +239,6 @@ public class BrowserTest extends GwtTestTest {
   @Test
   public void click_WithPosition() {
     // Arrange
-    tested = false;
     b.addClickHandler(new ClickHandler() {
 
       public void onClick(ClickEvent event) {
@@ -222,10 +272,6 @@ public class BrowserTest extends GwtTestTest {
   @Test
   public void emptyText_LongPressFalse() {
     // Arrange
-    onChangeTriggered = false;
-    onBlurTriggered = false;
-    keyDownCount = 0;
-    keyUpCount = 0;
     String initialText = "1234";
 
     final TextBox tb = new TextBox();
@@ -283,10 +329,6 @@ public class BrowserTest extends GwtTestTest {
   @Test
   public void emptyText_LongPressTrue() {
     // Arrange
-    onChangeTriggered = false;
-    onBlurTriggered = false;
-    keyDownCount = 0;
-    keyUpCount = 0;
     String initialText = "1234";
 
     final TextBox tb = new TextBox();
@@ -344,10 +386,6 @@ public class BrowserTest extends GwtTestTest {
   @Test
   public void emptyText_LongPressTrue_Does_Not_Update_When_KeyDown_PreventDefault() {
     // Arrange
-    onChangeTriggered = false;
-    onBlurTriggered = false;
-    keyDownCount = 0;
-    keyUpCount = 0;
     String initialText = "1234";
 
     final TextBox tb = new TextBox();
@@ -407,8 +445,6 @@ public class BrowserTest extends GwtTestTest {
   @Test
   public void fillText() {
     // Arrange
-    onChangeTriggered = false;
-    onBlurTriggered = false;
     String textToFill = "some text";
 
     final List<Character> keyUpChars = new ArrayList<Character>();
@@ -481,8 +517,6 @@ public class BrowserTest extends GwtTestTest {
   @Test
   public void fillText_Does_Not_Update_When_KeyDown_PreventDefault() {
     // Arrange
-    onChangeTriggered = false;
-    onBlurTriggered = false;
     String initialText = "intial text";
     String textToFill = "some text which will not be filled";
 
@@ -562,8 +596,6 @@ public class BrowserTest extends GwtTestTest {
   @Test
   public void fillText_Does_Not_Update_When_KeyPress_PreventDefault() {
     // Arrange
-    onChangeTriggered = false;
-    onBlurTriggered = false;
     String initialText = "intial text";
     String textToFill = "some text which will not be filled";
 
@@ -679,8 +711,6 @@ public class BrowserTest extends GwtTestTest {
   @Test
   public void fillText_Still_Update_When_KeyUp_PreventDefault() {
     // Arrange
-    onChangeTriggered = false;
-    onBlurTriggered = false;
     String initialText = "intial text";
     String textToFill = "some text which will not be filled";
 
@@ -760,7 +790,6 @@ public class BrowserTest extends GwtTestTest {
   @Test
   public void focus() {
     // Arrange
-    tested = false;;
     b.addFocusHandler(new FocusHandler() {
 
       public void onFocus(FocusEvent event) {
@@ -782,7 +811,6 @@ public class BrowserTest extends GwtTestTest {
   @Test
   public void keyDown() {
     // Arrange
-    tested = false;;
     b.addKeyDownHandler(new KeyDownHandler() {
 
       public void onKeyDown(KeyDownEvent event) {
@@ -809,7 +837,6 @@ public class BrowserTest extends GwtTestTest {
   @Test
   public void keyPress() {
     // Arrange
-    tested = false;;
     b.addKeyPressHandler(new KeyPressHandler() {
 
       public void onKeyPress(KeyPressEvent event) {
@@ -836,7 +863,6 @@ public class BrowserTest extends GwtTestTest {
   @Test
   public void keyUp() {
     // Arrange
-    tested = false;;
     b.addKeyUpHandler(new KeyUpHandler() {
 
       public void onKeyUp(KeyUpEvent event) {
@@ -863,7 +889,6 @@ public class BrowserTest extends GwtTestTest {
   @Test
   public void mouseDown() {
     // Arrange
-    tested = false;;
     b.addMouseDownHandler(new MouseDownHandler() {
 
       public void onMouseDown(MouseDownEvent event) {
@@ -885,7 +910,6 @@ public class BrowserTest extends GwtTestTest {
   @Test
   public void mouseMove() {
     // Arrange
-    tested = false;;
     b.addMouseMoveHandler(new MouseMoveHandler() {
 
       public void onMouseMove(MouseMoveEvent event) {
@@ -907,8 +931,6 @@ public class BrowserTest extends GwtTestTest {
   @Test
   public void mouseOut() {
     // Arrange
-    tested = false;
-
     b.addMouseOutHandler(new MouseOutHandler() {
 
       public void onMouseOut(MouseOutEvent event) {
@@ -931,7 +953,6 @@ public class BrowserTest extends GwtTestTest {
   @Test
   public void mouseOver() {
     // Arrange
-    tested = false;;
     b.addMouseOverHandler(new MouseOverHandler() {
 
       public void onMouseOver(MouseOverEvent event) {
@@ -954,7 +975,6 @@ public class BrowserTest extends GwtTestTest {
   @Test
   public void mouseUp() {
     // Arrange
-    tested = false;;
     b.addMouseUpHandler(new MouseUpHandler() {
 
       public void onMouseUp(MouseUpEvent event) {
@@ -976,7 +996,6 @@ public class BrowserTest extends GwtTestTest {
   @Test
   public void mouseWheel() {
     // Arrange
-    tested = false;;
     b.addMouseWheelHandler(new MouseWheelHandler() {
 
       public void onMouseWheel(MouseWheelEvent event) {

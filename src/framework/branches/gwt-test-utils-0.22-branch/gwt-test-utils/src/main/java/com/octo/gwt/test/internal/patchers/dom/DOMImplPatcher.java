@@ -70,8 +70,7 @@ class DOMImplPatcher {
       boolean canBubble, boolean cancelable) {
 
     int typeInt = EventUtils.getEventTypeInt(type);
-    return EventBuilder.create(typeInt).setCanBubble(canBubble).setCancelable(
-        cancelable).build();
+    return EventBuilder.create(typeInt).setCanBubble(canBubble).build();
   }
 
   static InputElement createInputElement(Document doc, String type, String name) {
@@ -133,6 +132,13 @@ class DOMImplPatcher {
         JsoProperties.ELEM_EVENTLISTENER);
     if (listener != null && evt instanceof Event) {
       listener.onBrowserEvent((Event) evt);
+    }
+
+    // dispatch to parent if needed
+    boolean propagationStopped = JavaScriptObjects.getBoolean(evt,
+        JsoProperties.EVENT_IS_STOPPED);
+    if (target.getParentElement() != null && propagationStopped) {
+      target.getParentElement().dispatchEvent(evt);
     }
   }
 
@@ -221,7 +227,7 @@ class DOMImplPatcher {
 
   @PatchMethod
   static void eventStopPropagation(Object domImpl, NativeEvent evt) {
-
+    JavaScriptObjects.setProperty(evt, JsoProperties.EVENT_IS_STOPPED, true);
   }
 
   @PatchMethod

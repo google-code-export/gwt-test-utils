@@ -2,6 +2,11 @@ package com.octo.gwt.test;
 
 import java.util.List;
 
+import junit.framework.JUnit4TestAdapter;
+import junit.framework.Test;
+import junit.framework.TestResult;
+import junit.framework.TestSuite;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -35,7 +40,7 @@ import com.octo.gwt.test.internal.GwtConfig;
  * 
  */
 @RunWith(GwtRunner.class)
-public abstract class GwtTest extends GwtModuleRunnerAdapter {
+public abstract class GwtTest extends GwtModuleRunnerAdapter implements Test {
 
   /**
    * Bind the GwtClassLoader to the current thread
@@ -55,6 +60,23 @@ public abstract class GwtTest extends GwtModuleRunnerAdapter {
         GwtClassLoader.get().getParent());
   }
 
+  private final Test test;
+
+  public GwtTest() {
+    this.test = createJUnit4TestAdapter();
+  }
+
+  public int countTestCases() {
+    return test.countTestCases();
+  }
+
+  /**
+   * Runs a test and collects its result in a TestResult instance.
+   */
+  public void run(TestResult result) {
+    test.run(result);
+  }
+
   @Before
   public final void setUpGwtTest() throws Exception {
     GwtConfig.setup(this);
@@ -72,6 +94,16 @@ public abstract class GwtTest extends GwtModuleRunnerAdapter {
           throwables.get(0));
     }
 
+  }
+
+  /**
+   * Create a test instance compatible with JUnit 3 {@link Test} so that the
+   * current <code>GwtTest</code> can be added to a {@link TestSuite}.
+   * 
+   * @return A JUnit Test adapter for this test.
+   */
+  protected Test createJUnit4TestAdapter() {
+    return new JUnit4TestAdapter(this.getClass());
   }
 
 }

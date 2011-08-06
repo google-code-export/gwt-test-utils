@@ -10,29 +10,13 @@ import com.google.gwt.i18n.client.ConstantsWithLookup;
 import com.google.gwt.i18n.client.LocalizableResource;
 import com.google.gwt.i18n.client.Messages;
 import com.octo.gwt.test.GwtCreateHandler;
+import com.octo.gwt.test.exceptions.GwtTestI18NException;
 
 public class LocalizableCreateHandler implements GwtCreateHandler {
-
-  @SuppressWarnings("unchecked")
-  public Object create(Class<?> classLiteral) throws Exception {
-    if (!LocalizableResource.class.isAssignableFrom(classLiteral)) {
-      return null;
-    }
-
-    return LocalizableResourceProxyFactory.getFactory(
-        (Class<? extends LocalizableResource>) classLiteral).createProxy();
-  }
 
   private static class LocalizableResourceProxyFactory {
 
     private static Map<String, LocalizableResourceProxyFactory> factoryMap = new HashMap<String, LocalizableResourceProxyFactory>();
-
-    private Class<? extends LocalizableResource> proxiedClass;
-
-    private LocalizableResourceProxyFactory(
-        Class<? extends LocalizableResource> proxiedClass) {
-      this.proxiedClass = proxiedClass;
-    }
 
     public static <T extends LocalizableResource> LocalizableResourceProxyFactory getFactory(
         Class<T> clazz) {
@@ -45,6 +29,13 @@ public class LocalizableCreateHandler implements GwtCreateHandler {
       return factory;
     }
 
+    private final Class<? extends LocalizableResource> proxiedClass;
+
+    private LocalizableResourceProxyFactory(
+        Class<? extends LocalizableResource> proxiedClass) {
+      this.proxiedClass = proxiedClass;
+    }
+
     @SuppressWarnings("unchecked")
     public <T extends LocalizableResource> T createProxy() {
       InvocationHandler ih = createInvocationHandler(proxiedClass);
@@ -52,24 +43,36 @@ public class LocalizableCreateHandler implements GwtCreateHandler {
           new Class<?>[]{proxiedClass}, ih);
     }
 
-    @SuppressWarnings("unchecked")
     private InvocationHandler createInvocationHandler(
         Class<? extends LocalizableResource> clazz) {
       if (ConstantsWithLookup.class.isAssignableFrom(clazz)) {
-        return new ConstantsWithLookupInvocationHandler(
-            (Class<? extends ConstantsWithLookup>) clazz);
+        return new ConstantsWithLookupInvocationHandler(clazz);
       }
       if (Constants.class.isAssignableFrom(clazz)) {
-        return new ConstantsInvocationHandler(
-            (Class<? extends Constants>) clazz);
+        return new ConstantsInvocationHandler(clazz);
       } else if (Messages.class.isAssignableFrom(clazz)) {
-        return new MessagesInvocationHandler((Class<? extends Messages>) clazz);
+        return new MessagesInvocationHandler(clazz);
       } else {
         throw new RuntimeException(
             "Not managed GWT i18n interface for testing : "
                 + clazz.getSimpleName());
       }
     }
+  }
+
+  @SuppressWarnings("unchecked")
+  public Object create(Class<?> classLiteral) throws Exception {
+    if (!LocalizableResource.class.isAssignableFrom(classLiteral)) {
+      return null;
+    }
+
+    if (!classLiteral.isInterface()) {
+      throw new GwtTestI18NException(classLiteral.getSimpleName()
+          + " must be an interface");
+    }
+
+    return LocalizableResourceProxyFactory.getFactory(
+        (Class<? extends LocalizableResource>) classLiteral).createProxy();
   }
 
 }
