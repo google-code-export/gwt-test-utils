@@ -20,7 +20,7 @@ import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.octo.gwt.test.exceptions.GwtTestI18NException;
 import com.octo.gwt.test.internal.utils.GwtPropertiesHelper;
 
-class ConstantsInvocationHandler extends LocalizableResourcesInvocationHandler {
+class ConstantsInvocationHandler extends LocalizableResourceInvocationHandler {
 
   public ConstantsInvocationHandler(
       Class<? extends LocalizableResource> proxiedClass) {

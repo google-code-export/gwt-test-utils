@@ -18,7 +18,7 @@ import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.octo.gwt.test.exceptions.GwtTestI18NException;
 
-class MessagesInvocationHandler extends LocalizableResourcesInvocationHandler {
+class MessagesInvocationHandler extends LocalizableResourceInvocationHandler {
 
   public MessagesInvocationHandler(
       Class<? extends LocalizableResource> proxiedClass) {
