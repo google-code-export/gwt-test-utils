@@ -116,15 +116,6 @@ public class Browser {
   }
 
   /**
-   * Simulates a click event on a SimplePanel.
-   * 
-   * @param panel The targeted simple panel.
-   */
-  public static void click(SimplePanel panel) {
-    clickInternal(panel, panel.getWidget());
-  }
-
-  /**
    * Simulates a click event on the item of a SuggestBox with the given index.
    * 
    * @param parent The targeted suggest box.
@@ -569,6 +560,12 @@ public class Browser {
 
     if (events.length == 0) {
       return;
+    }
+
+    // Handle special case of SimplePanel
+    if (SimplePanel.class.isInstance(target)) {
+      SimplePanel panel = (SimplePanel) target;
+      target = (panel.getWidget() != null) ? panel.getWidget() : panel;
     }
 
     prepareEvents(target, events);

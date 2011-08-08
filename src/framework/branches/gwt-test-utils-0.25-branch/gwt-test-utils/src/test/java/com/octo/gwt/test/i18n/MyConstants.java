@@ -3,6 +3,7 @@ package com.octo.gwt.test.i18n;
 import java.util.Map;
 
 import com.google.gwt.i18n.client.Constants;
+import com.google.gwt.safehtml.shared.SafeHtml;
 
 public interface MyConstants extends Constants {
 
@@ -21,7 +22,7 @@ public interface MyConstants extends Constants {
   public String goodbye();
 
   @DefaultStringValue("hello from @DefaultStringValue")
-  public String hello();
+  public SafeHtml hello();
 
   @DefaultStringMapValue({
       "map1", "default map1 value", "map2", "default map2 value", "map3",

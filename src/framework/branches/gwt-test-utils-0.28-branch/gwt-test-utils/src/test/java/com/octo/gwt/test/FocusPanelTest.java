@@ -34,7 +34,25 @@ public class FocusPanelTest extends GwtTestTest {
   }
 
   @Test
-  public void click() {
+  public void click_EmptyPanel() {
+    // Arrange
+    panel = new FocusPanel();
+    panel.addClickHandler(new ClickHandler() {
+
+      public void onClick(ClickEvent event) {
+        test = true;
+      }
+    });
+
+    // Act
+    Browser.click(panel);
+
+    // Assert
+    Assert.assertTrue(test);
+  }
+
+  @Test
+  public void click_WithChild() {
     // Arrange
     panel.addClickHandler(new ClickHandler() {
 
@@ -57,7 +75,7 @@ public class FocusPanelTest extends GwtTestTest {
     // Assert
     Assert.assertTrue(test);
     // click event should not be dispatched to the child widget
-    Assert.assertEquals("focus panel's child widget", child.getText());
+    Assert.assertEquals("clicked", child.getText());
   }
 
   @Test

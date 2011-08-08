@@ -18,7 +18,7 @@ import com.google.gwt.i18n.client.LocalizableResource;
 import com.octo.gwt.test.exceptions.GwtTestI18NException;
 import com.octo.gwt.test.internal.utils.GwtPropertiesHelper;
 
-class ConstantsInvocationHandler extends LocalizableResourcesInvocationHandler {
+class ConstantsInvocationHandler extends LocalizableResourceInvocationHandler {
 
   public ConstantsInvocationHandler(
       Class<? extends LocalizableResource> proxiedClass) {

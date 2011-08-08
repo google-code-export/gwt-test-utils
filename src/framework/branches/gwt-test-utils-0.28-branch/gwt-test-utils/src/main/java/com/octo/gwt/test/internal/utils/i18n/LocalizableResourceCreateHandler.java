@@ -25,7 +25,7 @@ import com.octo.gwt.test.internal.GwtConfig;
  * @author Gael Lazzari
  * 
  */
-public class LocalizableCreateHandler implements GwtCreateHandler {
+public class LocalizableResourceCreateHandler implements GwtCreateHandler {
 
   private static class LocalizableResourceProxyFactory {
 

@@ -9,6 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.safehtml.shared.SafeHtml;
 import com.octo.gwt.test.GwtTestTest;
 import com.octo.gwt.test.internal.GwtConfig;
 
@@ -54,11 +55,11 @@ public class MyMessagesTest extends GwtTestTest {
 
     // Act 1
     String orangeColor = messages.orangeColor();
-    String orangeFruit = messages.orangeFruit();
+    SafeHtml orangeFruit = messages.orangeFruit();
 
     // Assert 1
     assertEquals("Orange", orangeColor);
-    assertEquals("Orange", orangeFruit);
+    assertEquals("Orange", orangeFruit.asString());
 
     // Arrange 2
     GwtConfig.get().setLocale(Locale.ENGLISH);
@@ -69,7 +70,7 @@ public class MyMessagesTest extends GwtTestTest {
 
     // Assert 2
     assertEquals("orange", orangeColor);
-    assertEquals("orange", orangeFruit);
+    assertEquals("orange", orangeFruit.asString());
 
   }
 

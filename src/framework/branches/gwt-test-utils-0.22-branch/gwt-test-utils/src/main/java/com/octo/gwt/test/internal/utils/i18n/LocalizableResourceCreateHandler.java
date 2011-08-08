@@ -12,7 +12,7 @@ import com.google.gwt.i18n.client.Messages;
 import com.octo.gwt.test.GwtCreateHandler;
 import com.octo.gwt.test.exceptions.GwtTestI18NException;
 
-public class LocalizableCreateHandler implements GwtCreateHandler {
+public class LocalizableResourceCreateHandler implements GwtCreateHandler {
 
   private static class LocalizableResourceProxyFactory {
 

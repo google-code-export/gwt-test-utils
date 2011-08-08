@@ -16,7 +16,7 @@ import com.google.gwt.i18n.client.PluralRule;
 import com.google.gwt.i18n.client.impl.plurals.DefaultRule;
 import com.octo.gwt.test.exceptions.GwtTestI18NException;
 
-class MessagesInvocationHandler extends LocalizableResourcesInvocationHandler {
+class MessagesInvocationHandler extends LocalizableResourceInvocationHandler {
 
   public MessagesInvocationHandler(
       Class<? extends LocalizableResource> proxiedClass) {

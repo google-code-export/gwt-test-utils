@@ -8,7 +8,7 @@ import com.octo.gwt.test.GwtCreateHandler;
 import com.octo.gwt.test.internal.AfterTestCallback;
 import com.octo.gwt.test.internal.AfterTestCallbackManager;
 import com.octo.gwt.test.internal.uibinder.UiBinderCreateHandler;
-import com.octo.gwt.test.internal.utils.i18n.LocalizableCreateHandler;
+import com.octo.gwt.test.internal.utils.i18n.LocalizableResourceCreateHandler;
 import com.octo.gwt.test.internal.utils.resources.ClientBundleCreateHandler;
 import com.octo.gwt.test.internal.utils.resources.ImageBundleCreateHandler;
 
@@ -42,7 +42,7 @@ public class GwtCreateHandlerManager implements AfterTestCallback {
     dockLayoutPanelCreateHandler = new DefaultDockLayoutPanelHandler();
     htmlPanelCreateHandler = new HTMLPanelCreateHandler();
     imageBundleCreateHandler = new ImageBundleCreateHandler();
-    localizableResourceCreateHandler = new LocalizableCreateHandler();
+    localizableResourceCreateHandler = new LocalizableResourceCreateHandler();
     uiBinderCreateHandler = new UiBinderCreateHandler();
     testRemoteServiceCreateHandler = TestRemoteServiceCreateHandler.get();
     webXmlRemoteServiceCreateHandler = new WebXmlRemoteServiceCreateHandler();

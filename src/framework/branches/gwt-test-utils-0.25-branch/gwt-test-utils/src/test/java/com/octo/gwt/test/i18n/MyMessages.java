@@ -2,6 +2,7 @@ package com.octo.gwt.test.i18n;
 
 import com.google.gwt.i18n.client.LocalizableResource.DefaultLocale;
 import com.google.gwt.i18n.client.Messages;
+import com.google.gwt.safehtml.shared.SafeHtml;
 
 @DefaultLocale("en")
 public interface MyMessages extends Messages {
@@ -38,7 +39,7 @@ public interface MyMessages extends Messages {
 
   @Meaning("the fruit")
   @DefaultMessage("orange")
-  String orangeFruit();
+  SafeHtml orangeFruit();
 
   @DefaultMessage("Your cart total is {0,number,currency}")
   @Description("The total value of the items in the shopping cart in local currency")

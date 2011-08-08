@@ -12,6 +12,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.safehtml.shared.SafeHtml;
 import com.octo.gwt.test.GwtTestTest;
 import com.octo.gwt.test.internal.GwtConfig;
 
@@ -30,7 +31,7 @@ public class MyConstantsTest extends GwtTestTest {
     GwtConfig.get().setLocale(Locale.ENGLISH);
 
     // Act 1
-    String hello = constants.hello();
+    SafeHtml hello = constants.hello();
     String goodbye = constants.goodbye();
     String[] stringArray = constants.stringArray();
     Map<String, Object> map = constants.map();
@@ -38,7 +39,7 @@ public class MyConstantsTest extends GwtTestTest {
     String valueWithoutLocaleToBeOverride = constants.valueWithoutLocaleToBeOverride();
 
     // Assert 1
-    assertEquals("Hello english !", hello);
+    assertEquals("Hello english !", hello.asString());
     assertEquals("Goodbye english !", goodbye);
 
     assertEquals(3, stringArray.length);
@@ -66,7 +67,7 @@ public class MyConstantsTest extends GwtTestTest {
     map = constants.map();
 
     // Assert 2
-    assertEquals("Hello US !", hello);
+    assertEquals("Hello US !", hello.asString());
     assertEquals("Goodbye US !", goodbye);
 
     assertEquals(4, stringArray.length);
@@ -89,7 +90,7 @@ public class MyConstantsTest extends GwtTestTest {
     String expectedErrorMessage = "No matching property \"goodbye\" for Constants class [com.octo.gwt.test.i18n.MyConstants]. Please check the corresponding properties files or use @DefaultStringValue";
 
     // Act 1
-    String hello = constants.hello();
+    SafeHtml hello = constants.hello();
     String[] stringArray = constants.stringArray();
     Map<String, Object> map = constants.map();
     int functionInt = constants.functionInt();
@@ -98,7 +99,7 @@ public class MyConstantsTest extends GwtTestTest {
     boolean functionBoolean = constants.functionBoolean();
 
     // Assert
-    assertEquals("hello from @DefaultStringValue", hello);
+    assertEquals("hello from @DefaultStringValue", hello.asString());
     assertEquals(2, stringArray.length);
     assertEquals("default0", stringArray[0]);
     assertEquals("default1", stringArray[1]);
@@ -127,7 +128,7 @@ public class MyConstantsTest extends GwtTestTest {
     GwtConfig.get().setLocale(Locale.FRENCH);
 
     // Act
-    String hello = constants.hello();
+    SafeHtml hello = constants.hello();
     String goodbye = constants.goodbye();
     String[] stringArray = constants.stringArray();
     Map<String, Object> map = constants.map();
@@ -137,7 +138,7 @@ public class MyConstantsTest extends GwtTestTest {
     boolean functionBoolean = constants.functionBoolean();
 
     // Assert
-    assertEquals("Bonjour", hello);
+    assertEquals("Bonjour", hello.asString());
     assertEquals("Au revoir et un caractère qui pue", goodbye);
 
     assertEquals(3, stringArray.length);

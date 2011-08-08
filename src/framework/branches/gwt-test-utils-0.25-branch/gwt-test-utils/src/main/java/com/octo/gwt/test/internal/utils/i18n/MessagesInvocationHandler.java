@@ -14,6 +14,8 @@ import com.google.gwt.i18n.client.Messages.PluralCount;
 import com.google.gwt.i18n.client.Messages.PluralText;
 import com.google.gwt.i18n.client.PluralRule;
 import com.google.gwt.i18n.client.impl.plurals.DefaultRule;
+import com.google.gwt.safehtml.shared.SafeHtml;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.octo.gwt.test.exceptions.GwtTestI18NException;
 
 class MessagesInvocationHandler extends LocalizableResourcesInvocationHandler {
@@ -39,7 +41,11 @@ class MessagesInvocationHandler extends LocalizableResourcesInvocationHandler {
       valuePattern = defaultMessage.value();
     }
     if (valuePattern != null) {
-      return format(valuePattern, args, getLocale());
+      String result = format(valuePattern, args, getLocale());
+
+      // handle SafeHtml return type
+      return (method.getReturnType() == SafeHtml.class)
+          ? SafeHtmlUtils.fromTrustedString(result) : result;
     }
 
     return null;
@@ -55,7 +61,12 @@ class MessagesInvocationHandler extends LocalizableResourcesInvocationHandler {
 
     String result = extractProperty(localizedProperties, key);
     if (result != null) {
-      return format(result, args, locale);
+
+      result = format(result, args, locale);
+
+      // handle SafeHtml return type
+      return (method.getReturnType() == SafeHtml.class)
+          ? SafeHtmlUtils.fromTrustedString(result) : result;
     }
 
     return null;
