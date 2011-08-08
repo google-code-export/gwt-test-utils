@@ -12,12 +12,12 @@ import com.octo.gwt.test.internal.GwtConfig;
 import com.octo.gwt.test.internal.utils.GwtPropertiesHelper;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
-abstract class LocalizableResourcesInvocationHandler implements
+abstract class LocalizableResourceInvocationHandler implements
     InvocationHandler {
 
   private final Class<? extends LocalizableResource> proxiedClass;
 
-  public LocalizableResourcesInvocationHandler(
+  public LocalizableResourceInvocationHandler(
       Class<? extends LocalizableResource> proxiedClass) {
     this.proxiedClass = proxiedClass;
   }

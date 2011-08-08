@@ -21,7 +21,7 @@ import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.octo.gwt.test.exceptions.GwtTestI18NException;
 
 @SuppressWarnings("deprecation")
-class MessagesInvocationHandler extends LocalizableResourcesInvocationHandler {
+class MessagesInvocationHandler extends LocalizableResourceInvocationHandler {
 
   public MessagesInvocationHandler(
       Class<? extends LocalizableResource> proxiedClass) {
