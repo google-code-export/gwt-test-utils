@@ -15,6 +15,8 @@ import com.google.gwt.i18n.client.Constants.DefaultStringArrayValue;
 import com.google.gwt.i18n.client.Constants.DefaultStringMapValue;
 import com.google.gwt.i18n.client.Constants.DefaultStringValue;
 import com.google.gwt.i18n.client.LocalizableResource;
+import com.google.gwt.safehtml.shared.SafeHtml;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.octo.gwt.test.exceptions.GwtTestI18NException;
 import com.octo.gwt.test.internal.utils.GwtPropertiesHelper;
 
@@ -33,6 +35,10 @@ class ConstantsInvocationHandler extends LocalizableResourcesInvocationHandler {
       DefaultStringValue a = getCheckedAnnotation(method,
           DefaultStringValue.class);
       return treatLine(a.value());
+    } else if (returnType == SafeHtml.class) {
+      DefaultStringValue a = getCheckedAnnotation(method,
+          DefaultStringValue.class);
+      return SafeHtmlUtils.fromTrustedString(treatLine(a.value()));
     } else if (returnType.isArray()
         && returnType.getComponentType() == String.class) {
       DefaultStringArrayValue a = getCheckedAnnotation(method,
@@ -96,6 +102,8 @@ class ConstantsInvocationHandler extends LocalizableResourcesInvocationHandler {
 
     if (returnType == String.class) {
       return line;
+    } else if (returnType == SafeHtml.class) {
+      return SafeHtmlUtils.fromTrustedString(line);
     } else if (returnType.isArray()
         && returnType.getComponentType() == String.class) {
       return line.split("\\s*,\\s*");

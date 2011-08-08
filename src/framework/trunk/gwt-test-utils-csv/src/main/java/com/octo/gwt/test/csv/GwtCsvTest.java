@@ -25,7 +25,6 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.UIObject;
@@ -302,12 +301,6 @@ public abstract class GwtCsvTest extends GwtTest {
   public void clickMenuItem(String index, String... params) {
     MenuBar menuBar = getObject(MenuBar.class, params);
     Browser.click(menuBar, Integer.parseInt(index));
-  }
-
-  @CsvMethod
-  public void clickSimplePanel(String... params) {
-    SimplePanel panel = getObject(SimplePanel.class, params);
-    Browser.click(panel);
   }
 
   @CsvMethod
