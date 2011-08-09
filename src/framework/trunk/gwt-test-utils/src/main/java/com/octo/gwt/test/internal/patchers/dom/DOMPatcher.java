@@ -10,6 +10,19 @@ import com.octo.gwt.test.patchers.PatchMethod;
 class DOMPatcher {
 
   @PatchMethod
+  public static Element getParent(Element elem) {
+    com.google.gwt.dom.client.Element parentElem = elem.getParentElement();
+
+    if (parentElem == null) {
+      return null;
+    }
+
+    Element parent = parentElem.cast();
+    return parent;
+
+  }
+
+  @PatchMethod
   static Element getFirstChild(Element elem) {
     Node firstChild = elem.getFirstChildElement();
     if (firstChild != null) {
