@@ -20,12 +20,21 @@ class DOMPatcher {
   }
 
   @PatchMethod
-  public static Element getNextSibling(Element elem) {
+  static Element getNextSibling(Element elem) {
     return (Element) elem.getNextSibling();
   }
 
   @PatchMethod
-  public static Element getParent(Element elem) {
-    return (Element) elem.getParentElement();
+  static Element getParent(Element elem) {
+    com.google.gwt.dom.client.Element parentElem = elem.getParentElement();
+
+    if (parentElem == null) {
+      return null;
+    }
+
+    Element parent = parentElem.cast();
+    return parent;
+
   }
+
 }

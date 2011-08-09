@@ -8,6 +8,7 @@ import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.ComplexPanel;
@@ -24,6 +25,7 @@ import com.octo.gwt.test.FinallyCommandTrigger;
 import com.octo.gwt.test.internal.GwtConfig;
 import com.octo.gwt.test.internal.patchers.dom.JavaScriptObjects;
 import com.octo.gwt.test.internal.utils.JsoProperties;
+import com.octo.gwt.test.utils.GwtReflectionUtils;
 import com.octo.gwt.test.utils.WidgetUtils;
 
 /**
@@ -583,6 +585,18 @@ public class Browser {
 
   private static void dispatchEventInternal(Widget target, Event... events) {
     for (Event event : events) {
+
+      // special case of click on CheckBox
+      if (CheckBox.class.isInstance(target)
+          && event.getTypeInt() == Event.ONCLICK) {
+        CheckBox checkBox = (CheckBox) target;
+        if (RadioButton.class.isInstance(target)) {
+          checkBox.setValue(true);
+        } else {
+          checkBox.setValue(!checkBox.getValue());
+        }
+      }
+
       // set the related target
       Element relatedTargetElement = JavaScriptObjects.getObject(event,
           JsoProperties.EVENT_RELATEDTARGET);
@@ -605,16 +619,9 @@ public class Browser {
         }
       }
 
-      if (CheckBox.class.isInstance(target)
-          && event.getTypeInt() == Event.ONCLICK) {
-        CheckBox checkBox = (CheckBox) target;
-        if (RadioButton.class.isInstance(target)) {
-          checkBox.setValue(true);
-        } else {
-          checkBox.setValue(!checkBox.getValue());
-        }
-      }
-      target.onBrowserEvent(event);
+      // dispatch the event
+      GwtReflectionUtils.callStaticMethod(DOM.class, "dispatchEvent", event,
+          target.getElement(), target);
     }
   }
 
