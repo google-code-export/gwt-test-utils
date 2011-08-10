@@ -1,10 +1,9 @@
 package com.octo.gwt.test.internal;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import com.google.gwt.dev.util.collect.HashSet;
 
 /**
  * Class responsible for triggering {@link AfterTestCallback#afterTest()}

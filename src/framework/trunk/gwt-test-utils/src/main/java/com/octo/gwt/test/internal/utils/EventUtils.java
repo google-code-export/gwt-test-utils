@@ -67,12 +67,6 @@ public class EventUtils {
       return Event.ONGESTURECHANGE;
     } else if (type.equals("gestureend")) {
       return Event.ONGESTUREEND;
-    } else if (type.equals("ended")) {
-      return Event.ONENDED;
-    } else if (type.equals("progress")) {
-      return Event.ONPROGRESS;
-    } else if (type.equals("canplaythrough")) {
-      return Event.ONCANPLAYTHROUGH;
     }
 
     throw new GwtTestDomException("Unable to convert DOM Event \"" + type
@@ -135,12 +129,6 @@ public class EventUtils {
         return "gesturechange";
       case Event.ONGESTUREEND:
         return "gestureend";
-      case Event.ONENDED:
-        return "ended";
-      case Event.ONPROGRESS:
-        return "progress";
-      case Event.ONCANPLAYTHROUGH:
-        return "canplaythrough";
       default:
         throw new GwtTestDomException(
             "Cannot get the String type of event with code [" + eventTypeInt
