@@ -2,10 +2,8 @@ package com.octo.gwt.test.internal;
 
 import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.impl.HistoryImpl;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
@@ -39,14 +37,6 @@ class GwtReset {
     GwtReflectionUtils.callPrivateMethod(
         GwtReflectionUtils.getPrivateFieldValue(commandExecutor, "commands"),
         "clear");
-
-    HistoryImpl historyImpl = GwtReflectionUtils.getStaticFieldValue(
-        History.class, "impl");
-    GwtReflectionUtils.callPrivateMethod(
-        GwtReflectionUtils.getPrivateFieldValue(
-            GwtReflectionUtils.getPrivateFieldValue(
-                GwtReflectionUtils.getPrivateFieldValue(historyImpl, "handlers"),
-                "eventBus"), "map"), "clear");
 
     GwtReflectionUtils.setStaticField(NumberFormat.class,
         "cachedDecimalFormat", null);

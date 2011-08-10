@@ -2,11 +2,13 @@ package com.octo.gwt.test.internal.patchers;
 
 import java.util.Stack;
 
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.impl.HistoryImpl;
 import com.octo.gwt.test.internal.AfterTestCallback;
 import com.octo.gwt.test.internal.AfterTestCallbackManager;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
+import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 @PatchClass(HistoryImpl.class)
 class HistoryImplPatcher {
@@ -23,6 +25,14 @@ class HistoryImplPatcher {
     public void afterTest() throws Throwable {
       stack.clear();
       top = null;
+
+      HistoryImpl historyImpl = GwtReflectionUtils.getStaticFieldValue(
+          History.class, "impl");
+      GwtReflectionUtils.callPrivateMethod(
+          GwtReflectionUtils.getPrivateFieldValue(
+              GwtReflectionUtils.getPrivateFieldValue(
+                  GwtReflectionUtils.getPrivateFieldValue(historyImpl,
+                      "handlers"), "eventBus"), "map"), "clear");
     }
 
   }
