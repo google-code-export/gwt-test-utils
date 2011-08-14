@@ -42,7 +42,7 @@ public class ButtonTest extends GwtTestTest {
 
     // Assert
     assertEquals(
-        "<button type=\"button\" class=\"my-style\" disabled=\"\" accesskey=\"h\">test button</button>",
+        "<button type=\"button\" class=\"my-style\" disabled=\"\" accessKey=\"h\">test button</button>",
         toString);
   }
 

@@ -1,7 +1,7 @@
 package com.octo.gwt.test.internal.utils;
 
+import java.util.HashMap;
 import java.util.Map;
-import java.util.TreeMap;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
@@ -18,16 +18,8 @@ public class JsoProperties {
   public static final String DOCUMENT_ELEMENT = "documentElement";
 
   public static final String ELEM_BINDED_UIOBJECT = "ELEM_BINDED_UIOBJECT";
-  public static final String ELEM_CLASS = "class";
   public static final String ELEM_EVENTLISTENER = "ELEM_EVENTLISTENER";
-  public static final String ELEM_ID = "id";
-  public static final String ELEM_IMG_SRC = "src";
-  public static final String ELEM_LANG = "lang";
-  public static final String ELEM_NAME = "name";
   public static final String ELEM_PROPERTIES = "ELEM_PROPERTIES";
-  public static final String ELEM_STYLE = "style";
-  public static final String ELEM_TITLE = "title";
-  public static final String ELEM_TYPE = "type";
   public static final String ELEMENT_CLIENT_HEIGHT = "ELEMENT_CLIENT_HEIGHT";
   public static final String ELEMENT_CLIENT_WIDTH = "ELEMENT_CLIENT_WIDTH";
 
@@ -44,7 +36,6 @@ public class JsoProperties {
   public static final String EVENT_TARGET = "EVENT_target";
   public static final String EVENT_TYPE = "EVENT_type";
 
-  public static final String INPUT_ELEM_VALUE = "value";
   public static final String JSARRAY_WRAPPED_LIST = "JSARRAY_WRAPPED_LIST";
 
   // MOUSE EVENT PROPERTIES
@@ -69,11 +60,11 @@ public class JsoProperties {
   public static final String STYLE_BORDER_BOTTOM_WIDTH = "border-bottom-width";
   public static final String STYLE_BORDER_LEFT_WIDTH = "border-left-width";
   public static final String STYLE_BORDER_RIGHT_WIDTH = "border-right-width";
-
   public static final String STYLE_BORDER_TOP_WIDTH = "border-top-width";
   public static final String STYLE_OBJECT_FIELD = "STYLE_OBJECT";
   public static final String STYLE_TARGET_ELEMENT = "STYLE_TARGET_ELEMENT";
   public static final String STYLE_WHITESPACE_PROPERTY = "whiteSpace";
+
   public static final String TAB_INDEX = "tabIndex";
   public static final String TAG_NAME = "tagName";
 
@@ -99,18 +90,24 @@ public class JsoProperties {
   private final Map<String, String> propertyNames;
 
   private JsoProperties() {
-    propertyNames = new TreeMap<String, String>();
+    propertyNames = new HashMap<String, String>();
+    propertyNames.put("id", "id");
+    propertyNames.put("name", "name");
+    propertyNames.put("class", "className");
+    propertyNames.put("title", "title");
+    propertyNames.put("type", "type");
+    propertyNames.put("value", "value");
+    propertyNames.put("src", "src");
+    propertyNames.put("lang", "lang");
   }
 
-  public void addJsoProperty(String propertyName) {
-    propertyNames.put(propertyName.toLowerCase(), propertyName);
+  public String getStandardDOMPropertyName(String propertyNameCaseInsensitive) {
+    return propertyNames.get(propertyNameCaseInsensitive.toLowerCase());
   }
 
-  public String getPropertyName(String propertyNameCaseInsensitive) {
-    String propertyName = propertyNames.get(propertyNameCaseInsensitive.toLowerCase());
-
-    return (propertyName != null || propertyNameCaseInsensitive.contains("_"))
-        ? propertyName : propertyNameCaseInsensitive;
+  public boolean isStandardDOMProperty(String propertyName) {
+    return propertyNames.values().contains(propertyName)
+        && (!"class".equals(propertyName));
   }
 
 }

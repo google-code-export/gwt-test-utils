@@ -53,10 +53,9 @@ class DOMImplPatcher {
   @PatchMethod
   static ButtonElement createButtonElement(Object domImpl, Document doc,
       String type) {
-    ButtonElement e = (ButtonElement) doc.createElement("button");
-    PropertyContainer properties = JavaScriptObjects.getObject(e,
-        JsoProperties.ELEM_PROPERTIES);
-    properties.put(JsoProperties.ELEM_TYPE, type);
+    ButtonElement e = doc.createElement("button").cast();
+
+    e.setAttribute("type", type);
     return e;
   }
 
@@ -260,10 +259,16 @@ class DOMImplPatcher {
 
   @PatchMethod
   static String getAttribute(Object domImpl, Element elem, String name) {
-    name = JsoProperties.get().getPropertyName(name);
     PropertyContainer properties = JavaScriptObjects.getObject(elem,
         JsoProperties.ELEM_PROPERTIES);
-    return properties.getString(name);
+
+    String standardDOMPropertyName = JsoProperties.get().getStandardDOMPropertyName(
+        name);
+
+    return (standardDOMPropertyName != null)
+        ? properties.getString(standardDOMPropertyName)
+        : properties.getString(name.toLowerCase());
+
   }
 
   @PatchMethod
@@ -375,21 +380,22 @@ class DOMImplPatcher {
     PropertyContainer properties = JavaScriptObjects.getObject(elem,
         JsoProperties.ELEM_PROPERTIES);
 
-    return properties.contains(name);
+    String standardDOMPropertyName = JsoProperties.get().getStandardDOMPropertyName(
+        name);
+
+    return (standardDOMPropertyName != null)
+        ? properties.contains(standardDOMPropertyName)
+        : properties.contains(name.toLowerCase());
   }
 
   @PatchMethod
   static String imgGetSrc(Object domImpl, Element img) {
-    PropertyContainer properties = JavaScriptObjects.getObject(img,
-        JsoProperties.ELEM_PROPERTIES);
-    return properties.getString(JsoProperties.ELEM_IMG_SRC);
+    return img.getAttribute("src");
   }
 
   @PatchMethod
   static void imgSetSrc(Object domImpl, Element img, String src) {
-    PropertyContainer properties = JavaScriptObjects.getObject(img,
-        JsoProperties.ELEM_PROPERTIES);
-    properties.put(JsoProperties.ELEM_IMG_SRC, src);
+    img.setAttribute("src", src);
   }
 
   @PatchMethod
@@ -501,13 +507,10 @@ class DOMImplPatcher {
       String name) {
     InputElement e = doc.createElement("input").cast();
 
-    PropertyContainer properties = JavaScriptObjects.getObject(e,
-        JsoProperties.ELEM_PROPERTIES);
-
-    properties.put(JsoProperties.ELEM_TYPE, type);
+    e.setAttribute("type", type);
 
     if (name != null) {
-      properties.put(JsoProperties.ELEM_NAME, name);
+      e.setAttribute("name", name);
     }
 
     return e;

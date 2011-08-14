@@ -2,6 +2,7 @@ package com.octo.gwt.test.internal.patchers.dom;
 
 import java.util.List;
 
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
@@ -27,11 +28,6 @@ class ElementPatcher {
   }
 
   @PatchMethod
-  static String getClassName(Element element) {
-    return element.getAttribute(JsoProperties.ELEM_CLASS);
-  }
-
-  @PatchMethod
   static int getClientHeight(Element element) {
     return JavaScriptObjects.getInteger(element,
         JsoProperties.ELEMENT_CLIENT_HEIGHT);
@@ -46,11 +42,6 @@ class ElementPatcher {
   @PatchMethod
   static NodeList<Element> getElementsByTagName(Element elem, String tagName) {
     return DocumentPatcher.getElementsByTagName(elem, tagName);
-  }
-
-  @PatchMethod
-  static String getId(Element element) {
-    return element.getAttribute(JsoProperties.ELEM_ID);
   }
 
   @PatchMethod
@@ -103,32 +94,40 @@ class ElementPatcher {
   }
 
   @PatchMethod
+  static JavaScriptObject getPropertyJSO(Element element, String propertyName) {
+    return (JavaScriptObject) getPropertyObject(element, propertyName);
+  }
+
+  @PatchMethod
   static Object getPropertyObject(Element element, String propertyName) {
-    // TODO: remove this test ?
     if ("tagName".equals(propertyName)) {
-      return element.getTagName();
+      return element.getTagName().toUpperCase();
+    } else if ("style".equals(propertyName)) {
+      return element.getStyle();
     }
+
     PropertyContainer properties = JavaScriptObjects.getObject(element,
         JsoProperties.ELEM_PROPERTIES);
+
     return properties.getObject(propertyName);
   }
 
   @PatchMethod
   static String getPropertyString(Element element, String propertyName) {
 
-    String value = (String) getPropertyObject(element, propertyName);
+    Object value = getPropertyObject(element, propertyName);
 
     // null (javascript undefined) is a possible value here if not a DOM
     // standard property
-    if (value == null) {
-      String propertyNameCaseSensitive = JsoProperties.get().getPropertyName(
-          propertyName);
-      if (propertyName.equals(propertyNameCaseSensitive)) {
-        value = "";
-      }
+    if (value == null
+        && JsoProperties.get().isStandardDOMProperty(propertyName)) {
+      return "";
+    } else if (value == null) {
+      return null;
+    } else {
+      return value.toString();
     }
 
-    return value;
   }
 
   @PatchMethod
@@ -138,32 +137,33 @@ class ElementPatcher {
   }
 
   @PatchMethod
-  static String getTitle(Element element) {
-    return element.getAttribute(JsoProperties.ELEM_TITLE);
-  }
-
-  @PatchMethod
   static void removeAttribute(Element element, String name) {
     PropertyContainer properties = JavaScriptObjects.getObject(element,
         JsoProperties.ELEM_PROPERTIES);
-    properties.remove(name);
+
+    String standardDOMPropertyName = JsoProperties.get().getStandardDOMPropertyName(
+        name);
+
+    if (standardDOMPropertyName != null) {
+      properties.remove(standardDOMPropertyName);
+    } else {
+      properties.remove(name.toLowerCase());
+    }
   }
 
   @PatchMethod
   static void setAttribute(Element element, String attributeName, String value) {
     PropertyContainer properties = JavaScriptObjects.getObject(element,
         JsoProperties.ELEM_PROPERTIES);
-    properties.put(attributeName.toLowerCase(), value);
-  }
 
-  @PatchMethod
-  static void setClassName(Element element, String className) {
-    element.setAttribute(JsoProperties.ELEM_CLASS, className);
-  }
+    String standardDOMPropertyName = JsoProperties.get().getStandardDOMPropertyName(
+        attributeName);
 
-  @PatchMethod
-  static void setId(Element element, String id) {
-    element.setAttribute(JsoProperties.ELEM_ID, id);
+    if (standardDOMPropertyName != null) {
+      properties.put(standardDOMPropertyName, value);
+    } else {
+      properties.put(attributeName.toLowerCase(), value);
+    }
   }
 
   @PatchMethod
@@ -180,39 +180,37 @@ class ElementPatcher {
   }
 
   @PatchMethod
-  static void setPropertyBoolean(Element element, String propertyName,
-      boolean value) {
-    PropertyContainer properties = JavaScriptObjects.getObject(element,
-        JsoProperties.ELEM_PROPERTIES);
-    properties.put(propertyName.toLowerCase(), value);
+  static void setPropertyBoolean(Element element, String name, boolean value) {
+    setPropertyObject(element, name, value);
   }
 
   @PatchMethod
-  static void setPropertyDouble(Element element, String propertyName,
-      double value) {
-    PropertyContainer properties = JavaScriptObjects.getObject(element,
-        JsoProperties.ELEM_PROPERTIES);
-    properties.put(propertyName.toLowerCase(), value);
+  static void setPropertyDouble(Element element, String name, double value) {
+    setPropertyObject(element, name, value);
   }
 
   @PatchMethod
-  static void setPropertyInt(Element element, String propertyName, int value) {
-    PropertyContainer properties = JavaScriptObjects.getObject(element,
-        JsoProperties.ELEM_PROPERTIES);
-    properties.put(propertyName.toLowerCase(), value);
+  static void setPropertyInt(Element element, String name, int value) {
+    setPropertyObject(element, name, value);
   }
 
   @PatchMethod
-  static void setPropertyString(Element element, String propertyName,
-      String value) {
-    PropertyContainer properties = JavaScriptObjects.getObject(element,
-        JsoProperties.ELEM_PROPERTIES);
-    properties.put(propertyName.toLowerCase(), value);
+  static void setPropertyJSO(Element element, String name,
+      JavaScriptObject value) {
+    setPropertyObject(element, name, value);
   }
 
   @PatchMethod
-  static void setTitle(Element element, String title) {
-    element.setAttribute(JsoProperties.ELEM_TITLE, title);
+  static void setPropertyObject(Element element, String name, Object value) {
+    PropertyContainer properties = JavaScriptObjects.getObject(element,
+        JsoProperties.ELEM_PROPERTIES);
+
+    properties.put(name, value);
+  }
+
+  @PatchMethod
+  static void setPropertyString(Element element, String name, String value) {
+    setPropertyObject(element, name, value);
   }
 
 }

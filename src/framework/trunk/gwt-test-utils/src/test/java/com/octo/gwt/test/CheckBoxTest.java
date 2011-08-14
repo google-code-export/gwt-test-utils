@@ -77,7 +77,7 @@ public class CheckBoxTest extends GwtTestTest {
     // Arrange
     CheckBox cb = new CheckBox();
     // Pre-Assert
-    assertEquals("", cb.getFormValue());
+    assertEquals("on", cb.getFormValue());
 
     // Act
     cb.setFormValue("whatever");
