@@ -11,6 +11,7 @@ import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NodeList;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Text;
 import com.octo.gwt.test.internal.patchers.dom.JavaScriptObjects;
 import com.octo.gwt.test.internal.utils.JsoProperties;
@@ -46,6 +47,8 @@ class JavaScriptObjectPatcher {
       return "'" + text.getData() + "'";
     } else if (Document.class.isInstance(jso)) {
       return "[object HTMLDocument]";
+    } else if (Style.class.isInstance(jso)) {
+      return "[object CSSStyleDeclaration]";
     } else if (Element.class.isInstance(jso)) {
       Element e = jso.cast();
       return elementToString(e);
@@ -78,6 +81,10 @@ class JavaScriptObjectPatcher {
         if (disabled.booleanValue()) {
           sb.append(entry.getKey()).append("=\"\" ");
         }
+      } else if ("className".equals(entry.getKey())) {
+        // special treatment for "className", which is mapped with DOM standard
+        // property "class"
+        sb.append("class=\"").append(entry.getValue()).append("\" ");
       } else {
         sb.append(entry.getKey()).append("=\"").append(entry.getValue()).append(
             "\" ");

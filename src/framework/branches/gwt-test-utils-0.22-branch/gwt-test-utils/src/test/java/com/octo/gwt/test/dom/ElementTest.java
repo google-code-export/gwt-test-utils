@@ -41,6 +41,11 @@ public class ElementTest extends GwtTestTest {
     assertEquals("text", e.getAttribute("input"));
   }
 
+  @Before
+  public void beforeElementTest() {
+    e = Document.get().createDivElement();
+  }
+
   @Test
   public void cast_KO() {
     try {
@@ -100,18 +105,25 @@ public class ElementTest extends GwtTestTest {
   @Test
   public void className() {
     // Act 1
-    e.setClassName("clazz");
+    e.setClassName("testClass");
 
     // Assert 1
-    assertEquals("clazz", e.getClassName());
-    assertEquals("clazz", e.getAttribute("class"));
+    assertEquals("testClass", e.getClassName());
+    assertEquals("testClass", e.getAttribute("class"));
+    assertEquals("testClass", e.getAttribute("CLASS"));
+    assertEquals("", e.getAttribute("className"));
+    assertEquals("", e.getAttribute("CLASSNAME"));
+    assertNull(e.getPropertyString("class"));
+    assertNull(e.getPropertyString("CLASS"));
+    assertEquals("testClass", e.getPropertyString("className"));
+    assertNull(e.getPropertyString("CLASSNAME"));
 
     // Act 2
     e.addClassName("addon");
 
     // Assert 2
-    assertEquals("clazz addon", e.getClassName());
-    assertEquals("clazz addon", e.getAttribute("class"));
+    assertEquals("testClass addon", e.getClassName());
+    assertEquals("testClass addon", e.getAttribute("class"));
 
     // Act 3
     e.setAttribute("class", "override");
@@ -175,6 +187,50 @@ public class ElementTest extends GwtTestTest {
 
     // Assert
     assertEquals("dir", e.getDir());
+  }
+
+  @Test
+  public void domImplementation() {
+    // Arrange
+    e.setAttribute("test", "testAttr");
+
+    // Assert getAttribute() is case insensitive
+    assertEquals("testAttr", e.getAttribute("test"));
+    assertEquals("testAttr", e.getAttribute("Test"));
+
+    // Assert hasAttribute is case insensitive
+    assertTrue(e.hasAttribute("teST"));
+
+    // Assert removeAttribute is case insensitve
+    e.removeAttribute("tEst");
+    assertEquals("", e.getAttribute("test"));
+    assertFalse(e.hasAttribute("teST"));
+
+    // Assert "non standard" DOM properties returns 'undefined' for String,
+    // Object and JSO
+    assertNull(e.getPropertyString("test"));
+    assertFalse(e.getPropertyBoolean("test"));
+    assertEquals(0, e.getPropertyInt("test"));
+    assertEquals(new Double(0.0), (Double) e.getPropertyDouble("test"));
+    assertNull(e.getPropertyObject("test"));
+    assertNull(e.getPropertyJSO("test"));
+
+    // Assert "standard" DOM properties returns "" for String
+    assertEquals("", e.getPropertyString("className"));
+    assertNull(e.getPropertyString("classnamE"));
+
+    e.setPropertyString("className", "testClass");
+    assertEquals("testClass", e.getPropertyString("className"));
+    // Special case "class" and "className"
+    assertNull(e.getPropertyString("class"));
+    assertEquals("testClass", e.getAttribute("class"));
+    assertEquals("", e.getAttribute("CLASSNAME"));
+    assertNull(e.getPropertyString("CLASSNAME"));
+
+    // Assert on Style JSO
+    System.out.println(e.getPropertyString("style"));
+    assertEquals("", e.getAttribute("style")); // prints ""
+    assertEquals("[object CSSStyleDeclaration]", e.getPropertyString("style"));
   }
 
   @Test
@@ -275,6 +331,15 @@ public class ElementTest extends GwtTestTest {
   }
 
   @Test
+  public void hasAttribute() {
+    // Arrange
+    e.setAttribute("myAttr", "value");
+
+    // Act & Assert
+    assertTrue(e.hasAttribute("myAttr"));
+  }
+
+  @Test
   public void id() {
     // Act 1
     e.setId("myId");
@@ -289,11 +354,6 @@ public class ElementTest extends GwtTestTest {
     // Assert 2
     assertEquals("updatedId", e.getId());
     assertEquals("updatedId", e.getAttribute("id"));
-  }
-
-  @Before
-  public void initElement() {
-    e = Document.get().createDivElement();
   }
 
   @Test
@@ -387,7 +447,7 @@ public class ElementTest extends GwtTestTest {
   @Test
   public void propertyString() {
     // Pre-Assert
-    assertEquals("", e.getPropertyString("prop"));
+    assertNull(e.getPropertyString("prop"));
 
     // Act
     e.setPropertyString("prop", "test");
@@ -402,7 +462,7 @@ public class ElementTest extends GwtTestTest {
     e.setAttribute("test", "value");
 
     // Act
-    e.removeAttribute("test");
+    e.removeAttribute("Test");
 
     // Assert
     assertEquals("Removed attribute should return emptyString", "",
@@ -444,6 +504,10 @@ public class ElementTest extends GwtTestTest {
   public void tagName() {
     // Act & Assert
     assertEquals("div", e.getTagName());
+    assertEquals("", e.getAttribute("tagName"));
+    assertEquals("", e.getAttribute("TAGNAME"));
+    assertEquals("DIV", e.getPropertyString("tagName"));
+    assertNull(e.getPropertyString("TAGNAME"));
   }
 
   @Test

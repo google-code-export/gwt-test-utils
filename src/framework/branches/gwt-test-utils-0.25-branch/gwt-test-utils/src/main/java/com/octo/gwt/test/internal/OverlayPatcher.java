@@ -9,7 +9,6 @@ import javassist.NotFoundException;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.octo.gwt.test.exceptions.GwtTestPatchException;
 import com.octo.gwt.test.internal.patchers.dom.JavaScriptObjects;
-import com.octo.gwt.test.internal.utils.JsoProperties;
 
 /**
  * 
@@ -60,8 +59,6 @@ class OverlayPatcher implements Patcher {
       return null;
     }
 
-    JsoProperties.get().addJsoProperty(propertyName);
-
     if (m.getName().startsWith("set")) {
       return getCodeSetProperty("this", propertyName, "$1");
     } else {
@@ -101,6 +98,7 @@ class OverlayPatcher implements Patcher {
 
   private String getCodeSetProperty(String object, String propertyName,
       String propertyValue) {
+
     return JavaScriptObjects.class.getName() + ".setProperty(" + object
         + ", \"" + propertyName + "\", " + propertyValue + ")";
   }

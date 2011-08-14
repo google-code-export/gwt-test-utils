@@ -61,6 +61,13 @@ class XMLParserImplPatcher {
     // Attribute return by XML node can be null
     PropertyContainer properties = JavaScriptObjects.getObject(o,
         JsoProperties.ELEM_PROPERTIES);
+
+    // special treatement for 'class' attribute, which is automatically stored
+    // in the PropertyContainer with 'className' key
+
+    if ("class".equals(name)) {
+      name = "className";
+    }
     return properties.getObject(name);
   }
 

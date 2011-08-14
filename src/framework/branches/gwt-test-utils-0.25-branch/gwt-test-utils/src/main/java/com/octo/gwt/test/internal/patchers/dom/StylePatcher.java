@@ -68,7 +68,7 @@ class StylePatcher {
     JavaScriptObjects.setProperty(style, propertyName, propertyValue);
 
     Element owner = StyleUtils.getOwnerElement(style);
-    String styleAttribute = owner.getAttribute(JsoProperties.ELEM_STYLE);
+    String styleAttribute = owner.getAttribute("style");
 
     LinkedHashMap<String, String> styleProperties = StyleUtils.getStyleProperties(styleAttribute);
 
@@ -89,7 +89,7 @@ class StylePatcher {
           "; ");
     }
 
-    owner.setAttribute(JsoProperties.ELEM_STYLE, sb.toString());
+    owner.setAttribute("style", sb.toString());
   }
 
 }

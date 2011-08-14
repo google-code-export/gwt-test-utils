@@ -53,10 +53,9 @@ class DOMImplPatcher {
   @PatchMethod
   static ButtonElement createButtonElement(Object domImpl, Document doc,
       String type) {
-    ButtonElement e = (ButtonElement) doc.createElement("button");
-    PropertyContainer properties = JavaScriptObjects.getObject(e,
-        JsoProperties.ELEM_PROPERTIES);
-    properties.put(JsoProperties.ELEM_TYPE, type);
+    ButtonElement e = doc.createElement("button").cast();
+
+    e.setAttribute("type", type);
     return e;
   }
 
@@ -71,21 +70,6 @@ class DOMImplPatcher {
 
     int typeInt = EventUtils.getEventTypeInt(type);
     return EventBuilder.create(typeInt).setCanBubble(canBubble).build();
-  }
-
-  static InputElement createInputElement(Document doc, String type, String name) {
-    InputElement e = (InputElement) doc.createElement("input");
-
-    PropertyContainer properties = JavaScriptObjects.getObject(e,
-        JsoProperties.ELEM_PROPERTIES);
-
-    properties.put(JsoProperties.ELEM_TYPE, type);
-
-    if (name != null) {
-      properties.put(JsoProperties.ELEM_NAME, name);
-    }
-
-    return e;
   }
 
   @PatchMethod
@@ -267,10 +251,16 @@ class DOMImplPatcher {
 
   @PatchMethod
   static String getAttribute(Object domImpl, Element elem, String name) {
-    name = JsoProperties.get().getPropertyName(name);
     PropertyContainer properties = JavaScriptObjects.getObject(elem,
         JsoProperties.ELEM_PROPERTIES);
-    return properties.getString(name);
+
+    String standardDOMPropertyName = JsoProperties.get().getStandardDOMPropertyName(
+        name);
+
+    return (standardDOMPropertyName != null)
+        ? properties.getString(standardDOMPropertyName)
+        : properties.getString(name.toLowerCase());
+
   }
 
   @PatchMethod
@@ -381,17 +371,26 @@ class DOMImplPatcher {
   }
 
   @PatchMethod
-  static String imgGetSrc(Object domImpl, Element img) {
-    PropertyContainer properties = JavaScriptObjects.getObject(img,
+  static boolean hasAttribute(Object domImpl, Element elem, String name) {
+    PropertyContainer properties = JavaScriptObjects.getObject(elem,
         JsoProperties.ELEM_PROPERTIES);
-    return properties.getString(JsoProperties.ELEM_IMG_SRC);
+
+    String standardDOMPropertyName = JsoProperties.get().getStandardDOMPropertyName(
+        name);
+
+    return (standardDOMPropertyName != null)
+        ? properties.contains(standardDOMPropertyName)
+        : properties.contains(name.toLowerCase());
+  }
+
+  @PatchMethod
+  static String imgGetSrc(Object domImpl, Element img) {
+    return img.getAttribute("src");
   }
 
   @PatchMethod
   static void imgSetSrc(Object domImpl, Element img, String src) {
-    PropertyContainer properties = JavaScriptObjects.getObject(img,
-        JsoProperties.ELEM_PROPERTIES);
-    properties.put(JsoProperties.ELEM_IMG_SRC, src);
+    img.setAttribute("src", src);
   }
 
   @PatchMethod
@@ -497,6 +496,19 @@ class DOMImplPatcher {
         JsoProperties.NODE_LIST_INNER_LIST);
 
     innerList.clear();
+  }
+
+  private static InputElement createInputElement(Document doc, String type,
+      String name) {
+    InputElement e = doc.createElement("input").cast();
+
+    e.setAttribute("type", type);
+
+    if (name != null) {
+      e.setAttribute("name", name);
+    }
+
+    return e;
   }
 
   private static NodeList<Node> getChildNodeList(Node node) {

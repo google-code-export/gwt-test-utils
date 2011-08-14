@@ -67,8 +67,8 @@ public class PropertyContainer implements Serializable {
   }
 
   public String getString(String key) {
-    String s = (String) map.get(key);
-    return s == null ? "" : s;
+    Object s = map.get(key);
+    return s == null ? "" : s.toString();
   }
 
   public Object put(String key, boolean value) {
@@ -101,6 +101,11 @@ public class PropertyContainer implements Serializable {
 
   public int size() {
     return map.size();
+  }
+
+  @Override
+  public String toString() {
+    return map.toString();
   }
 
 }

@@ -52,6 +52,11 @@ class DOMImplUserPatcher {
   }
 
   @PatchMethod
+  static EventListener getEventListener(DOMImpl domImpl, Element elem) {
+    return JavaScriptObjects.getObject(elem, JsoProperties.ELEM_EVENTLISTENER);
+  }
+
+  @PatchMethod
   static int getEventsSunk(DOMImpl domImpl, Element elem) {
     return 1;
   }
@@ -81,7 +86,6 @@ class DOMImplUserPatcher {
       EventListener listener) {
     JavaScriptObjects.setProperty(elem, JsoProperties.ELEM_EVENTLISTENER,
         listener);
-
   }
 
   @PatchMethod
