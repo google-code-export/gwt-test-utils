@@ -364,12 +364,13 @@ class DOMImplPatcher {
   }
 
   @PatchMethod
-  static boolean isOrHasChild(Object domImpl, Node parent, Node child) {
-    if (parent.equals(child)) {
-      return true;
-    } else if (child.getParentElement() != null
-        && child.getParentElement().equals(parent)) {
-      return true;
+  static boolean isOrHasChild(final Object domImpl, final Node parent,
+      Node child) {
+    while (child != null) {
+      if (parent.equals(child)) {
+        return true;
+      }
+      child = child.getParentNode();
     }
     return false;
   }

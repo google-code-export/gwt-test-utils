@@ -54,6 +54,11 @@ public class NodeTest extends GwtTestTest {
     }
   }
 
+  @Before
+  public void beforeNodeTest() {
+    n = Document.get().createDivElement();
+  }
+
   @Test
   public void clone_Deep() {
     // Arrange
@@ -202,11 +207,6 @@ public class NodeTest extends GwtTestTest {
     assertTrue("Element should have a child node", n.hasChildNodes());
   }
 
-  @Before
-  public void initElement() {
-    n = Document.get().createDivElement();
-  }
-
   @Test
   public void insertBefore() {
     // Arrange
@@ -241,6 +241,35 @@ public class NodeTest extends GwtTestTest {
     assertFalse("NodeList is not a DOM node", Node.is(list));
     assertTrue("AnchorElement is a DOM node",
         Node.is(Document.get().createAnchorElement()));
+  }
+
+  @Test
+  public void isOrHasChild_hasChild() {
+    // Arrange
+    Element a = Document.get().createAnchorElement();
+    Element div = Document.get().createDivElement();
+
+    div.appendChild(a);
+    n.appendChild(div);
+
+    // Act & Assert
+    assertTrue(n.isOrHasChild(a));
+  }
+
+  @Test
+  public void isOrHasChild_is() {
+    // Act & Assert
+    assertTrue(n.isOrHasChild(n));
+  }
+
+  @Test
+  public void isOrHasChild_notChild() {
+    // Arrange
+    Element a = Document.get().createAnchorElement();
+
+    // Act & Assert
+    assertFalse(n.isOrHasChild(a));
+
   }
 
   @Test

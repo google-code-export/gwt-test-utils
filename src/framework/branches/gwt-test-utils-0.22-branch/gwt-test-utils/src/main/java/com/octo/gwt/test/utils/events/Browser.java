@@ -564,7 +564,7 @@ public class Browser {
       return;
     }
 
-    // Handle special case of SimplePanel
+    // special case of SimplePanel
     if (SimplePanel.class.isInstance(target)) {
       SimplePanel panel = (SimplePanel) target;
       target = (panel.getWidget() != null) ? panel.getWidget() : panel;

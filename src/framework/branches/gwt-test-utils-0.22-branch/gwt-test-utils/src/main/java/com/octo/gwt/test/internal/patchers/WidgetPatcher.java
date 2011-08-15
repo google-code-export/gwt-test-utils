@@ -9,7 +9,6 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Widget;
 import com.octo.gwt.test.internal.patchers.dom.JavaScriptObjects;
-import com.octo.gwt.test.internal.utils.JsoProperties;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
@@ -18,6 +17,7 @@ class WidgetPatcher {
 
   @PatchMethod
   static void onBrowserEvent(Widget widget, Event event) {
+
     switch (DOM.eventGetType(event)) {
       case Event.ONMOUSEOVER:
         // Only fire the mouse over event if it's coming from outside this
@@ -36,21 +36,15 @@ class WidgetPatcher {
     onBrowserEventWithBubble(widget, event, applied);
   }
 
+  private static boolean isStopped(Event event) {
+    return JavaScriptObjects.getBoolean(event, "EVENT_isStopped");
+  }
+
   private static void onBrowserEventWithBubble(Widget widget, Event event,
       Set<Widget> applied) {
 
-    if (widget == null) {
-      return;
-    }
-
-    if (applied.contains(widget)) {
-      return;
-    }
-
-    boolean eventStopped = JavaScriptObjects.getBoolean(event,
-        JsoProperties.EVENT_IS_STOPPED);
-
-    if (eventStopped) {
+    if (widget == null || isStopped(event) || applied.contains(widget)) {
+      // cancel event handling
       return;
     }
 
