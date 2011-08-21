@@ -23,7 +23,10 @@ class CookiesPatcher {
   @PatchMethod
   static void removeCookieNative(String name) {
     Map<String, String> cachedCookies = getCookiesMap();
-    cachedCookies.remove(name);
+
+    if (cachedCookies != null) {
+      cachedCookies.remove(name);
+    }
   }
 
   @PatchMethod

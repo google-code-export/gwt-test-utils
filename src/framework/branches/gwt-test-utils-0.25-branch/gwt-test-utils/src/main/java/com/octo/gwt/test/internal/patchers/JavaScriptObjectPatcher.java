@@ -28,6 +28,16 @@ class JavaScriptObjectPatcher {
     return JavaScriptObjects.newObject(JsArrayString.class);
   }
 
+  @PatchMethod
+  static JavaScriptObject createFunction() {
+    return JavaScriptObjects.newObject(JavaScriptObject.class);
+  }
+
+  @PatchMethod
+  static JavaScriptObject createObject() {
+    return JavaScriptObjects.newObject(JavaScriptObject.class);
+  }
+
   @InitMethod
   static void initClass(CtClass c) throws CannotCompileException {
     // add field "protected PropertyContainer JSO_PROPERTIES;"
