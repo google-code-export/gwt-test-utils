@@ -1,5 +1,8 @@
 package com.octo.gwt.test.utils.events;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.BlurEvent;
@@ -8,16 +11,15 @@ import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
-import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.ComplexPanel;
+import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.RadioButton;
-import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
@@ -25,7 +27,6 @@ import com.octo.gwt.test.FinallyCommandTrigger;
 import com.octo.gwt.test.internal.GwtConfig;
 import com.octo.gwt.test.internal.patchers.dom.JavaScriptObjects;
 import com.octo.gwt.test.internal.utils.JsoProperties;
-import com.octo.gwt.test.utils.GwtReflectionUtils;
 import com.octo.gwt.test.utils.WidgetUtils;
 
 /**
@@ -171,7 +172,7 @@ public class Browser {
    * @param events Some events to dispatch.
    */
   public static void dispatchEvent(Widget target, Event... events) {
-    dispatchEvent(target, true, events);
+    dispatchEventInternal(target, true, events);
   }
 
   /**
@@ -314,7 +315,8 @@ public class Browser {
           keyCode).build();
       Event keyPressEvent = EventBuilder.create(Event.ONKEYPRESS).setKeyCode(
           keyCode).build();
-      dispatchEvent((Widget) hasTextWidget, check, keyDownEvent, keyPressEvent);
+      dispatchEventInternal((Widget) hasTextWidget, check, keyDownEvent,
+          keyPressEvent);
 
       // check if one on the events has been prevented
       boolean keyDownEventPreventDefault = JavaScriptObjects.getBoolean(
@@ -329,15 +331,15 @@ public class Browser {
 
       // trigger keyUp
       Event keyUpEvent = EventBuilder.create(Event.ONKEYUP).setKeyCode(keyCode).build();
-      dispatchEvent((Widget) hasTextWidget, check, keyUpEvent);
+      dispatchEventInternal((Widget) hasTextWidget, check, keyUpEvent);
     }
 
     // no need to check event anymore
-    dispatchEvent((Widget) hasTextWidget, false,
+    dispatchEventInternal((Widget) hasTextWidget, false,
         EventBuilder.create(Event.ONBLUR).build());
 
     if (changed) {
-      dispatchEvent((Widget) hasTextWidget, false,
+      dispatchEventInternal((Widget) hasTextWidget, false,
           EventBuilder.create(Event.ONCHANGE).build());
     }
   }
@@ -553,7 +555,7 @@ public class Browser {
     dispatchEvent(parent, onMouseOver, onMouseDown, onMouseUp, onClick);
   }
 
-  private static void dispatchEvent(Widget target, boolean check,
+  private static void dispatchEventInternal(Widget target, boolean check,
       Event... events) {
 
     // run finally scheduled commands first because they may modify the DOM
@@ -564,18 +566,14 @@ public class Browser {
       return;
     }
 
-    // special case of SimplePanel
-    if (SimplePanel.class.isInstance(target)) {
-      SimplePanel panel = (SimplePanel) target;
-      target = (panel.getWidget() != null) ? panel.getWidget() : panel;
-    }
-
     prepareEvents(target, events);
 
     boolean dipsatch = check ? canApplyEvent(events[0]) : true;
 
     if (dipsatch) {
-      dispatchEventInternal(target, events);
+      for (Event event : events) {
+        dispatchEventInternal(target, event);
+      }
     }
 
     // run finally scheduled commands because some could have been scheduled
@@ -583,51 +581,72 @@ public class Browser {
     FinallyCommandTrigger.triggerCommands();
   }
 
-  private static void dispatchEventInternal(Widget target, Event... events) {
-    for (Event event : events) {
-
-      // special case of click on CheckBox
-      if (CheckBox.class.isInstance(target)
-          && event.getTypeInt() == Event.ONCLICK) {
-        CheckBox checkBox = (CheckBox) target;
-        if (RadioButton.class.isInstance(target)) {
-          checkBox.setValue(true);
-        } else {
-          checkBox.setValue(!checkBox.getValue());
-        }
+  private static void dispatchEventInternal(Widget target, Event event) {
+    // special case of click on CheckBox
+    if (CheckBox.class.isInstance(target)
+        && event.getTypeInt() == Event.ONCLICK) {
+      CheckBox checkBox = (CheckBox) target;
+      if (RadioButton.class.isInstance(target)) {
+        checkBox.setValue(true);
+      } else {
+        checkBox.setValue(!checkBox.getValue());
       }
-
-      // set the related target
-      Element relatedTargetElement = JavaScriptObjects.getObject(event,
-          JsoProperties.EVENT_RELATEDTARGET);
-
-      if (relatedTargetElement == null) {
-        switch (event.getTypeInt()) {
-          case Event.ONMOUSEOVER:
-          case Event.ONMOUSEOUT:
-            Widget parent = target.getParent();
-            if (parent != null) {
-              relatedTargetElement = parent.getElement();
-            } else {
-              relatedTargetElement = Document.get().getDocumentElement();
-            }
-
-            JavaScriptObjects.setProperty(event,
-                JsoProperties.EVENT_RELATEDTARGET, relatedTargetElement);
-
-            break;
-        }
-      }
-
-      // dispatch the event
-      GwtReflectionUtils.callStaticMethod(DOM.class, "dispatchEvent", event,
-          target.getElement(), target);
     }
+
+    // set the related target
+    Element relatedTargetElement = JavaScriptObjects.getObject(event,
+        JsoProperties.EVENT_RELATEDTARGET);
+
+    if (relatedTargetElement == null) {
+      switch (event.getTypeInt()) {
+        case Event.ONMOUSEOVER:
+        case Event.ONMOUSEOUT:
+          Widget parent = target.getParent();
+          if (parent != null) {
+            relatedTargetElement = parent.getElement();
+          } else {
+            relatedTargetElement = Document.get().getDocumentElement();
+          }
+
+          JavaScriptObjects.setProperty(event,
+              JsoProperties.EVENT_RELATEDTARGET, relatedTargetElement);
+
+          break;
+      }
+    }
+
+    Set<Widget> applied = new HashSet<Widget>();
+    dispatchEventWithBubble(target, event, applied);
+  }
+
+  private static void dispatchEventWithBubble(Widget widget, Event event,
+      Set<Widget> applied) {
+
+    if (widget == null || isEventStopped(event) || applied.contains(widget)) {
+      // cancel event handling
+      return;
+    } else if (widget.getParent() instanceof Composite) {
+      // special case for composite, which trigger first its own handler, than
+      // the wrapped widget's handlers
+      widget = widget.getParent();
+    }
+
+    // fire
+    widget.onBrowserEvent(event);
+
+    applied.add(widget);
+
+    // process bubbling
+    dispatchEventWithBubble(widget.getParent(), event, applied);
   }
 
   private static boolean isDisabled(Element element) {
     return element.getPropertyBoolean("disabled")
         || element.getClassName().contains("gwt-CheckBox-disabled");
+  }
+
+  private static boolean isEventStopped(Event event) {
+    return JavaScriptObjects.getBoolean(event, "EVENT_isStopped");
   }
 
   private static boolean isVisible(Element element) {

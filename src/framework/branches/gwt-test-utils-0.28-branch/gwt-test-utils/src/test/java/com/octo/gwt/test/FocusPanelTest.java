@@ -75,7 +75,7 @@ public class FocusPanelTest extends GwtTestTest {
     // Assert
     Assert.assertTrue(test);
     // click event should not be dispatched to the child widget
-    Assert.assertEquals("clicked", child.getText());
+    Assert.assertEquals("focus panel's child widget", child.getText());
   }
 
   @Test

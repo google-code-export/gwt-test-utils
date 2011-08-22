@@ -228,7 +228,6 @@ public class ElementTest extends GwtTestTest {
     assertNull(e.getPropertyString("CLASSNAME"));
 
     // Assert on Style JSO
-    System.out.println(e.getPropertyString("style"));
     assertEquals("", e.getAttribute("style")); // prints ""
     assertEquals("[object CSSStyleDeclaration]", e.getPropertyString("style"));
   }

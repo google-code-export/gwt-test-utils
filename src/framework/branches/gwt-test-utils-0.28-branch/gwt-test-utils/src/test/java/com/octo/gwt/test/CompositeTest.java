@@ -7,10 +7,13 @@ import org.junit.Test;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.DomEvent;
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.octo.gwt.test.utils.events.Browser;
+import com.octo.gwt.test.utils.events.EventBuilder;
 
 public class CompositeTest extends GwtTestTest {
 
@@ -36,7 +39,7 @@ public class CompositeTest extends GwtTestTest {
     compositeCount = 0;
   }
 
-  // @Test
+  @Test
   public void click_Wrapped() {
     // Arrange
     label.addClickHandler(new ClickHandler() {
@@ -48,7 +51,7 @@ public class CompositeTest extends GwtTestTest {
         assertEquals(label.getElement(), event.getRelativeElement());
 
         // composite handler should be trigger first
-        assertEquals(labelCount + 1, compositeCount);
+        assertEquals(labelCount, compositeCount);
       }
     });
 
@@ -71,7 +74,7 @@ public class CompositeTest extends GwtTestTest {
     assertEquals(1, compositeCount);
   }
 
-  // @Test
+  @Test
   public void click_Wrapper() {
     // Arrange
     label.addClickHandler(new ClickHandler() {
@@ -107,7 +110,72 @@ public class CompositeTest extends GwtTestTest {
   }
 
   @Test
-  public void emptyTest() {
+  public void fireNativeEvent_Wrapped() {
+    // Arrange
+    label.addClickHandler(new ClickHandler() {
+
+      public void onClick(ClickEvent event) {
+        labelCount++;
+
+        assertEquals(label, event.getSource());
+        assertEquals(label.getElement(), event.getRelativeElement());
+      }
+    });
+
+    composite.addDomHandler(new ClickHandler() {
+
+      public void onClick(ClickEvent event) {
+        compositeCount++;
+
+        assertEquals(composite, event.getSource());
+        assertEquals(label.getElement(), event.getRelativeElement());
+      }
+
+    }, ClickEvent.getType());
+
+    Event clickEvent = EventBuilder.create(Event.ONCLICK).build();
+
+    // Act
+    DomEvent.fireNativeEvent(clickEvent, label, label.getElement());
+
+    // Assert
+    assertEquals(1, labelCount);
+    assertEquals(0, compositeCount);
+
+  }
+
+  @Test
+  public void fireNativeEvent_Wrapper() {
+    // Arrange
+    label.addClickHandler(new ClickHandler() {
+
+      public void onClick(ClickEvent event) {
+        labelCount++;
+
+        assertEquals(label, event.getSource());
+        assertEquals(label.getElement(), event.getRelativeElement());
+      }
+    });
+
+    composite.addDomHandler(new ClickHandler() {
+
+      public void onClick(ClickEvent event) {
+        compositeCount++;
+
+        assertEquals(composite, event.getSource());
+        assertEquals(label.getElement(), event.getRelativeElement());
+      }
+
+    }, ClickEvent.getType());
+
+    Event clickEvent = EventBuilder.create(Event.ONCLICK).build();
+
+    // Act
+    DomEvent.fireNativeEvent(clickEvent, composite, composite.getElement());
+
+    // Assert
+    assertEquals(0, labelCount);
+    assertEquals(1, compositeCount);
 
   }
 
