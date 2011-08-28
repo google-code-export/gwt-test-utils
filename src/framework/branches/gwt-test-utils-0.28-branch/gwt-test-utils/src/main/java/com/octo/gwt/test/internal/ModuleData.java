@@ -32,142 +32,168 @@ import com.octo.gwt.test.internal.utils.XmlUtils;
  */
 public class ModuleData {
 
-	private static final String[] CLASSPATH_ROOTS = new String[] { "src/main/java/", "src/main/resources/", "src/test/java/", "src/test/resources/",
-			"src/", "resources/", "res/" };
+  private static final String[] CLASSPATH_ROOTS = new String[]{
+      "src/main/java/", "src/main/resources/", "src/test/java/",
+      "src/test/resources/", "src/", "resources/", "res/"};
 
-	private static final Set<String> DEFAULT_CLIENT_PATHS = new HashSet<String>();
+  // must be declared and initialized BEFORE ModuleData INSTANCE
+  private static final Set<String> DEFAULT_CLIENT_PATHS = new HashSet<String>() {
+    private static final long serialVersionUID = -4617529294589721345L;
 
-	static {
-		DEFAULT_CLIENT_PATHS.add("com.google.gwt.");
-		DEFAULT_CLIENT_PATHS.add("com.octo.gwt.");
-		DEFAULT_CLIENT_PATHS.add("com.extjs.gxt.");
-	}
+    {
+      add("com.google.gwt.");
+      add("com.octo.gwt.");
+      add("com.extjs.gxt.");
+    }
+  };
 
-	private static final ModuleData INSTANCE = new ModuleData();
+  private static final ModuleData INSTANCE = new ModuleData();
 
-	public static ModuleData get() {
-		return INSTANCE;
-	}
+  public static ModuleData get() {
+    return INSTANCE;
+  }
 
-	private final Set<String> clientExclusions;
-	private final Set<String> clientPaths;
-	private final Map<String, String> moduleAlias;
+  private final Set<String> clientExclusions;
+  private final Set<String> clientPaths;
+  private final Set<String> customGeneratedClasses;
+  private final Map<String, String> moduleAlias;
+  private final Map<String, String> remoteServiceImpls;
+  private final Map<String, String> replaceWithClasses;
 
-	private final Map<String, String> remoteServiceImpls;
+  private ModuleData() {
+    moduleAlias = new HashMap<String, String>();
 
-	private ModuleData() {
-		moduleAlias = new HashMap<String, String>();
+    clientPaths = new HashSet<String>();
+    clientPaths.addAll(DEFAULT_CLIENT_PATHS);
 
-		clientPaths = new HashSet<String>();
-		clientPaths.addAll(DEFAULT_CLIENT_PATHS);
+    clientExclusions = new HashSet<String>();
 
-		clientExclusions = new HashSet<String>();
+    remoteServiceImpls = new HashMap<String, String>();
 
-		remoteServiceImpls = new HashMap<String, String>();
-	}
+    replaceWithClasses = new HashMap<String, String>();
 
-	public Set<String> getClientExclusions() {
-		return clientExclusions;
-	}
+    customGeneratedClasses = new HashSet<String>();
+  }
 
-	public Set<String> getClientPaths() {
-		return clientPaths;
-	}
+  public Set<String> getClientExclusions() {
+    return clientExclusions;
+  }
 
-	public String getModuleAlias(String module) {
-		return moduleAlias.get(module);
-	}
+  public Set<String> getClientPaths() {
+    return clientPaths;
+  }
 
-	public Set<String> getModuleNames() {
-		return Collections.unmodifiableSet(moduleAlias.keySet());
-	}
+  public Set<String> getCustomGeneratedClasses() {
+    return customGeneratedClasses;
+  }
 
-	public Class<?> getRemoteServiceImplClass(String remoteServicePath) {
-		if (!remoteServicePath.startsWith("/")) {
-			remoteServicePath = "/" + remoteServicePath;
-		}
+  public String getModuleAlias(String module) {
+    return moduleAlias.get(module);
+  }
 
-		String servletClassName = remoteServiceImpls.get(remoteServicePath);
+  public Set<String> getModuleNames() {
+    return Collections.unmodifiableSet(moduleAlias.keySet());
+  }
 
-		if (servletClassName == null) {
-			return null;
-		}
+  public Class<?> getRemoteServiceImplClass(String remoteServicePath) {
+    if (!remoteServicePath.startsWith("/")) {
+      remoteServicePath = "/" + remoteServicePath;
+    }
 
-		try {
-			return Class.forName(servletClassName, true, GwtClassLoader.get());
-		} catch (ClassNotFoundException e) {
-			throw new GwtTestConfigurationException("Cannot find servlet class '" + servletClassName + "' configured for servlet path '"
-					+ remoteServicePath + "'");
-		}
-	}
+    String servletClassName = remoteServiceImpls.get(remoteServicePath);
 
-	public void parseModule(String moduleFilePath) {
-		try {
-			Document document = createDocument(moduleFilePath);
-			XPath xpath = XPathFactory.newInstance().newXPath();
+    if (servletClassName == null) {
+      return null;
+    }
 
-			// parse .gwt.xml file to get the client package in the module and in the
-			// inherited modules
-			parseModuleFile(moduleFilePath, document, xpath);
+    try {
+      return Class.forName(servletClassName, true, GwtClassLoader.get());
+    } catch (ClassNotFoundException e) {
+      throw new GwtTestConfigurationException("Cannot find servlet class '"
+          + servletClassName + "' configured for servlet path '"
+          + remoteServicePath + "'");
+    }
+  }
 
-		} catch (Exception e) {
-			if (GwtTestException.class.isInstance(e)) {
-				throw (GwtTestException) e;
-			} else {
-				throw new GwtTestConfigurationException(e);
-			}
-		}
-	}
+  public String getReplaceWithClass(String classToCreate) {
+    return replaceWithClasses.get(classToCreate);
+  }
 
-	private Document createDocument(String moduleFilePath) throws Exception {
+  public void parseModule(String moduleFilePath) {
+    try {
+      Document document = createDocument(moduleFilePath);
+      XPath xpath = XPathFactory.newInstance().newXPath();
 
-		InputStream is = getModuleFileAsStream(moduleFilePath);
+      // parse .gwt.xml file to get the client package in the module and in the
+      // inherited modules
+      parseModuleFile(moduleFilePath, document, xpath);
 
-		try {
-			DocumentBuilder builder = XmlUtils.newDocumentBuilder();
-			return builder.parse(is);
-		} finally {
-			// close the stream
-			try {
-				is.close();
-			} catch (Exception ioException) {
-				// nothing to do
-			}
-		}
-	}
+    } catch (Exception e) {
+      if (GwtTestException.class.isInstance(e)) {
+        throw (GwtTestException) e;
+      } else {
+        throw new GwtTestConfigurationException(e);
+      }
+    }
+  }
 
-	private String getModuleAlias(Document document, XPath xpath, String moduleFilePath) throws XPathExpressionException {
-		return xpath.evaluate("/module/@rename-to", document).trim();
-	}
+  private Document createDocument(String moduleFilePath) throws Exception {
 
-	private InputStream getModuleFileAsStream(String moduleFilePath) {
-		InputStream is = GwtConfig.class.getClassLoader().getResourceAsStream(moduleFilePath);
+    InputStream is = getModuleFileAsStream(moduleFilePath);
 
-		if (is != null) {
-			return is;
-		}
+    try {
+      DocumentBuilder builder = XmlUtils.newDocumentBuilder();
+      return builder.parse(is);
+    } finally {
+      // close the stream
+      try {
+        is.close();
+      } catch (Exception ioException) {
+        // nothing to do
+      }
+    }
+  }
 
-		for (String classpathRoot : CLASSPATH_ROOTS) {
-			try {
-				return new FileInputStream(classpathRoot + moduleFilePath);
-			} catch (FileNotFoundException e) {
-				// try next
-			}
-		}
+  private String getModuleAlias(Document document, XPath xpath,
+      String moduleFilePath) throws XPathExpressionException {
+    return xpath.evaluate("/module/@rename-to", document).trim();
+  }
 
-		throw new GwtTestConfigurationException("Cannot find GWT module configuration file '" + moduleFilePath + "' in the classpath");
-	}
+  private InputStream getModuleFileAsStream(String moduleFilePath) {
+    InputStream is = GwtConfig.class.getClassLoader().getResourceAsStream(
+        moduleFilePath);
 
-	private String getModuleName(String moduleFilePath) {
-		return moduleFilePath.substring(0, moduleFilePath.toLowerCase().indexOf(".gwt.xml")).replaceAll("/", ".");
-	}
+    if (is != null) {
+      return is;
+    }
 
-	private String getModulePackage(String moduleFilePath) {
-		return moduleFilePath.substring(0, moduleFilePath.lastIndexOf("/") + 1).replaceAll("/", ".");
-	}
+    for (String classpathRoot : CLASSPATH_ROOTS) {
+      try {
+        return new FileInputStream(classpathRoot + moduleFilePath);
+      } catch (FileNotFoundException e) {
+        // try next
+      }
+    }
 
-	private void initializeClientPaths(String modulePackage, Document document, XPath xpath) throws XPathExpressionException {
-		NodeList sources = (NodeList) xpath.evaluate("/module/source", document, XPathConstants.NODESET);
+    throw new GwtTestConfigurationException(
+        "Cannot find GWT module configuration file '" + moduleFilePath
+            + "' in the classpath");
+  }
+
+  private String getModuleName(String moduleFilePath) {
+    return moduleFilePath.substring(0,
+        moduleFilePath.toLowerCase().indexOf(".gwt.xml")).replaceAll("/", ".");
+  }
+
+  private String getModulePackage(String moduleFilePath) {
+    return moduleFilePath.substring(0, moduleFilePath.lastIndexOf("/") + 1).replaceAll(
+        "/", ".");
+  }
+
+  private void initializeClientPaths(String modulePackage, Document document,
+      XPath xpath) throws XPathExpressionException {
+    NodeList sources = (NodeList) xpath.evaluate("/module/source", document,
+        XPathConstants.NODESET);
 
     // GWT default client paths
     clientPaths.add(modulePackage + "client.");
@@ -178,101 +204,156 @@ public class ModuleData {
       String sourcePath = xpath.evaluate("@path", source).trim().replaceAll(
           "/", ".");
 
-			if (sourcePath.length() < 1)
-				continue;
+      if (sourcePath.length() < 1) {
+        continue;
+      }
 
-			sourcePath = sourcePath.endsWith(".") ? modulePackage + sourcePath : modulePackage + sourcePath + ".";
-			clientPaths.add(sourcePath);
+      sourcePath = sourcePath.endsWith(".") ? modulePackage + sourcePath
+          : modulePackage + sourcePath + ".";
+      clientPaths.add(sourcePath);
 
-			initializeExclusionPaths(xpath, source, sourcePath);
+      initializeExclusionPaths(xpath, source, sourcePath);
+    }
+  }
 
-		}
-	}
+  private void initializeExclusionPaths(XPath xpath, Node source,
+      String sourcePath) throws XPathExpressionException {
+    NodeList exclusionNodes = (NodeList) xpath.evaluate("exclude", source,
+        XPathConstants.NODESET);
 
-	private void initializeExclusionPaths(XPath xpath, Node source, String sourcePath) throws XPathExpressionException {
-		NodeList exclusionNodes = (NodeList) xpath.evaluate("exclude", source, XPathConstants.NODESET);
+    for (int j = 0; j < exclusionNodes.getLength(); j++) {
+      Node exclusion = exclusionNodes.item(j);
+      String exclusionName = xpath.evaluate("@name", exclusion).trim();
+      int extensionToken = (exclusionName.toLowerCase().indexOf(".java"));
+      if (extensionToken > -1) {
+        exclusionName = exclusionName.substring(0, extensionToken).trim();
+      }
+      if (exclusionName.length() > 0) {
+        clientExclusions.add(sourcePath + exclusionName);
+      }
+    }
+  }
 
-		for (int j = 0; j < exclusionNodes.getLength(); j++) {
-			Node exclusion = exclusionNodes.item(j);
-			String exclusionName = xpath.evaluate("@name", exclusion).trim();
-			int extensionToken = (exclusionName.toLowerCase().indexOf(".java"));
-			if (extensionToken > -1) {
-				exclusionName = exclusionName.substring(0, extensionToken).trim();
-			}
-			if (exclusionName.length() > 0) {
-				clientExclusions.add(sourcePath + exclusionName);
-			}
-		}
-	}
+  private void initializeGenerateWith(Document document, XPath xpath)
+      throws XPathExpressionException {
 
-	private void initializeInherits(Document document, XPath xpath) throws Exception {
-		NodeList inherits = (NodeList) xpath.evaluate("/module/inherits", document, XPathConstants.NODESET);
+    NodeList whenTypeAssignableList = (NodeList) xpath.evaluate(
+        "/module/generate-with/when-type-assignable[@class]", document,
+        XPathConstants.NODESET);
 
-		for (int i = 0; i < inherits.getLength(); i++) {
-			Node inherit = inherits.item(i);
-			String inheritName = xpath.evaluate("@name", inherit).trim();
+    for (int i = 0; i < whenTypeAssignableList.getLength(); i++) {
+      Node whenTypeAssignableWith = whenTypeAssignableList.item(i);
 
-			if (moduleAlias.containsKey(inheritName) || moduleAlias.containsValue(inheritName) || isDefaultClientPathModule(inheritName)) {
-				continue;
-			}
+      String className = xpath.evaluate("@class", whenTypeAssignableWith);
+      customGeneratedClasses.add(className);
+    }
+  }
 
-			String inheritModuleFilePath = inheritName.replaceAll("\\.", "/") + ".gwt.xml";
+  private void initializeInherits(Document document, XPath xpath)
+      throws Exception {
+    NodeList inherits = (NodeList) xpath.evaluate("/module/inherits", document,
+        XPathConstants.NODESET);
 
-			Document inheritModuleDocument = createDocument(inheritModuleFilePath);
-			parseModuleFile(inheritModuleFilePath, inheritModuleDocument, xpath);
-		}
-	}
+    for (int i = 0; i < inherits.getLength(); i++) {
+      Node inherit = inherits.item(i);
+      String inheritName = xpath.evaluate("@name", inherit).trim();
 
-	private boolean isDefaultClientPathModule(String moduleName) {
-		for (String defaultClientPath : DEFAULT_CLIENT_PATHS) {
-			if (moduleName.startsWith(defaultClientPath)) {
-				return true;
-			}
-		}
+      if (moduleAlias.containsKey(inheritName)
+          || moduleAlias.containsValue(inheritName)
+          || isDefaultClientPathModule(inheritName)) {
+        continue;
+      }
 
-		return false;
-	}
+      String inheritModuleFilePath = inheritName.replaceAll("\\.", "/")
+          + ".gwt.xml";
 
-	private void initializeServlets(String moduleFilePath, Document document, XPath xpath) throws Exception {
-		NodeList servlets = (NodeList) xpath.evaluate("/module/servlet", document, XPathConstants.NODESET);
+      Document inheritModuleDocument = createDocument(inheritModuleFilePath);
+      parseModuleFile(inheritModuleFilePath, inheritModuleDocument, xpath);
+    }
+  }
 
-		for (int i = 0; i < servlets.getLength(); i++) {
-			Node servlet = servlets.item(i);
-			String servletPath = xpath.evaluate("@path", servlet).trim();
+  private void initializeReplaceWith(Document document, XPath xpath)
+      throws XPathExpressionException {
+    NodeList replaceWithList = (NodeList) xpath.evaluate(
+        "/module/replace-with[@class]", document, XPathConstants.NODESET);
 
-			if (servletPath == null || "".equals(servletPath.trim())) {
-				throw new GwtTestConfigurationException("Error in file '" + moduleFilePath + "' : <servlet> declared without a correct 'path' value");
-			}
+    for (int i = 0; i < replaceWithList.getLength(); i++) {
+      Node replaceWith = replaceWithList.item(i);
 
-			String servletClassName = xpath.evaluate("@class", servlet).trim();
+      NodeList whenPropertyIs = (NodeList) xpath.evaluate(
+          "descendant::when-property-is", replaceWith, XPathConstants.NODESET);
 
-			if (servletClassName == null || "".equals(servletClassName.trim())) {
-				throw new GwtTestConfigurationException("Error in file '" + moduleFilePath + "' : <servlet> declared without a correct 'class' value");
-			}
+      if (whenPropertyIs.getLength() == 0) {
+        // this is a default replace-with element, handle it !
+        String replaceClass = xpath.evaluate("@class", replaceWith);
+        String whenTypeIsClass = xpath.evaluate("when-type-is/@class",
+            replaceWith);
 
-			if (!servletPath.startsWith("/")) {
-				servletPath = "/" + servletPath;
-			}
+        replaceWithClasses.put(whenTypeIsClass, replaceClass);
 
-			remoteServiceImpls.put(servletPath, servletClassName);
+      }
+    }
+  }
 
-		}
-	}
+  private void initializeServlets(String moduleFilePath, Document document,
+      XPath xpath) throws Exception {
+    NodeList servlets = (NodeList) xpath.evaluate("/module/servlet", document,
+        XPathConstants.NODESET);
 
-	private void parseModuleFile(String moduleFilePath, Document document, XPath xpath) throws Exception {
+    for (int i = 0; i < servlets.getLength(); i++) {
+      Node servlet = servlets.item(i);
+      String servletPath = xpath.evaluate("@path", servlet).trim();
 
-		String moduleName = getModuleName(moduleFilePath);
-		String alias = getModuleAlias(document, xpath, moduleFilePath);
-		if (alias == null || "".equals(alias.trim())) {
-			alias = moduleName;
-		}
+      if (servletPath == null || "".equals(servletPath.trim())) {
+        throw new GwtTestConfigurationException("Error in file '"
+            + moduleFilePath
+            + "' : <servlet> declared without a correct 'path' value");
+      }
 
-		moduleAlias.put(moduleName, alias);
+      String servletClassName = xpath.evaluate("@class", servlet).trim();
 
-		String modulePackage = getModulePackage(moduleFilePath);
-		initializeClientPaths(modulePackage, document, xpath);
-		initializeInherits(document, xpath);
-		initializeServlets(moduleFilePath, document, xpath);
-	}
+      if (servletClassName == null || "".equals(servletClassName.trim())) {
+        throw new GwtTestConfigurationException("Error in file '"
+            + moduleFilePath
+            + "' : <servlet> declared without a correct 'class' value");
+      }
+
+      if (!servletPath.startsWith("/")) {
+        servletPath = "/" + servletPath;
+      }
+
+      remoteServiceImpls.put(servletPath, servletClassName);
+
+    }
+  }
+
+  private boolean isDefaultClientPathModule(String moduleName) {
+    for (String defaultClientPath : DEFAULT_CLIENT_PATHS) {
+      if (moduleName.startsWith(defaultClientPath)) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  private void parseModuleFile(String moduleFilePath, Document document,
+      XPath xpath) throws Exception {
+
+    String moduleName = getModuleName(moduleFilePath);
+    String alias = getModuleAlias(document, xpath, moduleFilePath);
+    if (alias == null || "".equals(alias.trim())) {
+      alias = moduleName;
+    }
+
+    moduleAlias.put(moduleName, alias);
+
+    String modulePackage = getModulePackage(moduleFilePath);
+    initializeClientPaths(modulePackage, document, xpath);
+    initializeInherits(document, xpath);
+    initializeServlets(moduleFilePath, document, xpath);
+    initializeReplaceWith(document, xpath);
+    initializeGenerateWith(document, xpath);
+  }
 
 }

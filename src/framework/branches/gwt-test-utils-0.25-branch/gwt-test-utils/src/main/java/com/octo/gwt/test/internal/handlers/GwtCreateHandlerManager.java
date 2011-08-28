@@ -25,6 +25,8 @@ public class GwtCreateHandlerManager implements AfterTestCallback {
   private final GwtCreateHandler cellBasedWidgetImplCreateHandler;
   private final GwtCreateHandler clientBundleCreateHander;
   private final GwtCreateHandler defaultGwtCreateHandler;
+  private final GwtCreateHandler deferredGenerateWithCreateHandler;
+  private final GwtCreateHandler deferredReplaceWithCreateHandler;
   private final GwtCreateHandler dockLayoutPanelCreateHandler;
   private final GwtCreateHandler htmlPanelCreateHandler;
   private final GwtCreateHandler imageBundleCreateHandler;
@@ -42,6 +44,8 @@ public class GwtCreateHandlerManager implements AfterTestCallback {
     cellBasedWidgetImplCreateHandler = new CellBasedWidgetImplCreateHandler();
     clientBundleCreateHander = new ClientBundleCreateHandler();
     defaultGwtCreateHandler = new DefaultGwtCreateHandler();
+    deferredGenerateWithCreateHandler = new DeferredGenerateWithCreateHandler();
+    deferredReplaceWithCreateHandler = new DeferredReplaceWithCreateHandler();
     dockLayoutPanelCreateHandler = new DefaultDockLayoutPanelHandler();
     htmlPanelCreateHandler = new HTMLPanelCreateHandler();
     imageBundleCreateHandler = new ImageBundleCreateHandler();
@@ -71,8 +75,12 @@ public class GwtCreateHandlerManager implements AfterTestCallback {
       list.add(mockCreateHandler);
     }
 
-    // then, add all user custom createHandlers
+    // than, add all user custom createHandlers
     list.addAll(addedHandlers);
+
+    // than, add custom deferred bindings
+    list.add(deferredReplaceWithCreateHandler);
+    list.add(deferredGenerateWithCreateHandler);
 
     // finally, add all default gwt-test-utils createHandlers
     list.add(localizableResourceCreateHandler);

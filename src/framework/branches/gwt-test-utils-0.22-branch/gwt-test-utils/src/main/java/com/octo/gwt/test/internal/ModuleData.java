@@ -55,9 +55,10 @@ public class ModuleData {
 
   private final Set<String> clientExclusions;
   private final Set<String> clientPaths;
+  private final Set<String> customGeneratedClasses;
   private final Map<String, String> moduleAlias;
-
   private final Map<String, String> remoteServiceImpls;
+  private final Map<String, String> replaceWithClasses;
 
   private ModuleData() {
     moduleAlias = new HashMap<String, String>();
@@ -68,6 +69,10 @@ public class ModuleData {
     clientExclusions = new HashSet<String>();
 
     remoteServiceImpls = new HashMap<String, String>();
+
+    replaceWithClasses = new HashMap<String, String>();
+
+    customGeneratedClasses = new HashSet<String>();
   }
 
   public Set<String> getClientExclusions() {
@@ -76,6 +81,10 @@ public class ModuleData {
 
   public Set<String> getClientPaths() {
     return clientPaths;
+  }
+
+  public Set<String> getCustomGeneratedClasses() {
+    return customGeneratedClasses;
   }
 
   public String getModuleAlias(String module) {
@@ -104,6 +113,10 @@ public class ModuleData {
           + servletClassName + "' configured for servlet path '"
           + remoteServicePath + "'");
     }
+  }
+
+  public String getReplaceWithClass(String classToCreate) {
+    return replaceWithClasses.get(classToCreate);
   }
 
   public void parseModule(String moduleFilePath) {
@@ -199,7 +212,6 @@ public class ModuleData {
       clientPaths.add(sourcePath);
 
       initializeExclusionPaths(xpath, source, sourcePath);
-
     }
   }
 
@@ -218,6 +230,21 @@ public class ModuleData {
       if (exclusionName.length() > 0) {
         clientExclusions.add(sourcePath + exclusionName);
       }
+    }
+  }
+
+  private void initializeGenerateWith(Document document, XPath xpath)
+      throws XPathExpressionException {
+
+    NodeList whenTypeAssignableList = (NodeList) xpath.evaluate(
+        "/module/generate-with/when-type-assignable[@class]", document,
+        XPathConstants.NODESET);
+
+    for (int i = 0; i < whenTypeAssignableList.getLength(); i++) {
+      Node whenTypeAssignableWith = whenTypeAssignableList.item(i);
+
+      String className = xpath.evaluate("@class", whenTypeAssignableWith);
+      customGeneratedClasses.add(className);
     }
   }
 
@@ -241,6 +268,29 @@ public class ModuleData {
 
       Document inheritModuleDocument = createDocument(inheritModuleFilePath);
       parseModuleFile(inheritModuleFilePath, inheritModuleDocument, xpath);
+    }
+  }
+
+  private void initializeReplaceWith(Document document, XPath xpath)
+      throws XPathExpressionException {
+    NodeList replaceWithList = (NodeList) xpath.evaluate(
+        "/module/replace-with[@class]", document, XPathConstants.NODESET);
+
+    for (int i = 0; i < replaceWithList.getLength(); i++) {
+      Node replaceWith = replaceWithList.item(i);
+
+      NodeList whenPropertyIs = (NodeList) xpath.evaluate(
+          "descendant::when-property-is", replaceWith, XPathConstants.NODESET);
+
+      if (whenPropertyIs.getLength() == 0) {
+        // this is a default replace-with element, handle it !
+        String replaceClass = xpath.evaluate("@class", replaceWith);
+        String whenTypeIsClass = xpath.evaluate("when-type-is/@class",
+            replaceWith);
+
+        replaceWithClasses.put(whenTypeIsClass, replaceClass);
+
+      }
     }
   }
 
@@ -301,6 +351,8 @@ public class ModuleData {
     initializeClientPaths(modulePackage, document, xpath);
     initializeInherits(document, xpath);
     initializeServlets(moduleFilePath, document, xpath);
+    initializeReplaceWith(document, xpath);
+    initializeGenerateWith(document, xpath);
   }
 
 }

@@ -39,7 +39,7 @@ class GwtPatcher {
             + GwtCreateHandler.class.getSimpleName()
             + " has been able to create an instance of '"
             + classLiteral.getName()
-            + "'. You should add our own with 'addGwtCreateHandler(..)' method or declared your tested object with @"
+            + "'. You should add our own with 'GwtTest.addGwtCreateHandler(..)' method or declared your tested object with @"
             + Mock.class.getSimpleName());
   }
 
