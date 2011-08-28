@@ -3,7 +3,7 @@
 	<groupId>com.octo.gwt.test</groupId>
 	<artifactId>gwt-test-utils-parent</artifactId>
 	<packaging>pom</packaging>
-	<version>0.32-SNAPSHOT</version>
+	<version>0.32</version>
 	<name>${project.artifactId}</name>
 
 	<properties>
@@ -15,7 +15,7 @@
 	</properties>
 
 	<scm>
-		<developerConnection>scm:svn:https://gwt-test-utils.googlecode.com/svn/src/framework/trunk</developerConnection>
+		<developerConnection>scm:svn:https://gwt-test-utils.googlecode.com/svn/src/framework/tags/gwt-test-utils-parent-0.32</developerConnection>
 	</scm>
 
 	<distributionManagement>
