@@ -57,7 +57,6 @@ public class CustomDeferredBindingTest extends GwtTestTest {
     IReplaceWith replaceWith = GWT.create(IReplaceWith.class);
 
     // Assert
-    System.out.println(replaceWith);
     assertTrue(replaceWith instanceof ReplaceWithMozilla);
   }
 
