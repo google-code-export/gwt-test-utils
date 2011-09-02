@@ -3,9 +3,11 @@ package com.octo.gwt.test.internal;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -31,6 +33,70 @@ import com.octo.gwt.test.internal.utils.XmlUtils;
  * 
  */
 public class ModuleData {
+
+  public static class ReplaceWithData {
+
+    private final Map<String, List<String>> anyWhenPropertyIs = new HashMap<String, List<String>>();
+    private final String replaceWith;
+    private final Map<String, String> whenPropertyIs = new HashMap<String, String>();
+    private final String whenTypeIs;
+
+    public ReplaceWithData(String replaceWith, String whenTypeIs) {
+      this.replaceWith = replaceWith;
+      this.whenTypeIs = whenTypeIs;
+    }
+
+    public boolean anyMatch(String propName, String propValue) {
+      List<String> any = anyWhenPropertyIs.get(propName);
+      if (any == null) {
+        return false;
+      }
+
+      for (String value : any) {
+        if (propValue.equals(value)) {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    public String getReplaceWith() {
+      return replaceWith;
+    }
+
+    public String getWhenTypeIs() {
+      return whenTypeIs;
+    }
+
+    public boolean hasAnyWhenPropertyIs() {
+      return anyWhenPropertyIs.size() > 0;
+    }
+
+    public boolean hasWhenPropertyIs() {
+      return whenPropertyIs.size() > 0;
+    }
+
+    public boolean whenPropertyIsMatch(String propName, String propValue) {
+      if (propValue == null) {
+        return false;
+      }
+
+      return propValue.equals(whenPropertyIs.get(propName));
+    }
+
+    void addAny(String propName, String propValue) {
+      List<String> any = anyWhenPropertyIs.get(propName);
+      if (any == null) {
+        any = new ArrayList<String>();
+        anyWhenPropertyIs.put(propName, any);
+      }
+      any.add(propValue);
+    }
+
+    void addWhenPropertyIs(String propName, String propValue) {
+      whenPropertyIs.put(propName, propValue);
+    }
+  }
 
   private static final String[] CLASSPATH_ROOTS = new String[]{
       "src/main/java/", "src/main/resources/", "src/test/java/",
@@ -58,7 +124,7 @@ public class ModuleData {
   private final Set<String> customGeneratedClasses;
   private final Map<String, String> moduleAlias;
   private final Map<String, String> remoteServiceImpls;
-  private final Map<String, String> replaceWithClasses;
+  private final Map<String, List<ReplaceWithData>> replaceWithListMap;
 
   private ModuleData() {
     moduleAlias = new HashMap<String, String>();
@@ -70,7 +136,7 @@ public class ModuleData {
 
     remoteServiceImpls = new HashMap<String, String>();
 
-    replaceWithClasses = new HashMap<String, String>();
+    replaceWithListMap = new HashMap<String, List<ReplaceWithData>>();
 
     customGeneratedClasses = new HashSet<String>();
   }
@@ -115,8 +181,8 @@ public class ModuleData {
     }
   }
 
-  public String getReplaceWithClass(String classToCreate) {
-    return replaceWithClasses.get(classToCreate);
+  public Map<String, List<ReplaceWithData>> getReplaceWithListMap() {
+    return replaceWithListMap;
   }
 
   public void parseModule(String moduleFilePath) {
@@ -280,18 +346,42 @@ public class ModuleData {
     for (int i = 0; i < replaceWithList.getLength(); i++) {
       Node replaceWith = replaceWithList.item(i);
 
-      NodeList whenPropertyIs = (NodeList) xpath.evaluate(
-          "descendant::when-property-is", replaceWith, XPathConstants.NODESET);
+      String replaceClass = xpath.evaluate("@class", replaceWith);
+      String whenTypeIsClass = xpath.evaluate("when-type-is/@class",
+          replaceWith);
 
-      if (whenPropertyIs.getLength() == 0) {
-        // this is a default replace-with element, handle it !
-        String replaceClass = xpath.evaluate("@class", replaceWith);
-        String whenTypeIsClass = xpath.evaluate("when-type-is/@class",
-            replaceWith);
+      ReplaceWithData data = new ReplaceWithData(replaceClass, whenTypeIsClass);
 
-        replaceWithClasses.put(whenTypeIsClass, replaceClass);
-
+      List<ReplaceWithData> list = replaceWithListMap.get(data.whenTypeIs);
+      if (list == null) {
+        list = new ArrayList<ReplaceWithData>();
+        replaceWithListMap.put(data.whenTypeIs, list);
       }
+
+      // Handle when-property-is list
+      NodeList whenPropertyIsList = (NodeList) xpath.evaluate(
+          "when-property-is", replaceWith, XPathConstants.NODESET);
+
+      for (int j = 0; j < whenPropertyIsList.getLength(); j++) {
+        Node whenPropertyIs = whenPropertyIsList.item(j);
+        String name = xpath.evaluate("@name", whenPropertyIs);
+        String value = xpath.evaluate("@value", whenPropertyIs);
+        data.addWhenPropertyIs(name, value);
+      }
+
+      // Handle any/when-property-is list
+      NodeList anyWhenPropertyIsList = (NodeList) xpath.evaluate(
+          "any/when-property-is", replaceWith, XPathConstants.NODESET);
+
+      for (int j = 0; j < anyWhenPropertyIsList.getLength(); j++) {
+        Node anyWhenPropertyIs = anyWhenPropertyIsList.item(j);
+        String name = xpath.evaluate("@name", anyWhenPropertyIs);
+        String value = xpath.evaluate("@value", anyWhenPropertyIs);
+
+        data.addAny(name, value);
+      }
+
+      list.add(data);
     }
   }
 

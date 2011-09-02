@@ -1,7 +1,10 @@
 package com.octo.gwt.test.utils.events;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 
 import com.google.gwt.dom.client.Document;
@@ -28,6 +31,7 @@ import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.HasData;
 import com.octo.gwt.test.FinallyCommandTrigger;
+import com.octo.gwt.test.internal.AfterTestCallback;
 import com.octo.gwt.test.internal.GwtConfig;
 import com.octo.gwt.test.internal.patchers.dom.JavaScriptObjects;
 import com.octo.gwt.test.internal.utils.JsoProperties;
@@ -58,6 +62,18 @@ public class Browser {
      */
     void onError(String errorMessage);
   }
+
+  private static class BrowserProperties implements AfterTestCallback {
+
+    private final Map<String, String> properties = new HashMap<String, String>();
+
+    public void afterTest() throws Throwable {
+      properties.clear();
+    }
+
+  }
+
+  private static final BrowserProperties BROWSER_PROPERTIES = new BrowserProperties();
 
   /**
    * Simulates a blur event.
@@ -427,6 +443,15 @@ public class Browser {
   }
 
   /**
+   * Get all Browser current properties.
+   * 
+   * @return A set of properties (name/value as strings).
+   */
+  public static Map<String, String> getProperties() {
+    return Collections.unmodifiableMap(BROWSER_PROPERTIES.properties);
+  }
+
+  /**
    * Simulates a keydown event.
    * 
    * @param target The targeted widget.
@@ -564,6 +589,17 @@ public class Browser {
           EventBuilder.create(Event.ONCHANGE).build());
     }
 	}
+
+  /**
+   * Set a browser property, like its 'user-agent', which could be use for
+   * deferred binding, like 'replace-with' mechanism.
+   * 
+   * @param name The name of the property.
+   * @param value The value of the property.
+   */
+  public static void setProperty(String name, String value) {
+    BROWSER_PROPERTIES.properties.put(name, value);
+  }
 
   private static boolean canApplyEvent(Event event) {
     Element targetElement = event.getEventTarget().cast();
