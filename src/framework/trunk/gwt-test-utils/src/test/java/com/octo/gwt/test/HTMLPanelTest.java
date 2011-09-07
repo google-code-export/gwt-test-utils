@@ -26,9 +26,12 @@ public class HTMLPanelTest extends GwtTestTest {
   @Test
   public void getInnerHTML() {
     // Arrange
-    HTMLPanel panel = new HTMLPanel("<h1>Test</h1>");
+    HTMLPanel panel = new HTMLPanel(
+        "<p>you can <b>test</b><a href=\"somelink\">here</a> and everything will be different</p>");
 
     // Act & Assert
-    assertEquals("<h1>Test</h1>", panel.getElement().getInnerHTML());
+    assertEquals(
+        "<p>you can <b>test</b><a href=\"somelink\">here</a> and everything will be different</p>",
+        panel.getElement().getInnerHTML());
   }
 }

@@ -57,12 +57,8 @@
 			<artifactId>slf4j-simple</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>net.sourceforge.cobertura</groupId>
-			<artifactId>cobertura</artifactId>
-			<version>1.9.4.1</version>
-			<scope>test</scope>
-		</dependency>
+		
+		
 	</dependencies>
 	
 	<dependencyManagement>
@@ -83,11 +79,6 @@
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>gwt-css-selectors</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
 			<groupId>com.google.gwt</groupId>
 			<artifactId>gwt-user</artifactId>
 			<version>${gwt.version}</version>
@@ -95,11 +86,6 @@
 		<dependency>
 			<groupId>com.google.gwt</groupId>
 			<artifactId>gwt-servlet</artifactId>
-			<version>${gwt.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.google.gwt</groupId>
-			<artifactId>gwt-dev</artifactId>
 			<version>${gwt.version}</version>
 		</dependency>
 		<dependency>
@@ -119,14 +105,19 @@
 			<version>3.12.1.GA</version>
 		</dependency>
 		<dependency>
-			<groupId>org.htmlparser</groupId>
-			<artifactId>htmlparser</artifactId>
-			<version>1.6</version>
+			<groupId>net.sourceforge.nekohtml</groupId>
+			<artifactId>nekohtml</artifactId>
+			<version>1.9.15</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-beanutils</groupId>
 			<artifactId>commons-beanutils</artifactId>
 			<version>1.8.3</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-lang</groupId>
+			<artifactId>commons-lang</artifactId>
+			<version>2.6</version>
 		</dependency>
 		<dependency>
 			<groupId>org.easymock</groupId>
