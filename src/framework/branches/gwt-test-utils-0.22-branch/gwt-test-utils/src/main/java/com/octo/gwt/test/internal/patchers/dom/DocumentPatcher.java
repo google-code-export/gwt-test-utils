@@ -240,7 +240,7 @@ class DocumentPatcher {
     if (htmlPrototype == null) {
       // parsing of the host page
       String html = getHostPageHTML(hostPagePath);
-      NodeList<Node> list = GwtHtmlParser.parse(html);
+      NodeList<Node> list = GwtHtmlParser.parse(html, false);
 
       htmlPrototype = findHTMLElement(hostPagePath, list);
       HTML_ELEMENT_PROTOTYPES.put(moduleName, hostPagePath, htmlPrototype);

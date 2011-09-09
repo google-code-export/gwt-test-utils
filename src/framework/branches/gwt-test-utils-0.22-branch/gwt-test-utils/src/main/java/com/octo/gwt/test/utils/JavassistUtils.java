@@ -1,12 +1,12 @@
 package com.octo.gwt.test.utils;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import javassist.CtClass;
 import javassist.CtConstructor;
 import javassist.NotFoundException;
 
-import com.google.gwt.dev.util.collect.HashSet;
 import com.octo.gwt.test.exceptions.GwtTestPatchException;
 
 /**

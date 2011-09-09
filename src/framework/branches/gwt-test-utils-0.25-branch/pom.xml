@@ -57,12 +57,8 @@
 			<artifactId>slf4j-simple</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>net.sourceforge.cobertura</groupId>
-			<artifactId>cobertura</artifactId>
-			<version>1.9.4.1</version>
-			<scope>test</scope>
-		</dependency>
+		
+		
 	</dependencies>
 	
 	<dependencyManagement>
@@ -80,11 +76,6 @@
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>gwt-test-utils-gxt</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>gwt-css-selectors</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
@@ -119,14 +110,14 @@
 			<version>3.12.1.GA</version>
 		</dependency>
 		<dependency>
-			<groupId>org.htmlparser</groupId>
-			<artifactId>htmlparser</artifactId>
-			<version>1.6</version>
-		</dependency>
-		<dependency>
 			<groupId>commons-beanutils</groupId>
 			<artifactId>commons-beanutils</artifactId>
 			<version>1.8.3</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-lang</groupId>
+			<artifactId>commons-lang</artifactId>
+			<version>2.6</version>
 		</dependency>
 		<dependency>
 			<groupId>org.easymock</groupId>
@@ -152,6 +143,16 @@
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-simple</artifactId>
 			<version>1.6.1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.inject</groupId>
+			<artifactId>guice</artifactId>
+			<version>3.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.inject.extensions</groupId>
+			<artifactId>guice-servlet</artifactId>
+			<version>3.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>

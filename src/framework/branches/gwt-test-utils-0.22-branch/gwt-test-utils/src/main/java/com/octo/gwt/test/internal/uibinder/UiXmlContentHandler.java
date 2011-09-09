@@ -19,7 +19,7 @@ class UiXmlContentHandler<T> implements ContentHandler {
   }
 
   public void characters(char[] ch, int start, int length) throws SAXException {
-    String text = String.copyValueOf(ch, start, length);
+    String text = String.valueOf(ch, start, length);
     this.builder.appendText(text);
   }
 
