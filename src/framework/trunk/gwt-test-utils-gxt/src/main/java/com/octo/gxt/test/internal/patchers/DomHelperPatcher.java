@@ -14,7 +14,7 @@ class DomHelperPatcher {
 
   @PatchMethod
   static Element append(Element elem, String html) {
-    NodeList<Node> parsedNodes = GwtHtmlParser.parse(html);
+    NodeList<Node> parsedNodes = GwtHtmlParser.parse(html, true);
 
     for (int i = 0; i < parsedNodes.getLength(); i++) {
       Node current = parsedNodes.getItem(i);
@@ -27,7 +27,7 @@ class DomHelperPatcher {
   @PatchMethod
   static Element insertAfter(Element elem, String html) {
     Element parent = elem.getParentElement().cast();
-    NodeList<Node> parsedNodes = GwtHtmlParser.parse(html);
+    NodeList<Node> parsedNodes = GwtHtmlParser.parse(html, true);
 
     for (int i = 0; i < parsedNodes.getLength(); i++) {
       Node previous = i > 0 ? parsedNodes.getItem(i - 1) : elem;
@@ -43,7 +43,7 @@ class DomHelperPatcher {
   @PatchMethod
   static Element insertBefore(Element elem, String html) {
     Element parent = elem.getParentElement().cast();
-    NodeList<Node> parsedNodes = GwtHtmlParser.parse(html);
+    NodeList<Node> parsedNodes = GwtHtmlParser.parse(html, true);
 
     parent.insertBefore(parsedNodes.getItem(0), elem);
 
@@ -59,7 +59,7 @@ class DomHelperPatcher {
 
   @PatchMethod
   static Element insertFirst(Element elem, String html) {
-    NodeList<Node> parsedNodes = GwtHtmlParser.parse(html);
+    NodeList<Node> parsedNodes = GwtHtmlParser.parse(html, true);
 
     elem.insertFirst(parsedNodes.getItem(0));
 

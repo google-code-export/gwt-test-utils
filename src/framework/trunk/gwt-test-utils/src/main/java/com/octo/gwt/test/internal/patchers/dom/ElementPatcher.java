@@ -172,7 +172,7 @@ class ElementPatcher {
         JsoProperties.NODE_LIST_INNER_LIST);
     innerList.clear();
 
-    NodeList<Node> nodes = GwtHtmlParser.parse(html);
+    NodeList<Node> nodes = GwtHtmlParser.parse(html, true);
 
     for (int i = 0; i < nodes.getLength(); i++) {
       innerList.add(nodes.getItem(i));

@@ -12,13 +12,6 @@
 	</parent>
 
 	<dependencies>
-		<!-- Add nekoHTML dependency first because gwt-dev has package xerces classes in a different 
-			version than nekoHTML, which result in a problem when setup custom NekoHTML 
-			SAX features (for example to parse fragment) -->
-		<dependency>
-			<groupId>net.sourceforge.nekohtml</groupId>
-			<artifactId>nekohtml</artifactId>
-		</dependency>
 		<dependency>
 			<groupId>com.google.gwt</groupId>
 			<artifactId>gwt-user</artifactId>
@@ -26,6 +19,12 @@
 		<dependency>
 			<groupId>com.google.gwt</groupId>
 			<artifactId>gwt-servlet</artifactId>
+		</dependency>
+		<!-- Add gwt-dev just to be sure gwt-test-utils is compatible with GWTTestCase -->
+		<!-- gwt-dev includes its the NekoHTML classes, in version 1.9.13, which is bugged with fragment parsing -->
+		<dependency>
+			<groupId>com.google.gwt</groupId>
+			<artifactId>gwt-dev</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>javassist</groupId>
@@ -54,6 +53,16 @@
 					<artifactId>objenesis</artifactId>
 				</exclusion>
 			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>com.google.inject</groupId>
+			<artifactId>guice</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.google.inject.extensions</groupId>
+			<artifactId>guice-servlet</artifactId>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>

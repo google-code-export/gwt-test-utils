@@ -21,7 +21,7 @@ public class GwtHtmlParserTest extends GwtTestTest {
     String html = "<div id=\"parent0\"></div><div id=\"parent1\"><div id=\"child0\"><span class=\"spanClass\" >test</span></div><BR><DIV id=\"child2\" style=\"color:red; font-style:italic; font-weight:bold; font-family:Arial\"></div>";
 
     // Act
-    NodeList<Node> nodes = GwtHtmlParser.parse(html);
+    NodeList<Node> nodes = GwtHtmlParser.parse(html, true);
 
     // Assert
     assertEquals(2, nodes.getLength());

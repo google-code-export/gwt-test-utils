@@ -2,11 +2,10 @@ package com.octo.gwt.test.internal.utils;
 
 import java.io.StringReader;
 
-import org.cyberneko.html.parsers.SAXParser;
 import org.xml.sax.InputSource;
-import org.xml.sax.SAXNotRecognizedException;
-import org.xml.sax.SAXNotSupportedException;
+import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
+import org.xml.sax.helpers.XMLReaderFactory;
 
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
@@ -22,12 +21,13 @@ import com.octo.gwt.test.exceptions.GwtTestPatchException;
  */
 public class GwtHtmlParser {
 
-  private static SAXParser PARSER;
+  private static XMLReader PARSER;
 
-  public static NodeList<Node> parse(String html) {
+  public static NodeList<Node> parse(String html, boolean innerHTML) {
     try {
       XMLReader saxReader = getParser();
-      GwtHtmlContentHandler contentHandler = new GwtHtmlContentHandler();
+      GwtHtmlContentHandler contentHandler = new GwtHtmlContentHandler(
+          innerHTML);
       saxReader.setContentHandler(contentHandler);
       saxReader.parse(new InputSource(new StringReader(html)));
       return contentHandler.getParsedNodes();
@@ -37,14 +37,17 @@ public class GwtHtmlParser {
     }
   }
 
-  private static SAXParser getParser() throws SAXNotRecognizedException,
-      SAXNotSupportedException {
+  private static XMLReader getParser() throws SAXException {
     if (PARSER == null) {
-      PARSER = new SAXParser();
-      PARSER.setFeature(
-          "http://cyberneko.org/html/features/balance-tags/document-fragment",
-          true);
+      PARSER = XMLReaderFactory.createXMLReader("org.cyberneko.html.parsers.SAXParser");
     }
+
+    // FIXME : this feature does not work with the NekoHTML version included in
+    // gwt-dev.jar (1.9.13)
+    // need to use the boolean "innerHTML)
+    PARSER.setFeature(
+        "http://cyberneko.org/html/features/balance-tags/document-fragment",
+        true);
 
     return PARSER;
 
