@@ -19,13 +19,24 @@ import com.google.gwt.dom.client.Document;
  */
 public class GwtXMLParser {
 
+  private static XMLReader PARSER;
+
   public static Document parse(String html) throws SAXException, IOException {
-    XMLReader saxReader = XmlUtils.newXMLReader();
+    XMLReader saxReader = getParser();
     GwtXmlContentHandler contentHandler = new GwtXmlContentHandler();
     saxReader.setContentHandler(contentHandler);
     saxReader.parse(new InputSource(new StringReader(html)));
 
     return contentHandler.getParsedDocument();
+  }
+
+  private static XMLReader getParser() {
+    if (PARSER == null) {
+      PARSER = XmlUtils.newXMLReader();
+    }
+
+    return PARSER;
+
   }
 
 }
