@@ -7,3 +7,25 @@ Since a GWT application usually deals with a backend server, you may be interest
 _gwt-test-utils_ comes with some classes to allow you to test your entire GWT + Guice stack very easily.
 
 = How to use =
+
+{{{
+
+public class DemoGuiceTest extends GwtGuiceTest {
+  
+  
+  @Override
+  public String getModuleName() {
+    return "com.octo.gwt.test.demo.Application";
+  }
+  
+  // ...
+  
+}
+
+}}}
+
+Instead of extending GwtTest, your test class must extends GwtGuiceTest which internally adds some extra behaviours. That's it !
+
+= Overriding default behaviour = 
+
+TODO
