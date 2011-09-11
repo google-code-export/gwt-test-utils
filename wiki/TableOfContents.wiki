@@ -1,3 +1,4 @@
+ * [GwtCompatibility GWT compatibility
  * [UserGuide User Guide]
  * [HowToUse Setup gwt-test-utils]
   * [http://code.google.com/p/gwt-test-utils/wiki/HowToUse#Getting_gwt-test-utils Getting gwt-test-utils]
