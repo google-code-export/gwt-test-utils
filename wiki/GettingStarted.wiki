@@ -1,4 +1,5 @@
 #summary The gwt-test-utils "Hello World!" application
+#sidebar TableOfContents
 
 Since *gwt-test-utils* is a testing framework, this page won't explain how to develop a "Hello World !" application, but how to test a GWT "Hello world !" application instead :-)
 
