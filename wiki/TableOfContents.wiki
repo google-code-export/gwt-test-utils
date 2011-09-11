@@ -9,6 +9,7 @@
   * [MockingClasses Mocking classes]
   * [MockingRpcServices Mocking RPC services]
  * [HowToWriteCsvScenario Writing complete test scenario with the CSV-based synthax]
- * [HowToUseWithSpring Integration with spring-test]
  * [HowToWriteCustomPatchers Writing custom patchers]
+ * [HowToUseWithSpring Integration with spring-test]
+ * [HowToUseWithGuice Integration with Guice]
  * [FAQ]
