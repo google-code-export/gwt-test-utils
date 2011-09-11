@@ -1,3 +1,7 @@
+#summary Frequently Asked Questions
+#sidebar TableOfContents
+
+
 == I get a {{{java.lang.UnsatisfiedLinkError}}} when launching my tests. What can I do ?==
 
 This exception will be thrown whenever you use a widget fonctionnality which call a native JSNI method the framework does not patch yet for the standard JVM.
