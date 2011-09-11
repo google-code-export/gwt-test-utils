@@ -1,3 +1,4 @@
+ * [GettingStarted Getting started]
  * [GwtCompatibility GWT compatibility]
  * [UserGuide User Guide]
  * [HowToUse Setup gwt-test-utils]
