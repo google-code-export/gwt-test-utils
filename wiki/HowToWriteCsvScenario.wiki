@@ -78,7 +78,6 @@ To run tests, we need a Run class which can told were to find CSV files to run a
 {{{GwtCsvTest}}} is the base class to do it :
 {{{
 @CsvDirectory(value = "functional-tests", extension = ".csv")
-@RunWith(StandardJUnit4CsvRunner.class)
 public class MyTestShell extends GwtCsvTest {
 
    private MyApp myApp = new MyApp();
@@ -194,7 +193,6 @@ We also have to modify the test class to provide some glue to connect the GWT UI
 
 {{{
 @CsvDirectory(value = "functional-tests", extension = ".csv")
-@RunWith(StandardJUnit4CsvRunner.class)
 public class MyTestShell extends GwtCsvTest {
 
    private MyApp myApp = new MyApp();
@@ -353,7 +351,6 @@ Finally, there is one thing left to do : to specify _initMacro.csv_ as a Macro f
 {{{
 @CsvDirectory(value = "functional-tests", extension = ".csv")
 @CsvMacros(value = "functional-tests", pattern = "^macro.*\\.csv$")
-@RunWith(StandardJUnit4CsvRunner.class)
 public class MyTestShell extends GwtCsvTest {
 
    ...
