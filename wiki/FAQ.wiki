@@ -1,26 +1,3 @@
-#summary Frequently Asked Questions
-#sidebar TableOfContents
-
-== I get a {{{ java.lang.RuntimeException: No mock registered for class}}} What do I miss ? == 
-
-It simply means that you forget to declare the class to be mocked.
-Let's assume you have a GWT Widget that make RCP call to the server via {{{MyService.myMethod()}}}.
-
-In your test class, you have to declare a mock for this service :
-
-{{{
-@Mock
-private MyServiceAsync myService;
-}}}
-
-*gwt-test-utils* will mock your {{{MyService}}} instance with [http://easymock.org/ EasyMock].
-
-Note the you *have to* use the annotation on the asynchronous version of the service interface.
-
-A complete example of mocking GWT RCP call is available in demonstration projects available in the <a href="http://code.google.com/p/gwt-test-utils/wiki/HowToWriteUnitTests#Tests_with_a_GWT_RPC_call">wiki</a>.
-
-
-
 == I get a {{{java.lang.UnsatisfiedLinkError}}} when launching my tests. What can I do ?==
 
 This exception will be thrown whenever you use a widget fonctionnality which call a native JSNI method the framework does not patch yet for the standard JVM.
