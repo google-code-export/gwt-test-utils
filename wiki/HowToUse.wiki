@@ -80,9 +80,6 @@ Other modules are listed by theirs artifactId :
 
  * {{{gwt-test-utils-csv}}}
  * {{{gwt-test-utils-gxt}}}
- * {{{gwt-test-utils-spring2}}}
- * {{{gwt-test-utils-spring3}}}
-
 
 All those modules are hosted on a custom Maven repository, which is provided by [http://www.octo.com/ Octo Technology] :
 
