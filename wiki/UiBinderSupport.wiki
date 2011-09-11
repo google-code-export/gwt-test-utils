@@ -21,12 +21,3 @@ Here is the list of features which are fully working :
 If something goes wrong with one of those features, please [http://code.google.com/p/gwt-test-utils/issues/list report an issue] or feel free to ask on the framework [http://groups.google.com/group/gwt-test-utils-users user mailing list].
 
 *We are aware of only one feature which is not working has expected when launching our GWT application : [http://code.google.com/intl/fr-FR/webtoolkit/doc/latest/DevGuideUiBinderI18n.html UiBinder i18n support].*
-
-Whereas
-
-
- 
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
