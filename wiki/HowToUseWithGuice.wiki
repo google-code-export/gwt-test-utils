@@ -1,0 +1,8 @@
+#summary This page explains how to test your GWT / Guice applications.
+#labels Guice
+
+Since a GWT application usually deals with a backend server, you may be interested in using Guice to manage your RPC services.
+
+_gwt-test-utils_ comes with some classes to allow you to test your entire GWT + Guice stack very easily.
+
+= How to use =
