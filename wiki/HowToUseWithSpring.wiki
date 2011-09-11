@@ -1,5 +1,6 @@
 #summary This page explains how to test your GWT / spring applications.
 #labels Spring
+#sidebar TableOfContents
 
 Since a GWT application usually deals with a backend server, you may be interested in using spring to manage your RPC services. A lot of simple frameworks, like [http://code.google.com/p/gwtrpc-spring/ gwtrpc-spring] will handle the glue code beetwen spring and GWT remote services for you.
 
