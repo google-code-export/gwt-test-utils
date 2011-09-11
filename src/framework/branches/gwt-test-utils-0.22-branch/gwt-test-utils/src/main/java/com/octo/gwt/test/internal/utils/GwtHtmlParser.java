@@ -40,14 +40,15 @@ public class GwtHtmlParser {
   private static XMLReader getParser() throws SAXException {
     if (PARSER == null) {
       PARSER = XMLReaderFactory.createXMLReader("org.cyberneko.html.parsers.SAXParser");
-    }
 
-    // FIXME : this feature does not work with the NekoHTML version included in
-    // gwt-dev.jar (1.9.13)
-    // need to use the boolean "innerHTML)
-    PARSER.setFeature(
-        "http://cyberneko.org/html/features/balance-tags/document-fragment",
-        true);
+      // FIXME : this feature does not work with the NekoHTML version included
+      // in
+      // gwt-dev.jar (1.9.13)
+      // need to use the boolean "innerHTML)
+      PARSER.setFeature(
+          "http://cyberneko.org/html/features/balance-tags/document-fragment",
+          true);
+    }
 
     return PARSER;
 

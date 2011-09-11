@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.junit.Assert;
+import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,6 +46,7 @@ import com.octo.gwt.test.utils.WidgetUtils;
 import com.octo.gwt.test.utils.events.Browser;
 import com.octo.gwt.test.utils.events.Browser.BrowserErrorHandler;
 
+@RunWith(GwtCsvRunner.class)
 public abstract class GwtCsvTest extends GwtTest {
 
   private static class MacroReader {

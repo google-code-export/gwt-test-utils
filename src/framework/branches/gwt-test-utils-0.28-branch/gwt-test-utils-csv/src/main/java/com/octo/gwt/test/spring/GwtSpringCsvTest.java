@@ -11,7 +11,9 @@ import org.springframework.mock.web.MockServletConfig;
 import org.springframework.test.context.ContextConfiguration;
 
 import com.google.gwt.user.client.rpc.RemoteService;
+import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import com.octo.gwt.test.csv.GwtCsvTest;
+import com.octo.gwt.test.server.RemoteServiceCreateHandler;
 
 /**
  * <p>
@@ -25,9 +27,10 @@ import com.octo.gwt.test.csv.GwtCsvTest;
  * </p>
  * <p>
  * You can autowire any spring bean in subclasses. For {@link RemoteService}
- * beans, implement the
+ * beans, see the
  * {@link GwtSpringCsvTest#findRpcServiceInSpringContext(ApplicationContext, Class, String)}
- * method to get deferred binding working in test mode.
+ * method which you might want to override to get deferred binding working as
+ * you need in test mode.
  * </p>
  * 
  * @author Gael Lazzari
@@ -39,6 +42,23 @@ public abstract class GwtSpringCsvTest extends GwtCsvTest implements
 
   private ApplicationContext applicationContext;
 
+  /**
+   * Spring test initialization method.
+   */
+  @Before
+  public void beforeGwtSpringCsvTest() {
+    // add a new RemoteServiceHandler which will call Spring context
+    addGwtCreateHandler(new RemoteServiceCreateHandler() {
+
+      @Override
+      protected Object findService(Class<?> remoteServiceClass,
+          String remoteServiceRelativePath) {
+        return findRpcServiceInSpringContext(applicationContext,
+            remoteServiceClass, remoteServiceRelativePath);
+      }
+    });
+  }
+
   /*
    * (non-Javadoc)
    * 
@@ -47,24 +67,6 @@ public abstract class GwtSpringCsvTest extends GwtCsvTest implements
   @Override
   public ServletConfig getServletConfig() {
     return new MockServletConfig();
-  }
-
-  /**
-   * Test initialization method.
-   */
-  @Before
-  public void initGwtSpringTest() {
-    // add a new RemoteServiceHandler which will call Spring context
-    addGwtCreateHandler(new SpringServiceGwtCreateHandler(applicationContext) {
-
-      @Override
-      protected Object findInSpringContext(
-          ApplicationContext applicationContext, Class<?> remoteServiceClass,
-          String remoteServiceRelativePath) {
-        return findRpcServiceInSpringContext(applicationContext,
-            remoteServiceClass, remoteServiceRelativePath);
-      }
-    });
   }
 
   /*
@@ -80,20 +82,29 @@ public abstract class GwtSpringCsvTest extends GwtCsvTest implements
   }
 
   /**
-   * Implement this method to retrieve {@link RemoteService} instance declared
-   * in a Spring context.
+   * Retrieve a GWT RPC service from a spring context. This implementation
+   * collects all assignable beans in the context. If no assignable bean can be
+   * found, it would returns <code>null</code>. If one an only one assignable
+   * bean can be found, it would be returned. If many assignable beans are
+   * found, this implementation would check if one of it has a matching
+   * {@link RemoteServiceRelativePath} annotation on its class. If so, it is
+   * returned. Otherwise, <code>null</code> is returned.
    * 
-   * @param applicationContext The spring context.
-   * @param remoteServiceClass The remote service interface of the spring bean
+   * @param applicationContext The Spring context.
+   * @param remoteServiceClass The remote service interface of the Spring bean
    *          to retrieve.
    * @param remoteServiceRelativePath The remote service relative path of the
-   *          spring bean to retrieve.
-   * @return The corresponding spring bean, or null if no bean has been found
+   *          Spring bean to retrieve.
+   * @return The corresponding Spring bean, or null if no bean has been found
    *         for this type and path.
    */
-  protected abstract Object findRpcServiceInSpringContext(
+  protected Object findRpcServiceInSpringContext(
       ApplicationContext applicationContext, Class<?> remoteServiceClass,
-      String remoteServiceRelativePath);
+      String remoteServiceRelativePath) {
+
+    return GwtSpringHelper.findRpcServiceInSpringContext(applicationContext,
+        remoteServiceClass, remoteServiceRelativePath);
+  }
 
   /**
    * Get the Spring context which as been injected in the test class.
