@@ -18,23 +18,30 @@ Note that those modules all directly depend on *gwt-test-utils-X.jar* and can be
 
 You can download _gwt-test-utils_ X version jars through the [http://code.google.com/p/gwt-test-utils/downloads/list Download section].
 
-In addition to _GWT_ jars, the framework requiers some other third-party librairies you should add to your project test classpath :
+The framework requiers some third-party librairies you should add to your project test classpath :
 
 ==== gwt-test-utils : ====
 
- * commons-beanutils-1.8.3.jar
- * commons-logging-1.1.1.jar
- * htmlparser-1.6.jar
- * javassist-3.12.1.GA.jar
- * junit-4.8.2.jar
- * slf4j-api-1.6.1.jar (with the adapter of your choice)
+ * gwt-user-2.0.1+.jar
+ * gwt-servlet-2.0.1+.jar
+ * *gwt-dev-2.0.1+.jar*
+ * commons-beanutils-1.8+.jar
+ * commons-lang-2.4+.jar
+ * javassist-3.12+.jar
+ * junit-4.5+.jar
+ * slf4j-api-1.6+.jar (with the adapter of your choice)
 
-If you are interested in using a java mock framework, _gwt-test-utils_ has been tested with :
+If you are interested in using a java mocking framework, _gwt-test-utils_ has been tested with :
 
  * easymock-3.0.jar
  * mockito-core-1.8.5.jar
 
-_gwt-test-utils_ also provide a nice integration with [http://www.springsource.org/ Spring]. It relies on the spring-test-2.5+.
+If you are interested in testing a GWT + Spring application with _gwt-test-utils_, you'll need to add *spring-test-2.5+* and all its related dependencies in your test classpath.
+
+Or, if it's the Guice feature you're interested in, you'll need
+
+ * guice-3.0.jar
+ * guice-servlet-3.0.jar
 
 ==== gwt-test-utils-csv : ====
 
