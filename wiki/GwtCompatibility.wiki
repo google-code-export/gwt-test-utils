@@ -1,4 +1,5 @@
 #summary This page explains how to choose the gwt-test-utils version to use
+#sidebar TableOfContents
 
 An important thing to know about _gwt-test-utils_ is that it relies on _GWT_ internal APIs.
 
