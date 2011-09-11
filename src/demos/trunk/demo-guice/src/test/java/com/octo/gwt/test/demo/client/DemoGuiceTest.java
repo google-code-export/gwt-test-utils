@@ -5,28 +5,25 @@ import static org.junit.Assert.assertNotNull;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
 
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Label;
+import com.google.inject.Inject;
 import com.octo.gwt.test.demo.server.FooBeanFactory;
 import com.octo.gwt.test.demo.server.FooBeanFactorySimple;
-import com.octo.gwt.test.spring.GwtSpringTest;
-import com.octo.gwt.test.spring.GwtTestContextLoader;
+import com.octo.gwt.test.guice.GwtGuiceTest;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 import com.octo.gwt.test.utils.events.Browser;
 
-@ContextConfiguration(locations = {"classpath:applicationContext.xml"}, loader = GwtTestContextLoader.class)
-public class DemoSpringTest extends GwtSpringTest {
+public class DemoGuiceTest extends GwtGuiceTest {
 
   private RPCComposite composite;
 
-  @Autowired
+  @Inject
   private FooBeanFactory fooBeanFactory;
 
   @Before
-  public void beforeDemoSpringTest() throws Exception {
+  public void beforeDemoGuiceTest() throws Exception {
     composite = new RPCComposite();
 
     // Assert this test has been injected object it needs

@@ -10,7 +10,9 @@
 	
 	<modules>
 		<module>demo-csv</module>
+		<module>demo-csv-guice</module>
 		<module>demo-csv-spring</module>
+		<module>demo-guice</module>
 		<module>demo-mocks</module>
 		<module>demo-simple</module>
 		<module>demo-spring</module>
@@ -24,7 +26,7 @@
 		<encoding>UTF-8</encoding>
 		<gwt.version>2.3.0</gwt.version>
 		<gwt.maven.plugin.version>2.3.0</gwt.maven.plugin.version>
-		<gwt.test.utils.version>0.31</gwt.test.utils.version>
+		<gwt.test.utils.version>0.33-SNAPSHOT</gwt.test.utils.version>
 		<java.version>1.5</java.version>
 	</properties>
 
@@ -119,6 +121,16 @@
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-simple</artifactId>
 			<version>1.6.1</version>
+		</dependency>
+				<dependency>
+			<groupId>com.google.inject</groupId>
+			<artifactId>guice</artifactId>
+			<version>3.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.inject.extensions</groupId>
+			<artifactId>guice-servlet</artifactId>
+			<version>3.0</version>
 		</dependency>
 		</dependencies>
 	</dependencyManagement>

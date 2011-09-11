@@ -1,7 +1,5 @@
 package com.octo.gwt.test.demo.client;
 
-import org.springframework.test.context.ContextConfiguration;
-
 import com.google.gwt.user.client.ui.RootPanel;
 import com.octo.gwt.test.csv.CsvDirectory;
 import com.octo.gwt.test.csv.CsvMacros;
@@ -9,13 +7,11 @@ import com.octo.gwt.test.csv.CsvMethod;
 import com.octo.gwt.test.csv.runner.CsvRunner;
 import com.octo.gwt.test.csv.runner.Node;
 import com.octo.gwt.test.csv.tools.NodeObjectFinder;
-import com.octo.gwt.test.spring.GwtSpringCsvTest;
-import com.octo.gwt.test.spring.GwtTestContextLoader;
+import com.octo.gwt.test.guice.GwtGuiceCsvTest;
 
 @CsvDirectory(value = "functional-tests", extension = ".csv")
 @CsvMacros(value = "functional-tests", pattern = "^macro.*\\.csv$")
-@ContextConfiguration(locations = {"classpath:applicationContext.xml"}, loader = GwtTestContextLoader.class)
-public class DemoCsvSpring2Test extends GwtSpringCsvTest {
+public class DemoCsvGuiceTest extends GwtGuiceCsvTest {
 
   private final Application application = new Application();
 
