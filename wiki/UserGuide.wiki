@@ -3,11 +3,11 @@
 
 = Introduction =
 
-gwt-test-utils is a Java testing framework for GWT applications. It provides a simple way to test your GWT User Interfaces without GWTTestCase, running in a standard JVM and using standard testing tools : JUnit, Easymock, Mockito, reflection, ... 
+_gwt-test-utils_ is a Java testing framework for GWT applications. It provides a simple way to test your GWT User Interfaces without GWTTestCase, running in a standard JVM and using standard testing tools : JUnit, Easymock, Mockito, reflection, ... 
 
 = Summary =
 
-The _gwt-test_utils_ user guide covers the following topics :
+The _gwt-test-utils_ user guide covers the following topics :
  * [GwtCompatibility GWT compatibility] : explains which version you should use according to your GWT version
  * [HowToUse Setup gwt-test-utils] : describes how to set up your projet to use gwt-test-utils
  * [HowToWriteUnitTests Writing unit tests] : presents how to write a simple unit test which manipulates GWT widgets and basic user events, and goes on to more advanced features like custom events building, simple objects mocking and RPC services mocking
