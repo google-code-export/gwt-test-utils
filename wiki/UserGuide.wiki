@@ -7,7 +7,7 @@ gwt-test-utils is a Java testing framework for GWT applications. It provides a s
 
 = Summary =
 
-This documentation covers the following topics :
+The _gwt-test_utils_ user guide covers the following topics :
  * [GwtCompatibility GWT compatibility] : explains which version you should use according to your GWT version
  * [HowToUse Setup gwt-test-utils] : describes how to set up your projet to use gwt-test-utils
  * [HowToWriteUnitTests Writing unit tests] : presents how to write a simple unit test which manipulates GWT widgets and basic user events, and goes on to more advanced features like custom events building, simple objects mocking and RPC services mocking
@@ -15,6 +15,5 @@ This documentation covers the following topics :
  * [HowToWriteCustomPatchers Writing custom patchers] : describes how the framework's patching capabilities can be extended through the use of custom patchers, and how to write them
  * [HowToUseWithSpring Integration with Spring] : describes how to test a GWT + Spring through the _spring-test_ module
  * [HowToUseWithGuice Integration with Guice] : describes how to test a GWT + Guice application
- * [FAQ] : various frequently asqued questions, which covers a few typical issues that you can run into when discovering the framework
 
 In addition, some demo applications can be checked out under [http://gwt-test-utils.googlecode.com/svn/src/demos/trunk/ SVN].
