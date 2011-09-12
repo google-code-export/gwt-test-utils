@@ -1,8 +1,8 @@
-#summary This page explains how to test your GWT / spring applications.
+#summary This page explains how to test your GWT / Spring applications.
 #labels Spring
 #sidebar TableOfContents
 
-Since a GWT application usually deals with a backend server, you may be interested in using spring to manage your RPC services. A lot of simple frameworks, like [http://code.google.com/p/gwtrpc-spring/ gwtrpc-spring] will handle the glue code beetwen spring and GWT remote services for you.
+Since a GWT application usually deals with a backend server, you may be interested in using Spring to manage your RPC services. A lot of simple frameworks, like [http://code.google.com/p/gwtrpc-spring/ gwtrpc-spring] will handle the glue code beetwen Spring and GWT remote services for you.
 
 But you also might want to test your entire stack. That's why _gwt-test-utils_ comes with some classes to do it very easily.
 
@@ -13,21 +13,31 @@ But you also might want to test your entire stack. That's why _gwt-test-utils_ c
 @ContextConfiguration(locations = {"classpath:applicationContext-test.xml"}, loader = GwtTestContextLoader.class)
 public class DemoSpringTest extends GwtSpringTest {
 
+  @Autowired
+  private MyService myService;
+
   @Override
   public String getModuleName() {
     return "com.octo.gwt.test.demo.Application";
   }
 
-   ...
+   // your test methods go here...
+
 }
 }}}
 
- # First, extend {{{GwtSpringTest}}}, the base class for test with spring.
+ # First, extend {{{GwtSpringTest}}}, the base class for test with Spring.
  # Use the {{{ContextConfiguration}}} annotation from _spring-test_ to configure your test context. _gwt-test-utils_ provides a custom Spring {{{ContextLoader}}} you *must* declare : {{{GwtTestContextLoader}}}.
  # Like in {{{GwtTest}}}, override the getModuleName() method.
+ # *That's it !* 
 
 Your {{{GwtSpringTest}}} subclasses can be injected with {{{@Autowired}}} beans, and hold a reference to the test {{{ApplicationContext}}} through the {{{GwtSpringTest.getApplicationContext()}}} protected method.
+Also note that your RPC servlets will automatically be binded to their corresponding {{{RemoteService}}} interfaces !
 
-If you want to write a [http://code.google.com/p/gwt-test-utils/wiki/HowToWriteCsvScenario CSV test scenario] which should be integrated with spring, just extend {{{GwtSpringCsvTest}}} instead of {{{GwtSpringTest}}} :-) 
+If you want to write a [http://code.google.com/p/gwt-test-utils/wiki/HowToWriteCsvScenario CSV test scenario] which should be integrated with Spring, just extend {{{GwtSpringCsvTest}}} instead of {{{GwtSpringTest}}} :-) 
 
 You can checkout [http://gwt-test-utils.googlecode.com/svn/src/demos/trunk/demo-spring demo-spring] and [http://gwt-test-utils.googlecode.com/svn/src/demos/trunk/demo-csv-spring demo-csv-spring] to see complete gwt+spring sample applications (integration with [http://code.google.com/p/gwtrpc-spring/ gwtrpc-spring]) and how to test them with _gwt-test-utils_.
+
+= Overriding default behaviour = 
+
+TODO
