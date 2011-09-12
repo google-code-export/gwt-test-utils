@@ -12,19 +12,30 @@ _gwt-test-utils_ comes with some classes to allow you to test your entire GWT + 
 
 public class DemoGuiceTest extends GwtGuiceTest {
   
-  
+  @Inject
+  private MyService myService;  
+
   @Override
   public String getModuleName() {
     return "com.octo.gwt.test.demo.Application";
   }
   
-  // ...
+  // your test methods go here...
   
 }
 
 }}}
 
-Instead of extending GwtTest, your test class must extends GwtGuiceTest which internally adds some extra behaviours. That's it !
+ # First, extend {{{GwtGuiceTest}}}, the base class for test with Guice.
+ # Like in {{{GwtTest}}}, override the getModuleName() method.
+ # *That's it !* 
+
+Your {{{GwtGuiceTest}}} subclasses can be injected with {{{@Inject}}} members, and hold a reference to the used {{{Injector}}} through the {{{GwtGuiceTest.getInjector()}}} protected method.
+Also note that your RPC servlets will automatically be binded to their corresponding {{{RemoteService}}} interfaces !
+
+If you want to write a [http://code.google.com/p/gwt-test-utils/wiki/HowToWriteCsvScenario CSV test scenario] which should be integrated with Guice, just extend {{{GwtGuiceCsvTest}}} instead of {{{GwtGuiceTest}}} :-) 
+
+You can checkout [http://gwt-test-utils.googlecode.com/svn/src/demos/trunk/demo-guice demo-guice] and [http://gwt-test-utils.googlecode.com/svn/src/demos/trunk/demo-csv-guice demo-csv-guice] to see complete GWT + Guice sample applications and how to test them with _gwt-test-utils_.
 
 = Overriding default behaviour = 
 
