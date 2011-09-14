@@ -31,9 +31,9 @@ public class BeanModelTest extends GwtGxtTest {
     BeanModel model = factory.createModel(customer);
 
     // Act
-    String name = model.get("name");
-    String email = model.get("email");
-    int age = model.get("age");
+    String name = (String) model.get("name");
+    String email = (String) model.get("email");
+    int age = (Integer) model.get("age");
 
     // Assert
     assertEquals("gael", name);
