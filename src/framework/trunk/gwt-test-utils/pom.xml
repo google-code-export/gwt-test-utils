@@ -21,7 +21,8 @@
 			<artifactId>gwt-servlet</artifactId>
 		</dependency>
 		<!-- Add gwt-dev just to be sure gwt-test-utils is compatible with GWTTestCase -->
-		<!-- gwt-dev includes its the NekoHTML classes, in version 1.9.13, which is bugged with fragment parsing -->
+		<!-- gwt-dev includes its the NekoHTML classes, in version 1.9.13, which 
+			is bugged with fragment parsing -->
 		<dependency>
 			<groupId>com.google.gwt</groupId>
 			<artifactId>gwt-dev</artifactId>
@@ -30,14 +31,22 @@
 			<groupId>javassist</groupId>
 			<artifactId>javassist</artifactId>
 		</dependency>
+		<!-- Use commons-beanutils and commons-lang bundled in gwt-dev.jar
 		<dependency>
 			<groupId>commons-beanutils</groupId>
 			<artifactId>commons-beanutils</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>commons-logging</groupId>
+					<artifactId>commons-logging</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>commons-lang</groupId>
 			<artifactId>commons-lang</artifactId>
 		</dependency>
+		-->
 		<dependency>
 			<groupId>org.easymock</groupId>
 			<artifactId>easymock</artifactId>
