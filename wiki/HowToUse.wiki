@@ -172,7 +172,7 @@ Just open a new JUnit Run configuration, and specify in the "JVM Arguments" text
 
 == With Maven ==
 
-In your project {{{pom.xml}}}, configure the Maven test plugin to increase the amount of memory available :
+In your project {{{pom.xml}}}, configure the [http://maven.apache.org/plugins/maven-surefire-plugin/ maven-surefire-plugin] to increase the amount of memory available :
 
 {{{
 <plugins>
