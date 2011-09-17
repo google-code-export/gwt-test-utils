@@ -1,4 +1,4 @@
-#summary This page explains how to test your GWT / Guice applications.
+#summary This page explains how to test your GWT + Guice applications.
 #labels Guice
 #sidebar TableOfContents
 
