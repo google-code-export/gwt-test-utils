@@ -7,7 +7,7 @@ import org.xml.sax.Attributes;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Text;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.octo.gwt.test.internal.patchers.dom.JavaScriptObjects;
 import com.octo.gwt.test.internal.utils.JsoProperties;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
@@ -45,7 +45,7 @@ class UiBinderElement implements UiBinderTag {
 
   }
 
-  public void addWidget(Widget widget) {
+  public void addWidget(IsWidget widget) {
     addWidget(this.wrapped, widget);
 
   }
@@ -64,18 +64,18 @@ class UiBinderElement implements UiBinderTag {
     return this.wrapped;
   }
 
-  protected void addWidget(Element wrapped, Widget widget) {
-    List<Widget> childWidgets = JavaScriptObjects.getObject(wrapped,
+  protected void addWidget(Element wrapped, IsWidget isWidget) {
+    List<IsWidget> childWidgets = JavaScriptObjects.getObject(wrapped,
         JsoProperties.UIBINDER_CHILD_WIDGETS_LIST);
 
     if (childWidgets == null) {
-      childWidgets = new ArrayList<Widget>();
+      childWidgets = new ArrayList<IsWidget>();
       JavaScriptObjects.setProperty(wrapped,
           JsoProperties.UIBINDER_CHILD_WIDGETS_LIST, childWidgets);
     }
 
-    childWidgets.add(widget);
-    appendElement(wrapped, widget.getElement());
+    childWidgets.add(isWidget);
+    appendElement(wrapped, isWidget.asWidget().getElement());
   }
 
   protected void appendElement(Element wrapped, Element child) {
