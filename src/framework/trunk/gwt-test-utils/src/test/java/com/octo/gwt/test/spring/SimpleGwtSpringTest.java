@@ -1,57 +1,34 @@
-package com.octo.gwt.test.integration;
+package com.octo.gwt.test.spring;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import org.junit.Before;
 import org.junit.Test;
+import org.springframework.test.context.ContextConfiguration;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.octo.gwt.test.GwtTestTest;
-import com.octo.gwt.test.integration.client.MyObject;
+import com.octo.gwt.test.client.MyObject;
+import com.octo.gwt.test.rpc.MyService;
+import com.octo.gwt.test.rpc.MyServiceAsync;
 
-public class RemoteServiceTest extends GwtTestTest {
+@ContextConfiguration(locations = {"classpath:com/octo/gwt/test/spring/applicationContext-test.xml"}, loader = GwtTestContextLoader.class)
+public class SimpleGwtSpringTest extends GwtSpringTest {
 
   private boolean failure;
   private boolean success;
 
-  @Before
-  public void beforeRemoteServiceTest() {
+  @Override
+  public String getModuleName() {
+    return "com.octo.gwt.test.GwtTestUtils";
+  }
+
+  @Test
+  public void rpcCall() {
+    // Arrange
     failure = false;
     success = false;
-  }
-
-  @Test
-  public void rpcCall_WithException() {
-    // Arrange
-    MyServiceAsync myService = GWT.create(MyService.class);
-
-    // Act
-    myService.someCallWithException(new AsyncCallback<Void>() {
-
-      public void onFailure(Throwable caught) {
-
-        assertEquals("Server side thrown exception !!", caught.getMessage());
-        failure = true;
-      }
-
-      public void onSuccess(Void result) {
-        success = true;
-      }
-    });
-
-    // Assert
-    assertTrue(
-        "The service callback should have been call in a synchronised way",
-        failure);
-    assertFalse(success);
-  }
-
-  @Test
-  public void rpcCall_WithSuccess() {
-    // Arrange
     MyObject object = new MyObject("my field initialized during test setup");
 
     MyServiceAsync myService = GWT.create(MyService.class);
@@ -89,6 +66,11 @@ public class RemoteServiceTest extends GwtTestTest {
         "The service callback should have been call in a synchronised way",
         success);
     assertFalse(failure);
+  }
+
+  @Override
+  protected String getHostPagePath(String moduleFullQualifiedName) {
+    return null;
   }
 
 }

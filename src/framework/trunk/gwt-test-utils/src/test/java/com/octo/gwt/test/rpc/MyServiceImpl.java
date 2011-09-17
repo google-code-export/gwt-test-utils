@@ -1,8 +1,8 @@
-package com.octo.gwt.test.integration;
+package com.octo.gwt.test.rpc;
 
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
-import com.octo.gwt.test.integration.client.MyChildObject;
-import com.octo.gwt.test.integration.client.MyObject;
+import com.octo.gwt.test.client.MyChildObject;
+import com.octo.gwt.test.client.MyObject;
 
 @RemoteServiceRelativePath("myService")
 public class MyServiceImpl implements MyService {

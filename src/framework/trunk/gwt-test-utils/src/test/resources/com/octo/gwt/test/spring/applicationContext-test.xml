@@ -4,6 +4,6 @@
         xsi:schemaLocation="http://www.springframework.org/schema/beans
          http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-        <bean id="myService" class="com.octo.gwt.test.integration.MyServiceImpl" />
+        <bean id="myService" class="com.octo.gwt.test.rpc.MyServiceImpl" />
 
 </beans>

@@ -1,4 +1,4 @@
-package com.octo.gwt.test.integration.client;
+package com.octo.gwt.test.client;
 
 import java.util.ArrayList;
 import java.util.List;

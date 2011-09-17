@@ -1,37 +1,57 @@
-package com.octo.gwt.test.integration.spring;
+package com.octo.gwt.test.rpc;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import org.junit.Before;
 import org.junit.Test;
-import org.springframework.context.ApplicationContext;
-import org.springframework.test.context.ContextConfiguration;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.octo.gwt.test.integration.MyService;
-import com.octo.gwt.test.integration.MyServiceAsync;
-import com.octo.gwt.test.integration.client.MyObject;
-import com.octo.gwt.test.spring.GwtSpringTest;
-import com.octo.gwt.test.spring.GwtTestContextLoader;
+import com.octo.gwt.test.GwtTestTest;
+import com.octo.gwt.test.client.MyObject;
 
-@ContextConfiguration(locations = {"classpath:com/octo/gwt/test/integration/spring/applicationContext-test.xml"}, loader = GwtTestContextLoader.class)
-public class SimpleGwtSpringTest extends GwtSpringTest {
+public class RemoteServiceTest extends GwtTestTest {
 
   private boolean failure;
   private boolean success;
 
-  @Override
-  public String getModuleName() {
-    return "com.octo.gwt.test.GwtTestUtils";
+  @Before
+  public void beforeRemoteServiceTest() {
+    failure = false;
+    success = false;
   }
 
   @Test
-  public void rpcCall() {
+  public void rpcCall_WithException() {
     // Arrange
-    failure = false;
-    success = false;
+    MyServiceAsync myService = GWT.create(MyService.class);
+
+    // Act
+    myService.someCallWithException(new AsyncCallback<Void>() {
+
+      public void onFailure(Throwable caught) {
+
+        assertEquals("Server side thrown exception !!", caught.getMessage());
+        failure = true;
+      }
+
+      public void onSuccess(Void result) {
+        success = true;
+      }
+    });
+
+    // Assert
+    assertTrue(
+        "The service callback should have been call in a synchronised way",
+        failure);
+    assertFalse(success);
+  }
+
+  @Test
+  public void rpcCall_WithSuccess() {
+    // Arrange
     MyObject object = new MyObject("my field initialized during test setup");
 
     MyServiceAsync myService = GWT.create(MyService.class);
@@ -69,23 +89,6 @@ public class SimpleGwtSpringTest extends GwtSpringTest {
         "The service callback should have been call in a synchronised way",
         success);
     assertFalse(failure);
-  }
-
-  @Override
-  protected Object findRpcServiceInSpringContext(
-      ApplicationContext applicationContext, Class<?> remoteServiceClass,
-      String remoteServiceRelativePath) {
-
-    if ("myService".equals(remoteServiceRelativePath)) {
-      return applicationContext.getBean("myService");
-    }
-
-    return null;
-  }
-
-  @Override
-  protected String getHostPagePath(String moduleFullQualifiedName) {
-    return null;
   }
 
 }
