@@ -63,6 +63,7 @@
 		
 		<g:Label ui:field="noCorrespondingUiFieldInJavaClass">No Corresponding @UiField in java class</g:Label>
 
+		<test:IsWidgetLabel ui:field="isWidgetLabel"></test:IsWidgetLabel>
 	</g:HTMLPanel>
 
 </ui:UiBinder>

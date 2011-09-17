@@ -1,7 +1,7 @@
 package com.octo.gwt.test.internal.uibinder;
 
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.IsWidget;
 
 /**
  * Handle <ui:with> tag
@@ -21,7 +21,7 @@ class UiBinderWith implements UiBinderTag {
     // nothing to do
   }
 
-  public void addWidget(Widget widget) {
+  public void addWidget(IsWidget isWidget) {
     // nothing to do
   }
 

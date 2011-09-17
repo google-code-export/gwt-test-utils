@@ -1,7 +1,7 @@
 package com.octo.gwt.test.internal.uibinder;
 
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.IsWidget;
 
 /**
  * Handle <ui:msg> tag.
@@ -26,8 +26,8 @@ class UiBinderMsg implements UiBinderTag {
         element.getTagName()).append(">");
   }
 
-  public void addWidget(Widget widget) {
-    parentTag.addWidget(widget);
+  public void addWidget(IsWidget isWidget) {
+    parentTag.addWidget(isWidget);
 
   }
 

@@ -120,5 +120,7 @@ public class UiBinderWithWidgetsTest extends GwtTestTest {
         "http://127.0.0.1:8888/gwt_test_utils_module/com/octo/gwt/test/uibinder/data.test",
         w.data.getUrl());
 
+    // Assertion on "IsWidget
+    assertEquals("isWidget Label", w.isWidgetLabel.getText());
   }
 }

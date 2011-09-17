@@ -45,6 +45,9 @@ public class UiBinderWithWidgets extends Composite {
   ImageResource img;
 
   @UiField
+  IsWidgetLabel isWidgetLabel;
+
+  @UiField
   ListBox listBox;
 
   @UiField

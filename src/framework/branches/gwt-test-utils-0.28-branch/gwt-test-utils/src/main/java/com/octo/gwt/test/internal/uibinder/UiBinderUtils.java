@@ -11,7 +11,7 @@ import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment.HorizontalAlignmentConstant;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment.VerticalAlignmentConstant;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.octo.gwt.test.exceptions.ReflectionException;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
@@ -112,7 +112,7 @@ class UiBinderUtils {
         && nameSpaceURI.equals(UIBINDER_NSURI);
   }
 
-  public static void populateWidget(Widget w, Map<String, Object> properties) {
+  public static void populateWidget(IsWidget w, Map<String, Object> properties) {
     try {
       UIBINDER_BEANUTILS.populate(w, properties);
     } catch (Exception e) {
@@ -125,7 +125,7 @@ class UiBinderUtils {
     String[] styles = (String[]) properties.get("addStyleNames");
     if (styles != null) {
       for (String style : styles) {
-        w.addStyleName(style);
+        w.asWidget().addStyleName(style);
       }
     }
   }

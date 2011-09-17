@@ -12,14 +12,15 @@ import com.google.gwt.dom.client.Text;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.HasWidgets;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.HasWidgets.ForIsWidget;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.octo.gwt.test.exceptions.GwtTestException;
 import com.octo.gwt.test.exceptions.GwtTestUiBinderException;
 import com.octo.gwt.test.exceptions.ReflectionException;
 import com.octo.gwt.test.internal.patchers.dom.JavaScriptObjects;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
-class UiBinderWidget<T extends Widget> implements UiBinderTag {
+class UiBinderWidget<T extends IsWidget> implements UiBinderTag {
 
   private static final Pattern ATTRIBUTE_PATTERN = Pattern.compile("^\\{(\\w+)\\.{1}([^\\}]*)}$");
 
@@ -108,8 +109,8 @@ class UiBinderWidget<T extends Widget> implements UiBinderTag {
     appendElement(this.wrapped, element);
   }
 
-  public final void addWidget(Widget widget) {
-    addWidget(this.wrapped, widget);
+  public final void addWidget(IsWidget isWidget) {
+    addWidget(this.wrapped, isWidget);
   }
 
   public final void appendText(String data) {
@@ -127,21 +128,31 @@ class UiBinderWidget<T extends Widget> implements UiBinderTag {
     return wrapped;
   }
 
-  protected void addWidget(T wrapped, Widget widget) {
-    if (HasWidgets.class.isInstance(wrapped)) {
+  protected void addWidget(T wrapped, IsWidget isWidget) {
+    if (ForIsWidget.class.isInstance(wrapped)) {
       // hack for GWT 2.1.0
       if (wrapped instanceof HTMLPanel) {
         HTMLPanel htmlPanel = (HTMLPanel) wrapped;
-        GwtReflectionUtils.callPrivateMethod(htmlPanel, "add", widget,
+        GwtReflectionUtils.callPrivateMethod(htmlPanel, "add",
+            isWidget.asWidget(), htmlPanel.getElement());
+      } else {
+        ((ForIsWidget) wrapped).add(isWidget);
+      }
+    } else if (HasWidgets.class.isInstance(wrapped)) {
+      // hack for GWT 2.1.0
+      if (wrapped instanceof HTMLPanel) {
+        HTMLPanel htmlPanel = (HTMLPanel) wrapped;
+        GwtReflectionUtils.callPrivateMethod(htmlPanel, "add", isWidget,
             htmlPanel.getElement());
       } else {
-        ((HasWidgets) wrapped).add(widget);
+        ((HasWidgets) wrapped).add(isWidget.asWidget());
       }
     }
+
   }
 
   protected void appendElement(T wrapped, Element child) {
-    wrapped.getElement().appendChild(child);
+    wrapped.asWidget().getElement().appendChild(child);
   }
 
   protected void appendText(T wrapped, String data) {
@@ -149,7 +160,7 @@ class UiBinderWidget<T extends Widget> implements UiBinderTag {
       ((HasText) wrapped).setText(data);
     } else {
       Text text = JavaScriptObjects.newText(data);
-      wrapped.getElement().appendChild(text);
+      wrapped.asWidget().getElement().appendChild(text);
     }
   }
 

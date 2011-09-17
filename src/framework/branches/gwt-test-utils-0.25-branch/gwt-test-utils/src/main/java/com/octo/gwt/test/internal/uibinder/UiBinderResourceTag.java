@@ -6,7 +6,7 @@ import java.util.Set;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.octo.gwt.test.exceptions.GwtTestUiBinderException;
 import com.octo.gwt.test.exceptions.ReflectionException;
 import com.octo.gwt.test.internal.utils.resources.ResourcePrototypeProxyBuilder;
@@ -40,7 +40,7 @@ abstract class UiBinderResourceTag implements UiBinderTag {
     // adapter method
   }
 
-  public void addWidget(Widget widget) {
+  public void addWidget(IsWidget widget) {
     // adapter method
   }
 

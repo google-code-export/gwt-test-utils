@@ -14,9 +14,9 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.uibinder.client.UiConstructor;
 import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.NamedFrame;
 import com.google.gwt.user.client.ui.RadioButton;
-import com.google.gwt.user.client.ui.Widget;
 import com.octo.gwt.test.exceptions.GwtTestConfigurationException;
 import com.octo.gwt.test.exceptions.GwtTestUiBinderException;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
@@ -107,8 +107,8 @@ public class UiBinderTagBuilder<T> {
       }
     } else {
       // add to its parent
-      if (Widget.class.isInstance(currentObject)) {
-        parentTag.addWidget((Widget) currentObject);
+      if (IsWidget.class.isInstance(currentObject)) {
+        parentTag.addWidget((IsWidget) currentObject);
       } else {
         parentTag.addElement((Element) currentObject);
       }
@@ -177,17 +177,18 @@ public class UiBinderTagBuilder<T> {
             + ".ui.xml");
       }
 
-      if (Widget.class.isAssignableFrom(clazz)) {
+      if (IsWidget.class.isAssignableFrom(clazz)) {
         // create or get the instance
-        Widget widget = getInstance((Class<? extends Widget>) clazz, attributes);
+        IsWidget isWidget = getInstance((Class<? extends IsWidget>) clazz,
+            attributes);
 
-        return new UiBinderWidget<Widget>(widget, attributes, parentTag, owner,
-            resourceManager);
+        return new UiBinderWidget<IsWidget>(isWidget, attributes, parentTag,
+            owner, resourceManager);
       } else {
         throw new GwtTestUiBinderException("Not managed type in file '"
             + owner.getClass().getSimpleName() + ".ui.xml"
-            + "', only subclass of '" + Widget.class.getName()
-            + "' are managed");
+            + "', only implementation of '" + IsWidget.class.getName()
+            + "' are allowed");
       }
     } else if (UiBinderUtils.isResourceTag(nameSpaceURI, localName)) {
       return resourceManager.registerResource(localName, attributes, parentTag);
