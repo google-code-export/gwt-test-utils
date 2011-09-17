@@ -1,0 +1,17 @@
+#summary This page explains how to test your GWT + GIN applications.
+#sidebar TableOfContents
+
+[http://code.google.com/p/google-gin/ google-gin] provides an elegant and easy way to do dependency injection in GWT client code, through its {{{com.google.gwt.inject.client.Ginjector}}} class.
+
+To enable _gwt-test-utils_ to instanciate your custom Ginjectors, all you need to do is to register a {{{GInjectorCreateHandler}}} during your test configuration.
+
+It could be done this way :
+
+{{{
+  @Before
+  public void setupGIN() {
+    addGwtCreateHandler(new GInjectorCreateHandler());
+  }
+}}}
+
+*That's it !* {{{GInjectorCreateHandler}}} will be able to handle your {{{GinModules}}} configuration without anything else :-)
