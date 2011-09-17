@@ -8,10 +8,15 @@ To enable _gwt-test-utils_ to instanciate your custom Ginjectors, all you need t
 It could be done this way :
 
 {{{
-  @Before
+
+public MyGinTest extends GwtTest {
+ 
+ @Before
   public void setupGIN() {
     addGwtCreateHandler(new GInjectorCreateHandler());
   }
+
+}
 }}}
 
 *That's it !* {{{GInjectorCreateHandler}}} will be able to handle your {{{GinModules}}} configuration without anything else :-)
