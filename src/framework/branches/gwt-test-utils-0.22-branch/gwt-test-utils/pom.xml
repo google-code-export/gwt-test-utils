@@ -31,22 +31,11 @@
 			<groupId>javassist</groupId>
 			<artifactId>javassist</artifactId>
 		</dependency>
-		<!-- Use commons-beanutils and commons-lang bundled in gwt-dev.jar
-		<dependency>
-			<groupId>commons-beanutils</groupId>
-			<artifactId>commons-beanutils</artifactId>
-			<exclusions>
-				<exclusion>
-					<groupId>commons-logging</groupId>
-					<artifactId>commons-logging</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>commons-lang</groupId>
-			<artifactId>commons-lang</artifactId>
-		</dependency>
-		-->
+		<!-- Use commons-beanutils and commons-lang bundled in gwt-dev.jar <dependency> 
+			<groupId>commons-beanutils</groupId> <artifactId>commons-beanutils</artifactId> 
+			<exclusions> <exclusion> <groupId>commons-logging</groupId> <artifactId>commons-logging</artifactId> 
+			</exclusion> </exclusions> </dependency> <dependency> <groupId>commons-lang</groupId> 
+			<artifactId>commons-lang</artifactId> </dependency> -->
 		<dependency>
 			<groupId>org.easymock</groupId>
 			<artifactId>easymock</artifactId>
@@ -71,6 +60,11 @@
 		<dependency>
 			<groupId>com.google.inject.extensions</groupId>
 			<artifactId>guice-servlet</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.google.gwt.inject</groupId>
+			<artifactId>gin</artifactId>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>

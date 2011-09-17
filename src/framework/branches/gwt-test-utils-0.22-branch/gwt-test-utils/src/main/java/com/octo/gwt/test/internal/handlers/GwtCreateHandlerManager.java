@@ -61,6 +61,7 @@ public class GwtCreateHandlerManager implements AfterTestCallback {
   public void afterTest() throws Throwable {
     addedHandlers.clear();
     testRemoteServiceCreateHandler.reset();
+    mockCreateHandler = null;
   }
 
   public List<GwtCreateHandler> getGwtCreateHandlers() {
