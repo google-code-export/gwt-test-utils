@@ -23,9 +23,9 @@ import com.google.inject.spi.InjectionPoint;
 import com.octo.gwt.test.exceptions.GwtTestPatchException;
 
 /**
- * Module to be added dynamically to substitute a GIN Injector with a Guice
- * Injector, in order to add all required bindings to call GWT's deferred
- * binding fallback.
+ * Additional Guice module class which must be added when replacing a GIN
+ * Injector with a Guice Injector, in order to add all required bindings to call
+ * GWT's deferred binding fallback which happens in GIN.
  * 
  * @author Alex Dobjanschi
  * @author Gael Lazzari
