@@ -14,4 +14,5 @@
   * [HowToWriteCustomPatchers Writing custom patchers]
   * [HowToUseWithSpring Integration with spring-test]
   * [HowToUseWithGuice Integration with Guice]
+  * [HowToUseWithGIN Integration with GIN]
  * [FAQ]
