@@ -5,6 +5,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.text.MessageFormat;
 
+import com.google.gwt.safecss.shared.SafeStyles;
 import com.google.gwt.safehtml.client.SafeHtmlTemplates;
 import com.google.gwt.safehtml.client.SafeHtmlTemplates.Template;
 import com.google.gwt.safehtml.shared.SafeHtml;
@@ -37,12 +38,16 @@ class SafeHtmlTemplatesCreateHandler implements GwtCreateHandler {
         for (int i = 0; i < args.length; i++) {
           if (SafeHtml.class.isInstance(args[i])) {
             newArgs[i] = ((SafeHtml) args[i]).asString();
+          } else if (SafeStyles.class.isInstance(args[i])) {
+            newArgs[i] = ((SafeStyles) args[i]).asString();
           } else {
             newArgs[i] = args[i];
           }
         }
 
-        String templateValue = MessageFormat.format(template.value(), newArgs);
+        // escape simple quote
+        String templateValue = MessageFormat.format(
+            template.value().replaceAll("'", "''"), newArgs);
 
         SafeHtmlBuilder builder = new SafeHtmlBuilder().appendHtmlConstant(templateValue);
 
