@@ -26,6 +26,7 @@ public class JsoProperties {
   // EVENT PROPERTIES
   public static final String EVENT_BUTTON = "EVENT_button";
   public static final String EVENT_IS_STOPPED = "EVENT_isStopped";
+
   public static final String EVENT_KEY_ALT = "EVENT_altKey";
   public static final String EVENT_KEY_CTRL = "EVENT_ctrlKey";
   public static final String EVENT_KEY_META = "EVENT_metaKey";
@@ -35,21 +36,27 @@ public class JsoProperties {
   public static final String EVENT_RELATEDTARGET = "EVENT_relatedTarget";
   public static final String EVENT_TARGET = "EVENT_target";
   public static final String EVENT_TYPE = "EVENT_type";
-
   public static final String JSARRAY_WRAPPED_LIST = "JSARRAY_WRAPPED_LIST";
-
   // MOUSE EVENT PROPERTIES
   public static final String MOUSEEVENT_CLIENTX = "EVENT_clientX";
+
   public static final String MOUSEEVENT_CLIENTY = "EVENT_clientY";
+
   public static final String MOUSEEVENT_SCREENX = "EVENT_screenX";
   public static final String MOUSEEVENT_SCREENY = "EVENT_screenY";
-
   public static final String NODE_LIST_FIELD = "childNodes";
   public static final String NODE_LIST_INNER_LIST = "NODE_LIST_INNER_LIST";
+
   public static final String NODE_NAME = "nodeName";
   public static final String NODE_NAMESPACE_URI = "namespaceURI";
   public static final String NODE_TYPE_FIELD = "nodeType";
   public static final String PARENT_NODE_FIELD = "parentNode";
+
+  // POTENTIAL ELEMENT PROPERTIES
+  public static final String POTENTIALELEMENT_TAG = "POTENTIALELEMENT_TAG";
+  public static final String POTENTIALELEMENT_UIOBJECT = "POTENTIALELEMENT_UIOBJECT";
+  public static final String POTENTIALELEMENT_WRAPPED_ELEMENT = "POTENTIALELEMENT_WRAPPED_ELEMENT";
+
   public static final String SCROLL_LEFT = "scrollLeft";
 
   public static final String SELECTED_INDEX_FIELD = "selectedIndex";

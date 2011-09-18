@@ -59,7 +59,8 @@ public class UiBinderWithWidgetsTest extends GwtTestTest {
     assertEquals("MyRadioGroup", w.radioButton2.getName());
     assertFalse(w.radioButton2.getValue());
 
-    assertEquals(MyClientBundle.INSTANCE.testImageResource().getURL(),
+    assertEquals(
+        MyClientBundle.INSTANCE.testImageResource().getSafeUri().asString(),
         w.image.getUrl());
 
     assertEquals("my provided label", w.providedLabel.getText());
@@ -112,13 +113,13 @@ public class UiBinderWithWidgetsTest extends GwtTestTest {
     assertEquals("img", w.img.getName());
     assertEquals(
         "http://127.0.0.1:8888/gwt_test_utils_module/com/octo/gwt/test/uibinder/img.jpg",
-        w.img.getURL());
+        w.img.getSafeUri().asString());
 
     // Assertion on inner data
     assertEquals("data", w.data.getName());
     assertEquals(
         "http://127.0.0.1:8888/gwt_test_utils_module/com/octo/gwt/test/uibinder/data.test",
-        w.data.getUrl());
+        w.data.getSafeUri().asString());
 
     // Assertion on "IsWidget
     assertEquals("isWidget Label", w.isWidgetLabel.getText());

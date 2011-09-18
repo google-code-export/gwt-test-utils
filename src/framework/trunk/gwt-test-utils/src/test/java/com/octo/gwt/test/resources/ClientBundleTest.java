@@ -60,7 +60,7 @@ public class ClientBundleTest extends GwtTestTest {
 
     // Act
     String name = testDataResource.getName();
-    String url = testDataResource.getUrl();
+    String url = testDataResource.getSafeUri().asString();
     String toString = testDataResource.toString();
 
     // Assert
@@ -81,7 +81,7 @@ public class ClientBundleTest extends GwtTestTest {
 
     // Act
     String name = testImageResource.getName();
-    String url = testImageResource.getURL();
+    String url = testImageResource.getSafeUri().asString();
     int heigh = testImageResource.getHeight();
     int left = testImageResource.getLeft();
     int width = testImageResource.getWidth();
@@ -110,7 +110,7 @@ public class ClientBundleTest extends GwtTestTest {
 
     // Act
     String name = treeResources.treeOpen().getName();
-    String url = treeResources.treeLeaf().getURL();
+    String url = treeResources.treeLeaf().getSafeUri().asString();
 
     // Assert
     assertEquals("treeOpen", name);
