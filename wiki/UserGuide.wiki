@@ -15,5 +15,6 @@ The _gwt-test-utils_ user guide covers the following topics :
  * [HowToWriteCustomPatchers Writing custom patchers] : describes how the framework's patching capabilities can be extended through the use of custom patchers, and how to write them
  * [HowToUseWithSpring Integration with Spring] : describes how to test a GWT + Spring through the _spring-test_ module
  * [HowToUseWithGuice Integration with Guice] : describes how to test a GWT + Guice application
+ * [HowToUseWithGIN Integration with GIN] : describes how to test a GWT + GIN application
 
 In addition, some demo applications can be checked out under [http://gwt-test-utils.googlecode.com/svn/src/demos/trunk/ SVN].
