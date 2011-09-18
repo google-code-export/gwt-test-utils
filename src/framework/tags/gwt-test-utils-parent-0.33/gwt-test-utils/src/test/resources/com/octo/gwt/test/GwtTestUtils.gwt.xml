@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module rename-to='gwt_test_utils_module'>
+	<inherits name='com.google.gwt.user.User' />
+	<inherits name="com.google.gwt.i18n.I18N" />
+	<inherits name='com.google.gwt.user.theme.standard.Standard' />
+
+	<!-- Specify the app entry point class. -->
+	<entry-point class='com.octo.gwt.demo.client.Gwt_test_utils_demo' />
+
+	<servlet path="myService" class="com.octo.gwt.test.rpc.MyServiceImpl" />
+
+	<!-- Specify the paths for translatable code -->
+	<source path='client' />
+	<source path='shared'>
+		<exclude name="Test1.java" />
+	</source>
+	<source path='integration.client' />
+
+	<!-- Fall through to this rule is the browser isn't IE or Mozilla -->
+	<replace-with class="com.octo.gwt.test.deferred.ReplaceWithDefault">
+		<when-type-is class="com.octo.gwt.test.deferred.IReplaceWith" />
+	</replace-with>
+
+	<!-- Mozilla -->
+	<replace-with class="com.octo.gwt.test.deferred.ReplaceWithMozilla">
+		<when-type-is class="com.octo.gwt.test.deferred.IReplaceWith" />
+		<any>
+			<when-property-is name="user.agent" value="gecko" />
+			<when-property-is name="user.agent" value="gecko1_8" />
+		</any>
+	</replace-with>
+
+	<!-- IE -->
+	<replace-with class="com.octo.gwt.test.deferred.ReplaceWithIE">
+		<when-type-is class="com.octo.gwt.test.deferred.IReplaceWith" />
+		<when-property-is name="user.agent" value="ie6" />
+	</replace-with>
+
+	<generate-with
+		class="dont.care.fake.Generator">
+		<when-type-assignable class="com.octo.gwt.test.deferred.IGenerateWith" />
+	</generate-with>
+
+</module>
