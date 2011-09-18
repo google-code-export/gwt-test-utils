@@ -36,7 +36,7 @@ class OverlayPatcher implements Patcher {
   private final Patcher decoratedPatcher;
 
   OverlayPatcher(Patcher patcher) {
-    this.decoratedPatcher = patcher;
+    decoratedPatcher = patcher;
   }
 
   public void finalizeClass(CtClass c) throws Exception {
@@ -59,7 +59,7 @@ class OverlayPatcher implements Patcher {
       return null;
     }
 
-    if (m.getName().startsWith("set")) {
+    if (m.getName().startsWith("set") && m.getReturnType() == CtClass.voidType) {
       return getCodeSetProperty("this", propertyName, "$1");
     } else {
       return "return "

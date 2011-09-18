@@ -42,7 +42,9 @@ class SafeHtmlTemplatesCreateHandler implements GwtCreateHandler {
           }
         }
 
-        String templateValue = MessageFormat.format(template.value(), newArgs);
+        // escape simple quote
+        String templateValue = MessageFormat.format(
+            template.value().replaceAll("'", "''"), newArgs);
 
         SafeHtmlBuilder builder = new SafeHtmlBuilder().appendHtmlConstant(templateValue);
 

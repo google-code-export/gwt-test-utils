@@ -9,13 +9,6 @@ import com.octo.gwt.test.patchers.PatchMethod;
 @PatchClass(DOM.class)
 class DOMPatcher {
 
-  /**
-   * Hack for GWT 2.0.4
-   * 
-   * @param parent
-   * @param child
-   */
-  // TODO: remove when starting to support PotentialElement
   @PatchMethod
   static Element getFirstChild(Element elem) {
     Node firstChild = elem.getFirstChildElement();
