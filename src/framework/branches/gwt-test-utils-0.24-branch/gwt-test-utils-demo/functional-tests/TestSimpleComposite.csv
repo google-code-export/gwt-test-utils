@@ -1,6 +1,0 @@
-start
-runmacro;InitialisationMacro
-mouseMove;/simpleComposite/img
-assertExact;mouse moved on picture !;/main/widget(0)/label/text
-assertExact;mouse moved on picture !;/myApp/c1/label/text
-assertExact;mouse moved on picture !;/simpleComposite/label/text
