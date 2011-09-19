@@ -14,6 +14,7 @@
 		<module>demo-csv-spring</module>
 		<module>demo-guice</module>
 		<module>demo-mocks</module>
+		<module>demo-placesActivites</module>
 		<module>demo-simple</module>
 		<module>demo-spring</module>
 	</modules>
@@ -25,8 +26,8 @@
 	<properties>
 		<encoding>UTF-8</encoding>
 		<gwt.version>2.3.0</gwt.version>
-		<gwt.maven.plugin.version>2.3.0</gwt.maven.plugin.version>
-		<gwt.test.utils.version>0.33-SNAPSHOT</gwt.test.utils.version>
+		<gwt.maven.plugin.version>2.3.0-1</gwt.maven.plugin.version>
+		<gwt.test.utils.version>0.33</gwt.test.utils.version>
 		<java.version>1.5</java.version>
 	</properties>
 
