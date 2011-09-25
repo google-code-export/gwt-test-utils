@@ -2,7 +2,9 @@ package com.octo.gwt.test.internal.patchers;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
+import com.google.gwt.user.client.ui.PotentialElement;
 import com.google.gwt.user.client.ui.UIObject;
+import com.google.gwt.user.client.ui.Widget;
 import com.octo.gwt.test.internal.patchers.dom.JavaScriptObjects;
 import com.octo.gwt.test.internal.utils.JsoProperties;
 import com.octo.gwt.test.patchers.PatchClass;
@@ -64,13 +66,19 @@ class UIObjectPatcher {
   @PatchMethod
   static void setElement(UIObject uiObject,
       com.google.gwt.user.client.Element elem) {
-    assert (GwtReflectionUtils.getPrivateFieldValue(uiObject, "element") == null) : "Element may only be set once";
+    Element element = GwtReflectionUtils.getPrivateFieldValue(uiObject,
+        "element");
+    assert (element == null || PotentialElement.isPotential(element)) : "Element may only be set once";
 
     GwtReflectionUtils.setPrivateFieldValue(uiObject, "element", elem);
 
-    // Bind the widget to the element so we can trigger nativeEvent on it
-    JavaScriptObjects.setProperty(elem, JsoProperties.ELEM_BINDED_UIOBJECT,
-        uiObject);
+    // Bind the widget to listen to element so we can trigger event on it even
+    // if the widget has not been attached yet
+    if (Widget.class.isInstance(uiObject)) {
+      JavaScriptObjects.setProperty(elem, JsoProperties.ELEM_EVENTLISTENER,
+          uiObject);
+    }
+
   }
 
   @PatchMethod

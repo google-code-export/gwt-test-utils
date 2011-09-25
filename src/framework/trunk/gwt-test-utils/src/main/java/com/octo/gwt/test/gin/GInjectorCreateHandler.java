@@ -9,6 +9,7 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.inject.client.GinModule;
 import com.google.gwt.inject.client.GinModules;
 import com.google.gwt.inject.client.Ginjector;
@@ -19,14 +20,7 @@ import com.google.inject.Module;
 import com.octo.gwt.test.GwtCreateHandler;
 
 /**
- * Provide GWT.create for Ginjector.
- * 
- * <p>
- * The current implementation cannot supply for one important aspect of
- * google-gin: the ability to fallback to <code>GWT.create</code> if the binding
- * is not found (this is particularly important for GWT-RPC, Constants,
- * Messages, etc).
- * </p>
+ * Handle {@link GWT#create(Class)} for {@link Ginjector}.
  * 
  * @author Alex Dobjanschi
  * @author Gael Lazzari

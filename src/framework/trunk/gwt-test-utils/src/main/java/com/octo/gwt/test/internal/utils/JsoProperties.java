@@ -17,7 +17,6 @@ public class JsoProperties {
 
   public static final String DOCUMENT_ELEMENT = "documentElement";
 
-  public static final String ELEM_BINDED_UIOBJECT = "ELEM_BINDED_UIOBJECT";
   public static final String ELEM_EVENTLISTENER = "ELEM_EVENTLISTENER";
   public static final String ELEM_PROPERTIES = "ELEM_PROPERTIES";
   public static final String ELEMENT_CLIENT_HEIGHT = "ELEMENT_CLIENT_HEIGHT";
