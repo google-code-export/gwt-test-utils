@@ -4,6 +4,7 @@ import java.util.Map;
 
 import javassist.CannotCompileException;
 import javassist.CtClass;
+import javassist.CtConstructor;
 import javassist.CtField;
 
 import com.google.gwt.core.client.JavaScriptObject;
@@ -19,6 +20,7 @@ import com.octo.gwt.test.internal.utils.PropertyContainer;
 import com.octo.gwt.test.patchers.InitMethod;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
+import com.octo.gwt.test.utils.JavassistUtils;
 
 @PatchClass(JavaScriptObject.class)
 class JavaScriptObjectPatcher {
@@ -41,12 +43,15 @@ class JavaScriptObjectPatcher {
   @InitMethod
   static void initClass(CtClass c) throws CannotCompileException {
     // add field "protected PropertyContainer JSO_PROPERTIES;"
-    CtField propertiesField = CtField.make(
-        "protected final " + PropertyContainer.class.getName() + " "
-            + JavaScriptObjects.PROPERTIES + " = "
-            + PropertyContainer.class.getName()
-            + ".newInstance(new java.util.HashMap());", c);
+    CtField propertiesField = CtField.make("protected "
+        + PropertyContainer.class.getName() + " "
+        + JavaScriptObjects.PROPERTIES + ";", c);
     c.addField(propertiesField);
+
+    CtConstructor defaultConstructor = JavassistUtils.findConstructor(c);
+    defaultConstructor.insertAfter(JavaScriptObjects.PROPERTIES + " = "
+        + PropertyContainer.class.getName()
+        + ".newInstance(new java.util.HashMap());");
   }
 
   @PatchMethod

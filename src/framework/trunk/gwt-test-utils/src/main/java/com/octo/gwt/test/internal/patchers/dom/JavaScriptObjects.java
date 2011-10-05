@@ -1,6 +1,7 @@
 package com.octo.gwt.test.internal.patchers.dom;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,7 +11,6 @@ import java.util.TreeMap;
 import javassist.CtClass;
 
 import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.dom.client.AnchorElement;
 import com.google.gwt.dom.client.AreaElement;
 import com.google.gwt.dom.client.BRElement;
@@ -230,9 +230,10 @@ public class JavaScriptObjects {
       }
     } else if (Text.class.isAssignableFrom(jsoClass)) {
       nodeType = Node.TEXT_NODE;
-    } else if (JsArrayString.class.isAssignableFrom(jsoClass)) {
+    } else if (jsoClass.getName().startsWith("com.google.gwt")
+        && jsoClass.getSimpleName().startsWith("JsArray")) {
       setProperty(o, JsoProperties.JSARRAY_WRAPPED_LIST,
-          new ArrayList<String>());
+          new ArrayList<Object>());
     }
 
     setProperty(o, JsoProperties.NODE_TYPE_FIELD, nodeType);
@@ -291,7 +292,15 @@ public class JavaScriptObjects {
   }
 
   private static PropertyContainer getJsoProperties(JavaScriptObject o) {
-    return GwtReflectionUtils.getPrivateFieldValue(o, PROPERTIES);
+    PropertyContainer pc = GwtReflectionUtils.getPrivateFieldValue(o,
+        PROPERTIES);
+
+    if (pc == null) {
+      pc = PropertyContainer.newInstance(new HashMap<String, Object>());
+      GwtReflectionUtils.setPrivateFieldValue(o, PROPERTIES, pc);
+    }
+
+    return pc;
   }
 
   private static PropertyContainer getJsoProperties(JavaScriptObject o,
