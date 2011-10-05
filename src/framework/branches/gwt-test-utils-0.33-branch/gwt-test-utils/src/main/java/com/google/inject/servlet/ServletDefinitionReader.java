@@ -43,8 +43,13 @@ public class ServletDefinitionReader {
         // If not, then cache it. Most likely, a test will only be serviced by a
         // few servlets, so it's a waste of resources to instantiate them all.
         if (!mapUriToServlets.containsKey(entry.getKey())) {
-          mapUriToServlets.put(entry.getKey(),
-              injector.getInstance(entry.getValue()));
+          try {
+            mapUriToServlets.put(entry.getKey(),
+                injector.getInstance(entry.getValue()));
+          } catch (Throwable t) {
+            throw new GwtTestConfigurationException(
+                "cannot instantiate servlet", t);
+          }
         }
 
         return mapUriToServlets.get(entry.getKey());
