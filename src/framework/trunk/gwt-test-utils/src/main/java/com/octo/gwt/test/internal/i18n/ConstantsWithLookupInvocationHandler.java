@@ -1,4 +1,4 @@
-package com.octo.gwt.test.internal.utils.i18n;
+package com.octo.gwt.test.internal.i18n;
 
 import java.lang.reflect.Method;
 import java.util.Locale;

@@ -10,6 +10,7 @@ import javax.servlet.ServletConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.gwt.i18n.client.Dictionary;
 import com.octo.gwt.test.exceptions.GwtTestPatchException;
 import com.octo.gwt.test.internal.GwtConfig;
 import com.octo.gwt.test.internal.handlers.GwtCreateHandlerManager;
@@ -26,11 +27,23 @@ public abstract class GwtModuleRunnerAdapter implements GwtModuleRunner {
    * (non-Javadoc)
    * 
    * @see
+   * com.octo.gwt.test.GwtModuleRunner#addDictionary(com.google.gwt.i18n.client
+   * .Dictionary)
+   */
+  public void addDictionary(Dictionary dictionnary) {
+    // TODO Auto-generated method stub
+
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
    * com.octo.gwt.test.GwtModuleRunner#addGwtCreateHandler(com.octo.gwt.test
    * .GwtCreateHandler)
    */
-  public boolean addGwtCreateHandler(GwtCreateHandler gwtCreateHandler) {
-    return GwtCreateHandlerManager.get().addGwtCreateHandler(gwtCreateHandler);
+  public void addGwtCreateHandler(GwtCreateHandler gwtCreateHandler) {
+    GwtCreateHandlerManager.get().addGwtCreateHandler(gwtCreateHandler);
   }
 
   /*
