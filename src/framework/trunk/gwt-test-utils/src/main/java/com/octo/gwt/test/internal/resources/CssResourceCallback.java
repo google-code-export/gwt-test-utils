@@ -1,11 +1,11 @@
-package com.octo.gwt.test.internal.utils.resources;
+package com.octo.gwt.test.internal.resources;
 
 import java.lang.reflect.Method;
 import java.net.URL;
 
 import com.google.gwt.dom.client.StyleInjector;
 import com.google.gwt.resources.client.CssResource;
-import com.octo.gwt.test.internal.utils.resources.CssResourceReader.CssParsingResult;
+import com.octo.gwt.test.internal.resources.CssResourceReader.CssParsingResult;
 
 /**
  * Callback interface where {@link CssResource } methods calls are redirected.

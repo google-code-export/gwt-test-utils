@@ -1,4 +1,4 @@
-package com.octo.gwt.test.internal.utils.resources;
+package com.octo.gwt.test.internal.resources;
 
 import java.io.BufferedReader;
 import java.io.IOException;

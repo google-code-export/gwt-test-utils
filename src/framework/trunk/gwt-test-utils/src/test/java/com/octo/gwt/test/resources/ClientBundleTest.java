@@ -38,7 +38,7 @@ public class ClientBundleTest extends GwtTestTest {
     assertEquals("testStyleOnSpecificStyle", testStyleOnSpecificStyle);
     assertEquals("constant-value", constantValue);
     assertEquals(
-        "com.octo.gwt.test.internal.utils.resources.CssResourceCallback generated for 'com.octo.gwt.test.resources.MyClientBundle.testCssResource()'",
+        "com.octo.gwt.test.internal.resources.CssResourceCallback generated for 'com.octo.gwt.test.resources.MyClientBundle.testCssResource()'",
         toString);
     assertEquals(testCssResource, MyClientBundle.INSTANCE.testCssResource());
   }
@@ -69,7 +69,7 @@ public class ClientBundleTest extends GwtTestTest {
         "http://127.0.0.1:8888/gwt_test_utils_module/com/octo/gwt/test/resources/textResourceXml.xml",
         url);
     assertEquals(
-        "com.octo.gwt.test.internal.utils.resources.DataResourceCallback generated for 'com.octo.gwt.test.resources.MyClientBundle.testDataResource()'",
+        "com.octo.gwt.test.internal.resources.DataResourceCallback generated for 'com.octo.gwt.test.resources.MyClientBundle.testDataResource()'",
         toString);
     assertEquals(testDataResource, MyClientBundle.INSTANCE.testDataResource());
   }
@@ -98,7 +98,7 @@ public class ClientBundleTest extends GwtTestTest {
     assertEquals(0, width);
     assertEquals(0, top);
     assertEquals(
-        "com.octo.gwt.test.internal.utils.resources.ImageResourceCallback generated for 'com.octo.gwt.test.resources.MyClientBundle.testImageResource()'",
+        "com.octo.gwt.test.internal.resources.ImageResourceCallback generated for 'com.octo.gwt.test.resources.MyClientBundle.testImageResource()'",
         toString);
     assertEquals(testImageResource, MyClientBundle.INSTANCE.testImageResource());
   }
@@ -163,7 +163,7 @@ public class ClientBundleTest extends GwtTestTest {
     assertEquals("textResourceTxt", name);
     assertEquals(expectedText, text);
     assertEquals(
-        "com.octo.gwt.test.internal.utils.resources.TextResourceCallback generated for 'com.octo.gwt.test.resources.MyClientBundle.textResourceTxt()'",
+        "com.octo.gwt.test.internal.resources.TextResourceCallback generated for 'com.octo.gwt.test.resources.MyClientBundle.textResourceTxt()'",
         toString);
     assertEquals(textResource, MyClientBundle.INSTANCE.textResourceTxt());
   }
@@ -183,7 +183,7 @@ public class ClientBundleTest extends GwtTestTest {
     assertEquals("textResourceXml", name);
     assertEquals(expectedText, text);
     assertEquals(
-        "com.octo.gwt.test.internal.utils.resources.TextResourceCallback generated for 'com.octo.gwt.test.resources.MyClientBundle.textResourceXml()'",
+        "com.octo.gwt.test.internal.resources.TextResourceCallback generated for 'com.octo.gwt.test.resources.MyClientBundle.textResourceXml()'",
         toString);
     assertEquals(textResource, MyClientBundle.INSTANCE.textResourceXml());
   }
