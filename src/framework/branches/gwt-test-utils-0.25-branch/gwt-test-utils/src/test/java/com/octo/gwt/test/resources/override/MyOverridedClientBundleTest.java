@@ -27,7 +27,7 @@ public class MyOverridedClientBundleTest extends GwtTestTest {
         "http://127.0.0.1:8888/gwt_test_utils_module/com/octo/gwt/test/resources/textResourceXml.xml",
         url);
     assertEquals(
-        "com.octo.gwt.test.internal.utils.resources.DataResourceCallback generated for 'com.octo.gwt.test.resources.override.MyOverridedClientBundle.testDataResource()'",
+        "com.octo.gwt.test.internal.resources.DataResourceCallback generated for 'com.octo.gwt.test.resources.override.MyOverridedClientBundle.testDataResource()'",
         toString);
     assertEquals(testDataResource,
         MyOverridedClientBundle.INSTANCE.testDataResource());

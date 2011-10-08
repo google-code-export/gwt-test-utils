@@ -1,10 +1,12 @@
 package com.octo.gwt.test;
 
 import java.util.Locale;
+import java.util.Map;
 
 import javax.servlet.ServletConfig;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.i18n.client.Dictionary;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
@@ -18,7 +20,24 @@ import com.octo.gwt.test.utils.events.Browser.BrowserErrorHandler;
  */
 public interface GwtModuleRunner {
 
-  boolean addGwtCreateHandler(GwtCreateHandler gwtCreateHandler);
+  /**
+   * Add String key/value pairs to a GWT {@link Dictionary}.
+   * 
+   * @param dictionaryName The name of the {@link Dictionary} on which the
+   *          entries should be added
+   * @param entries The Dictionary's entries to add
+   * 
+   * @see {@link Dictionary#get(String)}
+   */
+  void addDictionaryEntries(String dictionaryName, Map<String, String> entries);
+
+  /**
+   * Declare a GwtCreateHandler to be a candidate for GWT deferred binding calls
+   * ({@link GWT#create(Class)}).
+   * 
+   * @param gwtCreateHandler The deferred binding candidate.
+   */
+  void addGwtCreateHandler(GwtCreateHandler gwtCreateHandler);
 
   /**
    * Specifies if the module runner is allowed the setup of debug id.

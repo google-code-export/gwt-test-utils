@@ -6,7 +6,7 @@ import java.util.Map;
 import org.xml.sax.Attributes;
 
 import com.octo.gwt.test.exceptions.GwtTestUiBinderException;
-import com.octo.gwt.test.internal.utils.resources.ResourcePrototypeProxyBuilder;
+import com.octo.gwt.test.internal.resources.ResourcePrototypeProxyBuilder;
 
 /**
  * Handle <ui:image> tag.

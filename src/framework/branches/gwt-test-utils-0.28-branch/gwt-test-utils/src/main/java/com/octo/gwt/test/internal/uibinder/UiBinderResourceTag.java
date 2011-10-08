@@ -9,7 +9,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.octo.gwt.test.exceptions.GwtTestUiBinderException;
 import com.octo.gwt.test.exceptions.ReflectionException;
-import com.octo.gwt.test.internal.utils.resources.ResourcePrototypeProxyBuilder;
+import com.octo.gwt.test.internal.resources.ResourcePrototypeProxyBuilder;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 /**

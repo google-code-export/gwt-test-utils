@@ -22,23 +22,8 @@ public class XmlUtils {
   static {
 
     documentBuilderFactory = DocumentBuilderFactory.newInstance();
-
     documentBuilderFactory.setValidating(false);
-    try {
-      documentBuilderFactory.setFeature(
-          "http://xml.org/sax/features/namespaces", false);
-      documentBuilderFactory.setFeature(
-          "http://xml.org/sax/features/validation", false);
-      documentBuilderFactory.setFeature(
-          "http://apache.org/xml/features/nonvalidating/load-dtd-grammar",
-          false);
-      documentBuilderFactory.setFeature(
-          "http://apache.org/xml/features/nonvalidating/load-external-dtd",
-          false);
-    } catch (Exception e) {
-      // should never happen
-      throw new GwtTestConfigurationException(e);
-    }
+    documentBuilderFactory.setNamespaceAware(false);
   }
 
   public static DocumentBuilder newDocumentBuilder() {

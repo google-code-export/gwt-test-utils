@@ -10,7 +10,7 @@ import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.DataResource;
 import com.google.gwt.resources.client.ImageResource;
 import com.octo.gwt.test.exceptions.GwtTestUiBinderException;
-import com.octo.gwt.test.internal.utils.resources.ResourcePrototypeProxyBuilder;
+import com.octo.gwt.test.internal.resources.ResourcePrototypeProxyBuilder;
 
 class UiResourceManager {
 

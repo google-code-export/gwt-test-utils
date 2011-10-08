@@ -7,10 +7,10 @@ import java.util.List;
 import com.octo.gwt.test.GwtCreateHandler;
 import com.octo.gwt.test.internal.AfterTestCallback;
 import com.octo.gwt.test.internal.AfterTestCallbackManager;
+import com.octo.gwt.test.internal.i18n.LocalizableResourceCreateHandler;
+import com.octo.gwt.test.internal.resources.ClientBundleCreateHandler;
+import com.octo.gwt.test.internal.resources.ImageBundleCreateHandler;
 import com.octo.gwt.test.internal.uibinder.UiBinderCreateHandler;
-import com.octo.gwt.test.internal.utils.i18n.LocalizableResourceCreateHandler;
-import com.octo.gwt.test.internal.utils.resources.ClientBundleCreateHandler;
-import com.octo.gwt.test.internal.utils.resources.ImageBundleCreateHandler;
 
 public class GwtCreateHandlerManager implements AfterTestCallback {
 

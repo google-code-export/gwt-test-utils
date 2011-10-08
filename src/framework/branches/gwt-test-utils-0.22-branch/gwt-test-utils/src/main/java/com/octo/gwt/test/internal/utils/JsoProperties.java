@@ -15,6 +15,7 @@ import com.google.gwt.core.client.JavaScriptObject;
  */
 public class JsoProperties {
 
+  public static final String DICTIONARY_ENTRIES = "DICTIONARY_ENTRIES";
   public static final String DOCUMENT_ELEMENT = "documentElement";
 
   public static final String ELEM_EVENTLISTENER = "ELEM_EVENTLISTENER";

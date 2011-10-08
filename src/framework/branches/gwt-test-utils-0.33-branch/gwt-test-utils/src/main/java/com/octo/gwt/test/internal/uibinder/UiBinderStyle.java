@@ -3,7 +3,7 @@ package com.octo.gwt.test.internal.uibinder;
 import java.util.Map;
 
 import com.google.gwt.resources.client.CssResource;
-import com.octo.gwt.test.internal.utils.resources.ResourcePrototypeProxyBuilder;
+import com.octo.gwt.test.internal.resources.ResourcePrototypeProxyBuilder;
 
 /**
  * Handle <ui:style> tag with a "type" attribute to specify a
