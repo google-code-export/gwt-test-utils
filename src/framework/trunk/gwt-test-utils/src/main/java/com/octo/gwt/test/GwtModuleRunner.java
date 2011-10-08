@@ -1,6 +1,7 @@
 package com.octo.gwt.test;
 
 import java.util.Locale;
+import java.util.Map;
 
 import javax.servlet.ServletConfig;
 
@@ -20,13 +21,15 @@ import com.octo.gwt.test.utils.events.Browser.BrowserErrorHandler;
 public interface GwtModuleRunner {
 
   /**
-   * Add a GWT Dictionnary to be a candidate for {@link Dictionary#get(String)}
-   * lookup.
+   * Add String key/value pairs to a GWT {@link Dictionary}.
    * 
-   * @param dictionnary The dictionnary to register
-   * @return
+   * @param dictionaryName The name of the {@link Dictionary} on which the
+   *          entries should be added
+   * @param entries The Dictionary's entries to add
+   * 
+   * @see {@link Dictionary#get(String)}
    */
-  void addDictionary(Dictionary dictionnary);
+  void addDictionaryEntries(String dictionaryName, Map<String, String> entries);
 
   /**
    * Declare a GwtCreateHandler to be a candidate for GWT deferred binding calls

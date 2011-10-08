@@ -11,14 +11,13 @@ import java.util.Set;
 import org.junit.Test;
 
 import com.google.gwt.i18n.client.Dictionary;
-import com.octo.gwt.test.i18n.DictionaryBuilder;
 
 public class DictionaryTest extends GwtTestTest {
 
   @Test
   public void checkToString() {
     // Arrange
-    addDictionary(createTestDictionary("toString"));
+    addDictionaryEntries("toString", createDictionaryEntries());
 
     // Act
     String toString = Dictionary.getDictionary("toString").toString();
@@ -30,76 +29,51 @@ public class DictionaryTest extends GwtTestTest {
   @Test
   public void get() {
     // Arrange
-    addDictionary(createTestDictionary("get"));
+    addDictionaryEntries("get", createDictionaryEntries());
 
     // Act
     String name = Dictionary.getDictionary("get").get("name");
     String description = Dictionary.getDictionary("get").get("description");
-    String since = Dictionary.getDictionary("get").get("since");
-    String by = Dictionary.getDictionary("get").get("by");
 
     // Assert
     assertEquals("gwt-test-utils", name);
     assertEquals("An awesome GWT testing tool ;-)", description);
-    assertEquals("October 2K9", since);
-    assertEquals("Bertrand & Gael", by);
-  }
-
-  @Test
-  public void getDictionary() {
-    // Arrange
-    Dictionary expected = createTestDictionary("getDictionary");
-    addDictionary(expected);
-
-    // Act
-    Dictionary dictionnary = Dictionary.getDictionary("getDictionary");
-
-    // Assert
-    assertEquals(expected, dictionnary);
   }
 
   @Test
   public void keySet() {
     // Arrange
-    addDictionary(createTestDictionary("keySet"));
+    addDictionaryEntries("keySet", createDictionaryEntries());
 
     // Act
     Set<String> keySet = Dictionary.getDictionary("keySet").keySet();
 
     // Assert
-    assertEquals(4, keySet.size());
+    assertEquals(2, keySet.size());
     assertTrue(keySet.contains("name"));
     assertTrue(keySet.contains("description"));
-    assertTrue(keySet.contains("since"));
-    assertTrue(keySet.contains("by"));
   }
 
   @Test
   public void values() {
     // Arrange
-    addDictionary(createTestDictionary("values"));
+    addDictionaryEntries("values", createDictionaryEntries());
 
     // Act
     Collection<String> values = Dictionary.getDictionary("values").values();
 
     // Assert
-    assertEquals(4, values.size());
-    assertTrue(values.contains("Bertrand & Gael"));
-    assertTrue(values.contains("October 2K9"));
+    assertEquals(2, values.size());
     assertTrue(values.contains("gwt-test-utils"));
     assertTrue(values.contains("An awesome GWT testing tool ;-)"));
   }
 
-  private Dictionary createTestDictionary(String name) {
+  private Map<String, String> createDictionaryEntries() {
 
     Map<String, String> entries = new HashMap<String, String>();
     entries.put("name", "gwt-test-utils");
     entries.put("description", "An awesome GWT testing tool ;-)");
 
-    DictionaryBuilder builder = DictionaryBuilder.create(name, entries);
-    builder.addEntry("since", "October 2K9");
-    builder.addEntry("by", "Bertrand & Gael");
-
-    return builder.build();
+    return entries;
   }
 }

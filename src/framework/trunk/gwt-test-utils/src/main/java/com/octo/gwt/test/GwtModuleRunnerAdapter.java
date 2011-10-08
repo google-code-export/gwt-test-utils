@@ -4,6 +4,7 @@ import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.servlet.ServletConfig;
 
@@ -14,6 +15,7 @@ import com.google.gwt.i18n.client.Dictionary;
 import com.octo.gwt.test.exceptions.GwtTestPatchException;
 import com.octo.gwt.test.internal.GwtConfig;
 import com.octo.gwt.test.internal.handlers.GwtCreateHandlerManager;
+import com.octo.gwt.test.internal.i18n.DictionaryUtils;
 import com.octo.gwt.test.utils.events.Browser.BrowserErrorHandler;
 
 public abstract class GwtModuleRunnerAdapter implements GwtModuleRunner {
@@ -27,12 +29,14 @@ public abstract class GwtModuleRunnerAdapter implements GwtModuleRunner {
    * (non-Javadoc)
    * 
    * @see
-   * com.octo.gwt.test.GwtModuleRunner#addDictionary(com.google.gwt.i18n.client
-   * .Dictionary)
+   * com.octo.gwt.test.GwtModuleRunner#addDictionaryEntries(java.lang.String,
+   * java.util.Map)
    */
-  public void addDictionary(Dictionary dictionnary) {
-    // TODO Auto-generated method stub
+  public void addDictionaryEntries(String dictionaryName,
+      Map<String, String> entries) {
 
+    Dictionary dictionary = Dictionary.getDictionary(dictionaryName);
+    DictionaryUtils.addEntries(dictionary, entries);
   }
 
   /*
