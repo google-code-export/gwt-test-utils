@@ -14,7 +14,7 @@ import com.octo.gwt.test.internal.patchers.dom.JavaScriptObjects;
  * 
  * {@link Patcher} decorator to use for all {@link JavaScriptObject} subclasses
  * (also known as "overlay types"). It automatically adds an implementation for
- * getter and setter written in JSNI.
+ * getter and setter written in JSNI. Test
  * 
  * @author Gael Lazzari
  * 
@@ -46,8 +46,8 @@ class OverlayPatcher implements Patcher {
   }
 
   public String getNewBody(CtMethod m) throws Exception {
-    String newBody = (decoratedPatcher != null)
-        ? decoratedPatcher.getNewBody(m) : null;
+    String newBody = decoratedPatcher != null ? decoratedPatcher.getNewBody(m)
+        : null;
 
     if (newBody != null || !Modifier.isNative(m.getModifiers())) {
       return newBody;
