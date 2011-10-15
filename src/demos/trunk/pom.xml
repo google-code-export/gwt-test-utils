@@ -14,7 +14,6 @@
 		<module>demo-csv-spring</module>
 		<module>demo-guice</module>
 		<module>demo-mocks</module>
-		<module>demo-placesActivites</module>
 		<module>demo-simple</module>
 		<module>demo-spring</module>
 	</modules>
@@ -25,9 +24,9 @@
 
 	<properties>
 		<encoding>UTF-8</encoding>
-		<gwt.version>2.3.0</gwt.version>
-		<gwt.maven.plugin.version>2.3.0-1</gwt.maven.plugin.version>
-		<gwt.test.utils.version>0.33</gwt.test.utils.version>
+		<gwt.version>2.4.0</gwt.version>
+		<gwt.maven.plugin.version>2.4.0</gwt.maven.plugin.version>
+		<gwt.test.utils.version>0.34</gwt.test.utils.version>
 		<java.version>1.5</java.version>
 	</properties>
 
@@ -141,6 +140,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.2</version>
 				<configuration>
 					<encoding>${encoding}</encoding>
 					<source>${java.version}</source>
@@ -150,6 +150,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-resources-plugin</artifactId>
+				<version>2.5</version>
 				<configuration>
 					<encoding>${encoding}</encoding>
 				</configuration>
@@ -160,6 +161,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.9</version>
 				<configuration>
 					<argLine>-XX:MaxPermSize=128M -Xmx512M</argLine>
 				</configuration>
