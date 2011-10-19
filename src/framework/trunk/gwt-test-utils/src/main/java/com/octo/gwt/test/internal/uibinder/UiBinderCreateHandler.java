@@ -17,6 +17,16 @@ import com.octo.gwt.test.GwtCreateHandler;
  */
 public class UiBinderCreateHandler implements GwtCreateHandler {
 
+  private static final UiBinderCreateHandler INSTANCE = new UiBinderCreateHandler();
+
+  public static UiBinderCreateHandler get() {
+    return INSTANCE;
+  }
+
+  private UiBinderCreateHandler() {
+
+  }
+
   public Object create(Class<?> classLiteral) throws Exception {
     if (UiBinder.class.isAssignableFrom(classLiteral)) {
       return createProxy(classLiteral);

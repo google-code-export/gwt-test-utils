@@ -6,6 +6,7 @@ import static org.junit.Assert.assertNull;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArrayString;
 import com.octo.gwt.test.internal.patchers.dom.JavaScriptObjects;
 
@@ -16,9 +17,8 @@ public class JsArrayStringTest extends GwtTestTest {
   @Before
   public void beforeJsArrayStringTest() {
     // Arrange
-    jsArrayString = JavaScriptObjects.newObject(JsArrayString.class);
+    jsArrayString = JavaScriptObject.createArray().cast();
     assertEquals(0, jsArrayString.length());
-    assertNull(jsArrayString.get(100));
 
     // Act
     jsArrayString.set(4, "test");
@@ -73,6 +73,15 @@ public class JsArrayStringTest extends GwtTestTest {
     assertEquals("toshift", shift);
     assertEquals(4, jsArrayString.length());
     assertEquals(",,,test", jsArrayString.join());
+  }
+
+  @Test
+  public void unboundedGet_ReturnsNull() {
+    // Act
+    String unbounded = jsArrayString.get(100);
+
+    // Assert
+    assertNull(unbounded);
   }
 
   @Test
