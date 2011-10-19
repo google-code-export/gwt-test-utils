@@ -47,7 +47,7 @@ public class GwtCreateHandlerManager implements AfterTestCallback {
     htmlPanelCreateHandler = new HTMLPanelCreateHandler();
     imageBundleCreateHandler = new ImageBundleCreateHandler();
     localizableResourceCreateHandler = new LocalizableResourceCreateHandler();
-    uiBinderCreateHandler = new UiBinderCreateHandler();
+    uiBinderCreateHandler = UiBinderCreateHandler.get();
     testRemoteServiceCreateHandler = TestRemoteServiceCreateHandler.get();
     webXmlRemoteServiceCreateHandler = new WebXmlRemoteServiceCreateHandler();
 
