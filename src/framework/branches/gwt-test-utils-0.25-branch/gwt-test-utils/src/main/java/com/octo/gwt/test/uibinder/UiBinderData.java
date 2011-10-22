@@ -1,4 +1,4 @@
-package com.octo.gwt.test.internal.uibinder;
+package com.octo.gwt.test.uibinder;
 
 import java.net.URL;
 import java.util.Map;
@@ -9,7 +9,7 @@ import com.octo.gwt.test.exceptions.GwtTestUiBinderException;
 import com.octo.gwt.test.internal.resources.ResourcePrototypeProxyBuilder;
 
 /**
- * Handle <ui:data> tag.
+ * Handles <ui:data /> tags.
  * 
  * @author Gael Lazzari
  * 

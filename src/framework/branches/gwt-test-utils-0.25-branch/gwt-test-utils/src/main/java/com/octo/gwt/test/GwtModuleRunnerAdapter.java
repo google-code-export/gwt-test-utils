@@ -16,6 +16,7 @@ import com.octo.gwt.test.exceptions.GwtTestPatchException;
 import com.octo.gwt.test.internal.GwtConfig;
 import com.octo.gwt.test.internal.handlers.GwtCreateHandlerManager;
 import com.octo.gwt.test.internal.i18n.DictionaryUtils;
+import com.octo.gwt.test.uibinder.UiBinderWidgetFactory;
 import com.octo.gwt.test.utils.events.Browser.BrowserErrorHandler;
 
 public abstract class GwtModuleRunnerAdapter implements GwtModuleRunner {
@@ -48,6 +49,17 @@ public abstract class GwtModuleRunnerAdapter implements GwtModuleRunner {
    */
   public void addGwtCreateHandler(GwtCreateHandler gwtCreateHandler) {
     GwtCreateHandlerManager.get().addGwtCreateHandler(gwtCreateHandler);
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * com.octo.gwt.test.GwtModuleRunner#addUiBinderWidgetFactory(com.octo.gwt
+   * .test.uibinder.UiBinderWidgetFactory)
+   */
+  public void addUiBinderWidgetFactory(UiBinderWidgetFactory factory) {
+    GwtConfig.get().getUiBinderWidgetFactories().add(factory);
   }
 
   /*
