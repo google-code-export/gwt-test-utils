@@ -1,4 +1,4 @@
-package com.octo.gwt.test.internal.uibinder;
+package com.octo.gwt.test.uibinder;
 
 import java.lang.reflect.Field;
 import java.util.Map;
@@ -13,7 +13,7 @@ import com.octo.gwt.test.internal.resources.ResourcePrototypeProxyBuilder;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 /**
- * Base class for resource tags : <ui:style>, <ui:image> and <ui:data>
+ * Base class for resource tags : <ui:style />, <ui:image /> and <ui:data />
  * 
  * @author Gael Lazzari
  * 

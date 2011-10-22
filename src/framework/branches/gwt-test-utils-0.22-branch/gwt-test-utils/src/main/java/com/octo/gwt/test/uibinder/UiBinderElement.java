@@ -1,4 +1,4 @@
-package com.octo.gwt.test.internal.uibinder;
+package com.octo.gwt.test.uibinder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +12,12 @@ import com.octo.gwt.test.internal.patchers.dom.JavaScriptObjects;
 import com.octo.gwt.test.internal.utils.JsoProperties;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
+/**
+ * Handles all HTML element tags declared in a .ui.xml file.
+ * 
+ * @author Gael Lazzari
+ * 
+ */
 class UiBinderElement implements UiBinderTag {
 
   private final UiBinderTag parentTag;
@@ -64,7 +70,7 @@ class UiBinderElement implements UiBinderTag {
     return this.wrapped;
   }
 
-  protected void addWidget(Element wrapped, Widget widget) {
+  protected void addWidget(Element wrapped, Widget isWidget) {
     List<Widget> childWidgets = JavaScriptObjects.getObject(wrapped,
         JsoProperties.UIBINDER_CHILD_WIDGETS_LIST);
 
@@ -74,8 +80,8 @@ class UiBinderElement implements UiBinderTag {
           JsoProperties.UIBINDER_CHILD_WIDGETS_LIST, childWidgets);
     }
 
-    childWidgets.add(widget);
-    appendElement(wrapped, widget.getElement());
+    childWidgets.add(isWidget);
+    appendElement(wrapped, isWidget.getElement());
   }
 
   protected void appendElement(Element wrapped, Element child) {

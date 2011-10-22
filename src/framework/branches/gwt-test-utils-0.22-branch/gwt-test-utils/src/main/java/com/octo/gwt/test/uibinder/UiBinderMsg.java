@@ -1,10 +1,10 @@
-package com.octo.gwt.test.internal.uibinder;
+package com.octo.gwt.test.uibinder;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
- * Handle <ui:msg> tag.
+ * Handles <ui:msg /> tags.
  * 
  * @author Gael Lazzari
  * 
@@ -26,8 +26,8 @@ class UiBinderMsg implements UiBinderTag {
         element.getTagName()).append(">");
   }
 
-  public void addWidget(Widget widget) {
-    parentTag.addWidget(widget);
+  public void addWidget(Widget isWidget) {
+    parentTag.addWidget(isWidget);
 
   }
 

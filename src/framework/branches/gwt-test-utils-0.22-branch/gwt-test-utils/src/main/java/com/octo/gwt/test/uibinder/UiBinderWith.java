@@ -1,10 +1,10 @@
-package com.octo.gwt.test.internal.uibinder;
+package com.octo.gwt.test.uibinder;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
- * Handle <ui:with> tag
+ * Handles <ui:with /> tags.
  * 
  * @author Gael Lazzari
  * 
@@ -21,7 +21,7 @@ class UiBinderWith implements UiBinderTag {
     // nothing to do
   }
 
-  public void addWidget(Widget widget) {
+  public void addWidget(Widget isWidget) {
     // nothing to do
   }
 

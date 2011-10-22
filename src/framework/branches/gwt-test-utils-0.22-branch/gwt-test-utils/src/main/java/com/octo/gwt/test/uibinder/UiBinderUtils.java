@@ -1,20 +1,23 @@
-package com.octo.gwt.test.internal.uibinder;
+package com.octo.gwt.test.uibinder;
 
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.beanutils.BeanUtilsBean;
 import org.apache.commons.beanutils.Converter;
 
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment.HorizontalAlignmentConstant;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment.VerticalAlignmentConstant;
-import com.google.gwt.user.client.ui.Widget;
-import com.octo.gwt.test.exceptions.ReflectionException;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
+import com.octo.gwt.test.utils.UiBinderBeanUtils;
 
+/**
+ * Utility class for UiBinder stuff. <strong>For internal use only.</strong>
+ * 
+ * @author Gael Lazzari
+ * 
+ */
 @SuppressWarnings("rawtypes")
 class UiBinderUtils {
 
@@ -37,14 +40,14 @@ class UiBinderUtils {
 
   private static final String STYLE_TAG = "style";
   private static final String TYPE_ATTR_NAME = "type";
-  private static final BeanUtilsBean UIBINDER_BEANUTILS = new BeanUtilsBean();
+
   private static final String UIBINDER_NSURI = "urn:ui:com.google.gwt.uibinder";
   private static final String UIBINDER_TAG = "UiBinder";
 
   private static final String WITH_TAG = "with";
 
   static {
-    UIBINDER_BEANUTILS.getConvertUtils().register(new Converter() {
+    UiBinderBeanUtils.registerConverter(new Converter() {
 
       public Object convert(Class type, Object value) {
         return GwtReflectionUtils.getStaticFieldValue(
@@ -52,7 +55,7 @@ class UiBinderUtils {
       }
     }, HorizontalAlignmentConstant.class);
 
-    UIBINDER_BEANUTILS.getConvertUtils().register(new Converter() {
+    UiBinderBeanUtils.registerConverter(new Converter() {
 
       public Object convert(Class type, Object value) {
         return GwtReflectionUtils.getStaticFieldValue(
@@ -110,24 +113,6 @@ class UiBinderUtils {
   public static boolean isWithTag(String nameSpaceURI, String tagName) {
     return WITH_TAG.equals(tagName) && nameSpaceURI != null
         && nameSpaceURI.equals(UIBINDER_NSURI);
-  }
-
-  public static void populateWidget(Widget w, Map<String, Object> properties) {
-    try {
-      UIBINDER_BEANUTILS.populate(w, properties);
-    } catch (Exception e) {
-      throw new ReflectionException(
-          "UiBinder error while setting properties for '"
-              + w.getClass().getSimpleName() + "'", e);
-    }
-
-    // handle specifics
-    String[] styles = (String[]) properties.get("addStyleNames");
-    if (styles != null) {
-      for (String style : styles) {
-        w.addStyleName(style);
-      }
-    }
   }
 
   private UiBinderUtils() {
