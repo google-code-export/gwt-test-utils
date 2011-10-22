@@ -1,5 +1,7 @@
 package com.octo.gwt.test.internal;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import javax.servlet.ServletConfig;
@@ -12,6 +14,7 @@ import com.octo.gwt.test.GwtModuleRunner;
 import com.octo.gwt.test.WindowOperationsHandler;
 import com.octo.gwt.test.exceptions.GwtTestConfigurationException;
 import com.octo.gwt.test.exceptions.GwtTestException;
+import com.octo.gwt.test.uibinder.UiBinderWidgetFactory;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 import com.octo.gwt.test.utils.events.Browser.BrowserErrorHandler;
 
@@ -50,12 +53,15 @@ public class GwtConfig implements AfterTestCallback {
 
   private Locale locale;
 
+  private final List<UiBinderWidgetFactory> uiBinderWidgetFactories = new ArrayList<UiBinderWidgetFactory>();
+
   private GwtConfig() {
 
   }
 
   public void afterTest() throws Throwable {
     gwtModuleRunner = null;
+    uiBinderWidgetFactories.clear();
 
     GwtReset.get().reset();
 
@@ -83,6 +89,10 @@ public class GwtConfig implements AfterTestCallback {
 
   public ServletConfig getServletConfig() {
     return gwtModuleRunner.getServletConfig();
+  }
+
+  public List<UiBinderWidgetFactory> getUiBinderWidgetFactories() {
+    return uiBinderWidgetFactories;
   }
 
   public WindowOperationsHandler getWindowOperationsHandler() {

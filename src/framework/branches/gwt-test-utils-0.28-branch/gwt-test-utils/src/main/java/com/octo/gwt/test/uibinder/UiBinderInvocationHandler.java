@@ -1,4 +1,4 @@
-package com.octo.gwt.test.internal.uibinder;
+package com.octo.gwt.test.uibinder;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
