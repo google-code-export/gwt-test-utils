@@ -1,4 +1,4 @@
-package com.octo.gwt.test.internal.uibinder;
+package com.octo.gwt.test.uibinder;
 
 import java.util.Map;
 
@@ -6,7 +6,7 @@ import com.google.gwt.resources.client.CssResource;
 import com.octo.gwt.test.internal.resources.ResourcePrototypeProxyBuilder;
 
 /**
- * Handle <ui:style> tag with a "type" attribute to specify a
+ * Handles <ui:style /> tags with a "type" attribute to specify a
  * {@link CssResource} subtype.
  * 
  * @author Gael Lazzari

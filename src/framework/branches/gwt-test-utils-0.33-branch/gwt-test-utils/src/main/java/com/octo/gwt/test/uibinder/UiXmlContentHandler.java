@@ -1,10 +1,19 @@
-package com.octo.gwt.test.internal.uibinder;
+package com.octo.gwt.test.uibinder;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 
+import com.google.gwt.user.client.ui.Widget;
+
+/**
+ * SAX handler for UiBinder xml.
+ * 
+ * @author Gael Lazzari
+ * 
+ * @param <T> The type of the root declared {@link Widget}.
+ */
 class UiXmlContentHandler<T> implements ContentHandler {
 
   private UiBinderTagBuilder<T> builder;

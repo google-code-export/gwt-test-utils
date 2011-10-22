@@ -10,7 +10,7 @@ import com.octo.gwt.test.internal.AfterTestCallbackManager;
 import com.octo.gwt.test.internal.i18n.LocalizableResourceCreateHandler;
 import com.octo.gwt.test.internal.resources.ClientBundleCreateHandler;
 import com.octo.gwt.test.internal.resources.ImageBundleCreateHandler;
-import com.octo.gwt.test.internal.uibinder.UiBinderCreateHandler;
+import com.octo.gwt.test.uibinder.UiBinderCreateHandler;
 
 public class GwtCreateHandlerManager implements AfterTestCallback {
 
