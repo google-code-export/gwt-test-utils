@@ -10,6 +10,7 @@ import com.google.gwt.i18n.client.Dictionary;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.octo.gwt.test.uibinder.UiBinderWidgetFactory;
 import com.octo.gwt.test.utils.events.Browser;
 import com.octo.gwt.test.utils.events.Browser.BrowserErrorHandler;
 
@@ -38,6 +39,14 @@ public interface GwtModuleRunner {
    * @param gwtCreateHandler The deferred binding candidate.
    */
   void addGwtCreateHandler(GwtCreateHandler gwtCreateHandler);
+
+  /**
+   * Declare a UiBinderWidgetFactory to be a candidate for handling some widget
+   * declaration in a .ui.xml UiBinder file.
+   * 
+   * @param factory The UiBinder Widget factory candidate.
+   */
+  void addUiBinderWidgetFactory(UiBinderWidgetFactory factory);
 
   /**
    * Specifies if the module runner is allowed the setup of debug id.

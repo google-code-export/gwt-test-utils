@@ -1,4 +1,4 @@
-package com.octo.gwt.test.internal.uibinder;
+package com.octo.gwt.test.uibinder;
 
 import java.io.IOException;
 import java.io.InputStream;

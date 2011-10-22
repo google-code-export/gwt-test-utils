@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.LIElement;
+import com.google.gwt.user.client.ui.DockLayoutPanel.Direction;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.octo.gwt.test.GwtTestTest;
 
@@ -25,6 +26,8 @@ public class UiBinderWithDockLayoutPanelTest extends GwtTestTest {
     assertEquals("East", panel.eastLabel.getText());
     assertEquals("South", panel.southLabel.getText());
     assertEquals("Center", panel.centerLabel.getText());
+    assertEquals(Direction.NORTH,
+        panel.getLayout().getWidgetDirection(panel.northLabel));
     assertEquals(
         "<ul><li id=\"li-west0\">west0</li><li id=\"li-west1\">west1</li></ul>",
         panel.westHTML.getHTML());
