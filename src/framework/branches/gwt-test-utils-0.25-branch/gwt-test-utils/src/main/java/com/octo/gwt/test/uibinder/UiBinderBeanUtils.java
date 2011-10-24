@@ -1,4 +1,4 @@
-package com.octo.gwt.test.utils;
+package com.octo.gwt.test.uibinder;
 
 import java.util.Map;
 

@@ -33,18 +33,19 @@ public interface UiBinderTag {
   void appendText(String text);
 
   /**
+   * Callback method called when the UiBinder tag is closed, so implementation
+   * could apply some custom configuration if necessary.
+   * 
+   * @return The UiBinder tag's wrapped object (Widget, Resource, DOM
+   *         element...)
+   */
+  Object endTag();
+
+  /**
    * Get the parent UiBinder tag.
    * 
    * @return The parent UiBinder tag
    */
   UiBinderTag getParentTag();
-
-  /**
-   * Get the Object (Widget, Resource, DOM element...) wrapped by the UiBinder
-   * tag.
-   * 
-   * @return The wrapped object
-   */
-  Object getWrapped();
 
 }

@@ -63,18 +63,18 @@ class UiBinderTagBuilder<T> {
   UiBinderTagBuilder<T> endTag(String nameSpaceURI, String localName) {
 
     // ignore <UiBinder> tag
-    if (UiBinderUtils.isUiBinderTag(nameSpaceURI, localName)) {
+    if (UiBinderXmlUtils.isUiBinderTag(nameSpaceURI, localName)) {
       return this;
     }
 
-    Object currentObject = currentTag.getWrapped();
+    Object currentObject = currentTag.endTag();
     UiBinderTag parentTag = currentTag.getParentTag();
     currentTag = parentTag;
 
-    if (UiBinderUtils.isResourceTag(nameSpaceURI, localName)) {
+    if (UiBinderXmlUtils.isResourceTag(nameSpaceURI, localName)) {
       // ignore <data>, <image> and <style> stags
       return this;
-    } else if (UiBinderUtils.isMsgTag(nameSpaceURI, localName)) {
+    } else if (UiBinderXmlUtils.isMsgTag(nameSpaceURI, localName)) {
       // special <msg> case
       parentTag.appendText((String) currentObject);
       return this;
@@ -105,7 +105,7 @@ class UiBinderTagBuilder<T> {
   UiBinderTagBuilder<T> startTag(String nameSpaceURI, String localName,
       Attributes attributes) {
 
-    if (UiBinderUtils.isUiBinderTag(nameSpaceURI, localName)) {
+    if (UiBinderXmlUtils.isUiBinderTag(nameSpaceURI, localName)) {
       return this;
     }
 
@@ -149,10 +149,10 @@ class UiBinderTagBuilder<T> {
             + "', only implementation of '" + IsWidget.class.getName()
             + "' are allowed");
       }
-    } else if (UiBinderUtils.isResourceTag(nameSpaceURI, localName)) {
+    } else if (UiBinderXmlUtils.isResourceTag(nameSpaceURI, localName)) {
       return resourceManager.registerResource(localName, attributes, parentTag,
           owner);
-    } else if (UiBinderUtils.isMsgTag(nameSpaceURI, localName)) {
+    } else if (UiBinderXmlUtils.isMsgTag(nameSpaceURI, localName)) {
       return new UiBinderMsg(currentTag);
     } else {
       return new UiBinderElement(nameSpaceURI, localName, attributes,

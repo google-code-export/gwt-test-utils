@@ -20,10 +20,11 @@ import com.octo.gwt.test.exceptions.GwtTestUiBinderException;
 import com.octo.gwt.test.exceptions.ReflectionException;
 import com.octo.gwt.test.internal.patchers.dom.JavaScriptObjects;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
-import com.octo.gwt.test.utils.UiBinderBeanUtils;
 
 /**
- * Handles <g:Xxx /> tags, where Xxx is a {@link IsWidget} implementation.
+ * Base handler for Widgets tag (e.g. <g:Xxx /> tags, where Xxx is a
+ * {@link IsWidget} implementation). This class should be overriden to add
+ * custom code to handle specific widget / attributes.
  * 
  * @author Gael Lazzari
  * 
@@ -59,13 +60,13 @@ public class UiBinderWidget<T extends IsWidget> implements UiBinderTag {
       String attrValue = attributes.getValue(i).trim();
       String attrUri = attributes.getURI(i);
 
-      if (UiBinderUtils.isUiFieldAttribute(attrUri, attrName)) {
+      if (UiBinderXmlUtils.isUiFieldAttribute(attrUri, attrName)) {
         treatUiFieldAttr(owner, attrValue);
       } else if ("styleName".equals(attrName)) {
 
         // special case of style
         attributesMap.put("styleName",
-            UiBinderUtils.getEffectiveStyleName(attrValue));
+            UiBinderXmlUtils.getEffectiveStyleName(attrValue));
 
       } else if ("addStyleNames".equals(attrName)) {
 
@@ -117,22 +118,31 @@ public class UiBinderWidget<T extends IsWidget> implements UiBinderTag {
   /*
    * (non-Javadoc)
    * 
+   * @see com.octo.gwt.test.uibinder.UiBinderTag#getWrapped()
+   */
+  public Object endTag() {
+    UiBinderBeanUtils.populateWidget(this.wrapped, attributesMap);
+    return wrapped;
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
    * @see com.octo.gwt.test.uibinder.UiBinderTag#getParentTag()
    */
   public UiBinderTag getParentTag() {
     return parentTag;
   }
 
-  /*
-   * (non-Javadoc)
+  /**
+   * Add a new Widget as a child to this widget. This implementation just calls
+   * {@link ForIsWidget#add(IsWidget)} or
+   * {@link HasWidgets#add(com.google.gwt.user.client.ui.Widget)} according to
+   * which interface the wrapped widget is implementing.
    * 
-   * @see com.octo.gwt.test.uibinder.UiBinderTag#getWrapped()
+   * @param wrapped The wrapped widget of this tag.
+   * @param isWidget The child widget to be added.
    */
-  public Object getWrapped() {
-    UiBinderBeanUtils.populateWidget(this.wrapped, attributesMap);
-    return wrapped;
-  }
-
   protected void addWidget(T wrapped, IsWidget isWidget) {
     if (ForIsWidget.class.isInstance(wrapped)) {
       // hack for GWT 2.1.0
@@ -149,10 +159,28 @@ public class UiBinderWidget<T extends IsWidget> implements UiBinderTag {
 
   }
 
+  /**
+   * Append an element declared in the .ui.xml to this widget, which is supposed
+   * to be its parent. This implementation calls
+   * {@link Element#appendChild(com.google.gwt.dom.client.Node)} on the Widget's
+   * element.
+   * 
+   * @param wrapped The wrapped widget of this tag.
+   * @param child The child element to be appended.
+   */
   protected void appendElement(T wrapped, Element child) {
     wrapped.asWidget().getElement().appendChild(child);
   }
 
+  /**
+   * Append text to this widget. This implementation calls
+   * {@link HasText#setText(String)} if the current widget is implementing the
+   * {@link HasText} interface, or append a new {@link Text} node wrapping the
+   * data value to the Widget's element.
+   * 
+   * @param wrapped The wrapped widget of this tag.
+   * @param data The string value.
+   */
   protected void appendText(T wrapped, String data) {
     if (HasText.class.isInstance(wrapped)) {
       ((HasText) wrapped).setText(data);
@@ -167,7 +195,7 @@ public class UiBinderWidget<T extends IsWidget> implements UiBinderTag {
     String[] effectiveStyles = new String[styles.length];
 
     for (int j = 0; j < styles.length; j++) {
-      effectiveStyles[j] = UiBinderUtils.getEffectiveStyleName(styles[j]);
+      effectiveStyles[j] = UiBinderXmlUtils.getEffectiveStyleName(styles[j]);
     }
     attributesMap.put("addStyleNames", effectiveStyles);
   }

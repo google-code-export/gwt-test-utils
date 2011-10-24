@@ -35,11 +35,11 @@ class UiBinderElement implements UiBinderTag {
       String attrValue = attributes.getValue(i).trim();
       String attrUri = attributes.getURI(i);
 
-      if (UiBinderUtils.isUiFieldAttribute(attrUri, attrName)) {
+      if (UiBinderXmlUtils.isUiFieldAttribute(attrUri, attrName)) {
         GwtReflectionUtils.setPrivateFieldValue(owner, attrValue, this.wrapped);
       } else if ("class".equalsIgnoreCase(attrName)) {
         this.wrapped.setAttribute("class",
-            UiBinderUtils.getEffectiveStyleName(attrValue));
+            UiBinderXmlUtils.getEffectiveStyleName(attrValue));
       } else {
         this.wrapped.setAttribute(attrName, attrValue);
       }
@@ -66,7 +66,7 @@ class UiBinderElement implements UiBinderTag {
     return parentTag;
   }
 
-  public Object getWrapped() {
+  public Object endTag() {
     return this.wrapped;
   }
 

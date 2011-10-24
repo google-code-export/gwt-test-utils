@@ -7,8 +7,8 @@ import com.extjs.gxt.ui.client.widget.layout.BorderLayout;
 import com.extjs.gxt.ui.client.widget.layout.FitLayout;
 import com.octo.gwt.test.GwtCreateHandler;
 import com.octo.gwt.test.exceptions.GwtTestUiBinderException;
+import com.octo.gwt.test.uibinder.UiBinderBeanUtils;
 import com.octo.gwt.test.uibinder.UiBinderCreateHandler;
-import com.octo.gwt.test.utils.UiBinderBeanUtils;
 
 /**
  * A custom <code>GwtCreateHandler</code> to handle GXT component creations

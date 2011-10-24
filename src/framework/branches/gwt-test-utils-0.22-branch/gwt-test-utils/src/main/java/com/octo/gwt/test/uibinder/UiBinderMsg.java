@@ -39,7 +39,7 @@ class UiBinderMsg implements UiBinderTag {
     return parentTag;
   }
 
-  public Object getWrapped() {
+  public Object endTag() {
     return sb.toString();
   }
 }

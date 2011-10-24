@@ -201,7 +201,7 @@ class UiBinderInstanciator {
 
     for (int i = 0; i < attributes.getLength(); i++) {
       String attrName = attributes.getLocalName(i);
-      if (!UiBinderUtils.isUiFieldAttribute(attributes.getURI(i), attrName)) {
+      if (!UiBinderXmlUtils.isUiFieldAttribute(attributes.getURI(i), attrName)) {
 
         if (inclueSetters || !isBeanProperty(clazz, attrName)) {
           argsList.add(attributes.getValue(i));

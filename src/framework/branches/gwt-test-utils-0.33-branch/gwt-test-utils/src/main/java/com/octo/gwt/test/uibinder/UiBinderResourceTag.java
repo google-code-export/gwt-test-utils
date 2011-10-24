@@ -52,7 +52,7 @@ abstract class UiBinderResourceTag implements UiBinderTag {
     return parentTag;
   }
 
-  public Object getWrapped() {
+  public Object endTag() {
     if (wrappedObject == null) {
       // delegate the creation to subclasses
       wrappedObject = buildObject(builder);

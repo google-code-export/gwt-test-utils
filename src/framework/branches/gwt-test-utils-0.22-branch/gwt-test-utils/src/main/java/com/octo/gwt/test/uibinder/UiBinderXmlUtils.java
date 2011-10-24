@@ -10,16 +10,15 @@ import com.google.gwt.user.client.ui.HasHorizontalAlignment.HorizontalAlignmentC
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment.VerticalAlignmentConstant;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
-import com.octo.gwt.test.utils.UiBinderBeanUtils;
 
 /**
- * Utility class for UiBinder stuff. <strong>For internal use only.</strong>
+ * Utility class for UiBinder XML stuff.
  * 
  * @author Gael Lazzari
  * 
  */
 @SuppressWarnings("rawtypes")
-class UiBinderUtils {
+public class UiBinderXmlUtils {
 
   private static final String DATA_TAG = "data";
   private static final String FIELD_ATTR_NAME = "field";
@@ -115,7 +114,7 @@ class UiBinderUtils {
         && nameSpaceURI.equals(UIBINDER_NSURI);
   }
 
-  private UiBinderUtils() {
+  private UiBinderXmlUtils() {
 
   }
 
