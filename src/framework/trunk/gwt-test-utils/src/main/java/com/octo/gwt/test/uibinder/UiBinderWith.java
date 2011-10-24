@@ -34,7 +34,7 @@ class UiBinderWith implements UiBinderTag {
     return null;
   }
 
-  public Object getWrapped() {
+  public Object endTag() {
     return with;
   }
 
