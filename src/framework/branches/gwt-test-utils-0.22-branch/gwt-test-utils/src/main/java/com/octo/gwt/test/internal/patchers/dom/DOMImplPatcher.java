@@ -61,7 +61,7 @@ class DOMImplPatcher {
 
   @PatchMethod
   static Element createElement(Object domImpl, Document doc, String tag) {
-    return JavaScriptObjects.newElement(tag);
+    return JavaScriptObjects.newElement(tag, doc);
   }
 
   @PatchMethod
@@ -105,7 +105,7 @@ class DOMImplPatcher {
   @PatchMethod
   static void cssSetOpacity(Object domImpl, Style style, double value) {
     double modulo = value % 1;
-    String stringValue = (modulo == 0) ? String.valueOf((int) value)
+    String stringValue = modulo == 0 ? String.valueOf((int) value)
         : String.valueOf(value);
     style.setProperty("opacity", stringValue);
   }
@@ -232,7 +232,7 @@ class DOMImplPatcher {
     String standardDOMPropertyName = JsoProperties.get().getStandardDOMPropertyName(
         name);
 
-    return (standardDOMPropertyName != null)
+    return standardDOMPropertyName != null
         ? properties.getString(standardDOMPropertyName)
         : properties.getString(name.toLowerCase());
 
@@ -335,7 +335,7 @@ class DOMImplPatcher {
 
     String tagName = JavaScriptObjects.getObject(elem, JsoProperties.TAG_NAME);
 
-    return (tagName != null) ? tagName
+    return tagName != null ? tagName
         : (String) GwtReflectionUtils.getStaticFieldValue(elem.getClass(),
             "TAG");
   }
@@ -348,7 +348,7 @@ class DOMImplPatcher {
     String standardDOMPropertyName = JsoProperties.get().getStandardDOMPropertyName(
         name);
 
-    return (standardDOMPropertyName != null)
+    return standardDOMPropertyName != null
         ? properties.contains(standardDOMPropertyName)
         : properties.contains(name.toLowerCase());
   }
@@ -431,7 +431,7 @@ class DOMImplPatcher {
   @PatchMethod
   static void setInnerText(Object domImpl, Element elem, String text) {
     clearChildNodes(elem);
-    elem.appendChild(JavaScriptObjects.newText(text));
+    elem.appendChild(JavaScriptObjects.newText(text, elem.getOwnerDocument()));
   }
 
   @PatchMethod

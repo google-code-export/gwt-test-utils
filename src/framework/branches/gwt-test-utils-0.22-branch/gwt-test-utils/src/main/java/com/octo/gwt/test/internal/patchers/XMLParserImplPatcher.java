@@ -33,7 +33,11 @@ class XMLParserImplPatcher {
   @PatchMethod
   static JavaScriptObject createCDATASection(JavaScriptObject jsObject,
       String data) {
-    Text text = JavaScriptObjects.newObject(Text.class);
+    Document document = jsObject.cast();
+    Text text = document.createTextNode(data);
+
+    JavaScriptObjects.setProperty(text, JsoProperties.NODE_OWNER_DOCUMENT,
+        document);
 
     // set the special type
     JavaScriptObjects.setProperty(text, JsoProperties.NODE_TYPE_FIELD,
@@ -54,6 +58,12 @@ class XMLParserImplPatcher {
       String tagName) {
     Document document = jsObject.cast();
     return document.createElement(tagName);
+  }
+
+  @PatchMethod
+  static JavaScriptObject createTextNode(JavaScriptObject jsObject, String text) {
+    Document document = jsObject.cast();
+    return document.createTextNode(text);
   }
 
   @PatchMethod
@@ -218,6 +228,12 @@ class XMLParserImplPatcher {
   }
 
   @PatchMethod
+  static Document getOwnerDocument(JavaScriptObject o) {
+    Node n = o.cast();
+    return n.getOwnerDocument();
+  }
+
+  @PatchMethod
   static JavaScriptObject getPreviousSibling(JavaScriptObject o) {
     Node n = o.cast();
     return n.getPreviousSibling();
@@ -263,6 +279,13 @@ class XMLParserImplPatcher {
     Node oldChildNode = oldChildJs.cast();
 
     return node.removeChild(oldChildNode);
+  }
+
+  @PatchMethod
+  static void setAttribute(JavaScriptObject o, String name, String value) {
+    PropertyContainer properties = JavaScriptObjects.getObject(o,
+        JsoProperties.ELEM_PROPERTIES);
+    properties.put(name, value);
   }
 
   @PatchMethod

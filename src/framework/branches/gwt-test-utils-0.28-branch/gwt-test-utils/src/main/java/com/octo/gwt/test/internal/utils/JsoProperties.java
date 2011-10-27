@@ -48,6 +48,7 @@ public class JsoProperties {
   public static final String NODE_LIST_INNER_LIST = "NODE_LIST_INNER_LIST";
   public static final String NODE_NAME = "nodeName";
   public static final String NODE_NAMESPACE_URI = "namespaceURI";
+  public static final String NODE_OWNER_DOCUMENT = "NODE_OWNER_DOCUMENT";
   public static final String NODE_TYPE_FIELD = "nodeType";
   public static final String PARENT_NODE_FIELD = "parentNode";
   public static final String SCROLL_LEFT = "scrollLeft";
@@ -107,7 +108,7 @@ public class JsoProperties {
 
   public boolean isStandardDOMProperty(String propertyName) {
     return propertyNames.values().contains(propertyName)
-        && (!"class".equals(propertyName));
+        && !"class".equals(propertyName);
   }
 
 }

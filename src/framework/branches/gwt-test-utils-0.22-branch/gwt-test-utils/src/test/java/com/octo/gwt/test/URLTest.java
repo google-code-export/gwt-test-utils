@@ -9,7 +9,7 @@ import com.google.gwt.http.client.URL;
 public class URLTest extends GwtTestTest {
 
   @Test
-  public void eEncodeComponent() {
+  public void encodeQueryString() {
     // Arrange
     String stringToEncode = "test";
 

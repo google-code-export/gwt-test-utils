@@ -52,7 +52,7 @@ class DocumentPatcher {
 
   @PatchMethod
   static Text createTextNode(Document document, String data) {
-    return JavaScriptObjects.newText(data);
+    return JavaScriptObjects.newText(data, document);
   }
 
   @PatchMethod
@@ -66,7 +66,7 @@ class DocumentPatcher {
     if (DOCUMENT_HOLDER.document == null) {
       try {
         DOCUMENT_HOLDER.document = JavaScriptObjects.newObject(Document.class);
-        Element e = parseHTMLElement();
+        Element e = parseHTMLElement(DOCUMENT_HOLDER.document);
         DOCUMENT_HOLDER.document.appendChild(e);
         JavaScriptObjects.setProperty(DOCUMENT_HOLDER.document,
             JsoProperties.DOCUMENT_ELEMENT, e);
@@ -221,14 +221,16 @@ class DocumentPatcher {
     }
   }
 
-  private static Element parseHTMLElement() {
+  private static Element parseHTMLElement(Document document) {
     String moduleName = GwtConfig.get().getModuleName();
     String hostPagePath = GwtConfig.get().getHostPagePath();
 
     if (hostPagePath == null) {
       // return a default empty HTML element
-      Element defaultHTMLElement = JavaScriptObjects.newElement("HTML");
-      defaultHTMLElement.appendChild(JavaScriptObjects.newElement("body"));
+      Element defaultHTMLElement = JavaScriptObjects.newElement("HTML",
+          document);
+      defaultHTMLElement.appendChild(JavaScriptObjects.newElement("body",
+          document));
       return defaultHTMLElement;
     }
 

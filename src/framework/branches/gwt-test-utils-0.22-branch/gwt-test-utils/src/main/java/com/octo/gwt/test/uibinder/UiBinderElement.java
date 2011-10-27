@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.xml.sax.Attributes;
 
+import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Text;
 import com.google.gwt.user.client.ui.Widget;
@@ -25,7 +26,7 @@ class UiBinderElement implements UiBinderTag {
 
   UiBinderElement(String nsURI, String tagName, Attributes attributes,
       UiBinderTag parentTag, Object owner) {
-    this.wrapped = JavaScriptObjects.newElement(tagName);
+    this.wrapped = JavaScriptObjects.newElement(tagName, Document.get());
     this.parentTag = parentTag;
 
     JavaScriptObjects.setProperty(wrapped, JsoProperties.XML_NAMESPACE, nsURI);
@@ -62,12 +63,12 @@ class UiBinderElement implements UiBinderTag {
     }
   }
 
-  public UiBinderTag getParentTag() {
-    return parentTag;
-  }
-
   public Object endTag() {
     return this.wrapped;
+  }
+
+  public UiBinderTag getParentTag() {
+    return parentTag;
   }
 
   protected void addWidget(Element wrapped, Widget isWidget) {
@@ -89,7 +90,7 @@ class UiBinderElement implements UiBinderTag {
   }
 
   protected void appendText(Element wrapped, String data) {
-    Text text = JavaScriptObjects.newText(data);
+    Text text = JavaScriptObjects.newText(data, wrapped.getOwnerDocument());
     wrapped.appendChild(text);
   }
 

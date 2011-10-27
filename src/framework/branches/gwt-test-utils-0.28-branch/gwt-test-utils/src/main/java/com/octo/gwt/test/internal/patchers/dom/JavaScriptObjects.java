@@ -170,7 +170,7 @@ public class JavaScriptObjects {
     return getJsoProperties(jso, propName).getString(propName);
   }
 
-  public static Element newElement(String tag) {
+  public static Element newElement(String tag, Document ownerDocument) {
     Class<? extends Element> clazz = ELEMENT_TAGS.get(tag.toLowerCase());
 
     if (clazz == null) {
@@ -180,6 +180,7 @@ public class JavaScriptObjects {
     Element elem = newObject(clazz);
 
     setProperty(elem, JsoProperties.TAG_NAME, tag);
+    setProperty(elem, JsoProperties.NODE_OWNER_DOCUMENT, ownerDocument);
 
     if (tag.equalsIgnoreCase("html")) {
       setProperty(elem, JsoProperties.NODE_NAME, "HTML");
@@ -211,8 +212,14 @@ public class JavaScriptObjects {
       setProperty(o, JsoProperties.NODE_LIST_FIELD, newNodeList());
     }
 
+    if (Node.class.isAssignableFrom(jsoClass)
+        && !Document.class.isAssignableFrom(jsoClass)) {
+      setProperty(o, JsoProperties.NODE_OWNER_DOCUMENT, Document.get());
+    }
+
     if (Document.class.isAssignableFrom(jsoClass)) {
       nodeType = Node.DOCUMENT_NODE;
+      setProperty(o, JsoProperties.NODE_OWNER_DOCUMENT, o);
     } else if (Element.class.isAssignableFrom(jsoClass)) {
       nodeType = Node.ELEMENT_NODE;
 
@@ -250,9 +257,10 @@ public class JavaScriptObjects {
     return style;
   }
 
-  public static Text newText(String data) {
+  public static Text newText(String data, Document ownerDocument) {
     Text text = newObject(Text.class);
     text.setData(data);
+    setProperty(text, JsoProperties.NODE_OWNER_DOCUMENT, ownerDocument);
 
     return text;
   }

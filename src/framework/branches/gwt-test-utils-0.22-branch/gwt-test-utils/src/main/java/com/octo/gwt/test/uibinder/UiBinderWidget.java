@@ -172,7 +172,8 @@ public class UiBinderWidget<T extends Widget> implements UiBinderTag {
     if (HasText.class.isInstance(wrapped)) {
       ((HasText) wrapped).setText(data);
     } else {
-      Text text = JavaScriptObjects.newText(data);
+      Text text = JavaScriptObjects.newText(data,
+          wrapped.getElement().getOwnerDocument());
       wrapped.getElement().appendChild(text);
     }
   }

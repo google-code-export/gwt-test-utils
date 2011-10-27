@@ -287,9 +287,9 @@ public class ElementTest extends GwtTestTest {
     ButtonElement be0 = Document.get().createPushButtonElement();
     ButtonElement be1 = Document.get().createPushButtonElement();
     e.appendChild(be0);
-    e.appendChild(JavaScriptObjects.newText("test1"));
+    e.appendChild(JavaScriptObjects.newText("test1", Document.get()));
     e.appendChild(be1);
-    e.appendChild(JavaScriptObjects.newText("test2"));
+    e.appendChild(JavaScriptObjects.newText("test2", Document.get()));
 
     // Act & Assert
     assertEquals(be1, be0.getNextSiblingElement());

@@ -30,7 +30,7 @@ class GwtXmlContentHandler implements ContentHandler {
     String text = String.valueOf(ch, start, length).trim();
 
     if (text.length() > 0) {
-      currentNode.appendChild(Document.get().createTextNode(text));
+      currentNode.appendChild(document.createTextNode(text));
     }
   }
 
@@ -71,7 +71,7 @@ class GwtXmlContentHandler implements ContentHandler {
   public void startElement(String nameSpaceURI, String localName,
       String rawName, Attributes attributes) throws SAXException {
 
-    Element element = Document.get().createElement(localName);
+    Element element = document.createElement(localName);
 
     JavaScriptObjects.setProperty(element, JsoProperties.NODE_NAMESPACE_URI,
         nameSpaceURI);

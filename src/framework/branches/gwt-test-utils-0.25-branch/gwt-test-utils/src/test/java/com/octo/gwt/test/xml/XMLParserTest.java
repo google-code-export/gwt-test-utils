@@ -1,4 +1,4 @@
-package com.octo.gwt.test;
+package com.octo.gwt.test.xml;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -22,6 +22,7 @@ import com.google.gwt.xml.client.NamedNodeMap;
 import com.google.gwt.xml.client.NodeList;
 import com.google.gwt.xml.client.Text;
 import com.google.gwt.xml.client.XMLParser;
+import com.octo.gwt.test.GwtTestTest;
 import com.octo.gwt.test.internal.utils.XmlUtils;
 
 public class XMLParserTest extends GwtTestTest {
@@ -105,6 +106,9 @@ public class XMLParserTest extends GwtTestTest {
     assertEquals("#text", tags.item(0).getFirstChild().getNodeName());
     assertEquals("<tags><tag>value</tag></tags>",
         doc.getDocumentElement().toString());
+
+    assertEquals(doc.getDocumentElement(),
+        tags.item(0).getOwnerDocument().getDocumentElement());
   }
 
   @Test

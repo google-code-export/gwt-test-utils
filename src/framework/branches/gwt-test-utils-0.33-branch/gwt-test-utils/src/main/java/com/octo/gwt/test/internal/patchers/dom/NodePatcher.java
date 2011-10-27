@@ -30,7 +30,8 @@ class NodePatcher {
     switch (node.getNodeType()) {
       case Node.ELEMENT_NODE:
         Element e = node.cast();
-        newNode = JavaScriptObjects.newElement(e.getTagName());
+        newNode = JavaScriptObjects.newElement(e.getTagName(),
+            node.getOwnerDocument());
         break;
       case Node.DOCUMENT_NODE:
         newNode = JavaScriptObjects.newObject(Document.class);
@@ -73,8 +74,9 @@ class NodePatcher {
   @PatchMethod
   static Node getNextSibling(Node node) {
     Node parent = node.getParentNode();
-    if (parent == null)
+    if (parent == null) {
       return null;
+    }
 
     List<Node> list = getChildNodeList(parent);
 
@@ -134,14 +136,15 @@ class NodePatcher {
 
   @PatchMethod
   static Document getOwnerDocument(Node node) {
-    return Document.get();
+    return JavaScriptObjects.getObject(node, JsoProperties.NODE_OWNER_DOCUMENT);
   }
 
   @PatchMethod
   static Node getPreviousSibling(Node node) {
     Node parent = node.getParentNode();
-    if (parent == null)
+    if (parent == null) {
       return null;
+    }
 
     List<Node> list = getChildNodeList(parent);
 
@@ -262,6 +265,10 @@ class NodePatcher {
 
       if (JsoProperties.PARENT_NODE_FIELD.equals(entry.getKey())) {
         // Nothing to do : new cloned node does not have any parent
+      } else if (JsoProperties.NODE_OWNER_DOCUMENT.equals(entry.getKey())) {
+        JavaScriptObjects.setProperty(newJso,
+            JsoProperties.NODE_OWNER_DOCUMENT, JavaScriptObjects.getObject(
+                oldJso, JsoProperties.NODE_OWNER_DOCUMENT));
       } else if (JsoProperties.STYLE_OBJECT_FIELD.equals(entry.getKey())) {
         setupStyle(newJso, (Style) entry.getValue());
       } else if (JsoProperties.NODE_LIST_FIELD.equals(entry.getKey())) {

@@ -278,7 +278,8 @@ public class NodeTest extends GwtTestTest {
     assertEquals("#document", Document.get().getNodeName());
     assertEquals("HTML", Document.get().getDocumentElement().getNodeName());
     assertEquals("a", Document.get().createAnchorElement().getNodeName());
-    assertEquals("#text", JavaScriptObjects.newText("test").getNodeName());
+    assertEquals("#text",
+        JavaScriptObjects.newText("test", Document.get()).getNodeName());
   }
 
   @Test
@@ -290,7 +291,7 @@ public class NodeTest extends GwtTestTest {
     assertEquals(Node.ELEMENT_NODE,
         Document.get().createAnchorElement().getNodeType());
     assertEquals(Node.TEXT_NODE,
-        JavaScriptObjects.newText("test").getNodeType());
+        JavaScriptObjects.newText("test", Document.get()).getNodeType());
   }
 
   @Test
