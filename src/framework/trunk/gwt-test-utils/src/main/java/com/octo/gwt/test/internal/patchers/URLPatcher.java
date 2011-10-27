@@ -12,6 +12,16 @@ import com.octo.gwt.test.patchers.PatchMethod;
 class URLPatcher {
 
   @PatchMethod
+  static String encodePathSegmentImpl(String decodedURLComponent) {
+    try {
+      String url = URLEncoder.encode(decodedURLComponent, "UTF-8");
+      return url.replaceAll("\\+", "%20").replaceAll("%2B", "+");
+    } catch (UnsupportedEncodingException e) {
+      throw new GwtTestPatchException(e);
+    }
+  }
+
+  @PatchMethod
   static String encodeQueryStringImpl(String decodedURLComponent) {
     try {
       return URLEncoder.encode(decodedURLComponent, "UTF-8");

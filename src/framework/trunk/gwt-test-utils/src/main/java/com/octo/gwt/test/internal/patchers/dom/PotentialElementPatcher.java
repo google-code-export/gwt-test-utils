@@ -15,7 +15,8 @@ class PotentialElementPatcher {
   @PatchMethod
   static PotentialElement build(UIObject o, String tagName) {
     PotentialElement e = JavaScriptObjects.newObject(PotentialElement.class);
-    Element wrappedElement = JavaScriptObjects.newElement(tagName);
+    Element wrappedElement = JavaScriptObjects.newElement(tagName,
+        o.getElement().getOwnerDocument());
     JavaScriptObjects.setProperty(e, JsoProperties.POTENTIALELEMENT_TAG, true);
     JavaScriptObjects.setProperty(e,
         JsoProperties.POTENTIALELEMENT_WRAPPED_ELEMENT, wrappedElement);
