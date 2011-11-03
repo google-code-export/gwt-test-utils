@@ -71,11 +71,12 @@ class UiBinderTagBuilder<T> {
     UiBinderTag parentTag = currentTag.getParentTag();
     currentTag = parentTag;
 
-    if (UiBinderXmlUtils.isResourceTag(nameSpaceURI, localName)) {
-      // ignore <data>, <image> and <style> stags
+    if (UiBinderXmlUtils.isResourceTag(nameSpaceURI, localName)
+        || UiBinderXmlUtils.isImportTag(nameSpaceURI, localName)) {
+      // ignore <ui:data>, <ui:image>, <ui:style> and <ui:import> tags
       return this;
     } else if (UiBinderXmlUtils.isMsgTag(nameSpaceURI, localName)) {
-      // special <msg> case
+      // special <ui:msg> case
       parentTag.appendText((String) currentObject);
       return this;
     }
@@ -138,7 +139,7 @@ class UiBinderTagBuilder<T> {
       if (Widget.class.isAssignableFrom(clazz)) {
         // create or get the instance
         Widget isWidget = UiBinderInstanciator.getInstance(
-            (Class<? extends Widget>) clazz, attributes, owner);
+            (Class<? extends Widget>) clazz, attributes, resourceManager, owner);
 
         return DefaultUiBinderWidgetFactory.get().createUiBinderWidget(
             isWidget, attributes, parentTag, owner, resourceManager);
@@ -152,6 +153,8 @@ class UiBinderTagBuilder<T> {
     } else if (UiBinderXmlUtils.isResourceTag(nameSpaceURI, localName)) {
       return resourceManager.registerResource(localName, attributes, parentTag,
           owner);
+    } else if (UiBinderXmlUtils.isImportTag(nameSpaceURI, localName)) {
+      return resourceManager.registerImport(attributes, parentTag, owner);
     } else if (UiBinderXmlUtils.isMsgTag(nameSpaceURI, localName)) {
       return new UiBinderMsg(currentTag);
     } else {
@@ -159,5 +162,4 @@ class UiBinderTagBuilder<T> {
           parentTag, owner);
     }
   }
-
 }

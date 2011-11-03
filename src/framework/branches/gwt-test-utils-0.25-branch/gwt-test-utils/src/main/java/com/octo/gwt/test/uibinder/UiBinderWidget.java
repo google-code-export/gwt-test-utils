@@ -1,6 +1,10 @@
 package com.octo.gwt.test.uibinder;
 
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -19,6 +23,7 @@ import com.octo.gwt.test.exceptions.GwtTestException;
 import com.octo.gwt.test.exceptions.GwtTestUiBinderException;
 import com.octo.gwt.test.exceptions.ReflectionException;
 import com.octo.gwt.test.internal.patchers.dom.JavaScriptObjects;
+import com.octo.gwt.test.internal.utils.JsoProperties;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 /**
@@ -32,7 +37,7 @@ import com.octo.gwt.test.utils.GwtReflectionUtils;
  */
 public class UiBinderWidget<T extends IsWidget> implements UiBinderTag {
 
-  private static final Pattern ATTRIBUTE_PATTERN = Pattern.compile("^\\{(\\w+)\\.{1}([^\\}]*)}$");
+  private static final Pattern EXTERNAL_RESOURCES_PATTERN = Pattern.compile("\\s*\\{(\\S*)\\}\\s*");
 
   private final Map<String, Object> attributesMap;
   private final UiBinderTag parentTag;
@@ -63,18 +68,15 @@ public class UiBinderWidget<T extends IsWidget> implements UiBinderTag {
       if (UiBinderXmlUtils.isUiFieldAttribute(attrUri, attrName)) {
         treatUiFieldAttr(owner, attrValue);
       } else if ("styleName".equals(attrName)) {
-
         // special case of style
         attributesMap.put("styleName",
             UiBinderXmlUtils.getEffectiveStyleName(attrValue));
 
       } else if ("addStyleNames".equals(attrName)) {
-
         // special case of multiple style to add
         treatAddStyleNamesAttr(attrValue);
 
       } else {
-
         // normal attribute
         treatStandardAttr(owner, resourceManager, attrName, attrValue);
 
@@ -90,7 +92,17 @@ public class UiBinderWidget<T extends IsWidget> implements UiBinderTag {
    * .Element)
    */
   public final void addElement(Element element) {
-    appendElement(this.wrapped, element);
+
+    String namespaceURI = JavaScriptObjects.getString(element,
+        JsoProperties.XML_NAMESPACE);
+    List<IsWidget> childWidgets = JavaScriptObjects.getObject(element,
+        JsoProperties.UIBINDER_CHILD_WIDGETS_LIST);
+
+    if (childWidgets == null) {
+      childWidgets = Collections.emptyList();
+    }
+
+    appendElement(this.wrapped, element, namespaceURI, childWidgets);
   }
 
   /*
@@ -166,10 +178,14 @@ public class UiBinderWidget<T extends IsWidget> implements UiBinderTag {
    * element.
    * 
    * @param wrapped The wrapped widget of this tag.
-   * @param child The child element to be appended.
+   * @param element The child element to be appended.
+   * @param namespaceURI The namespace URI of the child element.
+   * @param childWidgets The element's childs widgets, which could be empty if
+   *          no child has been added to it.
    */
-  protected void appendElement(T wrapped, Element child) {
-    wrapped.asWidget().getElement().appendChild(child);
+  protected void appendElement(T wrapped, Element element, String namespaceURI,
+      List<IsWidget> childWidgets) {
+    wrapped.asWidget().getElement().appendChild(element);
   }
 
   /**
@@ -191,6 +207,57 @@ public class UiBinderWidget<T extends IsWidget> implements UiBinderTag {
     }
   }
 
+  private Object extractResource(String group,
+      UiResourceManager resourceManager, Object owner) {
+    String[] splitted = group.split("\\.");
+    String resourceAlias = splitted[0];
+    Object resource = resourceManager.getUiResource(resourceAlias);
+    if (resource == null) {
+      throw new GwtTestUiBinderException("Error in file '"
+          + owner.getClass().getSimpleName()
+          + ".ui.xml' : no resource declared for alias '" + resourceAlias + "'");
+    }
+
+    if (splitted.length == 1) {
+      return resource;
+    }
+
+    // handle "alias.myCssResource.myClass"
+    try {
+      for (int i = 1; i < splitted.length; i++) {
+        resource = GwtReflectionUtils.callPrivateMethod(resource, splitted[i]);
+      }
+
+      return resource;
+
+    } catch (Exception e) {
+      if (GwtTestException.class.isInstance(e)) {
+        throw (GwtTestException) e;
+      } else {
+        throw new GwtTestUiBinderException("Error while calling property '"
+            + group.substring(group.indexOf('.') + 1) + "' on object of type '"
+            + resourceManager.getUiResource(resourceAlias).getClass().getName()
+            + "'", e);
+      }
+    }
+  }
+
+  private String formatResourcesMessage(String attrValue, List<Object> resources) {
+
+    StringBuilder sb = new StringBuilder();
+    Matcher m = EXTERNAL_RESOURCES_PATTERN.matcher(attrValue);
+
+    int foundNb = 0;
+    int token = 0;
+    while (m.find()) {
+      sb.append(attrValue.substring(token, m.start(1))).append(foundNb++);
+      token = m.end(1);
+    }
+    sb.append(attrValue.substring(token));
+
+    return MessageFormat.format(sb.toString(), resources.toArray());
+  }
+
   private void treatAddStyleNamesAttr(String attrValue) {
     String[] styles = attrValue.trim().split(" ");
     String[] effectiveStyles = new String[styles.length];
@@ -203,39 +270,30 @@ public class UiBinderWidget<T extends IsWidget> implements UiBinderTag {
 
   private void treatStandardAttr(Object owner,
       UiResourceManager resourceManager, String attrName, String attrValue) {
-    Matcher m = ATTRIBUTE_PATTERN.matcher(attrValue);
+
+    Matcher m = EXTERNAL_RESOURCES_PATTERN.matcher(attrValue);
     if (m.matches()) {
-      String resourceAlias = m.group(1);
-      Object resource = resourceManager.getUiResource(resourceAlias);
-      if (resource == null) {
-        throw new GwtTestUiBinderException("Error in file '"
-            + owner.getClass().getSimpleName()
-            + ".ui.xml' : no resource declared for alias '" + resourceAlias
-            + "'");
-      }
-
-      // handle "alias.myCssResource.myClass"
-      String[] properties = m.group(2).trim().split("\\.");
-      try {
-        for (String property : properties) {
-          resource = GwtReflectionUtils.callPrivateMethod(resource, property);
-        }
-      } catch (Exception e) {
-        if (GwtTestException.class.isInstance(e)) {
-          throw (GwtTestException) e;
-        } else {
-          throw new GwtTestUiBinderException(
-              "Error while calling property '"
-                  + m.group(2)
-                  + "' on object of type '"
-                  + resourceManager.getUiResource(resourceAlias).getClass().getName()
-                  + "'", e);
-        }
-      }
-      attributesMap.put(attrName, resource);
-
+      // entire value matches : only one {} resource, not only string
+      attributesMap.put(attrName,
+          extractResource(m.group(1), resourceManager, owner));
     } else {
-      attributesMap.put(attrName, attrValue);
+      // we have to find potential {} resources
+      m = EXTERNAL_RESOURCES_PATTERN.matcher(attrValue);
+
+      List<Object> resources = new ArrayList<Object>();
+      while (m.find()) {
+        resources.add(extractResource(m.group(1), resourceManager, owner));
+      }
+
+      if (resources.size() == 0) {
+        // attribute should be a String or a simple object convertible to a
+        // String
+        attributesMap.put(attrName, attrValue);
+      } else {
+        // case '{OBJ1} {Obj2}' : this must be formatted to string
+        attributesMap.put(attrName,
+            formatResourcesMessage(attrValue, resources));
+      }
     }
   }
 

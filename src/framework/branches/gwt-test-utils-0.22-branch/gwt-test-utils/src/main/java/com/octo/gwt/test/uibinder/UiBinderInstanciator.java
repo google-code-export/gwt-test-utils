@@ -30,12 +30,13 @@ import com.octo.gwt.test.utils.GwtReflectionUtils;
 @SuppressWarnings("unchecked")
 class UiBinderInstanciator {
 
-  static <U> U getInstance(Class<U> clazz, Attributes attributes, Object owner) {
+  static <U> U getInstance(Class<U> clazz, Attributes attributes,
+      UiResourceManager resourceManager, Object owner) {
     U instance = getProvidedUiField(clazz, owner);
 
     if (instance == null) {
       // delegate to specific widgets instanciator
-      instance = createSpecificWidget(clazz, attributes, owner);
+      instance = createSpecificWidget(clazz, attributes, resourceManager, owner);
     }
 
     GwtTestConfigurationException createHandlerException = null;
@@ -75,7 +76,7 @@ class UiBinderInstanciator {
 
   // TODO : not a flexible design...
   private static <U> U createSpecificWidget(Class<U> clazz,
-      Attributes attributes, Object owner) {
+      Attributes attributes, UiResourceManager resourceManager, Object owner) {
 
     if (clazz == RadioButton.class) {
       String name = attributes.getValue("name");
@@ -96,7 +97,6 @@ class UiBinderInstanciator {
                 + ".ui.xml' : missing required attribute 'name'");
       }
       return (U) new NamedFrame(name);
-
     }
 
     return null;

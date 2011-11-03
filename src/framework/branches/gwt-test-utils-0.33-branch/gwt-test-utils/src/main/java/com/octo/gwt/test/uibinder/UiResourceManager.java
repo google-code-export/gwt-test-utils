@@ -11,6 +11,7 @@ import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.octo.gwt.test.exceptions.GwtTestUiBinderException;
 import com.octo.gwt.test.internal.resources.ResourcePrototypeProxyBuilder;
+import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 /**
  * Class responsible for managing declared resources, e.g. <ui:with />,
@@ -49,17 +50,35 @@ public class UiResourceManager {
    *          file)
    * @return The corresponding resource, or null if it does not exist
    */
-  public Object getUiResource(String alias) {
-    return resources.get(alias);
+  @SuppressWarnings("unchecked")
+  public <T> T getUiResource(String alias) {
+    return (T) resources.get(alias);
+  }
+
+  /**
+   * Register some new resources which should correspond to a <ui:import> tag in
+   * the .ui.xml file.
+   * 
+   * @param attributes XML attributes of the tag
+   * @param parentTag The parent tag if any
+   * @param owner The {@link UiBinder} owner widget, which calls the
+   *          {@link UiBinder#createAndBindUi(Object)} method to initialize
+   *          itself.
+   * @return The UiBinderTag which has registered the imported object instances
+   *         in the {@link UiResourceManager}.
+   */
+  UiBinderTag registerImport(Attributes attributes, UiBinderTag parentTag,
+      Object owner) {
+    return new UiBinderImportTag(attributes, parentTag, resources, owner);
   }
 
   /**
    * Register a new resource which should correspond to a resource tag in the
-   * .ui.xml
+   * .ui.xml file.
    * 
    * @param localName The type of the resource ('with', 'style', 'image' or
    *          'data')
-   * @param attributes XML attribute of the tag
+   * @param attributes XML attributes of the tag
    * @param parentTag The parent tag if any
    * @param owner The {@link UiBinder} owner widget, which calls the
    *          {@link UiBinder#createAndBindUi(Object)} method to initialize
@@ -86,7 +105,7 @@ public class UiResourceManager {
       // special resource <ui:with> : the resource can be annotated with
       // @UiConstructor, @UiFactory or @UiField(provided=true)
       Object resource = UiBinderInstanciator.getInstance(type, attributes,
-          owner);
+          this, owner);
       resources.put(alias, resource);
       return new UiBinderWith(resource);
 
@@ -152,19 +171,11 @@ public class UiResourceManager {
     }
 
     try {
-      return Class.forName(type);
-    } catch (ClassNotFoundException e1) {
-      // it can be an inner class
-      int lastIndex = type.lastIndexOf('.');
-      String innerTypeName = type.substring(0, lastIndex) + "$"
-          + type.substring(lastIndex + 1);
-      try {
-        return Class.forName(innerTypeName);
-      } catch (ClassNotFoundException e2) {
-        throw new GwtTestUiBinderException("Cannot find class '" + type
-            + "' for resource '" + alias + "' declared in file '"
-            + owner.getClass().getSimpleName() + ".ui.xml'");
-      }
+      return GwtReflectionUtils.getClass(type);
+    } catch (ClassNotFoundException e2) {
+      throw new GwtTestUiBinderException("Cannot find class '" + type
+          + "' for resource '" + alias + "' declared in file '"
+          + owner.getClass().getSimpleName() + ".ui.xml'");
     }
   }
 }

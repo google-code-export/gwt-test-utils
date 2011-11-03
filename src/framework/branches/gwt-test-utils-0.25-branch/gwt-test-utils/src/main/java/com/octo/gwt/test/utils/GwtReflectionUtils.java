@@ -119,8 +119,8 @@ public class GwtReflectionUtils {
       Class<?>... paramTypes) {
     Class<?> searchType = clazz;
     while (!Object.class.equals(searchType) && searchType != null) {
-      Method[] methods = (searchType.isInterface() ? searchType.getMethods()
-          : searchType.getDeclaredMethods());
+      Method[] methods = searchType.isInterface() ? searchType.getMethods()
+          : searchType.getDeclaredMethods();
       for (int i = 0; i < methods.length; i++) {
         Method method = methods[i];
         if (name.equals(method.getName())
@@ -189,6 +189,31 @@ public class GwtReflectionUtils {
     cacheAnnotation.put(clazz, annotationClass, result);
 
     return result;
+  }
+
+  /**
+   * Get the class corresponding to the String passed as param. This method is
+   * better than {@link Class#forName(String)} because it can handle inner class
+   * when necessary.
+   * 
+   * @param type The class name
+   * @return The corresponding class object
+   * @throws ClassNotFoundException If the class does not exist
+   */
+  public static Class<?> getClass(String type) throws ClassNotFoundException {
+    try {
+      return Class.forName(type);
+    } catch (ClassNotFoundException e1) {
+      // it can be an inner class
+      int lastIndex = type.lastIndexOf('.');
+      String innerTypeName = type.substring(0, lastIndex) + "$"
+          + type.substring(lastIndex + 1);
+      try {
+        return Class.forName(innerTypeName);
+      } catch (ClassNotFoundException e2) {
+        throw e1;
+      }
+    }
   }
 
   public static Set<Field> getFields(Class<?> clazz) {

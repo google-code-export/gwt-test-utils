@@ -7,8 +7,6 @@ import org.xml.sax.Attributes;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.octo.gwt.test.internal.patchers.dom.JavaScriptObjects;
-import com.octo.gwt.test.internal.utils.JsoProperties;
 
 /**
  * Handles <g:DockLayoutPanel /> tags.
@@ -18,28 +16,25 @@ import com.octo.gwt.test.internal.utils.JsoProperties;
  */
 class UiBinderDockLayoutPanelFactory implements UiBinderWidgetFactory {
 
-  private static class UiBinderWithDockLayoutPanel extends
+  private static class UiBinderDockLayoutPanel extends
       UiBinderWidget<DockLayoutPanel> {
 
-    private UiBinderWithDockLayoutPanel(DockLayoutPanel wrapped,
+    private UiBinderDockLayoutPanel(DockLayoutPanel wrapped,
         Attributes attributes, UiBinderTag parentTag, Object owner,
         UiResourceManager resourceManager) {
       super(wrapped, attributes, parentTag, owner, resourceManager);
     }
 
     @Override
-    protected void appendElement(DockLayoutPanel wrapped, Element child) {
-      String nsURI = JavaScriptObjects.getString(child,
-          JsoProperties.XML_NAMESPACE);
+    protected void appendElement(DockLayoutPanel wrapped, Element element,
+        String namespaceURI, List<Widget> childWidgets) {
 
-      if (nsURI.length() == 0) {
-        super.appendElement(wrapped, child);
+      if (!UiBinderXmlUtils.CLIENTUI_NSURI.equals(namespaceURI)) {
+        super.appendElement(wrapped, element, namespaceURI, childWidgets);
       } else {
-        List<Widget> childWidgets = JavaScriptObjects.getObject(child,
-            JsoProperties.UIBINDER_CHILD_WIDGETS_LIST);
 
-        if (childWidgets != null && childWidgets.size() > 0) {
-          handleDockLayoutPanelSpecifics(wrapped, child, childWidgets);
+        if (childWidgets.size() > 0) {
+          handleDockLayoutPanelSpecifics(wrapped, element, childWidgets);
         }
       }
     }
@@ -68,16 +63,16 @@ class UiBinderDockLayoutPanelFactory implements UiBinderWidgetFactory {
     }
   }
 
-  public UiBinderWidget<? extends Widget> createUiBinderWidget(
-      Widget widget, Attributes attributes, UiBinderTag parentTag,
-      Object owner, UiResourceManager resourceManager) {
+  public UiBinderWidget<? extends Widget> createUiBinderWidget(Widget widget,
+      Attributes attributes, UiBinderTag parentTag, Object owner,
+      UiResourceManager resourceManager) {
 
     if (!DockLayoutPanel.class.isInstance(widget)) {
       return null;
     }
 
-    return new UiBinderWithDockLayoutPanel((DockLayoutPanel) widget,
-        attributes, parentTag, owner, resourceManager);
+    return new UiBinderDockLayoutPanel((DockLayoutPanel) widget, attributes,
+        parentTag, owner, resourceManager);
   }
 
 }

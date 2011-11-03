@@ -6,6 +6,8 @@ import org.apache.commons.beanutils.BeanUtilsBean;
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.beanutils.Converter;
 
+import com.google.gwt.user.client.ui.HasHorizontalAlignment.HorizontalAlignmentConstant;
+import com.google.gwt.user.client.ui.HasVerticalAlignment.VerticalAlignmentConstant;
 import com.google.gwt.user.client.ui.Widget;
 import com.octo.gwt.test.exceptions.ReflectionException;
 
@@ -19,6 +21,24 @@ import com.octo.gwt.test.exceptions.ReflectionException;
 public class UiBinderBeanUtils {
 
   private static final BeanUtilsBean UIBINDER_BEANUTILS = new BeanUtilsBean();
+
+  static {
+    registerConverter(new Converter() {
+
+      @SuppressWarnings("rawtypes")
+      public Object convert(Class type, Object value) {
+        return UiBinderXmlUtils.parseHorizontalAlignment(value.toString());
+      }
+    }, HorizontalAlignmentConstant.class);
+
+    registerConverter(new Converter() {
+
+      @SuppressWarnings("rawtypes")
+      public Object convert(Class type, Object value) {
+        return UiBinderXmlUtils.parseVerticalAlignment(value.toString());
+      }
+    }, VerticalAlignmentConstant.class);
+  }
 
   /**
    * 

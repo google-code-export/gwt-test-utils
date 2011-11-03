@@ -6,13 +6,18 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.xml.sax.Attributes;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
 import com.google.gwt.uibinder.client.UiConstructor;
 import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.DateLabel;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.NamedFrame;
 import com.google.gwt.user.client.ui.RadioButton;
@@ -30,12 +35,16 @@ import com.octo.gwt.test.utils.GwtReflectionUtils;
 @SuppressWarnings("unchecked")
 class UiBinderInstanciator {
 
-  static <U> U getInstance(Class<U> clazz, Attributes attributes, Object owner) {
+  // TODO: refactor with UiBinderWidget
+  private static final Pattern EXTERNAL_RESOURCES_PATTERN = Pattern.compile("\\s*\\{(\\S*)\\}\\s*");
+
+  static <U> U getInstance(Class<U> clazz, Attributes attributes,
+      UiResourceManager resourceManager, Object owner) {
     U instance = getProvidedUiField(clazz, owner);
 
     if (instance == null) {
       // delegate to specific widgets instanciator
-      instance = createSpecificWidget(clazz, attributes, owner);
+      instance = createSpecificWidget(clazz, attributes, resourceManager, owner);
     }
 
     GwtTestConfigurationException createHandlerException = null;
@@ -75,7 +84,7 @@ class UiBinderInstanciator {
 
   // TODO : not a flexible design...
   private static <U> U createSpecificWidget(Class<U> clazz,
-      Attributes attributes, Object owner) {
+      Attributes attributes, UiResourceManager resourceManager, Object owner) {
 
     if (clazz == RadioButton.class) {
       String name = attributes.getValue("name");
@@ -96,6 +105,30 @@ class UiBinderInstanciator {
                 + ".ui.xml' : missing required attribute 'name'");
       }
       return (U) new NamedFrame(name);
+    } else if (DateLabel.class == clazz) {
+      String format = attributes.getValue("format");
+
+      if (format != null) {
+        Matcher m = EXTERNAL_RESOURCES_PATTERN.matcher(format);
+        if (m.find()) {
+          format = m.group(1);
+          DateTimeFormat dtf = resourceManager.getUiResource(format);
+          if (dtf != null) {
+            return (U) new DateLabel(dtf);
+          }
+        }
+      }
+
+      String predefinedFormat = attributes.getValue("predefinedFormat");
+      if (predefinedFormat != null) {
+        PredefinedFormat predef = PredefinedFormat.valueOf(predefinedFormat);
+        return (U) new DateLabel(DateTimeFormat.getFormat(predef));
+      }
+
+      String customFormat = attributes.getValue("customFormat");
+      if (customFormat != null) {
+        return (U) new DateLabel(DateTimeFormat.getFormat(customFormat));
+      }
 
     }
 
