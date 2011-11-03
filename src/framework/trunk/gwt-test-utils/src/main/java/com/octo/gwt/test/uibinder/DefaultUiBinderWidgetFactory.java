@@ -32,6 +32,7 @@ class DefaultUiBinderWidgetFactory implements UiBinderWidgetFactory {
     gwtTestUtilsFactories = new ArrayList<UiBinderWidgetFactory>();
 
     gwtTestUtilsFactories.add(new UiBinderDockLayoutPanelFactory());
+    gwtTestUtilsFactories.add(new UiBinderCellPanelFactory());
   }
 
   /*
