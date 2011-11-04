@@ -23,13 +23,18 @@ class GwtReset {
     return INSTANCE;
   }
 
+  private static void getStaticAndCallClear(Class<?> clazz, String fieldName) {
+    GwtReflectionUtils.callPrivateMethod(
+        GwtReflectionUtils.getStaticFieldValue(clazz, fieldName), "clear");
+  }
+
   private GwtReset() {
   }
 
   void reset() throws Exception {
-    GwtReflectionUtils.getStaticAndCallClear(Timer.class, "timers");
-    GwtReflectionUtils.getStaticAndCallClear(RootPanel.class, "rootPanels");
-    GwtReflectionUtils.getStaticAndCallClear(RootPanel.class, "widgetsToDetach");
+    getStaticAndCallClear(Timer.class, "timers");
+    getStaticAndCallClear(RootPanel.class, "rootPanels");
+    getStaticAndCallClear(RootPanel.class, "widgetsToDetach");
 
     Object commandExecutor = GwtReflectionUtils.getStaticFieldValue(
         Class.forName("com.google.gwt.user.client.DeferredCommand"),
@@ -50,5 +55,4 @@ class GwtReset {
     GwtReflectionUtils.setStaticField(Window.class, "handlers", null);
     GwtReflectionUtils.setStaticField(Event.class, "handlers", null);
   }
-
 }

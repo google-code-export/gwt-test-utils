@@ -39,8 +39,11 @@ public class GwtReflectionUtils {
         IllegalAccessException;
   }
 
+  private static final String ASSERTIONS_FIELD_NAME = "$assertionsDisabled";
+
   private static DoubleMap<Class<?>, Class<?>, Map<Field, ?>> cacheAnnotatedField = new DoubleMap<Class<?>, Class<?>, Map<Field, ?>>();
   private static DoubleMap<Class<?>, Class<?>, Map<Method, ?>> cacheAnnotatedMethod = new DoubleMap<Class<?>, Class<?>, Map<Method, ?>>();
+
   private static DoubleMap<Class<?>, Class<?>, Object> cacheAnnotation = new DoubleMap<Class<?>, Class<?>, Object>();
 
   private static Map<Class<?>, Set<Field>> cacheField = new HashMap<Class<?>, Set<Field>>();
@@ -216,22 +219,23 @@ public class GwtReflectionUtils {
     }
   }
 
+  /**
+   * Get all fields from a class and its superclasses, being carefull not to add
+   * multiple '$assertionsDisabled' fields which are added when a class contains
+   * java assertions.
+   * 
+   * @param clazz The class to introspect.
+   * @return The set of field of the class
+   */
   public static Set<Field> getFields(Class<?> clazz) {
     Set<Field> set = cacheField.get(clazz);
     if (set != null) {
       return set;
     }
-    set = new HashSet<Field>();;
 
-    for (Field f : clazz.getDeclaredFields()) {
-      f.setAccessible(true);
-      set.add(f);
-    }
-
-    Class<?> superClazz = clazz.getSuperclass();
-    if (superClazz != null) {
-      set.addAll(getFields(superClazz));
-    }
+    // get all field, being carefull not to add multiple $assertionsDisabled
+    // fields
+    set = getFields(clazz, false);
 
     cacheField.put(clazz, set);
 
@@ -278,10 +282,6 @@ public class GwtReflectionUtils {
   public static <T> T getPrivateFieldValue(Object target, String fieldName) {
     Field field = getUniqueFieldByName(target.getClass(), fieldName);
     return (T) getPrivateFieldValue(target, field);
-  }
-
-  public static void getStaticAndCallClear(Class<?> clazz, String fieldName) {
-    callPrivateMethod(getStaticFieldValue(clazz, fieldName), "clear");
   }
 
   public static <T> T getStaticFieldValue(Class<?> clazz, String fieldName) {
@@ -449,6 +449,43 @@ public class GwtReflectionUtils {
       l[i] = args[i].getClass();
     }
     return findMethod(clazz, methodName, l);
+  }
+
+  /**
+   * Get all fields from a class, being carefull not to add multiple
+   * '$assertionsDisabled' fields which are added when a class contains java
+   * assertions.
+   * 
+   * @param clazz The class to introspect.
+   * @param hasAssertionField A token to remember if an '$assertionDisabled'
+   *          field had already been added to the class.
+   * @return The set of field of the class
+   */
+  private static Set<Field> getFields(Class<?> clazz, boolean hasAssertionField) {
+    Set<Field> set = new HashSet<Field>();;
+
+    for (Field f : clazz.getDeclaredFields()) {
+      if (ASSERTIONS_FIELD_NAME.equals(f.getName())) {
+
+        // do not add this assertion specific field if it has already been added
+        // by a child class
+        if (!hasAssertionField) {
+          f.setAccessible(true);
+          set.add(f);
+          hasAssertionField = true;
+        }
+      } else {
+        f.setAccessible(true);
+        set.add(f);
+      }
+    }
+
+    Class<?> superClazz = clazz.getSuperclass();
+    if (superClazz != null) {
+      set.addAll(getFields(superClazz, hasAssertionField));
+    }
+
+    return set;
   }
 
   private static Field getUniqueFieldByName(Class<?> clazz, String fieldName) {
