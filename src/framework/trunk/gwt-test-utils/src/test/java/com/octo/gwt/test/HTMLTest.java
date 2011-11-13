@@ -4,6 +4,9 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
+import com.google.gwt.dom.client.AnchorElement;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.user.client.ui.HTML;
 
 public class HTMLTest extends GwtTestTest {
@@ -32,6 +35,21 @@ public class HTMLTest extends GwtTestTest {
 
     // Assert
     assertEquals("this is a <b>great</b> test.<br>Enjoy!", result);
+  }
+
+  @Test
+  public void html_withAnchor() {
+    // Arrange
+    HTML widget = new HTML("<a href=\"foo\" target=\"bar\">baz</a>");
+
+    // Act
+    NodeList<Element> nodeList = widget.getElement().getElementsByTagName("a");
+
+    // Assert
+    assertEquals(1, nodeList.getLength());
+    AnchorElement anchor = nodeList.getItem(0).cast();
+    assertEquals("foo", anchor.getHref());
+    assertEquals("bar", anchor.getTarget());
   }
 
   @Test

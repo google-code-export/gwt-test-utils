@@ -1,7 +1,7 @@
 package com.octo.gwt.test.internal.utils;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
@@ -49,8 +49,8 @@ public class JsoProperties {
   public static final String NODE_NAME = "nodeName";
   public static final String NODE_NAMESPACE_URI = "namespaceURI";
   public static final String NODE_OWNER_DOCUMENT = "NODE_OWNER_DOCUMENT";
+  public static final String NODE_PARENT_NODE = "parentNode";
   public static final String NODE_TYPE_FIELD = "nodeType";
-  public static final String PARENT_NODE_FIELD = "parentNode";
 
   // POTENTIAL ELEMENT PROPERTIES
   public static final String POTENTIALELEMENT_TAG = "POTENTIALELEMENT_TAG";
@@ -94,27 +94,164 @@ public class JsoProperties {
     return INSTANCE;
   }
 
-  private final Map<String, String> propertyNames;
+  private final Set<String> propertyNames;
 
   private JsoProperties() {
-    propertyNames = new HashMap<String, String>();
-    propertyNames.put("id", "id");
-    propertyNames.put("name", "name");
-    propertyNames.put("class", "className");
-    propertyNames.put("title", "title");
-    propertyNames.put("type", "type");
-    propertyNames.put("value", "value");
-    propertyNames.put("src", "src");
-    propertyNames.put("lang", "lang");
+    propertyNames = new LinkedHashSet<String>();
+    /*
+     * 
+     * Parse HTML standard attributes here :
+     * http://www.w3.org/TR/html4/index/attributes.html
+     * 
+     * With this jQuery script :
+     * 
+     * <script language="Javascript"> var array = new Array();
+     * $('td[title=Name]').each(function() { var text = $(this).text().trim();
+     * if (jQuery.inArray(text, array) == -1) { array.push(text); } });
+     * 
+     * var java = '<p>'; var length = array.length;
+     * 
+     * for (var i=0; i < length; i++) { java += 'propertyNames.add("' + array[i]
+     * + '");<br/>'; }
+     * 
+     * java += '</p>';
+     * 
+     * $('table').parent().html(java); </script>
+     */
+    propertyNames.add("abbr");
+    propertyNames.add("accept-charset");
+    propertyNames.add("accept");
+    propertyNames.add("accesskey");
+    propertyNames.add("action");
+    propertyNames.add("align");
+    propertyNames.add("alink");
+    propertyNames.add("alt");
+    propertyNames.add("archive");
+    propertyNames.add("axis");
+    propertyNames.add("background");
+    propertyNames.add("bgcolor");
+    propertyNames.add("border");
+    propertyNames.add("cellpadding");
+    propertyNames.add("cellspacing");
+    propertyNames.add("char");
+    propertyNames.add("charoff");
+    propertyNames.add("charset");
+    propertyNames.add("checked");
+    propertyNames.add("cite");
+    propertyNames.add("class");
+    propertyNames.add("classid");
+    propertyNames.add("clear");
+    propertyNames.add("code");
+    propertyNames.add("codebase");
+    propertyNames.add("codetype");
+    propertyNames.add("color");
+    propertyNames.add("cols");
+    propertyNames.add("colspan");
+    propertyNames.add("compact");
+    propertyNames.add("content");
+    propertyNames.add("coords");
+    propertyNames.add("data");
+    propertyNames.add("datetime");
+    propertyNames.add("declare");
+    propertyNames.add("defer");
+    propertyNames.add("dir");
+    propertyNames.add("disabled");
+    propertyNames.add("enctype");
+    propertyNames.add("face");
+    propertyNames.add("for");
+    propertyNames.add("frame");
+    propertyNames.add("frameborder");
+    propertyNames.add("headers");
+    propertyNames.add("height");
+    propertyNames.add("href");
+    propertyNames.add("hreflang");
+    propertyNames.add("hspace");
+    propertyNames.add("http-equiv");
+    propertyNames.add("id");
+    propertyNames.add("ismap");
+    propertyNames.add("label");
+    propertyNames.add("lang");
+    propertyNames.add("language");
+    propertyNames.add("link");
+    propertyNames.add("longdesc");
+    propertyNames.add("marginheight");
+    propertyNames.add("marginwidth");
+    propertyNames.add("maxlength");
+    propertyNames.add("media");
+    propertyNames.add("method");
+    propertyNames.add("multiple");
+    propertyNames.add("name");
+    propertyNames.add("nohref");
+    propertyNames.add("noresize");
+    propertyNames.add("noshade");
+    propertyNames.add("nowrap");
+    propertyNames.add("object");
+    propertyNames.add("onblur");
+    propertyNames.add("onchange");
+    propertyNames.add("onclick");
+    propertyNames.add("ondblclick");
+    propertyNames.add("onfocus");
+    propertyNames.add("onkeydown");
+    propertyNames.add("onkeypress");
+    propertyNames.add("onkeyup");
+    propertyNames.add("onload");
+    propertyNames.add("onmousedown");
+    propertyNames.add("onmousemove");
+    propertyNames.add("onmouseout");
+    propertyNames.add("onmouseover");
+    propertyNames.add("onmouseup");
+    propertyNames.add("onreset");
+    propertyNames.add("onselect");
+    propertyNames.add("onsubmit");
+    propertyNames.add("onunload");
+    propertyNames.add("profile");
+    propertyNames.add("prompt");
+    propertyNames.add("readonly");
+    propertyNames.add("rel");
+    propertyNames.add("rev");
+    propertyNames.add("rows");
+    propertyNames.add("rowspan");
+    propertyNames.add("rules");
+    propertyNames.add("scheme");
+    propertyNames.add("scope");
+    propertyNames.add("scrolling");
+    propertyNames.add("selected");
+    propertyNames.add("shape");
+    propertyNames.add("size");
+    propertyNames.add("span");
+    propertyNames.add("src");
+    propertyNames.add("standby");
+    propertyNames.add("start");
+    propertyNames.add("style");
+    propertyNames.add("summary");
+    propertyNames.add("tabindex");
+    propertyNames.add("target");
+    propertyNames.add("text");
+    propertyNames.add("title");
+    propertyNames.add("type");
+    propertyNames.add("usemap");
+    propertyNames.add("valign");
+    propertyNames.add("value");
+    propertyNames.add("valuetype");
+    propertyNames.add("version");
+    propertyNames.add("vlink");
+    propertyNames.add("vspace");
+    propertyNames.add("width");
   }
 
-  public String getStandardDOMPropertyName(String propertyNameCaseInsensitive) {
-    return propertyNames.get(propertyNameCaseInsensitive.toLowerCase());
+  public String getDOMPropertyName(String propertyNameCaseInsensitive) {
+    propertyNameCaseInsensitive = propertyNameCaseInsensitive.toLowerCase();
+    if ("class".equals(propertyNameCaseInsensitive)) {
+      return "className";
+    }
+
+    return propertyNameCaseInsensitive;
+
   }
 
   public boolean isStandardDOMProperty(String propertyName) {
-    return propertyNames.values().contains(propertyName)
-        && !"class".equals(propertyName);
+    return "className".equals(propertyName) || !"class".equals(propertyName)
+        && propertyNames.contains(propertyName);
   }
 
 }

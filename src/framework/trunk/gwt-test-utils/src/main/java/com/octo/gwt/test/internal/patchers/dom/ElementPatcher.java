@@ -142,14 +142,9 @@ class ElementPatcher {
     PropertyContainer properties = JavaScriptObjects.getObject(element,
         JsoProperties.ELEM_PROPERTIES);
 
-    String standardDOMPropertyName = JsoProperties.get().getStandardDOMPropertyName(
-        name);
+    String propertyName = JsoProperties.get().getDOMPropertyName(name);
 
-    if (standardDOMPropertyName != null) {
-      properties.remove(standardDOMPropertyName);
-    } else {
-      properties.remove(name.toLowerCase());
-    }
+    properties.remove(propertyName);
   }
 
   @PatchMethod
@@ -157,14 +152,9 @@ class ElementPatcher {
     PropertyContainer properties = JavaScriptObjects.getObject(element,
         JsoProperties.ELEM_PROPERTIES);
 
-    String standardDOMPropertyName = JsoProperties.get().getStandardDOMPropertyName(
-        attributeName);
+    String propertyName = JsoProperties.get().getDOMPropertyName(attributeName);
 
-    if (standardDOMPropertyName != null) {
-      properties.put(standardDOMPropertyName, value);
-    } else {
-      properties.put(attributeName.toLowerCase(), value);
-    }
+    properties.put(propertyName, value);
   }
 
   @PatchMethod
