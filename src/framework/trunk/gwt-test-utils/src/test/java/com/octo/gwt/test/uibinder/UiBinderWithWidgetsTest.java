@@ -62,6 +62,7 @@ public class UiBinderWithWidgetsTest extends GwtTestTest {
     assertEquals(
         MyClientBundle.INSTANCE.testImageResource().getSafeUri().asString(),
         w.image.getUrl());
+    assertEquals("http://slazzer.com/image.jpg", w.imageWithUrl.getUrl());
 
     assertEquals("my provided label", w.providedLabel.getText());
     assertEquals("custom text setup in ui.xml", w.providedLabel.getCustomText());

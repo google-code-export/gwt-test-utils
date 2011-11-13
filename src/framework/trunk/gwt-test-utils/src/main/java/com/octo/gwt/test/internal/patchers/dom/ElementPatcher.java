@@ -56,8 +56,9 @@ class ElementPatcher {
 
   @PatchMethod
   static Element getOffsetParent(Element element) {
-    if (element == null)
+    if (element == null) {
       return null;
+    }
 
     return element.getParentElement();
   }
@@ -168,14 +169,17 @@ class ElementPatcher {
 
   @PatchMethod
   static void setInnerHTML(Element element, String html) {
+    // clear old childs
     List<Node> innerList = JavaScriptObjects.getObject(element.getChildNodes(),
         JsoProperties.NODE_LIST_INNER_LIST);
     innerList.clear();
 
+    // parse new childs
     NodeList<Node> nodes = GwtHtmlParser.parse(html, true);
 
+    // append new childs
     for (int i = 0; i < nodes.getLength(); i++) {
-      innerList.add(nodes.getItem(i));
+      element.appendChild(nodes.getItem(i));
     }
   }
 

@@ -101,14 +101,14 @@
 			<classifier>${gxt.classifier}</classifier>
 		</dependency>
 		<dependency>
-			<groupId>com.jhickman</groupId>
-			<artifactId>gxt-uibinder</artifactId>
-			<version>1.0.1</version>
+		    <groupId>com.jhickman</groupId>
+		    <artifactId>gxt-uibinder</artifactId>
+		    <version>1.0.1</version>
 		</dependency>
 		<dependency>
-			<groupId>com.jhickman</groupId>
-			<artifactId>gwt-customuibinder</artifactId>
-			<version>1.1.0</version>
+		    <groupId>org.codehaus.jackson</groupId>
+		    <artifactId>jackson-core-asl</artifactId>
+		    <version>1.9.1</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>

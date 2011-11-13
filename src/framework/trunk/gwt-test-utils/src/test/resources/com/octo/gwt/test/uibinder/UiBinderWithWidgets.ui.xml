@@ -53,6 +53,7 @@
 			addStyleNames='{res.testCssResource.testStyle} {otherStyle.pretty}'>Push my hot button!</g:PushButton>
 
 		<g:Image ui:field='image' resource='{res.testImageResource}' />
+		<g:Image ui:field="imageWithUrl" url="http://slazzer.com/image.jpg"></g:Image>
 
 		<g:VerticalPanel ui:field='verticalPanel' horizontalAlignment="ALIGN_LEFT"
 			verticalAlignment="ALIGN_MIDDLE">
@@ -64,6 +65,7 @@
 		<g:Label ui:field="noCorrespondingUiFieldInJavaClass">No Corresponding @UiField in java class</g:Label>
 
 		<test:IsWidgetLabel ui:field="isWidgetLabel"></test:IsWidgetLabel>
+		
 	</g:HTMLPanel>
 
 </ui:UiBinder>
