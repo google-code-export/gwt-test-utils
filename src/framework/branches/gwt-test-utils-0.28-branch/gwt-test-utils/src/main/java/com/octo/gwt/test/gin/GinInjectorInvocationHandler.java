@@ -26,7 +26,7 @@ class GinInjectorInvocationHandler implements InvocationHandler {
       throws Throwable {
     // Make sure method called has zero arguments (otherwise we're in
     // big trouble).
-    assert (args.length > 0) : "Cannot execute GinInjector methods with non-zero argument list";
+    assert args == null || args.length == 0 : "Cannot execute GinInjector methods with non-zero argument list";
 
     // Try to return a new instance based on the classLiteral
     // returnType.

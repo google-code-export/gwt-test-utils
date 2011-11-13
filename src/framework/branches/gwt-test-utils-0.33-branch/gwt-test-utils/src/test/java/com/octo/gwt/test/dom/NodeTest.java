@@ -20,7 +20,6 @@ import com.google.gwt.dom.client.OptionElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Text;
 import com.octo.gwt.test.GwtTestTest;
-import com.octo.gwt.test.internal.GwtPatcherUtils;
 import com.octo.gwt.test.internal.patchers.dom.JavaScriptObjects;
 
 public class NodeTest extends GwtTestTest {
@@ -47,11 +46,6 @@ public class NodeTest extends GwtTestTest {
   public void as() {
     // Act & Assert 1
     assertEquals(n, Node.as(n));
-
-    // Act & Assert 2
-    if (!GwtPatcherUtils.areAssertionEnabled()) {
-      assertNull(Node.as(null));
-    }
   }
 
   @Before

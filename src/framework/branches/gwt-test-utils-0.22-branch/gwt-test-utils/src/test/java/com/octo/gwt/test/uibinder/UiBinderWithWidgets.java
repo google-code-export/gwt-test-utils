@@ -42,6 +42,9 @@ public class UiBinderWithWidgets extends Composite {
   Image image;
 
   @UiField
+  Image imageWithUrl;
+
+  @UiField
   ImageResource img;
 
   @UiField

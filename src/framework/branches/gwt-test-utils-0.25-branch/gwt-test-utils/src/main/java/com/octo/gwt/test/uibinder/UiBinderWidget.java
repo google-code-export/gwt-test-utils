@@ -132,8 +132,9 @@ public class UiBinderWidget<T extends IsWidget> implements UiBinderTag {
    * 
    * @see com.octo.gwt.test.uibinder.UiBinderTag#getWrapped()
    */
-  public Object endTag() {
-    UiBinderBeanUtils.populateWidget(this.wrapped, attributesMap);
+  public final Object endTag() {
+    UiBinderBeanUtils.populateWidget(wrapped, attributesMap);
+    finalizeWidget(wrapped);
     return wrapped;
   }
 
@@ -205,6 +206,17 @@ public class UiBinderWidget<T extends IsWidget> implements UiBinderTag {
           wrapped.asWidget().getElement().getOwnerDocument());
       wrapped.asWidget().getElement().appendChild(text);
     }
+  }
+
+  /**
+   * A callback executed after every standard widget properties have been setup
+   * to eventually add custom properties to the widget. This implementation does
+   * nothing.
+   * 
+   * @param widget The widget to finalize.
+   */
+  protected void finalizeWidget(T widget) {
+
   }
 
   private Object extractResource(String group,

@@ -5,7 +5,7 @@ import java.util.regex.Pattern;
 
 /**
  * 
- * Some String utility methods. <strong>For internal use only.</strong>
+ * Some Gwt String utility methods. <strong>For internal use only.</strong>
  * 
  * @author Gael Lazzari
  * 
@@ -19,16 +19,18 @@ public class GwtStringUtils {
   public static String camelize(String s) {
     String[] strings = s.split("[-|_|\\s]");
 
-    if (strings.length <= 0)
+    if (strings.length <= 0) {
       return "";
+    }
 
     StringBuilder sb = new StringBuilder(strings[0].toLowerCase());
 
     for (int i = 1; i < strings.length; i++) {
       String string = strings[i];
-      if (string.length() > 0)
+      if (string.length() > 0) {
         sb.append(Character.toUpperCase(string.charAt(0))).append(
             string.substring(1).toLowerCase());
+      }
     }
 
     return sb.toString();
@@ -74,8 +76,9 @@ public class GwtStringUtils {
   }
 
   public static String resolveBackSlash(String input) {
-    if (input == null || "".equals(input.trim()))
+    if (input == null || "".equals(input.trim())) {
       return input;
+    }
 
     StringBuffer b = new StringBuffer();
     boolean backSlashSeen = false;

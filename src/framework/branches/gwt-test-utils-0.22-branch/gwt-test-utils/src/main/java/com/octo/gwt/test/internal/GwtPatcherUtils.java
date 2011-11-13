@@ -16,12 +16,6 @@ import javassist.Modifier;
  */
 public class GwtPatcherUtils {
 
-  public static boolean areAssertionEnabled() {
-    boolean enabled = false;
-    assert enabled = true;
-    return enabled;
-  }
-
   public static void patch(CtClass c, Patcher patcher) throws Exception {
     c.setModifiers(Modifier.PUBLIC);
 

@@ -213,16 +213,6 @@ public class DOMTest extends GwtTestTest {
     assertEquals("option", elem.getTagName());
   }
 
-  @SuppressWarnings("deprecation")
-  @Test
-  public void createOptions() {
-    // Act
-    OptionElement elem = OptionElement.as(DOM.createOptions());
-
-    // Assert
-    assertEquals("options", elem.getTagName());
-  }
-
   @Test
   public void createSelect() {
     // Act

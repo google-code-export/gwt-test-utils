@@ -167,8 +167,9 @@ public class ButtonTest extends GwtTestTest {
   @Test
   public void wrap() {
     // Arrange
-    ButtonElement element = Document.get().createButtonElement();
+    ButtonElement element = Document.get().createPushButtonElement();
     element.setTabIndex(3);
+    Document.get().getBody().appendChild(element);
 
     // Act
     Button b = Button.wrap(element);

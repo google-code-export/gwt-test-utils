@@ -29,11 +29,6 @@ class UIObjectPatcher {
   }
 
   @PatchMethod
-  static String getStyleName(Element elem) {
-    return elem.getAttribute("class");
-  }
-
-  @PatchMethod
   static boolean isVisible(Element elem) {
     String display = elem.getStyle().getProperty("display");
 
@@ -65,7 +60,7 @@ class UIObjectPatcher {
   @PatchMethod
   static void setElement(UIObject uiObject,
       com.google.gwt.user.client.Element elem) {
-    assert (GwtReflectionUtils.getPrivateFieldValue(uiObject, "element") == null) : "Element may only be set once";
+    assert GwtReflectionUtils.getPrivateFieldValue(uiObject, "element") == null : "Element may only be set once";
 
     GwtReflectionUtils.setPrivateFieldValue(uiObject, "element", elem);
 
@@ -79,11 +74,6 @@ class UIObjectPatcher {
   }
 
   @PatchMethod
-  static void setStyleName(Element elem, String styleName) {
-    elem.setAttribute("class", styleName);
-  }
-
-  @PatchMethod
   static void setVisible(Element elem, boolean visible) {
     String display = visible ? "" : "none";
     elem.getStyle().setProperty("display", display);
@@ -93,10 +83,10 @@ class UIObjectPatcher {
   static void updatePrimaryAndDependentStyleNames(Element elem,
       String newPrimaryStyle) {
 
-    String[] classes = getStyleName(elem).split(" ");
+    String[] classes = elem.getPropertyString("className").split(" ");
 
     if (classes.length < 1) {
-      setStyleName(elem, newPrimaryStyle);
+      elem.setPropertyString("className", newPrimaryStyle);
     } else {
       String oldPrimaryStyle = classes[0];
       int oldPrimaryStyleLen = oldPrimaryStyle.length();
@@ -116,7 +106,7 @@ class UIObjectPatcher {
         sb.append(name + " ");
       }
 
-      setStyleName(elem, sb.toString().trim());
+      elem.setPropertyString("className", sb.toString().trim());
     }
   }
 

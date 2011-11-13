@@ -180,7 +180,7 @@ class NodePatcher {
     }
 
     // Manage getParentNode()
-    JavaScriptObjects.setProperty(newChild, JsoProperties.PARENT_NODE_FIELD,
+    JavaScriptObjects.setProperty(newChild, JsoProperties.NODE_PARENT_NODE,
         parent);
 
     return newChild;
@@ -263,7 +263,7 @@ class NodePatcher {
       JavaScriptObject oldJso, boolean deep) {
     for (Map.Entry<String, Object> entry : JavaScriptObjects.entrySet(oldJso)) {
 
-      if (JsoProperties.PARENT_NODE_FIELD.equals(entry.getKey())) {
+      if (JsoProperties.NODE_PARENT_NODE.equals(entry.getKey())) {
         // Nothing to do : new cloned node does not have any parent
       } else if (JsoProperties.NODE_OWNER_DOCUMENT.equals(entry.getKey())) {
         JavaScriptObjects.setProperty(newJso,

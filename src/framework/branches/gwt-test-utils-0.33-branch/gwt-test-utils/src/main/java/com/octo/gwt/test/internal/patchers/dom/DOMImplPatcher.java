@@ -262,12 +262,9 @@ class DOMImplPatcher {
     PropertyContainer properties = JavaScriptObjects.getObject(elem,
         JsoProperties.ELEM_PROPERTIES);
 
-    String standardDOMPropertyName = JsoProperties.get().getStandardDOMPropertyName(
-        name);
+    String propertyName = JsoProperties.get().getDOMPropertyName(name);
 
-    return standardDOMPropertyName != null
-        ? properties.getString(standardDOMPropertyName)
-        : properties.getString(name.toLowerCase());
+    return properties.getString(propertyName);
 
   }
 
@@ -383,12 +380,9 @@ class DOMImplPatcher {
     PropertyContainer properties = JavaScriptObjects.getObject(elem,
         JsoProperties.ELEM_PROPERTIES);
 
-    String standardDOMPropertyName = JsoProperties.get().getStandardDOMPropertyName(
-        name);
+    String propertyName = JsoProperties.get().getDOMPropertyName(name);
 
-    return standardDOMPropertyName != null
-        ? properties.contains(standardDOMPropertyName)
-        : properties.contains(name.toLowerCase());
+    return properties.contains(propertyName);
   }
 
   @PatchMethod
