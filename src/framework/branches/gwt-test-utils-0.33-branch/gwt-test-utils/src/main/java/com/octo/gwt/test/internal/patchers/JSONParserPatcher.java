@@ -30,6 +30,16 @@ class JSONParserPatcher {
     JsonParser jp = null;
     try {
       JsonFactory f = new JsonFactory();
+      if (!strict) {
+        f.configure(JsonParser.Feature.ALLOW_COMMENTS, true);
+        f.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
+        f.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
+        f.configure(JsonParser.Feature.ALLOW_BACKSLASH_ESCAPING_ANY_CHARACTER,
+            true);
+        f.configure(JsonParser.Feature.ALLOW_UNQUOTED_CONTROL_CHARS, true);
+        f.configure(JsonParser.Feature.ALLOW_UNQUOTED_CONTROL_CHARS, true);
+        f.configure(JsonParser.Feature.ALLOW_NUMERIC_LEADING_ZEROS, true);
+      }
       jp = f.createJsonParser(json);
       jp.nextToken(); // will return JsonToken.START_OBJECT (verify?)
       JSONObject jsonObject = extractJSONObject(json, jp);
