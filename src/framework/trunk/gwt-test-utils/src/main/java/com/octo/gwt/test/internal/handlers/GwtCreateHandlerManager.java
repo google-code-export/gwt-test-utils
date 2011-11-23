@@ -22,6 +22,7 @@ public class GwtCreateHandlerManager implements AfterTestCallback {
 
   private final GwtCreateHandler abstractClassCreateHandler;
   private final List<GwtCreateHandler> addedHandlers;
+  private final GwtCreateHandler animationSchedulerCreateHandler;
   private final GwtCreateHandler cellBasedWidgetImplCreateHandler;
   private final GwtCreateHandler clientBundleCreateHander;
   private final GwtCreateHandler defaultGwtCreateHandler;
@@ -41,6 +42,7 @@ public class GwtCreateHandlerManager implements AfterTestCallback {
     // TODO : all createHandler should be singleton ?
     abstractClassCreateHandler = new AbstractClassCreateHandler();
     addedHandlers = new ArrayList<GwtCreateHandler>();
+    animationSchedulerCreateHandler = new AnimationSchedulerCreateHandler();
     cellBasedWidgetImplCreateHandler = new CellBasedWidgetImplCreateHandler();
     clientBundleCreateHander = new ClientBundleCreateHandler();
     defaultGwtCreateHandler = new DefaultGwtCreateHandler();
@@ -93,6 +95,7 @@ public class GwtCreateHandlerManager implements AfterTestCallback {
     list.add(testRemoteServiceCreateHandler);
     list.add(webXmlRemoteServiceCreateHandler);
     list.add(cellBasedWidgetImplCreateHandler);
+    list.add(animationSchedulerCreateHandler);
     list.add(defaultGwtCreateHandler);
     list.add(abstractClassCreateHandler);
     list.add(safeHtmlTemplatesCreateHandler);

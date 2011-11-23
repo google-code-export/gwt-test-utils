@@ -25,6 +25,20 @@ public class PopupPanelTest extends GwtTestTest {
   }
 
   @Test
+  public void center() {
+    // Arrange
+    PopupPanel popup = new PopupPanel();
+    popup.setAnimationEnabled(true);
+
+    // Act
+    popup.center();
+
+    // Assert
+    assertEquals(0, popup.getOffsetHeight());
+    assertEquals(0, popup.getOffsetWidth());
+  }
+
+  @Test
   public void show() {
     // Arrange
     PopupPanel popup = new PopupPanel();
