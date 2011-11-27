@@ -14,13 +14,31 @@ import com.octo.gwt.test.internal.GwtClassPool;
 import com.octo.gwt.test.internal.GwtPatcherUtils;
 import com.octo.gwt.test.utils.JavassistUtils;
 
+/**
+ * <p>
+ * Handler for trying to automatically instanciate abstract classes, by
+ * subclassing them and replace each abstract method by a default implementation
+ * which would throws an {@link UnsupportedOperationException}.
+ * </p>
+ * <p>
+ * It has been introducted to make possible the instanciation of abstract
+ * classes that gwt-test-utils doesn't patch right now.
+ * </p>
+ * 
+ * @see GwtPatcherUtils#patch(CtClass, com.octo.gwt.test.internal.Patcher)
+ * 
+ * @author Gael Lazzari
+ * 
+ */
 class AbstractClassCreateHandler implements GwtCreateHandler {
 
   private final Map<Class<?>, Class<?>> cache = new HashMap<Class<?>, Class<?>>();
 
-  // this GwtCreateHandler has been introduced to make possible the
-  // instanciation of abstract classes
-  // that gwt-test-utils doesn't patch right now
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.octo.gwt.test.GwtCreateHandler#create(java.lang.Class)
+   */
   public Object create(Class<?> classLiteral) throws Exception {
     if (classLiteral.isAnnotation() || classLiteral.isArray()
         || classLiteral.isEnum() || classLiteral.isInterface()

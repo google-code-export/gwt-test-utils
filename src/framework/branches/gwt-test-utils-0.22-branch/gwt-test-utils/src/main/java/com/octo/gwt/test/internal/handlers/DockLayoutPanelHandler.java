@@ -7,8 +7,19 @@ import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.octo.gwt.test.GwtCreateHandler;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
-class DefaultDockLayoutPanelHandler implements GwtCreateHandler {
+/**
+ * GwtCreateHandler for {@link DockLayoutPanel}.
+ * 
+ * @author Gael Lazzari
+ * 
+ */
+class DockLayoutPanelHandler implements GwtCreateHandler {
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.octo.gwt.test.GwtCreateHandler#create(java.lang.Class)
+   */
   public Object create(Class<?> classLiteral) throws Exception {
     if (!DockLayoutPanel.class.isAssignableFrom(classLiteral)) {
       return null;

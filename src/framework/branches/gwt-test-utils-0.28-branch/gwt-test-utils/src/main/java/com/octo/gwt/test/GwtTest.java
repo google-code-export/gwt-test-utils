@@ -87,6 +87,8 @@ public abstract class GwtTest extends GwtModuleRunnerAdapter implements Test {
 
     List<Throwable> throwables = AfterTestCallbackManager.get().triggerCallbacks();
 
+    GwtReset.get().reset();
+
     if (throwables.size() > 0) {
       throw new GwtTestException(
           throwables.size()

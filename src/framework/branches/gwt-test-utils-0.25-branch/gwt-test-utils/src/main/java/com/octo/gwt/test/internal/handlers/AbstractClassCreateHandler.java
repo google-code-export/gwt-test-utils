@@ -14,29 +14,49 @@ import com.octo.gwt.test.internal.GwtClassPool;
 import com.octo.gwt.test.internal.GwtPatcherUtils;
 import com.octo.gwt.test.utils.JavassistUtils;
 
+/**
+ * <p>
+ * Handler for trying to automatically instanciate abstract classes, by
+ * subclassing them and replace each abstract method by a default implementation
+ * which would throws an {@link UnsupportedOperationException}.
+ * </p>
+ * <p>
+ * It has been introducted to make possible the instanciation of abstract
+ * classes that gwt-test-utils doesn't patch right now.
+ * </p>
+ * 
+ * @see GwtPatcherUtils#patch(CtClass, com.octo.gwt.test.internal.Patcher)
+ * 
+ * @author Gael Lazzari
+ * 
+ */
 class AbstractClassCreateHandler implements GwtCreateHandler {
 
-	private final Map<Class<?>, Class<?>> cache = new HashMap<Class<?>, Class<?>>();
+  private final Map<Class<?>, Class<?>> cache = new HashMap<Class<?>, Class<?>>();
 
-	// this GwtCreateHandler has been introduced to make possible the
-	// instanciation of abstract classes
-	// that gwt-test-utils doesn't patch right now
-	public Object create(Class<?> classLiteral) throws Exception {
-		if (classLiteral.isAnnotation() || classLiteral.isArray() || classLiteral.isEnum() || classLiteral.isInterface()
-				|| !Modifier.isAbstract(classLiteral.getModifiers())) {
-			return null;
-		}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.octo.gwt.test.GwtCreateHandler#create(java.lang.Class)
+   */
+  public Object create(Class<?> classLiteral) throws Exception {
+    if (classLiteral.isAnnotation() || classLiteral.isArray()
+        || classLiteral.isEnum() || classLiteral.isInterface()
+        || !Modifier.isAbstract(classLiteral.getModifiers())) {
+      return null;
+    }
 
-		Class<?> newClass = cache.get(classLiteral);
+    Class<?> newClass = cache.get(classLiteral);
 
-		if (newClass != null) {
-			return newClass.newInstance();
-		}
+    if (newClass != null) {
+      return newClass.newInstance();
+    }
 
-		CtClass ctClass = GwtClassPool.getCtClass(classLiteral);
-		CtClass subClass = GwtClassPool.get().makeClass(classLiteral.getCanonicalName() + "SubClass");
+    CtClass ctClass = GwtClassPool.getCtClass(classLiteral);
+    CtClass subClass = GwtClassPool.get().makeClass(
+        classLiteral.getCanonicalName() + "SubClass");
 
-		subClass.setSuperclass(ctClass);
+    subClass.setSuperclass(ctClass);
 
     subClass.setModifiers(Modifier.PUBLIC);
 
@@ -58,12 +78,12 @@ class AbstractClassCreateHandler implements GwtCreateHandler {
       }
     }
 
-		GwtPatcherUtils.patch(subClass, null);
+    GwtPatcherUtils.patch(subClass, null);
 
-		newClass = subClass.toClass(GwtClassLoader.get(), null);
-		cache.put(classLiteral, newClass);
+    newClass = subClass.toClass(GwtClassLoader.get(), null);
+    cache.put(classLiteral, newClass);
 
-		return newClass.newInstance();
-	}
+    return newClass.newInstance();
+  }
 
 }

@@ -43,7 +43,7 @@ public class GwtCreateHandlerManager implements AfterTestCallback {
     defaultGwtCreateHandler = new DefaultGwtCreateHandler();
     deferredGenerateWithCreateHandler = new DeferredGenerateWithCreateHandler();
     deferredReplaceWithCreateHandler = new DeferredReplaceWithCreateHandler();
-    dockLayoutPanelCreateHandler = new DefaultDockLayoutPanelHandler();
+    dockLayoutPanelCreateHandler = new DockLayoutPanelHandler();
     htmlPanelCreateHandler = new HTMLPanelCreateHandler();
     imageBundleCreateHandler = new ImageBundleCreateHandler();
     localizableResourceCreateHandler = new LocalizableResourceCreateHandler();

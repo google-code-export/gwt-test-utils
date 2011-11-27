@@ -93,8 +93,6 @@ public class CellTableTest extends GwtTestTest {
       }
     });
 
-    FinallyCommandTrigger.triggerCommands();
-
     // Act 1
     Browser.click(table, CONTACTS.get(0));
 

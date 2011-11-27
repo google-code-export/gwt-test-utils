@@ -62,9 +62,6 @@ public class GwtConfig implements AfterTestCallback {
   public void afterTest() throws Throwable {
     gwtModuleRunner = null;
     uiBinderWidgetFactories.clear();
-
-    GwtReset.get().reset();
-
   }
 
   public BrowserErrorHandler getBrowserErrorHandler() {

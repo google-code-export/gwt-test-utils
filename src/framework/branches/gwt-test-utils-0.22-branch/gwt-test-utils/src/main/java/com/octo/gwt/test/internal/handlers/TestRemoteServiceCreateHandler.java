@@ -9,6 +9,13 @@ import com.octo.gwt.test.internal.ModuleData;
 import com.octo.gwt.test.server.RemoteServiceCreateHandler;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
+/**
+ * GwtCreateHandler for {@link RemoteService} instances which would have been
+ * declared in the module .ui.xml configuration file with the <servlet> tag.
+ * 
+ * @author Gael Lazzari
+ * 
+ */
 class TestRemoteServiceCreateHandler extends RemoteServiceCreateHandler {
 
   private static final TestRemoteServiceCreateHandler INSTANCE = new TestRemoteServiceCreateHandler();
@@ -23,6 +30,13 @@ class TestRemoteServiceCreateHandler extends RemoteServiceCreateHandler {
     cachedServices.clear();
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * com.octo.gwt.test.server.RemoteServiceCreateHandler#findService(java.lang
+   * .Class, java.lang.String)
+   */
   @Override
   protected Object findService(Class<?> remoteServiceClass,
       String remoteServiceRelativePath) {
