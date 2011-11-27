@@ -14,8 +14,19 @@ import com.google.gwt.safehtml.shared.SafeUri;
 import com.octo.gwt.test.GwtCreateHandler;
 import com.octo.gwt.test.exceptions.GwtTestPatchException;
 
+/**
+ * GwtCreateHandler for {@link SafeHtmlTemplates}.
+ * 
+ * @author Gael Lazzari
+ * 
+ */
 class SafeHtmlTemplatesCreateHandler implements GwtCreateHandler {
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.octo.gwt.test.GwtCreateHandler#create(java.lang.Class)
+   */
   public Object create(Class<?> classLiteral) throws Exception {
 
     if (!SafeHtmlTemplates.class.isAssignableFrom(classLiteral)) {

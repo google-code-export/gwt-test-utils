@@ -8,9 +8,9 @@ import com.google.gwt.uibinder.client.UiField;
 import com.octo.gwt.test.GwtCreateHandler;
 
 /**
- * Handler in charge of creating UiBinder objects through deferred binding,
- * parsing .ui.xml files and binding to java {@link UiField}. <strong>For
- * internal use only.</strong>
+ * GwtCreateHandler in charge of creating UiBinder objects through deferred
+ * binding, parsing .ui.xml files and binding to java {@link UiField}.
+ * <strong>For internal use only.</strong>
  * 
  * @author Gael Lazzari
  * 
@@ -27,6 +27,11 @@ public class UiBinderCreateHandler implements GwtCreateHandler {
 
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.octo.gwt.test.GwtCreateHandler#create(java.lang.Class)
+   */
   public Object create(Class<?> classLiteral) throws Exception {
     if (UiBinder.class.isAssignableFrom(classLiteral)) {
       return createProxy(classLiteral);

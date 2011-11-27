@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import com.google.gwt.core.client.GWT;
 import com.octo.gwt.test.GwtCreateHandler;
 import com.octo.gwt.test.internal.AfterTestCallback;
 import com.octo.gwt.test.internal.AfterTestCallbackManager;
@@ -12,6 +13,14 @@ import com.octo.gwt.test.internal.resources.ClientBundleCreateHandler;
 import com.octo.gwt.test.internal.resources.ImageBundleCreateHandler;
 import com.octo.gwt.test.uibinder.UiBinderCreateHandler;
 
+/**
+ * Manages the ordered list of GwtCreateHandler to call to try to emulate
+ * {@link GWT#create(Class)} instructions. <strong>For internal use
+ * only.</strong>
+ * 
+ * @author Gael Lazzari
+ * 
+ */
 public class GwtCreateHandlerManager implements AfterTestCallback {
 
   private static final GwtCreateHandlerManager INSTANCE = new GwtCreateHandlerManager();
@@ -33,6 +42,7 @@ public class GwtCreateHandlerManager implements AfterTestCallback {
   private final GwtCreateHandler imageBundleCreateHandler;
   private final GwtCreateHandler localizableResourceCreateHandler;
   private GwtCreateHandler mockCreateHandler;
+  private final GwtCreateHandler resizeLayoutPanelImplCreateHandler;
   private final GwtCreateHandler safeHtmlTemplatesCreateHandler;
   private final TestRemoteServiceCreateHandler testRemoteServiceCreateHandler;
   private final GwtCreateHandler uiBinderCreateHandler;
@@ -48,10 +58,11 @@ public class GwtCreateHandlerManager implements AfterTestCallback {
     defaultGwtCreateHandler = new DefaultGwtCreateHandler();
     deferredGenerateWithCreateHandler = new DeferredGenerateWithCreateHandler();
     deferredReplaceWithCreateHandler = new DeferredReplaceWithCreateHandler();
-    dockLayoutPanelCreateHandler = new DefaultDockLayoutPanelHandler();
+    dockLayoutPanelCreateHandler = new DockLayoutPanelHandler();
     htmlPanelCreateHandler = new HTMLPanelCreateHandler();
     imageBundleCreateHandler = new ImageBundleCreateHandler();
     localizableResourceCreateHandler = new LocalizableResourceCreateHandler();
+    resizeLayoutPanelImplCreateHandler = new ResizeLayoutPanelImplCreateHandler();
     safeHtmlTemplatesCreateHandler = new SafeHtmlTemplatesCreateHandler();
     uiBinderCreateHandler = UiBinderCreateHandler.get();
     testRemoteServiceCreateHandler = TestRemoteServiceCreateHandler.get();
@@ -91,6 +102,7 @@ public class GwtCreateHandlerManager implements AfterTestCallback {
     list.add(imageBundleCreateHandler);
     list.add(htmlPanelCreateHandler);
     list.add(dockLayoutPanelCreateHandler);
+    list.add(resizeLayoutPanelImplCreateHandler);
     list.add(uiBinderCreateHandler);
     list.add(testRemoteServiceCreateHandler);
     list.add(webXmlRemoteServiceCreateHandler);

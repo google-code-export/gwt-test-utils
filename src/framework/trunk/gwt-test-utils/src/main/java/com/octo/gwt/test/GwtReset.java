@@ -1,4 +1,4 @@
-package com.octo.gwt.test.internal;
+package com.octo.gwt.test;
 
 import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.i18n.client.NumberFormat;

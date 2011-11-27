@@ -4,16 +4,31 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.rpc.RemoteService;
 import com.octo.gwt.test.exceptions.GwtTestConfigurationException;
 import com.octo.gwt.test.internal.utils.WebXmlUtils;
 import com.octo.gwt.test.server.RemoteServiceCreateHandler;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
+/**
+ * GwtCreateHandler for {@link RemoteService} instances which would have been
+ * declared in the web.xml file.
+ * 
+ * @author Gael Lazzari
+ * 
+ */
 class WebXmlRemoteServiceCreateHandler extends RemoteServiceCreateHandler {
 
   // a map with servletUrl as key and serviceImpl instance as value
   private final Map<String, Object> servicesImplMap = new HashMap<String, Object>();
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * com.octo.gwt.test.server.RemoteServiceCreateHandler#findService(java.lang
+   * .Class, java.lang.String)
+   */
   @Override
   protected Object findService(Class<?> remoteServiceClass,
       String remoteServiceRelativePath) {
