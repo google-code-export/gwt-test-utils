@@ -1,8 +1,7 @@
 package com.octo.gwt.test.uibinder;
 
 import java.util.List;
-
-import org.xml.sax.Attributes;
+import java.util.Map;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.CellPanel;
@@ -22,7 +21,7 @@ class UiBinderCellPanelFactory implements UiBinderWidgetFactory {
 
     private static final String CELL_TAG = "cell";
 
-    public UiBinderCellPanel(CellPanel wrapped, Attributes attributes,
+    public UiBinderCellPanel(CellPanel wrapped, Map<String, Object> attributes,
         UiBinderTag parentTag, Object owner, UiResourceManager resourceManager) {
       super(wrapped, attributes, parentTag, owner, resourceManager);
     }
@@ -73,8 +72,17 @@ class UiBinderCellPanelFactory implements UiBinderWidgetFactory {
     }
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * com.octo.gwt.test.uibinder.UiBinderWidgetFactory#createUiBinderWidget(com
+   * .google.gwt.user.client.ui.IsWidget, java.util.Map,
+   * com.octo.gwt.test.uibinder.UiBinderTag, java.lang.Object,
+   * com.octo.gwt.test.uibinder.UiResourceManager)
+   */
   public UiBinderWidget<? extends IsWidget> createUiBinderWidget(
-      IsWidget widget, Attributes attributes, UiBinderTag parentTag,
+      IsWidget widget, Map<String, Object> attributes, UiBinderTag parentTag,
       Object owner, UiResourceManager resourceManager) {
 
     if (!CellPanel.class.isInstance(widget)) {

@@ -2,9 +2,9 @@ package com.octo.gwt.test.uibinder;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
-import org.xml.sax.Attributes;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
@@ -32,7 +32,7 @@ class UiBinderDockLayoutPanelFactory implements UiBinderWidgetFactory {
     private IsWidget westWidget;
 
     private UiBinderDockLayoutPanel(DockLayoutPanel wrapped,
-        Attributes attributes, UiBinderTag parentTag, Object owner,
+        Map<String, Object> attributes, UiBinderTag parentTag, Object owner,
         UiResourceManager resourceManager) {
       super(wrapped, attributes, parentTag, owner, resourceManager);
     }
@@ -98,8 +98,17 @@ class UiBinderDockLayoutPanelFactory implements UiBinderWidgetFactory {
     }
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * com.octo.gwt.test.uibinder.UiBinderWidgetFactory#createUiBinderWidget(com
+   * .google.gwt.user.client.ui.IsWidget, java.util.Map,
+   * com.octo.gwt.test.uibinder.UiBinderTag, java.lang.Object,
+   * com.octo.gwt.test.uibinder.UiResourceManager)
+   */
   public UiBinderWidget<? extends IsWidget> createUiBinderWidget(
-      IsWidget widget, Attributes attributes, UiBinderTag parentTag,
+      IsWidget widget, Map<String, Object> attributes, UiBinderTag parentTag,
       Object owner, UiResourceManager resourceManager) {
 
     if (!DockLayoutPanel.class.isInstance(widget)) {

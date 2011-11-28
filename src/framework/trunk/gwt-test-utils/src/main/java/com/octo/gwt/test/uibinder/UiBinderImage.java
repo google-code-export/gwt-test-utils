@@ -3,8 +3,6 @@ package com.octo.gwt.test.uibinder;
 import java.net.URL;
 import java.util.Map;
 
-import org.xml.sax.Attributes;
-
 import com.octo.gwt.test.exceptions.GwtTestUiBinderException;
 import com.octo.gwt.test.internal.resources.ResourcePrototypeProxyBuilder;
 
@@ -18,11 +16,11 @@ class UiBinderImage extends UiBinderResourceTag {
 
   UiBinderImage(ResourcePrototypeProxyBuilder builder, String alias,
       UiBinderTag parentTag, Object owner, Map<String, Object> resources,
-      Attributes attributes) {
+      Map<String, Object> attributes) {
     super(builder, alias, parentTag, owner, resources);
 
     // handle "src" attribute
-    String src = attributes.getValue("src");
+    String src = (String) attributes.get("src");
     builder.resourceURL(computeImageURL(owner, src));
   }
 

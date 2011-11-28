@@ -2,8 +2,7 @@ package com.octo.gwt.test.uibinder;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import org.xml.sax.Attributes;
+import java.util.Map;
 
 import com.google.gwt.user.client.ui.IsWidget;
 import com.octo.gwt.test.internal.GwtConfig;
@@ -40,12 +39,12 @@ class DefaultUiBinderWidgetFactory implements UiBinderWidgetFactory {
    * 
    * @see
    * com.octo.gwt.test.uibinder.UiBinderWidgetFactory#createUiBinderWidget(com
-   * .google.gwt.user.client.ui.IsWidget, org.xml.sax.Attributes,
+   * .google.gwt.user.client.ui.IsWidget, java.util.Map,
    * com.octo.gwt.test.uibinder.UiBinderTag, java.lang.Object,
    * com.octo.gwt.test.uibinder.UiResourceManager)
    */
   public UiBinderWidget<? extends IsWidget> createUiBinderWidget(
-      IsWidget widget, Attributes attributes, UiBinderTag parentTag,
+      IsWidget widget, Map<String, Object> attributes, UiBinderTag parentTag,
       Object owner, UiResourceManager resourceManager) {
 
     // try with user's custom UiBinderWidgetFactories
@@ -70,7 +69,7 @@ class DefaultUiBinderWidgetFactory implements UiBinderWidgetFactory {
   }
 
   private UiBinderWidget<? extends IsWidget> tryInstanciate(IsWidget widget,
-      Attributes attributes, UiBinderTag parentTag, Object owner,
+      Map<String, Object> attributes, UiBinderTag parentTag, Object owner,
       UiResourceManager resourceManager,
       List<UiBinderWidgetFactory> uiBinderWidgetFactories) {
     for (UiBinderWidgetFactory factory : uiBinderWidgetFactories) {

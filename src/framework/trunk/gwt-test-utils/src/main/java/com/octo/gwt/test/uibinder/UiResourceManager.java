@@ -3,8 +3,6 @@ package com.octo.gwt.test.uibinder;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.xml.sax.Attributes;
-
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.DataResource;
 import com.google.gwt.resources.client.ImageResource;
@@ -59,7 +57,7 @@ public class UiResourceManager {
    * Register some new resources which should correspond to a <ui:import> tag in
    * the .ui.xml file.
    * 
-   * @param attributes XML attributes of the tag
+   * @param attributes Map of attributes parsed from the tag
    * @param parentTag The parent tag if any
    * @param owner The {@link UiBinder} owner widget, which calls the
    *          {@link UiBinder#createAndBindUi(Object)} method to initialize
@@ -67,8 +65,8 @@ public class UiResourceManager {
    * @return The UiBinderTag which has registered the imported object instances
    *         in the {@link UiResourceManager}.
    */
-  UiBinderTag registerImport(Attributes attributes, UiBinderTag parentTag,
-      Object owner) {
+  UiBinderTag registerImport(Map<String, Object> attributes,
+      UiBinderTag parentTag, Object owner) {
     return new UiBinderImportTag(attributes, parentTag, resources, owner);
   }
 
@@ -78,7 +76,7 @@ public class UiResourceManager {
    * 
    * @param localName The type of the resource ('with', 'style', 'image' or
    *          'data')
-   * @param attributes XML attributes of the tag
+   * @param attributes Map of attributes parsed from the tag
    * @param parentTag The parent tag if any
    * @param owner The {@link UiBinder} owner widget, which calls the
    *          {@link UiBinder#createAndBindUi(Object)} method to initialize
@@ -88,8 +86,9 @@ public class UiResourceManager {
    * @throws GwtTestUiBinderException If the localName is not managed or if the
    *           alias is already binded to another Resource object
    */
-  UiBinderTag registerResource(String localName, Attributes attributes,
-      UiBinderTag parentTag, Object owner) throws GwtTestUiBinderException {
+  UiBinderTag registerResource(String localName,
+      Map<String, Object> attributes, UiBinderTag parentTag, Object owner)
+      throws GwtTestUiBinderException {
 
     String alias = getResourceAlias(localName, attributes);
 
@@ -136,9 +135,10 @@ public class UiResourceManager {
     }
   }
 
-  private String getResourceAlias(String localName, Attributes attributes) {
+  private String getResourceAlias(String localName,
+      Map<String, Object> attributes) {
     String alias;
-    alias = attributes.getValue("field");
+    alias = (String) attributes.get("ui:field");
     if (alias == null && !"with".equals(localName)) {
       alias = localName;
     }
@@ -152,8 +152,8 @@ public class UiResourceManager {
   }
 
   private Class<?> getResourceType(String alias, String localName,
-      Attributes attributes) {
-    String type = attributes.getValue("type");
+      Map<String, Object> attributes) {
+    String type = (String) attributes.get("type");
 
     if (type == null && "image".equals(localName)) {
       // special code for <ui:image> with no 'type' attribute

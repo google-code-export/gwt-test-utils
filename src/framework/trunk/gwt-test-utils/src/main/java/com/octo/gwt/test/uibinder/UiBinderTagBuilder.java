@@ -1,13 +1,26 @@
 package com.octo.gwt.test.uibinder;
 
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.xml.sax.Attributes;
 
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.user.client.ui.IsWidget;
+import com.octo.gwt.test.exceptions.GwtTestException;
 import com.octo.gwt.test.exceptions.GwtTestUiBinderException;
+import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 @SuppressWarnings("unchecked")
 class UiBinderTagBuilder<T> {
+
+  private static final Pattern EXTERNAL_RESOURCES_PATTERN = Pattern.compile("\\s*\\{(\\S*)\\}\\s*");
 
   static final <T> UiBinderTagBuilder<T> create(Class<T> rootComponentClass,
       Object owner) {
@@ -118,7 +131,10 @@ class UiBinderTagBuilder<T> {
   }
 
   private UiBinderTag createUiBinderTag(String nameSpaceURI, String localName,
-      Attributes attributes, UiBinderTag parentTag) {
+      Attributes attributesXML, UiBinderTag parentTag) {
+
+    Map<String, Object> attributes = parseAttributesMap(nameSpaceURI,
+        attributesXML);
 
     localName = localName.replaceAll("\\.", "\\$");
 
@@ -163,4 +179,135 @@ class UiBinderTagBuilder<T> {
           parentTag, owner);
     }
   }
+
+  private Object extractResource(String group,
+      UiResourceManager resourceManager, Object owner) {
+    String[] splitted = group.split("\\.");
+    String resourceAlias = splitted[0];
+    Object resource = resourceManager.getUiResource(resourceAlias);
+    if (resource == null) {
+      throw new GwtTestUiBinderException("Error in file '"
+          + owner.getClass().getSimpleName()
+          + ".ui.xml' : no resource declared for alias '" + resourceAlias + "'");
+    }
+
+    if (splitted.length == 1) {
+      return resource;
+    }
+
+    // handle "alias.myDataResource.getUrl"
+    try {
+      for (int i = 1; i < splitted.length; i++) {
+        if (CssResource.class.isInstance(resource)) {
+          // special case of css styles
+          return splitted[i];
+        } else {
+          resource = GwtReflectionUtils.callPrivateMethod(resource, splitted[i]);
+        }
+      }
+
+      return resource;
+
+    } catch (Exception e) {
+      if (GwtTestException.class.isInstance(e)) {
+        throw (GwtTestException) e;
+      } else {
+        throw new GwtTestUiBinderException("Error while calling property '"
+            + group.substring(group.indexOf('.') + 1) + "' on object of type '"
+            + resourceManager.getUiResource(resourceAlias).getClass().getName()
+            + "'", e);
+      }
+    }
+  }
+
+  private String formatResourcesMessage(String attrValue, List<Object> resources) {
+
+    StringBuilder sb = new StringBuilder();
+    Matcher m = EXTERNAL_RESOURCES_PATTERN.matcher(attrValue);
+
+    int foundNb = 0;
+    int token = 0;
+    while (m.find()) {
+      sb.append(attrValue.substring(token, m.start(1))).append(foundNb++);
+      token = m.end(1);
+    }
+    sb.append(attrValue.substring(token));
+
+    return MessageFormat.format(sb.toString(), resources.toArray());
+  }
+
+  private Map<String, Object> parseAttributesMap(String elementNsURI,
+      Attributes attributesXML) {
+
+    Map<String, Object> attributesMap = new HashMap<String, Object>();
+
+    for (int i = 0; i < attributesXML.getLength(); i++) {
+      String attrName = attributesXML.getLocalName(i);
+      String attrValue = attributesXML.getValue(i).trim();
+      String attrUri = "".equals(attributesXML.getURI(i)) ? elementNsURI
+          : attributesXML.getURI(i);
+
+      if (UiBinderXmlUtils.isUiFieldAttribute(attrUri, attrName)) {
+        attributesMap.put("ui:field", attrValue);
+      } else if ("styleName".equals(attrName)) {
+        // special case of style
+        attributesMap.put("styleName",
+            UiBinderXmlUtils.getEffectiveStyleName(attrValue));
+
+      } else if ("addStyleNames".equals(attrName)) {
+        // special case of multiple style to add
+        treatAddStyleNamesAttr(attrValue, attributesMap);
+
+      } else {
+        // normal attribute
+        treatStandardAttr(owner, resourceManager, attrName, attrValue,
+            attributesMap);
+
+      }
+    }
+
+    return attributesMap;
+  }
+
+  private void treatAddStyleNamesAttr(String attrValue,
+      Map<String, Object> attributesMap) {
+    String[] styles = attrValue.trim().split(" ");
+    String[] effectiveStyles = new String[styles.length];
+
+    for (int j = 0; j < styles.length; j++) {
+      effectiveStyles[j] = UiBinderXmlUtils.getEffectiveStyleName(styles[j]);
+    }
+    attributesMap.put("addStyleNames", effectiveStyles);
+  }
+
+  private void treatStandardAttr(Object owner,
+      UiResourceManager resourceManager, String attrName, String attrValue,
+      Map<String, Object> attributesMap) {
+
+    Matcher m = EXTERNAL_RESOURCES_PATTERN.matcher(attrValue);
+    if (m.matches()) {
+      // entire value matches : only one {} resource, not only string
+      attributesMap.put(attrName,
+          extractResource(m.group(1), resourceManager, owner));
+    } else {
+      // we have to find potential {} resources
+      m = EXTERNAL_RESOURCES_PATTERN.matcher(attrValue);
+
+      List<Object> resources = new ArrayList<Object>();
+      while (m.find()) {
+        resources.add(extractResource(m.group(1), resourceManager, owner));
+      }
+
+      if (resources.size() == 0) {
+        // attribute should be a String or a simple object convertible to a
+        // String
+        attributesMap.put(attrName, attrValue);
+      } else {
+        // case '{OBJ1} {Obj2}' : this must be formatted to string
+        attributesMap.put(attrName,
+            formatResourcesMessage(attrValue, resources));
+      }
+    }
+  }
+
 }

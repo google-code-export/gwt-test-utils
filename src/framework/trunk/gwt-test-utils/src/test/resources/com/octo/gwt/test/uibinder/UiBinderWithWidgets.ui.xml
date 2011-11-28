@@ -52,7 +52,7 @@
 		<g:PushButton ui:field='pushButton'
 			addStyleNames='{res.testCssResource.testStyle} {otherStyle.pretty}'>Push my hot button!</g:PushButton>
 
-		<g:Image ui:field='image' resource='{res.testImageResource}' />
+		<g:Image ui:field='image' resource='{res.testImageResource}' altText="Loading..." styleName="{otherStyle.pretty}" />
 		<g:Image ui:field="imageWithUrl" url="http://slazzer.com/image.jpg"></g:Image>
 
 		<g:VerticalPanel ui:field='verticalPanel' horizontalAlignment="ALIGN_LEFT"

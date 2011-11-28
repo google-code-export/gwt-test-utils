@@ -1,6 +1,6 @@
 package com.octo.gwt.test.uibinder;
 
-import org.xml.sax.Attributes;
+import java.util.Map;
 
 import com.google.gwt.user.client.ui.IsWidget;
 
@@ -22,6 +22,6 @@ public interface UiBinderWidgetFactory {
    * @return
    */
   UiBinderWidget<? extends IsWidget> createUiBinderWidget(IsWidget widget,
-      Attributes attributes, UiBinderTag parentTag, Object owner,
+      Map<String, Object> attributes, UiBinderTag parentTag, Object owner,
       UiResourceManager resourceManager);
 }

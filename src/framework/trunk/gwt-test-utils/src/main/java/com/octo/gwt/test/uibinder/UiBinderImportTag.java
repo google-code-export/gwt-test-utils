@@ -5,8 +5,6 @@ import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.xml.sax.Attributes;
-
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.octo.gwt.test.exceptions.GwtTestUiBinderException;
@@ -23,7 +21,7 @@ class UiBinderImportTag implements UiBinderTag {
 
   private final UiBinderTag parentTag;
 
-  UiBinderImportTag(Attributes attributes, UiBinderTag parentTag,
+  UiBinderImportTag(Map<String, Object> attributes, UiBinderTag parentTag,
       Map<String, Object> resources, Object owner) {
     this.parentTag = parentTag;
     // collects single and multiple imports in UiBinderResourceManager inner map
@@ -78,16 +76,17 @@ class UiBinderImportTag implements UiBinderTag {
     }
   }
 
-  private Map<String, Object> collectObjectToImport(Attributes attributes,
-      Map<String, Object> resources, Object owner) {
+  private Map<String, Object> collectObjectToImport(
+      Map<String, Object> attributes, Map<String, Object> resources,
+      Object owner) {
     Map<String, Object> result = new HashMap<String, Object>();
 
-    for (int i = 0; i < attributes.getLength(); i++) {
-      String attrName = attributes.getLocalName(i);
-      String attrValue = attributes.getValue(i).trim();
+    for (Map.Entry<String, Object> entry : attributes.entrySet()) {
+      String attrName = entry.getKey();
+      String attrValue = entry.getValue().toString().trim();
 
       // ignore attributes other than <ui:field>
-      if (!UiBinderXmlUtils.FIELD_ATTR_NAME.equals(attrName)) {
+      if (!"ui:field".equals(attrName)) {
         continue;
       }
 

@@ -6,18 +6,16 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.xml.sax.Attributes;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.shared.DateTimeFormat;
 import com.google.gwt.i18n.shared.DateTimeFormat.PredefinedFormat;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.uibinder.client.UiConstructor;
 import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.DateLabel;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.NamedFrame;
 import com.google.gwt.user.client.ui.RadioButton;
@@ -35,10 +33,7 @@ import com.octo.gwt.test.utils.GwtReflectionUtils;
 @SuppressWarnings("unchecked")
 class UiBinderInstanciator {
 
-  // TODO: refactor with UiBinderWidget
-  private static final Pattern EXTERNAL_RESOURCES_PATTERN = Pattern.compile("\\s*\\{(\\S*)\\}\\s*");
-
-  static <U> U getInstance(Class<U> clazz, Attributes attributes,
+  static <U> U getInstance(Class<U> clazz, Map<String, Object> attributes,
       UiResourceManager resourceManager, Object owner) {
     U instance = getProvidedUiField(clazz, owner);
 
@@ -84,10 +79,11 @@ class UiBinderInstanciator {
 
   // TODO : not a flexible design...
   private static <U> U createSpecificWidget(Class<U> clazz,
-      Attributes attributes, UiResourceManager resourceManager, Object owner) {
+      Map<String, Object> attributes, UiResourceManager resourceManager,
+      Object owner) {
 
     if (clazz == RadioButton.class) {
-      String name = attributes.getValue("name");
+      String name = (String) attributes.get("name");
       if (name == null) {
         throw new GwtTestUiBinderException(
             "Error during the instanciation of a RadioButton declared in "
@@ -95,9 +91,19 @@ class UiBinderInstanciator {
                 + ".ui.xml' : missing required attribute 'name'");
       }
       return (U) new RadioButton(name);
+    } else if (clazz == Image.class) {
+
+      ImageResource imageResource = (ImageResource) attributes.get("resource");
+      if (imageResource != null) {
+        return (U) new Image(imageResource);
+      }
+      String url = (String) attributes.get("url");
+      if (url != null) {
+        return (U) new Image(url);
+      }
 
     } else if (clazz == NamedFrame.class) {
-      String name = attributes.getValue("name");
+      String name = (String) attributes.get("name");
       if (name == null) {
         throw new GwtTestUiBinderException(
             "Error during the instanciation of a NamedFrame declared in "
@@ -106,26 +112,19 @@ class UiBinderInstanciator {
       }
       return (U) new NamedFrame(name);
     } else if (DateLabel.class == clazz) {
-      String format = attributes.getValue("format");
+      DateTimeFormat format = (DateTimeFormat) attributes.get("format");
 
       if (format != null) {
-        Matcher m = EXTERNAL_RESOURCES_PATTERN.matcher(format);
-        if (m.find()) {
-          format = m.group(1);
-          DateTimeFormat dtf = resourceManager.getUiResource(format);
-          if (dtf != null) {
-            return (U) new DateLabel(dtf);
-          }
-        }
+        return (U) new DateLabel(format);
       }
 
-      String predefinedFormat = attributes.getValue("predefinedFormat");
+      String predefinedFormat = (String) attributes.get("predefinedFormat");
       if (predefinedFormat != null) {
         PredefinedFormat predef = PredefinedFormat.valueOf(predefinedFormat);
         return (U) new DateLabel(DateTimeFormat.getFormat(predef));
       }
 
-      String customFormat = attributes.getValue("customFormat");
+      String customFormat = (String) attributes.get("customFormat");
       if (customFormat != null) {
         return (U) new DateLabel(DateTimeFormat.getFormat(customFormat));
       }
@@ -136,7 +135,7 @@ class UiBinderInstanciator {
   }
 
   private static <U> U getObjectFromUiConstructor(Class<U> clazz,
-      Attributes attributes) {
+      Map<String, Object> attributes) {
     for (Constructor<?> cons : clazz.getDeclaredConstructors()) {
       if (cons.getAnnotation(UiConstructor.class) != null) {
         Constructor<U> uiConstructor = (Constructor<U>) cons;
@@ -229,20 +228,23 @@ class UiBinderInstanciator {
   }
 
   private static String[] getUiConstructorArgs(Class<?> clazz,
-      Attributes attributes, boolean inclueSetters) {
+      Map<String, Object> attributes, boolean inclueSetters) {
     List<String> argsList = new ArrayList<String>();
 
-    for (int i = 0; i < attributes.getLength(); i++) {
-      String attrName = attributes.getLocalName(i);
-      if (!UiBinderXmlUtils.isUiFieldAttribute(attributes.getURI(i), attrName)) {
+    for (Map.Entry<String, Object> entry : attributes.entrySet()) {
+      String attrName = entry.getKey();
+      String attrValue = entry.getValue().toString().trim();
 
-        if (inclueSetters || !isBeanProperty(clazz, attrName)) {
-          argsList.add(attributes.getValue(i));
-        }
+      if ("ui:field".equals(attrName)) {
+        continue;
+      }
+
+      if (inclueSetters || !isBeanProperty(clazz, attrName)) {
+        argsList.add(attrValue);
       }
     }
 
-    return argsList.toArray(new String[0]);
+    return argsList.toArray(new String[argsList.size()]);
   }
 
   private static boolean isBeanProperty(Class<?> clazz, String attrName) {
