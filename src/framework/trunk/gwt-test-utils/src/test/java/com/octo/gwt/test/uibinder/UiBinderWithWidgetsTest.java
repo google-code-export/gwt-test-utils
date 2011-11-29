@@ -37,6 +37,23 @@ public class UiBinderWithWidgetsTest extends GwtTestTest {
   }
 
   @Test
+  public void fill_TextBox() {
+    // Arrange
+    UiBinderWithWidgets w = new UiBinderWithWidgets("gael", "eric");
+
+    // Pre-Assert
+    assertEquals("We <b>strongly</b> urge you to reconsider.",
+        w.msgLabel.getText());
+
+    // Act
+    Browser.fillText(w.textBox, "ValueChangeHandler has been triggered !");
+
+    // Assert
+    assertEquals("ValueChangeHandler has been triggered !",
+        w.msgLabel.getText());
+  }
+
+  @Test
   public void uiBinderWidget() {
     // Arrange
     UiBinderWithWidgets w = new UiBinderWithWidgets("gael", "eric");
@@ -95,7 +112,7 @@ public class UiBinderWithWidgetsTest extends GwtTestTest {
         w.msgLabel.getText());
 
     assertEquals("9'00", w.msgInnerWidget.getText());
-    assertEquals(w.msgInnerWidget, wrappedPanel.getWidget(4));
+    assertEquals(w.msgInnerWidget, wrappedPanel.getWidget(5));
 
     assertEquals(HasHorizontalAlignment.ALIGN_LEFT,
         w.verticalPanel.getHorizontalAlignment());
