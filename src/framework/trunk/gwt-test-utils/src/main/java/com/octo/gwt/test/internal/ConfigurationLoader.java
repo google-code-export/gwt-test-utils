@@ -3,12 +3,10 @@ package com.octo.gwt.test.internal;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
@@ -60,18 +58,24 @@ class ConfigurationLoader {
 
   private final ClassSubstituer classSubstituer;
 
-  private final List<String> delegateList;
+  private final Set<String> delegateSet;
   private final MethodRemover methodRemover;
+  private final Set<String> moduleFileSet;
   private PatcherFactory patcherFactory;
   private boolean processedModuleFile = false;
-
+  private final Set<String> removeMethodSet;
   private final Set<String> scanPackageSet;
+  private final Set<String> substituteClassSet;
 
   private ConfigurationLoader(ClassLoader classLoader) {
     this.classLoader = classLoader;
     this.classSubstituer = new ClassSubstituer();
-    this.delegateList = new ArrayList<String>();
+    this.delegateSet = new HashSet<String>();
+    this.moduleFileSet = new HashSet<String>();
     this.scanPackageSet = new HashSet<String>();
+    this.removeMethodSet = new HashSet<String>();
+    this.substituteClassSet = new HashSet<String>();
+
     this.methodRemover = new MethodRemover();
 
     readFiles();
@@ -82,8 +86,8 @@ class ConfigurationLoader {
     return classSubstituer;
   }
 
-  public List<String> getDelegateList() {
-    return Collections.unmodifiableList(delegateList);
+  public Set<String> getDelegateSet() {
+    return Collections.unmodifiableSet(delegateSet);
   }
 
   public JavaClassModifier getMethodRemover() {
@@ -99,20 +103,21 @@ class ConfigurationLoader {
       String key = ((String) entry.getKey()).trim();
       String value = ((String) entry.getValue()).trim();
       if ("scan-package".equals(value)) {
-        if (!scanPackageSet.add(key)) {
-          throw new GwtTestConfigurationException(
-              "'scan-package' mechanism is used to scan the same package twice : '"
-                  + key + "'");
-        }
+        scanPackageSet.add(key);
       } else if ("delegate".equals(value)) {
-        delegateList.add(key);
-      } else if ("remove-method".equals(value)) {
+        delegateSet.add(key);
+      } else if ("remove-method".equals(value)
+          && !removeMethodSet.contains(key)) {
         processRemoveMethod(key, url);
-      } else if ("substitute-class".equals(value)) {
+        removeMethodSet.add(key);
+      } else if ("substitute-class".equals(value)
+          && !substituteClassSet.contains(key)) {
         processSubstituteClass(key, url);
-      } else if ("module-file".equals(value)) {
+        substituteClassSet.add(key);
+      } else if ("module-file".equals(value) && !moduleFileSet.contains(key)) {
         processModuleFile(key, url);
         processedModuleFile = true;
+        moduleFileSet.add(key);
       } else {
         throw new GwtTestConfigurationException("Error in '" + url.getPath()
             + "' : unknown value '" + value + "'");
@@ -120,15 +125,15 @@ class ConfigurationLoader {
     }
   }
 
-  private void processModuleFile(String key, URL url) {
-    ModuleData.get().parseModule(key);
+  private void processModuleFile(String string, URL url) {
+    ModuleData.get().parseModule(string);
   }
 
-  private void processRemoveMethod(String key, URL url) {
-    String[] array = key.split("\\s*,\\s*");
+  private void processRemoveMethod(String string, URL url) {
+    String[] array = string.split("\\s*,\\s*");
     if (array.length != 3) {
       throw new GwtTestConfigurationException(
-          "Invalid 'remove-method' property format for value '" + key
+          "Invalid 'remove-method' property format for value '" + string
               + "' in file '" + url.getPath() + "'");
     }
 
@@ -139,11 +144,11 @@ class ConfigurationLoader {
     methodRemover.removeMethod(methodClass, methodName, methodSignature);
   }
 
-  private void processSubstituteClass(String key, URL url) {
-    String[] array = key.split("\\s*,\\s*");
+  private void processSubstituteClass(String string, URL url) {
+    String[] array = string.split("\\s*,\\s*");
     if (array.length != 2) {
       throw new GwtTestConfigurationException(
-          "Invalid 'substitute-class' property format for value '" + key
+          "Invalid 'substitute-class' property format for value '" + string
               + "' in file '" + url.getPath() + "'");
     }
 
@@ -198,7 +203,7 @@ class ConfigurationLoader {
         }
 
         if (annotation != null) {
-          String classToPatchName = (annotation.value() != PatchClass.class)
+          String classToPatchName = annotation.value() != PatchClass.class
               ? annotation.value().getName() : annotation.target().trim();
 
           if (!"".equals(classToPatchName)) {
