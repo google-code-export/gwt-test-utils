@@ -62,7 +62,6 @@ class ConfigurationLoader {
   private final MethodRemover methodRemover;
   private final Set<String> moduleFileSet;
   private PatcherFactory patcherFactory;
-  private boolean processedModuleFile = false;
   private final Set<String> removeMethodSet;
   private final Set<String> scanPackageSet;
   private final Set<String> substituteClassSet;
@@ -106,18 +105,12 @@ class ConfigurationLoader {
         scanPackageSet.add(key);
       } else if ("delegate".equals(value)) {
         delegateSet.add(key);
-      } else if ("remove-method".equals(value)
-          && !removeMethodSet.contains(key)) {
+      } else if ("remove-method".equals(value)) {
         processRemoveMethod(key, url);
-        removeMethodSet.add(key);
-      } else if ("substitute-class".equals(value)
-          && !substituteClassSet.contains(key)) {
+      } else if ("substitute-class".equals(value)) {
         processSubstituteClass(key, url);
-        substituteClassSet.add(key);
-      } else if ("module-file".equals(value) && !moduleFileSet.contains(key)) {
+      } else if ("module-file".equals(value)) {
         processModuleFile(key, url);
-        processedModuleFile = true;
-        moduleFileSet.add(key);
       } else {
         throw new GwtTestConfigurationException("Error in '" + url.getPath()
             + "' : unknown value '" + value + "'");
@@ -126,10 +119,20 @@ class ConfigurationLoader {
   }
 
   private void processModuleFile(String string, URL url) {
+    if (!moduleFileSet.add(string)) {
+      // already processed
+      return;
+    }
+
     ModuleData.get().parseModule(string);
   }
 
   private void processRemoveMethod(String string, URL url) {
+    if (!removeMethodSet.add(string)) {
+      // already processed
+      return;
+    }
+
     String[] array = string.split("\\s*,\\s*");
     if (array.length != 3) {
       throw new GwtTestConfigurationException(
@@ -145,6 +148,11 @@ class ConfigurationLoader {
   }
 
   private void processSubstituteClass(String string, URL url) {
+    if (!substituteClassSet.add(string)) {
+      // already processed
+      return;
+    }
+
     String[] array = string.split("\\s*,\\s*");
     if (array.length != 2) {
       throw new GwtTestConfigurationException(
@@ -177,7 +185,7 @@ class ConfigurationLoader {
     }
 
     // check that at least one module file has been processed
-    if (!processedModuleFile) {
+    if (moduleFileSet.size() == 0) {
       throw new GwtTestConfigurationException(
           "Cannot find any 'module-file' setup in configuration file 'META-INF/gwt-test-utils.properties'");
     }
