@@ -77,7 +77,7 @@ public class UiBinderWithWidgetsTest extends GwtTestTest {
     assertFalse(w.radioButton2.getValue());
 
     assertEquals(
-        MyClientBundle.INSTANCE.testImageResource().getSafeUri().asString(),
+        MyClientBundle.INSTANCE.cellTableLoading().getSafeUri().asString(),
         w.image.getUrl());
     assertEquals("Loading...", w.image.getAltText());
     assertEquals("pretty", w.image.getStyleName());

@@ -98,10 +98,10 @@ public class ResourcePrototypeProxyBuilder {
     ResourcePrototypeCallback callback;
 
     if (TextResource.class.isAssignableFrom(proxiedClass)) {
-      callback = (url != null) ? new TextResourceCallback(url)
+      callback = url != null ? new TextResourceCallback(url)
           : new TextResourceCallback(text);
     } else if (CssResource.class.isAssignableFrom(proxiedClass)) {
-      callback = (url != null) ? new CssResourceCallback(url)
+      callback = url != null ? new CssResourceCallback(url)
           : new CssResourceCallback(text);
     } else if (DataResource.class.isAssignableFrom(proxiedClass)) {
       callback = new DataResourceCallback(computeUrl(url, ownerClass));
@@ -134,23 +134,36 @@ public class ResourcePrototypeProxyBuilder {
   }
 
   private String computeUrl(URL resourceURL, Class<?> resourceClass) {
+    String url = computeUrlRecursive(resourceURL, resourceClass);
+
+    if (url != null) {
+      return url;
+    }
+
+    throw new GwtTestResourcesException(
+        "Cannot compute the relative URL of resource '" + resourceURL + "'");
+  }
+
+  private String computeUrlRecursive(URL resourceURL, Class<?> resourceClass) {
     String packagePath = resourceClass.getPackage().getName().replaceAll("\\.",
         "/");
 
     int startIndex = resourceURL.getPath().indexOf(packagePath);
 
     if (startIndex == -1) {
-      if (resourceClass.getInterfaces() != null
-          && resourceClass.getInterfaces().length == 1) {
-        return computeUrl(resourceURL, resourceClass.getInterfaces()[0]);
-      } else {
-        throw new GwtTestResourcesException(
-            "Cannot compute the relative URL of resource '" + resourceURL + "'");
+      for (Class<?> inter : resourceClass.getInterfaces()) {
+        String url = computeUrlRecursive(resourceURL, inter);
+        if (url != null) {
+          return url;
+        }
       }
-    }
-    String resourceRelativePath = resourceURL.getPath().substring(startIndex);
 
-    return GWT.getModuleBaseURL() + resourceRelativePath;
+      return null;
+
+    } else {
+      String resourceRelativePath = resourceURL.getPath().substring(startIndex);
+      return GWT.getModuleBaseURL() + resourceRelativePath;
+    }
   }
 
   private InvocationHandler generateInvocationHandler(
