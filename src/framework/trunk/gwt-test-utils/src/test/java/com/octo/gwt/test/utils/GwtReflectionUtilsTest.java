@@ -83,7 +83,8 @@ public class GwtReflectionUtilsTest {
     testBean.setBool(true);
 
     // Act
-    boolean b = GwtReflectionUtils.getPrivateFieldValue(testBean, "bool");
+    boolean b = (Boolean) GwtReflectionUtils.getPrivateFieldValue(testBean,
+        "bool");
 
     // Assert
     assertTrue(b);
