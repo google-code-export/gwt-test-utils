@@ -12,11 +12,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.gwt.i18n.client.Dictionary;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.octo.gwt.test.exceptions.GwtTestPatchException;
 import com.octo.gwt.test.internal.GwtConfig;
 import com.octo.gwt.test.internal.handlers.GwtCreateHandlerManager;
 import com.octo.gwt.test.internal.i18n.DictionaryUtils;
-import com.octo.gwt.test.uibinder.UiBinderWidgetFactory;
+import com.octo.gwt.test.uibinder.UiWidgetTagFactory;
 import com.octo.gwt.test.utils.events.Browser.BrowserErrorHandler;
 
 public abstract class GwtModuleRunnerAdapter implements GwtModuleRunner {
@@ -58,7 +59,8 @@ public abstract class GwtModuleRunnerAdapter implements GwtModuleRunner {
    * com.octo.gwt.test.GwtModuleRunner#addUiBinderWidgetFactory(com.octo.gwt
    * .test.uibinder.UiBinderWidgetFactory)
    */
-  public void addUiBinderWidgetFactory(UiBinderWidgetFactory factory) {
+  public void addUiBinderWidgetFactory(
+      UiWidgetTagFactory<? extends IsWidget> factory) {
     GwtConfig.get().getUiBinderWidgetFactories().add(factory);
   }
 
@@ -141,6 +143,18 @@ public abstract class GwtModuleRunnerAdapter implements GwtModuleRunner {
    */
   public WindowOperationsHandler getWindowOperationsHandler() {
     return null;
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * com.octo.gwt.test.GwtModuleRunner#registerUiConstructor(java.lang.Class,
+   * java.lang.String[])
+   */
+  public void registerUiConstructor(Class<? extends IsWidget> widgetClass,
+      String... argNames) {
+    GwtConfig.get().registerUiConstructor(widgetClass, argNames);
   }
 
   /**

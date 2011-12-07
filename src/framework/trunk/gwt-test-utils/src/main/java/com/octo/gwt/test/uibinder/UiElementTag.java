@@ -19,13 +19,13 @@ import com.octo.gwt.test.utils.GwtReflectionUtils;
  * @author Gael Lazzari
  * 
  */
-class UiBinderElement implements UiBinderTag {
+class UiElementTag implements UiTag {
 
-  private final UiBinderTag parentTag;
+  private final UiTag parentTag;
   private final Element wrapped;
 
-  UiBinderElement(String nsURI, String tagName, Map<String, Object> attributes,
-      UiBinderTag parentTag, Object owner) {
+  UiElementTag(String nsURI, String tagName, Map<String, Object> attributes,
+      UiTag parentTag, Object owner) {
     this.wrapped = JavaScriptObjects.newElement(tagName, Document.get());
     this.parentTag = parentTag;
 
@@ -71,7 +71,7 @@ class UiBinderElement implements UiBinderTag {
     return this.wrapped;
   }
 
-  public UiBinderTag getParentTag() {
+  public UiTag getParentTag() {
     return parentTag;
   }
 

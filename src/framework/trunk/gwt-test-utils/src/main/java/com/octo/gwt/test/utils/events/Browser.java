@@ -674,11 +674,10 @@ public class Browser {
       if (CheckBox.class.isInstance(target)
           && event.getTypeInt() == Event.ONCLICK) {
         CheckBox checkBox = (CheckBox) target;
-        if (RadioButton.class.isInstance(target)) {
-          checkBox.setValue(true);
-        } else {
-          checkBox.setValue(!checkBox.getValue());
-        }
+        boolean newValue = RadioButton.class.isInstance(target) ? true
+            : !checkBox.getValue();
+        checkBox.setValue(newValue);
+        ValueChangeEvent.fire(checkBox, newValue);
       }
 
       // set the related target

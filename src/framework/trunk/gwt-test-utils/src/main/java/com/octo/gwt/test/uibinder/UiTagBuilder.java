@@ -18,16 +18,16 @@ import com.octo.gwt.test.exceptions.GwtTestUiBinderException;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 @SuppressWarnings("unchecked")
-class UiBinderTagBuilder<T> {
+class UiTagBuilder<T> {
 
   private static final Pattern EXTERNAL_RESOURCES_PATTERN = Pattern.compile("\\s*\\{(\\S*)\\}\\s*");
 
-  static final <T> UiBinderTagBuilder<T> create(Class<T> rootComponentClass,
+  static final <T> UiTagBuilder<T> create(Class<T> rootComponentClass,
       Object owner) {
-    return new UiBinderTagBuilder<T>(rootComponentClass, owner);
+    return new UiTagBuilder<T>(rootComponentClass, owner);
   }
 
-  private UiBinderTag currentTag;
+  private UiTag currentTag;
   private final Object owner;
   private final UiResourceManager resourceManager;
 
@@ -35,13 +35,13 @@ class UiBinderTagBuilder<T> {
 
   private final Class<T> rootComponentClass;
 
-  private UiBinderTagBuilder(Class<T> rootComponentClass, Object owner) {
+  private UiTagBuilder(Class<T> rootComponentClass, Object owner) {
     this.rootComponentClass = rootComponentClass;
     this.owner = owner;
     this.resourceManager = UiResourceManager.newInstance(owner);
   }
 
-  UiBinderTagBuilder<T> appendText(String text) {
+  UiTagBuilder<T> appendText(String text) {
     if (!"".equals(text.trim())) {
       currentTag.appendText(text);
     }
@@ -73,7 +73,7 @@ class UiBinderTagBuilder<T> {
     return (T) rootComponent;
   }
 
-  UiBinderTagBuilder<T> endTag(String nameSpaceURI, String localName) {
+  UiTagBuilder<T> endTag(String nameSpaceURI, String localName) {
 
     // ignore <UiBinder> tag
     if (UiBinderXmlUtils.isUiBinderTag(nameSpaceURI, localName)) {
@@ -81,7 +81,7 @@ class UiBinderTagBuilder<T> {
     }
 
     Object currentObject = currentTag.endTag();
-    UiBinderTag parentTag = currentTag.getParentTag();
+    UiTag parentTag = currentTag.getParentTag();
     currentTag = parentTag;
 
     if (UiBinderXmlUtils.isResourceTag(nameSpaceURI, localName)
@@ -116,7 +116,7 @@ class UiBinderTagBuilder<T> {
     return this;
   }
 
-  UiBinderTagBuilder<T> startTag(String nameSpaceURI, String localName,
+  UiTagBuilder<T> startTag(String nameSpaceURI, String localName,
       Attributes attributes) {
 
     if (UiBinderXmlUtils.isUiBinderTag(nameSpaceURI, localName)) {
@@ -124,14 +124,14 @@ class UiBinderTagBuilder<T> {
     }
 
     // register the current UiBinderTag in the stack
-    currentTag = createUiBinderTag(nameSpaceURI, localName, attributes,
+    currentTag = createUiTag(nameSpaceURI, localName, attributes,
         currentTag);
 
     return this;
   }
 
-  private UiBinderTag createUiBinderTag(String nameSpaceURI, String localName,
-      Attributes attributesXML, UiBinderTag parentTag) {
+  private UiTag createUiTag(String nameSpaceURI, String localName,
+      Attributes attributesXML, UiTag parentTag) {
 
     Map<String, Object> attributes = parseAttributesMap(nameSpaceURI,
         attributesXML);
@@ -153,13 +153,14 @@ class UiBinderTagBuilder<T> {
       }
 
       if (IsWidget.class.isAssignableFrom(clazz)) {
-        // create or get the instance
-        IsWidget isWidget = UiBinderInstanciator.getInstance(
-            (Class<? extends IsWidget>) clazz, attributes, resourceManager,
-            owner);
 
-        return DefaultUiBinderWidgetFactory.get().createUiBinderWidget(
-            isWidget, attributes, parentTag, owner, resourceManager);
+        Class<? extends IsWidget> widgetClass = (Class<? extends IsWidget>) clazz;
+        UiWidgetTag<IsWidget> uibinderTag = DefaultUiWidgetTagFactory.get().createUiWidgetTag(
+            widgetClass, attributes);
+
+        uibinderTag.startTag(widgetClass, attributes, parentTag, owner);
+
+        return uibinderTag;
 
       } else {
         throw new GwtTestUiBinderException("Not managed type in file '"
@@ -173,9 +174,9 @@ class UiBinderTagBuilder<T> {
     } else if (UiBinderXmlUtils.isImportTag(nameSpaceURI, localName)) {
       return resourceManager.registerImport(attributes, parentTag, owner);
     } else if (UiBinderXmlUtils.isMsgTag(nameSpaceURI, localName)) {
-      return new UiBinderMsg(currentTag);
+      return resourceManager.registerMsg(attributes, parentTag, attributes);
     } else {
-      return new UiBinderElement(nameSpaceURI, localName, attributes,
+      return new UiElementTag(nameSpaceURI, localName, attributes,
           parentTag, owner);
     }
   }

@@ -65,7 +65,7 @@ class UiBinderInvocationHandler implements InvocationHandler {
    */
   private Object createAndBindUi(Object owner) {
     Class<?> rootComponentClass = getRootElementClass();
-    GwtUiBinderParser parser = new GwtUiBinderParser();
+    UiBinderParser parser = new UiBinderParser();
 
     // parse .ui.xml file and inject @UiField
     Object rootComponent = parser.createUiComponent(rootComponentClass, owner);

@@ -9,7 +9,7 @@ import com.google.gwt.user.client.ui.IsWidget;
  * @author Gael Lazzari
  * 
  */
-public interface UiBinderTag {
+public interface UiTag {
 
   /**
    * Appends a DOM child element to this UiBinder tag.
@@ -46,6 +46,6 @@ public interface UiBinderTag {
    * 
    * @return The parent UiBinder tag
    */
-  UiBinderTag getParentTag();
+  UiTag getParentTag();
 
 }

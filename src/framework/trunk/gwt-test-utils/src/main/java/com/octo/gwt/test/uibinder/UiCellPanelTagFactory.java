@@ -15,16 +15,11 @@ import com.google.gwt.user.client.ui.IsWidget;
  * @author Gael Lazzari
  * 
  */
-class UiBinderCellPanelFactory implements UiBinderWidgetFactory {
+class UiCellPanelTagFactory implements UiWidgetTagFactory<CellPanel> {
 
-  private static class UiBinderCellPanel extends UiBinderWidget<CellPanel> {
+  private static class UiCellPanelTag extends UiWidgetTag<CellPanel> {
 
     private static final String CELL_TAG = "cell";
-
-    public UiBinderCellPanel(CellPanel wrapped, Map<String, Object> attributes,
-        UiBinderTag parentTag, Object owner, UiResourceManager resourceManager) {
-      super(wrapped, attributes, parentTag, owner, resourceManager);
-    }
 
     @Override
     protected void appendElement(CellPanel wrapped, Element element,
@@ -70,27 +65,33 @@ class UiBinderCellPanelFactory implements UiBinderWidgetFactory {
 
       }
     }
+
+    @Override
+    protected void finalizeWidget(CellPanel widget) {
+      // nothing to do
+    }
+
+    @Override
+    protected void initializeWidget(CellPanel wrapped,
+        Map<String, Object> attributes, Object owner) {
+      // nothing to do
+    }
   }
 
   /*
    * (non-Javadoc)
    * 
    * @see
-   * com.octo.gwt.test.uibinder.UiBinderWidgetFactory#createUiBinderWidget(com
-   * .google.gwt.user.client.ui.IsWidget, java.util.Map,
-   * com.octo.gwt.test.uibinder.UiBinderTag, java.lang.Object,
-   * com.octo.gwt.test.uibinder.UiResourceManager)
+   * com.octo.gwt.test.uibinder.UiBinderWidgetFactory#createUiWidgetTag
+   * (java.lang.Class, java.util.Map)
    */
-  public UiBinderWidget<? extends IsWidget> createUiBinderWidget(
-      IsWidget widget, Map<String, Object> attributes, UiBinderTag parentTag,
-      Object owner, UiResourceManager resourceManager) {
-
-    if (!CellPanel.class.isInstance(widget)) {
+  public UiWidgetTag<CellPanel> createUiWidgetTag(
+      Class<? extends IsWidget> widgetClass, Map<String, Object> attributes) {
+    if (!CellPanel.class.isAssignableFrom(widgetClass)) {
       return null;
     }
 
-    return new UiBinderCellPanel((CellPanel) widget, attributes, parentTag,
-        owner, resourceManager);
+    return new UiCellPanelTag();
   }
 
 }

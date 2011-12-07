@@ -18,7 +18,7 @@ import com.octo.gwt.test.internal.utils.XmlUtils;
  * @author Gael Lazzari
  * 
  */
-class GwtUiBinderParser {
+class UiBinderParser {
 
   /**
    * Parse the .ui.xml file to fill the corresponding objects.

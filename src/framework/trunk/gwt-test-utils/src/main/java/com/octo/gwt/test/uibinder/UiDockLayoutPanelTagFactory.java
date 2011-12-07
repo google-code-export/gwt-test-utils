@@ -7,6 +7,7 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.IsWidget;
 
@@ -16,10 +17,11 @@ import com.google.gwt.user.client.ui.IsWidget;
  * @author Gael Lazzari
  * 
  */
-class UiBinderDockLayoutPanelFactory implements UiBinderWidgetFactory {
+class UiDockLayoutPanelTagFactory implements
+    UiWidgetTagFactory<DockLayoutPanel> {
 
-  private static class UiBinderDockLayoutPanel extends
-      UiBinderWidget<DockLayoutPanel> {
+  private static class UiDockLayoutPanelTag extends
+      UiWidgetTag<DockLayoutPanel> {
 
     private final List<IsWidget> centerWidgets = new ArrayList<IsWidget>();
     private double eastSize;
@@ -30,12 +32,6 @@ class UiBinderDockLayoutPanelFactory implements UiBinderWidgetFactory {
     private IsWidget southWidget;
     private double westSize;
     private IsWidget westWidget;
-
-    private UiBinderDockLayoutPanel(DockLayoutPanel wrapped,
-        Map<String, Object> attributes, UiBinderTag parentTag, Object owner,
-        UiResourceManager resourceManager) {
-      super(wrapped, attributes, parentTag, owner, resourceManager);
-    }
 
     @Override
     protected void appendElement(DockLayoutPanel wrapped, Element element,
@@ -53,7 +49,6 @@ class UiBinderDockLayoutPanelFactory implements UiBinderWidgetFactory {
 
     @Override
     protected void finalizeWidget(DockLayoutPanel widget) {
-      super.finalizeWidget(widget);
 
       if (northWidget != null) {
         widget.addNorth(northWidget, northSize);
@@ -70,6 +65,26 @@ class UiBinderDockLayoutPanelFactory implements UiBinderWidgetFactory {
       for (IsWidget centerWidget : centerWidgets) {
         widget.add(centerWidget);
       }
+    }
+
+    @Override
+    protected void initializeWidget(DockLayoutPanel wrapped,
+        Map<String, Object> attributes, Object owner) {
+      // nothing to do
+
+    }
+
+    @Override
+    protected DockLayoutPanel instanciate(
+        Class<? extends DockLayoutPanel> widgetClass,
+        Map<String, Object> attributes, Object owner) {
+
+      if (widgetClass == DockLayoutPanel.class) {
+        return new DockLayoutPanel(Unit.EM);
+      }
+
+      // use default instanciation system
+      return super.instanciate(widgetClass, attributes, owner);
     }
 
     private void handleDockLayoutPanelSpecifics(DockLayoutPanel wrapped,
@@ -102,20 +117,17 @@ class UiBinderDockLayoutPanelFactory implements UiBinderWidgetFactory {
    * (non-Javadoc)
    * 
    * @see
-   * com.octo.gwt.test.uibinder.UiBinderWidgetFactory#createUiBinderWidget(com
-   * .google.gwt.user.client.ui.IsWidget, java.util.Map,
-   * com.octo.gwt.test.uibinder.UiBinderTag, java.lang.Object,
-   * com.octo.gwt.test.uibinder.UiResourceManager)
+   * com.octo.gwt.test.uibinder.UiBinderWidgetFactory#createUiWidgetTag
+   * (java.lang.Class, java.util.Map)
    */
-  public UiBinderWidget<? extends IsWidget> createUiBinderWidget(
-      IsWidget widget, Map<String, Object> attributes, UiBinderTag parentTag,
-      Object owner, UiResourceManager resourceManager) {
+  public UiWidgetTag<DockLayoutPanel> createUiWidgetTag(
+      Class<? extends IsWidget> widgetClass, Map<String, Object> attributes) {
 
-    if (!DockLayoutPanel.class.isInstance(widget)) {
+    if (!DockLayoutPanel.class.isAssignableFrom(widgetClass)) {
       return null;
     }
 
-    return new UiBinderDockLayoutPanel((DockLayoutPanel) widget, attributes,
-        parentTag, owner, resourceManager);
+    return new UiDockLayoutPanelTag();
   }
+
 }
