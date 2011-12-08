@@ -1,4 +1,4 @@
-package com.octo.gwt.test.uibinder;
+package com.octo.gwt.test.uibinder.widget;
 
 import java.util.Map;
 
@@ -6,8 +6,16 @@ import com.google.gwt.i18n.shared.DateTimeFormat;
 import com.google.gwt.i18n.shared.DateTimeFormat.PredefinedFormat;
 import com.google.gwt.user.client.ui.DateLabel;
 import com.google.gwt.user.client.ui.IsWidget;
+import com.octo.gwt.test.uibinder.UiWidgetTag;
+import com.octo.gwt.test.uibinder.UiWidgetTagFactory;
 
-class UiDateLabelTagFactory implements UiWidgetTagFactory<DateLabel> {
+/**
+ * Handles <g:DateLabel /> tags.
+ * 
+ * @author Gael Lazzari
+ * 
+ */
+public class UiDateLabelTagFactory implements UiWidgetTagFactory<DateLabel> {
 
   private static class UiDateLabelTag extends UiWidgetTag<DateLabel> {
 
@@ -56,8 +64,7 @@ class UiDateLabelTagFactory implements UiWidgetTagFactory<DateLabel> {
   /*
    * (non-Javadoc)
    * 
-   * @see
-   * com.octo.gwt.test.uibinder.UiBinderWidgetFactory#createUiWidgetTag
+   * @see com.octo.gwt.test.uibinder.UiBinderWidgetFactory#createUiWidgetTag
    * (java.lang.Class, java.util.Map)
    */
   public UiWidgetTag<DateLabel> createUiWidgetTag(

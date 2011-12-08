@@ -1,7 +1,6 @@
 package com.octo.gwt.test.uibinder;
 
 import java.lang.reflect.Constructor;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -49,14 +48,9 @@ public abstract class UiWidgetTag<T extends IsWidget> implements UiTag {
 
     String namespaceURI = JavaScriptObjects.getString(element,
         JsoProperties.XML_NAMESPACE);
-    List<IsWidget> childWidgets = JavaScriptObjects.getObject(element,
-        JsoProperties.UIBINDER_CHILD_WIDGETS_LIST);
 
-    if (childWidgets == null) {
-      childWidgets = Collections.emptyList();
-    }
-
-    appendElement(this.wrapped, element, namespaceURI, childWidgets);
+    appendElement(this.wrapped, element, namespaceURI,
+        UiBinderXmlUtils.getChildWidgets(element));
   }
 
   /*

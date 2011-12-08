@@ -1,11 +1,19 @@
-package com.octo.gwt.test.uibinder;
+package com.octo.gwt.test.uibinder.widget;
 
 import java.util.Map;
 
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.IsWidget;
+import com.octo.gwt.test.uibinder.UiWidgetTag;
+import com.octo.gwt.test.uibinder.UiWidgetTagFactory;
 
-class UiHTMLPanelTagFactory implements UiWidgetTagFactory<HTMLPanel> {
+/**
+ * Handles <g:HTMLPanel /> tags.
+ * 
+ * @author Gael Lazzari
+ * 
+ */
+public class UiHTMLPanelTagFactory implements UiWidgetTagFactory<HTMLPanel> {
 
   private static class UiHTMLPanelTag extends UiWidgetTag<HTMLPanel> {
 
@@ -36,8 +44,7 @@ class UiHTMLPanelTagFactory implements UiWidgetTagFactory<HTMLPanel> {
   /*
    * (non-Javadoc)
    * 
-   * @see
-   * com.octo.gwt.test.uibinder.UiBinderWidgetFactory#createUiWidgetTag
+   * @see com.octo.gwt.test.uibinder.UiBinderWidgetFactory#createUiWidgetTag
    * (java.lang.Class, java.util.Map)
    */
   public UiWidgetTag<HTMLPanel> createUiWidgetTag(

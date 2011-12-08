@@ -1,12 +1,18 @@
 package com.octo.gwt.test.uibinder;
 
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment.HorizontalAlignmentConstant;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment.VerticalAlignmentConstant;
+import com.google.gwt.user.client.ui.IsWidget;
+import com.octo.gwt.test.internal.patchers.dom.JavaScriptObjects;
+import com.octo.gwt.test.internal.utils.JsoProperties;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 /**
@@ -40,6 +46,22 @@ public class UiBinderXmlUtils {
   private static final String TYPE_ATTR_NAME = "type";
   private static final String UIBINDER_TAG = "UiBinder";
   private static final String WITH_TAG = "with";
+
+  /**
+   * Retrieve all child widgets contained in a UiBinder custom Element (for
+   * example : <g:stack>, <g:east>...).
+   * 
+   * @param element The UiBinder custom Element.
+   * @return The list of child widget, which would be empty if the element has
+   *         no child.
+   */
+  public static List<IsWidget> getChildWidgets(Element element) {
+    List<IsWidget> childWidgets = JavaScriptObjects.getObject(element,
+        JsoProperties.UIBINDER_CHILD_WIDGETS_LIST);
+
+    return childWidgets != null ? childWidgets
+        : Collections.<IsWidget> emptyList();
+  }
 
   public static String getEffectiveStyleName(String style) {
     style = style.replaceAll("[\\{\\}\\s]", "");

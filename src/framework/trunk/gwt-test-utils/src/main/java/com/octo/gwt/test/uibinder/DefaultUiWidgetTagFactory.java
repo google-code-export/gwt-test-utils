@@ -6,6 +6,13 @@ import java.util.Map;
 
 import com.google.gwt.user.client.ui.IsWidget;
 import com.octo.gwt.test.internal.GwtConfig;
+import com.octo.gwt.test.uibinder.widget.UiCellPanelTagFactory;
+import com.octo.gwt.test.uibinder.widget.UiDateLabelTagFactory;
+import com.octo.gwt.test.uibinder.widget.UiDockLayoutPanelTagFactory;
+import com.octo.gwt.test.uibinder.widget.UiHTMLPanelTagFactory;
+import com.octo.gwt.test.uibinder.widget.UiLayoutPanelTagFactory;
+import com.octo.gwt.test.uibinder.widget.UiStackLayoutPanelTagFactory;
+import com.octo.gwt.test.uibinder.widget.UiTabLayoutPanelTagFactory;
 
 /**
  * Default UiWidgetTagFactory, which try to delegate {@link UiWidgetTag}
@@ -33,6 +40,9 @@ class DefaultUiWidgetTagFactory implements UiWidgetTagFactory<IsWidget> {
     gwtTestUtilsFactories.add(new UiDockLayoutPanelTagFactory());
     gwtTestUtilsFactories.add(new UiHTMLPanelTagFactory());
     gwtTestUtilsFactories.add(new UiImageTagFactory());
+    gwtTestUtilsFactories.add(new UiLayoutPanelTagFactory());
+    gwtTestUtilsFactories.add(new UiStackLayoutPanelTagFactory());
+    gwtTestUtilsFactories.add(new UiTabLayoutPanelTagFactory());
   }
 
   /*

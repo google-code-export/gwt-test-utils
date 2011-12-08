@@ -8,12 +8,15 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.layout.client.Layout.AnimationCallback;
 import com.google.gwt.layout.client.Layout.Layer;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.LayoutPanel;
-import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.RootLayoutPanel;
+import com.google.gwt.user.client.ui.Widget;
 
 public class LayoutPanelTest extends GwtTestTest {
 
@@ -31,8 +34,8 @@ public class LayoutPanelTest extends GwtTestTest {
     panel.add(b);
 
     // Assert
-    assertEquals(1, panel.getWidgetCount());
-    assertEquals(b, panel.getWidget(0));
+    assertEquals(3, panel.getWidgetCount());
+    assertEquals(b, panel.getWidget(2));
     assertTrue(b.isAttached());
   }
 
@@ -63,9 +66,24 @@ public class LayoutPanelTest extends GwtTestTest {
 
     panel = new LayoutPanel();
     assertFalse(panel.isAttached());
-    RootPanel.get().add(panel);
+
+    // Attach the LayoutPanel to the RootLayoutPanel. The latter will listen for
+    // resize events on the window to ensure that its children are informed of
+    // possible size changes.
+    RootLayoutPanel.get().add(panel);
     assertTrue(panel.isAttached());
     assertEquals(0, panel.getWidgetCount());
+
+    // Attach two child widgets to a LayoutPanel, laying them out horizontally,
+    // splitting at 50%.
+    Widget childOne = new HTML("left"), childTwo = new HTML("right");
+    panel.add(childOne);
+    panel.add(childTwo);
+
+    panel.setWidgetLeftWidth(childOne, 0, Unit.PCT, 50, Unit.PCT);
+    panel.setWidgetRightWidth(childTwo, 0, Unit.PCT, 50, Unit.PCT);
+
+    assertEquals(2, panel.getWidgetCount());
   }
 
   @Test

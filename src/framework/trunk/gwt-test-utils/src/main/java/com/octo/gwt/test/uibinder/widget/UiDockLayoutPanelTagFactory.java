@@ -1,4 +1,4 @@
-package com.octo.gwt.test.uibinder;
+package com.octo.gwt.test.uibinder.widget;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +10,10 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.SplitLayoutPanel;
+import com.octo.gwt.test.uibinder.UiBinderXmlUtils;
+import com.octo.gwt.test.uibinder.UiWidgetTag;
+import com.octo.gwt.test.uibinder.UiWidgetTagFactory;
 
 /**
  * Handles <g:DockLayoutPanel /> tags.
@@ -17,7 +21,7 @@ import com.google.gwt.user.client.ui.IsWidget;
  * @author Gael Lazzari
  * 
  */
-class UiDockLayoutPanelTagFactory implements
+public class UiDockLayoutPanelTagFactory implements
     UiWidgetTagFactory<DockLayoutPanel> {
 
   private static class UiDockLayoutPanelTag extends
@@ -40,10 +44,7 @@ class UiDockLayoutPanelTagFactory implements
       if (!UiBinderXmlUtils.CLIENTUI_NSURI.equals(namespaceURI)) {
         super.appendElement(wrapped, element, namespaceURI, childWidgets);
       } else {
-
-        if (childWidgets.size() > 0) {
-          handleDockLayoutPanelSpecifics(wrapped, element, childWidgets);
-        }
+        handleDockLayoutPanelSpecifics(wrapped, element, childWidgets);
       }
     }
 
@@ -80,7 +81,17 @@ class UiDockLayoutPanelTagFactory implements
         Map<String, Object> attributes, Object owner) {
 
       if (widgetClass == DockLayoutPanel.class) {
-        return new DockLayoutPanel(Unit.EM);
+        String unit = (String) attributes.get("unit");
+        Unit styleUnit = unit != null ? Unit.valueOf(unit) : Unit.PX;
+
+        return new DockLayoutPanel(styleUnit);
+      } else if (widgetClass == SplitLayoutPanel.class) {
+
+        String splitterSize = (String) attributes.get("splitterSize");
+
+        return splitterSize != null ? new SplitLayoutPanel(
+            Integer.valueOf(splitterSize)) : new SplitLayoutPanel();
+
       }
 
       // use default instanciation system
@@ -116,8 +127,7 @@ class UiDockLayoutPanelTagFactory implements
   /*
    * (non-Javadoc)
    * 
-   * @see
-   * com.octo.gwt.test.uibinder.UiBinderWidgetFactory#createUiWidgetTag
+   * @see com.octo.gwt.test.uibinder.UiBinderWidgetFactory#createUiWidgetTag
    * (java.lang.Class, java.util.Map)
    */
   public UiWidgetTag<DockLayoutPanel> createUiWidgetTag(

@@ -1,4 +1,4 @@
-package com.octo.gwt.test.uibinder;
+package com.octo.gwt.test.uibinder.widget;
 
 import java.util.List;
 import java.util.Map;
@@ -8,6 +8,9 @@ import com.google.gwt.user.client.ui.CellPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment.HorizontalAlignmentConstant;
 import com.google.gwt.user.client.ui.HasVerticalAlignment.VerticalAlignmentConstant;
 import com.google.gwt.user.client.ui.IsWidget;
+import com.octo.gwt.test.uibinder.UiBinderXmlUtils;
+import com.octo.gwt.test.uibinder.UiWidgetTag;
+import com.octo.gwt.test.uibinder.UiWidgetTagFactory;
 
 /**
  * Handles subclasses of CellPanel (which declare <g:cell> tags).
@@ -15,7 +18,7 @@ import com.google.gwt.user.client.ui.IsWidget;
  * @author Gael Lazzari
  * 
  */
-class UiCellPanelTagFactory implements UiWidgetTagFactory<CellPanel> {
+public class UiCellPanelTagFactory implements UiWidgetTagFactory<CellPanel> {
 
   private static class UiCellPanelTag extends UiWidgetTag<CellPanel> {
 
@@ -81,8 +84,7 @@ class UiCellPanelTagFactory implements UiWidgetTagFactory<CellPanel> {
   /*
    * (non-Javadoc)
    * 
-   * @see
-   * com.octo.gwt.test.uibinder.UiBinderWidgetFactory#createUiWidgetTag
+   * @see com.octo.gwt.test.uibinder.UiBinderWidgetFactory#createUiWidgetTag
    * (java.lang.Class, java.util.Map)
    */
   public UiWidgetTag<CellPanel> createUiWidgetTag(
