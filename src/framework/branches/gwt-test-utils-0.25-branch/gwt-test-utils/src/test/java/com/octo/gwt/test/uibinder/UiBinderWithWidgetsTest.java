@@ -5,6 +5,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import com.google.gwt.dom.client.Document;
@@ -20,6 +21,11 @@ import com.octo.gwt.test.utils.GwtReflectionUtils;
 import com.octo.gwt.test.utils.events.Browser;
 
 public class UiBinderWithWidgetsTest extends GwtTestTest {
+
+  @Before
+  public void before() {
+    registerUiConstructor(UiConstructorLabel.class, "uiConstructorLabel");
+  }
 
   @Test
   public void click_UiHandler() {
@@ -37,7 +43,24 @@ public class UiBinderWithWidgetsTest extends GwtTestTest {
   }
 
   @Test
-  public void uiBinderWidget() {
+  public void fill_TextBox() {
+    // Arrange
+    UiBinderWithWidgets w = new UiBinderWithWidgets("gael", "eric");
+
+    // Pre-Assert
+    assertEquals("We <b>strongly</b> urge you to reconsider.",
+        w.msgLabel.getText());
+
+    // Act
+    Browser.fillText(w.textBox, "ValueChangeHandler has been triggered !");
+
+    // Assert
+    assertEquals("ValueChangeHandler has been triggered !",
+        w.msgLabel.getText());
+  }
+
+  @Test
+  public void uiObjectTag() {
     // Arrange
     UiBinderWithWidgets w = new UiBinderWithWidgets("gael", "eric");
 
@@ -59,8 +82,11 @@ public class UiBinderWithWidgetsTest extends GwtTestTest {
     assertEquals("MyRadioGroup", w.radioButton2.getName());
     assertFalse(w.radioButton2.getValue());
 
-    assertEquals(MyClientBundle.INSTANCE.testImageResource().getURL(),
+    assertEquals(MyClientBundle.INSTANCE.cellTableLoading().getURL(),
         w.image.getUrl());
+    assertEquals("Loading...", w.image.getAltText());
+    assertEquals("pretty", w.image.getStyleName());
+
     assertEquals("http://slazzer.com/image.jpg", w.imageWithUrl.getUrl());
 
     assertEquals("my provided label", w.providedLabel.getText());
@@ -91,7 +117,7 @@ public class UiBinderWithWidgetsTest extends GwtTestTest {
         w.msgLabel.getText());
 
     assertEquals("9'00", w.msgInnerWidget.getText());
-    assertEquals(w.msgInnerWidget, wrappedPanel.getWidget(4));
+    assertEquals(w.msgInnerWidget, wrappedPanel.getWidget(5));
 
     assertEquals(HasHorizontalAlignment.ALIGN_LEFT,
         w.verticalPanel.getHorizontalAlignment());
@@ -106,7 +132,7 @@ public class UiBinderWithWidgetsTest extends GwtTestTest {
         w.style.getText());
 
     // Assertion on inner style
-    assertEquals("gwt-PushButton gwt-PushButton-up testStyle pretty",
+    assertEquals("gwt-PushButton testStyle pretty gwt-PushButton-up",
         w.pushButton.getStyleName());
 
     // Assertion on inner image

@@ -1,12 +1,12 @@
 package com.octo.gwt.test.resources;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.DataResource;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.resources.client.TextResource;
+import com.google.gwt.user.client.impl.WindowImplIE.Resources;
 
-public interface MyClientBundle extends ClientBundle {
+public interface MyClientBundle extends Resources {
 
   public static final MyClientBundle INSTANCE = GWT.create(MyClientBundle.class);
 

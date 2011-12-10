@@ -37,7 +37,6 @@ public class GwtCreateHandlerManager implements AfterTestCallback {
   private final GwtCreateHandler deferredGenerateWithCreateHandler;
   private final GwtCreateHandler deferredReplaceWithCreateHandler;
   private final GwtCreateHandler dockLayoutPanelCreateHandler;
-  private final GwtCreateHandler htmlPanelCreateHandler;
   private final GwtCreateHandler imageBundleCreateHandler;
   private final GwtCreateHandler localizableResourceCreateHandler;
   private GwtCreateHandler mockCreateHandler;
@@ -57,7 +56,6 @@ public class GwtCreateHandlerManager implements AfterTestCallback {
     deferredGenerateWithCreateHandler = new DeferredGenerateWithCreateHandler();
     deferredReplaceWithCreateHandler = new DeferredReplaceWithCreateHandler();
     dockLayoutPanelCreateHandler = new DockLayoutPanelHandler();
-    htmlPanelCreateHandler = new HTMLPanelCreateHandler();
     imageBundleCreateHandler = new ImageBundleCreateHandler();
     localizableResourceCreateHandler = new LocalizableResourceCreateHandler();
     resizeLayoutPanelImplCreateHandler = new ResizeLayoutPanelImplCreateHandler();
@@ -98,7 +96,6 @@ public class GwtCreateHandlerManager implements AfterTestCallback {
     list.add(localizableResourceCreateHandler);
     list.add(clientBundleCreateHander);
     list.add(imageBundleCreateHandler);
-    list.add(htmlPanelCreateHandler);
     list.add(dockLayoutPanelCreateHandler);
     list.add(resizeLayoutPanelImplCreateHandler);
     list.add(uiBinderCreateHandler);

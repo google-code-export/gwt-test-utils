@@ -27,8 +27,8 @@
 			<artifactId>gwt-dev</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>javassist</groupId>
-			<artifactId>javassist</artifactId>
+		    <groupId>org.javassist</groupId>
+		    <artifactId>javassist</artifactId>
 		</dependency>
 		<!-- Use commons-beanutils and commons-lang bundled in gwt-dev.jar <dependency> 
 			<groupId>commons-beanutils</groupId> <artifactId>commons-beanutils</artifactId> 

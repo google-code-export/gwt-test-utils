@@ -15,6 +15,8 @@ import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.shared.UmbrellaException;
 import com.google.gwt.user.cellview.client.AbstractHasData;
 import com.google.gwt.user.client.Event;
@@ -105,14 +107,14 @@ public class Browser {
     FinallyCommandTrigger.triggerCommands();
 
     // compute the key for the item to click
-    Object itemKey = (hasData.getKeyProvider() != null)
+    Object itemKey = hasData.getKeyProvider() != null
         ? hasData.getKeyProvider().getKey(item) : item;
 
     Iterator<T> it = hasData.getVisibleItems().iterator();
     while (it.hasNext()) {
       // compute the key for the current visible item
       T visibleContent = it.next();
-      Object visibleKey = (hasData.getKeyProvider() != null)
+      Object visibleKey = hasData.getKeyProvider() != null
           ? hasData.getKeyProvider().getKey(visibleContent) : visibleContent;
 
       if (visibleKey.equals(itemKey)) {
@@ -352,6 +354,7 @@ public class Browser {
    * @param value The value to fill. Cannot be null or empty.
    * @throws IllegalArgumentException if the value to fill is null or empty.
    */
+  @SuppressWarnings({"rawtypes", "unchecked"})
   public static void fillText(HasText hasTextWidget, boolean check, String value)
       throws IllegalArgumentException {
     if (value == null || "".equals(value)) {
@@ -391,6 +394,11 @@ public class Browser {
       // trigger keyUp
       Event keyUpEvent = EventBuilder.create(Event.ONKEYUP).setKeyCode(keyCode).build();
       dispatchEventInternal((Widget) hasTextWidget, check, keyUpEvent);
+
+      if (changed && HasValueChangeHandlers.class.isInstance(hasTextWidget)) {
+        ValueChangeEvent.fire((HasValueChangeHandlers) hasTextWidget,
+            value.substring(0, i + 1));
+      }
     }
 
     // no need to check event anymore
@@ -666,11 +674,10 @@ public class Browser {
       if (CheckBox.class.isInstance(target)
           && event.getTypeInt() == Event.ONCLICK) {
         CheckBox checkBox = (CheckBox) target;
-        if (RadioButton.class.isInstance(target)) {
-          checkBox.setValue(true);
-        } else {
-          checkBox.setValue(!checkBox.getValue());
-        }
+        boolean newValue = RadioButton.class.isInstance(target) ? true
+            : !checkBox.getValue();
+        checkBox.setValue(newValue);
+        ValueChangeEvent.fire(checkBox, newValue);
       }
 
       // set the related target

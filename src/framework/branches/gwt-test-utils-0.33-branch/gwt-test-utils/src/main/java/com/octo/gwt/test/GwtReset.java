@@ -6,6 +6,7 @@ import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
@@ -36,6 +37,7 @@ class GwtReset {
   void reset() throws Exception {
     getStaticAndCallClear(Timer.class, "timers");
     getStaticAndCallClear(RootPanel.class, "rootPanels");
+    GwtReflectionUtils.setStaticField(RootLayoutPanel.class, "singleton", null);
     getStaticAndCallClear(RootPanel.class, "widgetsToDetach");
 
     Object commandExecutor = GwtReflectionUtils.getStaticFieldValue(

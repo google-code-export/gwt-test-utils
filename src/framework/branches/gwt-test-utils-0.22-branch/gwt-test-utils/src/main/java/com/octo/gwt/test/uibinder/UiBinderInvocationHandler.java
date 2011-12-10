@@ -8,11 +8,13 @@ import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.google.gwt.dev.Link;
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Widget;
 import com.octo.gwt.test.exceptions.GwtTestUiBinderException;
+import com.octo.gwt.test.exceptions.ReflectionException;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 class UiBinderInvocationHandler implements InvocationHandler {
@@ -64,7 +66,7 @@ class UiBinderInvocationHandler implements InvocationHandler {
    */
   private Object createAndBindUi(Object owner) {
     Class<?> rootComponentClass = getRootElementClass();
-    GwtUiBinderParser parser = new GwtUiBinderParser();
+    UiBinderParser parser = new UiBinderParser();
 
     // parse .ui.xml file and inject @UiField
     Object rootComponent = parser.createUiComponent(rootComponentClass, owner);
@@ -119,13 +121,21 @@ class UiBinderInvocationHandler implements InvocationHandler {
   private GwtEvent.Type<?> getEventType(Method method) {
     Class<?> eventTypeClass = method.getParameterTypes()[0];
 
-    GwtEvent<?> eventPrototype = EVENT_PROTOTYPES.get(eventTypeClass);
-    if (eventPrototype == null) {
-      eventPrototype = (GwtEvent<?>) GwtReflectionUtils.instantiateClass(eventTypeClass);
-      EVENT_PROTOTYPES.put(eventTypeClass, eventPrototype);
+    try {
+      return GwtReflectionUtils.callStaticMethod(eventTypeClass, "getType");
+    } catch (ReflectionException e) {
+      // custom event does not respect the "TYPE" private static field
+      // 'standard', we have to try to instanciate it to call
+      // 'getAssociatedType()' method on it
+      GwtEvent<?> eventPrototype = EVENT_PROTOTYPES.get(eventTypeClass);
+      if (eventPrototype == null) {
+        eventPrototype = (GwtEvent<?>) GwtReflectionUtils.instantiateClass(eventTypeClass);
+        EVENT_PROTOTYPES.put(eventTypeClass, eventPrototype);
+      }
+
+      return eventPrototype.getAssociatedType();
     }
 
-    return eventPrototype.getAssociatedType();
   }
 
   /**

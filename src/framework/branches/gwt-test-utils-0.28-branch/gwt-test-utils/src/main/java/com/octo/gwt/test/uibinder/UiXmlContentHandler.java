@@ -16,7 +16,7 @@ import com.google.gwt.user.client.ui.Widget;
  */
 class UiXmlContentHandler<T> implements ContentHandler {
 
-  private UiBinderTagBuilder<T> builder;
+  private UiTagBuilder<T> builder;
   private final Object owner;
 
   private T rootComponent;
@@ -64,7 +64,7 @@ class UiXmlContentHandler<T> implements ContentHandler {
   }
 
   public void startDocument() throws SAXException {
-    this.builder = UiBinderTagBuilder.create(this.rootComponentClass,
+    this.builder = UiTagBuilder.create(this.rootComponentClass,
         this.owner);
   }
 

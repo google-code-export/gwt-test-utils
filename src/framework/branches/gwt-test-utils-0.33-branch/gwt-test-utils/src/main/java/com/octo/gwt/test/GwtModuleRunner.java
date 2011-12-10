@@ -7,10 +7,12 @@ import javax.servlet.ServletConfig;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.Dictionary;
+import com.google.gwt.uibinder.client.UiConstructor;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import com.octo.gwt.test.uibinder.UiBinderWidgetFactory;
+import com.octo.gwt.test.uibinder.UiObjectTagFactory;
 import com.octo.gwt.test.utils.events.Browser;
 import com.octo.gwt.test.utils.events.Browser.BrowserErrorHandler;
 
@@ -41,12 +43,13 @@ public interface GwtModuleRunner {
   void addGwtCreateHandler(GwtCreateHandler gwtCreateHandler);
 
   /**
-   * Declare a UiBinderWidgetFactory to be a candidate for handling some widget
+   * Declare a UiWidgetTagFactory to be a candidate to handle some widget
    * declaration in a .ui.xml UiBinder file.
    * 
    * @param factory The UiBinder Widget factory candidate.
    */
-  void addUiBinderWidgetFactory(UiBinderWidgetFactory factory);
+  void addUiObjectTagFactory(
+      UiObjectTagFactory<? extends IsWidget> factory);
 
   /**
    * Specifies if the module runner is allowed the setup of debug id.
@@ -121,4 +124,15 @@ public interface GwtModuleRunner {
    * @return The callback to use to handle {@link Window} method calls.
    */
   WindowOperationsHandler getWindowOperationsHandler();
+
+  /**
+   * Declare a {@link UiConstructor} which might be use to handle some widget
+   * creation according to its declaration in a .ui.xml UiBinder file.
+   * 
+   * @param clazz The widget class where the {@link UiConstructor} is
+   *          declared.
+   * @param argNames An ordered array of argument names
+   */
+  void registerUiConstructor(Class<? extends IsWidget> clazz,
+      String... argNames);
 }

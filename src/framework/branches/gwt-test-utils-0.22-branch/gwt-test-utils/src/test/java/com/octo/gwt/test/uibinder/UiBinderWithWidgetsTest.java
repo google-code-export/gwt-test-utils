@@ -5,6 +5,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import com.google.gwt.dom.client.Document;
@@ -20,6 +21,11 @@ import com.octo.gwt.test.utils.GwtReflectionUtils;
 import com.octo.gwt.test.utils.events.Browser;
 
 public class UiBinderWithWidgetsTest extends GwtTestTest {
+
+  @Before
+  public void before() {
+    registerUiConstructor(UiConstructorLabel.class, "uiConstructorLabel");
+  }
 
   @Test
   public void click_UiHandler() {
@@ -106,7 +112,7 @@ public class UiBinderWithWidgetsTest extends GwtTestTest {
         w.style.getText());
 
     // Assertion on inner style
-    assertEquals("gwt-PushButton gwt-PushButton-up testStyle pretty",
+    assertEquals("gwt-PushButton testStyle pretty gwt-PushButton-up",
         w.pushButton.getStyleName());
 
     // Assertion on inner image

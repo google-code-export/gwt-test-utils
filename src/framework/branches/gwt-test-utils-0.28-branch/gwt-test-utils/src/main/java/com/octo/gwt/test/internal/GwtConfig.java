@@ -1,11 +1,16 @@
 package com.octo.gwt.test.internal;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.servlet.ServletConfig;
 
+import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.NamedFrame;
+import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.UIObject.DebugIdImpl;
 import com.google.gwt.user.client.ui.UIObject.DebugIdImplEnabled;
@@ -14,7 +19,7 @@ import com.octo.gwt.test.GwtModuleRunner;
 import com.octo.gwt.test.WindowOperationsHandler;
 import com.octo.gwt.test.exceptions.GwtTestConfigurationException;
 import com.octo.gwt.test.exceptions.GwtTestException;
-import com.octo.gwt.test.uibinder.UiBinderWidgetFactory;
+import com.octo.gwt.test.uibinder.UiObjectTagFactory;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 import com.octo.gwt.test.utils.events.Browser.BrowserErrorHandler;
 
@@ -43,6 +48,8 @@ public class GwtConfig implements AfterTestCallback {
     INSTANCE.setupInstance(gwtModuleRunner);
   }
 
+  Map<Class<?>, List<String[]>> uiConstructorsMap = new HashMap<Class<?>, List<String[]>>();
+
   private String checkedModuleName;
 
   private final DebugIdImpl disabledInstance = new DebugIdImpl();
@@ -53,7 +60,7 @@ public class GwtConfig implements AfterTestCallback {
 
   private Locale locale;
 
-  private final List<UiBinderWidgetFactory> uiBinderWidgetFactories = new ArrayList<UiBinderWidgetFactory>();
+  private final List<UiObjectTagFactory<?>> uiObjectTagFactories = new ArrayList<UiObjectTagFactory<?>>();
 
   private GwtConfig() {
 
@@ -61,7 +68,8 @@ public class GwtConfig implements AfterTestCallback {
 
   public void afterTest() throws Throwable {
     gwtModuleRunner = null;
-    uiBinderWidgetFactories.clear();
+    uiObjectTagFactories.clear();
+    uiConstructorsMap.clear();
   }
 
   public BrowserErrorHandler getBrowserErrorHandler() {
@@ -88,12 +96,27 @@ public class GwtConfig implements AfterTestCallback {
     return gwtModuleRunner.getServletConfig();
   }
 
-  public List<UiBinderWidgetFactory> getUiBinderWidgetFactories() {
-    return uiBinderWidgetFactories;
+  public List<String[]> getUiConstructors(Class<?> clazz) {
+    return uiConstructorsMap.get(clazz);
+  }
+
+  public List<UiObjectTagFactory<?>> getUiObjectTagFactories() {
+    return uiObjectTagFactories;
   }
 
   public WindowOperationsHandler getWindowOperationsHandler() {
     return gwtModuleRunner.getWindowOperationsHandler();
+  }
+
+  public void registerUiConstructor(
+      Class<? extends IsWidget> classWithUiConstructor, String... argNames) {
+    List<String[]> uiConstructors = uiConstructorsMap.get(classWithUiConstructor);
+    if (uiConstructors == null) {
+      uiConstructors = new ArrayList<String[]>();
+      uiConstructorsMap.put(classWithUiConstructor, uiConstructors);
+    }
+
+    uiConstructors.add(argNames);
   }
 
   /**
@@ -144,6 +167,9 @@ public class GwtConfig implements AfterTestCallback {
 
     setLocale(gwtModuleRunner.getLocale());
     setupDebugIdImpl(gwtModuleRunner);
+
+    registerUiConstructor(NamedFrame.class, "name");
+    registerUiConstructor(RadioButton.class, "name");
 
     AfterTestCallbackManager.get().registerCallback(this);
   }

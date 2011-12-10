@@ -6,23 +6,15 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.xml.sax.Attributes;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.i18n.client.DateTimeFormat;
-import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
 import com.google.gwt.uibinder.client.UiConstructor;
 import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.DateLabel;
 import com.google.gwt.user.client.ui.IsWidget;
-import com.google.gwt.user.client.ui.NamedFrame;
-import com.google.gwt.user.client.ui.RadioButton;
-import com.octo.gwt.test.exceptions.GwtTestConfigurationException;
+import com.google.gwt.user.client.ui.UIObject;
 import com.octo.gwt.test.exceptions.GwtTestUiBinderException;
+import com.octo.gwt.test.internal.GwtConfig;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 /**
@@ -35,30 +27,9 @@ import com.octo.gwt.test.utils.GwtReflectionUtils;
 @SuppressWarnings("unchecked")
 class UiBinderInstanciator {
 
-  // TODO: refactor with UiBinderWidget
-  private static final Pattern EXTERNAL_RESOURCES_PATTERN = Pattern.compile("\\s*\\{(\\S*)\\}\\s*");
-
-  static <U> U getInstance(Class<U> clazz, Attributes attributes,
-      UiResourceManager resourceManager, Object owner) {
+  static <U> U getInstance(Class<U> clazz, Map<String, Object> attributes,
+      Object owner) {
     U instance = getProvidedUiField(clazz, owner);
-
-    if (instance == null) {
-      // delegate to specific widgets instanciator
-      instance = createSpecificWidget(clazz, attributes, resourceManager, owner);
-    }
-
-    GwtTestConfigurationException createHandlerException = null;
-
-    if (instance == null) {
-      try {
-        // try to create it with any custom GwtCreateHandler or with
-        // DefaultGwtCreateHandler (if there is an empty constructor)
-        instance = (U) GWT.create(clazz);
-      } catch (GwtTestConfigurationException e) {
-        createHandlerException = e;
-        // just keep trying with @UiFactory or @UiConstructor
-      }
-    }
 
     if (instance == null) {
       instance = getObjectFromUiFactory(clazz, owner);
@@ -68,116 +39,72 @@ class UiBinderInstanciator {
       instance = getObjectFromUiConstructor(clazz, attributes);
     }
 
-    if (instance == null) {
-      if (IsWidget.class.isAssignableFrom(clazz)) {
-        throw new GwtTestUiBinderException(
-            clazz.getName()
-                + " has no default (zero args) constructor. To fix this, you can define a @UiFactory method on the UiBinder's owner, or annotate a constructor of "
-                + clazz.getSimpleName() + " with @UiConstructor.");
-      } else {
-        throw createHandlerException;
-      }
+    if (instance == null && !UIObject.class.isAssignableFrom(clazz)
+        && !IsWidget.class.isAssignableFrom(clazz)) {
+      instance = GWT.create(clazz);
     }
 
     return instance;
   }
 
-  // TODO : not a flexible design...
-  private static <U> U createSpecificWidget(Class<U> clazz,
-      Attributes attributes, UiResourceManager resourceManager, Object owner) {
+  private static List<Object> extractArgs(String[] argNames,
+      Map<String, Object> attributes) {
 
-    if (clazz == RadioButton.class) {
-      String name = attributes.getValue("name");
-      if (name == null) {
-        throw new GwtTestUiBinderException(
-            "Error during the instanciation of a RadioButton declared in "
-                + owner.getClass().getSimpleName()
-                + ".ui.xml' : missing required attribute 'name'");
-      }
-      return (U) new RadioButton(name);
-
-    } else if (clazz == NamedFrame.class) {
-      String name = attributes.getValue("name");
-      if (name == null) {
-        throw new GwtTestUiBinderException(
-            "Error during the instanciation of a NamedFrame declared in "
-                + owner.getClass().getSimpleName()
-                + ".ui.xml' : missing required attribute 'name'");
-      }
-      return (U) new NamedFrame(name);
-    } else if (DateLabel.class == clazz) {
-      String format = attributes.getValue("format");
-
-      if (format != null) {
-        Matcher m = EXTERNAL_RESOURCES_PATTERN.matcher(format);
-        if (m.find()) {
-          format = m.group(1);
-          DateTimeFormat dtf = resourceManager.getUiResource(format);
-          if (dtf != null) {
-            return (U) new DateLabel(dtf);
-          }
-        }
+    List<Object> args = new ArrayList<Object>();
+    for (String argName : argNames) {
+      Object arg = attributes.get(argName);
+      if (arg == null) {
+        // the widget .ui.xml declaration does not match with this
+        // @UiConstructor
+        return null;
       }
 
-      String predefinedFormat = attributes.getValue("predefinedFormat");
-      if (predefinedFormat != null) {
-        PredefinedFormat predef = PredefinedFormat.valueOf(predefinedFormat);
-        return (U) new DateLabel(DateTimeFormat.getFormat(predef));
-      }
-
-      String customFormat = attributes.getValue("customFormat");
-      if (customFormat != null) {
-        return (U) new DateLabel(DateTimeFormat.getFormat(customFormat));
-      }
-
+      args.add(arg);
     }
 
-    return null;
+    return args;
   }
 
   private static <U> U getObjectFromUiConstructor(Class<U> clazz,
-      Attributes attributes) {
+      Map<String, Object> attributes) {
+
+    List<String[]> registeredUiConstructors = GwtConfig.get().getUiConstructors(
+        clazz);
+
+    boolean hasUiConstructor = false;
+
     for (Constructor<?> cons : clazz.getDeclaredConstructors()) {
       if (cons.getAnnotation(UiConstructor.class) != null) {
-        Constructor<U> uiConstructor = (Constructor<U>) cons;
-        String[] args = getUiConstructorArgs(clazz, attributes, false);
 
-        if (args.length != uiConstructor.getParameterTypes().length) {
-          args = getUiConstructorArgs(clazz, attributes, true);
-        }
-
-        if (args.length != uiConstructor.getParameterTypes().length) {
+        hasUiConstructor = true;
+        if (registeredUiConstructors == null) {
           throw new GwtTestUiBinderException(
-              "Cannot invoke @UiConstructor '"
-                  + uiConstructor.toGenericString()
-                  + "' : gwt-test-utils is not able to determine which XML attributes are intented to be passed as parameters of this constructor");
+              "gwt-test-utils has found a @UiConstructor in '"
+                  + clazz.getName()
+                  + "' which isn't registered. You should register it by calling the 'registerUiConstructor' with the approriate parameters in your test class");
         }
 
-        try {
-          return GwtReflectionUtils.instantiateClass(uiConstructor,
-              (Object[]) args);
-        } catch (Exception e) {
-          StringBuilder sb = new StringBuilder();
-          sb.append("Error while calling @UiConstructor 'new ").append(
-              clazz.getSimpleName()).append("(");
+        Constructor<U> uiConstructor = (Constructor<U>) cons;
 
-          for (String arg : args) {
-            sb.append("\"" + arg + "\"");
-            sb.append(", ");
+        for (String[] argNames : registeredUiConstructors) {
+          List<Object> potentialArgs = extractArgs(argNames, attributes);
+          if (potentialArgs != null && matchs(uiConstructor, potentialArgs)) {
+            return instanciate(uiConstructor, potentialArgs);
           }
-
-          if (args.length > 0) {
-            sb.delete(sb.length() - 2, sb.length() - 1);
-          }
-
-          sb.append(");'");
-
-          throw new GwtTestUiBinderException(sb.toString(), e);
         }
+
       }
     }
 
-    return null;
+    if (!hasUiConstructor) {
+      return null;
+    } else {
+      throw new GwtTestUiBinderException(
+          "gwt-test-utils has found at least one @UiConstructor in '"
+              + clazz.getName()
+              + "' which isn't registered well. You should register it by calling the 'registerUiConstructor' with the approriate parameters in your test class");
+
+    }
   }
 
   private static <U> U getObjectFromUiFactory(Class<U> clazz, Object owner) {
@@ -228,32 +155,42 @@ class UiBinderInstanciator {
     return null;
   }
 
-  private static String[] getUiConstructorArgs(Class<?> clazz,
-      Attributes attributes, boolean inclueSetters) {
-    List<String> argsList = new ArrayList<String>();
+  private static <U> U instanciate(Constructor<U> cons, List<Object> args) {
+    try {
+      return GwtReflectionUtils.instantiateClass(cons, args.toArray());
+    } catch (Exception e) {
+      StringBuilder sb = new StringBuilder();
+      sb.append("Error while calling @UiConstructor 'new ").append(
+          cons.getDeclaringClass().getSimpleName()).append("(");
 
-    for (int i = 0; i < attributes.getLength(); i++) {
-      String attrName = attributes.getLocalName(i);
-      if (!UiBinderXmlUtils.isUiFieldAttribute(attributes.getURI(i), attrName)) {
-
-        if (inclueSetters || !isBeanProperty(clazz, attrName)) {
-          argsList.add(attributes.getValue(i));
-        }
+      for (Object arg : args) {
+        sb.append("\"" + arg.toString() + "\"");
+        sb.append(", ");
       }
-    }
 
-    return argsList.toArray(new String[0]);
+      if (args.size() > 0) {
+        sb.delete(sb.length() - 2, sb.length() - 1);
+      }
+
+      sb.append(");'");
+
+      throw new GwtTestUiBinderException(sb.toString(), e);
+    }
   }
 
-  private static boolean isBeanProperty(Class<?> clazz, String attrName) {
-    String setter = "set" + Character.toUpperCase(attrName.charAt(0))
-        + attrName.substring(1);
-    for (Method m : clazz.getMethods()) {
-      if (setter.equals(m.getName()) && m.getParameterTypes().length == 1) {
-        return true;
+  private static boolean matchs(Constructor<?> cons, List<Object> args) {
+    Class<?>[] paramTypes = cons.getParameterTypes();
+    if (paramTypes.length != args.size()) {
+      return false;
+    }
+
+    for (int i = 0; i < args.size(); i++) {
+      if (!paramTypes[i].isInstance(args.get(i))) {
+        return false;
       }
     }
-    return false;
+
+    return true;
   }
 
 }

@@ -2,6 +2,7 @@ package com.octo.gwt.test.uibinder;
 
 import static org.junit.Assert.assertEquals;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import com.google.gwt.user.client.ui.RootPanel;
@@ -9,6 +10,11 @@ import com.octo.gwt.test.GwtTestTest;
 import com.octo.gwt.test.utils.events.Browser;
 
 public class UiBinderWithWidgetsChildTest extends GwtTestTest {
+
+  @Before
+  public void before() {
+    registerUiConstructor(UiConstructorLabel.class, "uiConstructorLabel");
+  }
 
   @Test
   public void click_UiHandler() {
@@ -26,7 +32,7 @@ public class UiBinderWithWidgetsChildTest extends GwtTestTest {
   }
 
   @Test
-  public void uiBinderWidget() {
+  public void uiObjectTag() {
     // Arrange
     UiBinderWithWidgetsChild w = new UiBinderWithWidgetsChild("gael", "eric");
 

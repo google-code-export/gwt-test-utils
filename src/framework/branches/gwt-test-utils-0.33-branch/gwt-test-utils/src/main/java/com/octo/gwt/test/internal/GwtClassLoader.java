@@ -52,7 +52,7 @@ public class GwtClassLoader extends Loader {
 
     ConfigurationLoader configurationLoader = ConfigurationLoader.createInstance(this.getParent());
 
-    for (String s : configurationLoader.getDelegateList()) {
+    for (String s : configurationLoader.getDelegateSet()) {
       delegateLoadingOf(s);
     }
 

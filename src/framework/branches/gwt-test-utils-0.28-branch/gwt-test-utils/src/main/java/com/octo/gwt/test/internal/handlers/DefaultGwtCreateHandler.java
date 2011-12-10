@@ -18,7 +18,6 @@ class DefaultGwtCreateHandler implements GwtCreateHandler {
 
     try {
       Constructor<Object> cons = (Constructor<Object>) classLiteral.getDeclaredConstructor();
-      GwtReflectionUtils.makeAccessible(cons);
       return GwtReflectionUtils.instantiateClass(cons);
     } catch (NoSuchMethodException e) {
       return null;

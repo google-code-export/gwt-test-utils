@@ -130,7 +130,10 @@ public class GwtReflectionUtils {
             && paramTypes.length == method.getParameterTypes().length) {
           boolean compatibleParams = true;
           for (int j = 0; j < paramTypes.length; j++) {
-            if (!method.getParameterTypes()[j].isAssignableFrom(paramTypes[j])) {
+            Class<?> methodParamType = getCheckedClass(method.getParameterTypes()[j]);
+            Class<?> searchParamType = getCheckedClass(paramTypes[j]);
+
+            if (!methodParamType.isAssignableFrom(searchParamType)) {
               compatibleParams = false;
             }
           }
@@ -449,6 +452,30 @@ public class GwtReflectionUtils {
       l[i] = args[i].getClass();
     }
     return findMethod(clazz, methodName, l);
+  }
+
+  private static Class<?> getCheckedClass(Class<?> potentialPrimitiveType) {
+    if (!potentialPrimitiveType.isPrimitive()) {
+      return potentialPrimitiveType;
+    }
+
+    if (potentialPrimitiveType == Byte.TYPE) {
+      return Byte.class;
+    } else if (potentialPrimitiveType == Short.TYPE) {
+      return Short.class;
+    } else if (potentialPrimitiveType == Integer.TYPE) {
+      return Integer.class;
+    } else if (potentialPrimitiveType == Long.TYPE) {
+      return Long.class;
+    } else if (potentialPrimitiveType == Float.TYPE) {
+      return Float.class;
+    } else if (potentialPrimitiveType == Double.TYPE) {
+      return Double.class;
+    } else if (potentialPrimitiveType == Boolean.TYPE) {
+      return Boolean.class;
+    } else {
+      return Character.class;
+    }
   }
 
   /**

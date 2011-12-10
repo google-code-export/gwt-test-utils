@@ -74,6 +74,7 @@ public class JsoProperties {
   public static final String TFOOT = "tFoot";
   public static final String THEAD = "tHead";
 
+  public static final String UIBINDER_CHILD_UIOBJECT_LIST = "UIBINDER_CHILD_UIOBJECT_LIST";
   public static final String UIBINDER_CHILD_WIDGETS_LIST = "UIBINDER_CHILD_WIDGETS_LIST";
 
   public static final String XML_ATTR_JSO = "XML_ATTR_JSO";

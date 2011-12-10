@@ -9,6 +9,7 @@ import org.apache.commons.beanutils.Converter;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment.HorizontalAlignmentConstant;
 import com.google.gwt.user.client.ui.HasVerticalAlignment.VerticalAlignmentConstant;
 import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.UIObject;
 import com.octo.gwt.test.exceptions.ReflectionException;
 
 /**
@@ -42,25 +43,30 @@ public class UiBinderBeanUtils {
 
   /**
    * 
-   * @param w
+   * @param o
    * @param properties
    * 
    * @see BeanUtilsBean#populate(Object, Map)
    */
-  public static void populateWidget(IsWidget w, Map<String, Object> properties) {
+  public static void populateObject(Object o, Map<String, Object> properties) {
     try {
-      UIBINDER_BEANUTILS.populate(w, properties);
+      UIBINDER_BEANUTILS.populate(o, properties);
     } catch (Exception e) {
       throw new ReflectionException(
           "UiBinder error while setting properties for '"
-              + w.getClass().getSimpleName() + "'", e);
+              + o.getClass().getSimpleName() + "'", e);
     }
 
     // handle specifics
     String[] styles = (String[]) properties.get("addStyleNames");
     if (styles != null) {
       for (String style : styles) {
-        w.asWidget().addStyleName(style);
+        if (o instanceof IsWidget) {
+          ((IsWidget) o).asWidget().addStyleName(style);
+        } else if (o instanceof UIObject) {
+          ((UIObject) o).addStyleName(style);
+        }
+
       }
     }
   }
