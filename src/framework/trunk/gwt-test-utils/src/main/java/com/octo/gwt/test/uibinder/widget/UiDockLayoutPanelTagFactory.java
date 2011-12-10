@@ -12,20 +12,20 @@ import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.SplitLayoutPanel;
 import com.octo.gwt.test.uibinder.UiBinderXmlUtils;
-import com.octo.gwt.test.uibinder.UiWidgetTag;
-import com.octo.gwt.test.uibinder.UiWidgetTagFactory;
+import com.octo.gwt.test.uibinder.UiObjectTag;
+import com.octo.gwt.test.uibinder.UiObjectTagFactory;
 
 /**
- * Handles <g:DockLayoutPanel /> tags.
+ * Handles &lt;g:DockLayoutPanel> tags.
  * 
  * @author Gael Lazzari
  * 
  */
 public class UiDockLayoutPanelTagFactory implements
-    UiWidgetTagFactory<DockLayoutPanel> {
+    UiObjectTagFactory<DockLayoutPanel> {
 
   private static class UiDockLayoutPanelTag extends
-      UiWidgetTag<DockLayoutPanel> {
+      UiObjectTag<DockLayoutPanel> {
 
     private final List<IsWidget> centerWidgets = new ArrayList<IsWidget>();
     private double eastSize;
@@ -49,7 +49,7 @@ public class UiDockLayoutPanelTagFactory implements
     }
 
     @Override
-    protected void finalizeWidget(DockLayoutPanel widget) {
+    protected void finalizeObject(DockLayoutPanel widget) {
 
       if (northWidget != null) {
         widget.addNorth(northWidget, northSize);
@@ -69,7 +69,7 @@ public class UiDockLayoutPanelTagFactory implements
     }
 
     @Override
-    protected void initializeWidget(DockLayoutPanel wrapped,
+    protected void initializeObject(DockLayoutPanel wrapped,
         Map<String, Object> attributes, Object owner) {
       // nothing to do
 
@@ -77,15 +77,15 @@ public class UiDockLayoutPanelTagFactory implements
 
     @Override
     protected DockLayoutPanel instanciate(
-        Class<? extends DockLayoutPanel> widgetClass,
-        Map<String, Object> attributes, Object owner) {
+        Class<? extends DockLayoutPanel> clazz, Map<String, Object> attributes,
+        Object owner) {
 
-      if (widgetClass == DockLayoutPanel.class) {
+      if (clazz == DockLayoutPanel.class) {
         String unit = (String) attributes.get("unit");
         Unit styleUnit = unit != null ? Unit.valueOf(unit) : Unit.PX;
 
         return new DockLayoutPanel(styleUnit);
-      } else if (widgetClass == SplitLayoutPanel.class) {
+      } else if (clazz == SplitLayoutPanel.class) {
 
         String splitterSize = (String) attributes.get("splitterSize");
 
@@ -95,7 +95,7 @@ public class UiDockLayoutPanelTagFactory implements
       }
 
       // use default instanciation system
-      return super.instanciate(widgetClass, attributes, owner);
+      return super.instanciate(clazz, attributes, owner);
     }
 
     private void handleDockLayoutPanelSpecifics(DockLayoutPanel wrapped,
@@ -127,13 +127,13 @@ public class UiDockLayoutPanelTagFactory implements
   /*
    * (non-Javadoc)
    * 
-   * @see com.octo.gwt.test.uibinder.UiBinderWidgetFactory#createUiWidgetTag
+   * @see com.octo.gwt.test.uibinder.UiObjectTagFactory#createUiObjectTag
    * (java.lang.Class, java.util.Map)
    */
-  public UiWidgetTag<DockLayoutPanel> createUiWidgetTag(
-      Class<? extends IsWidget> widgetClass, Map<String, Object> attributes) {
+  public UiObjectTag<DockLayoutPanel> createUiObjectTag(Class<?> clazz,
+      Map<String, Object> attributes) {
 
-    if (!DockLayoutPanel.class.isAssignableFrom(widgetClass)) {
+    if (!DockLayoutPanel.class.isAssignableFrom(clazz)) {
       return null;
     }
 

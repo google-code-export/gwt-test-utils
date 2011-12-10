@@ -13,6 +13,7 @@ import org.xml.sax.Attributes;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.UIObject;
 import com.octo.gwt.test.exceptions.GwtTestException;
 import com.octo.gwt.test.exceptions.GwtTestUiBinderException;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
@@ -27,7 +28,7 @@ class UiTagBuilder<T> {
     return new UiTagBuilder<T>(rootComponentClass, owner);
   }
 
-  private UiTag currentTag;
+  private UiTag<?> currentTag;
   private final Object owner;
   private final UiResourceManager resourceManager;
 
@@ -81,7 +82,7 @@ class UiTagBuilder<T> {
     }
 
     Object currentObject = currentTag.endTag();
-    UiTag parentTag = currentTag.getParentTag();
+    UiTag<?> parentTag = currentTag.getParentTag();
     currentTag = parentTag;
 
     if (UiBinderXmlUtils.isResourceTag(nameSpaceURI, localName)
@@ -108,6 +109,9 @@ class UiTagBuilder<T> {
       // add to its parent
       if (IsWidget.class.isInstance(currentObject)) {
         parentTag.addWidget((IsWidget) currentObject);
+      } else if (UIObject.class.isInstance(currentObject)) {
+        // UIObject instance that is not a Widget
+        parentTag.addUiObject((UIObject) currentObject);
       } else {
         parentTag.addElement((Element) currentObject);
       }
@@ -124,14 +128,13 @@ class UiTagBuilder<T> {
     }
 
     // register the current UiBinderTag in the stack
-    currentTag = createUiTag(nameSpaceURI, localName, attributes,
-        currentTag);
+    currentTag = createUiTag(nameSpaceURI, localName, attributes, currentTag);
 
     return this;
   }
 
-  private UiTag createUiTag(String nameSpaceURI, String localName,
-      Attributes attributesXML, UiTag parentTag) {
+  private UiTag<?> createUiTag(String nameSpaceURI, String localName,
+      Attributes attributesXML, UiTag<?> parentTag) {
 
     Map<String, Object> attributes = parseAttributesMap(nameSpaceURI,
         attributesXML);
@@ -152,21 +155,21 @@ class UiTagBuilder<T> {
             + ".ui.xml");
       }
 
-      if (IsWidget.class.isAssignableFrom(clazz)) {
+      if (UIObject.class.isAssignableFrom(clazz)
+          || IsWidget.class.isAssignableFrom(clazz)) {
 
-        Class<? extends IsWidget> widgetClass = (Class<? extends IsWidget>) clazz;
-        UiWidgetTag<IsWidget> uibinderTag = DefaultUiWidgetTagFactory.get().createUiWidgetTag(
-            widgetClass, attributes);
+        UiObjectTag<Object> uibinderTag = DefaultUiWidgetTagFactory.get().createUiObjectTag(
+            clazz, attributes);
 
-        uibinderTag.startTag(widgetClass, attributes, parentTag, owner);
+        uibinderTag.startTag(clazz, attributes, parentTag, owner);
 
         return uibinderTag;
-
       } else {
-        throw new GwtTestUiBinderException("Not managed type in file '"
-            + owner.getClass().getSimpleName() + ".ui.xml"
-            + "', only implementation of '" + IsWidget.class.getName()
-            + "' are allowed");
+        throw new GwtTestUiBinderException("Not managed UiBinder type '"
+            + clazz + "' declared in file '" + owner.getClass().getSimpleName()
+            + ".ui.xml" + "', only implementation of '"
+            + IsWidget.class.getName() + "' or subclass of '"
+            + UIObject.class.getName() + "' are allowed");
       }
     } else if (UiBinderXmlUtils.isResourceTag(nameSpaceURI, localName)) {
       return resourceManager.registerResource(localName, attributes, parentTag,
@@ -176,8 +179,8 @@ class UiTagBuilder<T> {
     } else if (UiBinderXmlUtils.isMsgTag(nameSpaceURI, localName)) {
       return resourceManager.registerMsg(attributes, parentTag, attributes);
     } else {
-      return new UiElementTag(nameSpaceURI, localName, attributes,
-          parentTag, owner);
+      return new UiElementTag(nameSpaceURI, localName, attributes, parentTag,
+          owner);
     }
   }
 

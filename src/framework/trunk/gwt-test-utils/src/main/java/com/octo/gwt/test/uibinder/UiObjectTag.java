@@ -13,6 +13,7 @@ import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.HasWidgets.ForIsWidget;
 import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.UIObject;
 import com.octo.gwt.test.exceptions.GwtTestUiBinderException;
 import com.octo.gwt.test.exceptions.ReflectionException;
 import com.octo.gwt.test.internal.patchers.dom.JavaScriptObjects;
@@ -20,29 +21,30 @@ import com.octo.gwt.test.internal.utils.JsoProperties;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 /**
- * Base handler for Widgets tag (e.g. <g:Xxx /> tags, where Xxx is a
- * {@link IsWidget} implementation). This class is expected to be extended to
- * add custom code to handle specific widget / attributes.
+ * Base handler for any object tag (e.g. &lt;g:Xxx /> tags, where Xxx is either
+ * {@link UIObject} subclass or a {@link IsWidget} subtype. This class is
+ * expected to be extended to add custom code to handle specific widget /
+ * attributes.
  * 
  * @author Gael Lazzari
  * 
- * @param <T> The widget type
+ * @param <T> The wrapped object subtype
  * 
- * @see UiWidgetTag#instanciate(Class)
- * @see UiWidgetTag#initializeWidget(IsWidget, Map)
- * @see UiWidgetTag#finalizeWidget(IsWidget)
+ * @see UiObjectTag#instanciate(Class)
+ * @see UiObjectTag#initializeObject(IsWidget, Map)
+ * @see UiObjectTag#finalizeObject(IsWidget)
  */
-public abstract class UiWidgetTag<T extends IsWidget> implements UiTag {
+public abstract class UiObjectTag<T> implements UiTag<T> {
 
-  private UiTag parentTag;
+  private UiTag<?> parentTag;
   private T wrapped;
 
   /*
    * (non-Javadoc)
    * 
    * @see
-   * com.octo.gwt.test.uibinder.UiBinderTag#addElement(com.google.gwt.dom.client
-   * .Element)
+   * com.octo.gwt.test.uibinder.UiTag#addElement(com.google.gwt.dom.client.Element
+   * )
    */
   public final void addElement(Element element) {
 
@@ -57,8 +59,19 @@ public abstract class UiWidgetTag<T extends IsWidget> implements UiTag {
    * (non-Javadoc)
    * 
    * @see
-   * com.octo.gwt.test.uibinder.UiBinderTag#addWidget(com.google.gwt.user.client
-   * .ui.IsWidget)
+   * com.octo.gwt.test.uibinder.UiTag#addUiObject(com.google.gwt.user.client
+   * .ui.UIObject)
+   */
+  public final void addUiObject(UIObject uiObject) {
+    addUIObject(this.wrapped, uiObject);
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * com.octo.gwt.test.uibinder.UiTag#addWidget(com.google.gwt.user.client.ui
+   * .IsWidget)
    */
   public final void addWidget(IsWidget isWidget) {
     addWidget(this.wrapped, isWidget);
@@ -67,7 +80,7 @@ public abstract class UiWidgetTag<T extends IsWidget> implements UiTag {
   /*
    * (non-Javadoc)
    * 
-   * @see com.octo.gwt.test.uibinder.UiBinderTag#appendText(java.lang.String)
+   * @see com.octo.gwt.test.uibinder.UiTag#appendText(java.lang.String)
    */
   public final void appendText(String data) {
     if (!"".equals(data.trim())) {
@@ -78,19 +91,19 @@ public abstract class UiWidgetTag<T extends IsWidget> implements UiTag {
   /*
    * (non-Javadoc)
    * 
-   * @see com.octo.gwt.test.uibinder.UiBinderTag#endTag()
+   * @see com.octo.gwt.test.uibinder.UiTag#endTag()
    */
-  public final Object endTag() {
-    finalizeWidget(wrapped);
+  public final T endTag() {
+    finalizeObject(wrapped);
     return wrapped;
   }
 
   /*
    * (non-Javadoc)
    * 
-   * @see com.octo.gwt.test.uibinder.UiBinderTag#getParentTag()
+   * @see com.octo.gwt.test.uibinder.UiTag#getParentTag()
    */
-  public final UiTag getParentTag() {
+  public final UiTag<?> getParentTag() {
     return parentTag;
   }
 
@@ -98,23 +111,23 @@ public abstract class UiWidgetTag<T extends IsWidget> implements UiTag {
    * Callback method called whenever a new uiBinder tag is opened, so
    * implementation could apply some custom initialization.
    * 
-   * @param widgetClass
+   * @param clazz The class of the object to be wrapped in this UiTag.
    * @param namespaceURI The namespace URI of the opened tag
-   * @param attributes map of attributes of the wrapped widget, with attribute
+   * @param attributes map of attributes of the wrapped uiObject, with attribute
    *          XML names as keys, corresponding objects as values.
    * @param parentTag The parent tag
    * @param owner The owner of the UiBinder template, with {@link UiField}
    *          fields.
    */
-  final void startTag(Class<? extends T> widgetClass,
-      Map<String, Object> attributes, UiTag parentTag, Object owner) {
+  final void startTag(Class<? extends T> clazz, Map<String, Object> attributes,
+      UiTag<?> parentTag, Object owner) {
 
     this.parentTag = parentTag;
 
-    wrapped = UiBinderInstanciator.getInstance(widgetClass, attributes, owner);
+    wrapped = UiBinderInstanciator.getInstance(clazz, attributes, owner);
 
     if (wrapped == null) {
-      wrapped = instanciate(widgetClass, attributes, owner);
+      wrapped = instanciate(clazz, attributes, owner);
     }
 
     String uiFieldValue = (String) attributes.get("ui:field");
@@ -128,18 +141,32 @@ public abstract class UiWidgetTag<T extends IsWidget> implements UiTag {
       }
     }
 
-    initializeWidget(wrapped, attributes, owner);
+    initializeObject(wrapped, attributes, owner);
 
-    UiBinderBeanUtils.populateWidget(wrapped, attributes);
+    UiBinderBeanUtils.populateObject(wrapped, attributes);
   }
 
   /**
-   * Add a new Widget as a child to this widget. This implementation just calls
-   * {@link ForIsWidget#add(IsWidget)} or
-   * {@link HasWidgets#add(com.google.gwt.user.client.ui.Widget)} according to
-   * which interface the wrapped widget is implementing.
+   * Add a new UIObject which is not a {@link IsWidget} instance as a child to
+   * this uiObject. This implementation does nothing, the method is expected to
+   * be overridden.
    * 
-   * @param wrapped The wrapped widget of this tag.
+   * @param wrapped The wrapped uiObject of this tag.
+   * @param uiObject The UIObject instance to add, which is not a
+   *          {@link IsWidget} instance.
+   * 
+   */
+  protected void addUIObject(T wrapped, UIObject uiObject) {
+
+  }
+
+  /**
+   * Add a new Widget as a child to this uiObject. This implementation just
+   * calls {@link ForIsWidget#add(IsWidget)} or
+   * {@link HasWidgets#add(com.google.gwt.user.client.ui.Widget)} according to
+   * which interface the wrapped uiObject is implementing.
+   * 
+   * @param wrapped The wrapped uiObject of this tag.
    * @param isWidget The child widget to be added.
    */
   protected void addWidget(T wrapped, IsWidget isWidget) {
@@ -152,12 +179,12 @@ public abstract class UiWidgetTag<T extends IsWidget> implements UiTag {
   }
 
   /**
-   * Append an element declared in the .ui.xml to this widget, which is supposed
-   * to be its parent. This implementation calls
+   * Append an element declared in the .ui.xml to this uiObject, which is
+   * supposed to be its parent. This implementation calls
    * {@link Element#appendChild(com.google.gwt.dom.client.Node)} on the Widget's
    * element.
    * 
-   * @param wrapped The wrapped widget of this tag.
+   * @param wrapped The wrapped uiObject of this tag.
    * @param element The child element to be appended.
    * @param namespaceURI The namespace URI of the child element.
    * @param childWidgets The element's childs widgets, which could be empty if
@@ -165,78 +192,92 @@ public abstract class UiWidgetTag<T extends IsWidget> implements UiTag {
    */
   protected void appendElement(T wrapped, Element element, String namespaceURI,
       List<IsWidget> childWidgets) {
-    wrapped.asWidget().getElement().appendChild(element);
+    getElement(wrapped).appendChild(element);
   }
 
   /**
-   * Append text to this widget. This implementation calls
-   * {@link HasText#setText(String)} if the current widget is implementing the
+   * Append text to this uiObject. This implementation calls
+   * {@link HasText#setText(String)} if the current uiObject is implementing the
    * {@link HasText} interface, or append a new {@link Text} node wrapping the
    * data value to the Widget's element.
    * 
-   * @param wrapped The wrapped widget of this tag.
+   * @param wrapped The wrapped uiObject of this tag.
    * @param data The string value.
    */
   protected void appendText(T wrapped, String data) {
     if (HasText.class.isInstance(wrapped)) {
       ((HasText) wrapped).setText(data);
     } else {
-      Text text = JavaScriptObjects.newText(data,
-          wrapped.asWidget().getElement().getOwnerDocument());
-      wrapped.asWidget().getElement().appendChild(text);
+      Element element = getElement(wrapped);
+      Text text = JavaScriptObjects.newText(data, element.getOwnerDocument());
+      element.appendChild(text);
     }
   }
 
   /**
-   * A callback executed after every standard widget properties have been setup
-   * to be able to process any custom finalization on the wrapped widget.
+   * A callback executed after every standard uiObject properties have been
+   * setup to be able to process any custom finalization on the wrapped
+   * uiObject.
    * 
-   * @param widget The widget to finalize.
+   * @param uiObject The uiObject to finalize.
    */
-  protected abstract void finalizeWidget(T widget);
+  protected abstract void finalizeObject(T uiObject);
+
+  protected Element getElement(T wrapped) {
+    if (wrapped instanceof UIObject) {
+      return ((UIObject) wrapped).getElement();
+    } else if (wrapped instanceof IsWidget) {
+      return ((IsWidget) wrapped).asWidget().getElement();
+    } else {
+      throw new GwtTestUiBinderException(
+          "Cannot retrieve the Element instance in instances of '"
+              + wrapped.getClass().getName() + "', you have to override "
+              + this.getClass() + ".getElement(..) protected method");
+    }
+  }
 
   /**
    * A callback method executed just after the corresponding UiBinder tag was
    * opened to be able to process any custom initialization on the wrapped
-   * widget.
+   * uiObject.
    * 
-   * @param wrapped The widget to initialize
-   * @param attributes map of attributes of the wrapped widget, with attribute
+   * @param wrapped The uiObject to initialize
+   * @param attributes map of attributes of the wrapped uiObject, with attribute
    *          XML names as keys, corresponding objects as values. This map will
-   *          be used to populate the wrapped widget just after this callback
+   *          be used to populate the wrapped uiObject just after this callback
    *          would be executed.
    * @param owner The owner of the UiBinder template, with {@link UiField}
    *          fields.
    * @return The created instance
    */
-  protected abstract void initializeWidget(T wrapped,
+  protected abstract void initializeObject(T wrapped,
       Map<String, Object> attributes, Object owner);
 
   /**
-   * Method responsible for the widget instanciation. It is called only if the
+   * Method responsible for the uiObject instanciation. It is called only if the
    * uiBinder tag is not a provided {@link UiField} and not annotated with
    * either {@link UiFactory} nor {@link UiConstructor}. This implementation
    * simply check for a zero-arg constructor to call and would throw an
    * exception if it does not exist.
    * 
-   * @param widgetClass The widget class to instanciate.
-   * @param attributes map of attributes of the wrapped widget, with attribute
+   * @param clazz The uiObject class to instanciate.
+   * @param attributes map of attributes of the wrapped uiObject, with attribute
    *          XML names as keys, corresponding objects as values.
    * @param owner The owner of the UiBinder template, with {@link UiField}
    *          fields.
    * @return The created instance.
    */
-  protected T instanciate(Class<? extends T> widgetClass,
+  protected T instanciate(Class<? extends T> clazz,
       Map<String, Object> attributes, Object owner) {
     try {
-      Constructor<? extends T> defaultCons = widgetClass.getDeclaredConstructor();
+      Constructor<? extends T> defaultCons = clazz.getDeclaredConstructor();
       return GwtReflectionUtils.instantiateClass(defaultCons);
     } catch (NoSuchMethodException e) {
       throw new GwtTestUiBinderException(
-          widgetClass.getName()
+          clazz.getName()
               + " has no default (zero args) constructor. You have to register a custom "
-              + UiWidgetTagFactory.class.getSimpleName()
-              + " by calling the protected method 'addUiBinderWidgetFactory' of your test class and override the 'instanciate(Class<T>) method in it");
+              + UiObjectTagFactory.class.getSimpleName()
+              + " by calling the protected method 'addUiObjectTagFactory' of your test class and override the 'instanciate(Class<T>) method in it");
     }
   }
 

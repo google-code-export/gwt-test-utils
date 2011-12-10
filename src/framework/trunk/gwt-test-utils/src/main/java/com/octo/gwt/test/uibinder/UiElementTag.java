@@ -8,6 +8,7 @@ import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Text;
 import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.UIObject;
 import com.octo.gwt.test.exceptions.ReflectionException;
 import com.octo.gwt.test.internal.patchers.dom.JavaScriptObjects;
 import com.octo.gwt.test.internal.utils.JsoProperties;
@@ -19,13 +20,13 @@ import com.octo.gwt.test.utils.GwtReflectionUtils;
  * @author Gael Lazzari
  * 
  */
-class UiElementTag implements UiTag {
+class UiElementTag implements UiTag<Element> {
 
-  private final UiTag parentTag;
+  private final UiTag<?> parentTag;
   private final Element wrapped;
 
   UiElementTag(String nsURI, String tagName, Map<String, Object> attributes,
-      UiTag parentTag, Object owner) {
+      UiTag<?> parentTag, Object owner) {
     this.wrapped = JavaScriptObjects.newElement(tagName, Document.get());
     this.parentTag = parentTag;
 
@@ -56,6 +57,11 @@ class UiElementTag implements UiTag {
 
   }
 
+  public final void addUiObject(UIObject uiObject) {
+    appendUiObject(wrapped, uiObject);
+
+  }
+
   public void addWidget(IsWidget widget) {
     addWidget(this.wrapped, widget);
 
@@ -67,11 +73,11 @@ class UiElementTag implements UiTag {
     }
   }
 
-  public Object endTag() {
+  public Element endTag() {
     return this.wrapped;
   }
 
-  public UiTag getParentTag() {
+  public UiTag<?> getParentTag() {
     return parentTag;
   }
 
@@ -96,6 +102,21 @@ class UiElementTag implements UiTag {
   protected void appendText(Element wrapped, String data) {
     Text text = JavaScriptObjects.newText(data, wrapped.getOwnerDocument());
     wrapped.appendChild(text);
+  }
+
+  protected void appendUiObject(Element wrapped2, UIObject uiObject) {
+    List<UIObject> childObjects = JavaScriptObjects.getObject(wrapped,
+        JsoProperties.UIBINDER_CHILD_UIOBJECT_LIST);
+
+    if (childObjects == null) {
+      childObjects = new ArrayList<UIObject>();
+      JavaScriptObjects.setProperty(wrapped,
+          JsoProperties.UIBINDER_CHILD_UIOBJECT_LIST, childObjects);
+    }
+
+    childObjects.add(uiObject);
+    appendElement(wrapped, uiObject.getElement());
+
   }
 
 }

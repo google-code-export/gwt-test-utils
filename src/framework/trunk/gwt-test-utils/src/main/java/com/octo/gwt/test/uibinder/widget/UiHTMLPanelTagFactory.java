@@ -3,40 +3,40 @@ package com.octo.gwt.test.uibinder.widget;
 import java.util.Map;
 
 import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.IsWidget;
-import com.octo.gwt.test.uibinder.UiWidgetTag;
-import com.octo.gwt.test.uibinder.UiWidgetTagFactory;
+import com.octo.gwt.test.uibinder.UiObjectTag;
+import com.octo.gwt.test.uibinder.UiObjectTagFactory;
 
 /**
- * Handles <g:HTMLPanel /> tags.
+ * Handles &lt;g:HTMLPanel> tags.
  * 
  * @author Gael Lazzari
  * 
  */
-public class UiHTMLPanelTagFactory implements UiWidgetTagFactory<HTMLPanel> {
+public class UiHTMLPanelTagFactory implements UiObjectTagFactory<HTMLPanel> {
 
-  private static class UiHTMLPanelTag extends UiWidgetTag<HTMLPanel> {
+  private static class UiHTMLPanelTag extends UiObjectTag<HTMLPanel> {
 
     @Override
-    protected void finalizeWidget(HTMLPanel widget) {
+    protected void finalizeObject(HTMLPanel widget) {
       // nothing to do
     }
 
     @Override
-    protected void initializeWidget(HTMLPanel wrapped,
+    protected void initializeObject(HTMLPanel wrapped,
         Map<String, Object> attributes, Object owner) {
       // nothing to do
     }
 
     @Override
-    protected HTMLPanel instanciate(Class<? extends HTMLPanel> widgetClass,
+    protected HTMLPanel instanciate(Class<? extends HTMLPanel> clazz,
         Map<String, Object> attributes, Object owner) {
 
-      if (widgetClass == HTMLPanel.class) {
+      if (clazz == HTMLPanel.class) {
         return new HTMLPanel("");
       }
 
-      return super.instanciate(widgetClass, attributes, owner);
+      // use default instanciation system
+      return super.instanciate(clazz, attributes, owner);
     }
 
   }
@@ -44,13 +44,13 @@ public class UiHTMLPanelTagFactory implements UiWidgetTagFactory<HTMLPanel> {
   /*
    * (non-Javadoc)
    * 
-   * @see com.octo.gwt.test.uibinder.UiBinderWidgetFactory#createUiWidgetTag
+   * @see com.octo.gwt.test.uibinder.UiObjectTagFactory#createUiObjectTag
    * (java.lang.Class, java.util.Map)
    */
-  public UiWidgetTag<HTMLPanel> createUiWidgetTag(
-      Class<? extends IsWidget> widgetClass, Map<String, Object> attributes) {
+  public UiObjectTag<HTMLPanel> createUiObjectTag(Class<?> clazz,
+      Map<String, Object> attributes) {
 
-    if (HTMLPanel.class.isAssignableFrom(widgetClass)) {
+    if (HTMLPanel.class.isAssignableFrom(clazz)) {
       return new UiHTMLPanelTag();
     }
 

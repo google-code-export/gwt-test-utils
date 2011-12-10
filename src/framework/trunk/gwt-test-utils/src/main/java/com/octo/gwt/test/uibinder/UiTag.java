@@ -2,14 +2,19 @@ package com.octo.gwt.test.uibinder;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.UIObject;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
- * Base interface for a XML tag in a .ui.xml file.
+ * 
+ * Base interface for a XML tag in a .ui.xml file. An UiTag should wrap an
+ * object which correspond to a ui element declaration.
  * 
  * @author Gael Lazzari
  * 
+ * @param <T> The type of the wrapped object.
  */
-public interface UiTag {
+public interface UiTag<T> {
 
   /**
    * Appends a DOM child element to this UiBinder tag.
@@ -17,6 +22,11 @@ public interface UiTag {
    * @param element The element to append
    */
   void addElement(Element element);
+
+  /**
+   * Adds a child UIObject which isn't a {@link Widget} to this UiBinder tag.
+   */
+  void addUiObject(UIObject uiObject);
 
   /**
    * Adds a child widget to this UiBinder tag.
@@ -39,13 +49,13 @@ public interface UiTag {
    * @return The UiBinder tag's wrapped object (Widget, Resource, DOM
    *         element...)
    */
-  Object endTag();
+  T endTag();
 
   /**
    * Get the parent UiBinder tag.
    * 
    * @return The parent UiBinder tag
    */
-  UiTag getParentTag();
+  UiTag<?> getParentTag();
 
 }

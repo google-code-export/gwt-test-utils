@@ -9,20 +9,20 @@ import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.StackLayoutPanel;
 import com.octo.gwt.test.uibinder.UiBinderXmlUtils;
-import com.octo.gwt.test.uibinder.UiWidgetTag;
-import com.octo.gwt.test.uibinder.UiWidgetTagFactory;
+import com.octo.gwt.test.uibinder.UiObjectTag;
+import com.octo.gwt.test.uibinder.UiObjectTagFactory;
 
 /**
- * Handles <g:StackLayoutPanel /> tags.
+ * Handles &lt;g:StackLayoutPanel> tags.
  * 
  * @author Gael Lazzari
  * 
  */
 public class UiStackLayoutPanelTagFactory implements
-    UiWidgetTagFactory<StackLayoutPanel> {
+    UiObjectTagFactory<StackLayoutPanel> {
 
   private static class UiStackLayoutPanelTag extends
-      UiWidgetTag<StackLayoutPanel> {
+      UiObjectTag<StackLayoutPanel> {
 
     @Override
     protected void appendElement(StackLayoutPanel wrapped, Element element,
@@ -36,30 +36,30 @@ public class UiStackLayoutPanelTagFactory implements
     }
 
     @Override
-    protected void finalizeWidget(StackLayoutPanel widget) {
+    protected void finalizeObject(StackLayoutPanel widget) {
       // nothing to do
     }
 
     @Override
-    protected void initializeWidget(StackLayoutPanel wrapped,
+    protected void initializeObject(StackLayoutPanel wrapped,
         Map<String, Object> attributes, Object owner) {
       // nothing to do
     }
 
     @Override
     protected StackLayoutPanel instanciate(
-        Class<? extends StackLayoutPanel> widgetClass,
+        Class<? extends StackLayoutPanel> clazz,
         Map<String, Object> attributes, Object owner) {
 
-      if (widgetClass == StackLayoutPanel.class) {
-        String unit = (String) attributes.get("unit");
-        Unit styleUnit = unit != null ? Unit.valueOf(unit) : Unit.PX;
-
-        return new StackLayoutPanel(styleUnit);
+      if (clazz != StackLayoutPanel.class) {
+        // use default instanciation system
+        return super.instanciate(clazz, attributes, owner);
       }
 
-      // use default instanciation system
-      return super.instanciate(widgetClass, attributes, owner);
+      String unit = (String) attributes.get("unit");
+      Unit styleUnit = unit != null ? Unit.valueOf(unit) : Unit.PX;
+
+      return new StackLayoutPanel(styleUnit);
     }
 
     private void handleStackLayoutPanelSpecifics(StackLayoutPanel wrapped,
@@ -96,13 +96,13 @@ public class UiStackLayoutPanelTagFactory implements
    * (non-Javadoc)
    * 
    * @see
-   * com.octo.gwt.test.uibinder.UiWidgetTagFactory#createUiWidgetTag(java.lang
+   * com.octo.gwt.test.uibinder.UiWidgetTagFactory#createUiObjectTag(java.lang
    * .Class, java.util.Map)
    */
-  public UiWidgetTag<StackLayoutPanel> createUiWidgetTag(
-      Class<? extends IsWidget> widgetClass, Map<String, Object> attributes) {
+  public UiObjectTag<StackLayoutPanel> createUiObjectTag(Class<?> clazz,
+      Map<String, Object> attributes) {
 
-    if (StackLayoutPanel.class.isAssignableFrom(widgetClass)) {
+    if (StackLayoutPanel.class.isAssignableFrom(clazz)) {
       return new UiStackLayoutPanelTag();
     }
 

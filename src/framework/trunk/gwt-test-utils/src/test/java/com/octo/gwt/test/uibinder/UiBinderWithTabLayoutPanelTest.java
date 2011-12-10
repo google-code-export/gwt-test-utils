@@ -22,13 +22,12 @@ public class UiBinderWithTabLayoutPanelTest extends GwtTestTest {
     assertEquals("Custom header", panel.customHeader.getText());
     assertEquals("baker", panel.second.getText());
 
-    /**
-     * assertEquals("<b>HTML</b> header",
-     * panel.getPanel().getTabWidget(0).getElement().getInnerHTML());
-     * 
-     * assertEquals(panel.customHeader,
-     * panel.getPanel().getTabWidget(panel.second));
-     */
+    assertEquals("<b>HTML</b> header",
+        panel.getPanel().getTabWidget(0).getElement().getInnerHTML());
+
+    assertEquals(panel.customHeader,
+        panel.getPanel().getTabWidget(panel.second));
+
   }
 
 }

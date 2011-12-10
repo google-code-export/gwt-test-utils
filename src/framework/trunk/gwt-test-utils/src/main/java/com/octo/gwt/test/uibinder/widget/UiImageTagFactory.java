@@ -1,31 +1,38 @@
-package com.octo.gwt.test.uibinder;
+package com.octo.gwt.test.uibinder.widget;
 
 import java.util.Map;
 
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.IsWidget;
+import com.octo.gwt.test.uibinder.UiObjectTag;
+import com.octo.gwt.test.uibinder.UiObjectTagFactory;
 
-class UiImageTagFactory implements UiWidgetTagFactory<Image> {
+/**
+ * Handles &lt;g:Image> tags.
+ * 
+ * @author Gael Lazzari
+ * 
+ */
+public class UiImageTagFactory implements UiObjectTagFactory<Image> {
 
-  private static class UiImageTag extends UiWidgetTag<Image> {
+  private static class UiImageTag extends UiObjectTag<Image> {
 
     @Override
-    protected void finalizeWidget(Image widget) {
+    protected void finalizeObject(Image widget) {
       // noting to do
     }
 
     @Override
-    protected void initializeWidget(Image wrapped,
+    protected void initializeObject(Image wrapped,
         Map<String, Object> attributes, Object owner) {
       // nothing to do
     }
 
     @Override
-    protected Image instanciate(Class<? extends Image> widgetClass,
+    protected Image instanciate(Class<? extends Image> clazz,
         Map<String, Object> attributes, Object owner) {
 
-      if (widgetClass == Image.class) {
+      if (clazz == Image.class) {
 
         ImageResource imageResource = (ImageResource) attributes.get("resource");
         if (imageResource != null) {
@@ -41,7 +48,7 @@ class UiImageTagFactory implements UiWidgetTagFactory<Image> {
 
       // unable to use custom constructor or is a subclass of Image, so use
       // default mechanism
-      return super.instanciate(widgetClass, attributes, owner);
+      return super.instanciate(clazz, attributes, owner);
     }
 
   }
@@ -49,14 +56,13 @@ class UiImageTagFactory implements UiWidgetTagFactory<Image> {
   /*
    * (non-Javadoc)
    * 
-   * @see
-   * com.octo.gwt.test.uibinder.UiBinderWidgetFactory#createUiWidgetTag
+   * @see com.octo.gwt.test.uibinder.UiObjectTagFactory#createUiObjectTag
    * (java.lang.Class, java.util.Map)
    */
-  public UiWidgetTag<Image> createUiWidgetTag(
-      Class<? extends IsWidget> widgetClass, Map<String, Object> attributes) {
+  public UiObjectTag<Image> createUiObjectTag(Class<?> clazz,
+      Map<String, Object> attributes) {
 
-    if (Image.class.isAssignableFrom(widgetClass)) {
+    if (Image.class.isAssignableFrom(clazz)) {
       return new UiImageTag();
     }
 

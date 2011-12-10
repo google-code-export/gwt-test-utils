@@ -4,25 +4,27 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.google.gwt.user.client.ui.IsWidget;
 import com.octo.gwt.test.internal.GwtConfig;
 import com.octo.gwt.test.uibinder.widget.UiCellPanelTagFactory;
 import com.octo.gwt.test.uibinder.widget.UiDateLabelTagFactory;
 import com.octo.gwt.test.uibinder.widget.UiDockLayoutPanelTagFactory;
 import com.octo.gwt.test.uibinder.widget.UiHTMLPanelTagFactory;
+import com.octo.gwt.test.uibinder.widget.UiImageTagFactory;
 import com.octo.gwt.test.uibinder.widget.UiLayoutPanelTagFactory;
+import com.octo.gwt.test.uibinder.widget.UiMenuBarTagFactory;
+import com.octo.gwt.test.uibinder.widget.UiMenuItemTagFactory;
 import com.octo.gwt.test.uibinder.widget.UiStackLayoutPanelTagFactory;
 import com.octo.gwt.test.uibinder.widget.UiTabLayoutPanelTagFactory;
 
 /**
- * Default UiWidgetTagFactory, which try to delegate {@link UiWidgetTag}
+ * Default UiWidgetTagFactory, which try to delegate {@link UiObjectTag}
  * instanciation to UiWidgetTagFactories added by users before using those
  * implemented in gwt-test-utils.
  * 
  * @author Gael Lazzari
  * 
  */
-class DefaultUiWidgetTagFactory implements UiWidgetTagFactory<IsWidget> {
+class DefaultUiWidgetTagFactory implements UiObjectTagFactory<Object> {
 
   private static final DefaultUiWidgetTagFactory INSTANCE = new DefaultUiWidgetTagFactory();
 
@@ -30,10 +32,10 @@ class DefaultUiWidgetTagFactory implements UiWidgetTagFactory<IsWidget> {
     return INSTANCE;
   }
 
-  private final List<UiWidgetTagFactory<? extends IsWidget>> gwtTestUtilsFactories;
+  private final List<UiObjectTagFactory<?>> gwtTestUtilsFactories;
 
   private DefaultUiWidgetTagFactory() {
-    gwtTestUtilsFactories = new ArrayList<UiWidgetTagFactory<? extends IsWidget>>();
+    gwtTestUtilsFactories = new ArrayList<UiObjectTagFactory<?>>();
 
     gwtTestUtilsFactories.add(new UiCellPanelTagFactory());
     gwtTestUtilsFactories.add(new UiDateLabelTagFactory());
@@ -41,6 +43,8 @@ class DefaultUiWidgetTagFactory implements UiWidgetTagFactory<IsWidget> {
     gwtTestUtilsFactories.add(new UiHTMLPanelTagFactory());
     gwtTestUtilsFactories.add(new UiImageTagFactory());
     gwtTestUtilsFactories.add(new UiLayoutPanelTagFactory());
+    gwtTestUtilsFactories.add(new UiMenuBarTagFactory());
+    gwtTestUtilsFactories.add(new UiMenuItemTagFactory());
     gwtTestUtilsFactories.add(new UiStackLayoutPanelTagFactory());
     gwtTestUtilsFactories.add(new UiTabLayoutPanelTagFactory());
   }
@@ -48,37 +52,37 @@ class DefaultUiWidgetTagFactory implements UiWidgetTagFactory<IsWidget> {
   /*
    * (non-Javadoc)
    * 
-   * @see com.octo.gwt.test.uibinder.UiBinderWidgetFactory#createUiWidgetTag
-   * (java.lang.Class, java.util.Map)
+   * @see
+   * com.octo.gwt.test.uibinder.UiObjectTagFactory#createUiObjectTag(java.lang
+   * .Class, java.util.Map)
    */
-  public UiWidgetTag<IsWidget> createUiWidgetTag(
-      Class<? extends IsWidget> widgetClass, Map<String, Object> attributes) {
+  public UiObjectTag<Object> createUiObjectTag(Class<?> clazz,
+      Map<String, Object> attributes) {
 
-    // try with user's custom UiBinderWidgetFactories
-    UiWidgetTag<IsWidget> result = tryInstanciateUiBinderWidget(widgetClass,
-        attributes, GwtConfig.get().getUiBinderWidgetFactories());
+    // try with user's custom UiObjectTagFactories
+    UiObjectTag<Object> result = tryInstanciateUiObjectTag(clazz, attributes,
+        GwtConfig.get().getUiObjectTagFactories());
 
     if (result != null) {
       return result;
     }
 
-    // try with gwt-test-utils custom UiBinderWidgetFactories
-    result = tryInstanciateUiBinderWidget(widgetClass, attributes,
-        gwtTestUtilsFactories);
+    // try with gwt-test-utils custom UiObjectTagFactories
+    result = tryInstanciateUiObjectTag(clazz, attributes, gwtTestUtilsFactories);
     if (result != null) {
       return result;
     }
 
     // default
-    return new UiWidgetTag<IsWidget>() {
+    return new UiObjectTag<Object>() {
 
       @Override
-      protected void finalizeWidget(IsWidget widget) {
+      protected void finalizeObject(Object widget) {
         // nothing to do
       }
 
       @Override
-      protected void initializeWidget(IsWidget wrapped,
+      protected void initializeObject(Object wrapped,
           Map<String, Object> attributes, Object owner) {
         // nothing to do
 
@@ -88,13 +92,12 @@ class DefaultUiWidgetTagFactory implements UiWidgetTagFactory<IsWidget> {
   }
 
   @SuppressWarnings({"rawtypes", "unchecked"})
-  private UiWidgetTag<IsWidget> tryInstanciateUiBinderWidget(
-      Class<? extends IsWidget> widgetClass, Map<String, Object> attributes,
-      List<UiWidgetTagFactory<? extends IsWidget>> uiBinderWidgetFactories) {
-    for (UiWidgetTagFactory factory : uiBinderWidgetFactories) {
+  private UiObjectTag<Object> tryInstanciateUiObjectTag(Class<?> clazz,
+      Map<String, Object> attributes,
+      List<UiObjectTagFactory<?>> uiObjectTagFactories) {
+    for (UiObjectTagFactory factory : uiObjectTagFactories) {
 
-      UiWidgetTag<IsWidget> result = factory.createUiWidgetTag(widgetClass,
-          attributes);
+      UiObjectTag<Object> result = factory.createUiObjectTag(clazz, attributes);
       if (result != null) {
         return result;
       }

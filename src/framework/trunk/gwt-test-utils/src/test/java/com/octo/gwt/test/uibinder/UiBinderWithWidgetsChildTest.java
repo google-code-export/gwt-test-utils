@@ -32,7 +32,7 @@ public class UiBinderWithWidgetsChildTest extends GwtTestTest {
   }
 
   @Test
-  public void uiBinderWidget() {
+  public void uiObjectTag() {
     // Arrange
     UiBinderWithWidgetsChild w = new UiBinderWithWidgetsChild("gael", "eric");
 

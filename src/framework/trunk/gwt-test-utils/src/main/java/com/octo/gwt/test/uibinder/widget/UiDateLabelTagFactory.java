@@ -5,36 +5,35 @@ import java.util.Map;
 import com.google.gwt.i18n.shared.DateTimeFormat;
 import com.google.gwt.i18n.shared.DateTimeFormat.PredefinedFormat;
 import com.google.gwt.user.client.ui.DateLabel;
-import com.google.gwt.user.client.ui.IsWidget;
-import com.octo.gwt.test.uibinder.UiWidgetTag;
-import com.octo.gwt.test.uibinder.UiWidgetTagFactory;
+import com.octo.gwt.test.uibinder.UiObjectTag;
+import com.octo.gwt.test.uibinder.UiObjectTagFactory;
 
 /**
- * Handles <g:DateLabel /> tags.
+ * Handles &lt;g:DateLabel> tags.
  * 
  * @author Gael Lazzari
  * 
  */
-public class UiDateLabelTagFactory implements UiWidgetTagFactory<DateLabel> {
+public class UiDateLabelTagFactory implements UiObjectTagFactory<DateLabel> {
 
-  private static class UiDateLabelTag extends UiWidgetTag<DateLabel> {
+  private static class UiDateLabelTag extends UiObjectTag<DateLabel> {
 
     @Override
-    protected void finalizeWidget(DateLabel widget) {
+    protected void finalizeObject(DateLabel widget) {
       // nothing to do
     }
 
     @Override
-    protected void initializeWidget(DateLabel wrapped,
+    protected void initializeObject(DateLabel wrapped,
         Map<String, Object> attributes, Object owner) {
       // nothing to do
     }
 
     @Override
-    protected DateLabel instanciate(Class<? extends DateLabel> widgetClass,
+    protected DateLabel instanciate(Class<? extends DateLabel> clazz,
         Map<String, Object> attributes, Object owner) {
 
-      if (widgetClass == DateLabel.class) {
+      if (clazz == DateLabel.class) {
         DateTimeFormat format = (DateTimeFormat) attributes.get("format");
 
         if (format != null) {
@@ -56,7 +55,7 @@ public class UiDateLabelTagFactory implements UiWidgetTagFactory<DateLabel> {
 
       // unable to use custom constructor or is a subclass of DateLabel, so use
       // default mechanism
-      return super.instanciate(widgetClass, attributes, owner);
+      return super.instanciate(clazz, attributes, owner);
     }
 
   }
@@ -64,13 +63,13 @@ public class UiDateLabelTagFactory implements UiWidgetTagFactory<DateLabel> {
   /*
    * (non-Javadoc)
    * 
-   * @see com.octo.gwt.test.uibinder.UiBinderWidgetFactory#createUiWidgetTag
+   * @see com.octo.gwt.test.uibinder.UiObjectTagFactory#createUiObjectTag
    * (java.lang.Class, java.util.Map)
    */
-  public UiWidgetTag<DateLabel> createUiWidgetTag(
-      Class<? extends IsWidget> widgetClass, Map<String, Object> attributes) {
+  public UiObjectTag<DateLabel> createUiObjectTag(Class<?> clazz,
+      Map<String, Object> attributes) {
 
-    if (DateLabel.class.isAssignableFrom(widgetClass)) {
+    if (DateLabel.class.isAssignableFrom(clazz)) {
       return new UiDateLabelTag();
     }
 

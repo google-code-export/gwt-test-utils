@@ -19,7 +19,7 @@ import com.octo.gwt.test.GwtModuleRunner;
 import com.octo.gwt.test.WindowOperationsHandler;
 import com.octo.gwt.test.exceptions.GwtTestConfigurationException;
 import com.octo.gwt.test.exceptions.GwtTestException;
-import com.octo.gwt.test.uibinder.UiWidgetTagFactory;
+import com.octo.gwt.test.uibinder.UiObjectTagFactory;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 import com.octo.gwt.test.utils.events.Browser.BrowserErrorHandler;
 
@@ -60,7 +60,7 @@ public class GwtConfig implements AfterTestCallback {
 
   private Locale locale;
 
-  private final List<UiWidgetTagFactory<? extends IsWidget>> uiBinderWidgetFactories = new ArrayList<UiWidgetTagFactory<? extends IsWidget>>();
+  private final List<UiObjectTagFactory<?>> uiObjectTagFactories = new ArrayList<UiObjectTagFactory<?>>();
 
   private GwtConfig() {
 
@@ -68,7 +68,7 @@ public class GwtConfig implements AfterTestCallback {
 
   public void afterTest() throws Throwable {
     gwtModuleRunner = null;
-    uiBinderWidgetFactories.clear();
+    uiObjectTagFactories.clear();
     uiConstructorsMap.clear();
   }
 
@@ -96,12 +96,12 @@ public class GwtConfig implements AfterTestCallback {
     return gwtModuleRunner.getServletConfig();
   }
 
-  public List<UiWidgetTagFactory<? extends IsWidget>> getUiBinderWidgetFactories() {
-    return uiBinderWidgetFactories;
+  public List<String[]> getUiConstructors(Class<?> clazz) {
+    return uiConstructorsMap.get(clazz);
   }
 
-  public List<String[]> getUiConstructors(Class<?> widgetClass) {
-    return uiConstructorsMap.get(widgetClass);
+  public List<UiObjectTagFactory<?>> getUiObjectTagFactories() {
+    return uiObjectTagFactories;
   }
 
   public WindowOperationsHandler getWindowOperationsHandler() {

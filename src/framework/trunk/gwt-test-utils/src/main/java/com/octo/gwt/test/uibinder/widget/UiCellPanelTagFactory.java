@@ -9,18 +9,18 @@ import com.google.gwt.user.client.ui.HasHorizontalAlignment.HorizontalAlignmentC
 import com.google.gwt.user.client.ui.HasVerticalAlignment.VerticalAlignmentConstant;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.octo.gwt.test.uibinder.UiBinderXmlUtils;
-import com.octo.gwt.test.uibinder.UiWidgetTag;
-import com.octo.gwt.test.uibinder.UiWidgetTagFactory;
+import com.octo.gwt.test.uibinder.UiObjectTag;
+import com.octo.gwt.test.uibinder.UiObjectTagFactory;
 
 /**
- * Handles subclasses of CellPanel (which declare <g:cell> tags).
+ * Handles subclasses of CellPanel (which declare &lt;g:cell> tags).
  * 
  * @author Gael Lazzari
  * 
  */
-public class UiCellPanelTagFactory implements UiWidgetTagFactory<CellPanel> {
+public class UiCellPanelTagFactory implements UiObjectTagFactory<CellPanel> {
 
-  private static class UiCellPanelTag extends UiWidgetTag<CellPanel> {
+  private static class UiCellPanelTag extends UiObjectTag<CellPanel> {
 
     private static final String CELL_TAG = "cell";
 
@@ -70,12 +70,12 @@ public class UiCellPanelTagFactory implements UiWidgetTagFactory<CellPanel> {
     }
 
     @Override
-    protected void finalizeWidget(CellPanel widget) {
+    protected void finalizeObject(CellPanel widget) {
       // nothing to do
     }
 
     @Override
-    protected void initializeWidget(CellPanel wrapped,
+    protected void initializeObject(CellPanel wrapped,
         Map<String, Object> attributes, Object owner) {
       // nothing to do
     }
@@ -84,12 +84,12 @@ public class UiCellPanelTagFactory implements UiWidgetTagFactory<CellPanel> {
   /*
    * (non-Javadoc)
    * 
-   * @see com.octo.gwt.test.uibinder.UiBinderWidgetFactory#createUiWidgetTag
+   * @see com.octo.gwt.test.uibinder.UiObjectTagFactory#createUiObjectTag
    * (java.lang.Class, java.util.Map)
    */
-  public UiWidgetTag<CellPanel> createUiWidgetTag(
-      Class<? extends IsWidget> widgetClass, Map<String, Object> attributes) {
-    if (!CellPanel.class.isAssignableFrom(widgetClass)) {
+  public UiObjectTag<CellPanel> createUiObjectTag(Class<?> clazz,
+      Map<String, Object> attributes) {
+    if (!CellPanel.class.isAssignableFrom(clazz)) {
       return null;
     }
 

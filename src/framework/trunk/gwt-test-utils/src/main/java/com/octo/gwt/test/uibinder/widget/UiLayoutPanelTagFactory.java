@@ -7,18 +7,18 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.octo.gwt.test.uibinder.UiBinderXmlUtils;
-import com.octo.gwt.test.uibinder.UiWidgetTag;
-import com.octo.gwt.test.uibinder.UiWidgetTagFactory;
+import com.octo.gwt.test.uibinder.UiObjectTag;
+import com.octo.gwt.test.uibinder.UiObjectTagFactory;
 
 /**
- * Handles <g:LayoutPanel /> tags.
+ * Handles &lt;g:LayoutPanel> tags.
  * 
  * @author Gael Lazzari
  * 
  */
-public class UiLayoutPanelTagFactory implements UiWidgetTagFactory<LayoutPanel> {
+public class UiLayoutPanelTagFactory implements UiObjectTagFactory<LayoutPanel> {
 
-  private static class UiLayoutPanelTag extends UiWidgetTag<LayoutPanel> {
+  private static class UiLayoutPanelTag extends UiObjectTag<LayoutPanel> {
 
     @Override
     protected void appendElement(LayoutPanel wrapped, Element element,
@@ -35,12 +35,12 @@ public class UiLayoutPanelTagFactory implements UiWidgetTagFactory<LayoutPanel> 
     }
 
     @Override
-    protected void finalizeWidget(LayoutPanel widget) {
+    protected void finalizeObject(LayoutPanel widget) {
       // nothing to do
     }
 
     @Override
-    protected void initializeWidget(LayoutPanel wrapped,
+    protected void initializeObject(LayoutPanel wrapped,
         Map<String, Object> attributes, Object owner) {
       // nothing to do
     }
@@ -82,10 +82,10 @@ public class UiLayoutPanelTagFactory implements UiWidgetTagFactory<LayoutPanel> 
 
   }
 
-  public UiWidgetTag<LayoutPanel> createUiWidgetTag(
-      Class<? extends IsWidget> widgetClass, Map<String, Object> attributes) {
+  public UiObjectTag<LayoutPanel> createUiObjectTag(Class<?> clazz,
+      Map<String, Object> attributes) {
 
-    if (LayoutPanel.class.isAssignableFrom(widgetClass)) {
+    if (LayoutPanel.class.isAssignableFrom(clazz)) {
       return new UiLayoutPanelTag();
     }
 

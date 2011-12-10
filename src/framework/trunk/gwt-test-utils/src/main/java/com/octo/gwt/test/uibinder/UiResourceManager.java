@@ -14,6 +14,7 @@ import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.UIObject;
 import com.octo.gwt.test.exceptions.GwtTestUiBinderException;
 import com.octo.gwt.test.exceptions.ReflectionException;
 import com.octo.gwt.test.internal.resources.ResourcePrototypeProxyBuilder;
@@ -34,7 +35,7 @@ class UiResourceManager {
   private static class UiBinderImage extends UiResourceTag {
 
     UiBinderImage(ResourcePrototypeProxyBuilder builder, String alias,
-        UiTag parentTag, Object owner, Map<String, Object> resources,
+        UiTag<?> parentTag, Object owner, Map<String, Object> resources,
         Map<String, Object> attributes) {
       super(builder, alias, parentTag, owner, resources);
 
@@ -68,7 +69,7 @@ class UiResourceManager {
   private static class UiDataTag extends UiResourceTag {
 
     UiDataTag(ResourcePrototypeProxyBuilder builder, String alias,
-        UiTag parentTag, Object owner, Map<String, Object> resources,
+        UiTag<?> parentTag, Object owner, Map<String, Object> resources,
         Map<String, Object> attributes) {
       super(builder, alias, parentTag, owner, resources);
 
@@ -98,11 +99,11 @@ class UiResourceManager {
   /**
    * Handles <ui:import> tags.
    */
-  private static class UiImportTag implements UiTag {
+  private static class UiImportTag implements UiTag<Object> {
 
-    private final UiTag parentTag;
+    private final UiTag<?> parentTag;
 
-    UiImportTag(Map<String, Object> attributes, UiTag parentTag,
+    UiImportTag(Map<String, Object> attributes, UiTag<?> parentTag,
         Map<String, Object> resources, Object owner) {
       this.parentTag = parentTag;
       // collects single and multiple imports in UiBinderResourceManager inner
@@ -111,6 +112,10 @@ class UiResourceManager {
     }
 
     public void addElement(Element element) {
+      // nothing to do
+    }
+
+    public void addUiObject(UIObject uiObject) {
       // nothing to do
     }
 
@@ -127,7 +132,7 @@ class UiResourceManager {
       return null;
     }
 
-    public UiTag getParentTag() {
+    public UiTag<?> getParentTag() {
       return parentTag;
     }
 
@@ -220,12 +225,12 @@ class UiResourceManager {
    * @author Gael Lazzari
    * 
    */
-  private static class UiMsgTag implements UiTag {
+  private static class UiMsgTag implements UiTag<String> {
 
-    private final UiTag parentTag;
+    private final UiTag<?> parentTag;
     private final StringBuilder sb;
 
-    UiMsgTag(UiTag parent) {
+    UiMsgTag(UiTag<?> parent) {
       this.parentTag = parent;
       sb = new StringBuilder();
     }
@@ -237,6 +242,10 @@ class UiResourceManager {
           element.getTagName()).append(">");
     }
 
+    public void addUiObject(UIObject uiObject) {
+      parentTag.addUiObject(uiObject);
+    }
+
     public void addWidget(IsWidget isWidget) {
       parentTag.addWidget(isWidget);
 
@@ -246,11 +255,11 @@ class UiResourceManager {
       sb.append(data);
     }
 
-    public Object endTag() {
+    public String endTag() {
       return sb.toString();
     }
 
-    public UiTag getParentTag() {
+    public UiTag<?> getParentTag() {
       return parentTag;
     }
   }
@@ -259,17 +268,17 @@ class UiResourceManager {
    * Base class for resource tags : <ui:style />, <ui:image /> and <ui:data />
    * 
    */
-  private static abstract class UiResourceTag implements UiTag {
+  private static abstract class UiResourceTag implements UiTag<Object> {
 
     private final String alias;
     private final ResourcePrototypeProxyBuilder builder;
     private final Object owner;
-    private final UiTag parentTag;
+    private final UiTag<?> parentTag;
     private final Map<String, Object> resources;
     private Object wrappedObject;
 
     UiResourceTag(ResourcePrototypeProxyBuilder builder, String alias,
-        UiTag parentTag, Object owner, Map<String, Object> resources) {
+        UiTag<?> parentTag, Object owner, Map<String, Object> resources) {
       this.builder = builder;
       this.owner = owner;
       this.parentTag = parentTag;
@@ -278,6 +287,10 @@ class UiResourceManager {
     }
 
     public void addElement(Element element) {
+      // adapter method
+    }
+
+    public void addUiObject(UIObject uiObject) {
       // adapter method
     }
 
@@ -312,7 +325,7 @@ class UiResourceManager {
       return wrappedObject;
     }
 
-    public UiTag getParentTag() {
+    public UiTag<?> getParentTag() {
       return parentTag;
     }
 
@@ -352,7 +365,7 @@ class UiResourceManager {
     private final StringBuilder text;
 
     UiStyleTag(ResourcePrototypeProxyBuilder builder, String alias,
-        UiTag parentTag, Object owner, Map<String, Object> resources) {
+        UiTag<?> parentTag, Object owner, Map<String, Object> resources) {
       super(builder, alias, parentTag, owner, resources);
       this.text = new StringBuilder();
     }
@@ -372,7 +385,7 @@ class UiResourceManager {
   /**
    * Handles <ui:with /> tags.
    */
-  private static class UiWithTag implements UiTag {
+  private static class UiWithTag implements UiTag<Object> {
 
     private final Object with;
 
@@ -381,6 +394,10 @@ class UiResourceManager {
     }
 
     public void addElement(Element element) {
+      // nothing to do
+    }
+
+    public void addUiObject(UIObject uiObject) {
       // nothing to do
     }
 
@@ -396,7 +413,7 @@ class UiResourceManager {
       return with;
     }
 
-    public UiTag getParentTag() {
+    public UiTag<?> getParentTag() {
       // nothing to do
       return null;
     }
@@ -448,7 +465,7 @@ class UiResourceManager {
    * @return The UiBinderTag which has registered the imported object instances
    *         in the {@link UiResourceManager}.
    */
-  UiTag registerImport(Map<String, Object> attributes, UiTag parentTag,
+  UiTag<?> registerImport(Map<String, Object> attributes, UiTag<?> parentTag,
       Object owner) {
     return new UiImportTag(attributes, parentTag, resources, owner);
   }
@@ -464,7 +481,7 @@ class UiResourceManager {
    * @return The UiBinderTag which has registered the imported object instances
    *         in the {@link UiResourceManager}.
    */
-  UiTag registerMsg(Map<String, Object> attributes, UiTag parentTag,
+  UiTag<String> registerMsg(Map<String, Object> attributes, UiTag<?> parentTag,
       Object owner) {
     return new UiMsgTag(parentTag);
   }
@@ -485,8 +502,8 @@ class UiResourceManager {
    * @throws GwtTestUiBinderException If the localName is not managed or if the
    *           alias is already binded to another Resource object
    */
-  UiTag registerResource(String localName, Map<String, Object> attributes,
-      UiTag parentTag, Object owner) throws GwtTestUiBinderException {
+  UiTag<?> registerResource(String localName, Map<String, Object> attributes,
+      UiTag<?> parentTag, Object owner) throws GwtTestUiBinderException {
 
     String alias = getResourceAlias(localName, attributes);
 
