@@ -86,7 +86,7 @@ class ConstantsInvocationHandler extends LocalizableResourceInvocationHandler {
   @Override
   protected Object extractFromProperties(Properties properties, Method method,
       Object[] args, Locale locale) throws Throwable {
-    String line = properties.getProperty(method.getName());
+    String line = properties.getProperty(getKey(method));
 
     if (line == null) {
       return null;

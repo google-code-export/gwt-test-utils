@@ -44,7 +44,7 @@ class MessagesInvocationHandler extends LocalizableResourceInvocationHandler {
       String result = format(valuePattern, args, getLocale());
 
       // handle SafeHtml return type
-      return (method.getReturnType() == SafeHtml.class)
+      return method.getReturnType() == SafeHtml.class
           ? SafeHtmlUtils.fromTrustedString(result) : result;
     }
 
@@ -56,8 +56,8 @@ class MessagesInvocationHandler extends LocalizableResourceInvocationHandler {
       Method method, Object[] args, Locale locale) throws Throwable {
     Annotation messageAnnotation = getMessageAnnotation(method);
 
-    String key = (messageAnnotation == null) ? method.getName()
-        : getSpecificKey(messageAnnotation, method, args, locale);
+    String key = messageAnnotation == null ? getKey(method) : getSpecificKey(
+        messageAnnotation, method, args, locale);
 
     String result = extractProperty(localizedProperties, key);
     if (result != null) {
@@ -65,7 +65,7 @@ class MessagesInvocationHandler extends LocalizableResourceInvocationHandler {
       result = format(result, args, locale);
 
       // handle SafeHtml return type
-      return (method.getReturnType() == SafeHtml.class)
+      return method.getReturnType() == SafeHtml.class
           ? SafeHtmlUtils.fromTrustedString(result) : result;
     }
 
@@ -106,9 +106,9 @@ class MessagesInvocationHandler extends LocalizableResourceInvocationHandler {
           Class<? extends PluralRule> pluralRuleClass = pluralCount.value();
           int count = (Integer) args[i];
 
-          String pluralRuleClassName = (pluralRuleClass != PluralRule.class)
+          String pluralRuleClassName = pluralRuleClass != PluralRule.class
               ? pluralRuleClass.getName() : DefaultRule.class.getName();
-          pluralRuleClassName += ("_" + locale.getLanguage());
+          pluralRuleClassName += "_" + locale.getLanguage();
 
           try {
             Class<? extends PluralRule> acutalRule = (Class<? extends PluralRule>) Class.forName(pluralRuleClassName);

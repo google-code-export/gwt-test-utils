@@ -28,6 +28,10 @@ public interface MyConstants extends Constants {
       "default map3 value"})
   public Map<String, Object> map();
 
+  @DefaultStringValue("Default String Message With Key")
+  @Key("message.with.key")
+  public String messageWithKey();
+
   @DefaultStringArrayValue({"default0", "default1"})
   public String[] stringArray();
 

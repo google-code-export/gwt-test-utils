@@ -37,6 +37,7 @@ public class MyConstantsTest extends GwtTestTest {
     Map<String, Object> map = constants.map();
     String valueWithoutLocale = constants.valueWithoutLocale();
     String valueWithoutLocaleToBeOverride = constants.valueWithoutLocaleToBeOverride();
+    String messageWithKey = constants.messageWithKey();
 
     // Assert 1
     assertEquals("Hello english !", hello.asString());
@@ -59,12 +60,16 @@ public class MyConstantsTest extends GwtTestTest {
     assertEquals("Value from parent default .properties",
         valueWithoutLocaleToBeOverride);
 
+    // @Key
+    assertEquals("Message with key english", messageWithKey);
+
     // Act 2
     GwtConfig.get().setLocale(Locale.US);
     hello = constants.hello();
     goodbye = constants.goodbye();
     stringArray = constants.stringArray();
     map = constants.map();
+    messageWithKey = constants.messageWithKey();
 
     // Assert 2
     assertEquals("Hello US !", hello.asString());
@@ -82,6 +87,9 @@ public class MyConstantsTest extends GwtTestTest {
     assertEquals("default map1 value", map.get("map1"));
     assertEquals("default map2 value", map.get("map2"));
     assertEquals("default map3 value", map.get("map3"));
+
+    // @Key
+    assertEquals("Message with key US", messageWithKey);
   }
 
   @Test
