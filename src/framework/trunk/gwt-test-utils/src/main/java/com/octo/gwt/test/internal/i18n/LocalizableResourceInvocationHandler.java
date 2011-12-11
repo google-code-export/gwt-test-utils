@@ -7,6 +7,7 @@ import java.util.Properties;
 
 import com.google.gwt.i18n.client.LocalizableResource;
 import com.google.gwt.i18n.client.LocalizableResource.DefaultLocale;
+import com.google.gwt.i18n.client.LocalizableResource.Key;
 import com.octo.gwt.test.exceptions.GwtTestI18NException;
 import com.octo.gwt.test.internal.GwtConfig;
 import com.octo.gwt.test.internal.utils.GwtPropertiesHelper;
@@ -78,6 +79,11 @@ abstract class LocalizableResourceInvocationHandler implements
   protected abstract Object extractFromProperties(
       Properties localizedProperties, Method method, Object[] args,
       Locale locale) throws Throwable;
+
+  protected String getKey(Method method) {
+    Key key = method.getAnnotation(Key.class);
+    return key != null ? key.value() : method.getName();
+  }
 
   protected Locale getLocale() {
     if (GwtConfig.get().getLocale() != null) {
