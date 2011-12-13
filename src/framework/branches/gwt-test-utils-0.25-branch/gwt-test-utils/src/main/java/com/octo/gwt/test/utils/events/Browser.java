@@ -106,6 +106,10 @@ public class Browser {
     // trigger finally scheduled command first
     FinallyCommandTrigger.triggerCommands();
 
+    if (hasData.getSelectionModel() == null) {
+      return;
+    }
+
     // compute the key for the item to click
     Object itemKey = hasData.getKeyProvider() != null
         ? hasData.getKeyProvider().getKey(item) : item;
