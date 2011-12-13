@@ -22,8 +22,15 @@ public class XmlUtils {
   static {
 
     documentBuilderFactory = DocumentBuilderFactory.newInstance();
+
+    documentBuilderFactory.setAttribute(
+        "http://apache.org/xml/features/nonvalidating/load-dtd-grammar", false);
+    documentBuilderFactory.setAttribute(
+        "http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+
+    documentBuilderFactory.setNamespaceAware(true);
     documentBuilderFactory.setValidating(false);
-    documentBuilderFactory.setNamespaceAware(false);
+
   }
 
   public static DocumentBuilder newDocumentBuilder() {

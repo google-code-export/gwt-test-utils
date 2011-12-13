@@ -198,7 +198,8 @@ public class ModuleData {
       if (GwtTestException.class.isInstance(e)) {
         throw (GwtTestException) e;
       } else {
-        throw new GwtTestConfigurationException(e);
+        throw new GwtTestConfigurationException(
+            "Error while parsing GWT module file '" + moduleFilePath + "'", e);
       }
     }
   }
@@ -290,7 +291,7 @@ public class ModuleData {
     for (int j = 0; j < exclusionNodes.getLength(); j++) {
       Node exclusion = exclusionNodes.item(j);
       String exclusionName = xpath.evaluate("@name", exclusion).trim();
-      int extensionToken = (exclusionName.toLowerCase().indexOf(".java"));
+      int extensionToken = exclusionName.toLowerCase().indexOf(".java");
       if (extensionToken > -1) {
         exclusionName = exclusionName.substring(0, extensionToken).trim();
       }
