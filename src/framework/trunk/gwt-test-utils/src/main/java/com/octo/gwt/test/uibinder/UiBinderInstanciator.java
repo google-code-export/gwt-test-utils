@@ -18,7 +18,7 @@ import com.octo.gwt.test.internal.GwtConfig;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 /**
- * Class responsible for Object instanciatations. It handles provided
+ * Class responsible for Object instantiations. It handles provided
  * {@link UiField}, {@link UiFactory} fields and {@link UiConstructor} fields.
  * 
  * @author Gael Lazzari
