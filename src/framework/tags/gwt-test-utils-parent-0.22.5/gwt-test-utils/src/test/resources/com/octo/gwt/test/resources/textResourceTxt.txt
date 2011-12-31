@@ -1,2 +1,0 @@
-Hello gwt-test-utils !
-This is a test with a simple text file
