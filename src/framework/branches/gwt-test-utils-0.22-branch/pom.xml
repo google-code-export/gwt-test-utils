@@ -3,7 +3,7 @@
 	<groupId>com.octo.gwt.test</groupId>
 	<artifactId>gwt-test-utils-parent</artifactId>
 	<packaging>pom</packaging>
-	<version>0.22.5-SNAPSHOT</version>
+	<version>0.22.5</version>
 	<name>${project.artifactId}</name>
 
 	<properties>
