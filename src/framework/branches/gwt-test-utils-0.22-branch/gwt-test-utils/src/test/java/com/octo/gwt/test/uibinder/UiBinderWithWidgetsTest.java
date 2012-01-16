@@ -117,14 +117,13 @@ public class UiBinderWithWidgetsTest extends GwtTestTest {
 
     // Assertion on inner image
     assertEquals("img", w.img.getName());
-    assertEquals(
-        "http://127.0.0.1:8888/gwt_test_utils_module/com/octo/gwt/test/uibinder/img.jpg",
+    assertEquals("http://127.0.0.1:8888/gwt_test_utils_module/img.jpg",
         w.img.getURL());
 
     // Assertion on inner data
     assertEquals("data", w.data.getName());
     assertEquals(
-        "http://127.0.0.1:8888/gwt_test_utils_module/com/octo/gwt/test/uibinder/data.test",
+        "http://127.0.0.1:8888/gwt_test_utils_module/MyChildConstants.properties",
         w.data.getUrl());
 
   }

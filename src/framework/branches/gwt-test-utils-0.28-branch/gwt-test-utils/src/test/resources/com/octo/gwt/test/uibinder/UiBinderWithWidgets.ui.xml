@@ -4,7 +4,7 @@
 
 	<ui:with field='res' type='com.octo.gwt.test.resources.MyClientBundle' />
 	<ui:image field="img" src="img.jpg"></ui:image>
-	<ui:data field="data" src="./data.test"></ui:data>
+	<ui:data field="data" src="../i18n/MyChildConstants.properties"></ui:data>
 
 	<ui:style type='com.octo.gwt.test.uibinder.UiBinderWithWidgets.MyStyle'>
 		.redBox {

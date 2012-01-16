@@ -22,7 +22,7 @@ public class ImageTest extends GwtTestTest {
 
     // Assert
     assertEquals(
-        "http://127.0.0.1:8888/gwt_test_utils_module/com/octo/gwt/test/resources/testImageResource.gif",
+        "http://127.0.0.1:8888/gwt_test_utils_module/testImageResource.gif",
         i.getUrl());
     assertEquals(0, i.getOriginLeft());
     assertEquals(0, i.getOriginTop());

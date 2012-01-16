@@ -1,13 +1,17 @@
 package com.octo.gwt.test.utils;
 
+import java.lang.annotation.Annotation;
 import java.util.HashSet;
 import java.util.Set;
 
 import javassist.CtClass;
 import javassist.CtConstructor;
 import javassist.NotFoundException;
+import javassist.bytecode.AnnotationsAttribute;
+import javassist.bytecode.annotation.StringMemberValue;
 
 import com.octo.gwt.test.exceptions.GwtTestPatchException;
+import com.octo.gwt.test.internal.GwtClassPool;
 
 /**
  * Utility class over the <code>javassist</code> API.
@@ -34,6 +38,34 @@ public class JavassistUtils {
             + ") in class " + ctClass.getName()
             + ", you have to set parameter types discriminators");
     }
+  }
+
+  /**
+   * Retrieve the String value of an annotation which is not available at
+   * runtime.
+   * 
+   * @param clazz The annotated class
+   * @param annotation The annotation which is not visible at runtime
+   * @param name The name of the String property of the annotation to retrieve
+   * @return The String value of the annotation or null if the annotation or its
+   *         property is not present
+   */
+  public static String getInvisibleAnnotationStringValue(Class<?> clazz,
+      Class<? extends Annotation> annotation, String name) {
+    CtClass ctClass = GwtClassPool.getCtClass(clazz);
+    ctClass.defrost();
+
+    AnnotationsAttribute attr = (AnnotationsAttribute) ctClass.getClassFile().getAttribute(
+        AnnotationsAttribute.invisibleTag);
+    if (attr == null) {
+      return null;
+    }
+    javassist.bytecode.annotation.Annotation an = attr.getAnnotation(annotation.getName());
+
+    ctClass.freeze();
+
+    return an != null
+        ? ((StringMemberValue) an.getMemberValue(name)).getValue() : null;
   }
 
   private static void findConstructors(CtClass ctClass, Set<CtConstructor> set,

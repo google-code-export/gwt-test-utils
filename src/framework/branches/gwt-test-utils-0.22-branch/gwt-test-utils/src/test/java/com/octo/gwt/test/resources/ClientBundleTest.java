@@ -66,8 +66,7 @@ public class ClientBundleTest extends GwtTestTest {
     // Assert
     assertEquals("testDataResource", name);
     assertEquals(
-        "http://127.0.0.1:8888/gwt_test_utils_module/com/octo/gwt/test/resources/textResourceXml.xml",
-        url);
+        "http://127.0.0.1:8888/gwt_test_utils_module/textResourceXml.xml", url);
     assertEquals(
         "com.octo.gwt.test.internal.resources.DataResourceCallback generated for 'com.octo.gwt.test.resources.MyClientBundle.testDataResource()'",
         toString);
@@ -91,7 +90,7 @@ public class ClientBundleTest extends GwtTestTest {
     // Assert
     assertEquals("testImageResource", name);
     assertEquals(
-        "http://127.0.0.1:8888/gwt_test_utils_module/com/octo/gwt/test/resources/testImageResource.gif",
+        "http://127.0.0.1:8888/gwt_test_utils_module/testImageResource.gif",
         url);
     assertEquals(0, heigh);
     assertEquals(0, left);
@@ -114,8 +113,7 @@ public class ClientBundleTest extends GwtTestTest {
 
     // Assert
     assertEquals("treeOpen", name);
-    assertEquals(
-        "http://127.0.0.1:8888/gwt_test_utils_module/com/google/gwt/user/client/ui/treeLeaf.gif",
+    assertEquals("http://127.0.0.1:8888/gwt_test_utils_module/treeLeaf.gif",
         url);
   }
 
