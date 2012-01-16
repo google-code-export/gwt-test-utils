@@ -134,36 +134,10 @@ public class ResourcePrototypeProxyBuilder {
   }
 
   private String computeUrl(URL resourceURL, Class<?> resourceClass) {
-    String url = computeUrlRecursive(resourceURL, resourceClass);
 
-    if (url != null) {
-      return url;
-    }
-
-    throw new GwtTestResourcesException(
-        "Cannot compute the relative URL of resource '" + resourceURL + "'");
-  }
-
-  private String computeUrlRecursive(URL resourceURL, Class<?> resourceClass) {
-    String packagePath = resourceClass.getPackage().getName().replaceAll("\\.",
-        "/");
-
-    int startIndex = resourceURL.getPath().indexOf(packagePath);
-
-    if (startIndex == -1) {
-      for (Class<?> inter : resourceClass.getInterfaces()) {
-        String url = computeUrlRecursive(resourceURL, inter);
-        if (url != null) {
-          return url;
-        }
-      }
-
-      return null;
-
-    } else {
-      String resourceRelativePath = resourceURL.getPath().substring(startIndex);
-      return GWT.getModuleBaseURL() + resourceRelativePath;
-    }
+    String resourceRelativePath = resourceURL.getPath().substring(
+        resourceURL.getPath().lastIndexOf('/') + 1);
+    return GWT.getModuleBaseURL() + resourceRelativePath;
   }
 
   private InvocationHandler generateInvocationHandler(
