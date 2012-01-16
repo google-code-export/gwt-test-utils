@@ -2,15 +2,14 @@ package com.octo.gwt.test.uibinder;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Proxy;
-import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
 
 import com.google.gwt.dev.Link;
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Widget;
 import com.octo.gwt.test.exceptions.GwtTestUiBinderException;
@@ -21,9 +20,9 @@ class UiBinderInvocationHandler implements InvocationHandler {
 
   private static final Map<Class<?>, GwtEvent<?>> EVENT_PROTOTYPES = new HashMap<Class<?>, GwtEvent<?>>();
 
-  private final Class<?> proxiedClass;
+  private final Class<UiBinder<?, ?>> proxiedClass;
 
-  UiBinderInvocationHandler(Class<?> proxiedClass) {
+  UiBinderInvocationHandler(Class<UiBinder<?, ?>> proxiedClass) {
     this.proxiedClass = proxiedClass;
   }
 
@@ -64,11 +63,10 @@ class UiBinderInvocationHandler implements InvocationHandler {
    *         UiBinder#createAndBindUi(Object)}.
    */
   private Object createAndBindUi(Object owner) {
-    Class<?> rootComponentClass = getRootElementClass();
     UiBinderParser parser = new UiBinderParser();
 
     // parse .ui.xml file and inject @UiField
-    Object rootComponent = parser.createUiComponent(rootComponentClass, owner);
+    Object rootComponent = parser.createUiComponent(proxiedClass, owner);
     // handle @UiHandlers
     addHandlers(owner);
 
@@ -135,26 +133,6 @@ class UiBinderInvocationHandler implements InvocationHandler {
       return eventPrototype.getAssociatedType();
     }
 
-  }
-
-  /**
-   * Get the actual class of the <U> parameter.
-   * 
-   * @return The class of the root element or widget generated from UiBinder.
-   */
-  private Class<?> getRootElementClass() {
-    for (Type type : proxiedClass.getGenericInterfaces()) {
-
-      if (type instanceof ParameterizedType) {
-        ParameterizedType pType = (ParameterizedType) type;
-
-        return (Class<?>) pType.getActualTypeArguments()[0];
-      }
-    }
-
-    throw new GwtTestUiBinderException("The UiBinder subinterface '"
-        + proxiedClass.getName()
-        + "' is not parameterized. Please add its generic types.");
   }
 
 }

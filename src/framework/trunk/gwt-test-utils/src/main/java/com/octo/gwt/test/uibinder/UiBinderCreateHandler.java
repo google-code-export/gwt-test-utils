@@ -32,15 +32,16 @@ public class UiBinderCreateHandler implements GwtCreateHandler {
    * 
    * @see com.octo.gwt.test.GwtCreateHandler#create(java.lang.Class)
    */
+  @SuppressWarnings("unchecked")
   public Object create(Class<?> classLiteral) throws Exception {
     if (UiBinder.class.isAssignableFrom(classLiteral)) {
-      return createProxy(classLiteral);
+      return createProxy((Class<UiBinder<?, ?>>) classLiteral);
     } else {
       return null;
     }
   }
 
-  private Object createProxy(Class<?> uiBinderClass) {
+  private Object createProxy(Class<UiBinder<?, ?>> uiBinderClass) {
     InvocationHandler ih = new UiBinderInvocationHandler(uiBinderClass);
 
     return Proxy.newProxyInstance(this.getClass().getClassLoader(),
