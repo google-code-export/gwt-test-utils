@@ -15,16 +15,18 @@ class HistoryImplPatcher {
 
   static class HistoryHolder implements AfterTestCallback {
 
-    Stack<String> stack = new Stack<String>();
-    String top;
+    final Stack<String> stack;
+    private String top;
 
     HistoryHolder() {
+      this.stack = new Stack<String>();
+      this.top = "";
       AfterTestCallbackManager.get().registerCallback(this);
     }
 
     public void afterTest() throws Throwable {
       stack.clear();
-      top = null;
+      top = "";
 
       HistoryImpl historyImpl = GwtReflectionUtils.getStaticFieldValue(
           History.class, "impl");
@@ -56,6 +58,10 @@ class HistoryImplPatcher {
 
   @PatchMethod
   static void setToken(String token) {
+    if (token == null) {
+      token = "";
+    }
+
     HISTORY_HOLDER.stack.push(token);
     HISTORY_HOLDER.top = token;
   }

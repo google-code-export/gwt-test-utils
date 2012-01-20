@@ -14,18 +14,30 @@ import org.slf4j.LoggerFactory;
 import com.google.gwt.i18n.client.Dictionary;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.octo.gwt.test.exceptions.GwtTestPatchException;
+import com.octo.gwt.test.internal.AfterTestCallback;
+import com.octo.gwt.test.internal.AfterTestCallbackManager;
 import com.octo.gwt.test.internal.GwtConfig;
 import com.octo.gwt.test.internal.handlers.GwtCreateHandlerManager;
 import com.octo.gwt.test.internal.i18n.DictionaryUtils;
 import com.octo.gwt.test.uibinder.UiObjectTagFactory;
 import com.octo.gwt.test.utils.events.Browser.BrowserErrorHandler;
 
-public abstract class GwtModuleRunnerAdapter implements GwtModuleRunner {
+public abstract class GwtModuleRunnerAdapter implements GwtModuleRunner,
+    AfterTestCallback {
 
   private static final String DEFAULT_WAR_DIR = "war/";
   private static final Logger LOGGER = LoggerFactory.getLogger(GwtConfig.class);
   private static final String MAVEN_DEFAULT_RES_DIR = "src/main/resources/";
   private static final String MAVEN_DEFAULT_WEB_DIR = "src/main/webapp/";
+
+  private Locale locale;
+  private GwtLogHandler logHandler;
+  private ServletConfig servletConfig;
+  private WindowOperationsHandler windowOperationsHandler;
+
+  public GwtModuleRunnerAdapter() {
+    AfterTestCallbackManager.get().registerCallback(this);
+  }
 
   /*
    * (non-Javadoc)
@@ -55,13 +67,24 @@ public abstract class GwtModuleRunnerAdapter implements GwtModuleRunner {
   /*
    * (non-Javadoc)
    * 
-   * @see
-   * com.octo.gwt.test.GwtModuleRunner#addUiObjectTagFactory(com.octo.gwt
+   * @see com.octo.gwt.test.GwtModuleRunner#addUiObjectTagFactory(com.octo.gwt
    * .test.uibinder.UiObjectTagFactory)
    */
   public void addUiObjectTagFactory(
       UiObjectTagFactory<? extends IsWidget> factory) {
     GwtConfig.get().getUiObjectTagFactories().add(factory);
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.octo.gwt.test.internal.AfterTestCallback#afterTest()
+   */
+  public void afterTest() throws Throwable {
+    this.locale = null;
+    this.locale = null;
+    this.servletConfig = null;
+    this.windowOperationsHandler = null;
   }
 
   /*
@@ -105,7 +128,7 @@ public abstract class GwtModuleRunnerAdapter implements GwtModuleRunner {
    * @see com.octo.gwt.test.GwtModuleRunner#getLocale()
    */
   public Locale getLocale() {
-    return null;
+    return locale;
   }
 
   /*
@@ -114,7 +137,7 @@ public abstract class GwtModuleRunnerAdapter implements GwtModuleRunner {
    * @see com.octo.gwt.test.GwtModuleRunner#getLogHandler()
    */
   public GwtLogHandler getLogHandler() {
-    return null;
+    return logHandler;
   }
 
   /*
@@ -130,10 +153,12 @@ public abstract class GwtModuleRunnerAdapter implements GwtModuleRunner {
    * @see com.octo.gwt.test.GwtModuleRunner#getLogHandler()
    */
   public ServletConfig getServletConfig() {
-    throw new GwtTestPatchException(
-        "No ServletConfig specified. You should override "
-            + GwtModuleRunner.class.getSimpleName()
-            + ".getServletConfig() to provide your own ServletConfig mocked instance");
+    if (servletConfig == null) {
+      throw new GwtTestPatchException(
+          "No ServletConfig specified. You have to set your own ServetConfig mocked instance with the protected 'setServletConfig' method available in your test class");
+    }
+
+    return servletConfig;
   }
 
   /*
@@ -142,7 +167,7 @@ public abstract class GwtModuleRunnerAdapter implements GwtModuleRunner {
    * @see com.octo.gwt.test.GwtModuleRunner#getWindowOperationsHandler()
    */
   public WindowOperationsHandler getWindowOperationsHandler() {
-    return null;
+    return windowOperationsHandler;
   }
 
   /*
@@ -197,6 +222,23 @@ public abstract class GwtModuleRunnerAdapter implements GwtModuleRunner {
         + ".getHostPagePath() method to specify it.");
 
     return null;
+  }
+
+  protected void setLocale(Locale locale) {
+    this.locale = locale;
+  }
+
+  protected void setLogHandler(GwtLogHandler logHandler) {
+    this.logHandler = logHandler;
+  }
+
+  protected void setServletConfig(ServletConfig servletConfig) {
+    this.servletConfig = servletConfig;
+  }
+
+  protected void setWindowOperationsHandler(
+      WindowOperationsHandler windowOperationsHandler) {
+    this.windowOperationsHandler = windowOperationsHandler;
   }
 
 }

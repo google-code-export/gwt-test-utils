@@ -4,6 +4,7 @@ import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.Window;
 import com.octo.gwt.test.WindowOperationsHandler;
+import com.octo.gwt.test.exceptions.GwtTestConfigurationException;
 import com.octo.gwt.test.internal.GwtConfig;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
@@ -24,11 +25,15 @@ class WindowPatcher {
   @PatchMethod
   static boolean confirm(String msg) {
     WindowOperationsHandler handler = GwtConfig.get().getWindowOperationsHandler();
-    if (handler != null) {
-      return handler.confirm(msg);
+    if (handler == null) {
+      throw new GwtTestConfigurationException(
+          "A call to Window.confirm(msg) was triggered, but no "
+              + WindowOperationsHandler.class.getSimpleName()
+              + " has been registered. You need to setup your own with the protected 'setWindowOperationsHandler' method available in your test class");
+
     }
 
-    return false;
+    return handler.confirm(msg);
   }
 
   @PatchMethod

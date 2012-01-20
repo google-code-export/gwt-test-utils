@@ -11,6 +11,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import com.google.gwt.event.shared.UmbrellaException;
 import com.octo.gwt.test.exceptions.GwtTestException;
 import com.octo.gwt.test.exceptions.ReflectionException;
 import com.octo.gwt.test.internal.utils.DoubleMap;
@@ -61,6 +62,11 @@ public class GwtReflectionUtils {
     } catch (InvocationTargetException e) {
       if (GwtTestException.class.isInstance(e.getCause())) {
         throw (GwtTestException) e.getCause();
+      } else if (AssertionError.class.isInstance(e.getCause())) {
+        throw (AssertionError) e.getCause();
+      } else if (UmbrellaException.class.isInstance(e.getCause())) {
+        throw new ReflectionException("Error while calling method '"
+            + method.toString() + "'", e.getCause().getCause());
       }
       throw new ReflectionException("Error while calling method '"
           + method.toString() + "'", e.getCause());
