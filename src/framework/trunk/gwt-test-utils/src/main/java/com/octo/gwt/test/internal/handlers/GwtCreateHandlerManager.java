@@ -41,6 +41,7 @@ public class GwtCreateHandlerManager implements AfterTestCallback {
   private final GwtCreateHandler imageBundleCreateHandler;
   private final GwtCreateHandler localizableResourceCreateHandler;
   private GwtCreateHandler mockCreateHandler;
+  private final GwtCreateHandler placeHistoryMapperCreateHandler;
   private final GwtCreateHandler resizeLayoutPanelImplCreateHandler;
   private final GwtCreateHandler safeHtmlTemplatesCreateHandler;
   private final TestRemoteServiceCreateHandler testRemoteServiceCreateHandler;
@@ -60,6 +61,7 @@ public class GwtCreateHandlerManager implements AfterTestCallback {
     dockLayoutPanelCreateHandler = new DockLayoutPanelHandler();
     imageBundleCreateHandler = new ImageBundleCreateHandler();
     localizableResourceCreateHandler = new LocalizableResourceCreateHandler();
+    placeHistoryMapperCreateHandler = new PlaceHistoryMapperCreateHandler();
     resizeLayoutPanelImplCreateHandler = new ResizeLayoutPanelImplCreateHandler();
     safeHtmlTemplatesCreateHandler = new SafeHtmlTemplatesCreateHandler();
     uiBinderCreateHandler = UiBinderCreateHandler.get();
@@ -108,6 +110,7 @@ public class GwtCreateHandlerManager implements AfterTestCallback {
     list.add(defaultGwtCreateHandler);
     list.add(abstractClassCreateHandler);
     list.add(safeHtmlTemplatesCreateHandler);
+    list.add(placeHistoryMapperCreateHandler);
 
     return Collections.unmodifiableList(list);
   }

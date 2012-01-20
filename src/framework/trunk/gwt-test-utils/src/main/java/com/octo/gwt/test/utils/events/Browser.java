@@ -710,7 +710,9 @@ public class Browser {
       dispatchEventWithBubble(target, event, applied);
 
     } catch (UmbrellaException e) {
-      if (RuntimeException.class.isInstance(e.getCause())) {
+      if (AssertionError.class.isInstance(e.getCause())) {
+        throw (AssertionError) e.getCause();
+      } else if (RuntimeException.class.isInstance(e.getCause())) {
         throw (RuntimeException) e.getCause();
       } else {
         throw e;
