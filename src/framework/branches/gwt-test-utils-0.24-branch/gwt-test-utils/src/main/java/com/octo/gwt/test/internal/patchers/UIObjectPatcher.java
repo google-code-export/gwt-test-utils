@@ -2,7 +2,9 @@ package com.octo.gwt.test.internal.patchers;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
+import com.google.gwt.user.client.ui.PotentialElement;
 import com.google.gwt.user.client.ui.UIObject;
+import com.google.gwt.user.client.ui.Widget;
 import com.octo.gwt.test.internal.patchers.dom.ElementPatcher;
 import com.octo.gwt.test.internal.utils.PropertyContainerHelper;
 import com.octo.gwt.test.patchers.AutomaticPatcher;
@@ -12,6 +14,8 @@ import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 @PatchClass(UIObject.class)
 public class UIObjectPatcher extends AutomaticPatcher {
+
+	public static final String ELEM_EVENTLISTENER = "ELEM_EVENTLISTENER";
 
 	@PatchMethod
 	public static double extractLengthValue(UIObject uiObject, String s) {
@@ -29,10 +33,64 @@ public class UIObjectPatcher extends AutomaticPatcher {
 	}
 
 	@PatchMethod
+	public static String getStyleName(Element elem) {
+		return PropertyContainerHelper.getProperty(elem,
+				ElementPatcher.CLASSNAME_FIELD);
+	}
+
+	@PatchMethod
 	public static boolean isVisible(Element elem) {
 		String display = elem.getStyle().getProperty("display");
 
 		return !display.equals("none");
+	}
+
+	@PatchMethod
+	public static void replaceElement(UIObject uiObject, Element elem) {
+		Element element = GwtReflectionUtils.getPrivateFieldValue(uiObject,
+				"element");
+		if (element != null) {
+			// replace this.element in its parent with elem.
+			replaceNode(uiObject, element, elem);
+		}
+
+		GwtReflectionUtils.setPrivateFieldValue(uiObject, "element", elem);
+	}
+
+	@PatchMethod
+	public static void replaceNode(UIObject uiObject, Element node,
+			Element newNode) {
+		Node parent = node.getParentNode();
+
+		if (parent != null) {
+			parent.insertBefore(newNode, node);
+			parent.removeChild(node);
+		}
+	}
+
+	@PatchMethod
+	public static void setElement(UIObject uiObject,
+			com.google.gwt.user.client.Element elem) {
+		Element element = GwtReflectionUtils.getPrivateFieldValue(uiObject,
+				"element");
+		assert element == null || PotentialElement.isPotential(element) : "Element may only be set once";
+
+		GwtReflectionUtils.setPrivateFieldValue(uiObject, "element", elem);
+
+		// Bind the widget to listen to element so we can trigger event on it
+		// even
+		// if the widget has not been attached yet
+		if (Widget.class.isInstance(uiObject)) {
+			PropertyContainerHelper.setProperty(elem, ELEM_EVENTLISTENER,
+					uiObject);
+		}
+
+	}
+
+	@PatchMethod
+	public static void setStyleName(Element elem, String styleName) {
+		PropertyContainerHelper.setProperty(elem,
+				ElementPatcher.CLASSNAME_FIELD, styleName);
 	}
 
 	@PatchMethod
@@ -42,7 +100,8 @@ public class UIObjectPatcher extends AutomaticPatcher {
 	}
 
 	@PatchMethod
-	public static void updatePrimaryAndDependentStyleNames(Element elem, String newPrimaryStyle) {
+	public static void updatePrimaryAndDependentStyleNames(Element elem,
+			String newPrimaryStyle) {
 
 		String[] classes = getStyleName(elem).split(" ");
 
@@ -55,8 +114,11 @@ public class UIObjectPatcher extends AutomaticPatcher {
 			classes[0] = newPrimaryStyle;
 			for (int i = 1; i < classes.length; i++) {
 				String name = classes[i];
-				if (name.length() > oldPrimaryStyleLen && name.charAt(oldPrimaryStyleLen) == '-' && name.indexOf(oldPrimaryStyle) == 0) {
-					classes[i] = newPrimaryStyle + name.substring(oldPrimaryStyleLen);
+				if (name.length() > oldPrimaryStyleLen
+						&& name.charAt(oldPrimaryStyleLen) == '-'
+						&& name.indexOf(oldPrimaryStyle) == 0) {
+					classes[i] = newPrimaryStyle
+							+ name.substring(oldPrimaryStyleLen);
 				}
 			}
 
@@ -67,37 +129,6 @@ public class UIObjectPatcher extends AutomaticPatcher {
 
 			setStyleName(elem, sb.toString().trim());
 		}
-	}
-
-	@PatchMethod
-	public static void replaceElement(UIObject uiObject, Element elem) {
-		Element element = GwtReflectionUtils.getPrivateFieldValue(uiObject, "element");
-		if (element != null) {
-			// replace this.element in its parent with elem.
-			replaceNode(uiObject, element, elem);
-		}
-
-		GwtReflectionUtils.setPrivateFieldValue(uiObject, "element", elem);
-	}
-
-	@PatchMethod
-	public static void replaceNode(UIObject uiObject, Element node, Element newNode) {
-		Node parent = node.getParentNode();
-
-		if (parent != null) {
-			parent.insertBefore(newNode, node);
-			parent.removeChild(node);
-		}
-	}
-
-	@PatchMethod
-	public static String getStyleName(Element elem) {
-		return PropertyContainerHelper.getProperty(elem, ElementPatcher.CLASSNAME_FIELD);
-	}
-
-	@PatchMethod
-	public static void setStyleName(Element elem, String styleName) {
-		PropertyContainerHelper.setProperty(elem, ElementPatcher.CLASSNAME_FIELD, styleName);
 	}
 
 }

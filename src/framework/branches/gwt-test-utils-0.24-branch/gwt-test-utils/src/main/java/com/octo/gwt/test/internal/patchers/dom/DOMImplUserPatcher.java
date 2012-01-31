@@ -3,6 +3,8 @@ package com.octo.gwt.test.internal.patchers.dom;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.impl.DOMImpl;
+import com.octo.gwt.test.internal.patchers.UIObjectPatcher;
+import com.octo.gwt.test.internal.utils.PropertyContainerHelper;
 import com.octo.gwt.test.patchers.AutomaticPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
@@ -12,25 +14,8 @@ import com.octo.gwt.test.utils.events.EventUtils;
 public class DOMImplUserPatcher extends AutomaticPatcher {
 
 	@PatchMethod
-	public static void setEventListener(DOMImpl domImpl, Element elem, EventListener listener) {
-
-	}
-
-	@PatchMethod
-	public static int getEventsSunk(DOMImpl domImpl, Element elem) {
-		return 1;
-	}
-
-	@PatchMethod
 	public static int eventGetTypeInt(DOMImpl domImpl, String type) {
 		return EventUtils.getEventTypeInt(type);
-	}
-
-	// Abstract methods
-
-	@PatchMethod
-	public static void insertChild(DOMImpl domImpl, Element userParent, Element userChild, int index) {
-		NodePatcher.insertAtIndex(userParent, userChild, index);
 	}
 
 	@PatchMethod
@@ -43,7 +28,13 @@ public class DOMImplUserPatcher extends AutomaticPatcher {
 	}
 
 	@PatchMethod
-	public static int getChildIndex(DOMImpl domImpl, Element parent, Element child) {
+	public static int getChildCount(Object domImpl, Element elem) {
+		return elem.getChildCount();
+	}
+
+	@PatchMethod
+	public static int getChildIndex(DOMImpl domImpl, Element parent,
+			Element child) {
 		if (parent == null || child == null) {
 			return -1;
 		}
@@ -57,9 +48,17 @@ public class DOMImplUserPatcher extends AutomaticPatcher {
 		return -1;
 	}
 
-	@PatchMethod
-	public static void sinkEvents(DOMImpl domImpl, Element elem, int eventBits) {
+	// Abstract methods
 
+	@PatchMethod
+	public static EventListener getEventListener(DOMImpl domImpl, Element elem) {
+		return PropertyContainerHelper.getProperty(elem,
+				UIObjectPatcher.ELEM_EVENTLISTENER);
+	}
+
+	@PatchMethod
+	public static int getEventsSunk(DOMImpl domImpl, Element elem) {
+		return 1;
 	}
 
 	@PatchMethod
@@ -67,8 +66,21 @@ public class DOMImplUserPatcher extends AutomaticPatcher {
 	}
 
 	@PatchMethod
-	public static int getChildCount(Object domImpl, Element elem) {
-		return elem.getChildCount();
+	public static void insertChild(DOMImpl domImpl, Element userParent,
+			Element userChild, int index) {
+		NodePatcher.insertAtIndex(userParent, userChild, index);
+	}
+
+	@PatchMethod
+	public static void setEventListener(DOMImpl domImpl, Element elem,
+			EventListener listener) {
+		PropertyContainerHelper.setProperty(elem,
+				UIObjectPatcher.ELEM_EVENTLISTENER, listener);
+	}
+
+	@PatchMethod
+	public static void sinkEvents(DOMImpl domImpl, Element elem, int eventBits) {
+
 	}
 
 }

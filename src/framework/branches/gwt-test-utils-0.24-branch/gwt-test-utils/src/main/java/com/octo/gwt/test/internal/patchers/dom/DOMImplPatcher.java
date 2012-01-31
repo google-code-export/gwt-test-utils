@@ -13,7 +13,9 @@ import com.google.gwt.dom.client.SelectElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Text;
 import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.EventListener;
 import com.octo.gwt.test.internal.overrides.OverrideNodeList;
+import com.octo.gwt.test.internal.patchers.UIObjectPatcher;
 import com.octo.gwt.test.internal.utils.PropertyContainer;
 import com.octo.gwt.test.internal.utils.PropertyContainerHelper;
 import com.octo.gwt.test.internal.utils.TagAware;
@@ -38,13 +40,92 @@ public class DOMImplPatcher extends AutomaticPatcher {
 	private static final String NODE_LIST_FIELD = "ChildNodes";
 
 	@PatchMethod
+	public static ButtonElement createButtonElement(Object domImpl,
+			Document doc, String type) {
+		ButtonElement e = (ButtonElement) doc.createElement("button");
+		PropertyContainerHelper.setProperty(e, "Type", type);
+		return e;
+	}
+
+	@PatchMethod
+	public static InputElement createCheckInputElement(Object domImpl,
+			Document doc) {
+		InputElement e = createInputElement(doc, "checkbox", null);
+		e.setValue("on");
+
+		return e;
+	}
+
+	@PatchMethod
 	public static Element createElement(Object domImpl, Document doc, String tag) {
 		return NodeFactory.createElement(tag);
 	}
 
 	@PatchMethod
-	public static int getBodyOffsetLeft(Object domImpl, Document doc) {
-		return 0;
+	public static NativeEvent createHtmlEvent(Object domImpl, Document doc,
+			String type, boolean canBubble, boolean cancelable) {
+		return EventBuilder.create(Event.getTypeInt(type)).build();
+	}
+
+	public static InputElement createInputElement(Document doc, String type,
+			String name) {
+		InputElement e = (InputElement) doc.createElement("input");
+		PropertyContainerHelper.setProperty(e, "Type", type);
+
+		if (name != null) {
+			PropertyContainerHelper.setProperty(e, "Name", name);
+		}
+
+		return e;
+	}
+
+	@PatchMethod
+	public static InputElement createInputElement(Object domImpl, Document doc,
+			String type) {
+		return createInputElement(doc, type, null);
+	}
+
+	@PatchMethod
+	public static InputElement createInputRadioElement(Object domImpl,
+			Document doc, String name) {
+		return DOMImplPatcher.createInputElement(doc, "RADIO", name);
+	}
+
+	@PatchMethod
+	public static void cssClearOpacity(Object domImpl, Style style) {
+		String opacityField = GwtReflectionUtils.getStaticFieldValue(
+				Style.class, "STYLE_OPACITY");
+		PropertyContainerHelper.setProperty(style, opacityField, "");
+	}
+
+	@PatchMethod
+	public static void cssSetOpacity(Object domImpl, Style style, double value) {
+		String opacityField = GwtReflectionUtils.getStaticFieldValue(
+				Style.class, "STYLE_OPACITY");
+		PropertyContainerHelper.setProperty(style, opacityField,
+				String.valueOf(value));
+	}
+
+	@PatchMethod
+	public static void dispatchEvent(Object domImpl, Element target,
+			NativeEvent evt) {
+		EventListener listener = PropertyContainerHelper.getProperty(target,
+				UIObjectPatcher.ELEM_EVENTLISTENER);
+		if (listener != null && evt instanceof Event) {
+			listener.onBrowserEvent((Event) evt);
+		}
+	}
+
+	@PatchMethod
+	public static boolean eventGetAltKey(Object domImpl, NativeEvent evt) {
+		OverrideEvent event = (OverrideEvent) evt;
+		return event.isOverrideAltKey();
+	}
+
+	@PatchMethod
+	public static int eventGetButton(Object domImpl, NativeEvent evt) {
+		OverrideEvent event = (OverrideEvent) evt;
+		return event.getOverrideButton();
 	}
 
 	@PatchMethod
@@ -53,78 +134,43 @@ public class DOMImplPatcher extends AutomaticPatcher {
 	}
 
 	@PatchMethod
-	public static int getBodyOffsetTop(Object domImpl, Document doc) {
-		return 0;
+	public static boolean eventGetCtrlKey(Object domImpl, NativeEvent evt) {
+		OverrideEvent event = (OverrideEvent) evt;
+		return event.isOverrideCtrlKey();
 	}
 
 	@PatchMethod
-	public static ButtonElement createButtonElement(Object domImpl, Document doc, String type) {
-		ButtonElement e = (ButtonElement) doc.createElement("button");
-		PropertyContainerHelper.setProperty(e, "Type", type);
-		return e;
+	public static int eventGetKeyCode(Object domImpl, NativeEvent evt) {
+		OverrideEvent event = (OverrideEvent) evt;
+		return event.getOverrideKeyCode();
 	}
 
 	@PatchMethod
-	public static InputElement createInputElement(Object domImpl, Document doc, String type) {
-		return createInputElement(doc, type, null);
+	public static boolean eventGetMetaKey(Object domImpl, NativeEvent evt) {
+		OverrideEvent event = (OverrideEvent) evt;
+		return event.isOverrideMetaKey();
 	}
 
 	@PatchMethod
-	public static String getAttribute(Object domImpl, Element elem, String name) {
-		PropertyContainer propertyContainer = PropertyContainerHelper.getProperty(elem, ElementPatcher.PROPERTY_MAP_FIELD);
-		return (String) propertyContainer.get(name);
+	public static boolean eventGetShiftKey(Object domImpl, NativeEvent evt) {
+		OverrideEvent event = (OverrideEvent) evt;
+		return event.isOverrideShiftKey();
 	}
 
 	@PatchMethod
-	public static String getTagName(Object domImpl, Element elem) {
-		if (elem == null)
-			return null;
-
-		if (elem instanceof TagAware) {
-			return ((TagAware) elem).getTag();
-		}
-
-		String tagName = PropertyContainerHelper.getProperty(elem, TAG_NAME);
-		return (tagName != null) ? tagName : (String) GwtReflectionUtils.getStaticFieldValue(elem.getClass(), "TAG");
-	}
-
-	@PatchMethod
-	public static String getInnerHTML(Object domImpl, Element elem) {
-		return PropertyContainerHelper.getPropertyString(elem, INNER_HTML);
-	}
-
-	@PatchMethod
-	public static String getInnerText(Object domImpl, Element elem) {
-		Text textNode = getTextNode(elem);
-		if (textNode != null) {
-			return textNode.getData();
-		} else {
-			return "";
-		}
-	}
-
-	@PatchMethod
-	public static void setInnerText(Object domImpl, Element elem, String text) {
-		Text textNode = getTextNode(elem);
-		if (textNode != null) {
-			textNode.setData(text);
-		} else {
-			textNode = NodeFactory.createTextNode(text);
-			elem.appendChild(textNode);
-		}
-	}
-
-	private static Text getTextNode(Element elem) {
-		NodeList<Node> list = elem.getChildNodes();
-
-		for (int i = 0; i < list.getLength(); i++) {
-			Node node = list.getItem(i);
-			if (Text.class.isInstance(node)) {
-				return (Text) node;
-			}
-		}
-
+	public static EventTarget eventGetTarget(Object domImpl,
+			NativeEvent nativeEvent) {
 		return null;
+	}
+
+	@PatchMethod
+	public static String eventGetType(Object domImpl, NativeEvent nativeEvent) {
+		return EventUtils.getEventTypeString(nativeEvent);
+	}
+
+	@PatchMethod
+	public static void eventPreventDefault(Object domImpl, NativeEvent evt) {
+
 	}
 
 	@PatchMethod
@@ -138,8 +184,20 @@ public class DOMImplPatcher extends AutomaticPatcher {
 	}
 
 	@PatchMethod
-	public static int getTabIndex(Object domImpl, Element elem) {
-		return PropertyContainerHelper.getPropertyInteger(elem, TAB_INDEX);
+	public static String getAttribute(Object domImpl, Element elem, String name) {
+		PropertyContainer propertyContainer = PropertyContainerHelper
+				.getProperty(elem, ElementPatcher.PROPERTY_MAP_FIELD);
+		return (String) propertyContainer.get(name);
+	}
+
+	@PatchMethod
+	public static int getBodyOffsetLeft(Object domImpl, Document doc) {
+		return 0;
+	}
+
+	@PatchMethod
+	public static int getBodyOffsetTop(Object domImpl, Document doc) {
+		return 0;
 	}
 
 	@PatchMethod
@@ -157,13 +215,18 @@ public class DOMImplPatcher extends AutomaticPatcher {
 	}
 
 	@PatchMethod
-	public static Element getParentElement(Object domImpl, Node elem) {
-		Node parent = elem.getParentNode();
+	public static String getInnerHTML(Object domImpl, Element elem) {
+		return PropertyContainerHelper.getPropertyString(elem, INNER_HTML);
+	}
 
-		if (parent == null || !(parent instanceof Element))
-			return null;
-
-		return parent.cast();
+	@PatchMethod
+	public static String getInnerText(Object domImpl, Element elem) {
+		Text textNode = getTextNode(elem);
+		if (textNode != null) {
+			return textNode.getData();
+		} else {
+			return "";
+		}
 	}
 
 	@PatchMethod
@@ -190,8 +253,13 @@ public class DOMImplPatcher extends AutomaticPatcher {
 	}
 
 	@PatchMethod
-	public static void setScrollLeft(Object domImpl, Element elem, int left) {
-		PropertyContainerHelper.setProperty(elem, SCROLL_LEFT, left);
+	public static Element getParentElement(Object domImpl, Node elem) {
+		Node parent = elem.getParentNode();
+
+		if (parent == null || !(parent instanceof Element))
+			return null;
+
+		return parent.cast();
 	}
 
 	@PatchMethod
@@ -200,44 +268,33 @@ public class DOMImplPatcher extends AutomaticPatcher {
 	}
 
 	@PatchMethod
-	public static String eventGetType(Object domImpl, NativeEvent nativeEvent) {
-		return EventUtils.getEventTypeString(nativeEvent);
+	public static int getTabIndex(Object domImpl, Element elem) {
+		return PropertyContainerHelper.getPropertyInteger(elem, TAB_INDEX);
 	}
 
 	@PatchMethod
-	public static int eventGetKeyCode(Object domImpl, NativeEvent evt) {
-		OverrideEvent event = (OverrideEvent) evt;
-		return event.getOverrideKeyCode();
+	public static String getTagName(Object domImpl, Element elem) {
+		if (elem == null)
+			return null;
+
+		if (elem instanceof TagAware) {
+			return ((TagAware) elem).getTag();
+		}
+
+		String tagName = PropertyContainerHelper.getProperty(elem, TAG_NAME);
+		return (tagName != null) ? tagName : (String) GwtReflectionUtils
+				.getStaticFieldValue(elem.getClass(), "TAG");
 	}
 
 	@PatchMethod
-	public static int eventGetButton(Object domImpl, NativeEvent evt) {
-		OverrideEvent event = (OverrideEvent) evt;
-		return event.getOverrideButton();
-	}
+	public static boolean hasAttribute(Object domImpl, Element elem, String name) {
 
-	@PatchMethod
-	public static boolean eventGetAltKey(Object domImpl, NativeEvent evt) {
-		OverrideEvent event = (OverrideEvent) evt;
-		return event.isOverrideAltKey();
-	}
+		PropertyContainer properties = PropertyContainerHelper.getProperty(
+				elem, ElementPatcher.PROPERTY_MAP_FIELD);
 
-	@PatchMethod
-	public static boolean eventGetCtrlKey(Object domImpl, NativeEvent evt) {
-		OverrideEvent event = (OverrideEvent) evt;
-		return event.isOverrideCtrlKey();
-	}
+		// String propertyName = JsoProperties.get().getDOMPropertyName(name);
 
-	@PatchMethod
-	public static boolean eventGetMetaKey(Object domImpl, NativeEvent evt) {
-		OverrideEvent event = (OverrideEvent) evt;
-		return event.isOverrideMetaKey();
-	}
-
-	@PatchMethod
-	public static boolean eventGetShiftKey(Object domImpl, NativeEvent evt) {
-		OverrideEvent event = (OverrideEvent) evt;
-		return event.isOverrideShiftKey();
+		return properties.containsKey(name);
 	}
 
 	@PatchMethod
@@ -251,7 +308,24 @@ public class DOMImplPatcher extends AutomaticPatcher {
 	}
 
 	@PatchMethod
-	public static void selectAdd(Object domImpl, SelectElement select, OptionElement option, OptionElement before) {
+	public static boolean isOrHasChild(Object domImpl, Node parent, Node child) {
+		if (parent.equals(child)) {
+			return true;
+		} else if (child.getParentElement() != null
+				&& child.getParentElement().equals(parent)) {
+			return true;
+		}
+		return false;
+	}
+
+	@PatchMethod
+	public static void scrollIntoView(Object domImpl, Element elem) {
+
+	}
+
+	@PatchMethod
+	public static void selectAdd(Object domImpl, SelectElement select,
+			OptionElement option, OptionElement before) {
 		if (before == null) {
 			select.appendChild(option);
 		} else {
@@ -260,12 +334,21 @@ public class DOMImplPatcher extends AutomaticPatcher {
 	}
 
 	@PatchMethod
+	public static void selectClear(Object domImpl, SelectElement select) {
+		OverrideNodeList<Node> childNodes = (OverrideNodeList<Node>) select
+				.getChildNodes();
+		childNodes.getList().clear();
+		select.setSelectedIndex(-1);
+	}
+
+	@PatchMethod
 	public static int selectGetLength(Object domImpl, SelectElement select) {
 		return selectGetOptions(domImpl, select).getLength();
 	}
 
 	@PatchMethod
-	public static NodeList<OptionElement> selectGetOptions(Object domImpl, SelectElement select) {
+	public static NodeList<OptionElement> selectGetOptions(Object domImpl,
+			SelectElement select) {
 		OverrideNodeList<OptionElement> list = new OverrideNodeList<OptionElement>();
 
 		for (int i = 0; i < select.getChildNodes().getLength(); i++) {
@@ -278,81 +361,47 @@ public class DOMImplPatcher extends AutomaticPatcher {
 		return list;
 	}
 
-	@PatchMethod
-	public static void selectClear(Object domImpl, SelectElement select) {
-		OverrideNodeList<Node> childNodes = (OverrideNodeList<Node>) select.getChildNodes();
-		childNodes.getList().clear();
-		select.setSelectedIndex(-1);
-	}
+	// Abstract methods
 
 	@PatchMethod
-	public static void selectRemoveOption(Object domImpl, SelectElement select, int index) {
-		OverrideNodeList<Node> childNodes = (OverrideNodeList<Node>) select.getChildNodes();
+	public static void selectRemoveOption(Object domImpl, SelectElement select,
+			int index) {
+		OverrideNodeList<Node> childNodes = (OverrideNodeList<Node>) select
+				.getChildNodes();
 		childNodes.getList().remove(index);
 	}
 
 	@PatchMethod
-	public static void cssSetOpacity(Object domImpl, Style style, double value) {
-		String opacityField = GwtReflectionUtils.getStaticFieldValue(Style.class, "STYLE_OPACITY");
-		PropertyContainerHelper.setProperty(style, opacityField, String.valueOf(value));
+	public static void setInnerText(Object domImpl, Element elem, String text) {
+		Text textNode = getTextNode(elem);
+		if (textNode != null) {
+			textNode.setData(text);
+		} else {
+			textNode = NodeFactory.createTextNode(text);
+			elem.appendChild(textNode);
+		}
 	}
 
 	@PatchMethod
-	public static void cssClearOpacity(Object domImpl, Style style) {
-		String opacityField = GwtReflectionUtils.getStaticFieldValue(Style.class, "STYLE_OPACITY");
-		PropertyContainerHelper.setProperty(style, opacityField, "");
+	public static void setScrollLeft(Object domImpl, Element elem, int left) {
+		PropertyContainerHelper.setProperty(elem, SCROLL_LEFT, left);
 	}
 
 	private static OverrideNodeList<Node> getChildNodeList(Node node) {
 		return PropertyContainerHelper.getProperty(node, NODE_LIST_FIELD);
 	}
 
-	public static InputElement createInputElement(Document doc, String type, String name) {
-		InputElement e = (InputElement) doc.createElement("input");
-		PropertyContainerHelper.setProperty(e, "Type", type);
+	private static Text getTextNode(Element elem) {
+		NodeList<Node> list = elem.getChildNodes();
 
-		if (name != null) {
-			PropertyContainerHelper.setProperty(e, "Name", name);
+		for (int i = 0; i < list.getLength(); i++) {
+			Node node = list.getItem(i);
+			if (Text.class.isInstance(node)) {
+				return (Text) node;
+			}
 		}
 
-		return e;
-	}
-
-	@PatchMethod
-	public static void scrollIntoView(Object domImpl, Element elem) {
-
-	}
-
-	// Abstract methods
-
-	@PatchMethod
-	public static boolean isOrHasChild(Object domImpl, Node parent, Node child) {
-		if (parent.equals(child)) {
-			return true;
-		} else if (child.getParentElement() != null && child.getParentElement().equals(parent)) {
-			return true;
-		}
-		return false;
-	}
-
-	@PatchMethod
-	public static InputElement createInputRadioElement(Object domImpl, Document doc, String name) {
-		return DOMImplPatcher.createInputElement(doc, "RADIO", name);
-	}
-
-	@PatchMethod
-	public static EventTarget eventGetTarget(Object domImpl, NativeEvent nativeEvent) {
 		return null;
-	}
-
-	@PatchMethod
-	public static void eventPreventDefault(Object domImpl, NativeEvent evt) {
-
-	}
-
-	@PatchMethod
-	public static NativeEvent createHtmlEvent(Object domImpl, Document doc, String type, boolean canBubble, boolean cancelable) {
-		return EventBuilder.create(Event.getTypeInt(type)).build();
 	}
 
 }

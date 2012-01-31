@@ -21,14 +21,15 @@ public class GwtCreateHandlerManager {
 		return INSTANCE;
 	}
 
-	private List<GwtCreateHandler> addedHandlers;
+	private final List<GwtCreateHandler> addedHandlers;
 	private GwtCreateHandler mockCreateHandler;
-	private GwtCreateHandler localizableResourceHandler;
-	private GwtCreateHandler clientBundleCreateHander;
-	private GwtCreateHandler imageBundleCreateHandler;
-	private GwtCreateHandler defaultGwtCreateHandler;
-	private GwtCreateHandler abstractClassCreateHandler;
-	private GwtCreateHandler debugIdImplCreateHandler;
+	private final GwtCreateHandler localizableResourceHandler;
+	private final GwtCreateHandler clientBundleCreateHander;
+	private final GwtCreateHandler imageBundleCreateHandler;
+	private final GwtCreateHandler defaultGwtCreateHandler;
+	private final GwtCreateHandler abstractClassCreateHandler;
+	private final GwtCreateHandler debugIdImplCreateHandler;
+	private final GwtCreateHandler safeHtmlTemplatesCreateHandler;
 
 	private GwtCreateHandlerManager() {
 		addedHandlers = new ArrayList<GwtCreateHandler>();
@@ -38,10 +39,11 @@ public class GwtCreateHandlerManager {
 		defaultGwtCreateHandler = new DefaultGwtCreateHandler();
 		abstractClassCreateHandler = new AbstractClassCreateHandler();
 		debugIdImplCreateHandler = new DebugIdImplCreateHandler();
+		safeHtmlTemplatesCreateHandler = new SafeHtmlTemplatesCreateHandler();
 	}
 
-	public void setMockCreateHandler(GwtCreateHandler mockCreateHandler) {
-		this.mockCreateHandler = mockCreateHandler;
+	public boolean addGwtCreateHandler(GwtCreateHandler gwtCreateHandler) {
+		return addedHandlers.add(gwtCreateHandler);
 	}
 
 	public List<GwtCreateHandler> getGwtCreateHandlers() {
@@ -62,18 +64,19 @@ public class GwtCreateHandlerManager {
 		list.add(localizableResourceHandler);
 		list.add(clientBundleCreateHander);
 		list.add(imageBundleCreateHandler);
+		list.add(safeHtmlTemplatesCreateHandler);
 		list.add(defaultGwtCreateHandler);
 		list.add(abstractClassCreateHandler);
 
 		return Collections.unmodifiableList(list);
 	}
 
-	public boolean addGwtCreateHandler(GwtCreateHandler gwtCreateHandler) {
-		return addedHandlers.add(gwtCreateHandler);
-	}
-
 	public void reset() {
 		addedHandlers.clear();
+	}
+
+	public void setMockCreateHandler(GwtCreateHandler mockCreateHandler) {
+		this.mockCreateHandler = mockCreateHandler;
 	}
 
 }
