@@ -1,6 +1,7 @@
 package com.octo.gwt.test.internal.patchers;
 
-import java.util.HashMap;
+import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import com.google.gwt.core.client.JavaScriptObject;
@@ -14,6 +15,12 @@ import com.octo.gwt.test.patchers.PatchMethod;
 class JSONObjectParser {
 
   private static final String JSONOBJECT_MAP = "JSONOBJECT_MAP";
+
+  @PatchMethod
+  static void addAllKeys(JSONObject jsonObject, Collection<String> s) {
+    Map<String, JSONValue> map = getInnerMap(jsonObject);
+    s.addAll(map.keySet());
+  }
 
   @PatchMethod
   static JSONValue get0(JSONObject jsonObject, String key) {
@@ -35,7 +42,7 @@ class JSONObjectParser {
     Map<String, JSONValue> map = JavaScriptObjects.getObject(jsObject,
         JSONOBJECT_MAP);
     if (map == null) {
-      map = new HashMap<String, JSONValue>();
+      map = new LinkedHashMap<String, JSONValue>();
       JavaScriptObjects.setProperty(jsObject, JSONOBJECT_MAP, map);
     }
 

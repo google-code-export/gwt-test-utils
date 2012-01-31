@@ -17,6 +17,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
 import com.octo.gwt.test.GwtTestTest;
 import com.octo.gwt.test.server.RemoteServiceCreateHandler;
@@ -36,6 +37,11 @@ public class GInjectorCreateHandlerTest extends GwtTestTest {
     Virtual v();
   }
 
+  @GinModules(M4.class)
+  interface G4 extends Ginjector {
+    Virtual v();
+  }
+
   static class Impl implements Virtual {
   }
 
@@ -45,6 +51,12 @@ public class GInjectorCreateHandlerTest extends GwtTestTest {
     @Inject
     public Impl2(TestMessages messages) {
       this.messages = messages;
+    }
+  }
+
+  static class ImplementationWithProviders implements Virtual {
+    @Inject
+    public ImplementationWithProviders(Provider<VirtualMore> provider) {
     }
   }
 
@@ -58,6 +70,7 @@ public class GInjectorCreateHandlerTest extends GwtTestTest {
     }
 
   }
+
   // This module will only contain a single binding
   static final class M2 extends AbstractGinModule {
     @Override
@@ -70,6 +83,13 @@ public class GInjectorCreateHandlerTest extends GwtTestTest {
     @Override
     protected void configure() {
       bind(Virtual.class).to(Impl2.class);
+      bind(VirtualMore.class).to(ImplMore2.class);
+    }
+  }
+  static class M4 extends AbstractGinModule {
+    @Override
+    protected void configure() {
+      bind(Virtual.class).to(ImplementationWithProviders.class);
       bind(VirtualMore.class).to(ImplMore2.class);
     }
   }
@@ -109,10 +129,10 @@ public class GInjectorCreateHandlerTest extends GwtTestTest {
     @DefaultMessage("this is junit")
     String myName();
   }
+
   // Simple bindings
   static interface Virtual {
   }
-
   static interface VirtualMore {
   }
 
@@ -175,6 +195,19 @@ public class GInjectorCreateHandlerTest extends GwtTestTest {
 
     // Assert
     assertTrue(more instanceof ImplMore2);
+  }
+
+  /**
+   * This is the use case that needs to hold. <code><pre>
+   * class Animal {
+   * 
+   * @Inject Animal (Provider<Sound> soundProvider) { } } </pre></code>
+   */
+  @SuppressWarnings("unused")
+  @Test
+  public void shouldInstantiateObjectGraphsContainingProviders() {
+    final G4 injector = GWT.create(G4.class);
+    final Virtual virtual = injector.v();
   }
 
 }

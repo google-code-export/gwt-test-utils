@@ -16,7 +16,7 @@ import com.octo.gwt.test.utils.GwtReflectionUtils;
  * @author Gael Lazzari
  * 
  */
-public class GwtGuiceHelper {
+class GwtGuiceHelper {
 
   private static final GwtGuiceHelper INSTANCE = new GwtGuiceHelper();
 

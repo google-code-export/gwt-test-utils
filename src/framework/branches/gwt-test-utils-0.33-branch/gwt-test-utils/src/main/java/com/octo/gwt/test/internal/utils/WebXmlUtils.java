@@ -5,19 +5,15 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import javax.xml.namespace.NamespaceContext;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
-import org.apache.xml.utils.PrefixResolver;
-import org.apache.xml.utils.PrefixResolverDefault;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -59,40 +55,6 @@ public class WebXmlUtils {
       DocumentBuilder builder = XmlUtils.newDocumentBuilder();
       Document document = builder.parse(is);
       XPath xpath = XPathFactory.newInstance().newXPath();
-
-      // XPath needs additional info when handling namespaces. Only the
-      // #getNamespaceURI is used when parsing the document.
-      final PrefixResolver resolver = new PrefixResolverDefault(
-          document.getDocumentElement());
-      xpath.setNamespaceContext(new NamespaceContext() {
-
-        public String getNamespaceURI(String prefix) {
-          return resolver.getNamespaceForPrefix(prefix);
-        }
-
-        public String getPrefix(String namespaceURI) {
-          return null;
-        }
-
-        @SuppressWarnings("rawtypes")
-        public Iterator getPrefixes(String namespaceURI) {
-          return null;
-        }
-      });
-
-      // Optionally, the snippet below makes sure (by bailing out early)
-      // the web.xml is well-formed (no invalid structure, root node is
-      // web-app). The NamespaceContext set for xpath instance above will
-      // handle all namespaces (using a resolver) -- it wouldn't work if
-      // not all namespaces are added to the root element (like, providing
-      // a custom namespace in a child element within hierarchy).
-      NodeList node = (NodeList) xpath.evaluate("/:web-app", document,
-          XPathConstants.NODESET);
-      if (node == null || node.getLength() == 0) {
-        throw new IllegalStateException("no web-app node found");
-      }
-
-      // Proceed to parsing.
       servletClassMap = parseServletClassMap(document, xpath);
       listenerClasses = parseListeners(document, xpath);
 
@@ -138,7 +100,7 @@ public class WebXmlUtils {
       throws XPathExpressionException {
     Set<String> result = new HashSet<String>();
 
-    NodeList listeners = (NodeList) xpath.evaluate("/:web-app/:listener",
+    NodeList listeners = (NodeList) xpath.evaluate("/web-app/listener",
         document, XPathConstants.NODESET);
 
     for (int i = 0; i < listeners.getLength(); i++) {
@@ -153,7 +115,7 @@ public class WebXmlUtils {
 
   private Map<String, String> parseMappingElements(Document document,
       XPath xpath) throws XPathExpressionException {
-    NodeList mappings = (NodeList) xpath.evaluate("/:web-app/:servlet-mapping",
+    NodeList mappings = (NodeList) xpath.evaluate("/web-app/servlet-mapping",
         document, XPathConstants.NODESET);
 
     Map<String, String> mappingsMap = new HashMap<String, String>();
@@ -196,8 +158,8 @@ public class WebXmlUtils {
 
   private Map<String, String> parseServletElements(Document document,
       XPath xpath) throws XPathExpressionException {
-    NodeList servlets = (NodeList) xpath.evaluate("/:web-app/:servlet",
-        document, XPathConstants.NODESET);
+    NodeList servlets = (NodeList) xpath.evaluate("/web-app/servlet", document,
+        XPathConstants.NODESET);
 
     Map<String, String> servletsMap = new HashMap<String, String>();
 

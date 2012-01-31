@@ -85,6 +85,17 @@ class DeferredBindingModule extends AbstractModule {
 
     for (Class<?> toInstanciate : classesToInstanciate) {
       if (!bindedClasses.contains(toInstanciate)) {
+
+        if (toInstanciate.equals(Provider.class)) {
+          continue;
+          // Skip the Provider class. However, there's a second
+          // issue here, when you need to inject a Provider of
+          // parameterized type not already bound (something that
+          // falls back to GWT.create): Animal(Provider<Messages> provider).
+          // I'm not sure there's a way to fix this (other that
+          // don't use Provider for generated code).
+        }
+
         bind((Class<Object>) toInstanciate).toProvider(
             new DeferredBindingProvider(ginInjectorClass, toInstanciate));
       }

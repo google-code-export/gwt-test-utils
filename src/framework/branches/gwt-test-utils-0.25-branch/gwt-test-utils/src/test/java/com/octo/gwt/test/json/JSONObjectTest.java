@@ -71,5 +71,11 @@ public class JSONObjectTest extends GwtTestTest {
     assertEquals(4.0, ((JSONNumber) object.get("int")).doubleValue(), 0);
     assertEquals(3, ((JSONArray) object.get("array")).size());
 
+    // toString
+    assertEquals(
+        "{string:json string, int:3.0, float:3.1415, bool:true, array:[1.0,33.7,l33t], object:{int:4.0, array:[5.0,6.0,7.0]}}",
+        o.toString());
+
   }
+
 }

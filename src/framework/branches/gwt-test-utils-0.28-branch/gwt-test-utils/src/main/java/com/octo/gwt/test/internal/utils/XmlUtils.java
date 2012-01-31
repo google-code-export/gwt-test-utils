@@ -28,11 +28,17 @@ public class XmlUtils {
     documentBuilderFactory.setAttribute(
         "http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
 
-    documentBuilderFactory.setNamespaceAware(true);
+    documentBuilderFactory.setNamespaceAware(false);
     documentBuilderFactory.setValidating(false);
 
   }
 
+  /**
+   * Creates a new DocumentBuilder which does not validate document an is not
+   * aware of XML namespaces.
+   * 
+   * @return The created DocumentBuilder
+   */
   public static DocumentBuilder newDocumentBuilder() {
     try {
       return documentBuilderFactory.newDocumentBuilder();
