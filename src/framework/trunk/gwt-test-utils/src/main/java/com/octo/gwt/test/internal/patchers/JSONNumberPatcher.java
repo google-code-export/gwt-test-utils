@@ -5,7 +5,7 @@ import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
 @PatchClass(JSONNumber.class)
-public class JSONNumberPatcher {
+class JSONNumberPatcher {
 
   @PatchMethod
   static String toString(JSONNumber jsonNumber) {
