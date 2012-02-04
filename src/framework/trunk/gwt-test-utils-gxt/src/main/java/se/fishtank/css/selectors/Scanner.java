@@ -13,7 +13,7 @@ import java.util.List;
  * This implementation uses the <a href="http://www.complang.org/ragel/">Ragel
  * State Machine Compiler</a>.
  * <p/>
- * Use the following command to generate the Java code for the scanner: <br/>
+ * Use the following command to generate the Java code for the scanner: <br>
  * 
  * <pre>
  * ragel -J Scanner.java.rl -o ../java/se/fishtank/css/selectors/scanner/Scanner.java

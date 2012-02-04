@@ -227,7 +227,7 @@ public class ModuleData {
   }
 
   private InputStream getModuleFileAsStream(String moduleFilePath) {
-    InputStream is = GwtConfig.class.getClassLoader().getResourceAsStream(
+    InputStream is = this.getClass().getClassLoader().getResourceAsStream(
         moduleFilePath);
 
     if (is != null) {
