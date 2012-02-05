@@ -13,6 +13,9 @@ public interface MyClientBundle extends CellTable.Resources, Resources {
 
   public ImageResource doubleShouldThrowException();
 
+  @Source("root-classpath-img.png")
+  public ImageResource rootClasspathImg();
+
   @Source("css/testCssResource.css")
   public TestCssResource testCssResource();
 

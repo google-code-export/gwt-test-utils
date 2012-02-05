@@ -133,6 +133,35 @@ public class ClientBundleTest extends GwtTestTest {
   }
 
   @Test
+  public void rootClasspathImg() {
+    // Arrange
+    ImageResource rootClasspathImg = MyClientBundle.INSTANCE.rootClasspathImg();
+
+    // Act
+    String name = rootClasspathImg.getName();
+    String url = rootClasspathImg.getSafeUri().asString();
+    int heigh = rootClasspathImg.getHeight();
+    int left = rootClasspathImg.getLeft();
+    int width = rootClasspathImg.getWidth();
+    int top = rootClasspathImg.getTop();
+    String toString = rootClasspathImg.toString();
+
+    // Assert
+    assertEquals("rootClasspathImg", name);
+    assertEquals(
+        "http://127.0.0.1:8888/gwt_test_utils_module/root-classpath-img.png",
+        url);
+    assertEquals(0, heigh);
+    assertEquals(0, left);
+    assertEquals(0, width);
+    assertEquals(0, top);
+    assertEquals(
+        "com.octo.gwt.test.internal.resources.ImageResourceCallback generated for 'com.octo.gwt.test.resources.MyClientBundle.rootClasspathImg()'",
+        toString);
+    assertEquals(rootClasspathImg, MyClientBundle.INSTANCE.rootClasspathImg());
+  }
+
+  @Test
   public void textResource_FromGwtAPI() {
     // Arrange
     com.google.gwt.user.client.impl.WindowImplIE.Resources treeResources = GWT.create(com.google.gwt.user.client.impl.WindowImplIE.Resources.class);
