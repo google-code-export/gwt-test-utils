@@ -52,11 +52,11 @@ public class GwtClassLoader extends Loader {
 
     ConfigurationLoader configurationLoader = ConfigurationLoader.createInstance(this.getParent());
 
-    for (String s : configurationLoader.getDelegateSet()) {
+    for (String s : configurationLoader.getDelegates()) {
       delegateLoadingOf(s);
     }
 
-    addTranslator(GwtClassPool.get(), new GwtTranslator());
+    addTranslator(GwtClassPool.get(), new GwtTranslator(configurationLoader));
   }
 
 }

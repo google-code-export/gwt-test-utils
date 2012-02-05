@@ -6,10 +6,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Indicates that the annotated method can be used to provide a JVM-compliant
+ * Indicates that the annotated method is used to provide a JVM-compliant
  * version of a particular method.
- * 
- * @see AutomaticPatcher
  * 
  * @author Bertrand Paquet
  */
@@ -18,68 +16,19 @@ import java.lang.annotation.Target;
 public @interface PatchMethod {
 
 	/**
-	 * The type of the patch to apply to the method.
-	 * 
-	 * @author Bertrand Paquet
-	 * 
-	 */
-	public enum Type {
-
-		/**
-		 * Insert new Java code after the actual body. The corresponding
-		 * substitution method should be static, return a String and do not take
-		 * any parameter (or specify its parameter through
-		 * {@link PatchMethod#args()} to distinguish to method with the same
-		 * name).
-		 */
-		INSERT_CODE_AFTER,
-
-		/**
-		 * Insert new Java code before the actual body. The corresponding
-		 * substitution method should be static, return a String and do not take
-		 * any parameter (or specify its parameter through
-		 * {@link PatchMethod#args()} to distinguish to method with the same
-		 * name).
-		 */
-		INSERT_CODE_BEFORE,
-
-		/**
-		 * Replace the method body with new Java Code. The corresponding
-		 * substitution method should be static, return a String and do not take
-		 * any parameter (or specify its parameter through
-		 * {@link PatchMethod#args()} to distinguish to method with the same
-		 * name).
-		 */
-		NEW_CODE_AS_STRING,
-
-		/**
-		 * Replace the method body with a new Java Code that just call the
-		 * substitution method, passing it the parameter that are passed to the
-		 * original one, plus the object instance on which is called the method
-		 * if it is not static.
-		 */
-		STATIC_CALL;
-	}
-
-	/**
 	 * <p>
-	 * The parameter of the method to patch. If not set and
-	 * {@link PatchMethod#type()} is set to {@link Type#STATIC_CALL},
-	 * {@link AutomaticPatcher} will check for a method with the same
-	 * {@link PatchMethod#value()} and the same parameters as the annoted one,
-	 * with eventually an instance of the corresponding class as the first
-	 * parameter if the method to patch is not static.
+	 * Specify if this patch method should override an existing one, declared in
+	 * another {@link PatchClass}. Only one <code>PatchMethod</code> with
+	 * override = true can exist. Otherwise, an exception will be thrown.
+	 * </p>
+	 * <p>
+	 * Default value is <strong>false</strong>.
+	 * </p>
 	 * 
-	 * @return The parameter of the method to patch.
+	 * @return True is this patch method should override an existing one, false
+	 *         otherwise.
 	 */
-	Class<?>[] args() default { PatchMethod.class };
-
-	/**
-	 * The type of the patch. {@link Type#STATIC_CALL} by default.
-	 * 
-	 * @return The type of the patch.
-	 */
-	Type type() default Type.STATIC_CALL;
+	boolean override() default false;
 
 	/**
 	 * The name of the method to patch. If not set, {@link AutomaticPatcher}

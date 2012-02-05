@@ -1,6 +1,6 @@
 package com.octo.gwt.test;
 
-import junit.framework.Assert;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
@@ -9,20 +9,20 @@ import com.google.gwt.user.client.ui.Button;
 public class DebugIdDisabledTest extends GwtTestTest {
 
 	@Override
-	protected boolean ensureDebugId() {
+	public boolean ensureDebugId() {
 		return false;
 	}
 
 	@Test
-	public void checkEnsureDebugId() {
-		// Setup
+	public void ensureDebugId_Disabled() {
+		// Arrange
 		Button b = new Button();
 
-		// Test
+		// Act
 		b.ensureDebugId("myDebugId");
 
 		// Assert
-		Assert.assertEquals("", b.getElement().getId());
+		assertEquals("", b.getElement().getId());
 	}
 
 }

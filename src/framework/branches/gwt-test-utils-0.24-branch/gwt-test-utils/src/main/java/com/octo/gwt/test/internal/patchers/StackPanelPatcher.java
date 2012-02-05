@@ -2,13 +2,12 @@ package com.octo.gwt.test.internal.patchers;
 
 import com.google.gwt.user.client.ui.StackPanel;
 import com.google.gwt.user.client.ui.WidgetCollection;
-import com.octo.gwt.test.patchers.AutomaticPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 @PatchClass(StackPanel.class)
-public class StackPanelPatcher extends AutomaticPatcher {
+public class StackPanelPatcher {
 
 	@PatchMethod
 	public static int findDividerIndex(StackPanel panel, com.google.gwt.user.client.Element child) {

@@ -1,274 +1,245 @@
 package com.octo.gwt.test.internal;
 
-import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.net.URLDecoder;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
+
+import javassist.CtClass;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.octo.gwt.test.IPatcher;
-import com.octo.gwt.test.internal.modifiers.ClassSubstituer;
-import com.octo.gwt.test.internal.modifiers.JavaClassModifier;
-import com.octo.gwt.test.internal.modifiers.MethodRemover;
+import com.octo.gwt.test.exceptions.GwtTestConfigurationException;
+import com.octo.gwt.test.exceptions.GwtTestPatchException;
+import com.octo.gwt.test.internal.ClassesScanner.ClassVisitor;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
-public class ConfigurationLoader {
+class ConfigurationLoader {
 
-	private static final Logger logger = LoggerFactory.getLogger(ConfigurationLoader.class);
+  private static final String CONFIG_FILENAME = "META-INF/gwt-test-utils.properties";
 
-	private static final String CONFIG_FILENAME = "META-INF/gwt-test-utils.properties";
+  private static ConfigurationLoader INSTANCE;
 
-	private static ConfigurationLoader INSTANCE;
+  private static final Logger logger = LoggerFactory.getLogger(ConfigurationLoader.class);
 
-	private List<JavaClassModifier> javaClassModifierList;
+  public static synchronized final ConfigurationLoader createInstance(
+      ClassLoader classLoader) {
+    if (INSTANCE != null) {
+      throw new GwtTestConfigurationException(
+          ConfigurationLoader.class.getSimpleName()
+              + " instance has already been initialized");
+    }
 
-	private MethodRemover methodRemover;
+    INSTANCE = new ConfigurationLoader(classLoader);
 
-	public static final ConfigurationLoader createInstance(ClassLoader classLoader) {
-		if (INSTANCE != null) {
-			throw new RuntimeException(ConfigurationLoader.class.getSimpleName() + " instance has already been initialized");
-		}
+    return INSTANCE;
+  }
 
-		INSTANCE = new ConfigurationLoader(classLoader);
+  private final ClassLoader classLoader;
 
-		return INSTANCE;
-	}
+  private final ClassSubstituer classSubstituer;
 
-	public static ConfigurationLoader getInstance() {
-		if (INSTANCE == null) {
-			throw new RuntimeException(ConfigurationLoader.class.getSimpleName() + " instance has not been initialized yet");
-		}
+  private final Set<String> delegates;
+  private final MethodRemover methodRemover;
+  private final Set<String> moduleFiles;
+  private final Set<String> notDelegates;
+  private PatcherFactory patcherFactory;
+  private final Set<String> removeMethods;
+  private final Set<String> scanPackages;
+  private final Set<String> substituteClasses;
 
-		return INSTANCE;
-	}
+  private ConfigurationLoader(ClassLoader classLoader) {
+    this.classLoader = classLoader;
+    this.classSubstituer = new ClassSubstituer();
+    this.delegates = new HashSet<String>();
+    this.notDelegates = new HashSet<String>();
+    this.moduleFiles = new HashSet<String>();
+    this.scanPackages = new HashSet<String>();
+    this.removeMethods = new HashSet<String>();
+    this.substituteClasses = new HashSet<String>();
 
-	private ClassLoader classLoader;
-	private List<String> delegateList;
-	private List<String> notDelegateList;
-	private Set<String> scanPackageSet;
-	private Map<String, IPatcher> patchers;
+    this.methodRemover = new MethodRemover();
 
-	private ConfigurationLoader(ClassLoader classLoader) {
-		this.classLoader = classLoader;
-		delegateList = new ArrayList<String>();
-		notDelegateList = new ArrayList<String>();
-		javaClassModifierList = new ArrayList<JavaClassModifier>();
-		methodRemover = new MethodRemover();
-		javaClassModifierList.add(methodRemover);
-		scanPackageSet = new HashSet<String>();
+    readFiles();
+    visitPatchClasses();
+  }
 
-		readFiles();
-	}
+  public JavaClassModifier getClassSubstituer() {
+    return classSubstituer;
+  }
 
-	public Map<String, IPatcher> getPatchers() {
-		if (patchers == null) {
-			try {
-				loadPatchers();
-			} catch (Exception e) {
-				throw new RuntimeException("Error while loading " + IPatcher.class.getSimpleName() + " instances", e);
-			}
-		}
+  public Set<String> getDelegates() {
+    return delegates;
+  }
 
-		return patchers;
-	}
+  public JavaClassModifier getMethodRemover() {
+    return methodRemover;
+  }
 
-	private void loadPatchers() throws Exception {
-		patchers = new HashMap<String, IPatcher>();
-		List<String> classList = findScannedClasses();
-		for (String className : classList) {
-			Class<?> clazz = Class.forName(className, true, classLoader);
+  public Set<String> getNotDelegates() {
+    return notDelegates;
+  }
 
-			PatchClass patchClass = GwtReflectionUtils.getAnnotation(clazz, PatchClass.class);
+  public PatcherFactory getPatcherFactory() {
+    return patcherFactory;
+  }
 
-			if (patchClass == null) {
-				continue;
-			}
+  public Set<String> getScanPackages() {
+    return scanPackages;
+  }
 
-			if (!IPatcher.class.isAssignableFrom(clazz) || !hasDefaultConstructor(clazz)) {
-				throw new RuntimeException("The @" + PatchClass.class.getSimpleName() + " annotated class '" + clazz.getName() + "' must implements "
-						+ IPatcher.class.getSimpleName() + " interface and provide an empty constructor");
-			}
+  private void process(Properties p, URL url) {
+    for (Entry<Object, Object> entry : p.entrySet()) {
+      String key = ((String) entry.getKey()).trim();
+      String value = ((String) entry.getValue()).trim();
+      if ("scan-package".equals(value)) {
+        scanPackages.add(key);
+      } else if ("delegate".equals(value)) {
+        delegates.add(key);
+      } else if ("notDelegate".equals(value)) {
+        notDelegates.add(key);
+      } else if ("remove-method".equals(value)) {
+        processRemoveMethod(key, url);
+      } else if ("substitute-class".equals(value)) {
+        processSubstituteClass(key, url);
+      } else if ("module-file".equals(value)) {
+        processModuleFile(key, url);
+      } else {
+        throw new GwtTestConfigurationException("Error in '" + url.getPath()
+            + "' : unknown value '" + value + "'");
+      }
+    }
+  }
 
-			IPatcher patcher = (IPatcher) GwtReflectionUtils.instantiateClass(clazz);
+  private void processModuleFile(String string, URL url) {
+    if (!moduleFiles.add(string)) {
+      // already processed
+      return;
+    }
 
-			for (Class<?> c : patchClass.value()) {
-				String targetName = c.isMemberClass() ? c.getDeclaringClass().getCanonicalName() + "$" + c.getSimpleName() : c.getCanonicalName();
-				if (patchers.get(targetName) != null) {
-					logger.error("Two patches for same class " + targetName);
-					throw new RuntimeException("Two patches for same class " + targetName);
-				}
-				patchers.put(targetName, patcher);
-				logger.debug("Add patch for class " + targetName + " : " + clazz.getCanonicalName());
-			}
-			for (String s : patchClass.classes()) {
-				if (patchers.get(s) != null) {
-					logger.error("Two patches for same class " + s);
-					throw new RuntimeException("Two patches for same class " + s);
-				}
-				patchers.put(s, patcher);
-				logger.debug("Add patch for class " + s + " : " + clazz.getCanonicalName());
-			}
-		}
-	}
+    ModuleData.get().parseModule(string);
+  }
 
-	private boolean hasDefaultConstructor(Class<?> clazz) {
-		try {
-			return clazz.getDeclaredConstructor() != null;
-		} catch (NoSuchMethodException e) {
-			return false;
-		}
-	}
+  private void processRemoveMethod(String string, URL url) {
+    if (!removeMethods.add(string)) {
+      // already processed
+      return;
+    }
 
-	private void readFiles() {
-		try {
-			Enumeration<URL> l = classLoader.getResources(CONFIG_FILENAME);
-			while (l.hasMoreElements()) {
-				URL url = l.nextElement();
-				logger.debug("Load config file " + url.toString());
-				Properties p = new Properties();
-				InputStream inputStream = url.openStream();
-				p.load(inputStream);
-				inputStream.close();
-				process(p, url);
-				logger.debug("File loaded and processed " + url.toString());
-			}
-		} catch (Exception e) {
-			if (e instanceof RuntimeException) {
-				throw (RuntimeException) e;
-			}
-			throw new RuntimeException("Error while reading '" + CONFIG_FILENAME + "' files", e);
-		}
-	}
+    String[] array = string.split("\\s*,\\s*");
+    if (array.length != 3) {
+      throw new GwtTestConfigurationException(
+          "Invalid 'remove-method' property format for value '" + string
+              + "' in file '" + url.getPath() + "'");
+    }
 
-	private void process(Properties p, URL url) {
-		for (Entry<Object, Object> entry : p.entrySet()) {
-			String key = (String) entry.getKey();
-			String value = (String) entry.getValue();
-			if ("scan-package".equals(value)) {
-				if (!scanPackageSet.add(key)) {
-					throw new RuntimeException("'scan-package' mechanism is used to scan the same package twice : '" + key + "'");
-				}
-			} else if ("delegate".equals(value)) {
-				delegateList.add(key);
-			} else if ("notDelegate".equals(value)) {
-				notDelegateList.add(key);
-			} else if ("remove-method".equals(value)) {
-				processRemoveMethod(key, url);
-			} else if ("substitute-class".equals(value)) {
-				processSubstituteClass(key, url);
-			} else {
-				throw new RuntimeException("Error in '" + url.getPath() + "' : unknown value '" + value + "'");
-			}
-		}
-	}
+    String methodClass = array[0];
+    String methodName = array[1];
+    String methodSignature = array[2];
 
-	private void processSubstituteClass(String key, URL url) {
-		String[] array = key.split("\\s*,\\s*");
-		if (array.length != 2) {
-			throw new RuntimeException("Invalid 'substitute-class' property format for value '" + key + "' in file '" + url.getPath() + "'");
-		}
+    methodRemover.removeMethod(methodClass, methodName, methodSignature);
+  }
 
-		String originalClass = array[0];
-		String substitutionClass = array[1];
-		javaClassModifierList.add(new ClassSubstituer(originalClass, substitutionClass));
-	}
+  private void processSubstituteClass(String string, URL url) {
+    if (!substituteClasses.add(string)) {
+      // already processed
+      return;
+    }
 
-	private void processRemoveMethod(String key, URL url) {
-		String[] array = key.split("\\s*,\\s*");
-		if (array.length != 3) {
-			throw new RuntimeException("Invalid 'remove-method' property format for value '" + key + "' in file '" + url.getPath() + "'");
-		}
+    String[] array = string.split("\\s*,\\s*");
+    if (array.length != 2) {
+      throw new GwtTestConfigurationException(
+          "Invalid 'substitute-class' property format for value '" + string
+              + "' in file '" + url.getPath() + "'");
+    }
 
-		String methodClass = array[0];
-		String methodName = array[1];
-		String methodSignature = array[2];
+    String originalClass = array[0];
+    String substitutionClass = array[1];
+    // add in second position, just after method-substituer
+    this.classSubstituer.registerSubstitution(originalClass, substitutionClass);
+  }
 
-		methodRemover.removeMethod(methodClass, methodName, methodSignature);
-	}
+  private void readFiles() {
+    try {
+      Enumeration<URL> l = classLoader.getResources(CONFIG_FILENAME);
+      while (l.hasMoreElements()) {
+        URL url = l.nextElement();
+        logger.debug("Load config file " + url.toString());
+        Properties p = new Properties();
+        InputStream inputStream = url.openStream();
+        p.load(inputStream);
+        inputStream.close();
+        process(p, url);
+        logger.debug("File loaded and processed " + url.toString());
+      }
+    } catch (IOException e) {
+      throw new GwtTestConfigurationException("Error while reading '"
+          + CONFIG_FILENAME + "' files", e);
+    }
 
-	public List<JavaClassModifier> getJavaClassModifierList() {
-		return Collections.unmodifiableList(javaClassModifierList);
-	}
+    // check that at least one module file has been processed
+    if (moduleFiles.size() == 0) {
+      throw new GwtTestConfigurationException(
+          "Cannot find any 'module-file' setup in configuration file 'META-INF/gwt-test-utils.properties'");
+    }
+  }
 
-	public List<String> getDelegateList() {
-		return Collections.unmodifiableList(delegateList);
-	}
+  private void visitPatchClasses() {
+    final Map<String, Set<CtClass>> patchClassMap = new HashMap<String, Set<CtClass>>();
+    ClassVisitor patchClassVisitor = new ClassVisitor() {
 
-	public List<String> getNotDelegateList() {
-		return Collections.unmodifiableList(notDelegateList);
-	}
+      public void visit(CtClass ctClass) {
+        PatchClass annotation = null;
+        try {
+          if (ctClass.hasAnnotation(PatchClass.class)) {
+            // load the Patch class in the main classloader
+            Class<?> patchClass = Class.forName(ctClass.getName(), false,
+                classLoader);
+            annotation = GwtReflectionUtils.getAnnotation(patchClass,
+                PatchClass.class);
+          }
+        } catch (ClassNotFoundException e) {
+          // should never happen
+          throw new GwtTestPatchException(e);
+        }
 
-	private List<String> findScannedClasses() throws Exception {
-		List<String> classList = new ArrayList<String>();
-		for (String s : scanPackageSet) {
-			String path = s.replaceAll("\\.", "/");
-			logger.debug("Scan package " + s);
-			Enumeration<URL> l = classLoader.getResources(path);
-			while (l.hasMoreElements()) {
-				URL url = l.nextElement();
-				String u = url.toExternalForm();
-				if (u.startsWith("file:")) {
-					String directoryName = u.substring("file:".length());
-					directoryName = URLDecoder.decode(directoryName, "UTF-8");
-					loadClassesFromDirectory(new File(directoryName), s, classList);
-				} else if (u.startsWith("jar:file:")) {
-					loadClassesFromJarFile(u.substring("jar:file:".length()), s, classList);
-				} else {
-					throw new RuntimeException("Not managed class container " + u);
-				}
-			}
-		}
-		return classList;
-	}
+        if (annotation != null) {
+          String classToPatchName = annotation.value() != PatchClass.class
+              ? annotation.value().getName() : annotation.target().trim();
 
-	private void loadClassesFromJarFile(String path, String s, List<String> classList) throws Exception {
-		String prefix = path.substring(path.indexOf("!") + 2);
-		String jarName = path.substring(0, path.indexOf("!"));
-		jarName = URLDecoder.decode(jarName, "UTF-8");
-		logger.debug("Load classes from jar " + jarName);
-		JarFile jar = new JarFile(jarName);
-		Enumeration<JarEntry> entries = jar.entries();
-		while (entries.hasMoreElements()) {
-			JarEntry entry = entries.nextElement();
-			if (entry.getName().startsWith(prefix) && entry.getName().endsWith(".class")) {
-				String className = entry.getName();
-				className = className.substring(0, className.length() - ".class".length());
-				className = className.replaceAll("\\/", ".");
-				classList.add(className);
-			}
-		}
-		logger.debug("Classes loaded from jar " + jarName);
-	}
+          if (!"".equals(classToPatchName)) {
+            addPatchClass(classToPatchName, ctClass);
+          }
+        }
+      }
 
-	private void loadClassesFromDirectory(File directoryToScan, String current, List<String> classList) {
-		logger.debug("Scan directory " + directoryToScan);
-		for (File f : directoryToScan.listFiles()) {
-			if (f.isDirectory()) {
-				if (!".".equals(f.getName()) && !"..".equals(f.getName())) {
-					loadClassesFromDirectory(f, current + "." + f.getName(), classList);
-				}
-			} else {
-				if (f.getName().endsWith(".class")) {
-					classList.add(current + "." + f.getName().substring(0, f.getName().length() - ".class".length()));
-				}
-			}
-		}
-		logger.debug("Directory scanned " + directoryToScan);
-	}
+      private void addPatchClass(String targetName, CtClass patchClass) {
+        Set<CtClass> patchClasses = patchClassMap.get(targetName);
+        if (patchClasses == null) {
+          patchClasses = new HashSet<CtClass>();
+          patchClassMap.put(targetName, patchClasses);
+        }
+
+        patchClasses.add(patchClass);
+
+        logger.debug("Add patch for class '" + targetName + "' : '"
+            + patchClass.getName() + "'");
+      }
+
+    };
+
+    ClassesScanner.getInstance().scanPackages(patchClassVisitor, scanPackages);
+
+    // create all patchers
+    patcherFactory = new PatcherFactory(patchClassMap);
+  }
 
 }

@@ -12,6 +12,9 @@ public interface MyClientBundle extends Resources {
 
   public ImageResource doubleShouldThrowException();
 
+  @Source("root-classpath-img.png")
+  public ImageResource rootClasspathImg();
+
   @Source("css/testCssResource.css")
   public TestCssResource testCssResource();
 

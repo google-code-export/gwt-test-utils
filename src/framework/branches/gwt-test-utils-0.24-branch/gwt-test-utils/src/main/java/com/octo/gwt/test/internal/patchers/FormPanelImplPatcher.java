@@ -4,12 +4,11 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.impl.FormPanelImpl;
 import com.google.gwt.user.client.ui.impl.FormPanelImplHost;
 import com.octo.gwt.test.internal.utils.PropertyContainerHelper;
-import com.octo.gwt.test.patchers.AutomaticPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
 @PatchClass(FormPanelImpl.class)
-public class FormPanelImplPatcher extends AutomaticPatcher {
+public class FormPanelImplPatcher {
 	
 	@PatchMethod
 	public static void hookEvents(FormPanelImpl panelImpl, Element iframe, Element form, FormPanelImplHost listener) {
@@ -29,7 +28,7 @@ public class FormPanelImplPatcher extends AutomaticPatcher {
 
 	@PatchMethod
 	public static String getEncoding(FormPanelImpl panelImpl, Element form) {
-		return PropertyContainerHelper.getProperty(form, "enctype");
+		return PropertyContainerHelper.getObject(form, "enctype");
 	}
 
 	@PatchMethod

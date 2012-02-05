@@ -14,7 +14,7 @@ public class HTMLTest extends GwtTestTest {
   @Test
   public void checkToString() {
     // Arrange
-    HTML html = new HTML("this is a <b>great</b> test.<BR/>Enjoy!");
+    HTML html = new HTML("this is a <b>great</b> test.<br>Enjoy!");
 
     // Act
     String result = html.toString();
@@ -28,7 +28,7 @@ public class HTMLTest extends GwtTestTest {
   @Test
   public void html() {
     // Arrange
-    HTML html = new HTML("this is a <b>great</b> test.<BR/>Enjoy!");
+    HTML html = new HTML("this is a <b>great</b> test.<br>Enjoy!");
 
     // Act
     String result = html.getHTML();
@@ -53,9 +53,21 @@ public class HTMLTest extends GwtTestTest {
   }
 
   @Test
+  public void html_withSpecialChars() {
+    // Arrange
+    HTML html = new HTML("<span>R&eacute;sidence&nbsp:&nbsp</span>");
+
+    // Act
+    String result = html.getHTML();
+
+    // Assert
+    assertEquals("<span>Résidence : </span>", result);
+  }
+
+  @Test
   public void text() {
     // Arrange
-    HTML html = new HTML("this is a <b>great</b> test.<BR/>Enjoy!");
+    HTML html = new HTML("this is a <b>great</b> test.<br>Enjoy!");
 
     // Act
     String result = html.getText();

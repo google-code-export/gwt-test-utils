@@ -12,32 +12,11 @@ import com.google.gwt.dom.client.Node;
 import com.octo.gwt.test.GwtTestTest;
 import com.octo.gwt.test.internal.overrides.OverrideNodeList;
 import com.octo.gwt.test.internal.patchers.dom.NodeFactory;
-import com.octo.gwt.test.internal.utils.GwtPatcherUtils;
 
 @SuppressWarnings("deprecation")
 public class NodeTest extends GwtTestTest {
 
 	private Node n;
-
-	@Before
-	public void initElement() {
-		n = NodeFactory.createNode();
-	}
-
-	@Test
-	public void checkAs() {
-		Assert.assertEquals(n, Node.as(n));
-		if (!GwtPatcherUtils.areAssertionEnabled()) {
-			Assert.assertNull(Node.as(null));
-		}
-	}
-
-	@Test
-	public void checkIs() {
-		Assert.assertFalse("null is not a DOM node", Node.is(null));
-		Assert.assertFalse("NodeList is not a DOM node", Node.is(new OverrideNodeList<Node>()));
-		Assert.assertTrue("AnchorElement is a DOM node", Node.is(Document.get().createAnchorElement()));
-	}
 
 	@Test
 	public void checkAppendChild() {
@@ -52,6 +31,11 @@ public class NodeTest extends GwtTestTest {
 	}
 
 	@Test
+	public void checkAs() {
+		Assert.assertEquals(n, Node.as(n));
+	}
+
+	@Test
 	public void checkCloneDeep() {
 		n.setNodeValue("value");
 
@@ -60,8 +44,10 @@ public class NodeTest extends GwtTestTest {
 
 		Node newNode = n.cloneNode(true);
 		Assert.assertEquals("value", newNode.getNodeValue());
-		Assert.assertNull("Cloned node's parent should be null", newNode.getParentNode());
-		Assert.assertEquals("Deep cloned node should have child nodes", 1, newNode.getChildNodes().getLength());
+		Assert.assertNull("Cloned node's parent should be null",
+				newNode.getParentNode());
+		Assert.assertEquals("Deep cloned node should have child nodes", 1,
+				newNode.getChildNodes().getLength());
 		Assert.assertTrue(child != newNode.getChildNodes().getItem(0));
 	}
 
@@ -75,9 +61,11 @@ public class NodeTest extends GwtTestTest {
 
 		Node newNode = n.cloneNode(false);
 		Assert.assertEquals("value", newNode.getNodeValue());
-		Assert.assertNull("Cloned node's parent should be null", newNode.getParentNode());
+		Assert.assertNull("Cloned node's parent should be null",
+				newNode.getParentNode());
 		Assert.assertEquals(1, n.getChildNodes().getLength());
-		Assert.assertEquals("Not deep cloned node should not have child nodes", 0, newNode.getChildNodes().getLength());
+		Assert.assertEquals("Not deep cloned node should not have child nodes",
+				0, newNode.getChildNodes().getLength());
 	}
 
 	@Test
@@ -123,20 +111,6 @@ public class NodeTest extends GwtTestTest {
 	}
 
 	@Test
-	public void checkNodeType() {
-		Assert.assertEquals(Node.DOCUMENT_NODE, Document.get().getNodeType());
-		Assert.assertEquals(Node.ELEMENT_NODE, Document.get().getDocumentElement().getNodeType());
-		Assert.assertEquals(Node.ELEMENT_NODE, Document.get().createAnchorElement().getNodeType());
-		Assert.assertEquals(Node.TEXT_NODE, NodeFactory.createTextNode("test").getNodeType());
-	}
-
-	@Test
-	public void checkNodeValue() {
-		n.setNodeValue("node");
-		Assert.assertEquals("node", n.getNodeValue());
-	}
-
-	@Test
 	public void checkGetOwnerDocument() {
 		Assert.assertEquals(Document.get(), n.getOwnerDocument());
 	}
@@ -145,11 +119,11 @@ public class NodeTest extends GwtTestTest {
 	public void checkGetParentNode() {
 		Assert.assertNull(n.getParentNode());
 
-		//Set up
+		// Set up
 		BaseElement be = Document.get().createBaseElement();
 		n.appendChild(be);
 
-		//Test and assert
+		// Test and assert
 		Assert.assertEquals(n, be.getParentNode());
 	}
 
@@ -169,9 +143,10 @@ public class NodeTest extends GwtTestTest {
 
 	@Test
 	public void checkHasChildNodes() {
-		Assert.assertFalse("New element should not have child nodes", n.hasChildNodes());
+		Assert.assertFalse("New element should not have child nodes",
+				n.hasChildNodes());
 
-		//Set up
+		// Set up
 		BaseElement be = Document.get().createBaseElement();
 		n.appendChild(be);
 
@@ -202,6 +177,32 @@ public class NodeTest extends GwtTestTest {
 		Assert.assertEquals(be2, n.getChildNodes().getItem(2));
 		Assert.assertEquals(be3, n.getChildNodes().getItem(3));
 		Assert.assertEquals(be4, n.getChildNodes().getItem(4));
+	}
+
+	@Test
+	public void checkIs() {
+		Assert.assertFalse("null is not a DOM node", Node.is(null));
+		Assert.assertFalse("NodeList is not a DOM node",
+				Node.is(new OverrideNodeList<Node>()));
+		Assert.assertTrue("AnchorElement is a DOM node",
+				Node.is(Document.get().createAnchorElement()));
+	}
+
+	@Test
+	public void checkNodeType() {
+		Assert.assertEquals(Node.DOCUMENT_NODE, Document.get().getNodeType());
+		Assert.assertEquals(Node.ELEMENT_NODE, Document.get()
+				.getDocumentElement().getNodeType());
+		Assert.assertEquals(Node.ELEMENT_NODE, Document.get()
+				.createAnchorElement().getNodeType());
+		Assert.assertEquals(Node.TEXT_NODE, NodeFactory.createTextNode("test")
+				.getNodeType());
+	}
+
+	@Test
+	public void checkNodeValue() {
+		n.setNodeValue("node");
+		Assert.assertEquals("node", n.getNodeValue());
 	}
 
 	@Test
@@ -241,6 +242,11 @@ public class NodeTest extends GwtTestTest {
 		Assert.assertEquals(c1, replaced);
 		Assert.assertNull(nullReplaced);
 		Assert.assertNull(nullReplaced2);
+	}
+
+	@Before
+	public void initElement() {
+		n = NodeFactory.createNode();
 	}
 
 }

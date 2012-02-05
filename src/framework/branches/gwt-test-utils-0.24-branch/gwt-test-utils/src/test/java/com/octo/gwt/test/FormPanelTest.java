@@ -21,19 +21,6 @@ public class FormPanelTest extends GwtTestTest {
 	private boolean submitted;
 	private boolean completeSubmitted;
 
-	@Override
-	protected String getCurrentTestedModuleFile() {
-		return "test-config.gwt.xml";
-	}
-
-	@Before
-	public void setupFormPanel() {
-		form = new FormPanel();
-		Assert.assertFalse(form.isAttached());
-		RootPanel.get().add(form);
-		Assert.assertTrue(form.isAttached());
-	}
-
 	@Test
 	public void checkAdd() {
 		// Setup
@@ -61,6 +48,56 @@ public class FormPanelTest extends GwtTestTest {
 	}
 
 	@Test
+	public void checkFormDimension() {
+		// Test 1
+		form.setHeight("10");
+		form.setWidth("20");
+		// Assert 1
+		Assert.assertEquals("10", form.getElement().getStyle().getHeight());
+		Assert.assertEquals("20", form.getElement().getStyle().getWidth());
+
+		// Test 2
+		form.setSize("30", "40");
+		// Assert 2
+		Assert.assertEquals("40", form.getElement().getStyle().getHeight());
+		Assert.assertEquals("30", form.getElement().getStyle().getWidth());
+
+		// Test 3
+		form.setPixelSize(30, 40);
+		// Assert 3
+		Assert.assertEquals("40px", form.getElement().getStyle().getHeight());
+		Assert.assertEquals("30px", form.getElement().getStyle().getWidth());
+	}
+
+	@Test
+	public void checkFormSetup() {
+		// Test
+		form.setAction("/myFormHandler");
+		form.setEncoding(FormPanel.ENCODING_MULTIPART);
+
+		form.setMethod(FormPanel.METHOD_POST);
+		form.setTitle("formTitle");
+		form.setStyleName("formStyleName");
+		form.addStyleName("addition");
+
+		// Assert
+		Assert.assertEquals("/myFormHandler", form.getAction());
+		Assert.assertEquals(FormPanel.ENCODING_MULTIPART, form.getEncoding());
+		Assert.assertEquals(FormPanel.METHOD_POST, form.getMethod());
+		Assert.assertEquals("formTitle", form.getTitle());
+		Assert.assertEquals("formStyleName addition", form.getStyleName());
+	}
+
+	@Test
+	public void checkRemoveFromParent() {
+		// Test
+		form.removeFromParent();
+
+		// Assert
+		Assert.assertFalse(form.isAttached());
+	}
+
+	@Test
 	public void checkSetWidget() {
 		// Setup
 		Button b1 = new Button();
@@ -85,54 +122,12 @@ public class FormPanelTest extends GwtTestTest {
 		Assert.assertTrue(b2.isAttached());
 	}
 
-	@Test
-	public void checkFormSetup() {
-		// Test
-		form.setAction("/myFormHandler");
-		form.setEncoding(FormPanel.ENCODING_MULTIPART);
-
-		form.setMethod(FormPanel.METHOD_POST);
-		form.setTitle("formTitle");
-		form.setStyleName("formStyleName");
-		form.addStyleName("addition");
-
-		// Assert
-		Assert.assertEquals("/myFormHandler", form.getAction());
-		Assert.assertEquals(FormPanel.ENCODING_MULTIPART, form.getEncoding());
-		Assert.assertEquals(FormPanel.METHOD_POST, form.getMethod());
-		Assert.assertEquals("formTitle", form.getTitle());
-		Assert.assertEquals("formStyleName addition", form.getStyleName());
-	}
-
-	@Test
-	public void checkFormDimension() {
-		// Test 1
-		form.setHeight("10");
-		form.setWidth("20");
-		// Assert 1
-		Assert.assertEquals("10", form.getElement().getStyle().getHeight());
-		Assert.assertEquals("20", form.getElement().getStyle().getWidth());
-
-		// Test 2
-		form.setSize("30", "40");
-		// Assert 2
-		Assert.assertEquals("40", form.getElement().getStyle().getHeight());
-		Assert.assertEquals("30", form.getElement().getStyle().getWidth());
-
-		// Test 3
-		form.setPixelSize(30, 40);
-		// Assert 3
-		Assert.assertEquals("40px", form.getElement().getStyle().getHeight());
-		Assert.assertEquals("30px", form.getElement().getStyle().getWidth());
-	}
-
-	@Test
-	public void checkRemoveFromParent() {
-		// Test
-		form.removeFromParent();
-
-		// Assert
+	@Before
+	public void setupFormPanel() {
+		form = new FormPanel();
 		Assert.assertFalse(form.isAttached());
+		RootPanel.get().add(form);
+		Assert.assertTrue(form.isAttached());
 	}
 
 	@Test
@@ -181,7 +176,8 @@ public class FormPanelTest extends GwtTestTest {
 		tb.setName("textBoxFormElement");
 		panel.add(tb);
 
-		// Create a ListBox, giving it a name and some values to be associated with
+		// Create a ListBox, giving it a name and some values to be associated
+		// with
 		// its options.
 		ListBox lb = new ListBox();
 		lb.setName("listBoxFormElement");
@@ -198,7 +194,8 @@ public class FormPanelTest extends GwtTestTest {
 		// Add an event handler to the form.
 		form.addSubmitHandler(new FormPanel.SubmitHandler() {
 			public void onSubmit(SubmitEvent event) {
-				// This event is fired just before the form is submitted. We can take
+				// This event is fired just before the form is submitted. We can
+				// take
 				// this opportunity to perform validation.
 				if (tb.getText() == null || tb.getText().length() == 0) {
 					event.cancel();
@@ -209,9 +206,12 @@ public class FormPanelTest extends GwtTestTest {
 		});
 		form.addSubmitCompleteHandler(new FormPanel.SubmitCompleteHandler() {
 			public void onSubmitComplete(SubmitCompleteEvent event) {
-				// When the form submission is successfully completed, this event is
-				// fired. Assuming the service returned a response of type text/html,
-				// we can get the result text here (see the FormPanel documentation for
+				// When the form submission is successfully completed, this
+				// event is
+				// fired. Assuming the service returned a response of type
+				// text/html,
+				// we can get the result text here (see the FormPanel
+				// documentation for
 				// further explanation).
 				completeSubmitted = true;
 			}

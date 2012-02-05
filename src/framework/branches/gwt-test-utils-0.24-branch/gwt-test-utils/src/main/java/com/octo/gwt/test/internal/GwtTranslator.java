@@ -1,9 +1,7 @@
 package com.octo.gwt.test.internal;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.regex.Pattern;
 
-import javassist.CannotCompileException;
 import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.NotFoundException;
@@ -12,49 +10,108 @@ import javassist.Translator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.octo.gwt.test.IPatcher;
-import com.octo.gwt.test.internal.modifiers.JavaClassModifier;
-import com.octo.gwt.test.internal.utils.GwtPatcherUtils;
+import com.octo.gwt.test.exceptions.GwtTestException;
+import com.octo.gwt.test.exceptions.GwtTestPatchException;
 
-public class GwtTranslator implements Translator {
+class GwtTranslator implements Translator {
 
-	public static final Logger logger = LoggerFactory.getLogger(GwtTranslator.class);
+	private static final Logger LOGGER = LoggerFactory
+			.getLogger(GwtTranslator.class);
 
-	private Map<String, IPatcher> map = new HashMap<String, IPatcher>();
+	private static final Pattern TEST_PATTERN = Pattern
+			.compile("^.*[T|t][E|e][S|s][T|t].*$");
 
-	public GwtTranslator(Map<String, IPatcher> map) {
-		this.map = map;
+	private final ConfigurationLoader configurationLoader;
+
+	// private final SerializableModifier serializableModifier;
+
+	GwtTranslator(ConfigurationLoader configurationLoader) {
+		// this.serializableModifier = new SerializableModifier();
+		this.configurationLoader = configurationLoader;
 	}
 
-	public void onLoad(ClassPool pool, String className) throws NotFoundException, CannotCompileException {
+	public void onLoad(ClassPool pool, String className)
+			throws NotFoundException {
+		patchClass(pool.get(className));
+	}
+
+	public void start(ClassPool pool) throws NotFoundException {
+	}
+
+	private void applyJavaClassModifier(CtClass ctClass) {
 		try {
-			IPatcher patcher = map.get(className);
-			if (patcher != null) {
-				logger.debug("Load class " + className + ", use patcher " + patcher.getClass().getCanonicalName());
-				CtClass clazz = pool.get(className);
-				logger.debug("Patch class " + className);
-				GwtPatcherUtils.patch(clazz, patcher);
-				logger.debug("Class loaded & patched " + className);
-			} else {
-				logger.debug("Load class " + className + ", no patch");
-			}
+			// Apply remove-method
+			configurationLoader.getMethodRemover().modify(ctClass);
 
-			modifiyClass(className);
+			// Apply substitute-class
+			configurationLoader.getClassSubstituer().modify(ctClass);
+
+			// // Apply serializable modifier
+			// serializableModifier.modify(ctClass);
 		} catch (Exception e) {
-			throw new CannotCompileException(e);
+			if (GwtTestException.class.isInstance(e)) {
+				throw (GwtTestException) e;
+			} else {
+				throw new GwtTestPatchException(e);
+			}
+		}
+
+	}
+
+	private void applyPatcher(CtClass classToPatch) {
+		Patcher patcher = configurationLoader.getPatcherFactory()
+				.createPatcher(classToPatch);
+
+		if (patcher != null) {
+			LOGGER.debug("Apply '" + patcher.getClass().getName() + "'");
+			try {
+				GwtPatcherUtils.patch(classToPatch, patcher);
+			} catch (Exception e) {
+				if (GwtTestException.class.isInstance(e)) {
+					throw (GwtTestException) e;
+				} else {
+					throw new GwtTestPatchException(
+							"Error while patching class '"
+									+ classToPatch.getName() + "'", e);
+				}
+			}
 		}
 	}
 
-	public void start(ClassPool pool) throws NotFoundException, CannotCompileException {
+	private void modifiyClass(CtClass classToModify) {
 
-	}
+		for (String exclusion : ModuleData.get().getClientExclusions()) {
+			if (classToModify.getName().equals(exclusion)) {
+				// don't modify this class
+				return;
+			}
+		}
 
-	private void modifiyClass(String className) throws Exception {
-		logger.debug("Modify class " + className + ", with modifier declared in 'META-INF/gwt-test-utils.properties'");
-		CtClass classToModify = PatchGwtClassPool.get().get(className);
-		for (JavaClassModifier modifier : ConfigurationLoader.getInstance().getJavaClassModifierList()) {
-			modifier.modify(classToModify);
+		for (String clientPackage : ModuleData.get().getClientPaths()) {
+			if (classToModify.getName().startsWith(clientPackage)) {
+				// modifiy this class
+				applyJavaClassModifier(classToModify);
+				return;
+			}
+		}
+
+		for (String scanPackage : configurationLoader.getScanPackages()) {
+			if (classToModify.getName().startsWith(scanPackage)) {
+				// modifiy this class
+				applyJavaClassModifier(classToModify);
+				return;
+			}
+		}
+
+		if (TEST_PATTERN.matcher(classToModify.getName()).matches()) {
+			applyJavaClassModifier(classToModify);
 		}
 	}
 
+	private void patchClass(CtClass classToModify) {
+		LOGGER.debug("Load class '" + classToModify.getName() + "'");
+		applyPatcher(classToModify);
+		modifiyClass(classToModify);
+		LOGGER.debug("Class '" + classToModify.getName() + "' has been loaded");
+	}
 }

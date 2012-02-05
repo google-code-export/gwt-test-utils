@@ -38,7 +38,7 @@ class GwtHtmlContentHandler implements ContentHandler {
 
   public void characters(char[] ch, int start, int length) throws SAXException {
 
-    String string = String.valueOf(ch, start, length);
+    String string = String.valueOf(ch, start, length).replaceAll("\\u00A0", " ");
 
     if (string.length() > 0) {
       Text text = Document.get().createTextNode(string);

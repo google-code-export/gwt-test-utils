@@ -3,7 +3,7 @@ package com.octo.gwt.test.patchers;
 import com.octo.gwt.test.patchers.MyClassToPatch.MyInnerClass;
 
 @PatchClass(MyClassToPatch.class)
-public class MyClassToPatchPatcher extends AutomaticPatcher {
+public class MyClassToPatchPatcher {
 
 	@PatchMethod
 	public static String myStringMethod(MyClassToPatch myClassToPatch, MyInnerClass innerObject) {

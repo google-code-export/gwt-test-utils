@@ -19,7 +19,6 @@ import com.octo.gwt.test.internal.patchers.UIObjectPatcher;
 import com.octo.gwt.test.internal.utils.PropertyContainer;
 import com.octo.gwt.test.internal.utils.PropertyContainerHelper;
 import com.octo.gwt.test.internal.utils.TagAware;
-import com.octo.gwt.test.patchers.AutomaticPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
@@ -27,8 +26,8 @@ import com.octo.gwt.test.utils.events.EventBuilder;
 import com.octo.gwt.test.utils.events.EventUtils;
 import com.octo.gwt.test.utils.events.OverrideEvent;
 
-@PatchClass(classes = { "com.google.gwt.dom.client.DOMImpl" })
-public class DOMImplPatcher extends AutomaticPatcher {
+@PatchClass(target = "com.google.gwt.dom.client.DOMImpl")
+public class DOMImplPatcher {
 
 	private static final String SRC = "Src";
 	private static final String SCROLL_LEFT = "ScrollLeft";
@@ -109,7 +108,7 @@ public class DOMImplPatcher extends AutomaticPatcher {
 	@PatchMethod
 	public static void dispatchEvent(Object domImpl, Element target,
 			NativeEvent evt) {
-		EventListener listener = PropertyContainerHelper.getProperty(target,
+		EventListener listener = PropertyContainerHelper.getObject(target,
 				UIObjectPatcher.ELEM_EVENTLISTENER);
 		if (listener != null && evt instanceof Event) {
 			listener.onBrowserEvent((Event) evt);
@@ -175,18 +174,18 @@ public class DOMImplPatcher extends AutomaticPatcher {
 
 	@PatchMethod
 	public static int getAbsoluteLeft(Object domImpl, Element elem) {
-		return PropertyContainerHelper.getPropertyInteger(elem, ABSOLUTE_LEFT);
+		return PropertyContainerHelper.getInteger(elem, ABSOLUTE_LEFT);
 	}
 
 	@PatchMethod
 	public static int getAbsoluteTop(Object domImpl, Element elem) {
-		return PropertyContainerHelper.getPropertyInteger(elem, ABSOLUTE_TOP);
+		return PropertyContainerHelper.getInteger(elem, ABSOLUTE_TOP);
 	}
 
 	@PatchMethod
 	public static String getAttribute(Object domImpl, Element elem, String name) {
 		PropertyContainer propertyContainer = PropertyContainerHelper
-				.getProperty(elem, ElementPatcher.PROPERTY_MAP_FIELD);
+				.getObject(elem, ElementPatcher.PROPERTY_MAP_FIELD);
 		return (String) propertyContainer.get(name);
 	}
 
@@ -216,7 +215,7 @@ public class DOMImplPatcher extends AutomaticPatcher {
 
 	@PatchMethod
 	public static String getInnerHTML(Object domImpl, Element elem) {
-		return PropertyContainerHelper.getPropertyString(elem, INNER_HTML);
+		return PropertyContainerHelper.getString(elem, INNER_HTML);
 	}
 
 	@PatchMethod
@@ -264,12 +263,12 @@ public class DOMImplPatcher extends AutomaticPatcher {
 
 	@PatchMethod
 	public static int getScrollLeft(Object domImpl, Element elem) {
-		return PropertyContainerHelper.getPropertyInteger(elem, SCROLL_LEFT);
+		return PropertyContainerHelper.getInteger(elem, SCROLL_LEFT);
 	}
 
 	@PatchMethod
 	public static int getTabIndex(Object domImpl, Element elem) {
-		return PropertyContainerHelper.getPropertyInteger(elem, TAB_INDEX);
+		return PropertyContainerHelper.getInteger(elem, TAB_INDEX);
 	}
 
 	@PatchMethod
@@ -281,7 +280,7 @@ public class DOMImplPatcher extends AutomaticPatcher {
 			return ((TagAware) elem).getTag();
 		}
 
-		String tagName = PropertyContainerHelper.getProperty(elem, TAG_NAME);
+		String tagName = PropertyContainerHelper.getObject(elem, TAG_NAME);
 		return (tagName != null) ? tagName : (String) GwtReflectionUtils
 				.getStaticFieldValue(elem.getClass(), "TAG");
 	}
@@ -289,8 +288,8 @@ public class DOMImplPatcher extends AutomaticPatcher {
 	@PatchMethod
 	public static boolean hasAttribute(Object domImpl, Element elem, String name) {
 
-		PropertyContainer properties = PropertyContainerHelper.getProperty(
-				elem, ElementPatcher.PROPERTY_MAP_FIELD);
+		PropertyContainer properties = PropertyContainerHelper.getObject(elem,
+				ElementPatcher.PROPERTY_MAP_FIELD);
 
 		// String propertyName = JsoProperties.get().getDOMPropertyName(name);
 
@@ -299,7 +298,7 @@ public class DOMImplPatcher extends AutomaticPatcher {
 
 	@PatchMethod
 	public static String imgGetSrc(Object domImpl, Element img) {
-		return PropertyContainerHelper.getProperty(img, SRC);
+		return PropertyContainerHelper.getObject(img, SRC);
 	}
 
 	@PatchMethod
@@ -388,7 +387,7 @@ public class DOMImplPatcher extends AutomaticPatcher {
 	}
 
 	private static OverrideNodeList<Node> getChildNodeList(Node node) {
-		return PropertyContainerHelper.getProperty(node, NODE_LIST_FIELD);
+		return PropertyContainerHelper.getObject(node, NODE_LIST_FIELD);
 	}
 
 	private static Text getTextNode(Element elem) {

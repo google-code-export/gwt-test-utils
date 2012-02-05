@@ -3,6 +3,8 @@ package com.octo.gwt.test;
 import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.InitializationError;
 
+import com.octo.gwt.test.internal.GwtClassLoader;
+
 /**
  * <p>
  * GwtTestRunner is a JUnit test runner allowing to run tests classes which
@@ -10,7 +12,7 @@ import org.junit.runners.model.InitializationError;
  * </p>
  * 
  * <p>
- * To achieve this, it uses a specific class loader ({@link GwtTestClassLoader}
+ * To achieve this, it uses a specific class loader ({@link GwtClassLoader}
  * ), which aim is to provide JVM-compliant versions of classes referenced in
  * those test classes. To obtain JVM-compliant code, the class loader rely on a
  * set of class patchers (implementing {@link IPatcher}) which can be configured
@@ -20,7 +22,7 @@ import org.junit.runners.model.InitializationError;
 public class GwtTestRunner extends BlockJUnit4ClassRunner {
 
 	public GwtTestRunner(Class<?> clazz) throws InitializationError, ClassNotFoundException {
-		super(GwtTestClassLoader.getInstance().loadClass(clazz.getName()));
+		super(GwtClassLoader.getInstance().loadClass(clazz.getName()));
 	}
 
 }

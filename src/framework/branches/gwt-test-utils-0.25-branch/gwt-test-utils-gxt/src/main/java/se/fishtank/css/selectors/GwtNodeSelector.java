@@ -11,7 +11,7 @@ import com.google.gwt.dom.client.Node;
 /**
  * An implementation of a DOM based {@link NodeSelector}.
  * <p/>
- * <strong>Possible enhancements:</strong> <br/>
+ * <strong>Possible enhancements:</strong> <br>
  * When searching for an element by its {@code id} we traverse the whole tree.
  * An attribute with the name <strong>id</strong> is not of the type id unless
  * it's been defined that way by a DTD etc, and we can't assume that this is the

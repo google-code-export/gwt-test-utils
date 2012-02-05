@@ -3,7 +3,6 @@ package com.octo.gwt.test.internal;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -44,36 +43,26 @@ class ConfigurationLoader {
     return INSTANCE;
   }
 
-  public static synchronized ConfigurationLoader get() {
-    if (INSTANCE == null) {
-      throw new GwtTestConfigurationException(
-          ConfigurationLoader.class.getSimpleName()
-              + " instance has not been initialized yet");
-    }
-
-    return INSTANCE;
-  }
-
   private final ClassLoader classLoader;
 
   private final ClassSubstituer classSubstituer;
 
-  private final Set<String> delegateSet;
+  private final Set<String> delegates;
   private final MethodRemover methodRemover;
-  private final Set<String> moduleFileSet;
+  private final Set<String> moduleFiles;
   private PatcherFactory patcherFactory;
-  private final Set<String> removeMethodSet;
-  private final Set<String> scanPackageSet;
-  private final Set<String> substituteClassSet;
+  private final Set<String> removeMethods;
+  private final Set<String> scanPackages;
+  private final Set<String> substituteClasses;
 
   private ConfigurationLoader(ClassLoader classLoader) {
     this.classLoader = classLoader;
     this.classSubstituer = new ClassSubstituer();
-    this.delegateSet = new HashSet<String>();
-    this.moduleFileSet = new HashSet<String>();
-    this.scanPackageSet = new HashSet<String>();
-    this.removeMethodSet = new HashSet<String>();
-    this.substituteClassSet = new HashSet<String>();
+    this.delegates = new HashSet<String>();
+    this.moduleFiles = new HashSet<String>();
+    this.scanPackages = new HashSet<String>();
+    this.removeMethods = new HashSet<String>();
+    this.substituteClasses = new HashSet<String>();
 
     this.methodRemover = new MethodRemover();
 
@@ -85,8 +74,8 @@ class ConfigurationLoader {
     return classSubstituer;
   }
 
-  public Set<String> getDelegateSet() {
-    return Collections.unmodifiableSet(delegateSet);
+  public Set<String> getDelegates() {
+    return delegates;
   }
 
   public JavaClassModifier getMethodRemover() {
@@ -97,14 +86,18 @@ class ConfigurationLoader {
     return patcherFactory;
   }
 
+  public Set<String> getScanPackages() {
+    return scanPackages;
+  }
+
   private void process(Properties p, URL url) {
     for (Entry<Object, Object> entry : p.entrySet()) {
       String key = ((String) entry.getKey()).trim();
       String value = ((String) entry.getValue()).trim();
       if ("scan-package".equals(value)) {
-        scanPackageSet.add(key);
+        scanPackages.add(key);
       } else if ("delegate".equals(value)) {
-        delegateSet.add(key);
+        delegates.add(key);
       } else if ("remove-method".equals(value)) {
         processRemoveMethod(key, url);
       } else if ("substitute-class".equals(value)) {
@@ -119,7 +112,7 @@ class ConfigurationLoader {
   }
 
   private void processModuleFile(String string, URL url) {
-    if (!moduleFileSet.add(string)) {
+    if (!moduleFiles.add(string)) {
       // already processed
       return;
     }
@@ -128,7 +121,7 @@ class ConfigurationLoader {
   }
 
   private void processRemoveMethod(String string, URL url) {
-    if (!removeMethodSet.add(string)) {
+    if (!removeMethods.add(string)) {
       // already processed
       return;
     }
@@ -148,7 +141,7 @@ class ConfigurationLoader {
   }
 
   private void processSubstituteClass(String string, URL url) {
-    if (!substituteClassSet.add(string)) {
+    if (!substituteClasses.add(string)) {
       // already processed
       return;
     }
@@ -185,7 +178,7 @@ class ConfigurationLoader {
     }
 
     // check that at least one module file has been processed
-    if (moduleFileSet.size() == 0) {
+    if (moduleFiles.size() == 0) {
       throw new GwtTestConfigurationException(
           "Cannot find any 'module-file' setup in configuration file 'META-INF/gwt-test-utils.properties'");
     }
@@ -235,7 +228,7 @@ class ConfigurationLoader {
 
     };
 
-    ClassesScanner.getInstance().scanPackages(patchClassVisitor, scanPackageSet);
+    ClassesScanner.getInstance().scanPackages(patchClassVisitor, scanPackages);
 
     // create all patchers
     patcherFactory = new PatcherFactory(patchClassMap);

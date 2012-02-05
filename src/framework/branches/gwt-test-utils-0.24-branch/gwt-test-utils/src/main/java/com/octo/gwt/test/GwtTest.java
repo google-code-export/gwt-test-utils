@@ -1,12 +1,16 @@
 package com.octo.gwt.test;
 
-import java.util.Locale;
+import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 
-import com.octo.gwt.test.internal.GwtReset;
+import com.google.gwt.user.client.ui.IsWidget;
+import com.octo.gwt.test.exceptions.GwtTestException;
+import com.octo.gwt.test.internal.AfterTestCallbackManager;
+import com.octo.gwt.test.internal.GwtConfig;
+import com.octo.gwt.test.uibinder.UiObjectTagFactory;
 
 /**
  * <p>
@@ -27,66 +31,43 @@ import com.octo.gwt.test.internal.GwtReset;
  * 
  */
 @RunWith(GwtTestRunner.class)
-public abstract class GwtTest {
+public abstract class GwtTest extends GwtModuleRunnerAdapter {
+
+	@Override
+	public void addUiObjectTagFactory(
+			UiObjectTagFactory<? extends IsWidget> factory) {
+		GwtConfig.get().getUiObjectTagFactories().add(factory);
+	}
+
+	@Override
+	public abstract String getModuleName();
+
+	@Override
+	public void registerUiConstructor(Class<? extends IsWidget> clazz,
+			String... argNames) {
+		GwtConfig.get().registerUiConstructor(clazz, argNames);
+	}
 
 	@Before
 	public void setUpGwtTest() throws Exception {
-		GwtConfig.setLocale(getLocale());
-		GwtConfig.setCurrentTestedModuleFile(getCurrentTestedModuleFile());
-		GwtConfig.setLogHandler(getLogHandler());
-		GwtConfig.setHostPagePath(getHostPagePath());
-		GwtConfig.setEnsureDebugId(ensureDebugId());
+		GwtConfig.get().setup(this);
 	}
 
 	@After
-	public void tearDownAbstractGwtIntegrationShell() throws Exception {
-		resetPatchGwt();
-	}
+	public final void tearDownGwtTest() throws Exception {
 
-	public abstract String getModuleName();
+		List<Throwable> throwables = AfterTestCallbackManager.get()
+				.triggerCallbacks();
 
-	protected String getCurrentTestedModuleFile() {
-		// this method can be overrided by subclass
-		return null;
-	}
+		GwtReset.get().reset();
 
-	protected GwtLogHandler getLogHandler() {
-		// this method can be overrided by subclass
-		return null;
-	}
+		if (throwables.size() > 0) {
+			throw new GwtTestException(
+					throwables.size()
+							+ " exception(s) thrown during JUnit @After callback. First one is thrown :",
+					throwables.get(0));
+		}
 
-	protected Locale getLocale() {
-		// this method can be overrided by subclass
-		return null;
-	}
-
-	/**
-	 * Override this method if you want your test to allow the setup of debug
-	 * id.
-	 * 
-	 * @return true if setting debug id should be enabled, false otherwise.
-	 */
-	protected boolean ensureDebugId() {
-		return false;
-	}
-
-	protected String getHostPagePath() {
-		// this method can be overrided by subclass
-		return null;
-	}
-
-	protected void resetPatchGwt() throws Exception {
-		// reinit GWT
-		GwtReset.reset();
-	}
-
-	protected boolean addGwtCreateHandler(GwtCreateHandler gwtCreateHandler) {
-		return GwtConfig.addGwtCreateHandler(gwtCreateHandler);
-	}
-
-	@Deprecated
-	protected void setGwtCreateHandler(GwtCreateHandler gwtCreateHandler) {
-		addGwtCreateHandler(gwtCreateHandler);
 	}
 
 }

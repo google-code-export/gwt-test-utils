@@ -4,12 +4,11 @@ import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.TableRowElement;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.FlexTable;
-import com.octo.gwt.test.patchers.AutomaticPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
 @PatchClass(FlexTable.class)
-public class FlexTablePatcher extends AutomaticPatcher {
+public class FlexTablePatcher {
 
 	@PatchMethod
 	public static void addCells(Element table, int row, int num) {

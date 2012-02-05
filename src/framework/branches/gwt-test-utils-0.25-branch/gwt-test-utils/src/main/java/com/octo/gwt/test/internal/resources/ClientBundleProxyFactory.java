@@ -7,8 +7,10 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javassist.CtClass;
 import javassist.NotFoundException;
@@ -58,7 +60,7 @@ class ClientBundleProxyFactory {
         computeExtensions = true;
       }
 
-      List<URL> existingFiles = new ArrayList<URL>();
+      Set<URL> existingFiles = new HashSet<URL>();
 
       for (ResourceFileEntry resourceEntry : filesSimpleNames) {
         String resourceName = resourceEntry.resourceName;
@@ -66,23 +68,40 @@ class ClientBundleProxyFactory {
         String baseDir = declaringClass.getPackage().getName().replaceAll(
             "\\.", "/")
             + "/";
-        String fileName = (resourceName.startsWith(baseDir)) ? resourceName
-            : baseDir + resourceName;
+        String resourceNameWithPackage = resourceName.startsWith(baseDir)
+            ? resourceName : baseDir + resourceName;
 
         if (computeExtensions) {
           String[] extensions = getResourceDefaultExtensions(method);
 
           for (String extension : extensions) {
-            String possibleFile = fileName + extension;
+            // try to find the file directly in the classpath
+            String possibleFile = resourceName + extension;
             URL url = this.getClass().getClassLoader().getResource(possibleFile);
             if (url != null) {
               existingFiles.add(url);
             }
+
+            // try to find the file relative to the ClientBundle subinterface's
+            // package
+            String possibleFileWithPackage = resourceNameWithPackage
+                + extension;
+            URL urlWithPackage = this.getClass().getClassLoader().getResource(
+                possibleFileWithPackage);
+            if (urlWithPackage != null) {
+              existingFiles.add(urlWithPackage);
+            }
           }
         } else {
-          URL url = this.getClass().getClassLoader().getResource(fileName);
+          URL url = this.getClass().getClassLoader().getResource(resourceName);
           if (url != null) {
             existingFiles.add(url);
+          }
+
+          URL urlWithPackage = this.getClass().getClassLoader().getResource(
+              resourceNameWithPackage);
+          if (urlWithPackage != null) {
+            existingFiles.add(urlWithPackage);
           }
         }
       }
@@ -97,7 +116,7 @@ class ClientBundleProxyFactory {
                 + "." + method.getName() + "()'");
       }
 
-      return existingFiles.get(0);
+      return existingFiles.iterator().next();
 
     }
 

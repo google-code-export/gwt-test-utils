@@ -5,13 +5,12 @@ import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
 import com.google.gwt.user.client.ui.OverrideSubmitCompleteEvent;
 import com.google.gwt.user.client.ui.impl.FormPanelImpl;
-import com.octo.gwt.test.patchers.AutomaticPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 @PatchClass(FormPanel.class)
-public class FormPanelPatcher extends AutomaticPatcher {
+public class FormPanelPatcher {
 
 	@PatchMethod
 	public static void submit(FormPanel formPanel) {

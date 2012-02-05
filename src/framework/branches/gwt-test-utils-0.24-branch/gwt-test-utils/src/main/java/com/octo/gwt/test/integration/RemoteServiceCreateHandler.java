@@ -14,15 +14,16 @@ import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import com.octo.gwt.test.GwtCreateHandler;
 import com.octo.gwt.test.integration.internal.DeserializationContext;
-import com.octo.gwt.test.internal.PatchGwtClassPool;
+import com.octo.gwt.test.internal.GwtClassPool;
 
 public abstract class RemoteServiceCreateHandler implements GwtCreateHandler {
 
-	private static final Logger logger = LoggerFactory.getLogger(RemoteServiceCreateHandler.class);
+	private static final Logger logger = LoggerFactory
+			.getLogger(RemoteServiceCreateHandler.class);
 
-	private DeserializationContext backToGwtCallbacks;
+	private final DeserializationContext backToGwtCallbacks;
 
-	private DeserializationContext fromGwtCallbacks;
+	private final DeserializationContext fromGwtCallbacks;
 
 	private GwtRpcExceptionHandler exceptionHandler;
 
@@ -32,22 +33,13 @@ public abstract class RemoteServiceCreateHandler implements GwtCreateHandler {
 		this.fromGwtCallbacks = new DeserializationContext();
 	}
 
-	public void addBackToGwtCallbacks(Class<?> clazz, ISerializeCallback callback) {
+	public void addBackToGwtCallbacks(Class<?> clazz,
+			ISerializeCallback callback) {
 		this.backToGwtCallbacks.put(clazz, callback);
 	}
 
 	public void addFromGwtCallbacks(Class<?> clazz, ISerializeCallback callback) {
 		this.fromGwtCallbacks.put(clazz, callback);
-	}
-
-	public void setExceptionHandler(GwtRpcExceptionHandler exceptionHandler) {
-		this.exceptionHandler = exceptionHandler;
-	}
-
-	protected abstract Object findService(Class<?> remoteServiceClass, String remoteServiceRelativePath);
-
-	protected Object createObject(Class<?> classLiteral) throws Exception {
-		return null;
 	}
 
 	public Object create(Class<?> classLiteral) throws Exception {
@@ -67,29 +59,48 @@ public abstract class RemoteServiceCreateHandler implements GwtCreateHandler {
 				logger.error("Service not found " + className);
 				throw new RuntimeException("Service not found " + className);
 			}
-			GwtRpcInvocationHandler handler = new GwtRpcInvocationHandler(asyncClazz, service);
+			GwtRpcInvocationHandler handler = new GwtRpcInvocationHandler(
+					asyncClazz, service);
 			handler.setExceptionHandler(exceptionHandler);
 			handler.setBackToGwtCallbacks(backToGwtCallbacks);
 			handler.setFromGwtCallbacks(fromGwtCallbacks);
-			return Proxy.newProxyInstance(getClass().getClassLoader(), new Class[] { asyncClazz }, handler);
+			return Proxy.newProxyInstance(getClass().getClassLoader(),
+					new Class[] { asyncClazz }, handler);
 		}
 		logger.debug("Creating class " + className);
 		Object o = createObject(classLiteral);
 		return o;
 	}
-	
-	private String getRemoveServiceRelativePath(String className) throws NotFoundException, ClassNotFoundException {
-		CtClass ctClass = PatchGwtClassPool.get().get(className);
+
+	public void setExceptionHandler(GwtRpcExceptionHandler exceptionHandler) {
+		this.exceptionHandler = exceptionHandler;
+	}
+
+	private String getRemoveServiceRelativePath(String className)
+			throws NotFoundException, ClassNotFoundException {
+		CtClass ctClass = GwtClassPool.get().get(className);
 		Object[] annotations = ctClass.getAvailableAnnotations();
 		for (Object o : annotations) {
 			if (Proxy.isProxyClass(o.getClass())) {
-				AnnotationImpl annotation = (AnnotationImpl) Proxy.getInvocationHandler(o);
-				if (annotation.getTypeName().equals(RemoteServiceRelativePath.class.getName())) {
-					return ((StringMemberValue) annotation.getAnnotation().getMemberValue("value")).getValue();
+				AnnotationImpl annotation = (AnnotationImpl) Proxy
+						.getInvocationHandler(o);
+				if (annotation.getTypeName().equals(
+						RemoteServiceRelativePath.class.getName())) {
+					return ((StringMemberValue) annotation.getAnnotation()
+							.getMemberValue("value")).getValue();
 				}
 			}
 		}
-		throw new RuntimeException("Cannot find the '@" + RemoteServiceRelativePath.class.getSimpleName() + "' annotation on RemoteService interface '" + className + "'");
+		throw new RuntimeException("Cannot find the '@"
+				+ RemoteServiceRelativePath.class.getSimpleName()
+				+ "' annotation on RemoteService interface '" + className + "'");
 	}
+
+	protected Object createObject(Class<?> classLiteral) throws Exception {
+		return null;
+	}
+
+	protected abstract Object findService(Class<?> remoteServiceClass,
+			String remoteServiceRelativePath);
 
 }

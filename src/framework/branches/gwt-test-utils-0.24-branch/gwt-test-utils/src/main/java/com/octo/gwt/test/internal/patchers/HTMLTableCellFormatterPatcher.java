@@ -3,12 +3,11 @@ package com.octo.gwt.test.internal.patchers;
 import com.google.gwt.dom.client.TableRowElement;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.HTMLTable.CellFormatter;
-import com.octo.gwt.test.patchers.AutomaticPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
 @PatchClass(CellFormatter.class)
-public class HTMLTableCellFormatterPatcher extends AutomaticPatcher {
+public class HTMLTableCellFormatterPatcher {
 
 	@PatchMethod
 	public static Element getCellElement(CellFormatter cellFormatter, Element table, int row, int col) {

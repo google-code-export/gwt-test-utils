@@ -15,6 +15,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.ui.Button;
+import com.octo.gwt.test.internal.GwtConfig;
 import com.octo.gwt.test.utils.events.Browser;
 
 public class GwtMainTest extends GwtTestTest {
@@ -22,36 +23,20 @@ public class GwtMainTest extends GwtTestTest {
 	private String sToday;
 	private boolean success;
 
-	@Override
-	public String getCurrentTestedModuleFile() {
-		return "test-config.gwt.xml";
-	}
-
-	@Before
-	public void setupGWTTest() {
-		GwtConfig.setLocale(new Locale("FR"));
-		sToday = DateTimeFormat.getFormat("EEE dd MMM").format(new Date(1259103600000l));
-		success = false;
-	}
-
-	@Test
-	public void checkThatGwtInitialiseOccursBeforeTheJUnitInitialisationOfTheClass() {
-		assertEquals("mer. 25 nov.", sToday);
-	}
-
 	@Test
 	public void checkGetHostPageBase() {
 		Assert.assertEquals("http://127.0.0.1:8888/", GWT.getHostPageBaseURL());
 	}
 
 	@Test
-	public void checkGetModuleName() {
-		Assert.assertEquals("gwt_test_utils_module", GWT.getModuleName());
+	public void checkGetModuleBaseURL() {
+		Assert.assertEquals("http://127.0.0.1:8888/gwt_test_utils_module/",
+				GWT.getModuleBaseURL());
 	}
 
 	@Test
-	public void checkGetModuleBaseURL() {
-		Assert.assertEquals("http://127.0.0.1:8888/gwt_test_utils_module/", GWT.getModuleBaseURL());
+	public void checkGetModuleName() {
+		Assert.assertEquals("gwt_test_utils_module", GWT.getModuleName());
 	}
 
 	@Test
@@ -78,13 +63,13 @@ public class GwtMainTest extends GwtTestTest {
 			public void onClick(ClickEvent event) {
 				GWT.runAsync(new RunAsyncCallback() {
 
-					public void onSuccess() {
-						success = true;
-					}
-
 					public void onFailure(Throwable reason) {
 						Assert.fail("GWT.runAsync() has called \"onFailure\" callback");
 
+					}
+
+					public void onSuccess() {
+						success = true;
 					}
 				});
 
@@ -97,5 +82,18 @@ public class GwtMainTest extends GwtTestTest {
 		// Assert
 		Assert.assertTrue(success);
 
+	}
+
+	@Test
+	public void checkThatGwtInitialiseOccursBeforeTheJUnitInitialisationOfTheClass() {
+		assertEquals("mer. 25 nov.", sToday);
+	}
+
+	@Before
+	public void setupGWTTest() {
+		GwtConfig.get().setLocale(new Locale("FR"));
+		sToday = DateTimeFormat.getFormat("EEE dd MMM").format(
+				new Date(1259103600000l));
+		success = false;
 	}
 }

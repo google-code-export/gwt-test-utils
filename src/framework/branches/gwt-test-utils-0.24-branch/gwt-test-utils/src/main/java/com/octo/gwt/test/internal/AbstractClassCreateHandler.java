@@ -9,17 +9,17 @@ import javassist.CtClass;
 import javassist.CtMethod;
 
 import com.octo.gwt.test.GwtCreateHandler;
-import com.octo.gwt.test.GwtTestClassLoader;
-import com.octo.gwt.test.internal.utils.GwtPatcherUtils;
 
 public class AbstractClassCreateHandler implements GwtCreateHandler {
 
-	private Map<Class<?>, Class<?>> cache = new HashMap<Class<?>, Class<?>>();
+	private final Map<Class<?>, Class<?>> cache = new HashMap<Class<?>, Class<?>>();
 
-	// this GwtCreateHandler has been introduced to make possible the instanciation of abstract classes 
+	// this GwtCreateHandler has been introduced to make possible the
+	// instanciation of abstract classes
 	// that gwt-test-utils doesn't patch right now
 	public Object create(Class<?> classLiteral) throws Exception {
-		if (classLiteral.isAnnotation() || classLiteral.isArray() || classLiteral.isEnum() || classLiteral.isInterface()
+		if (classLiteral.isAnnotation() || classLiteral.isArray()
+				|| classLiteral.isEnum() || classLiteral.isInterface()
 				|| !Modifier.isAbstract(classLiteral.getModifiers())) {
 			return null;
 		}
@@ -30,10 +30,11 @@ public class AbstractClassCreateHandler implements GwtCreateHandler {
 			return newClass.newInstance();
 		}
 
-		ClassPool cp = PatchGwtClassPool.get();
+		ClassPool cp = GwtClassPool.get();
 
-		CtClass ctClass = PatchGwtClassPool.get().get(classLiteral.getName());
-		CtClass subClass = cp.makeClass(classLiteral.getCanonicalName() + "SubClass");
+		CtClass ctClass = GwtClassPool.get().get(classLiteral.getName());
+		CtClass subClass = cp.makeClass(classLiteral.getCanonicalName()
+				+ "SubClass");
 
 		subClass.setSuperclass(ctClass);
 
@@ -46,7 +47,7 @@ public class AbstractClassCreateHandler implements GwtCreateHandler {
 
 		GwtPatcherUtils.patch(subClass, null);
 
-		newClass = GwtTestClassLoader.getInstance().loadClass(subClass.getName());
+		newClass = GwtClassLoader.getInstance().loadClass(subClass.getName());
 		cache.put(classLiteral, newClass);
 
 		return newClass.newInstance();

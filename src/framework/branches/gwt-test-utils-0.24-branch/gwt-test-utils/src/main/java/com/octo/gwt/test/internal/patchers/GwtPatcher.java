@@ -4,30 +4,51 @@ import com.google.gwt.core.client.GWT;
 import com.octo.gwt.test.GwtCreateHandler;
 import com.octo.gwt.test.GwtLogHandler;
 import com.octo.gwt.test.Mock;
-import com.octo.gwt.test.internal.GwtCreateHandlerManager;
-import com.octo.gwt.test.patchers.AutomaticPatcher;
+import com.octo.gwt.test.exceptions.GwtTestConfigurationException;
+import com.octo.gwt.test.exceptions.GwtTestException;
+import com.octo.gwt.test.exceptions.GwtTestPatchException;
+import com.octo.gwt.test.internal.GwtConfig;
+import com.octo.gwt.test.internal.handlers.GwtCreateHandlerManager;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
 @PatchClass(GWT.class)
-public class GwtPatcher extends AutomaticPatcher {
-
-	public static GwtLogHandler gwtLogHandler = null;
-
-	public static void reset() {
-		gwtLogHandler = null;
-	}
+public class GwtPatcher {
 
 	@PatchMethod
-	public static void log(String message, Throwable t) {
-		if (gwtLogHandler != null) {
-			gwtLogHandler.log(message, t);
+	public static Object create(Class<?> classLiteral) {
+		for (GwtCreateHandler gwtCreateHandler : GwtCreateHandlerManager.get()
+				.getGwtCreateHandlers()) {
+			try {
+				Object o = gwtCreateHandler.create(classLiteral);
+				if (o != null) {
+					return o;
+				}
+			} catch (Exception e) {
+				if (GwtTestException.class.isInstance(e)) {
+					throw (GwtTestException) e;
+				} else {
+					throw new GwtTestPatchException(
+							"Error while creation instance of '"
+									+ classLiteral.getName() + "' through '"
+									+ gwtCreateHandler.getClass().getName()
+									+ "' instance", e);
+				}
+			}
 		}
+
+		throw new GwtTestConfigurationException(
+				"No declared "
+						+ GwtCreateHandler.class.getSimpleName()
+						+ " has been able to create an instance of '"
+						+ classLiteral.getName()
+						+ "'. You should add our own with 'GwtTest.addGwtCreateHandler(..)' method or declared your tested object with @"
+						+ Mock.class.getSimpleName());
 	}
 
 	@PatchMethod
 	public static String getVersion() {
-		return "GWT 2 by gwt-test-utils";
+		return "GWT by gwt-test-utils";
 	}
 
 	@PatchMethod
@@ -36,22 +57,11 @@ public class GwtPatcher extends AutomaticPatcher {
 	}
 
 	@PatchMethod
-	public static Object create(Class<?> classLiteral) {
-		for (GwtCreateHandler gwtCreateHandler : GwtCreateHandlerManager.getInstance().getGwtCreateHandlers()) {
-			try {
-				Object o = gwtCreateHandler.create(classLiteral);
-				if (o != null) {
-					return o;
-				}
-			} catch (Exception e) {
-				throw new RuntimeException("Error while creation instance of '" + classLiteral.getName() + "' through '"
-						+ gwtCreateHandler.getClass().getName() + "' instance", e);
-			}
+	public static void log(String message, Throwable t) {
+		GwtLogHandler logHandler = GwtConfig.get().getLogHandler();
+		if (logHandler != null) {
+			logHandler.log(message, t);
 		}
-
-		throw new RuntimeException("No declared " + GwtCreateHandler.class.getSimpleName() + " has been able to create an instance of '"
-				+ classLiteral.getName() + "'. You should add our own with 'addGwtCreateHandler(..)' method or declared your tested object with @"
-				+ Mock.class.getSimpleName());
 	}
 
 }

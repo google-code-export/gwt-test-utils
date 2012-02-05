@@ -5,12 +5,11 @@ import java.util.regex.Pattern;
 
 import com.google.gwt.dom.client.ImageElement;
 import com.google.gwt.user.client.ui.Image;
-import com.octo.gwt.test.patchers.AutomaticPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
 @PatchClass(Image.class)
-public class ImagePatcher extends AutomaticPatcher {
+public class ImagePatcher {
 
 	private static final Pattern PATTERN = Pattern.compile("^(\\d+).*$");
 

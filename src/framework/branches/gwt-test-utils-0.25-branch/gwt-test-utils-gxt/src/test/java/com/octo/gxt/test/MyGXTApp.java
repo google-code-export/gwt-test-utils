@@ -20,6 +20,7 @@ public class MyGXTApp implements EntryPoint {
     cp.getHeader().addTool(new ToolButton("x-tool-close"));
     cp.addText("BogusText");
     cp.addButton(new com.extjs.gxt.ui.client.widget.button.Button("Ok"));
+
     cp.setIconStyle("tree-folder-open");
     RootPanel.get().add(cp);
     cp.layout();

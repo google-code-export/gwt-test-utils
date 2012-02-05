@@ -66,7 +66,7 @@ public class GwtPropertiesHelper implements AfterTestCallback {
 
       while (true) {
         if (inOff >= inLimit) {
-          inLimit = (inStream == null) ? reader.read(inCharBuf)
+          inLimit = inStream == null ? reader.read(inCharBuf)
               : inStream.read(inByteBuf);
           inOff = 0;
           if (inLimit <= 0) {
@@ -134,7 +134,7 @@ public class GwtPropertiesHelper implements AfterTestCallback {
             continue;
           }
           if (inOff >= inLimit) {
-            inLimit = (inStream == null) ? reader.read(inCharBuf)
+            inLimit = inStream == null ? reader.read(inCharBuf)
                 : inStream.read(inByteBuf);
             inOff = 0;
             if (inLimit <= 0) {
@@ -193,14 +193,14 @@ public class GwtPropertiesHelper implements AfterTestCallback {
   }
 
   public void afterTest() throws Throwable {
-    cachedProperties.clear();
+    // cachedProperties.clear();
     sequenceReplacements.clear();
     initSequenceReplacements();
   }
 
   public Properties getLocalizedProperties(String prefix, Locale locale) {
     if (locale != null) {
-      prefix += ("_" + locale.toString());
+      prefix += "_" + locale.toString();
     }
     return getProperties(prefix);
   }
@@ -373,14 +373,15 @@ public class GwtPropertiesHelper implements AfterTestCallback {
           }
           out[outLen++] = (char) value;
         } else {
-          if (aChar == 't')
+          if (aChar == 't') {
             aChar = '\t';
-          else if (aChar == 'r')
+          } else if (aChar == 'r') {
             aChar = '\r';
-          else if (aChar == 'n')
+          } else if (aChar == 'n') {
             aChar = '\n';
-          else if (aChar == 'f')
+          } else if (aChar == 'f') {
             aChar = '\f';
+          }
           out[outLen++] = aChar;
         }
       } else {

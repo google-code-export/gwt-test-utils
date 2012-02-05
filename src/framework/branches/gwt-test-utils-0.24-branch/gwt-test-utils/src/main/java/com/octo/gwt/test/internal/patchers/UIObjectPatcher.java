@@ -7,13 +7,12 @@ import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 import com.octo.gwt.test.internal.patchers.dom.ElementPatcher;
 import com.octo.gwt.test.internal.utils.PropertyContainerHelper;
-import com.octo.gwt.test.patchers.AutomaticPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 @PatchClass(UIObject.class)
-public class UIObjectPatcher extends AutomaticPatcher {
+public class UIObjectPatcher {
 
 	public static final String ELEM_EVENTLISTENER = "ELEM_EVENTLISTENER";
 
@@ -34,7 +33,7 @@ public class UIObjectPatcher extends AutomaticPatcher {
 
 	@PatchMethod
 	public static String getStyleName(Element elem) {
-		return PropertyContainerHelper.getProperty(elem,
+		return PropertyContainerHelper.getObject(elem,
 				ElementPatcher.CLASSNAME_FIELD);
 	}
 

@@ -4,12 +4,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.google.gwt.user.client.Timer;
-import com.octo.gwt.test.patchers.AutomaticPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
 @PatchClass(Timer.class)
-public class TimerPatcher extends AutomaticPatcher {
+public class TimerPatcher {
 
 	public static int DEFAULT_REPEAT_TIME = 5;
 	private static Map<Timer, Integer> CACHE = new HashMap<Timer, Integer>();

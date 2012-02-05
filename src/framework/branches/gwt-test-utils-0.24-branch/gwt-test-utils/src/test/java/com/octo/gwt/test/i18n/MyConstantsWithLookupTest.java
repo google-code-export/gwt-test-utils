@@ -8,8 +8,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.google.gwt.core.client.GWT;
-import com.octo.gwt.test.GwtConfig;
 import com.octo.gwt.test.GwtTestTest;
+import com.octo.gwt.test.internal.GwtConfig;
 
 public class MyConstantsWithLookupTest extends GwtTestTest {
 
@@ -60,7 +60,8 @@ public class MyConstantsWithLookupTest extends GwtTestTest {
 		Assert.assertEquals(map.size(), getMap.size());
 		Assert.assertEquals(map.get("hello"), getMap.get("hello"));
 		Assert.assertEquals(map.get("goodbye"), getMap.get("goodbye"));
-		Assert.assertEquals(map.get("noCorrespondance"), getMap.get("noCorrespondance"));
+		Assert.assertEquals(map.get("noCorrespondance"),
+				getMap.get("noCorrespondance"));
 
 		Assert.assertEquals(functionInt, getInt);
 		Assert.assertEquals(functionDouble, getDouble, 0);
@@ -79,7 +80,7 @@ public class MyConstantsWithLookupTest extends GwtTestTest {
 
 	@Test
 	public void checkMyConstantsWithSpecialChar() {
-		GwtConfig.setLocale(Locale.FRENCH);
+		GwtConfig.get().setLocale(Locale.FRENCH);
 
 		// Test
 		String hello = constants.hello();
@@ -111,7 +112,8 @@ public class MyConstantsWithLookupTest extends GwtTestTest {
 
 		Assert.assertEquals(4, map.size());
 		Assert.assertEquals("Bonjour", map.get("hello"));
-		Assert.assertEquals("Au revoir et un caractère qui pue", map.get("goodbye"));
+		Assert.assertEquals("Au revoir et un caractère qui pue",
+				map.get("goodbye"));
 		Assert.assertEquals("premiere valeur de la map", map.get("map1"));
 		Assert.assertEquals("seconde valeur de la map", map.get("map2"));
 		Assert.assertNull(map.get("map3"));
@@ -131,7 +133,8 @@ public class MyConstantsWithLookupTest extends GwtTestTest {
 		Assert.assertEquals(map.size(), getMap.size());
 		Assert.assertEquals(map.get("hello"), getMap.get("hello"));
 		Assert.assertEquals(map.get("goodbye"), getMap.get("goodbye"));
-		Assert.assertEquals(map.get("noCorrespondance"), getMap.get("noCorrespondance"));
+		Assert.assertEquals(map.get("noCorrespondance"),
+				getMap.get("noCorrespondance"));
 
 		Assert.assertEquals(functionInt, getInt);
 		Assert.assertEquals(functionDouble, getDouble, 0);

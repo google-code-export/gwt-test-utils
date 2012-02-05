@@ -19,11 +19,11 @@ import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtMethod;
 
-import com.octo.gwt.test.GwtTestClassLoader;
 import com.octo.gwt.test.csv.CsvDirectory;
 import com.octo.gwt.test.csv.CsvMacros;
 import com.octo.gwt.test.csv.runner.CsvReader;
-import com.octo.gwt.test.internal.PatchGwtClassPool;
+import com.octo.gwt.test.internal.GwtClassLoader;
+import com.octo.gwt.test.internal.GwtClassPool;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 public class DirectoryTestReader {
@@ -82,7 +82,7 @@ public class DirectoryTestReader {
 	private void initTestMethods(Class<?> clazz, CsvDirectory csvDirectory) throws Exception {
 		testMethods = new ArrayList<Method>();
 		String csvShortName = csvDirectory.value().substring(csvDirectory.value().lastIndexOf('/') + 1);
-		ClassPool cp = PatchGwtClassPool.get();
+		ClassPool cp = GwtClassPool.get();
 
 		CtClass newClazz = cp.makeClass(clazz.getCanonicalName() + ".generated" + System.nanoTime());
 		newClazz.setSuperclass(cp.get(clazz.getCanonicalName()));
@@ -94,7 +94,7 @@ public class DirectoryTestReader {
 			m.setBody("launchTest(\"" + entry.getKey() + "\");");
 			newClazz.addMethod(m);
 		}
-		generatedClazz = newClazz.toClass(GwtTestClassLoader.getInstance(), null);
+		generatedClazz = newClazz.toClass(GwtClassLoader.getInstance(), null);
 		for (String methodName : methodList) {
 			Method m = generatedClazz.getMethod(methodName);
 			testMethods.add(m);

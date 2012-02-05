@@ -5,19 +5,19 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import com.octo.gwt.test.internal.utils.PropertyContainerHelper;
-import com.octo.gwt.test.patchers.AutomaticPropertyContainerPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
-@PatchClass(classes = { "com.google.gwt.user.client.ui.PrefixTree" })
-public class PrefixTreePatcher extends AutomaticPropertyContainerPatcher {
+@PatchClass(target = "com.google.gwt.user.client.ui.PrefixTree")
+public class PrefixTreePatcher {
 
 	private static final String PREFIXES_SET = "PREFIXES_SET";
 
 	@PatchMethod
 	public static boolean add(Object prefixTree, String s) {
-		Set<String> set = PropertyContainerHelper.getProperty(prefixTree, PREFIXES_SET);
+		Set<String> set = PropertyContainerHelper.getObject(prefixTree,
+				PREFIXES_SET);
 		if (set == null) {
 			set = new TreeSet<String>();
 			PropertyContainerHelper.setProperty(prefixTree, PREFIXES_SET, set);
@@ -27,9 +27,16 @@ public class PrefixTreePatcher extends AutomaticPropertyContainerPatcher {
 	}
 
 	@PatchMethod
-	public static void suggestImpl(Object prefixTree, String search, String prefix, Collection<String> output, int limit) {
+	public static void clear(Object prefixTree) {
+		GwtReflectionUtils.setPrivateFieldValue(prefixTree, "size", 0);
+	}
 
-		Set<String> set = PropertyContainerHelper.getProperty(prefixTree, PREFIXES_SET);
+	@PatchMethod
+	public static void suggestImpl(Object prefixTree, String search,
+			String prefix, Collection<String> output, int limit) {
+
+		Set<String> set = PropertyContainerHelper.getObject(prefixTree,
+				PREFIXES_SET);
 		if (set == null)
 			return;
 
@@ -38,11 +45,6 @@ public class PrefixTreePatcher extends AutomaticPropertyContainerPatcher {
 				output.add(record);
 			}
 		}
-	}
-
-	@PatchMethod
-	public static void clear(Object prefixTree) {
-		GwtReflectionUtils.setPrivateFieldValue(prefixTree, "size", 0);
 	}
 
 }

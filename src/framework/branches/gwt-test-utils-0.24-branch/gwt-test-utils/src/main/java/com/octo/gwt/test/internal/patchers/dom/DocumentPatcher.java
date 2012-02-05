@@ -8,28 +8,28 @@ import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Text;
 import com.octo.gwt.test.internal.overrides.OverrideNodeList;
 import com.octo.gwt.test.internal.utils.PropertyContainerHelper;
-import com.octo.gwt.test.patchers.AutomaticPropertyContainerPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
 @PatchClass(Document.class)
-public class DocumentPatcher extends AutomaticPropertyContainerPatcher {
+public class DocumentPatcher {
 
 	private static int ID = 0;
 
 	@PatchMethod
-	public static String getCompatMode(Document document) {
-		return "toto";
+	public static Text createTextNode(Document document, String data) {
+		return NodeFactory.createTextNode(data);
+	}
+
+	@PatchMethod
+	public static String createUniqueId(Document document) {
+		ID++;
+		return "elem_" + Long.toString(ID);
 	}
 
 	@PatchMethod
 	public static Document get() {
 		return NodeFactory.getDocument();
-	}
-
-	@PatchMethod
-	public static Text createTextNode(Document document, String data) {
-		return NodeFactory.createTextNode(data);
 	}
 
 	@PatchMethod
@@ -42,19 +42,13 @@ public class DocumentPatcher extends AutomaticPropertyContainerPatcher {
 	}
 
 	@PatchMethod
+	public static String getCompatMode(Document document) {
+		return "toto";
+	}
+
+	@PatchMethod
 	public static String getDomain(Document document) {
 		return null;
-	}
-
-	@PatchMethod
-	public static String getReferrer(Document document) {
-		return "";
-	}
-
-	@PatchMethod
-	public static String createUniqueId(Document document) {
-		ID++;
-		return "elem_" + Long.toString(ID);
 	}
 
 	@PatchMethod
@@ -77,7 +71,8 @@ public class DocumentPatcher extends AutomaticPropertyContainerPatcher {
 	}
 
 	@PatchMethod
-	public static NodeList<Element> getElementsByTagName(Document document, String tagName) {
+	public static NodeList<Element> getElementsByTagName(Document document,
+			String tagName) {
 		OverrideNodeList<Element> result = new OverrideNodeList<Element>();
 
 		inspectDomForTag(document, tagName, result);
@@ -85,18 +80,25 @@ public class DocumentPatcher extends AutomaticPropertyContainerPatcher {
 		return result;
 	}
 
-	private static void inspectDomForTag(Node node, String tagName, OverrideNodeList<Element> result) {
+	@PatchMethod
+	public static String getReferrer(Document document) {
+		return "";
+	}
+
+	private static OverrideNodeList<Node> getChildNodeList(Node node) {
+		return PropertyContainerHelper.getObject(node, "ChildNodes");
+	}
+
+	private static void inspectDomForTag(Node node, String tagName,
+			OverrideNodeList<Element> result) {
 		OverrideNodeList<Node> childs = getChildNodeList(node);
 		for (Node n : childs.getList()) {
-			if (Element.class.isInstance(n) && tagName.equals(((Element) n).getTagName())) {
+			if (Element.class.isInstance(n)
+					&& tagName.equals(((Element) n).getTagName())) {
 				result.getList().add((Element) n);
 			}
 			inspectDomForTag(n, tagName, result);
 		}
-	}
-
-	private static OverrideNodeList<Node> getChildNodeList(Node node) {
-		return PropertyContainerHelper.getProperty(node, "ChildNodes");
 	}
 
 }

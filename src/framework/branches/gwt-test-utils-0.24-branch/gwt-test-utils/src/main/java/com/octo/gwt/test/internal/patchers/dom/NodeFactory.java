@@ -8,6 +8,7 @@ import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.AnchorElement;
 import com.google.gwt.dom.client.AreaElement;
 import com.google.gwt.dom.client.BRElement;
@@ -61,7 +62,7 @@ import com.google.gwt.dom.client.TextAreaElement;
 import com.google.gwt.dom.client.TitleElement;
 import com.google.gwt.dom.client.UListElement;
 import com.octo.gwt.test.GwtTest;
-import com.octo.gwt.test.GwtTestClassLoader;
+import com.octo.gwt.test.internal.GwtClassLoader;
 import com.octo.gwt.test.internal.GwtHtmlParser;
 import com.octo.gwt.test.internal.utils.PropertyContainer;
 import com.octo.gwt.test.internal.utils.PropertyContainerHelper;
@@ -69,9 +70,23 @@ import com.octo.gwt.test.internal.utils.TagAware;
 
 public class NodeFactory {
 
-	public static String hostPagePath;
+	private static class SpecificElement extends Element implements TagAware {
 
+		private final String tag;
+
+		public SpecificElement(String tag) {
+			this.tag = tag;
+		}
+
+		public String getTag() {
+			return tag;
+		}
+
+	}
+
+	public static String hostPagePath;
 	private static Map<String, String> elementMap = new HashMap<String, String>();
+
 	private static Map<String, String> elementWithSpecialTagMap = new HashMap<String, String>();
 
 	static {
@@ -116,7 +131,8 @@ public class NodeFactory {
 		elementMap.put("param", ParamElement.class.getName());
 		elementMap.put("pre", PreElement.class.getName());
 		elementWithSpecialTagMap.put("q", QuoteElement.class.getName());
-		elementWithSpecialTagMap.put("blockquote", QuoteElement.class.getName());
+		elementWithSpecialTagMap
+				.put("blockquote", QuoteElement.class.getName());
 		elementMap.put("script", ScriptElement.class.getName());
 		elementMap.put("select", SelectElement.class.getName());
 		elementMap.put("span", SpanElement.class.getName());
@@ -125,12 +141,16 @@ public class NodeFactory {
 		elementWithSpecialTagMap.put("td", TableCellElement.class.getName());
 		elementWithSpecialTagMap.put("th", TableCellElement.class.getName());
 		elementWithSpecialTagMap.put("col", TableColElement.class.getName());
-		elementWithSpecialTagMap.put("colgroup", TableColElement.class.getName());
+		elementWithSpecialTagMap.put("colgroup",
+				TableColElement.class.getName());
 		elementMap.put("table", TableElement.class.getName());
 		elementMap.put("tr", TableRowElement.class.getName());
-		elementWithSpecialTagMap.put("tbody", TableSectionElement.class.getName());
-		elementWithSpecialTagMap.put("tfoot", TableSectionElement.class.getName());
-		elementWithSpecialTagMap.put("thead", TableSectionElement.class.getName());
+		elementWithSpecialTagMap.put("tbody",
+				TableSectionElement.class.getName());
+		elementWithSpecialTagMap.put("tfoot",
+				TableSectionElement.class.getName());
+		elementWithSpecialTagMap.put("thead",
+				TableSectionElement.class.getName());
 		elementMap.put("textarea", TextAreaElement.class.getName());
 		elementMap.put("title", TitleElement.class.getName());
 		elementMap.put("ul", UListElement.class.getName());
@@ -138,39 +158,43 @@ public class NodeFactory {
 
 	public static Document DOCUMENT;
 
-	private NodeFactory() {
-	}
-
-	public static void reset() {
-		if (DOCUMENT != null) {
-			PropertyContainer bodyPc = PropertyContainerHelper.cast(DOCUMENT.getBody()).getProperties();
-			bodyPc.clear();
-
-			PropertyContainer documentPc = PropertyContainerHelper.cast(DOCUMENT).getProperties();
-			documentPc.clear();
-			DOCUMENT = null;
-		}
-	}
-
-	public static Document getDocument() {
-		if (DOCUMENT == null) {
-			try {
-				DOCUMENT = (Document) loadClass(Document.class.getName()).newInstance();
-				Element e = parseHTMLElement();
-				DOCUMENT.appendChild(e);
-				PropertyContainerHelper.setProperty(DOCUMENT, "DocumentElement", e);
-			} catch (Exception e) {
-				throw new RuntimeException("Unable to create Document", e);
-			}
-		}
-		return DOCUMENT;
-	}
-
-	public static Style createStyle(Element owner) {
+	public static Element createElement(String tag) {
+		Element elem = null;
 		try {
-			return (Style) loadClass(Style.class.getName()).getConstructor(Element.class).newInstance(owner);
+			String elemClassName = elementMap.get(tag.toLowerCase());
+			String elemClassNameWithTag = elementWithSpecialTagMap.get(tag
+					.toLowerCase());
+
+			if (tag.equalsIgnoreCase("html")) {
+				elem = (Element) loadClass(Element.class.getName())
+						.newInstance();
+				PropertyContainerHelper.setProperty(elem, "NodeName", "HTML");
+				PropertyContainerHelper.setProperty(elem, "TagName", "HTML");
+			} else if (elemClassName != null) {
+				elem = (Element) loadClass(elemClassName).newInstance();
+			} else if (elemClassNameWithTag != null) {
+				Constructor<?> constructor = loadClass(elemClassNameWithTag)
+						.getConstructor(String.class);
+				elem = (Element) constructor.newInstance(tag);
+			}
+
+			if (elem == null) {
+				elem = new SpecificElement(tag);
+			}
+
+			return elem;
 		} catch (Exception e) {
-			throw new RuntimeException("Unable to create style for element <" + owner.getTagName() + ">" + e);
+			throw new RuntimeException("Cannot create element for tag <" + tag
+					+ ">", e);
+		}
+	}
+
+	public static JavaScriptObject createJSO() {
+		try {
+			return (JavaScriptObject) loadClass(
+					JavaScriptObject.class.getName()).newInstance();
+		} catch (Exception e) {
+			throw new RuntimeException("Unable to create JSO " + e);
 		}
 	}
 
@@ -182,6 +206,16 @@ public class NodeFactory {
 		}
 	}
 
+	public static Style createStyle(Element owner) {
+		try {
+			return (Style) loadClass(Style.class.getName()).getConstructor(
+					Element.class).newInstance(owner);
+		} catch (Exception e) {
+			throw new RuntimeException("Unable to create style for element <"
+					+ owner.getTagName() + ">" + e);
+		}
+	}
+
 	public static Text createTextNode(String data) {
 		try {
 			Text text = (Text) loadClass(Text.class.getName()).newInstance();
@@ -190,6 +224,109 @@ public class NodeFactory {
 			return text;
 		} catch (Exception e) {
 			throw new RuntimeException("Unable to create text " + e);
+		}
+	}
+
+	public static Document getDocument() {
+		if (DOCUMENT == null) {
+			try {
+				DOCUMENT = (Document) loadClass(Document.class.getName())
+						.newInstance();
+				Element e = parseHTMLElement();
+				DOCUMENT.appendChild(e);
+				PropertyContainerHelper.setProperty(DOCUMENT,
+						"DocumentElement", e);
+			} catch (Exception e) {
+				throw new RuntimeException("Unable to create Document", e);
+			}
+		}
+		return DOCUMENT;
+	}
+
+	public static void reset() {
+		if (DOCUMENT != null) {
+			PropertyContainer bodyPc = PropertyContainerHelper.cast(
+					DOCUMENT.getBody()).getProperties();
+			bodyPc.clear();
+
+			PropertyContainer documentPc = PropertyContainerHelper.cast(
+					DOCUMENT).getProperties();
+			documentPc.clear();
+			DOCUMENT = null;
+		}
+	}
+
+	private static Element createNewHTMLElement() {
+		Element e = createElement("html");
+
+		PropertyContainerHelper.setProperty(e, "NodeName", "HTML");
+		PropertyContainerHelper.setProperty(e, "TagName", "HTML");
+
+		BodyElement bodyElement = (BodyElement) createElement("body");
+		e.appendChild(bodyElement);
+
+		return e;
+	}
+
+	private static Element findHTMLElement(NodeList<Node> nodes) {
+		int i = 0;
+		while (i < nodes.getLength()) {
+			Node node = nodes.getItem(i);
+			if (Node.ELEMENT_NODE == node.getNodeType()) {
+				Element e = node.cast();
+				if ("html".equalsIgnoreCase(e.getTagName())) {
+					return e;
+				}
+			}
+		}
+		throw new RuntimeException("Cannot find a root HTML element in file '"
+				+ hostPagePath + "'");
+	}
+
+	private static String getHostPageHTML() {
+		if (hostPagePath == null) {
+			return null;
+		}
+		InputStream is = NodeFactory.class.getClassLoader()
+				.getResourceAsStream(hostPagePath);
+		if (is == null) {
+			throw new RuntimeException("Cannot find file '" + hostPagePath
+					+ "', please override " + GwtTest.class.getSimpleName()
+					+ ".getHostPagePath() method correctly (see "
+					+ ClassLoader.class.getSimpleName()
+					+ ".getResourceAsStream(string name))");
+		}
+		BufferedReader br = null;
+		try {
+			br = new BufferedReader(new InputStreamReader(is));
+			StringBuilder sb = new StringBuilder();
+			String line;
+			while ((line = br.readLine()) != null) {
+				sb.append(line);
+			}
+
+			return sb.toString();
+		} catch (IOException e) {
+			throw new RuntimeException(
+					"Error while reading module HTML host page '"
+							+ hostPagePath + "'", e);
+		} finally {
+			if (br != null) {
+				try {
+					br.close();
+				} catch (IOException e) {
+					throw new RuntimeException(e);
+				}
+			}
+		}
+
+	}
+
+	private static Class<?> loadClass(String className) {
+		try {
+			return GwtClassLoader.getInstance().loadClass(className);
+		} catch (ClassNotFoundException e) {
+			return null;
 		}
 	}
 
@@ -205,112 +342,6 @@ public class NodeFactory {
 		}
 	}
 
-	private static Element findHTMLElement(NodeList<Node> nodes) {
-		int i = 0;
-		while (i < nodes.getLength()) {
-			Node node = nodes.getItem(i);
-			if (Node.ELEMENT_NODE == node.getNodeType()) {
-				Element e = node.cast();
-				if ("html".equalsIgnoreCase(e.getTagName())) {
-					return e;
-				}
-			}
-		}
-		throw new RuntimeException("Cannot find a root HTML element in file '" + hostPagePath + "'");
-	}
-
-	private static String getHostPageHTML() {
-		if (hostPagePath == null) {
-			return null;
-		}
-		InputStream is = NodeFactory.class.getClassLoader().getResourceAsStream(hostPagePath);
-		if (is == null) {
-			throw new RuntimeException("Cannot find file '" + hostPagePath + "', please override "
-					+ GwtTest.class.getSimpleName() + ".getHostPagePath() method correctly (see "
-					+ ClassLoader.class.getSimpleName() + ".getResourceAsStream(string name))");
-		}
-		BufferedReader br = null;
-		try {
-			br = new BufferedReader(new InputStreamReader(is));
-			StringBuilder sb = new StringBuilder();
-			String line;
-			while ((line = br.readLine()) != null) {
-				sb.append(line);
-			}
-
-			return sb.toString();
-		} catch (IOException e) {
-			throw new RuntimeException("Error while reading module HTML host page '" + hostPagePath + "'", e);
-		} finally {
-			if (br != null) {
-				try {
-					br.close();
-				} catch (IOException e) {
-					throw new RuntimeException(e);
-				}
-			}
-		}
-
-	}
-
-	private static Element createNewHTMLElement() {
-		Element e = createElement("html");
-
-		PropertyContainerHelper.setProperty(e, "NodeName", "HTML");
-		PropertyContainerHelper.setProperty(e, "TagName", "HTML");
-
-		BodyElement bodyElement = (BodyElement) createElement("body");
-		e.appendChild(bodyElement);
-
-		return e;
-	}
-
-	public static Element createElement(String tag) {
-		Element elem = null;
-		try {
-			String elemClassName = elementMap.get(tag.toLowerCase());
-			String elemClassNameWithTag = elementWithSpecialTagMap.get(tag.toLowerCase());
-
-			if (tag.equalsIgnoreCase("html")) {
-				elem = (Element) loadClass(Element.class.getName()).newInstance();
-				PropertyContainerHelper.setProperty(elem, "NodeName", "HTML");
-				PropertyContainerHelper.setProperty(elem, "TagName", "HTML");
-			} else if (elemClassName != null) {
-				elem = (Element) loadClass(elemClassName).newInstance();
-			} else if (elemClassNameWithTag != null) {
-				Constructor<?> constructor = loadClass(elemClassNameWithTag).getConstructor(String.class);
-				elem = (Element) constructor.newInstance(tag);
-			}
-
-			if (elem == null) {
-				elem = new SpecificElement(tag);
-			}
-
-			return elem;
-		} catch (Exception e) {
-			throw new RuntimeException("Cannot create element for tag <" + tag + ">", e);
-		}
-	}
-
-	private static Class<?> loadClass(String className) {
-		try {
-			return GwtTestClassLoader.getInstance().loadClass(className);
-		} catch (ClassNotFoundException e) {
-			return null;
-		}
-	}
-
-	private static class SpecificElement extends Element implements TagAware {
-
-		private String tag;
-
-		public SpecificElement(String tag) {
-			this.tag = tag;
-		}
-
-		public String getTag() {
-			return tag;
-		}
-
+	private NodeFactory() {
 	}
 }

@@ -60,9 +60,125 @@ public class BrowserTest extends GwtTestTest {
 	private boolean onBlurTriggered;
 	private boolean onChangeTriggered;
 
-	@Override
-	public String getCurrentTestedModuleFile() {
-		return "test-config.gwt.xml";
+	Cell clickedCell;
+
+	// FIXME : pass this test correctly
+	// @Test
+	public void checkAddNativePreviewHandler() {
+		counter = 0;
+
+		Event.addNativePreviewHandler(new NativePreviewHandler() {
+
+			public void onPreviewNativeEvent(NativePreviewEvent event) {
+				counter++;
+
+			}
+		});
+
+		NativeEvent event = Document.get().createBlurEvent();
+		DomEvent.fireNativeEvent(event, new Button());
+
+		Assert.assertEquals(1, counter);
+	}
+
+	@Test
+	public void checkBlurEvent() {
+		tested = false;
+		Button b = new Button();
+		b.addBlurHandler(new BlurHandler() {
+
+			public void onBlur(BlurEvent event) {
+				tested = !tested;
+			}
+
+		});
+
+		// simule the event
+		Browser.blur(b);
+
+		Assert.assertTrue("onBlur event was not triggered", tested);
+	}
+
+	@Test
+	public void checkClickEvent() {
+		tested = false;
+		Button b = new Button();
+		b.addClickHandler(new ClickHandler() {
+
+			public void onClick(ClickEvent event) {
+				tested = !tested;
+			}
+
+		});
+
+		// simule the event
+		Browser.click(b);
+
+		Assert.assertTrue("onClick event was not triggered", tested);
+	}
+
+	@Test
+	public void checkClickOnComplexPanel() {
+
+		// Set up
+		tested = false;
+		ComplexPanel panel = new StackPanel() {
+
+			@Override
+			public void onBrowserEvent(com.google.gwt.user.client.Event event) {
+				super.onBrowserEvent(event);
+
+				if (DOM.eventGetType(event) == Event.ONCLICK) {
+					tested = !tested;
+				}
+			};
+		};
+
+		panel.add(new Anchor());
+
+		// Test
+		Browser.click(panel, 0);
+
+		// Assert
+		Assert.assertTrue("onClick event was not triggered", tested);
+	}
+
+	@Test
+	public void checkClickOnGrid() {
+		// Setup
+		final Grid g = new Grid(2, 2);
+		g.addClickHandler(new ClickHandler() {
+
+			public void onClick(ClickEvent event) {
+				clickedCell = g.getCellForEvent(event);
+			}
+		});
+
+		Anchor a = new Anchor();
+		g.setWidget(1, 1, a);
+
+		// Test
+		Browser.click(g, 1, 1);
+
+		// Assert
+		Assert.assertEquals(1, clickedCell.getRowIndex());
+		Assert.assertEquals(1, clickedCell.getCellIndex());
+	}
+
+	@Test
+	public void checkClickOnSuggestBox() {
+		// Setup
+		MultiWordSuggestOracle oracle = new MultiWordSuggestOracle();
+		oracle.add("suggestion 1");
+		oracle.add("suggestion 2");
+		SuggestBox box = new SuggestBox(oracle);
+
+		// Test
+		Browser.fillText(box, "sug");
+		Browser.click(box, 1);
+
+		// Assert
+		Assert.assertEquals("suggestion 2", box.getText());
 	}
 
 	@Test
@@ -101,7 +217,8 @@ public class BrowserTest extends GwtTestTest {
 		tb.addKeyUpHandler(new KeyUpHandler() {
 
 			public void onKeyUp(KeyUpEvent event) {
-				Assert.assertEquals(KeyCodes.KEY_BACKSPACE, event.getNativeKeyCode());
+				Assert.assertEquals(KeyCodes.KEY_BACKSPACE,
+						event.getNativeKeyCode());
 				keyUpCount++;
 			}
 		});
@@ -109,7 +226,8 @@ public class BrowserTest extends GwtTestTest {
 		tb.addKeyDownHandler(new KeyDownHandler() {
 
 			public void onKeyDown(KeyDownEvent event) {
-				Assert.assertEquals(KeyCodes.KEY_BACKSPACE, event.getNativeKeyCode());
+				Assert.assertEquals(KeyCodes.KEY_BACKSPACE,
+						event.getNativeKeyCode());
 				keyDownCount++;
 			}
 		});
@@ -162,7 +280,8 @@ public class BrowserTest extends GwtTestTest {
 		tb.addKeyUpHandler(new KeyUpHandler() {
 
 			public void onKeyUp(KeyUpEvent event) {
-				Assert.assertEquals(KeyCodes.KEY_BACKSPACE, event.getNativeKeyCode());
+				Assert.assertEquals(KeyCodes.KEY_BACKSPACE,
+						event.getNativeKeyCode());
 				keyUpCount++;
 			}
 		});
@@ -170,7 +289,8 @@ public class BrowserTest extends GwtTestTest {
 		tb.addKeyDownHandler(new KeyDownHandler() {
 
 			public void onKeyDown(KeyDownEvent event) {
-				Assert.assertEquals(KeyCodes.KEY_BACKSPACE, event.getNativeKeyCode());
+				Assert.assertEquals(KeyCodes.KEY_BACKSPACE,
+						event.getNativeKeyCode());
 				keyDownCount++;
 			}
 		});
@@ -183,67 +303,6 @@ public class BrowserTest extends GwtTestTest {
 		Assert.assertEquals("", tb.getText());
 		Assert.assertEquals(4, keyDownCount);
 		Assert.assertEquals(1, keyUpCount);
-		Assert.assertTrue(onBlurTriggered);
-		Assert.assertTrue(onChangeTriggered);
-	}
-
-	@Test
-	public void checkRemoveText() {
-		// Setup
-		onChangeTriggered = false;
-		onBlurTriggered = false;
-		keyDownCount = 0;
-		keyUpCount = 0;
-		String initialText = "1234";
-
-		final TextBox tb = new TextBox();
-		tb.setText(initialText);
-
-		tb.addChangeHandler(new ChangeHandler() {
-
-			public void onChange(ChangeEvent event) {
-				onChangeTriggered = true;
-			}
-		});
-
-		tb.addBlurHandler(new BlurHandler() {
-
-			public void onBlur(BlurEvent event) {
-				onBlurTriggered = true;
-			}
-		});
-
-		tb.addKeyPressHandler(new KeyPressHandler() {
-
-			public void onKeyPress(KeyPressEvent event) {
-				Assert.fail("no keyPress event should be triggered when pressing backspace button");
-			}
-		});
-
-		tb.addKeyUpHandler(new KeyUpHandler() {
-
-			public void onKeyUp(KeyUpEvent event) {
-				Assert.assertEquals(KeyCodes.KEY_BACKSPACE, event.getNativeKeyCode());
-				keyUpCount++;
-			}
-		});
-
-		tb.addKeyDownHandler(new KeyDownHandler() {
-
-			public void onKeyDown(KeyDownEvent event) {
-				Assert.assertEquals(KeyCodes.KEY_BACKSPACE, event.getNativeKeyCode());
-				keyDownCount++;
-			}
-		});
-
-		// Test
-		Browser.removeText(tb, 2);
-
-		// Asserts
-		// the textbox value should be updated
-		Assert.assertEquals("12", tb.getText());
-		Assert.assertEquals(2, keyDownCount);
-		Assert.assertEquals(2, keyUpCount);
 		Assert.assertTrue(onBlurTriggered);
 		Assert.assertTrue(onChangeTriggered);
 	}
@@ -281,7 +340,8 @@ public class BrowserTest extends GwtTestTest {
 				// Assert that onKeyPress is triggered before onKeyUp and after
 				// onKeyDown
 				Assert.assertEquals(keyPressChars.size(), keyUpChars.size());
-				Assert.assertEquals(keyPressChars.size() + 1, keyDownChars.size());
+				Assert.assertEquals(keyPressChars.size() + 1,
+						keyDownChars.size());
 
 				keyPressChars.add(event.getCharCode());
 			}
@@ -290,7 +350,8 @@ public class BrowserTest extends GwtTestTest {
 		tb.addKeyUpHandler(new KeyUpHandler() {
 
 			public void onKeyUp(KeyUpEvent event) {
-				// Assert that onKeyUp is triggered after onKeyDown and onKeyPress
+				// Assert that onKeyUp is triggered after onKeyDown and
+				// onKeyPress
 				Assert.assertEquals(keyUpChars.size() + 1, keyDownChars.size());
 				Assert.assertEquals(keyUpChars.size() + 1, keyPressChars.size());
 
@@ -301,7 +362,8 @@ public class BrowserTest extends GwtTestTest {
 		tb.addKeyDownHandler(new KeyDownHandler() {
 
 			public void onKeyDown(KeyDownEvent event) {
-				// Assert that onKeyDown is triggered before onKeyPress and onKeyUp
+				// Assert that onKeyDown is triggered before onKeyPress and
+				// onKeyUp
 				Assert.assertEquals(keyDownChars.size(), keyPressChars.size());
 				Assert.assertEquals(keyDownChars.size(), keyUpChars.size());
 
@@ -320,118 +382,6 @@ public class BrowserTest extends GwtTestTest {
 		assertTextFilledCorrectly(textToFill, keyUpChars);
 		Assert.assertTrue(onBlurTriggered);
 		Assert.assertTrue(onChangeTriggered);
-	}
-
-	private void assertTextFilledCorrectly(String filledText, List<Character> typedChars) {
-
-		Assert.assertEquals(filledText.length(), typedChars.size());
-
-		for (int i = 0; i < filledText.length(); i++) {
-			Assert.assertEquals((Object) filledText.charAt(i), typedChars.get(i));
-		}
-
-	}
-
-	@Test
-	public void checkClickEvent() {
-		tested = false;
-		Button b = new Button();
-		b.addClickHandler(new ClickHandler() {
-
-			public void onClick(ClickEvent event) {
-				tested = !tested;
-			}
-
-		});
-
-		// simule the event
-		Browser.click(b);
-
-		Assert.assertTrue("onClick event was not triggered", tested);
-	}
-
-	@Test
-	public void checkClickOnComplexPanel() {
-
-		// Set up
-		tested = false;
-		ComplexPanel panel = new StackPanel() {
-
-			@Override
-			public void onBrowserEvent(com.google.gwt.user.client.Event event) {
-				super.onBrowserEvent(event);
-
-				if (DOM.eventGetType(event) == Event.ONCLICK) {
-					tested = !tested;
-				}
-			};
-		};
-
-		panel.add(new Anchor());
-
-		// Test
-		Browser.click(panel, 0);
-
-		// Assert
-		Assert.assertTrue("onClick event was not triggered", tested);
-	}
-
-	Cell clickedCell;
-
-	@Test
-	public void checkClickOnGrid() {
-		// Setup
-		final Grid g = new Grid(2, 2);
-		g.addClickHandler(new ClickHandler() {
-
-			public void onClick(ClickEvent event) {
-				clickedCell = g.getCellForEvent(event);
-			}
-		});
-
-		Anchor a = new Anchor();
-		g.setWidget(1, 1, a);
-
-		// Test
-		Browser.click(g, 1, 1);
-
-		// Assert
-		Assert.assertEquals(1, clickedCell.getRowIndex());
-		Assert.assertEquals(1, clickedCell.getCellIndex());
-	}
-
-	@Test
-	public void checkClickOnSuggestBox() {
-		// Setup
-		MultiWordSuggestOracle oracle = new MultiWordSuggestOracle();
-		oracle.add("suggestion 1");
-		oracle.add("suggestion 2");
-		SuggestBox box = new SuggestBox(oracle);
-
-		// Test
-		Browser.fillText(box, "sug");
-		Browser.click(box, 1);
-
-		// Assert
-		Assert.assertEquals("suggestion 2", box.getText());
-	}
-
-	@Test
-	public void checkBlurEvent() {
-		tested = false;
-		Button b = new Button();
-		b.addBlurHandler(new BlurHandler() {
-
-			public void onBlur(BlurEvent event) {
-				tested = !tested;
-			}
-
-		});
-
-		// simule the event
-		Browser.blur(b);
-
-		Assert.assertTrue("onBlur event was not triggered", tested);
 	}
 
 	@Test
@@ -540,24 +490,6 @@ public class BrowserTest extends GwtTestTest {
 	}
 
 	@Test
-	public void checkMouseUpEvent() {
-		tested = false;
-		Button b = new Button();
-		b.addMouseUpHandler(new MouseUpHandler() {
-
-			public void onMouseUp(MouseUpEvent event) {
-				tested = !tested;
-			}
-
-		});
-
-		// simule the event
-		Browser.mouseUp(b);
-
-		Assert.assertTrue("onMouseUp event was not triggered", tested);
-	}
-
-	@Test
 	public void checkMouseMoveEvent() {
 		tested = false;
 		Button b = new Button();
@@ -576,21 +508,21 @@ public class BrowserTest extends GwtTestTest {
 	}
 
 	@Test
-	public void checkMouseWheelEvent() {
+	public void checkMouseOutEvent() {
 		tested = false;
 		Button b = new Button();
-		b.addMouseWheelHandler(new MouseWheelHandler() {
+		b.addMouseOutHandler(new MouseOutHandler() {
 
-			public void onMouseWheel(MouseWheelEvent event) {
+			public void onMouseOut(MouseOutEvent event) {
 				tested = !tested;
 			}
 
 		});
 
 		// simule the event
-		Browser.mouseWheel(b);
+		Browser.mouseOut(b);
 
-		Assert.assertTrue("onMouseWheel event was not triggered", tested);
+		Assert.assertTrue("onMouseOut event was not triggered", tested);
 	}
 
 	@Test
@@ -612,39 +544,113 @@ public class BrowserTest extends GwtTestTest {
 	}
 
 	@Test
-	public void checkMouseOutEvent() {
+	public void checkMouseUpEvent() {
 		tested = false;
 		Button b = new Button();
-		b.addMouseOutHandler(new MouseOutHandler() {
+		b.addMouseUpHandler(new MouseUpHandler() {
 
-			public void onMouseOut(MouseOutEvent event) {
+			public void onMouseUp(MouseUpEvent event) {
 				tested = !tested;
 			}
 
 		});
 
 		// simule the event
-		Browser.mouseOut(b);
+		Browser.mouseUp(b);
 
-		Assert.assertTrue("onMouseOut event was not triggered", tested);
+		Assert.assertTrue("onMouseUp event was not triggered", tested);
 	}
 
-	// FIXME : pass this test correctly
-	// @Test
-	public void checkAddNativePreviewHandler() {
-		counter = 0;
+	@Test
+	public void checkMouseWheelEvent() {
+		tested = false;
+		Button b = new Button();
+		b.addMouseWheelHandler(new MouseWheelHandler() {
 
-		Event.addNativePreviewHandler(new NativePreviewHandler() {
+			public void onMouseWheel(MouseWheelEvent event) {
+				tested = !tested;
+			}
 
-			public void onPreviewNativeEvent(NativePreviewEvent event) {
-				counter++;
+		});
 
+		// simule the event
+		Browser.mouseWheel(b);
+
+		Assert.assertTrue("onMouseWheel event was not triggered", tested);
+	}
+
+	@Test
+	public void checkRemoveText() {
+		// Setup
+		onChangeTriggered = false;
+		onBlurTriggered = false;
+		keyDownCount = 0;
+		keyUpCount = 0;
+		String initialText = "1234";
+
+		final TextBox tb = new TextBox();
+		tb.setText(initialText);
+
+		tb.addChangeHandler(new ChangeHandler() {
+
+			public void onChange(ChangeEvent event) {
+				onChangeTriggered = true;
 			}
 		});
 
-		NativeEvent event = Document.get().createBlurEvent();
-		DomEvent.fireNativeEvent(event, new Button());
+		tb.addBlurHandler(new BlurHandler() {
 
-		Assert.assertEquals(1, counter);
+			public void onBlur(BlurEvent event) {
+				onBlurTriggered = true;
+			}
+		});
+
+		tb.addKeyPressHandler(new KeyPressHandler() {
+
+			public void onKeyPress(KeyPressEvent event) {
+				Assert.fail("no keyPress event should be triggered when pressing backspace button");
+			}
+		});
+
+		tb.addKeyUpHandler(new KeyUpHandler() {
+
+			public void onKeyUp(KeyUpEvent event) {
+				Assert.assertEquals(KeyCodes.KEY_BACKSPACE,
+						event.getNativeKeyCode());
+				keyUpCount++;
+			}
+		});
+
+		tb.addKeyDownHandler(new KeyDownHandler() {
+
+			public void onKeyDown(KeyDownEvent event) {
+				Assert.assertEquals(KeyCodes.KEY_BACKSPACE,
+						event.getNativeKeyCode());
+				keyDownCount++;
+			}
+		});
+
+		// Test
+		Browser.removeText(tb, 2);
+
+		// Asserts
+		// the textbox value should be updated
+		Assert.assertEquals("12", tb.getText());
+		Assert.assertEquals(2, keyDownCount);
+		Assert.assertEquals(2, keyUpCount);
+		Assert.assertTrue(onBlurTriggered);
+		Assert.assertTrue(onChangeTriggered);
+	}
+
+	private void assertTextFilledCorrectly(String filledText,
+			List<Character> typedChars) {
+
+		Assert.assertEquals(filledText.length(), typedChars.size());
+
+		for (int i = 0; i < filledText.length(); i++) {
+			Assert.assertEquals((Object) filledText.charAt(i),
+					typedChars.get(i));
+		}
+
 	}
 }

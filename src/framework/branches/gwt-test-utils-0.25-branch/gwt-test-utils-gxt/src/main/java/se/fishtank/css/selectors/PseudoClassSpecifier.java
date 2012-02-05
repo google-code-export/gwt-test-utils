@@ -4,7 +4,7 @@ package se.fishtank.css.selectors;
 /**
  * An implementation of {@link Specifier} for pseudo-classes.
  * <p/>
- * Note: <br/>
+ * Note: <br>
  * The negation pseudo-class specifier is implemented by
  * {@link NegationSpecifier}, and the {@code nth-*} pseudo-classes are
  * implemented by {@link PseudoNthSpecifier}.

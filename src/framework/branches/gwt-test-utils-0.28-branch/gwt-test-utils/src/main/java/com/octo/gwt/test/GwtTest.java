@@ -79,7 +79,7 @@ public abstract class GwtTest extends GwtModuleRunnerAdapter implements Test {
 
   @Before
   public final void setUpGwtTest() throws Exception {
-    GwtConfig.setup(this);
+    GwtConfig.get().setup(this);
   }
 
   @After

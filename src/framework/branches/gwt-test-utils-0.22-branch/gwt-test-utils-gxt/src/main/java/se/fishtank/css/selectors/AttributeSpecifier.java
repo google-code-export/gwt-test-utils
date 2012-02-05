@@ -4,7 +4,7 @@ package se.fishtank.css.selectors;
 /**
  * An implementation of {@link Specifier} for attributes.
  * <p/>
- * Note: <br/>
+ * Note: <br>
  * This implementation will also be used for ID selectors and class selectors.
  * 
  * @see <a

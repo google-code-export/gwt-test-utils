@@ -34,6 +34,9 @@ public class AfterTestCallbackManager {
    * @return <tt>true</tt> if the callback was not already registered.
    */
   public boolean registerCallback(AfterTestCallback callback) {
+    if (callback instanceof GwtConfig) {
+      System.out.println("ok ");
+    }
     return callbacks.add(callback);
   }
 

@@ -3,6 +3,7 @@ package com.octo.gwt.test.internal;
 import java.util.ArrayList;
 import java.util.List;
 
+//TODO : delete
 public class PropertiesStringModifier {
 
 	private static class SequenceReplacement {

@@ -10,9 +10,9 @@ import org.slf4j.LoggerFactory;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.StatusCodeException;
-import com.octo.gwt.test.GwtTestClassLoader;
 import com.octo.gwt.test.integration.internal.DeserializationContext;
 import com.octo.gwt.test.integration.internal.GwtSerializationUtils;
+import com.octo.gwt.test.internal.GwtClassLoader;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 public class GwtRpcInvocationHandler implements InvocationHandler {
@@ -71,11 +71,11 @@ public class GwtRpcInvocationHandler implements InvocationHandler {
 			// Serialize objects
 			Object[] serializedArgs = new Object[subArgs.length];
 			for (int i = 0; i < subArgs.length; i++) {
-				serializedArgs[i] = GwtSerializationUtils.serializeUnserialize(subArgs[i], GwtTestClassLoader.getInstance().getParent(),
+				serializedArgs[i] = GwtSerializationUtils.serializeUnserialize(subArgs[i], GwtClassLoader.getInstance().getParent(),
 						fromGwtCallbacks);
 			}
 			Object returnValue = m.invoke(target, serializedArgs);
-			Object o = GwtSerializationUtils.serializeUnserialize(returnValue, GwtTestClassLoader.getInstance(), backToGwtCallbacks);
+			Object o = GwtSerializationUtils.serializeUnserialize(returnValue, GwtClassLoader.getInstance(), backToGwtCallbacks);
 			logger.debug("Result of " + m.getName() + " : " + o);
 			callback.onSuccess(o);
 		} catch (InvocationTargetException e) {

@@ -7,35 +7,36 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.SelectElement;
 import com.google.gwt.user.client.ui.UIObject;
 import com.octo.gwt.test.internal.utils.PropertyContainerHelper;
-import com.octo.gwt.test.patchers.AutomaticPropertyContainerPatcher;
+import com.octo.gwt.test.patchers.InitMethod;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
+import com.octo.gwt.test.utils.JavassistUtils;
 
 @PatchClass(SelectElement.class)
-public class SelectElementPatcher extends AutomaticPropertyContainerPatcher {
+public class SelectElementPatcher {
 
-	private static final String SELECTED_INDEX_FIELD = "SelectedIndex";
+  private static final String SELECTED_INDEX_FIELD = "SelectedIndex";
 
-	@Override
-	public void initClass(CtClass c) throws Exception {
-		super.initClass(c);
-		CtConstructor cons = findConstructor(c);
+  @PatchMethod
+  public static int getSize(SelectElement select) {
+    int size = 0;
 
-		cons.insertAfter(PropertyContainerHelper.getCodeSetProperty("this", SELECTED_INDEX_FIELD, "-1") + ";");
-	}
+    for (int i = 0; i < select.getChildNodes().getLength(); i++) {
+      Element e = select.getChildNodes().getItem(i).cast();
+      if (UIObject.isVisible(e)) {
+        size++;
+      }
+    }
 
-	@PatchMethod
-	public static int getSize(SelectElement select) {
-		int size = 0;
+    return size;
+  }
 
-		for (int i = 0; i < select.getChildNodes().getLength(); i++) {
-			Element e = select.getChildNodes().getItem(i).cast();
-			if (UIObject.isVisible(e)) {
-				size++;
-			}
-		}
+  @InitMethod
+  static void initClass(CtClass c) throws Exception {
+    CtConstructor cons = JavassistUtils.findConstructor(c);
 
-		return size;
-	}
+    cons.insertAfter(PropertyContainerHelper.getCodeSetProperty("this",
+        SELECTED_INDEX_FIELD, "-1") + ";");
+  }
 
 }

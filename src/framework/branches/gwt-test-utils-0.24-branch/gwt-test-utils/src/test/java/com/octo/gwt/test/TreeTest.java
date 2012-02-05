@@ -21,54 +21,6 @@ public class TreeTest extends GwtTestTest {
 
 	private TreeItem clickedTreeItem;
 
-	@Override
-	public String getCurrentTestedModuleFile() {
-		return "test-config.gwt.xml";
-	}
-
-	@Before
-	public void setupTree() {
-		// Create a tree with a few items in it.
-		parent = new TreeItem("parent");
-		item0 = parent.addItem("item0");
-		item1 = parent.addItem("item1");
-
-		// Add a CheckBox to the tree
-		item2 = new TreeItem(new CheckBox("item2"));
-		parent.addItem(item2);
-
-		tree = new Tree();
-		tree.addItem(parent);
-
-		// Add it to the root panel.
-		RootPanel.get().add(tree);
-
-		Assert.assertTrue(tree.isVisible());
-
-		clickedTreeItem = null;
-
-	}
-
-	@Test
-	public void checkTitle() {
-		tree.setTitle("title");
-		Assert.assertEquals("title", tree.getTitle());
-	}
-
-	@Test
-	public void checkVisible() {
-		Assert.assertEquals(true, tree.isVisible());
-		tree.setVisible(false);
-		Assert.assertEquals(false, tree.isVisible());
-	}
-
-	@Test
-	public void checkAnimationEnabled() {
-		tree.setAnimationEnabled(true);
-
-		Assert.assertEquals(true, tree.isAnimationEnabled());
-	}
-
 	@Test
 	public void checkAddItem() {
 
@@ -76,13 +28,6 @@ public class TreeTest extends GwtTestTest {
 
 		Assert.assertEquals(2, tree.getItemCount());
 		Assert.assertEquals("parent2", tree.getItem(1).getHTML());
-	}
-
-	@Test
-	public void checkRemoveItem() {
-		tree.removeItem(parent);
-
-		Assert.assertEquals(0, tree.getItemCount());
 	}
 
 	@Test
@@ -95,6 +40,20 @@ public class TreeTest extends GwtTestTest {
 		Assert.assertEquals(item1, tree.getItem(0).getChild(1));
 		Assert.assertEquals(item2, tree.getItem(0).getChild(2));
 		Assert.assertEquals("item3", tree.getItem(0).getChild(3).getHTML());
+	}
+
+	@Test
+	public void checkAnimationEnabled() {
+		tree.setAnimationEnabled(true);
+
+		Assert.assertEquals(true, tree.isAnimationEnabled());
+	}
+
+	@Test
+	public void checkRemoveItem() {
+		tree.removeItem(parent);
+
+		Assert.assertEquals(0, tree.getItemCount());
 	}
 
 	@Test
@@ -143,6 +102,42 @@ public class TreeTest extends GwtTestTest {
 		// Assert
 		Assert.assertEquals(item2, clickedTreeItem);
 		Assert.assertEquals(item2, selected);
+	}
+
+	@Test
+	public void checkTitle() {
+		tree.setTitle("title");
+		Assert.assertEquals("title", tree.getTitle());
+	}
+
+	@Test
+	public void checkVisible() {
+		Assert.assertEquals(true, tree.isVisible());
+		tree.setVisible(false);
+		Assert.assertEquals(false, tree.isVisible());
+	}
+
+	@Before
+	public void setupTree() {
+		// Create a tree with a few items in it.
+		parent = new TreeItem("parent");
+		item0 = parent.addItem("item0");
+		item1 = parent.addItem("item1");
+
+		// Add a CheckBox to the tree
+		item2 = new TreeItem(new CheckBox("item2"));
+		parent.addItem(item2);
+
+		tree = new Tree();
+		tree.addItem(parent);
+
+		// Add it to the root panel.
+		RootPanel.get().add(tree);
+
+		Assert.assertTrue(tree.isVisible());
+
+		clickedTreeItem = null;
+
 	}
 
 }

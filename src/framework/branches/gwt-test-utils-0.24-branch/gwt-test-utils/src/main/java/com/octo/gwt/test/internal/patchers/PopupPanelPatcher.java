@@ -4,23 +4,23 @@ import javassist.CtClass;
 import javassist.CtConstructor;
 
 import com.google.gwt.user.client.ui.PopupPanel;
-import com.octo.gwt.test.patchers.AutomaticPatcher;
+import com.octo.gwt.test.patchers.InitMethod;
 import com.octo.gwt.test.patchers.PatchClass;
+import com.octo.gwt.test.utils.JavassistUtils;
 
 @PatchClass(PopupPanel.class)
-public class PopupPanelPatcher extends AutomaticPatcher {
+public class PopupPanelPatcher {
 
-	@Override
-	public void initClass(CtClass c) throws Exception {
-		super.initClass(c);
-		CtConstructor cons = findConstructor(c);
+  @InitMethod
+  static void initClass(CtClass c) throws Exception {
+    CtConstructor cons = JavassistUtils.findConstructor(c);
 
-		cons.insertAfter("getElement().getStyle().setProperty(\"visibility\", \"hidden\");");
-	}
-	//
-	//	@PatchMethod
-	//	public static Element getStyleElement(PopupPanel panel) {
-	//		return ElementUtils.castToUserElement(panel.getElement());
-	//	}
+    cons.insertAfter("getElement().getStyle().setProperty(\"visibility\", \"hidden\");");
+  }
+  //
+  // @PatchMethod
+  // public static Element getStyleElement(PopupPanel panel) {
+  // return ElementUtils.castToUserElement(panel.getElement());
+  // }
 
 }

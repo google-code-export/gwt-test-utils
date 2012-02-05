@@ -12,12 +12,11 @@ import org.w3c.dom.Document;
 
 import com.google.gwt.core.client.impl.Impl;
 import com.octo.gwt.test.GwtTest;
-import com.octo.gwt.test.patchers.AutomaticPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
 @PatchClass(Impl.class)
-public class ImplPatcher extends AutomaticPatcher {
+public class ImplPatcher {
 
 	public static String currentTestedModuleFile;
 

@@ -67,10 +67,12 @@ public class Browser {
 
   private static class BrowserProperties implements AfterTestCallback {
 
+    private boolean eventsCanBubble = true;
     private final Map<String, String> properties = new HashMap<String, String>();
 
     public void afterTest() throws Throwable {
       properties.clear();
+      eventsCanBubble = true;
     }
 
   }
@@ -603,6 +605,15 @@ public class Browser {
 	}
 
   /**
+   * S
+   * 
+   * @param eventsCanBubble
+   */
+  public static void setEventsCanBubble(boolean eventsCanBubble) {
+    BROWSER_PROPERTIES.eventsCanBubble = eventsCanBubble;
+  }
+
+  /**
    * Set a browser property, like its 'user-agent', which could be use for
    * deferred binding, like 'replace-with' mechanism.
    * 
@@ -706,8 +717,14 @@ public class Browser {
         }
       }
 
-      Set<Widget> applied = new HashSet<Widget>();
-      dispatchEventWithBubble(target, event, applied);
+      if (BROWSER_PROPERTIES.eventsCanBubble) {
+        // fire with bubble support
+        Set<Widget> applied = new HashSet<Widget>();
+        dispatchEventWithBubble(target, event, applied);
+      } else {
+        // simple fire
+        target.onBrowserEvent(event);
+      }
 
     } catch (UmbrellaException e) {
       if (AssertionError.class.isInstance(e.getCause())) {

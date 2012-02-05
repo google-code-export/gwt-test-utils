@@ -4,12 +4,11 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
 import com.google.gwt.http.client.URL;
-import com.octo.gwt.test.patchers.AutomaticPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
 @PatchClass(URL.class)
-public class URLPatcher extends AutomaticPatcher {
+public class URLPatcher {
 
 	@PatchMethod
 	public static String encodeQueryStringImpl(String decodedURLComponent) {

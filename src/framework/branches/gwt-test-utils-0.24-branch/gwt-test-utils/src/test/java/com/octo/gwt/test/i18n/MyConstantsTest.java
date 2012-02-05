@@ -8,8 +8,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.google.gwt.core.client.GWT;
-import com.octo.gwt.test.GwtConfig;
 import com.octo.gwt.test.GwtTestTest;
+import com.octo.gwt.test.internal.GwtConfig;
 
 public class MyConstantsTest extends GwtTestTest {
 
@@ -18,7 +18,7 @@ public class MyConstantsTest extends GwtTestTest {
 	@Test
 	public void checkMyConstantsChange() {
 		// Setup
-		GwtConfig.setLocale(Locale.ENGLISH);
+		GwtConfig.get().setLocale(Locale.ENGLISH);
 
 		// Test 1
 		String hello = constants.hello();
@@ -43,7 +43,7 @@ public class MyConstantsTest extends GwtTestTest {
 		Assert.assertNull(map.get("map3"));
 
 		// Test 2
-		GwtConfig.setLocale(Locale.US);
+		GwtConfig.get().setLocale(Locale.US);
 		hello = constants.hello();
 		goodbye = constants.goodbye();
 		stringArray = constants.stringArray();
@@ -108,7 +108,7 @@ public class MyConstantsTest extends GwtTestTest {
 
 	@Test
 	public void checkMyConstantsWithSpecialChar() {
-		GwtConfig.setLocale(Locale.FRENCH);
+		GwtConfig.get().setLocale(Locale.FRENCH);
 
 		// Test
 		String hello = constants.hello();
@@ -131,7 +131,8 @@ public class MyConstantsTest extends GwtTestTest {
 
 		Assert.assertEquals(5, map.size());
 		Assert.assertEquals("Bonjour", map.get("hello"));
-		Assert.assertEquals("Au revoir et un caractère qui pue", map.get("goodbye"));
+		Assert.assertEquals("Au revoir et un caractère qui pue",
+				map.get("goodbye"));
 		Assert.assertEquals("je suis content", map.get("map1"));
 		Assert.assertEquals("tout pareil !", map.get("map2"));
 		Assert.assertNull(map.get("map3"));

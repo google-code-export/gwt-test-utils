@@ -15,8 +15,8 @@ import org.junit.internal.runners.InitializationError;
 import org.junit.internal.runners.TestClass;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.octo.gwt.test.GwtTestClassLoader;
 import com.octo.gwt.test.csv.tools.DirectoryTestReader;
+import com.octo.gwt.test.internal.GwtClassLoader;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 public class GwtSpringCsvRunner extends SpringJUnit4ClassRunner {
@@ -24,7 +24,7 @@ public class GwtSpringCsvRunner extends SpringJUnit4ClassRunner {
 	private DirectoryTestReader reader;
 
 	public GwtSpringCsvRunner(Class<?> clazz) throws InitializationError, ClassNotFoundException {
-		super(GwtTestClassLoader.getInstance().loadClass(clazz.getCanonicalName()));
+		super(GwtClassLoader.getInstance().loadClass(clazz.getCanonicalName()));
 	}
 
 	@Override

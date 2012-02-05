@@ -11,15 +11,11 @@ import com.octo.gwt.test.GwtTestTest;
 
 public class MyOverridedClientBundleTest extends GwtTestTest {
 
-	@Override
-	public String getCurrentTestedModuleFile() {
-		return "test-config.gwt.xml";
-	}
-
 	@Test
 	public void checkChildNoOverride() {
 		// Setup
-		DataResource testDataResource = MyOverridedClientBundle.INSTANCE.testDataResource();
+		DataResource testDataResource = MyOverridedClientBundle.INSTANCE
+				.testDataResource();
 
 		// Test
 		String name = testDataResource.getName();
@@ -27,13 +23,16 @@ public class MyOverridedClientBundleTest extends GwtTestTest {
 
 		// Assert
 		Assert.assertEquals("testDataResource", name);
-		Assert.assertEquals("http://127.0.0.1:8888/gwt_test_utils_module/com/octo/gwt/test/resources/textResourceXml.xml", url);
+		Assert.assertEquals(
+				"http://127.0.0.1:8888/gwt_test_utils_module/com/octo/gwt/test/resources/textResourceXml.xml",
+				url);
 	}
 
 	@Test
 	public void checkChildOverrideWithAnnotation() {
 		// Setup
-		ImageResource testImageResource = MyOverridedClientBundle.INSTANCE.testImageResource();
+		ImageResource testImageResource = MyOverridedClientBundle.INSTANCE
+				.testImageResource();
 
 		// Test
 		String name = testImageResource.getName();
@@ -45,7 +44,9 @@ public class MyOverridedClientBundleTest extends GwtTestTest {
 
 		// Assert
 		Assert.assertEquals("testImageResource", name);
-		Assert.assertEquals("http://127.0.0.1:8888/gwt_test_utils_module/com/octo/gwt/test/resources/override/override_testImageResource.gif", url);
+		Assert.assertEquals(
+				"http://127.0.0.1:8888/gwt_test_utils_module/com/octo/gwt/test/resources/override/override_testImageResource.gif",
+				url);
 		Assert.assertEquals(0, heigh);
 		Assert.assertEquals(0, left);
 		Assert.assertEquals(0, width);
@@ -55,7 +56,8 @@ public class MyOverridedClientBundleTest extends GwtTestTest {
 	@Test
 	public void checkChildOverrideWithoutAnnotation() {
 		// Setup
-		TextResource textResource = MyOverridedClientBundle.INSTANCE.textResourceTxt();
+		TextResource textResource = MyOverridedClientBundle.INSTANCE
+				.textResourceTxt();
 		String expectedText = "Overrided text resource !";
 
 		// Test

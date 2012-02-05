@@ -13,8 +13,18 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 public @interface PatchClass {
 
-	Class<?>[] value() default {};
+	/**
+	 * Name of the class to patch, in case it is internal.
+	 * 
+	 * @return The name of the class to patch.
+	 */
+	String target() default "";
 
-	String[] classes() default {};
+	/**
+	 * Class to patch.
+	 * 
+	 * @return The class to patch
+	 */
+	Class<?> value() default PatchClass.class;
 
 }

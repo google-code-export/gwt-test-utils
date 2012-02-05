@@ -16,7 +16,7 @@ public class GwtLogTest extends GwtTestTest {
 		message = null;
 		t = null;
 		GWT.log("toto", new Exception("e1"));
-		GwtConfig.setLogHandler(new GwtLogHandler() {
+		setLogHandler(new GwtLogHandler() {
 
 			public void log(String message, Throwable t) {
 				GwtLogTest.this.message = message;

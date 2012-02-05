@@ -38,16 +38,6 @@ public class GwtConfig implements AfterTestCallback {
     return INSTANCE;
   }
 
-  /**
-   * Setup a GWT module to be run. <strong>This method must be run only once, at
-   * the very beginning of the GWT module emulation.</strong>
-   * 
-   * @param gwtModuleRunner The configuration of the module to be run.
-   */
-  public static void setup(GwtModuleRunner gwtModuleRunner) {
-    INSTANCE.setupInstance(gwtModuleRunner);
-  }
-
   Map<Class<?>, List<String[]>> uiConstructorsMap = new HashMap<Class<?>, List<String[]>>();
 
   private String checkedModuleName;
@@ -63,7 +53,7 @@ public class GwtConfig implements AfterTestCallback {
   private final List<UiObjectTagFactory<?>> uiObjectTagFactories = new ArrayList<UiObjectTagFactory<?>>();
 
   private GwtConfig() {
-
+    AfterTestCallbackManager.get().registerCallback(this);
   }
 
   public void afterTest() throws Throwable {
@@ -128,6 +118,28 @@ public class GwtConfig implements AfterTestCallback {
     this.locale = locale;
   }
 
+  /**
+   * Setup a GWT module to be run. <strong>This method must be run only once, at
+   * the very beginning of the GWT module emulation.</strong>
+   * 
+   * @param gwtModuleRunner The configuration of the module to be run.
+   */
+  public void setup(GwtModuleRunner gwtModuleRunner) {
+    if (this.gwtModuleRunner != null) {
+      throw new GwtTestException(
+          "Because of the single-threaded nature of the GWT environment, gwt-test-utils tests can not be run in multiple thread at the same time");
+    }
+
+    this.gwtModuleRunner = gwtModuleRunner;
+    this.checkedModuleName = getCheckedModuleName();
+
+    setLocale(gwtModuleRunner.getLocale());
+    setupDebugIdImpl(gwtModuleRunner);
+
+    registerUiConstructor(NamedFrame.class, "name");
+    registerUiConstructor(RadioButton.class, "name");
+  }
+
   private String getCheckedModuleName() {
     String moduleName = gwtModuleRunner.getModuleName();
     if (moduleName == null || "".equals(moduleName.trim())) {
@@ -154,24 +166,6 @@ public class GwtConfig implements AfterTestCallback {
 
     GwtReflectionUtils.setStaticField(UIObject.class, "debugIdImpl",
         debugIdImplToUse);
-  }
-
-  private void setupInstance(GwtModuleRunner gwtModuleRunner) {
-    if (this.gwtModuleRunner != null) {
-      throw new GwtTestException(
-          "Because of the single-threaded nature of the GWT environment, gwt-test-utils tests can not be run in multiple thread at the same time");
-    }
-
-    this.gwtModuleRunner = gwtModuleRunner;
-    this.checkedModuleName = getCheckedModuleName();
-
-    setLocale(gwtModuleRunner.getLocale());
-    setupDebugIdImpl(gwtModuleRunner);
-
-    registerUiConstructor(NamedFrame.class, "name");
-    registerUiConstructor(RadioButton.class, "name");
-
-    AfterTestCallbackManager.get().registerCallback(this);
   }
 
 }

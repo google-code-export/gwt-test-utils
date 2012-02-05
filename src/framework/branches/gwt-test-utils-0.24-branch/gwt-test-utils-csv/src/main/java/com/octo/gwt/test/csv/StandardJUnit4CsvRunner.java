@@ -8,8 +8,8 @@ import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
 
-import com.octo.gwt.test.GwtTestClassLoader;
 import com.octo.gwt.test.csv.tools.DirectoryTestReader;
+import com.octo.gwt.test.internal.GwtClassLoader;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 public class StandardJUnit4CsvRunner extends BlockJUnit4ClassRunner {
@@ -17,7 +17,7 @@ public class StandardJUnit4CsvRunner extends BlockJUnit4ClassRunner {
 	private DirectoryTestReader reader;
 
 	public StandardJUnit4CsvRunner(Class<?> clazz) throws InitializationError, ClassNotFoundException {
-		super(GwtTestClassLoader.getInstance().loadClass(clazz.getName()));
+		super(GwtClassLoader.getInstance().loadClass(clazz.getName()));
 	}
 
 	@Override

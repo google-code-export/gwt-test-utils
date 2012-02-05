@@ -9,12 +9,25 @@ import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.TableCellElement;
 import com.google.gwt.dom.client.TableRowElement;
 import com.octo.gwt.test.internal.overrides.OverrideNodeList;
-import com.octo.gwt.test.patchers.AutomaticPropertyContainerPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
 @PatchClass(TableRowElement.class)
-public class TableRowElementPatcher extends AutomaticPropertyContainerPatcher {
+public class TableRowElementPatcher {
+
+	@PatchMethod
+	public static NodeList<TableCellElement> getCells(TableRowElement element) {
+		List<TableCellElement> cells = new ArrayList<TableCellElement>();
+
+		for (int i = 0; i < element.getChildCount(); i++) {
+			Node child = element.getChild(i);
+			if (TableCellElement.class.isInstance(child)) {
+				cells.add((TableCellElement) child);
+			}
+		}
+
+		return new OverrideNodeList<TableCellElement>(cells);
+	}
 
 	@PatchMethod
 	public static int getSectionRowIndex(TableRowElement element) {
@@ -34,20 +47,6 @@ public class TableRowElementPatcher extends AutomaticPropertyContainerPatcher {
 
 		return -1;
 
-	}
-
-	@PatchMethod
-	public static NodeList<TableCellElement> getCells(TableRowElement element) {
-		List<TableCellElement> cells = new ArrayList<TableCellElement>();
-
-		for (int i = 0; i < element.getChildCount(); i++) {
-			Node child = element.getChild(i);
-			if (TableCellElement.class.isInstance(child)) {
-				cells.add((TableCellElement) child);
-			}
-		}
-
-		return new OverrideNodeList<TableCellElement>(cells);
 	}
 
 }

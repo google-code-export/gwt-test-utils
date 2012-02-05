@@ -140,7 +140,7 @@ class AutomaticPatcher implements Patcher {
       for (CtMethod ctMethod : patchClass.getDeclaredMethods()) {
         if (ctMethod.hasAnnotation(InitMethod.class)) {
           if (!Modifier.isStatic(ctMethod.getModifiers())) {
-            throw new GwtTestPatchException("@" + InitMethod.class.getName()
+            throw new GwtTestPatchException("@" + InitMethod.class.getSimpleName()
                 + " has to be static : '" + ctMethod.getLongName() + "'");
           }
           try {

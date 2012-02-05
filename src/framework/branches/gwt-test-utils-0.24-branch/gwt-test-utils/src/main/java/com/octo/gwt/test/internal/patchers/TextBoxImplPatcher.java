@@ -3,12 +3,11 @@ package com.octo.gwt.test.internal.patchers;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.impl.TextBoxImpl;
 import com.octo.gwt.test.internal.utils.PropertyContainerHelper;
-import com.octo.gwt.test.patchers.AutomaticPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
 @PatchClass(TextBoxImpl.class)
-public class TextBoxImplPatcher extends AutomaticPatcher {
+public class TextBoxImplPatcher {
 
 	private static final String SELECTION_START = "SelectionStart";
 	private static final String SELECTION_END = "SelectionEnd";
@@ -21,13 +20,13 @@ public class TextBoxImplPatcher extends AutomaticPatcher {
 
 	@PatchMethod
 	public static int getCursorPos(TextBoxImpl textBoxImpl, Element e) {
-		return PropertyContainerHelper.getPropertyInteger(e, SELECTION_START);
+		return PropertyContainerHelper.getInteger(e, SELECTION_START);
 	}
 
 	@PatchMethod
 	public static int getSelectionLength(TextBoxImpl textBoxImpl, Element e) {
-		int selectionStart = PropertyContainerHelper.getPropertyInteger(e, SELECTION_START);
-		int selectionEnd = PropertyContainerHelper.getPropertyInteger(e, SELECTION_END);
+		int selectionStart = PropertyContainerHelper.getInteger(e, SELECTION_START);
+		int selectionEnd = PropertyContainerHelper.getInteger(e, SELECTION_END);
 		return selectionEnd - selectionStart;
 	}
 

@@ -5,13 +5,12 @@ import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.impl.DOMImpl;
 import com.octo.gwt.test.internal.patchers.UIObjectPatcher;
 import com.octo.gwt.test.internal.utils.PropertyContainerHelper;
-import com.octo.gwt.test.patchers.AutomaticPatcher;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 import com.octo.gwt.test.utils.events.EventUtils;
 
 @PatchClass(DOMImpl.class)
-public class DOMImplUserPatcher extends AutomaticPatcher {
+public class DOMImplUserPatcher {
 
 	@PatchMethod
 	public static int eventGetTypeInt(DOMImpl domImpl, String type) {
@@ -52,7 +51,7 @@ public class DOMImplUserPatcher extends AutomaticPatcher {
 
 	@PatchMethod
 	public static EventListener getEventListener(DOMImpl domImpl, Element elem) {
-		return PropertyContainerHelper.getProperty(elem,
+		return PropertyContainerHelper.getObject(elem,
 				UIObjectPatcher.ELEM_EVENTLISTENER);
 	}
 

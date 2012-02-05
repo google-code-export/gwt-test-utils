@@ -19,10 +19,12 @@ class GwtTranslator implements Translator {
 
   private static final Pattern TEST_PATTERN = Pattern.compile("^.*[T|t][E|e][S|s][T|t].*$");
 
+  private final ConfigurationLoader configurationLoader;
   private final SerializableModifier serializableModifier;
 
-  GwtTranslator() {
+  GwtTranslator(ConfigurationLoader configurationLoader) {
     this.serializableModifier = new SerializableModifier();
+    this.configurationLoader = configurationLoader;
   }
 
   public void onLoad(ClassPool pool, String className) throws NotFoundException {
@@ -35,10 +37,10 @@ class GwtTranslator implements Translator {
   private void applyJavaClassModifier(CtClass ctClass) {
     try {
       // Apply remove-method
-      ConfigurationLoader.get().getMethodRemover().modify(ctClass);
+      configurationLoader.getMethodRemover().modify(ctClass);
 
       // Apply substitute-class
-      ConfigurationLoader.get().getClassSubstituer().modify(ctClass);
+      configurationLoader.getClassSubstituer().modify(ctClass);
 
       // Apply serializable modifier
       serializableModifier.modify(ctClass);
@@ -53,7 +55,7 @@ class GwtTranslator implements Translator {
   }
 
   private void applyPatcher(CtClass classToPatch) {
-    Patcher patcher = ConfigurationLoader.get().getPatcherFactory().createPatcher(
+    Patcher patcher = configurationLoader.getPatcherFactory().createPatcher(
         classToPatch);
 
     if (patcher != null) {
@@ -82,6 +84,14 @@ class GwtTranslator implements Translator {
 
     for (String clientPackage : ModuleData.get().getClientPaths()) {
       if (classToModify.getName().startsWith(clientPackage)) {
+        // modifiy this class
+        applyJavaClassModifier(classToModify);
+        return;
+      }
+    }
+
+    for (String scanPackage : configurationLoader.getScanPackages()) {
+      if (classToModify.getName().startsWith(scanPackage)) {
         // modifiy this class
         applyJavaClassModifier(classToModify);
         return;

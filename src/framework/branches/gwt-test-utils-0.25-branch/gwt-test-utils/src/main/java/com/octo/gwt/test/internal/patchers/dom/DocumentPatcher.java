@@ -39,9 +39,21 @@ class DocumentPatcher {
     }
 
     public void afterTest() throws Throwable {
+      recursiveClearDom(document);
       document = null;
     }
 
+    private void recursiveClearDom(Node node) {
+      if (node == null) {
+        return;
+      }
+      NodeList<Node> childs = node.getChildNodes();
+      for (int i = 0; i < childs.getLength(); i++) {
+        recursiveClearDom(node.getChild(i));
+      }
+      JavaScriptObjects.clearProperties(node);
+      node = null;
+    }
   }
 
   private static DocumentHolder DOCUMENT_HOLDER = new DocumentHolder();
@@ -244,7 +256,6 @@ class DocumentPatcher {
 
       htmlPrototype = findHTMLElement(hostPagePath, list);
       HTML_ELEMENT_PROTOTYPES.put(moduleName, hostPagePath, htmlPrototype);
-      // return htmlPrototype;
     }
 
     return htmlPrototype.cloneNode(true).cast();
