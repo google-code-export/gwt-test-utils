@@ -26,15 +26,33 @@ public class HTMLTest extends GwtTestTest {
   }
 
   @Test
-  public void html() {
+  public void getHTML() {
     // Arrange
-    HTML html = new HTML("this is a <b>great</b> test.<br>Enjoy!");
+    HTML html = new HTML("<a href='#'>link</a><br/>test&nbsp;test");
 
     // Act
     String result = html.getHTML();
 
     // Assert
-    assertEquals("this is a <b>great</b> test.<br>Enjoy!", result);
+    assertEquals("<a href=\"#\">link</a><br>test&nbsp;test", result);
+  }
+
+  @Test
+  public void getText() {
+    // Arrange
+    HTML html = new HTML("<a href='#'>link</a><br/>test&nbsp;test&nbsp");
+
+    // Act
+    String result = html.getText();
+
+    // Assert
+    assertEquals("linktest test ", result);
+
+    // Act 2
+    html.setText("override <b>not bold text</b>");
+
+    // Assert 2
+    assertEquals("override <b>not bold text</b>", html.getText());
   }
 
   @Test
@@ -61,25 +79,7 @@ public class HTMLTest extends GwtTestTest {
     String result = html.getHTML();
 
     // Assert
-    assertEquals("<span>Résidence : </span>", result);
-  }
-
-  @Test
-  public void text() {
-    // Arrange
-    HTML html = new HTML("this is a <b>great</b> test.<br>Enjoy!");
-
-    // Act
-    String result = html.getText();
-
-    // Assert
-    assertEquals("this is a great test.Enjoy!", result);
-
-    // Act 2
-    html.setText("override <b>not bold text</b>");
-
-    // Assert 2
-    assertEquals("override <b>not bold text</b>", html.getText());
+    assertEquals("<span>Résidence&nbsp;:&nbsp;</span>", result);
   }
 
 }

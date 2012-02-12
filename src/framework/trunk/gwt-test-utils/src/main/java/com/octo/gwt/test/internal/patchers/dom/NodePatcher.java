@@ -11,6 +11,7 @@ import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Text;
 import com.octo.gwt.test.exceptions.GwtTestDomException;
+import com.octo.gwt.test.internal.utils.JavaScriptObjects;
 import com.octo.gwt.test.internal.utils.JsoProperties;
 import com.octo.gwt.test.internal.utils.PropertyContainer;
 import com.octo.gwt.test.patchers.PatchClass;
@@ -330,14 +331,12 @@ class NodePatcher {
     Style newStyle = JavaScriptObjects.getObject(newNode,
         JsoProperties.STYLE_OBJECT_FIELD);
 
-    for (Map.Entry<String, Object> entry : JavaScriptObjects.entrySet(oldStyle)) {
-      if (!JsoProperties.STYLE_TARGET_ELEMENT.equals(entry.getKey())) {
-        JavaScriptObjects.setProperty(newStyle, entry.getKey(),
-            entry.getValue());
-      }
+    Map<String, String> oldProperties = JavaScriptObjects.getObject(oldStyle,
+        JsoProperties.STYLE_PROPERTIES);
+    Map<String, String> newProperties = JavaScriptObjects.getObject(newStyle,
+        JsoProperties.STYLE_PROPERTIES);
 
-    }
-
+    newProperties.putAll(oldProperties);
   }
 
 }

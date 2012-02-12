@@ -15,63 +15,62 @@ import java.util.Set;
  */
 public class AfterTestCallbackManager {
 
-  private static final AfterTestCallbackManager INSTANCE = new AfterTestCallbackManager();
+	private static final AfterTestCallbackManager INSTANCE = new AfterTestCallbackManager();
 
-  public static AfterTestCallbackManager get() {
-    return INSTANCE;
-  }
+	public static AfterTestCallbackManager get() {
+		return INSTANCE;
+	}
 
-  private final Set<AfterTestCallback> callbacks;
+	private final Set<AfterTestCallback> callbacks;
 
-  private AfterTestCallbackManager() {
-    callbacks = new HashSet<AfterTestCallback>();
-  }
+	private AfterTestCallbackManager() {
+		callbacks = new HashSet<AfterTestCallback>();
+	}
 
-  /**
-   * Register a callback to trigger after a test execution.
-   * 
-   * @param callback The callback to register.
-   * @return <tt>true</tt> if the callback was not already registered.
-   */
-  public boolean registerCallback(AfterTestCallback callback) {
-    if (callback instanceof GwtConfig) {
-      System.out.println("ok ");
-    }
-    return callbacks.add(callback);
-  }
+	/**
+	 * Register a callback to trigger after a test execution.
+	 * 
+	 * @param callback
+	 *            The callback to register.
+	 * @return <tt>true</tt> if the callback was not already registered.
+	 */
+	public boolean registerCallback(AfterTestCallback callback) {
+		return callbacks.add(callback);
+	}
 
-  /**
-   * Trigger all the registered callbacks and collect all the exception that may
-   * be thrown.
-   * 
-   * @return A list of exceptions that has been thrown when triggering the
-   *         different callbacks.
-   */
-  public List<Throwable> triggerCallbacks() {
-    List<Throwable> throwables = new ArrayList<Throwable>();
+	/**
+	 * Trigger all the registered callbacks and collect all the exception that
+	 * may be thrown.
+	 * 
+	 * @return A list of exceptions that has been thrown when triggering the
+	 *         different callbacks.
+	 */
+	public List<Throwable> triggerCallbacks() {
+		List<Throwable> throwables = new ArrayList<Throwable>();
 
-    for (AfterTestCallback callback : callbacks) {
-      if (callback != null) {
-        try {
-          callback.afterTest();
-        } catch (Throwable t) {
-          throwables.add(t);
-        }
-      }
-    }
+		for (AfterTestCallback callback : callbacks) {
+			if (callback != null) {
+				try {
+					callback.afterTest();
+				} catch (Throwable t) {
+					throwables.add(t);
+				}
+			}
+		}
 
-    return throwables;
+		return throwables;
 
-  }
+	}
 
-  /**
-   * Unregister a callback so it will not be triggered anymore.
-   * 
-   * @param callback The callback to unregister.
-   * @return <tt>true</tt> if this callback was registered.
-   */
-  public boolean unregisterCallback(AfterTestCallback callback) {
-    return callbacks.remove(callback);
-  }
+	/**
+	 * Unregister a callback so it will not be triggered anymore.
+	 * 
+	 * @param callback
+	 *            The callback to unregister.
+	 * @return <tt>true</tt> if this callback was registered.
+	 */
+	public boolean unregisterCallback(AfterTestCallback callback) {
+		return callbacks.remove(callback);
+	}
 
 }
