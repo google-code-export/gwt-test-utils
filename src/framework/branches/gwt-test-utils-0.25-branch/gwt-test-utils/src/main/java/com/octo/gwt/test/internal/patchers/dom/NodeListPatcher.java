@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
+import com.octo.gwt.test.internal.utils.JavaScriptObjects;
 import com.octo.gwt.test.internal.utils.JsoProperties;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;

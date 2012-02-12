@@ -23,7 +23,7 @@ import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Style.Float;
 import com.octo.gwt.test.GwtTestTest;
-import com.octo.gwt.test.internal.patchers.dom.JavaScriptObjects;
+import com.octo.gwt.test.internal.utils.JavaScriptObjects;
 
 public class ElementTest extends GwtTestTest {
 
@@ -229,7 +229,7 @@ public class ElementTest extends GwtTestTest {
 
     // Assert on Style JSO
     assertEquals("", e.getAttribute("style")); // prints ""
-    assertEquals("[object CSSStyleDeclaration]", e.getPropertyString("style"));
+    assertEquals("", e.getPropertyString("style"));
   }
 
   @Test

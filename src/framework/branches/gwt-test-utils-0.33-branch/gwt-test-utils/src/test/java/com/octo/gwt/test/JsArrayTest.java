@@ -9,7 +9,7 @@ import org.junit.Test;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
-import com.octo.gwt.test.internal.patchers.dom.JavaScriptObjects;
+import com.octo.gwt.test.internal.utils.JavaScriptObjects;
 
 public class JsArrayTest extends GwtTestTest {
 

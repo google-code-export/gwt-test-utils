@@ -4,7 +4,7 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.EventTarget;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.UIObject;
-import com.octo.gwt.test.internal.patchers.dom.JavaScriptObjects;
+import com.octo.gwt.test.internal.utils.JavaScriptObjects;
 import com.octo.gwt.test.internal.utils.JsoProperties;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 

@@ -12,7 +12,7 @@ class JsonUtilsPatcher {
 
   @PatchMethod
   static String escapeValue(String toEscape) {
-    return StringEscapeUtils.escapeJavaScript(toEscape);
+    return "\"" + StringEscapeUtils.escapeJavaScript(toEscape) + "\"";
   }
 
   @PatchMethod

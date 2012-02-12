@@ -8,7 +8,7 @@ import javassist.NotFoundException;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.octo.gwt.test.exceptions.GwtTestPatchException;
-import com.octo.gwt.test.internal.patchers.dom.JavaScriptObjects;
+import com.octo.gwt.test.internal.utils.JavaScriptObjects;
 
 /**
  * 

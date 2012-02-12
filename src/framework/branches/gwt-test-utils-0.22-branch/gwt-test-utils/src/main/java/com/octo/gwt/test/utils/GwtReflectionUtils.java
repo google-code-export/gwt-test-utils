@@ -130,6 +130,12 @@ public class GwtReflectionUtils {
             && paramTypes.length == method.getParameterTypes().length) {
           boolean compatibleParams = true;
           for (int j = 0; j < paramTypes.length; j++) {
+
+            if (paramTypes[j] == null) {
+              // null class is a wildcard
+              continue;
+            }
+
             Class<?> methodParamType = getCheckedClass(method.getParameterTypes()[j]);
             Class<?> searchParamType = getCheckedClass(paramTypes[j]);
 
@@ -449,7 +455,7 @@ public class GwtReflectionUtils {
       Object... args) {
     Class<?>[] l = new Class[args.length];
     for (int i = 0; i < args.length; i++) {
-      l[i] = args[i].getClass();
+      l[i] = args[i] != null ? args[i].getClass() : null;
     }
     return findMethod(clazz, methodName, l);
   }

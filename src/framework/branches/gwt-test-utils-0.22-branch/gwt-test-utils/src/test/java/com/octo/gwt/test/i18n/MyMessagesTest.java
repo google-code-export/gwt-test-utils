@@ -10,7 +10,6 @@ import org.junit.Test;
 
 import com.google.gwt.core.client.GWT;
 import com.octo.gwt.test.GwtTestTest;
-import com.octo.gwt.test.internal.GwtConfig;
 
 public class MyMessagesTest extends GwtTestTest {
 
@@ -32,7 +31,7 @@ public class MyMessagesTest extends GwtTestTest {
     }
 
     // Arrange 2
-    GwtConfig.get().setLocale(Locale.FRANCE);
+    setLocale(Locale.FRANCE);
 
     // Act 2
     result = messages.a_message("Gael", 23, true);
@@ -50,7 +49,7 @@ public class MyMessagesTest extends GwtTestTest {
   @Test
   public void meaningAnnotation() {
     // Arrange 1
-    GwtConfig.get().setLocale(Locale.FRANCE);
+    setLocale(Locale.FRANCE);
 
     // Act 1
     String orangeColor = messages.orangeColor();
@@ -61,7 +60,7 @@ public class MyMessagesTest extends GwtTestTest {
     assertEquals("Orange", orangeFruit);
 
     // Arrange 2
-    GwtConfig.get().setLocale(Locale.ENGLISH);
+    setLocale(Locale.ENGLISH);
 
     // Act 2
     orangeColor = messages.orangeColor();
@@ -76,7 +75,7 @@ public class MyMessagesTest extends GwtTestTest {
   @Test
   public void totalAmount() {
     // Arrange 1
-    GwtConfig.get().setLocale(Locale.US);
+    setLocale(Locale.US);
 
     // Act
     String totalAmount = messages.totalAmount(6);
@@ -85,7 +84,7 @@ public class MyMessagesTest extends GwtTestTest {
     assertEquals("Your cart total is $6.00", totalAmount);
 
     // Arrange 2
-    GwtConfig.get().setLocale(Locale.FRANCE);
+    setLocale(Locale.FRANCE);
 
     // Act 2
     totalAmount = messages.totalAmount(6);
@@ -126,7 +125,7 @@ public class MyMessagesTest extends GwtTestTest {
   // @Test
   // public void checkAlternateMessageWithSelect_fr() {
   // // Arrange
-  // GwtConfig.get().setLocale(Locale.FRANCE);
+  // setLocale(Locale.FRANCE);
   //
   // // Act
   // String resultFEMALE = messages.alternateMessageWithSelect("Jenny",
@@ -152,11 +151,14 @@ public class MyMessagesTest extends GwtTestTest {
   // messages.alternateMessageWithSelectAndPluralCount("Jenny", Gender.FEMALE,
   // 4);
   // String resultMALE_ONE =
-  // messages.alternateMessageWithSelectAndPluralCount("Brian", Gender.MALE, 1);
+  // messages.alternateMessageWithSelectAndPluralCount("Brian", Gender.MALE,
+  // 1);
   // String resultMALE_MANY =
-  // messages.alternateMessageWithSelectAndPluralCount("Brian", Gender.MALE, 2);
+  // messages.alternateMessageWithSelectAndPluralCount("Brian", Gender.MALE,
+  // 2);
   // String resultUNKNOWN =
-  // messages.alternateMessageWithSelectAndPluralCount("Gloups", Gender.UNKNOWN,
+  // messages.alternateMessageWithSelectAndPluralCount("Gloups",
+  // Gender.UNKNOWN,
   // 0);
   //
   // // Assert
@@ -170,7 +172,7 @@ public class MyMessagesTest extends GwtTestTest {
   // @Test
   // public void checkAlternateMessageWithSelectAndPluralCount_fr() {
   // // Arrange
-  // GwtConfig.get().setLocale(Locale.FRANCE);
+  // setLocale(Locale.FRANCE);
   //
   // // Act
   // String resultFEMALE_ONE =
@@ -180,11 +182,14 @@ public class MyMessagesTest extends GwtTestTest {
   // messages.alternateMessageWithSelectAndPluralCount("Jenny", Gender.FEMALE,
   // 4);
   // String resultMALE_ONE =
-  // messages.alternateMessageWithSelectAndPluralCount("Brian", Gender.MALE, 1);
+  // messages.alternateMessageWithSelectAndPluralCount("Brian", Gender.MALE,
+  // 1);
   // String resultMALE_MANY =
-  // messages.alternateMessageWithSelectAndPluralCount("Brian", Gender.MALE, 2);
+  // messages.alternateMessageWithSelectAndPluralCount("Brian", Gender.MALE,
+  // 2);
   // String resultUNKNOWN =
-  // messages.alternateMessageWithSelectAndPluralCount("Gloups", Gender.UNKNOWN,
+  // messages.alternateMessageWithSelectAndPluralCount("Gloups",
+  // Gender.UNKNOWN,
   // 0);
   //
   // // Assert
@@ -198,7 +203,7 @@ public class MyMessagesTest extends GwtTestTest {
   @Test
   public void widgetCount_fr() {
     // Arrange
-    GwtConfig.get().setLocale(Locale.FRANCE);
+    setLocale(Locale.FRANCE);
 
     // Act
     String result0 = messages.widgetCount(0);

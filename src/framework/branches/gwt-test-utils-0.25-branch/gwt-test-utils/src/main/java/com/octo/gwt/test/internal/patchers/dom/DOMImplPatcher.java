@@ -19,6 +19,7 @@ import com.google.gwt.dom.client.Text;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.EventListener;
 import com.octo.gwt.test.internal.utils.EventUtils;
+import com.octo.gwt.test.internal.utils.JavaScriptObjects;
 import com.octo.gwt.test.internal.utils.JsoProperties;
 import com.octo.gwt.test.internal.utils.PropertyContainer;
 import com.octo.gwt.test.patchers.PatchClass;
@@ -251,6 +252,10 @@ class DOMImplPatcher {
 
   @PatchMethod
   static String getAttribute(Object domImpl, Element elem, String name) {
+    if ("style".equals(name)) {
+      return elem.getStyle().toString();
+    }
+
     PropertyContainer properties = JavaScriptObjects.getObject(elem,
         JsoProperties.ELEM_PROPERTIES);
 
@@ -476,7 +481,9 @@ class DOMImplPatcher {
       switch (node.getNodeType()) {
         case Node.TEXT_NODE:
           Text text = node.cast();
-          sb.append(text.getData());
+          String data = text.getData();
+          data = "&nbsp;".equals(data) ? " " : data;
+          sb.append(data);
           break;
         case Node.ELEMENT_NODE:
           Element childNode = node.cast();

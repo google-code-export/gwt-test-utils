@@ -23,6 +23,7 @@ import com.octo.gwt.test.internal.AfterTestCallbackManager;
 import com.octo.gwt.test.internal.GwtConfig;
 import com.octo.gwt.test.internal.utils.DoubleMap;
 import com.octo.gwt.test.internal.utils.GwtHtmlParser;
+import com.octo.gwt.test.internal.utils.JavaScriptObjects;
 import com.octo.gwt.test.internal.utils.JsoProperties;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;

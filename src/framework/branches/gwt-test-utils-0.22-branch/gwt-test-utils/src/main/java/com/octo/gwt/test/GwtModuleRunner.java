@@ -9,8 +9,8 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.Dictionary;
 import com.google.gwt.uibinder.client.UiConstructor;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.UIObject;
+import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.octo.gwt.test.uibinder.UiObjectTagFactory;
 import com.octo.gwt.test.utils.events.Browser;
@@ -48,8 +48,7 @@ public interface GwtModuleRunner {
    * 
    * @param factory The UiBinder Widget factory candidate.
    */
-  void addUiObjectTagFactory(
-      UiObjectTagFactory<? extends Widget> factory);
+  void addUiObjectTagFactory(UiObjectTagFactory<? extends Widget> factory);
 
   /**
    * Specifies if the module runner is allowed the setup of debug id.
@@ -129,10 +128,8 @@ public interface GwtModuleRunner {
    * Declare a {@link UiConstructor} which might be use to handle some widget
    * creation according to its declaration in a .ui.xml UiBinder file.
    * 
-   * @param clazz The widget class where the {@link UiConstructor} is
-   *          declared.
+   * @param clazz The widget class where the {@link UiConstructor} is declared.
    * @param argNames An ordered array of argument names
    */
-  void registerUiConstructor(Class<? extends Widget> clazz,
-      String... argNames);
+  void registerUiConstructor(Class<? extends Widget> clazz, String... argNames);
 }

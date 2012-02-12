@@ -9,8 +9,10 @@ import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Style;
 import com.octo.gwt.test.internal.utils.GwtHtmlParser;
 import com.octo.gwt.test.internal.utils.GwtStringUtils;
+import com.octo.gwt.test.internal.utils.JavaScriptObjects;
 import com.octo.gwt.test.internal.utils.JsoProperties;
 import com.octo.gwt.test.internal.utils.PropertyContainer;
+import com.octo.gwt.test.internal.utils.StyleUtils;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
@@ -133,6 +135,11 @@ class ElementPatcher {
 
   @PatchMethod
   static Style getStyle(Element element) {
+    // mark the style as being modified
+    PropertyContainer properties = JavaScriptObjects.getObject(element,
+        JsoProperties.ELEM_PROPERTIES);
+    properties.put("style", "");
+
     return JavaScriptObjects.getObject(element,
         JsoProperties.STYLE_OBJECT_FIELD);
   }
@@ -199,7 +206,14 @@ class ElementPatcher {
     PropertyContainer properties = JavaScriptObjects.getObject(element,
         JsoProperties.ELEM_PROPERTIES);
 
-    properties.put(name, value);
+    if ("style".equals(value)) {
+      StyleUtils.overrideStyle(element.getStyle(), value.toString());
+      // add an empty style to preserve the insert order of DOM attribute in the
+      // wrapped LinkedHashMap
+      properties.put(name, "");
+    } else {
+      properties.put(name, value);
+    }
   }
 
   @PatchMethod

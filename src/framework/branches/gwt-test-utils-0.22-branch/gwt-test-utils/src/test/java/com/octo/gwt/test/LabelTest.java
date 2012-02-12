@@ -28,6 +28,17 @@ public class LabelTest extends GwtTestTest {
   }
 
   @Test
+  public void getText_with_HTML() {
+    // Arrange
+    Label label = new Label("<a href='#'>link</a><br/>test&nbsp;test");
+
+    String text = label.getText();
+
+    // Assert
+    assertEquals("<a href='#'>link</a><br/>test&nbsp;test", text);
+  }
+
+  @Test
   public void id() {
     // Arrange
     Label label = new Label();

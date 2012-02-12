@@ -8,12 +8,12 @@ import java.util.Map;
 
 import javax.servlet.ServletConfig;
 
-import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.NamedFrame;
 import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.UIObject.DebugIdImpl;
 import com.google.gwt.user.client.ui.UIObject.DebugIdImplEnabled;
+import com.google.gwt.user.client.ui.Widget;
 import com.octo.gwt.test.GwtLogHandler;
 import com.octo.gwt.test.GwtModuleRunner;
 import com.octo.gwt.test.WindowOperationsHandler;
@@ -38,17 +38,11 @@ public class GwtConfig implements AfterTestCallback {
     return INSTANCE;
   }
 
-  Map<Class<?>, List<String[]>> uiConstructorsMap = new HashMap<Class<?>, List<String[]>>();
-
   private String checkedModuleName;
-
   private final DebugIdImpl disabledInstance = new DebugIdImpl();
-
   private final DebugIdImpl enabledInstance = new DebugIdImplEnabled();
-
   private GwtModuleRunner gwtModuleRunner;
-
-  private Locale locale;
+  private final Map<Class<?>, List<String[]>> uiConstructorsMap = new HashMap<Class<?>, List<String[]>>();
 
   private final List<UiObjectTagFactory<?>> uiObjectTagFactories = new ArrayList<UiObjectTagFactory<?>>();
 
@@ -71,7 +65,7 @@ public class GwtConfig implements AfterTestCallback {
   }
 
   public Locale getLocale() {
-    return locale;
+    return gwtModuleRunner.getLocale();
   }
 
   public GwtLogHandler getLogHandler() {
@@ -110,15 +104,6 @@ public class GwtConfig implements AfterTestCallback {
   }
 
   /**
-   * For internal testing purpose
-   * 
-   * @param locale
-   */
-  public void setLocale(Locale locale) {
-    this.locale = locale;
-  }
-
-  /**
    * Setup a GWT module to be run. <strong>This method must be run only once, at
    * the very beginning of the GWT module emulation.</strong>
    * 
@@ -133,7 +118,6 @@ public class GwtConfig implements AfterTestCallback {
     this.gwtModuleRunner = gwtModuleRunner;
     this.checkedModuleName = getCheckedModuleName();
 
-    setLocale(gwtModuleRunner.getLocale());
     setupDebugIdImpl(gwtModuleRunner);
 
     registerUiConstructor(NamedFrame.class, "name");

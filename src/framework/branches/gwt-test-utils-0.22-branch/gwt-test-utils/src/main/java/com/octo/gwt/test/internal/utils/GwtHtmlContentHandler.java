@@ -14,7 +14,6 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Text;
-import com.octo.gwt.test.internal.patchers.dom.JavaScriptObjects;
 
 /**
  * SAX handler for GWT DOM parsing. <strong>For internal use only.</strong>
@@ -119,7 +118,7 @@ class GwtHtmlContentHandler implements ContentHandler {
       String attrValue = attributes.getValue(index);
 
       if ("style".equalsIgnoreCase(attrName)) {
-        StyleUtils.setStyle(element.getStyle(), attrValue);
+        StyleUtils.overrideStyle(element.getStyle(), attrValue);
       } else if ("class".equalsIgnoreCase(attrName)) {
         element.setClassName(attrValue);
       } else {

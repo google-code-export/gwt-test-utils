@@ -35,7 +35,7 @@ import com.google.gwt.view.client.HasData;
 import com.octo.gwt.test.FinallyCommandTrigger;
 import com.octo.gwt.test.internal.AfterTestCallback;
 import com.octo.gwt.test.internal.GwtConfig;
-import com.octo.gwt.test.internal.patchers.dom.JavaScriptObjects;
+import com.octo.gwt.test.internal.utils.JavaScriptObjects;
 import com.octo.gwt.test.internal.utils.JsoProperties;
 import com.octo.gwt.test.utils.WidgetUtils;
 

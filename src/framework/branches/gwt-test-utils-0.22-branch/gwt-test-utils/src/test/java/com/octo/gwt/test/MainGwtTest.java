@@ -1,12 +1,14 @@
 package com.octo.gwt.test;
 
-import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -16,7 +18,6 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.ui.Button;
-import com.octo.gwt.test.internal.GwtConfig;
 import com.octo.gwt.test.utils.events.Browser;
 
 public class MainGwtTest extends GwtTestTest {
@@ -24,39 +25,60 @@ public class MainGwtTest extends GwtTestTest {
   private String sToday;
   private boolean success;
 
-  @Test
-  public void checkGetHostPageBase() {
-    Assert.assertEquals("http://127.0.0.1:8888/", GWT.getHostPageBaseURL());
+  @Before
+  public void beforeGWTTest() {
+    setLocale(new Locale("fr"));
+    Calendar cal = new GregorianCalendar();
+    cal.set(2010, 10, 24);
+    sToday = DateTimeFormat.getFormat("EEE dd MMM").format(cal.getTime());
+    success = false;
   }
 
   @Test
-  public void checkGetModuleBaseURL() {
-    Assert.assertEquals("http://127.0.0.1:8888/gwt_test_utils_module/",
+  public void getHostPageBase() {
+    // Act & Assert
+    assertEquals("http://127.0.0.1:8888/", GWT.getHostPageBaseURL());
+  }
+
+  @Test
+  public void getModuleBaseURL() {
+    // Act & Assert
+    assertEquals("http://127.0.0.1:8888/gwt_test_utils_module/",
         GWT.getModuleBaseURL());
   }
 
   @Test
-  public void checkGetModuleName() {
-    Assert.assertEquals("gwt_test_utils_module", GWT.getModuleName());
+  public void getVersion() {
+    // Act & Assert
+    assertEquals("GWT by gwt-test-utils", GWT.getVersion());
   }
 
   @Test
-  public void checkGetVersion() {
-    Assert.assertEquals("GWT by gwt-test-utils", GWT.getVersion());
+  public void initialiseOccursBeforeTheJUnitInitialisationOfTheClass() {
+    // Act & Assert
+    assertEquals("mer. 24 nov.", sToday);
   }
 
   @Test
-  public void checkIsClient() {
-    Assert.assertTrue(GWT.isClient());
+  public void isClient() {
+    // Act & Assert
+    assertTrue(GWT.isClient());
   }
 
   @Test
-  public void checkIsScript() {
-    Assert.assertFalse(GWT.isScript());
+  public void isScript() {
+    // Act & Assert
+    assertFalse(GWT.isScript());
   }
 
   @Test
-  public void checkRunAsync() {
+  public void moduleName() {
+    // Act & Assert
+    assertEquals("gwt_test_utils_module", GWT.getModuleName());
+  }
+
+  @Test
+  public void runAsync() {
     // Arrange
     Button b = new Button();
     b.addClickHandler(new ClickHandler() {
@@ -65,7 +87,7 @@ public class MainGwtTest extends GwtTestTest {
         GWT.runAsync(new RunAsyncCallback() {
 
           public void onFailure(Throwable reason) {
-            Assert.fail("GWT.runAsync() has called \"onFailure\" callback");
+            fail("GWT.runAsync() has called \"onFailure\" callback");
 
           }
 
@@ -81,21 +103,7 @@ public class MainGwtTest extends GwtTestTest {
     Browser.click(b);
 
     // Assert
-    Assert.assertTrue(success);
+    assertTrue(success);
 
-  }
-
-  @Test
-  public void checkThatGwtInitialiseOccursBeforeTheJUnitInitialisationOfTheClass() {
-    assertEquals("mer. 24 nov.", sToday);
-  }
-
-  @Before
-  public void setupGWTTest() {
-    GwtConfig.get().setLocale(new Locale("FR"));
-    Calendar cal = new GregorianCalendar();
-    cal.set(2010, 10, 24);
-    sToday = DateTimeFormat.getFormat("EEE dd MMM").format(cal.getTime());
-    success = false;
   }
 }

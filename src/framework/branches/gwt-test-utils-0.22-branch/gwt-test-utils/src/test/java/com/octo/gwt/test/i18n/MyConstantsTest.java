@@ -13,7 +13,6 @@ import org.junit.Test;
 
 import com.google.gwt.core.client.GWT;
 import com.octo.gwt.test.GwtTestTest;
-import com.octo.gwt.test.internal.GwtConfig;
 
 public class MyConstantsTest extends GwtTestTest {
 
@@ -27,7 +26,7 @@ public class MyConstantsTest extends GwtTestTest {
   @Test
   public void changeLocale() {
     // Arrange
-    GwtConfig.get().setLocale(Locale.ENGLISH);
+    setLocale(Locale.ENGLISH);
 
     // Act 1
     String hello = constants.hello();
@@ -63,7 +62,7 @@ public class MyConstantsTest extends GwtTestTest {
     assertEquals("Message with key english", messageWithKey);
 
     // Act 2
-    GwtConfig.get().setLocale(Locale.US);
+    setLocale(Locale.US);
     hello = constants.hello();
     goodbye = constants.goodbye();
     stringArray = constants.stringArray();
@@ -132,7 +131,7 @@ public class MyConstantsTest extends GwtTestTest {
 
   @Test
   public void specialChars() {
-    GwtConfig.get().setLocale(Locale.FRENCH);
+    setLocale(Locale.FRENCH);
 
     // Act
     String hello = constants.hello();

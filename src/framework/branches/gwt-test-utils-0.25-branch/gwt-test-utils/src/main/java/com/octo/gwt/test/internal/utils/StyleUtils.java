@@ -5,9 +5,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
-import com.octo.gwt.test.internal.patchers.dom.JavaScriptObjects;
 
 /**
  * 
@@ -20,9 +18,8 @@ public class StyleUtils {
 
   private static final Pattern STYLE_PATTERN = Pattern.compile("(.+):(.+)");
 
-  public static Element getOwnerElement(Style style) {
-    return JavaScriptObjects.getObject(style,
-        JsoProperties.STYLE_TARGET_ELEMENT);
+  public static LinkedHashMap<String, String> getProperties(Style style) {
+    return JavaScriptObjects.getObject(style, JsoProperties.STYLE_PROPERTIES);
   }
 
   public static LinkedHashMap<String, String> getStyleProperties(String style) {
@@ -43,8 +40,8 @@ public class StyleUtils {
     return result;
   }
 
-  public static void setStyle(Style target, String value) {
-    for (Map.Entry<String, String> entry : getStyleProperties(value).entrySet()) {
+  public static void overrideStyle(Style target, String newValue) {
+    for (Map.Entry<String, String> entry : getStyleProperties(newValue).entrySet()) {
       target.setProperty(GwtStringUtils.camelize(entry.getKey()),
           entry.getValue());
     }

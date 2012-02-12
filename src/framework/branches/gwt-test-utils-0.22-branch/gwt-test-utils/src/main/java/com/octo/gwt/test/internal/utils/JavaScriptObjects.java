@@ -1,4 +1,4 @@
-package com.octo.gwt.test.internal.patchers.dom;
+package com.octo.gwt.test.internal.utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -63,8 +63,6 @@ import com.google.gwt.dom.client.Text;
 import com.google.gwt.dom.client.TextAreaElement;
 import com.google.gwt.dom.client.TitleElement;
 import com.google.gwt.dom.client.UListElement;
-import com.octo.gwt.test.internal.utils.JsoProperties;
-import com.octo.gwt.test.internal.utils.PropertyContainer;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 public class JavaScriptObjects {
@@ -251,8 +249,8 @@ public class JavaScriptObjects {
   public static Style newStyle(Element owner) {
     Style style = newObject(Style.class);
 
-    setProperty(style, JsoProperties.STYLE_TARGET_ELEMENT, owner);
-    setProperty(style, JsoProperties.STYLE_WHITESPACE_PROPERTY, "nowrap");
+    setProperty(style, JsoProperties.STYLE_PROPERTIES,
+        new LinkedHashMap<String, String>());
 
     return style;
   }

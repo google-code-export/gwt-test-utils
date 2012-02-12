@@ -11,7 +11,6 @@ import org.xml.sax.SAXException;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
-import com.octo.gwt.test.internal.patchers.dom.JavaScriptObjects;
 
 /**
  * SAX handler for GWT DOM parsing from an XML source. <strong>For internal use

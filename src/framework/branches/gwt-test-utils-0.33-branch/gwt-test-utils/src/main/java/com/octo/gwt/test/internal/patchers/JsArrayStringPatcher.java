@@ -3,7 +3,7 @@ package com.octo.gwt.test.internal.patchers;
 import java.util.List;
 
 import com.google.gwt.core.client.JsArrayString;
-import com.octo.gwt.test.internal.patchers.dom.JavaScriptObjects;
+import com.octo.gwt.test.internal.utils.JavaScriptObjects;
 import com.octo.gwt.test.internal.utils.JsoProperties;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;

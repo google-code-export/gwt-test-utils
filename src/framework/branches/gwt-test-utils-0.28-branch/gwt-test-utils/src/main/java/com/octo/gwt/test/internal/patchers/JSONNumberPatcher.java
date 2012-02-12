@@ -9,7 +9,13 @@ class JSONNumberPatcher {
 
   @PatchMethod
   static String toString(JSONNumber jsonNumber) {
-    return String.valueOf(jsonNumber.doubleValue());
+    double doubleValue = jsonNumber.doubleValue();
+    if (Math.floor(doubleValue) == doubleValue) {
+      // the number is an integer
+      return String.valueOf((int) doubleValue);
+    } else {
+      return String.valueOf(doubleValue);
+    }
   }
 
 }

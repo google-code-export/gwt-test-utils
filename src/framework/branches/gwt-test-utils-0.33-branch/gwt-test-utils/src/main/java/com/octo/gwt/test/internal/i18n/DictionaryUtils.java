@@ -5,8 +5,7 @@ import java.util.Map;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.i18n.client.Dictionary;
-import com.octo.gwt.test.internal.patchers.dom.JavaScriptObjects;
-import com.octo.gwt.test.internal.utils.JsoProperties;
+import com.octo.gwt.test.internal.utils.JavaScriptObjects;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 /**
@@ -17,32 +16,34 @@ import com.octo.gwt.test.utils.GwtReflectionUtils;
  */
 public class DictionaryUtils {
 
-  public static void addEntries(Dictionary dictionary,
-      Map<String, String> entries) {
-    getEntries(dictionary).putAll(entries);
-  }
+	private static final String DICTIONARY_ENTRIES = "DICTIONARY_ENTRIES";
 
-  public static void attach(Dictionary dictionary, String name) {
-    JavaScriptObject dict = JavaScriptObjects.newObject(JavaScriptObject.class);
+	public static void addEntries(Dictionary dictionary,
+			Map<String, String> entries) {
+		getEntries(dictionary).putAll(entries);
+	}
 
-    Map<String, String> entries = new HashMap<String, String>();
-    JavaScriptObjects.setProperty(dict, JsoProperties.DICTIONARY_ENTRIES,
-        entries);
+	public static void attach(Dictionary dictionary, String name) {
+		JavaScriptObject dict = JavaScriptObjects
+				.newObject(JavaScriptObject.class);
 
-    GwtReflectionUtils.setPrivateFieldValue(dictionary, "dict", dict);
-  }
+		Map<String, String> entries = new HashMap<String, String>();
+		JavaScriptObjects.setProperty(dict, DICTIONARY_ENTRIES, entries);
 
-  public static JavaScriptObject getDict(Dictionary dictionary) {
-    return GwtReflectionUtils.getPrivateFieldValue(dictionary, "dict");
-  }
+		GwtReflectionUtils.setPrivateFieldValue(dictionary, "dict", dict);
+	}
 
-  public static Map<String, String> getEntries(Dictionary dictionary) {
-    return JavaScriptObjects.getObject(getDict(dictionary),
-        JsoProperties.DICTIONARY_ENTRIES);
-  }
+	public static JavaScriptObject getDict(Dictionary dictionary) {
+		return GwtReflectionUtils.getPrivateFieldValue(dictionary, "dict");
+	}
 
-  private DictionaryUtils() {
+	public static Map<String, String> getEntries(Dictionary dictionary) {
+		return JavaScriptObjects.getObject(getDict(dictionary),
+				DICTIONARY_ENTRIES);
+	}
 
-  }
+	private DictionaryUtils() {
+
+	}
 
 }

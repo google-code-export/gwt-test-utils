@@ -13,8 +13,8 @@ import com.google.gwt.i18n.client.impl.CurrencyDataImpl;
 import com.octo.gwt.test.internal.AfterTestCallback;
 import com.octo.gwt.test.internal.AfterTestCallbackManager;
 import com.octo.gwt.test.internal.GwtConfig;
-import com.octo.gwt.test.internal.patchers.dom.JavaScriptObjects;
 import com.octo.gwt.test.internal.utils.GwtPropertiesHelper;
+import com.octo.gwt.test.internal.utils.JavaScriptObjects;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 

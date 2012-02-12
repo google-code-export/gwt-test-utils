@@ -1,5 +1,6 @@
 package com.octo.gwt.test.internal.patchers;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import javassist.CannotCompileException;
@@ -13,7 +14,8 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Text;
-import com.octo.gwt.test.internal.patchers.dom.JavaScriptObjects;
+import com.octo.gwt.test.internal.utils.GwtStringUtils;
+import com.octo.gwt.test.internal.utils.JavaScriptObjects;
 import com.octo.gwt.test.internal.utils.JsoProperties;
 import com.octo.gwt.test.internal.utils.PropertyContainer;
 import com.octo.gwt.test.patchers.InitMethod;
@@ -63,10 +65,9 @@ class JavaScriptObjectPatcher {
     } else if (Document.class.isInstance(jso)) {
       return "[object HTMLDocument]";
     } else if (Style.class.isInstance(jso)) {
-      return "[object CSSStyleDeclaration]";
+      return styleToString((Style) jso);
     } else if (Element.class.isInstance(jso)) {
-      Element e = jso.cast();
-      return elementToString(e);
+      return elementToString((Element) jso);
     } else if (NodeList.class.isInstance(jso)) {
       return JavaScriptObjects.getObject(jso,
           JsoProperties.NODE_LIST_INNER_LIST).toString();
@@ -100,6 +101,11 @@ class JavaScriptObjectPatcher {
         // special treatment for "className", which is mapped with DOM standard
         // property "class"
         sb.append("class=\"").append(entry.getValue()).append("\" ");
+      } else if ("style".equals(entry.getKey())) {
+        String style = elem.getStyle().toString();
+        if (!"".equals(style)) {
+          sb.append("style=\"").append(elem.getStyle().toString()).append("\" ");
+        }
       } else {
         sb.append(entry.getKey()).append("=\"").append(entry.getValue()).append(
             "\" ");
@@ -111,6 +117,26 @@ class JavaScriptObjectPatcher {
     sb.append(">").append(elem.getInnerHTML());
     sb.append("</").append(tagName).append(">");
     return sb.toString();
+  }
+
+  private static String styleToString(Style style) {
+    LinkedHashMap<String, String> styleProperties = JavaScriptObjects.getObject(
+        style, JsoProperties.STYLE_PROPERTIES);
+
+    StringBuilder sb = new StringBuilder();
+
+    for (Map.Entry<String, String> entry : styleProperties.entrySet()) {
+      String cssPropertyValue = entry.getValue().trim();
+
+      if (!"".equals(cssPropertyValue)) {
+        String cssProperyName = GwtStringUtils.hyphenize(entry.getKey());
+        sb.append(cssProperyName).append(": ").append(cssPropertyValue).append(
+            "; ");
+      }
+    }
+
+    return sb.toString();
+
   }
 
 }

@@ -2,7 +2,7 @@ package com.octo.gwt.test.internal.patchers;
 
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.impl.TextBoxImpl;
-import com.octo.gwt.test.internal.patchers.dom.JavaScriptObjects;
+import com.octo.gwt.test.internal.utils.JavaScriptObjects;
 import com.octo.gwt.test.internal.utils.JsoProperties;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;

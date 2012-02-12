@@ -47,7 +47,7 @@ public class JSONObjectTest extends GwtTestTest {
   @Test
   public void parseStrict() {
     // Arrange
-    String json = "{\"string\": \"json string\", \"int\": 3, \"float\": 3.1415, \"bool\": true, \"array\": [1, 33.7, \"l33t\"], \"object\": {\"int\": 4, \"array\": [5, 6, 7]}}";
+    String json = "{\"string\": \"json string\", \"int\": 3.0, \"float\": 3.1415, \"bool\": true, \"array\": [1, 33.7, \"l33t\"], \"object\": {\"int\": 4, \"array\": [5, 6, 7]}}";
 
     // Act
     JSONObject o = JSONParser.parseStrict(json).isObject();
@@ -73,7 +73,7 @@ public class JSONObjectTest extends GwtTestTest {
 
     // toString
     assertEquals(
-        "{string:json string, int:3.0, float:3.1415, bool:true, array:[1.0,33.7,l33t], object:{int:4.0, array:[5.0,6.0,7.0]}}",
+        "{\"string\":\"json string\", \"int\":3, \"float\":3.1415, \"bool\":true, \"array\":[1,33.7,\"l33t\"], \"object\":{\"int\":4, \"array\":[5,6,7]}}",
         o.toString());
 
   }
