@@ -28,6 +28,7 @@ The framework requiers some third-party librairies you should add to your projec
  * javassist-3.12+.jar
  * junit-4.5+.jar
  * slf4j-api-1.6+.jar (with the adapter of your choice)
+ * jackson-core-asl-1.9.1+.jar if you use  {{{com.google.gwt.json}}} API
 
 If you are interested in using a java mocking framework, _gwt-test-utils_ has been tested with :
 
