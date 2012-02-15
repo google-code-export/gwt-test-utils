@@ -109,13 +109,21 @@ public class RadioButtonTest extends GwtTestTest {
     RadioButton rb1 = new RadioButton("myRadioGroup", "bar");
     RadioButton rb2 = new RadioButton("myRadioGroup", "baz");
 
-    // Act
+    // Act 1
     rb1.setValue(true);
 
-    // Assert;
+    // Assert 1
     assertEquals(false, rb0.getValue());
     assertEquals(true, rb1.getValue());
     assertEquals(false, rb2.getValue());
+
+    // Act 2
+    rb2.setValue(true);
+
+    // Assert 2
+    assertEquals(false, rb0.getValue());
+    assertEquals(false, rb1.getValue());
+    assertEquals(true, rb2.getValue());
   }
 
   @Test
