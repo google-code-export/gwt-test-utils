@@ -66,5 +66,6 @@ class GwtReset {
 
     GwtReflectionUtils.setStaticField(Window.class, "handlers", null);
     GwtReflectionUtils.setStaticField(Event.class, "handlers", null);
+
   }
 }

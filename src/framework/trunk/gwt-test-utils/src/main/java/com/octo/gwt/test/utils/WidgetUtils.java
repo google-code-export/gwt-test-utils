@@ -112,9 +112,9 @@ public class WidgetUtils {
   }
 
   /**
-   * Check if the current widget and its possible parents are visible. NOTE : if
-   * the current widget is a Popup, it is the isShowing() flag which would be
-   * evaluate.
+   * Check if the current widget and its possible parents are visible.
+   * <strong>NOTE</strong> : if the current widget is a Popup, it is the
+   * isShowing() flag which would be evaluate.
    * 
    * @param object The widget to check.
    * @return True if the widget and its possible parents are visible, false
@@ -123,12 +123,15 @@ public class WidgetUtils {
   public static boolean isWidgetVisible(UIObject object) {
     // FIXME : remove this hack which is required for octo main GWT
     // project...
-    if (object instanceof RootPanel) {
+    if (object == null) {
+      return false;
+    } else if (object instanceof RootPanel) {
       return true;
     } else if (object instanceof PopupPanel) {
       PopupPanel popup = (PopupPanel) object;
       return popup.isShowing();
     } else {
+
       return isElementVisible(object.getElement());
     }
   }
