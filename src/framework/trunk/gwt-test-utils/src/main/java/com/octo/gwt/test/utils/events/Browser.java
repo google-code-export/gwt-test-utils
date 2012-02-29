@@ -35,6 +35,7 @@ import com.octo.gwt.test.internal.AfterTestCallback;
 import com.octo.gwt.test.internal.GwtConfig;
 import com.octo.gwt.test.internal.utils.JavaScriptObjects;
 import com.octo.gwt.test.internal.utils.JsoProperties;
+import com.octo.gwt.test.internal.utils.RadioButtonManager;
 import com.octo.gwt.test.utils.WidgetUtils;
 
 /**
@@ -610,6 +611,64 @@ public class Browser {
     dispatchEvent(target, EventBuilder.create(Event.ONMOUSEWHEEL).build());
   }
 
+  public static void pressKey(Widget widget, int keyCode) {
+    if (widget == null) {
+      return;
+    }
+    // trigger keyDown and keyPress
+    Event keyDownEvent = EventBuilder.create(Event.ONKEYDOWN).setKeyCode(
+        keyCode).build();
+    Event keyPressEvent = EventBuilder.create(Event.ONKEYPRESS).setKeyCode(
+        keyCode).build();
+    dispatchEventInternal(widget, true, keyDownEvent, keyPressEvent);
+
+    // check if one on the events has been prevented
+    boolean keyDownEventPreventDefault = JavaScriptObjects.getBoolean(
+        keyDownEvent, JsoProperties.EVENT_PREVENTDEFAULT);
+    boolean keyPressEventPreventDefault = JavaScriptObjects.getBoolean(
+        keyPressEvent, JsoProperties.EVENT_PREVENTDEFAULT);
+
+    if (!keyDownEventPreventDefault && !keyPressEventPreventDefault) {
+
+      if (widget instanceof HasText) {
+        HasText hasTextWidget = (HasText) widget;
+        String oldText;
+        switch (keyCode) {
+          case KeyCodes.KEY_ALT:
+          case KeyCodes.KEY_CTRL:
+          case KeyCodes.KEY_DELETE:
+          case KeyCodes.KEY_DOWN:
+          case KeyCodes.KEY_END:
+          case KeyCodes.KEY_ENTER:
+          case KeyCodes.KEY_ESCAPE:
+          case KeyCodes.KEY_HOME:
+          case KeyCodes.KEY_LEFT:
+          case KeyCodes.KEY_PAGEDOWN:
+          case KeyCodes.KEY_PAGEUP:
+          case KeyCodes.KEY_RIGHT:
+          case KeyCodes.KEY_SHIFT:
+          case KeyCodes.KEY_UP:
+            // nothing to do
+            break;
+          case KeyCodes.KEY_TAB:
+            blur(widget);
+            break;
+          case KeyCodes.KEY_BACKSPACE:
+            oldText = hasTextWidget.getText();
+            hasTextWidget.setText(oldText.substring(0, oldText.length() - 1));
+            break;
+          default:
+            oldText = hasTextWidget.getText();
+            hasTextWidget.setText(oldText + (char) keyCode);
+        }
+      }
+
+      // trigger keyUp
+      Event keyUpEvent = EventBuilder.create(Event.ONKEYUP).setKeyCode(keyCode).build();
+      dispatchEventInternal(widget, true, keyUpEvent);
+    }
+  }
+
   /**
    * <p>
    * Remove a fixed number of character from the text within a widget which
@@ -728,6 +787,21 @@ public class Browser {
     dispatchEvent(parent, onMouseOver, onMouseDown, onMouseUp, onClick);
   }
 
+  private static void clickOnCheckBox(CheckBox checkBox) {
+    boolean newValue = RadioButton.class.isInstance(checkBox) ? true
+        : !checkBox.getValue();
+
+    // change value without triggering ValueChangeEvent : the trigger is done in
+    // CheckBox ensureDomEventHandlers()
+    WidgetUtils.setCheckBoxValueSilent(checkBox, newValue);
+
+    if (RadioButton.class.isInstance(checkBox)) {
+      // change every other radiobutton and trigger ValueChangeEvent
+      RadioButtonManager.onRadioGroupChanged((RadioButton) checkBox, newValue,
+          true);
+    }
+  }
+
   private static void dispatchEventInternal(Widget target, boolean check,
       Event... events) {
 
@@ -756,13 +830,10 @@ public class Browser {
 
   private static void dispatchEventInternal(Widget target, Event event) {
     try {
-      // special case of click on CheckBox
+      // special case of click on CheckBox : set the internal inputElement value
       if (CheckBox.class.isInstance(target)
           && event.getTypeInt() == Event.ONCLICK) {
-        CheckBox checkBox = (CheckBox) target;
-        boolean newValue = RadioButton.class.isInstance(target) ? true
-            : !checkBox.getValue();
-        checkBox.setValue(newValue, false);
+        clickOnCheckBox((CheckBox) target);
       }
 
       // set the related target

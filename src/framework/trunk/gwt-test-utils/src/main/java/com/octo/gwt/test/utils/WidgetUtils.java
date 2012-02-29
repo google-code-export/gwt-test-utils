@@ -7,10 +7,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.InputElement;
 import com.google.gwt.event.dom.client.DomEvent.Type;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
@@ -134,6 +137,20 @@ public class WidgetUtils {
 
       return isElementVisible(object.getElement());
     }
+  }
+
+  /**
+   * set a CheckBox value without firing any {@link ValueChangeEvent}.
+   * 
+   * @param checkBox the targeted checkBox
+   * @param newValue the new value, which could be retrieve through
+   *          {@link CheckBox#getValue()}
+   */
+  public static void setCheckBoxValueSilent(CheckBox checkBox, boolean newValue) {
+    InputElement inputElem = GwtReflectionUtils.getPrivateFieldValue(checkBox,
+        "inputElem");
+    inputElem.setChecked(newValue);
+    inputElem.setDefaultChecked(newValue);
   }
 
   private static boolean isElementVisible(Element element) {

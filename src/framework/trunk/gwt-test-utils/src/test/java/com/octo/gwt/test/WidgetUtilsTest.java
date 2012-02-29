@@ -10,12 +10,14 @@ import org.junit.Test;
 
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.SuggestBox.SuggestionDisplay;
+import com.octo.gwt.MockValueChangeHandler;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 import com.octo.gwt.test.utils.WidgetUtils;
 
@@ -155,6 +157,26 @@ public class WidgetUtilsTest extends GwtTestTest {
 
     // Assert
     assertTrue(isVisible);
+  }
+
+  @Test
+  public void setCheckBoxValueSilent() {
+    // Arrange
+    CheckBox cb = new CheckBox();
+    cb.setValue(true);
+    MockValueChangeHandler<Boolean> mockChangeHandler = new MockValueChangeHandler<Boolean>();
+    cb.addValueChangeHandler(mockChangeHandler);
+
+    // Pre-Assert
+    assertTrue(cb.getValue());
+    assertEquals(0, mockChangeHandler.getCallCount());
+
+    // Act
+    WidgetUtils.setCheckBoxValueSilent(cb, false);
+
+    // Assert
+    assertEquals(false, cb.getValue());
+    assertEquals(0, mockChangeHandler.getCallCount());
   }
 
   @Test

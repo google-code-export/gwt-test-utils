@@ -1,6 +1,8 @@
 package com.octo.gwt.test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
@@ -8,6 +10,7 @@ import com.google.gwt.dom.client.HeadingElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.RadioButton;
+import com.octo.gwt.MockValueChangeHandler;
 import com.octo.gwt.test.utils.events.Browser;
 
 public class RadioButtonTest extends GwtTestTest {
@@ -106,24 +109,45 @@ public class RadioButtonTest extends GwtTestTest {
   public void radioButton_Group() {
     // Arrange
     RadioButton rb0 = new RadioButton("myRadioGroup", "foo");
+    MockValueChangeHandler<Boolean> rb0MockChangeHandler = new MockValueChangeHandler<Boolean>();
+    rb0.addValueChangeHandler(rb0MockChangeHandler);
+
     RadioButton rb1 = new RadioButton("myRadioGroup", "bar");
+    MockValueChangeHandler<Boolean> rb1MockChangeHandler = new MockValueChangeHandler<Boolean>();
+    rb1.addValueChangeHandler(rb1MockChangeHandler);
+
     RadioButton rb2 = new RadioButton("myRadioGroup", "baz");
+    MockValueChangeHandler<Boolean> rb2MockChangeHandler = new MockValueChangeHandler<Boolean>();
+    rb2.addValueChangeHandler(rb2MockChangeHandler);
 
     // Act 1
-    rb1.setValue(true);
+    Browser.click(rb1);
 
     // Assert 1
     assertEquals(false, rb0.getValue());
+    assertEquals(0, rb0MockChangeHandler.getCallCount());
+
     assertEquals(true, rb1.getValue());
+    assertEquals(1, rb1MockChangeHandler.getCallCount());
+    assertTrue(rb1MockChangeHandler.getLast());
+
     assertEquals(false, rb2.getValue());
+    assertEquals(0, rb2MockChangeHandler.getCallCount());
 
     // Act 2
-    rb2.setValue(true);
+    Browser.click(rb2);
 
     // Assert 2
     assertEquals(false, rb0.getValue());
+    assertEquals(0, rb0MockChangeHandler.getCallCount());
+
     assertEquals(false, rb1.getValue());
+    assertEquals(2, rb1MockChangeHandler.getCallCount());
+    assertFalse(rb1MockChangeHandler.getLast());
+
     assertEquals(true, rb2.getValue());
+    assertEquals(1, rb2MockChangeHandler.getCallCount());
+    assertTrue(rb2MockChangeHandler.getLast());
   }
 
   @Test
