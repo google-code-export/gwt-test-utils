@@ -156,6 +156,10 @@ class ElementPatcher {
 
   @PatchMethod
   static void setAttribute(Element element, String attributeName, String value) {
+    if (JavaScriptObjects.ID.equals(attributeName)) {
+      JavaScriptObjects.onSetId(element, value);
+    }
+
     PropertyContainer properties = JavaScriptObjects.getObject(element,
         JsoProperties.ELEM_PROPERTIES);
 
@@ -203,6 +207,11 @@ class ElementPatcher {
 
   @PatchMethod
   static void setPropertyObject(Element element, String name, Object value) {
+
+    if (JavaScriptObjects.ID.equals(name)) {
+      JavaScriptObjects.onSetId(element, value.toString());
+    }
+
     PropertyContainer properties = JavaScriptObjects.getObject(element,
         JsoProperties.ELEM_PROPERTIES);
 

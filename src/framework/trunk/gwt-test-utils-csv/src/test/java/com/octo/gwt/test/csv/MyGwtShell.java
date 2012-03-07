@@ -3,6 +3,7 @@ package com.octo.gwt.test.csv;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 
+import com.google.gwt.user.client.ui.Widget;
 import com.octo.gwt.test.csv.data.MyBeautifulApp;
 import com.octo.gwt.test.csv.data.MyRemoteService;
 import com.octo.gwt.test.csv.data.MyService;
@@ -15,69 +16,81 @@ import com.octo.gwt.test.server.RemoteServiceCreateHandler;
 @RunWith(GwtCsvRunner.class)
 public abstract class MyGwtShell extends GwtCsvTest {
 
-  private MyBeautifulApp app;
+	private MyBeautifulApp app;
 
-  @CsvMethod
-  public void append(String s) {
-    MyStringStore.appender += s;
-  }
+	@CsvMethod
+	public void append(String s) {
+		MyStringStore.appender += s;
+	}
 
-  @Override
-  public String getModuleName() {
-    return "com.octo.gwt.test.csv.GwtCsvTest";
-  }
+	@Before
+	public void before() throws Exception {
+		RemoteServiceCreateHandler remoteServiceCreateHandler = new RemoteServiceCreateHandler() {
 
-  @CsvMethod
-  public void initApp() {
-    app = new MyBeautifulApp();
-    app.onModuleLoad();
-  }
+			@Override
+			public Object findService(Class<?> remoteServiceClass,
+					String remoteServiceRelativePath) {
+				if (remoteServiceClass == MyRemoteService.class
+						&& "myService".equals(remoteServiceRelativePath)) {
+					return new MyService();
+				}
+				return null;
+			}
 
-  @Before
-  public void before() throws Exception {
-    RemoteServiceCreateHandler remoteServiceCreateHandler = new RemoteServiceCreateHandler() {
+		};
 
-      @Override
-      public Object findService(Class<?> remoteServiceClass,
-          String remoteServiceRelativePath) {
-        if (remoteServiceClass == MyRemoteService.class
-            && "myService".equals(remoteServiceRelativePath)) {
-          return new MyService();
-        }
-        return null;
-      }
+		addGwtCreateHandler(remoteServiceCreateHandler);
 
-    };
+		MyStringStore.appender = "";
+	}
 
-    addGwtCreateHandler(remoteServiceCreateHandler);
+	@CsvMethod
+	public void detachWidget(String... params) {
+		Widget w = getObject(Widget.class, params);
+		w.removeFromParent();
+	}
 
-    MyStringStore.appender = "";
-  }
+	@Override
+	public String getModuleName() {
+		return "com.octo.gwt.test.csv.GwtCsvTest";
+	}
 
-  @Override
-  protected String getHostPagePath(String moduleFullQualifiedName) {
-    return null;
-  }
+	@CsvMethod
+	public void initApp() {
+		app = new MyBeautifulApp();
+		app.onModuleLoad();
+	}
 
-  @Override
-  protected NodeObjectFinder getNodeObjectFinder(String prefix) {
-    if ("app".equals(prefix)) {
-      return new NodeObjectFinder() {
+	@CsvMethod
+	public void setId(String newId, String... params) {
+		Widget w = getObject(Widget.class, params);
+		w.getElement().setId(newId);
+	}
 
-        public Object find(CsvRunner csvRunner, Node node) {
-          return csvRunner.getNodeValue(app, node);
-        }
-      };
-    } else if ("appender".equals(prefix)) {
-      return new NodeObjectFinder() {
+	@Override
+	protected String getHostPagePath(String moduleFullQualifiedName) {
+		return null;
+	}
 
-        public Object find(CsvRunner csvRunner, Node node) {
-          return MyStringStore.appender;
-        }
-      };
+	@Override
+	protected NodeObjectFinder getNodeObjectFinder(String prefix) {
+		if ("app".equals(prefix)) {
+			return new NodeObjectFinder() {
 
-    }
-    return super.getNodeObjectFinder(prefix);
-  }
+				public Object find(CsvRunner csvRunner, Node node) {
+					return csvRunner.getNodeValue(app, node);
+				}
+			};
+		} else if ("appender".equals(prefix)) {
+			return new NodeObjectFinder() {
+
+				public Object find(CsvRunner csvRunner, Node node) {
+					return MyStringStore.appender;
+				}
+			};
+
+		}
+		return super.getNodeObjectFinder(prefix);
+	}
 
 }

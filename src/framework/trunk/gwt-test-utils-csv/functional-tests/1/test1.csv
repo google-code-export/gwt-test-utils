@@ -11,3 +11,9 @@ click;/app/b2
 assertExact;click on b2;/app/l/text
 runmacro;appendStatic
 append;End of 1st test
+
+detachWidget;button-1
+isNotVisible;button-1
+
+setId;button-1;/app/b2
+isVisible;button-1

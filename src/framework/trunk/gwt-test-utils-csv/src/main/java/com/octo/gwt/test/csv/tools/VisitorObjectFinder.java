@@ -18,9 +18,11 @@ import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 import com.octo.gwt.test.csv.runner.CsvRunner;
 import com.octo.gwt.test.csv.runner.Node;
+import com.octo.gwt.test.internal.WidgetChangeHandler;
+import com.octo.gwt.test.internal.WidgetChangeHandlerManager;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
-class VisitorObjectFinder implements ObjectFinder {
+class VisitorObjectFinder implements ObjectFinder, WidgetChangeHandler {
 
 	private final Map<Object, WidgetRepository> repositories = new HashMap<Object, WidgetRepository>();
 
@@ -28,6 +30,8 @@ class VisitorObjectFinder implements ObjectFinder {
 
 	public VisitorObjectFinder(WidgetVisitor visitor) {
 		this.visitor = visitor;
+
+		WidgetChangeHandlerManager.get().registerWidgetChangedHandler(this);
 	}
 
 	public boolean accept(String... params) {
@@ -52,14 +56,6 @@ class VisitorObjectFinder implements ObjectFinder {
 				result = getObject(csvRunner, repository, params[0]);
 			} else {
 				result = getObject(csvRunner, repository, params[0]);
-				if (result == null) {
-					// try another time since code could have instanciate new
-					// widget after
-					// the last inspection
-					repository.clear();
-					inspectObject(root, repository, new HashSet<Object>());
-					result = getObject(csvRunner, repository, params[0]);
-				}
 			}
 
 			if (result != null) {
@@ -68,6 +64,21 @@ class VisitorObjectFinder implements ObjectFinder {
 		}
 
 		return null;
+	}
+
+	public boolean onAttach(Widget widget) {
+		repositories.clear();
+		return false;
+	}
+
+	public boolean onDetach(Widget widget) {
+		repositories.clear();
+		return false;
+	}
+
+	public boolean onSetId(UIObject o, String newId) {
+		repositories.clear();
+		return false;
 	}
 
 	protected Collection<RootPanel> getRootPanels() {
@@ -113,17 +124,6 @@ class VisitorObjectFinder implements ObjectFinder {
 			alreadyInspectedObjects.add(inspected);
 		}
 
-		if (UIObject.class.isInstance(inspected)
-				&& !((UIObject) inspected).isVisible()) {
-			if (Widget.class.isInstance(inspected)) {
-				// add the not visible widget but don't inspect its child
-				Widget widget = (Widget) inspected;
-				visitor.visitWidget(widget, repository);
-			}
-
-			return;
-		}
-
 		if (HasWidgets.class.isInstance(inspected)) {
 			Iterator<Widget> it = ((HasWidgets) inspected).iterator();
 			while (it.hasNext()) {
@@ -136,24 +136,19 @@ class VisitorObjectFinder implements ObjectFinder {
 		}
 
 		if (HasHTML.class.isInstance(inspected)) {
-			HasHTML hasHTMLWidget = (HasHTML) inspected;
-			visitor.visitHasHTML(hasHTMLWidget, repository);
+			visitor.visitHasHTML((HasHTML) inspected, repository);
 		}
 
 		if (HasText.class.isInstance(inspected)) {
-			HasText hasTextWidget = (HasText) inspected;
-			visitor.visitHasText(hasTextWidget, repository);
+			visitor.visitHasText((HasText) inspected, repository);
 		}
 
 		if (HasName.class.isInstance(inspected)) {
-			HasName hasNameWidget = (HasName) inspected;
-			visitor.visitHasName(hasNameWidget, repository);
+			visitor.visitHasName((HasName) inspected, repository);
 		}
 
 		if (Widget.class.isInstance(inspected)) {
-			// add the not visible widget but don't inspect its child
-			Widget widget = (Widget) inspected;
-			visitor.visitWidget(widget, repository);
+			visitor.visitWidget((Widget) inspected, repository);
 		}
 	}
 

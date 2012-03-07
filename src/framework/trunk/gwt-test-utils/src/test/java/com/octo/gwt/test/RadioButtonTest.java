@@ -10,12 +10,47 @@ import com.google.gwt.dom.client.HeadingElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.RadioButton;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.octo.gwt.MockValueChangeHandler;
 import com.octo.gwt.test.utils.events.Browser;
 
 public class RadioButtonTest extends GwtTestTest {
 
   private boolean tested;
+
+  @Test
+  public void changeName() {
+    // Arrange
+    RadioButton rb0 = new RadioButton("myRadioGroup", "foo");
+    RootPanel.get().add(rb0);
+    MockValueChangeHandler<Boolean> rb0MockChangeHandler = new MockValueChangeHandler<Boolean>();
+    rb0.addValueChangeHandler(rb0MockChangeHandler);
+
+    RadioButton rb1 = new RadioButton("myRadioGroup", "bar");
+    RootPanel.get().add(rb1);
+    MockValueChangeHandler<Boolean> rb1MockChangeHandler = new MockValueChangeHandler<Boolean>();
+    rb1.addValueChangeHandler(rb1MockChangeHandler);
+
+    // Act 1
+    rb0.setName("changedGroup");
+    Browser.click(rb0);
+
+    // Assert 1
+    assertTrue(rb0.getValue());
+    assertEquals(1, rb0MockChangeHandler.getCallCount());
+
+    // Act 2
+    rb1.setName("changedGroup");
+    Browser.click(rb1);
+
+    assertFalse(rb0.getValue());
+    assertEquals(2, rb0MockChangeHandler.getCallCount());
+    assertFalse(rb0MockChangeHandler.getLast());
+
+    assertTrue(rb1.getValue());
+    assertEquals(1, rb1MockChangeHandler.getCallCount());
+    assertTrue(rb1MockChangeHandler.getLast());
+  }
 
   @Test
   public void click_ClickHandler() {
@@ -74,6 +109,59 @@ public class RadioButtonTest extends GwtTestTest {
   }
 
   @Test
+  public void clickNotDetachedRadioButton() {
+    // Arrange
+    RadioButton rb0 = new RadioButton("myRadioGroup", "foo");
+    MockValueChangeHandler<Boolean> rb0MockChangeHandler = new MockValueChangeHandler<Boolean>();
+    rb0.addValueChangeHandler(rb0MockChangeHandler);
+
+    RadioButton rb1 = new RadioButton("myRadioGroup", "bar");
+    MockValueChangeHandler<Boolean> rb1MockChangeHandler = new MockValueChangeHandler<Boolean>();
+    rb1.addValueChangeHandler(rb1MockChangeHandler);
+
+    // Act
+    Browser.click(rb0);
+    Browser.click(rb1);
+
+    // Assert
+    assertTrue(rb0.getValue());
+    assertEquals(1, rb0MockChangeHandler.getCallCount());
+    assertTrue(rb1.getValue());
+    assertEquals(1, rb1MockChangeHandler.getCallCount());
+  }
+
+  @Test
+  public void clickOnDetachedRadionButton() {
+    // Arrange
+    RadioButton rb0 = new RadioButton("myRadioGroup", "foo");
+    rb0.setValue(true);
+    RootPanel.get().add(rb0);
+    MockValueChangeHandler<Boolean> rb0MockChangeHandler = new MockValueChangeHandler<Boolean>();
+    rb0.addValueChangeHandler(rb0MockChangeHandler);
+
+    RadioButton rb1 = new RadioButton("myRadioGroup", "bar");
+    RootPanel.get().add(rb1);
+    MockValueChangeHandler<Boolean> rb1MockChangeHandler = new MockValueChangeHandler<Boolean>();
+    rb1.addValueChangeHandler(rb1MockChangeHandler);
+
+    // Pre-Assert
+    assertTrue(rb0.getValue());
+    assertEquals(0, rb0MockChangeHandler.getCallCount());
+    assertFalse(rb1.getValue());
+    assertEquals(0, rb1MockChangeHandler.getCallCount());
+
+    // Act
+    RootPanel.get().remove(rb1);
+    Browser.click(rb1);
+
+    // Assert
+    assertTrue(rb1.getValue());
+    assertEquals(1, rb1MockChangeHandler.getCallCount());
+    assertTrue(rb0.getValue());
+    assertEquals(0, rb0MockChangeHandler.getCallCount());
+  }
+
+  @Test
   public void html() {
     // Arrange
     RadioButton rb = new RadioButton("myRadioGroup", "<h1>foo</h1>", true);
@@ -109,14 +197,17 @@ public class RadioButtonTest extends GwtTestTest {
   public void radioButton_Group() {
     // Arrange
     RadioButton rb0 = new RadioButton("myRadioGroup", "foo");
+    RootPanel.get().add(rb0);
     MockValueChangeHandler<Boolean> rb0MockChangeHandler = new MockValueChangeHandler<Boolean>();
     rb0.addValueChangeHandler(rb0MockChangeHandler);
 
     RadioButton rb1 = new RadioButton("myRadioGroup", "bar");
+    RootPanel.get().add(rb1);
     MockValueChangeHandler<Boolean> rb1MockChangeHandler = new MockValueChangeHandler<Boolean>();
     rb1.addValueChangeHandler(rb1MockChangeHandler);
 
     RadioButton rb2 = new RadioButton("myRadioGroup", "baz");
+    RootPanel.get().add(rb2);
     MockValueChangeHandler<Boolean> rb2MockChangeHandler = new MockValueChangeHandler<Boolean>();
     rb2.addValueChangeHandler(rb2MockChangeHandler);
 
