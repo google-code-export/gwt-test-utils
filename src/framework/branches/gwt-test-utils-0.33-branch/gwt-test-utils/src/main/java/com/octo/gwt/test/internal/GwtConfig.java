@@ -32,127 +32,128 @@ import com.octo.gwt.test.utils.events.Browser.BrowserErrorHandler;
  */
 public class GwtConfig implements AfterTestCallback {
 
-	private static final GwtConfig INSTANCE = new GwtConfig();
+  private static final GwtConfig INSTANCE = new GwtConfig();
 
-	public static GwtConfig get() {
-		return INSTANCE;
-	}
+  public static GwtConfig get() {
+    return INSTANCE;
+  }
 
-	private final Map<Class<?>, List<String[]>> uiConstructorsMap = new HashMap<Class<?>, List<String[]>>();
-	private String checkedModuleName;
-	private final DebugIdImpl disabledInstance = new DebugIdImpl();
-	private final DebugIdImpl enabledInstance = new DebugIdImplEnabled();
-	private GwtModuleRunner gwtModuleRunner;
+  private String checkedModuleName;
+  private final DebugIdImpl disabledInstance = new DebugIdImpl();
+  private final DebugIdImpl enabledInstance = new DebugIdImplEnabled();
+  private GwtModuleRunner gwtModuleRunner;
+  private final Map<Class<?>, List<String[]>> uiConstructorsMap = new HashMap<Class<?>, List<String[]>>();
 
-	private final List<UiObjectTagFactory<?>> uiObjectTagFactories = new ArrayList<UiObjectTagFactory<?>>();
+  private final List<UiObjectTagFactory<?>> uiObjectTagFactories = new ArrayList<UiObjectTagFactory<?>>();
 
-	private GwtConfig() {
-		AfterTestCallbackManager.get().registerCallback(this);
-	}
+  private GwtConfig() {
+    AfterTestCallbackManager.get().registerCallback(this);
+  }
 
-	public void afterTest() throws Throwable {
-		gwtModuleRunner = null;
-		uiObjectTagFactories.clear();
-		uiConstructorsMap.clear();
-	}
+  public void afterTest() throws Throwable {
+    gwtModuleRunner = null;
+    uiObjectTagFactories.clear();
+    uiConstructorsMap.clear();
+  }
 
-	public BrowserErrorHandler getBrowserErrorHandler() {
-		return gwtModuleRunner.getBrowserErrorHandler();
-	}
+  public boolean canDispatchDomEventOnDetachedWidget() {
+    return gwtModuleRunner.canDispatchDomEventOnDetachedWidget();
+  }
 
-	public String getHostPagePath() {
-		return gwtModuleRunner.getHostPagePath();
-	}
+  public BrowserErrorHandler getBrowserErrorHandler() {
+    return gwtModuleRunner.getBrowserErrorHandler();
+  }
 
-	public Locale getLocale() {
-		return gwtModuleRunner.getLocale();
-	}
+  public String getHostPagePath() {
+    return gwtModuleRunner.getHostPagePath();
+  }
 
-	public GwtLogHandler getLogHandler() {
-		return gwtModuleRunner.getLogHandler();
-	}
+  public Locale getLocale() {
+    return gwtModuleRunner.getLocale();
+  }
 
-	public String getModuleName() {
-		return checkedModuleName;
-	}
+  public GwtLogHandler getLogHandler() {
+    return gwtModuleRunner.getLogHandler();
+  }
 
-	public ServletConfig getServletConfig() {
-		return gwtModuleRunner.getServletConfig();
-	}
+  public String getModuleName() {
+    return checkedModuleName;
+  }
 
-	public List<String[]> getUiConstructors(Class<?> clazz) {
-		return uiConstructorsMap.get(clazz);
-	}
+  public ServletConfig getServletConfig() {
+    return gwtModuleRunner.getServletConfig();
+  }
 
-	public List<UiObjectTagFactory<?>> getUiObjectTagFactories() {
-		return uiObjectTagFactories;
-	}
+  public List<String[]> getUiConstructors(Class<?> clazz) {
+    return uiConstructorsMap.get(clazz);
+  }
 
-	public WindowOperationsHandler getWindowOperationsHandler() {
-		return gwtModuleRunner.getWindowOperationsHandler();
-	}
+  public List<UiObjectTagFactory<?>> getUiObjectTagFactories() {
+    return uiObjectTagFactories;
+  }
 
-	public void registerUiConstructor(
-			Class<? extends IsWidget> classWithUiConstructor,
-			String... argNames) {
-		List<String[]> uiConstructors = uiConstructorsMap
-				.get(classWithUiConstructor);
-		if (uiConstructors == null) {
-			uiConstructors = new ArrayList<String[]>();
-			uiConstructorsMap.put(classWithUiConstructor, uiConstructors);
-		}
+  public WindowOperationsHandler getWindowOperationsHandler() {
+    return gwtModuleRunner.getWindowOperationsHandler();
+  }
 
-		uiConstructors.add(argNames);
-	}
+  public void registerUiConstructor(
+      Class<? extends IsWidget> classWithUiConstructor, String... argNames) {
+    List<String[]> uiConstructors = uiConstructorsMap.get(classWithUiConstructor);
+    if (uiConstructors == null) {
+      uiConstructors = new ArrayList<String[]>();
+      uiConstructorsMap.put(classWithUiConstructor, uiConstructors);
+    }
 
-	/**
-	 * Setup a GWT module to be run. <strong>This method must be run only once,
-	 * at the very beginning of the GWT module emulation.</strong>
-	 * 
-	 * @param gwtModuleRunner
-	 *            The configuration of the module to be run.
-	 */
-	public void setup(GwtModuleRunner gwtModuleRunner) {
-		if (this.gwtModuleRunner != null) {
-			throw new GwtTestException(
-					"Because of the single-threaded nature of the GWT environment, gwt-test-utils tests can not be run in multiple thread at the same time");
-		}
+    uiConstructors.add(argNames);
+  }
 
-		this.gwtModuleRunner = gwtModuleRunner;
-		this.checkedModuleName = getCheckedModuleName();
+  /**
+   * Setup a GWT module to be run. <strong>This method must be run only once, at
+   * the very beginning of the GWT module emulation.</strong>
+   * 
+   * @param gwtModuleRunner The configuration of the module to be run.
+   */
+  public void setup(GwtModuleRunner gwtModuleRunner) {
+    if (this.gwtModuleRunner != null) {
+      throw new GwtTestException(
+          "Because of the single-threaded nature of the GWT environment, gwt-test-utils tests can not be run in multiple thread at the same time");
+    }
 
-		setupDebugIdImpl(gwtModuleRunner);
+    this.gwtModuleRunner = gwtModuleRunner;
+    this.checkedModuleName = getCheckedModuleName();
 
-		registerUiConstructor(NamedFrame.class, "name");
-		registerUiConstructor(RadioButton.class, "name");
-	}
+    setupDebugIdImpl(gwtModuleRunner);
 
-	private String getCheckedModuleName() {
-		String moduleName = gwtModuleRunner.getModuleName();
-		if (moduleName == null || "".equals(moduleName.trim())) {
-			throw new GwtTestConfigurationException(
-					"The tested module name returned by "
-							+ gwtModuleRunner.getClass().getName()
-							+ ".getModuleName() should not be null or empty");
-		}
+    registerUiConstructor(NamedFrame.class, "name");
+    registerUiConstructor(RadioButton.class, "name");
+  }
 
-		String moduleAlias = ModuleData.get().getModuleAlias(moduleName);
-		if (moduleAlias == null) {
-			throw new GwtTestConfigurationException(
-					"The tested module '"
-							+ moduleName
-							+ "' has not been found. Did you forget to declare a 'module-file' property in your 'META-INF/gwt-test-utils.properties' configuration file ?");
-		}
+  private String getCheckedModuleName() {
+    String moduleName = gwtModuleRunner.getModuleName();
+    if (moduleName == null || "".equals(moduleName.trim())) {
+      throw new GwtTestConfigurationException(
+          "The tested module name returned by "
+              + gwtModuleRunner.getClass().getName()
+              + ".getModuleName() should not be null or empty");
+    }
 
-		return moduleAlias;
-	}
+    String moduleAlias = ModuleData.get().getModuleAlias(moduleName);
+    if (moduleAlias == null) {
+      throw new GwtTestConfigurationException(
+          "The tested module '"
+              + moduleName
+              + "' has not been found. Did you forget to declare a 'module-file' property in your 'META-INF/gwt-test-utils.properties' configuration file ?");
+    }
 
-	private void setupDebugIdImpl(GwtModuleRunner gwtModuleRunner) {
-		DebugIdImpl debugIdImplToUse = gwtModuleRunner.ensureDebugId() ? enabledInstance
-				: disabledInstance;
+    return moduleAlias;
+  }
 
-		GwtReflectionUtils.setStaticField(UIObject.class, "debugIdImpl",
-				debugIdImplToUse);
-	}
+  private void setupDebugIdImpl(GwtModuleRunner gwtModuleRunner) {
+    DebugIdImpl debugIdImplToUse = gwtModuleRunner.ensureDebugId()
+        ? enabledInstance : disabledInstance;
+
+    GwtReflectionUtils.setStaticField(UIObject.class, "debugIdImpl",
+        debugIdImplToUse);
+  }
 
 }

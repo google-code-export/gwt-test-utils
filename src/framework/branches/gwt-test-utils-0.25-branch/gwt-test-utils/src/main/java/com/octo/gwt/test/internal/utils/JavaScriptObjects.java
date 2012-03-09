@@ -63,9 +63,14 @@ import com.google.gwt.dom.client.Text;
 import com.google.gwt.dom.client.TextAreaElement;
 import com.google.gwt.dom.client.TitleElement;
 import com.google.gwt.dom.client.UListElement;
+import com.google.gwt.user.client.EventListener;
+import com.google.gwt.user.client.ui.UIObject;
+import com.octo.gwt.test.internal.WidgetChangeHandlerManager;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 public class JavaScriptObjects {
+
+  public static final String ID = "id";
 
   public static final String PROPERTIES = "JSO_PROPERTIES";
 
@@ -263,6 +268,14 @@ public class JavaScriptObjects {
     return text;
   }
 
+  public static void onSetId(JavaScriptObject jso, String value) {
+    EventListener listener = getObject(jso, JsoProperties.ELEM_EVENTLISTENER);
+
+    if (UIObject.class.isInstance(listener)) {
+      WidgetChangeHandlerManager.get().fireSetIdEvent((UIObject) listener, value);
+    }
+  }
+
   public static void remove(JavaScriptObject jso, String propName) {
     getJsoProperties(jso, propName).remove(propName);
   }
@@ -289,6 +302,10 @@ public class JavaScriptObjects {
 
   public static void setProperty(JavaScriptObject jso, String propName,
       Object value) {
+
+    if (ID.equals(propName)) {
+      onSetId(jso, value.toString());
+    }
     getJsoProperties(jso, propName).put(propName, value);
   }
 

@@ -159,6 +159,8 @@ class DOMImplPatcher {
 
   @PatchMethod
   static int eventGetCharCode(Object domImpl, NativeEvent evt) {
+    // FIXME : wrong : GetCharCode = ASCII, evt.getKeyCode =
+    // http://www.cambiaresearch.com/articles/15/javascript-char-codes-key-codes
     return evt.getKeyCode();
   }
 

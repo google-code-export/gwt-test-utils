@@ -117,6 +117,18 @@ public class SerializableModifier implements JavaClassModifier {
     return result;
   }
 
+  private final CtClass charSequenceCtClass;
+  private final CtClass externalizableCtClass;
+  private final CtClass isSerializableCtClass;
+  private final CtClass serializableCtClass;
+
+  public SerializableModifier() {
+    serializableCtClass = GwtClassPool.getCtClass(Serializable.class);
+    isSerializableCtClass = GwtClassPool.getCtClass(IsSerializable.class);
+    externalizableCtClass = GwtClassPool.getCtClass(Externalizable.class);
+    charSequenceCtClass = GwtClassPool.getCtClass(CharSequence.class);
+  }
+
   public void modify(CtClass classToModify) throws Exception {
 
     if (classToModify.isInterface() || classToModify.isPrimitive()
@@ -126,22 +138,18 @@ public class SerializableModifier implements JavaClassModifier {
       return;
     }
 
-    CtClass charSequenceCtClass = GwtClassPool.getCtClass(CharSequence.class);
     if (classToModify.subtypeOf(charSequenceCtClass)) {
       return;
     }
 
     // Externalizable object which is not serialized by GWT RPC
-    CtClass externalizableCtClass = GwtClassPool.getCtClass(Externalizable.class);
     if (classToModify.subtypeOf(externalizableCtClass)) {
       return;
     }
 
-    CtClass serializableCtClass = GwtClassPool.getCtClass(Serializable.class);
-    CtClass isSerializableCtClass = GwtClassPool.getCtClass(IsSerializable.class);
-
     // substitute isSerializable with Serializable
-    if (classToModify.subtypeOf(isSerializableCtClass)) {
+    if (classToModify.subtypeOf(isSerializableCtClass)
+        && !classToModify.subtypeOf(serializableCtClass)) {
       CtClass[] interfaces = classToModify.getInterfaces();
       for (int i = 0; i < interfaces.length; i++) {
         if (isSerializableCtClass.equals(interfaces[i])) {

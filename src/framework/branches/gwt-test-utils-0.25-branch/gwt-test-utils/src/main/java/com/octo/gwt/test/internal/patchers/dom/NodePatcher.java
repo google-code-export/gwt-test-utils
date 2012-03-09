@@ -220,27 +220,25 @@ class NodePatcher {
   static Node removeChild(Node oldParent, Node oldChild) {
     List<Node> list = getChildNodeList(oldParent);
 
-    if (list.remove(oldChild)) {
-      return oldChild;
-    } else {
-      return null;
-    }
+    return (list.remove(oldChild)) ? oldChild : null;
   }
 
   @PatchMethod
   static Node replaceChild(Node parent, Node newChild, Node oldChild) {
-    if (oldChild != null) {
-      List<Node> list = getChildNodeList(parent);
 
-      for (int i = 0; i < list.size(); i++) {
-        if (list.get(i).equals(oldChild)) {
-          list.add(i, newChild);
-          list.remove(oldChild);
-          return oldChild;
-        }
+    if (oldChild == null) {
+      return null;
+    }
+    List<Node> list = getChildNodeList(parent);
+
+    for (int i = 0; i < list.size(); i++) {
+      if (list.get(i).equals(oldChild)) {
+        list.add(i, newChild);
+        list.remove(oldChild);
+        return oldChild;
       }
     }
-    // if oldChild is null or was not found
+
     return null;
   }
 

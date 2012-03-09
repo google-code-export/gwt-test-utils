@@ -56,6 +56,10 @@ public class GwtConfig implements AfterTestCallback {
     uiConstructorsMap.clear();
   }
 
+  public boolean canDispatchDomEventOnDetachedWidget() {
+    return gwtModuleRunner.canDispatchDomEventOnDetachedWidget();
+  }
+
   public BrowserErrorHandler getBrowserErrorHandler() {
     return gwtModuleRunner.getBrowserErrorHandler();
   }

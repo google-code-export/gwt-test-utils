@@ -15,8 +15,6 @@ import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
-import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.shared.UmbrellaException;
 import com.google.gwt.user.cellview.client.AbstractHasData;
 import com.google.gwt.user.client.Event;
@@ -37,6 +35,7 @@ import com.octo.gwt.test.internal.AfterTestCallback;
 import com.octo.gwt.test.internal.GwtConfig;
 import com.octo.gwt.test.internal.utils.JavaScriptObjects;
 import com.octo.gwt.test.internal.utils.JsoProperties;
+import com.octo.gwt.test.internal.utils.RadioButtonManager;
 import com.octo.gwt.test.utils.WidgetUtils;
 
 /**
@@ -127,7 +126,8 @@ public class Browser {
         hasData.getSelectionModel().setSelected(item,
             !hasData.getSelectionModel().isSelected(item));
 
-        // run finally scheduled commands because some could have been scheduled
+        // run finally scheduled commands because some could have been
+        // scheduled
         // when the event was dispatched.
         FinallyCommandTrigger.triggerCommands();
 
@@ -178,35 +178,36 @@ public class Browser {
   /**
    * Simulates a click event on a particular MenuItem of a MenuBar.
    * 
-   * @param parent The targeted menu bar.
+   * @param menuBar The targeted menu bar.
    * @param clickedItem The widget to click inside the menu bar.
    */
-  public static void click(MenuBar parent, MenuItem clickedItem) {
-    clickInternal(parent, clickedItem);
+  public static void click(MenuBar menuBar, MenuItem clickedItem) {
+    clickInternal(menuBar, clickedItem);
   }
 
   /**
    * Simulates a click event on the item of a SuggestBox with the given index.
    * 
-   * @param parent The targeted suggest box.
+   * @param suggestBox The targeted suggest box.
    * @param clickedItemIndex The index of the child widget to click inside the
    *          suggest box.
    */
-  public static void click(SuggestBox parent, int clickedItemIndex) {
-    click(parent, WidgetUtils.getMenuItems(parent).get(clickedItemIndex));
+  public static void click(SuggestBox suggestBox, int clickedItemIndex) {
+    click(suggestBox,
+        WidgetUtils.getMenuItems(suggestBox).get(clickedItemIndex));
   }
 
   /**
    * Simulates a click event on a particular MenuItem of a SuggestBox.
    * 
-   * @param parent The targeted suggest box.
+   * @param suggestBox The targeted suggest box.
    * @param clickedItem The child widget to click inside the suggest box.
    * 
    */
-  public static void click(SuggestBox parent, MenuItem clickedItem) {
+  public static void click(SuggestBox suggestBox, MenuItem clickedItem) {
     Event onClick = EventBuilder.create(Event.ONCLICK).setTarget(clickedItem).build();
 
-    if (canApplyEvent(onClick)) {
+    if (canApplyEvent(suggestBox, onClick)) {
       clickedItem.getCommand().execute();
     }
   }
@@ -343,8 +344,8 @@ public class Browser {
    * {@link KeyPressEvent} and {@link KeyUpEvent} are triggered. They can be
    * prevented with normal effect.</li>
    * <li>After typing, a {@link BlurEvent} is triggered.</li>
-   * <li>Than, if at least one on the KeyDown or KeyPress events has not been
-   * prevented, a {@link ChangeEvent} is triggered.</li>
+   * <li>Than, if at least one of the KeyDown or KeyPress events has not been
+   * prevented, a {@link ChangeEvent} would be triggered.</li>
    * </ul>
    * </p>
    * 
@@ -360,9 +361,41 @@ public class Browser {
    * @param value The value to fill. Cannot be null or empty.
    * @throws IllegalArgumentException if the value to fill is null or empty.
    */
-  @SuppressWarnings({"rawtypes", "unchecked"})
   public static void fillText(HasText hasTextWidget, boolean check, String value)
       throws IllegalArgumentException {
+    fillText(hasTextWidget, check, value, true);
+  }
+
+  /**
+   * <p>
+   * Fill a widget which implements HasText interface.
+   * </p>
+   * <p>
+   * <ul>
+   * <li>For each character in the value to fill, {@link KeyDownEvent},
+   * {@link KeyPressEvent} and {@link KeyUpEvent} are triggered. They can be
+   * prevented with normal effect.</li>
+   * </ul>
+   * </p>
+   * 
+   * <p>
+   * <strong>Do not use this method to remove text by calling it with an empty
+   * string. Use {@link Browser#emptyText(HasText, boolean)} instead.</strong>
+   * </p>
+   * 
+   * @param hasTextWidget The widget to fill. If this implementation actually
+   *          isn't a {@link Widget} instance, nothing would be done.
+   * @param check Indicate if the method should check if the hasText Widget to
+   *          fill is attached, visible and enabled before applying any event.
+   * @param value The value to fill. Cannot be null or empty.
+   * @param blur Specify if a blur event must be triggered. If
+   *          <strong>true</strong> and at least one on the KeyDown or KeyPress
+   *          events has not been prevented, a {@link ChangeEvent} would be
+   *          triggered too.
+   * @throws IllegalArgumentException if the value to fill is null or empty.
+   */
+  public static void fillText(HasText hasTextWidget, boolean check,
+      String value, boolean blur) throws IllegalArgumentException {
     if (value == null || "".equals(value)) {
       throw new IllegalArgumentException(
           "Cannot fill a null or empty text. If you intent to remove some text, use '"
@@ -401,19 +434,17 @@ public class Browser {
       Event keyUpEvent = EventBuilder.create(Event.ONKEYUP).setKeyCode(keyCode).build();
       dispatchEventInternal((Widget) hasTextWidget, check, keyUpEvent);
 
-      if (changed && HasValueChangeHandlers.class.isInstance(hasTextWidget)) {
-        ValueChangeEvent.fire((HasValueChangeHandlers) hasTextWidget,
-            value.substring(0, i + 1));
-      }
     }
 
-    // no need to check event anymore
-    dispatchEventInternal((Widget) hasTextWidget, false,
-        EventBuilder.create(Event.ONBLUR).build());
-
-    if (changed) {
+    if (blur) {
+      // no need to check event anymore
       dispatchEventInternal((Widget) hasTextWidget, false,
-          EventBuilder.create(Event.ONCHANGE).build());
+          EventBuilder.create(Event.ONBLUR).build());
+
+      if (changed) {
+        dispatchEventInternal((Widget) hasTextWidget, false,
+            EventBuilder.create(Event.ONCHANGE).build());
+      }
     }
   }
 
@@ -428,7 +459,7 @@ public class Browser {
    * prevented with normal effect.</li>
    * <li>After typing, a {@link BlurEvent} is triggered.</li>
    * <li>Than, if at least one on the KeyDown or KeyPress events has not been
-   * prevented, a {@link ChangeEvent} is triggered.</li>
+   * prevented, a {@link ChangeEvent} would be triggered.</li>
    * </ul>
    * </p>
    * 
@@ -444,7 +475,38 @@ public class Browser {
    */
   public static void fillText(HasText hasTextWidget, String value)
       throws IllegalArgumentException {
-    fillText(hasTextWidget, true, value);
+    fillText(hasTextWidget, true, value, true);
+  }
+
+  /**
+   * <p>
+   * Fill a widget which implements HasText interface.
+   * </p>
+   * <p>
+   * <ul>
+   * <li>For each character in the value to fill, {@link KeyDownEvent},
+   * {@link KeyPressEvent} and {@link KeyUpEvent} are triggered. They can be
+   * prevented with normal effect.</li>
+   * </ul>
+   * </p>
+   * 
+   * <p>
+   * <strong>Do not use this method to remove text by calling it with an empty
+   * string. Use {@link Browser#emptyText(HasText, boolean)} instead.</strong>
+   * </p>
+   * 
+   * @param hasTextWidget The widget to fill. If this implementation actually
+   *          isn't a {@link Widget} instance, nothing would be done.
+   * @param value The value to fill. Cannot be null or empty.
+   * @param blur Specify if a blur event must be triggered. If
+   *          <strong>true</strong> and at least one on the KeyDown or KeyPress
+   *          events has not been prevented, a {@link ChangeEvent} would be
+   *          triggered too.
+   * @throws IllegalArgumentException if the value to fill is null or empty.
+   */
+  public static void fillText(HasText hasTextWidget, String value, boolean blur)
+      throws IllegalArgumentException {
+    fillText(hasTextWidget, true, value, blur);
   }
 
   /**
@@ -549,6 +611,64 @@ public class Browser {
     dispatchEvent(target, EventBuilder.create(Event.ONMOUSEWHEEL).build());
   }
 
+  public static void pressKey(Widget widget, int keyCode) {
+    if (widget == null) {
+      return;
+    }
+    // trigger keyDown and keyPress
+    Event keyDownEvent = EventBuilder.create(Event.ONKEYDOWN).setKeyCode(
+        keyCode).build();
+    Event keyPressEvent = EventBuilder.create(Event.ONKEYPRESS).setKeyCode(
+        keyCode).build();
+    dispatchEventInternal(widget, true, keyDownEvent, keyPressEvent);
+
+    // check if one on the events has been prevented
+    boolean keyDownEventPreventDefault = JavaScriptObjects.getBoolean(
+        keyDownEvent, JsoProperties.EVENT_PREVENTDEFAULT);
+    boolean keyPressEventPreventDefault = JavaScriptObjects.getBoolean(
+        keyPressEvent, JsoProperties.EVENT_PREVENTDEFAULT);
+
+    if (!keyDownEventPreventDefault && !keyPressEventPreventDefault) {
+
+      if (widget instanceof HasText) {
+        HasText hasTextWidget = (HasText) widget;
+        String oldText;
+        switch (keyCode) {
+          case KeyCodes.KEY_ALT:
+          case KeyCodes.KEY_CTRL:
+          case KeyCodes.KEY_DELETE:
+          case KeyCodes.KEY_DOWN:
+          case KeyCodes.KEY_END:
+          case KeyCodes.KEY_ENTER:
+          case KeyCodes.KEY_ESCAPE:
+          case KeyCodes.KEY_HOME:
+          case KeyCodes.KEY_LEFT:
+          case KeyCodes.KEY_PAGEDOWN:
+          case KeyCodes.KEY_PAGEUP:
+          case KeyCodes.KEY_RIGHT:
+          case KeyCodes.KEY_SHIFT:
+          case KeyCodes.KEY_UP:
+            // nothing to do
+            break;
+          case KeyCodes.KEY_TAB:
+            blur(widget);
+            break;
+          case KeyCodes.KEY_BACKSPACE:
+            oldText = hasTextWidget.getText();
+            hasTextWidget.setText(oldText.substring(0, oldText.length() - 1));
+            break;
+          default:
+            oldText = hasTextWidget.getText();
+            hasTextWidget.setText(oldText + (char) keyCode);
+        }
+      }
+
+      // trigger keyUp
+      Event keyUpEvent = EventBuilder.create(Event.ONKEYUP).setKeyCode(keyCode).build();
+      dispatchEventInternal(widget, true, keyUpEvent);
+    }
+  }
+
   /**
    * <p>
    * Remove a fixed number of character from the text within a widget which
@@ -624,10 +744,20 @@ public class Browser {
     BROWSER_PROPERTIES.properties.put(name, value);
   }
 
-  private static boolean canApplyEvent(Event event) {
+  private static boolean canApplyEvent(Widget target, Event event) {
+
+    if (!target.isAttached()
+        && !GwtConfig.get().canDispatchDomEventOnDetachedWidget()) {
+      GwtConfig.get().getBrowserErrorHandler().onError(
+          "Cannot dispatch '" + event.getType()
+              + "' event : the targeted widget has to be attached to the DOM");
+      return false;
+    }
+
     Element targetElement = event.getEventTarget().cast();
 
-    if (!isVisible(targetElement)) {
+    if (!WidgetUtils.isWidgetVisible(target)
+        && isVisible(target, targetElement)) {
       GwtConfig.get().getBrowserErrorHandler().onError(
           "Cannot dispatch '"
               + event.getType()
@@ -657,6 +787,21 @@ public class Browser {
     dispatchEvent(parent, onMouseOver, onMouseDown, onMouseUp, onClick);
   }
 
+  private static void clickOnCheckBox(CheckBox checkBox) {
+    boolean newValue = RadioButton.class.isInstance(checkBox) ? true
+        : !checkBox.getValue();
+
+    // change value without triggering ValueChangeEvent : the trigger is done in
+    // CheckBox ensureDomEventHandlers()
+    WidgetUtils.setCheckBoxValueSilent(checkBox, newValue);
+
+    if (RadioButton.class.isInstance(checkBox)) {
+      // change every other radiobutton and trigger ValueChangeEvent
+      RadioButtonManager.onRadioGroupChanged((RadioButton) checkBox, newValue,
+          true);
+    }
+  }
+
   private static void dispatchEventInternal(Widget target, boolean check,
       Event... events) {
 
@@ -670,7 +815,7 @@ public class Browser {
 
     prepareEvents(target, events);
 
-    boolean dipsatch = check ? canApplyEvent(events[0]) : true;
+    boolean dipsatch = check ? canApplyEvent(target, events[0]) : true;
 
     if (dipsatch) {
       for (Event event : events) {
@@ -685,14 +830,10 @@ public class Browser {
 
   private static void dispatchEventInternal(Widget target, Event event) {
     try {
-      // special case of click on CheckBox
+      // special case of click on CheckBox : set the internal inputElement value
       if (CheckBox.class.isInstance(target)
           && event.getTypeInt() == Event.ONCLICK) {
-        CheckBox checkBox = (CheckBox) target;
-        boolean newValue = RadioButton.class.isInstance(target) ? true
-            : !checkBox.getValue();
-        checkBox.setValue(newValue);
-        ValueChangeEvent.fire(checkBox, newValue);
+        clickOnCheckBox((CheckBox) target);
       }
 
       // set the related target
@@ -744,7 +885,8 @@ public class Browser {
       // cancel event handling
       return;
     } else if (widget.getParent() instanceof Composite) {
-      // special case for composite, which trigger first its own handler, than
+      // special case for composite, which trigger first its own handler,
+      // than
       // the wrapped widget's handlers
       widget = widget.getParent();
     }
@@ -767,13 +909,16 @@ public class Browser {
     return JavaScriptObjects.getBoolean(event, "EVENT_isStopped");
   }
 
-  private static boolean isVisible(Element element) {
+  private static boolean isVisible(Widget visibleRoot, Element element) {
     if (element == null) {
+      return false;
+    } else if (element == visibleRoot.getElement()) {
       return true;
-    }
+    } else {
 
-    return UIObject.isVisible(element) ? isVisible(element.getParentElement())
-        : false;
+      return UIObject.isVisible(element) ? isVisible(visibleRoot,
+          element.getParentElement()) : false;
+    }
   }
 
   private static void prepareEvents(Widget target, Event... events) {

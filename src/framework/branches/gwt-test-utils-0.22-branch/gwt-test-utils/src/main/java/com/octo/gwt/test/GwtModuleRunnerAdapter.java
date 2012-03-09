@@ -30,6 +30,7 @@ public abstract class GwtModuleRunnerAdapter implements GwtModuleRunner,
   private static final String MAVEN_DEFAULT_RES_DIR = "src/main/resources/";
   private static final String MAVEN_DEFAULT_WEB_DIR = "src/main/webapp/";
 
+  private boolean canDispatchDomEventOnDetachedWidget;
   private Locale locale;
   private GwtLogHandler logHandler;
   private ServletConfig servletConfig;
@@ -84,6 +85,16 @@ public abstract class GwtModuleRunnerAdapter implements GwtModuleRunner,
     this.locale = null;
     this.servletConfig = null;
     this.windowOperationsHandler = null;
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * com.octo.gwt.test.GwtModuleRunner#canDispatchDomEventOnDetachedWidget()
+   */
+  public boolean canDispatchDomEventOnDetachedWidget() {
+    return canDispatchDomEventOnDetachedWidget;
   }
 
   /*
@@ -221,6 +232,11 @@ public abstract class GwtModuleRunnerAdapter implements GwtModuleRunner,
         + ".getHostPagePath() method to specify it.");
 
     return null;
+  }
+
+  protected void setCanDispatchDomEventOnDetachedWidget(
+      boolean canDispatchDomEventOnDetachedWidget) {
+    this.canDispatchDomEventOnDetachedWidget = canDispatchDomEventOnDetachedWidget;
   }
 
   protected void setLocale(Locale locale) {

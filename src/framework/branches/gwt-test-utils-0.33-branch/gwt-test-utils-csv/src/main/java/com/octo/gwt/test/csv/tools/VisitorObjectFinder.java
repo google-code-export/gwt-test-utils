@@ -17,133 +17,139 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 import com.octo.gwt.test.csv.runner.CsvRunner;
+import com.octo.gwt.test.csv.runner.Node;
+import com.octo.gwt.test.internal.WidgetChangeHandler;
+import com.octo.gwt.test.internal.WidgetChangeHandlerManager;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
-public class VisitorObjectFinder implements ObjectFinder {
+class VisitorObjectFinder implements ObjectFinder, WidgetChangeHandler {
 
-  public static class WidgetRepository {
+	private final Map<Object, WidgetRepository> repositories = new HashMap<Object, WidgetRepository>();
 
-    private Map<String, Object> map = new HashMap<String, Object>();
+	private final WidgetVisitor visitor;
 
-    public Object addAlias(String alias, Object widget) {
-      return map.put(alias, widget);
-    }
+	public VisitorObjectFinder(WidgetVisitor visitor) {
+		this.visitor = visitor;
 
-    public void clear() {
-      map.clear();
-    }
+		WidgetChangeHandlerManager.get().registerWidgetChangedHandler(this);
+	}
 
-    public Object getAlias(String alias) {
-      return map.get(alias);
-    }
+	public boolean accept(String... params) {
+		return params.length == 1 && !params[0].trim().startsWith("/");
+	}
 
-    public Object removeAlias(String alias) {
-      return map.remove(alias);
-    }
-  }
-  private Map<Object, WidgetRepository> repositories = new HashMap<Object, WidgetRepository>();
+	public void clear() {
+		repositories.clear();
+	}
 
-  private WidgetVisitor visitor;
+	public Object find(CsvRunner csvRunner, String... params) {
+		Object result;
+		Collection<RootPanel> roots = getRootPanels();
 
-  public VisitorObjectFinder(WidgetVisitor visitor) {
-    this.visitor = visitor;
-  }
+		for (Panel root : roots) {
+			WidgetRepository repository = repositories.get(root);
 
-  public boolean accept(String... params) {
-    return params.length == 1 && !params[0].trim().startsWith("/");
-  }
+			if (repository == null) {
+				repository = new WidgetRepository();
+				inspectObject(root, repository, new HashSet<Object>());
+				repositories.put(root, repository);
+				result = getObject(csvRunner, repository, params[0]);
+			} else {
+				result = getObject(csvRunner, repository, params[0]);
+			}
 
-  public Object find(CsvRunner csvRunner, String... params) {
-    Object result;
-    Collection<RootPanel> roots = getRootPanels();
+			if (result != null) {
+				return result;
+			}
+		}
 
-    for (Panel root : roots) {
-      WidgetRepository repository = repositories.get(root);
+		return null;
+	}
 
-      if (repository == null) {
-        repository = new WidgetRepository();
-        inspectObject(root, repository, new HashSet<Object>());
-        repositories.put(root, repository);
-        result = repository.getAlias(params[0]);
-      } else {
-        result = repository.getAlias(params[0]);
-        if (result == null) {
-          // try another time since code could have instanciate new widget after
-          // the last inspection
-          repository.clear();
-          inspectObject(root, repository, new HashSet<Object>());
-          result = repository.getAlias(params[0]);
-        }
-      }
+	public boolean onAttach(Widget widget) {
+		repositories.clear();
+		return false;
+	}
 
-      if (result != null) {
-        return result;
-      }
-    }
+	public boolean onDetach(Widget widget) {
+		repositories.clear();
+		return false;
+	}
 
-    return null;
+	public boolean onSetId(UIObject o, String newId) {
+		repositories.clear();
+		return false;
+	}
 
-  }
+	protected Collection<RootPanel> getRootPanels() {
+		// initialize the default rootPanel if not initialized yet
+		RootPanel.get();
+		Map<String, RootPanel> rootPanels = GwtReflectionUtils
+				.getStaticFieldValue(RootPanel.class, "rootPanels");
 
-  private void inspectObject(Object inspected, WidgetRepository repository,
-      Set<Object> alreadyInspectedObjects) {
-    if (inspected == null || alreadyInspectedObjects.contains(inspected)) {
-      return;
-    } else {
-      alreadyInspectedObjects.add(inspected);
-    }
+		return rootPanels.values();
+	}
 
-    if (UIObject.class.isInstance(inspected)
-        && !((UIObject) inspected).isVisible()) {
-      if (Widget.class.isInstance(inspected)) {
-        // add the not visible widget but don't inspect its child
-        Widget widget = (Widget) inspected;
-        visitor.visitWidget(widget, repository);
-      }
+	private Object getObject(CsvRunner csvRunner, WidgetRepository repository,
+			String alias) {
+		Object result = repository.getAlias(alias);
 
-      return;
-    }
+		if (result != null) {
+			return result;
+		}
 
-    if (HasWidgets.class.isInstance(inspected)) {
-      Iterator<Widget> it = ((HasWidgets) inspected).iterator();
-      while (it.hasNext()) {
-        inspectObject(it.next(), repository, alreadyInspectedObjects);
-      }
-    } else if (Composite.class.isInstance(inspected)) {
-      Widget widget = GwtReflectionUtils.callPrivateMethod(inspected,
-          "getWidget");
-      inspectObject(widget, repository, alreadyInspectedObjects);
-    }
+		int flag = alias.indexOf("/");
+		if (flag == -1) {
+			return null;
+		}
 
-    if (HasHTML.class.isInstance(inspected)) {
-      HasHTML hasHTMLWidget = (HasHTML) inspected;
-      visitor.visitHasHTML(hasHTMLWidget, repository);
-    }
+		String introspectionPath = null;
+		introspectionPath = alias.substring(flag);
+		alias = alias.substring(0, flag);
 
-    if (HasText.class.isInstance(inspected)) {
-      HasText hasTextWidget = (HasText) inspected;
-      visitor.visitHasText(hasTextWidget, repository);
-    }
+		result = repository.getAlias(alias);
 
-    if (HasName.class.isInstance(inspected)) {
-      HasName hasNameWidget = (HasName) inspected;
-      visitor.visitHasName(hasNameWidget, repository);
-    }
+		if (result == null) {
+			return null;
+		}
 
-    if (Widget.class.isInstance(inspected)) {
-      // add the not visible widget but don't inspect its child
-      Widget widget = (Widget) inspected;
-      visitor.visitWidget(widget, repository);
-    }
-  }
+		return csvRunner.getNodeValue(result, Node.parse(introspectionPath));
+	}
 
-  protected Collection<RootPanel> getRootPanels() {
-    // initialize the default rootPanel if not initialized yet
-    RootPanel.get();
-    Map<String, RootPanel> rootPanels = GwtReflectionUtils.getStaticFieldValue(
-        RootPanel.class, "rootPanels");
+	private void inspectObject(Object inspected, WidgetRepository repository,
+			Set<Object> alreadyInspectedObjects) {
+		if (inspected == null || alreadyInspectedObjects.contains(inspected)) {
+			return;
+		} else {
+			alreadyInspectedObjects.add(inspected);
+		}
 
-    return rootPanels.values();
-  }
+		if (HasWidgets.class.isInstance(inspected)) {
+			Iterator<Widget> it = ((HasWidgets) inspected).iterator();
+			while (it.hasNext()) {
+				inspectObject(it.next(), repository, alreadyInspectedObjects);
+			}
+		} else if (Composite.class.isInstance(inspected)) {
+			Widget widget = GwtReflectionUtils.callPrivateMethod(inspected,
+					"getWidget");
+			inspectObject(widget, repository, alreadyInspectedObjects);
+		}
+
+		if (HasHTML.class.isInstance(inspected)) {
+			visitor.visitHasHTML((HasHTML) inspected, repository);
+		}
+
+		if (HasText.class.isInstance(inspected)) {
+			visitor.visitHasText((HasText) inspected, repository);
+		}
+
+		if (HasName.class.isInstance(inspected)) {
+			visitor.visitHasName((HasName) inspected, repository);
+		}
+
+		if (Widget.class.isInstance(inspected)) {
+			visitor.visitWidget((Widget) inspected, repository);
+		}
+	}
 
 }

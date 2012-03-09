@@ -1,5 +1,8 @@
 package com.octo.gwt.test.csv.runner;
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -19,6 +22,7 @@ import com.octo.gwt.test.csv.CsvMethod;
 import com.octo.gwt.test.csv.GwtCsvTest;
 import com.octo.gwt.test.csv.GwtTestCsvException;
 import com.octo.gwt.test.csv.tools.ObjectFinder;
+import com.octo.gwt.test.csv.tools.ObjectFinderManager;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 public class CsvRunner {
@@ -37,22 +41,6 @@ public class CsvRunner {
     objectFinders.add(objectFinder);
   }
 
-  private boolean checkCondition(Object n, Node before, String after) {
-    Object result = getNodeValue(n, before);
-    String s = result == null ? null : result.toString();
-    return after.equals(s);
-  }
-
-  private CsvRunnerException createCsvExecutionException(Throwable cause) {
-    if (cause instanceof CsvRunnerException) {
-      return (CsvRunnerException) cause;
-    } else if (AssertionError.class.isInstance(cause)) {
-      cause = cause.getCause();
-    }
-
-    return new CsvRunnerException(this, cause);
-  }
-
   public void executeLine(String methodName, List<String> args, Object fixture)
       throws CsvRunnerException {
     if (methodName.indexOf("**") != 0) {
@@ -61,7 +49,7 @@ public class CsvRunner {
       transformArgs(filterArgs);
       Method m = getCsvMethod(fixture.getClass(), methodName);
       if (m == null) {
-        Assert.fail(getAssertionErrorMessagePrefix() + "@"
+        fail(getAssertionErrorMessagePrefix() + "@"
             + CsvMethod.class.getSimpleName() + " ' " + methodName
             + " ' not found in object " + fixture);
       }
@@ -74,7 +62,7 @@ public class CsvRunner {
           if (clazz.isArray()) {
             argList.add(new String[]{});
           } else {
-            Assert.fail(getAssertionErrorMessagePrefix() + "Too few args for "
+            fail(getAssertionErrorMessagePrefix() + "Too few args for "
                 + methodName);
           }
         } else {
@@ -88,7 +76,7 @@ public class CsvRunner {
         }
       }
       if (filterArgs.size() != 0) {
-        Assert.fail(getAssertionErrorMessagePrefix() + "Too many args for "
+        fail(getAssertionErrorMessagePrefix() + "Too many args for "
             + methodName);
       }
       try {
@@ -105,12 +93,12 @@ public class CsvRunner {
           throw createCsvExecutionException(e.getCause());
         }
         logger.error(getAssertionErrorMessagePrefix() + "Execution error", e);
-        Assert.fail(getAssertionErrorMessagePrefix() + "Error invoking "
-            + methodName + " in fixture : " + e.toString());
+        fail(getAssertionErrorMessagePrefix() + "Error invoking " + methodName
+            + " in fixture : " + e.toString());
       } catch (Exception e) {
         logger.error(getAssertionErrorMessagePrefix() + "Execution error", e);
-        Assert.fail(getAssertionErrorMessagePrefix() + "Error invoking "
-            + methodName + " in fixture : " + e.toString());
+        fail(getAssertionErrorMessagePrefix() + "Error invoking " + methodName
+            + " in fixture : " + e.toString());
       }
     } else {
       logger.debug(getProcessingMessagePrefix() + "commented line : "
@@ -132,148 +120,14 @@ public class CsvRunner {
     }
   }
 
-  private Object findInIterable(Iterable<Object> list, Node before,
-      String after, Object current, Method m) {
-    Object found = null;
-    for (Object n : list) {
-      if (checkCondition(n, before, after)) {
-        if (found != null) {
-          Assert.fail("Not unique object with condition " + before + "="
-              + after);
-        }
-        found = n;
-      }
-    }
-    Assert.assertNotNull(getAssertionErrorMessagePrefix() + "Not found "
-        + before + "=" + after + " in " + current.getClass().getCanonicalName()
-        + (m != null ? " method " + m.getName() : ""), found);
-    return found;
-  }
-
-  private Object findInList(final Object current, final Method m, Node mapEq,
-      String map) throws IllegalArgumentException, IllegalAccessException,
-      InvocationTargetException {
-    if (m.getParameterTypes().length != 1
-        && m.getParameterTypes()[0] != int.class) {
-      Assert.fail("Unable to navigate " + current.getClass().getCanonicalName()
-          + " with method " + m.getName());
-    }
-    Method countM = GwtReflectionUtils.getMethod(current.getClass(),
-        m.getName() + "Count");
-    if (countM == null) {
-      Assert.fail("Count method not found in "
-          + current.getClass().getCanonicalName() + " method " + m.getName());
-    }
-    if (countM.getParameterTypes().length > 0) {
-      Assert.fail("Too many parameter in count method "
-          + current.getClass().getCanonicalName() + " method "
-          + countM.getName());
-    }
-
-    logger.debug("Searching in list, field " + mapEq + ", value " + map);
-    final int count = (Integer) countM.invoke(current);
-    return findInIterable(new Iterable<Object>() {
-
-      public Iterator<Object> iterator() {
-        return new Iterator<Object>() {
-
-          int counter = 0;
-
-          public boolean hasNext() {
-            return counter < count;
-          }
-
-          public Object next() {
-            try {
-              return m.invoke(current, counter++);
-            } catch (Exception e) {
-              throw new GwtTestCsvException("Iterator exception", e);
-            }
-          }
-
-          public void remove() {
-            throw new UnsupportedOperationException("Remove not implemented");
-          }
-
-        };
-      }
-
-    }, mapEq, map, current, m);
-  }
-
-  private Object findObject(String... params) {
-    int i = 0;
-    Object result = null;
-    boolean accepted = false;
-
-    while (i < objectFinders.size() && !accepted) {
-      ObjectFinder objectFinder = objectFinders.get(i++);
-      accepted = objectFinder.accept(params);
-      if (accepted) {
-        result = objectFinder.find(this, params);
-      }
-    }
-
-    return result;
-  }
-
   public String getAssertionErrorMessagePrefix() {
     return "Error line " + (lineNumber + 1)
         + (extendedLineInfo == null ? "" : " [" + extendedLineInfo + "]")
         + ": ";
   }
 
-  private Method getCsvMethod(Class<?> clazz, String methodName) {
-    Map<String, Method> classCsvMethods = csvMethodsCache.get(clazz);
-
-    if (classCsvMethods == null) {
-      classCsvMethods = new HashMap<String, Method>();
-      csvMethodsCache.put(clazz, classCsvMethods);
-
-      Map<Method, CsvMethod> csvMethods = GwtReflectionUtils.getAnnotatedMethod(
-          clazz, CsvMethod.class);
-      for (Map.Entry<Method, CsvMethod> entry : csvMethods.entrySet()) {
-        classCsvMethods.put(getMethodName(entry), entry.getKey());
-      }
-
-    }
-    Method res = classCsvMethods.get(methodName);
-    if (res != null) {
-      return res;
-    } else if (clazz == GwtCsvTest.class) {
-      return null;
-    } else {
-      Class<?> superClass = clazz.getSuperclass();
-      if (superClass != null) {
-        return getCsvMethod(clazz.getSuperclass(), methodName);
-      } else {
-        return null;
-      }
-    }
-  }
-
-  private Field getField(Object fixture, Class<?> clazz, String fieldName) {
-    for (Field f : clazz.getDeclaredFields()) {
-      if (f.getName().equalsIgnoreCase(fieldName)) {
-        GwtReflectionUtils.makeAccessible(f);
-        return f;
-      }
-    }
-    Class<?> superClazz = clazz.getSuperclass();
-    if (superClazz != null) {
-      return getField(fixture, superClazz, fieldName);
-    }
-    return null;
-  }
-
-  private String getMethodName(Entry<Method, CsvMethod> entry) {
-    String methodname = entry.getValue().methodName();
-
-    return (methodname.equals("")) ? entry.getKey().getName() : methodname;
-  }
-
   @SuppressWarnings("unchecked")
-  public Object getNodeValue(Object o, Node node) {
+  public <T> T getNodeValue(Object o, Node node) {
     Object current = o;
     Node currentNode = node;
     while (currentNode != null) {
@@ -309,7 +163,7 @@ public class CsvRunner {
           } catch (Exception e) {
             logger.error(getAssertionErrorMessagePrefix() + "Execution error",
                 e);
-            Assert.fail(getAssertionErrorMessagePrefix()
+            fail(getAssertionErrorMessagePrefix()
                 + "Unable to get method result on "
                 + o.getClass().getCanonicalName() + ", method " + m.getName()
                 + ", params " + currentNode.getParams());
@@ -325,7 +179,7 @@ public class CsvRunner {
           } catch (Exception e) {
             logger.error(getAssertionErrorMessagePrefix() + "Execution error",
                 e);
-            Assert.fail(getAssertionErrorMessagePrefix()
+            fail(getAssertionErrorMessagePrefix()
                 + "Unable to get field value on "
                 + o.getClass().getCanonicalName() + ", field " + f.getName()
                 + ", params " + node);
@@ -342,7 +196,7 @@ public class CsvRunner {
               current = findInIterable(list, currentNode.getMapEq(),
                   currentNode.getMap(), current, null);
             } else {
-              Assert.fail(getAssertionErrorMessagePrefix()
+              fail(getAssertionErrorMessagePrefix()
                   + "Not managed type for iteration "
                   + current.getClass().getCanonicalName());
             }
@@ -355,12 +209,12 @@ public class CsvRunner {
       currentNode = currentNode.getNext();
     }
 
-    return current;
+    return (T) current;
   }
 
   @SuppressWarnings("unchecked")
   public <T> T getObject(Class<T> clazz, boolean failOnError, String... params) {
-    Object o = findObject(params);
+    Object o = ObjectFinderManager.get().findObject(this, params);
     if (clazz.isInstance(o)) {
       return (T) o;
     }
@@ -388,6 +242,162 @@ public class CsvRunner {
         + ": ";
   }
 
+  public int runSheet(List<List<String>> sheet, Object fixture)
+      throws Exception {
+    assertNotNull("Fixture have to be not null", fixture);
+    boolean execute = false;
+    int lineExecuted = 0;
+    lineNumber = 0;
+    for (List<String> row : sheet) {
+      if (execute) {
+        executeRow(row, fixture);
+        lineExecuted++;
+      }
+      if (row != null && row.size() > 0 && "start".equals(row.get(0))) {
+        execute = true;
+      }
+      lineNumber++;
+    }
+    lineNumber = -1;
+    return lineExecuted;
+  }
+
+  public void setExtendedLineInfo(String extendedLineInfo) {
+    this.extendedLineInfo = extendedLineInfo;
+  }
+
+  private boolean checkCondition(Object n, Node before, String after) {
+    Object result = getNodeValue(n, before);
+    String s = result == null ? null : result.toString();
+    return after.equals(s);
+  }
+
+  private CsvRunnerException createCsvExecutionException(Throwable cause) {
+    if (cause instanceof CsvRunnerException) {
+      return (CsvRunnerException) cause;
+    } else if (AssertionError.class.isInstance(cause)) {
+      cause = cause.getCause();
+    }
+
+    return new CsvRunnerException(this, cause);
+  }
+
+  private Object findInIterable(Iterable<Object> list, Node before,
+      String after, Object current, Method m) {
+    Object found = null;
+    for (Object n : list) {
+      if (checkCondition(n, before, after)) {
+        if (found != null) {
+          fail("Not unique object with condition " + before + "=" + after);
+        }
+        found = n;
+      }
+    }
+    assertNotNull(getAssertionErrorMessagePrefix() + "Not found " + before
+        + "=" + after + " in " + current.getClass().getCanonicalName()
+        + (m != null ? " method " + m.getName() : ""), found);
+    return found;
+  }
+
+  private Object findInList(final Object current, final Method m, Node mapEq,
+      String map) throws IllegalArgumentException, IllegalAccessException,
+      InvocationTargetException {
+    if (m.getParameterTypes().length != 1
+        && m.getParameterTypes()[0] != int.class) {
+      fail("Unable to navigate " + current.getClass().getCanonicalName()
+          + " with method " + m.getName());
+    }
+    Method countM = GwtReflectionUtils.getMethod(current.getClass(),
+        m.getName() + "Count");
+    if (countM == null) {
+      fail("Count method not found in " + current.getClass().getCanonicalName()
+          + " method " + m.getName());
+    }
+    if (countM.getParameterTypes().length > 0) {
+      fail("Too many parameter in count method "
+          + current.getClass().getCanonicalName() + " method "
+          + countM.getName());
+    }
+
+    logger.debug("Searching in list, field " + mapEq + ", value " + map);
+    final int count = (Integer) countM.invoke(current);
+    return findInIterable(new Iterable<Object>() {
+
+      public Iterator<Object> iterator() {
+        return new Iterator<Object>() {
+
+          int counter = 0;
+
+          public boolean hasNext() {
+            return counter < count;
+          }
+
+          public Object next() {
+            try {
+              return m.invoke(current, counter++);
+            } catch (Exception e) {
+              throw new GwtTestCsvException("Iterator exception", e);
+            }
+          }
+
+          public void remove() {
+            throw new UnsupportedOperationException("Remove not implemented");
+          }
+
+        };
+      }
+
+    }, mapEq, map, current, m);
+  }
+
+  private Method getCsvMethod(Class<?> clazz, String methodName) {
+    Map<String, Method> classCsvMethods = csvMethodsCache.get(clazz);
+
+    if (classCsvMethods == null) {
+      classCsvMethods = new HashMap<String, Method>();
+      csvMethodsCache.put(clazz, classCsvMethods);
+
+      Map<Method, CsvMethod> csvMethods = GwtReflectionUtils.getAnnotatedMethod(
+          clazz, CsvMethod.class);
+      for (Map.Entry<Method, CsvMethod> entry : csvMethods.entrySet()) {
+        classCsvMethods.put(getMethodName(entry), entry.getKey());
+      }
+
+    }
+    Method res = classCsvMethods.get(methodName);
+    if (res != null) {
+      return res;
+    } else if (clazz == GwtCsvTest.class) {
+      return null;
+    } else {
+      Class<?> superClass = clazz.getSuperclass();
+      if (superClass != null)
+        return getCsvMethod(clazz.getSuperclass(), methodName);
+      else
+        return null;
+    }
+  }
+
+  private Field getField(Object fixture, Class<?> clazz, String fieldName) {
+    for (Field f : clazz.getDeclaredFields()) {
+      if (f.getName().equalsIgnoreCase(fieldName)) {
+        GwtReflectionUtils.makeAccessible(f);
+        return f;
+      }
+    }
+    Class<?> superClazz = clazz.getSuperclass();
+    if (superClazz != null) {
+      return getField(fixture, superClazz, fieldName);
+    }
+    return null;
+  }
+
+  private String getMethodName(Entry<Method, CsvMethod> entry) {
+    String methodname = entry.getValue().methodName();
+
+    return (methodname.equals("")) ? entry.getKey().getName() : methodname;
+  }
+
   private Object invoke(Object current, Method m, List<String> list)
       throws IllegalArgumentException, IllegalAccessException {
     logger.debug("Invoking " + m.getName() + " on "
@@ -410,7 +420,7 @@ public class CsvRunner {
           || m.getParameterTypes()[index] == int.class) {
         tab[index] = Integer.parseInt(list.get(index));
       } else {
-        Assert.fail(getAssertionErrorMessagePrefix() + "Not managed type "
+        fail(getAssertionErrorMessagePrefix() + "Not managed type "
             + m.getParameterTypes()[index]);
       }
     }
@@ -438,7 +448,7 @@ public class CsvRunner {
       List<?> l = (List<?>) current;
       current = l.get(Integer.parseInt(map));
     } else {
-      Assert.fail(getAssertionErrorMessagePrefix() + "Object not a map "
+      fail(getAssertionErrorMessagePrefix() + "Object not a map "
           + current.getClass().getCanonicalName() + " : " + map);
     }
     return current;
@@ -453,30 +463,6 @@ public class CsvRunner {
     }
     list.clear();
     list.addAll(newList);
-  }
-
-  public int runSheet(List<List<String>> sheet, Object fixture)
-      throws Exception {
-    Assert.assertNotNull("Fixture have to be not null", fixture);
-    boolean execute = false;
-    int lineExecuted = 0;
-    lineNumber = 0;
-    for (List<String> row : sheet) {
-      if (execute) {
-        executeRow(row, fixture);
-        lineExecuted++;
-      }
-      if (row != null && row.size() > 0 && "start".equals(row.get(0))) {
-        execute = true;
-      }
-      lineNumber++;
-    }
-    lineNumber = -1;
-    return lineExecuted;
-  }
-
-  public void setExtendedLineInfo(String extendedLineInfo) {
-    this.extendedLineInfo = extendedLineInfo;
   }
 
   private void transformArgs(List<String> list) {

@@ -42,71 +42,71 @@ import com.octo.gwt.test.internal.GwtConfig;
 @RunWith(GwtRunner.class)
 public abstract class GwtTest extends GwtModuleRunnerAdapter implements Test {
 
-	/**
-	 * Bind the GwtClassLoader to the current thread
-	 */
-	@BeforeClass
-	public static final void bindClassLoader() {
-		Thread.currentThread().setContextClassLoader(GwtClassLoader.get());
-	}
+  /**
+   * Bind the GwtClassLoader to the current thread
+   */
+  @BeforeClass
+  public static final void bindClassLoader() {
+    Thread.currentThread().setContextClassLoader(GwtClassLoader.get());
+  }
 
-	/**
-	 * Unbind the static classloader instance from the current thread by binding
-	 * the system classloader instead.
-	 */
-	@AfterClass
-	public static final void unbindClassLoader() {
-		Thread.currentThread().setContextClassLoader(
-				GwtClassLoader.get().getParent());
-	}
+  /**
+   * Unbind the static classloader instance from the current thread by binding
+   * the system classloader instead.
+   */
+  @AfterClass
+  public static final void unbindClassLoader() {
+    Thread.currentThread().setContextClassLoader(
+        GwtClassLoader.get().getParent());
+  }
 
-	private final Test test;
+  private final Test test;
 
-	public GwtTest() {
-		this.test = createJUnit4TestAdapter();
-	}
+  public GwtTest() {
+    this.test = createJUnit4TestAdapter();
+    this.setCanDispatchDomEventOnDetachedWidget(true);
+  }
 
-	public int countTestCases() {
-		return test.countTestCases();
-	}
+  public int countTestCases() {
+    return test.countTestCases();
+  }
 
-	/**
-	 * Runs a test and collects its result in a TestResult instance.
-	 */
-	public void run(TestResult result) {
-		test.run(result);
-	}
+  /**
+   * Runs a test and collects its result in a TestResult instance.
+   */
+  public void run(TestResult result) {
+    test.run(result);
+  }
 
-	@Before
-	public final void setUpGwtTest() throws Exception {
-		GwtConfig.get().setup(this);
-	}
+  @Before
+  public final void setUpGwtTest() throws Exception {
+    GwtConfig.get().setup(this);
+  }
 
-	@After
-	public final void tearDownGwtTest() throws Exception {
+  @After
+  public final void tearDownGwtTest() throws Exception {
 
-		GwtReset.get().reset();
+    GwtReset.get().reset();
 
-		List<Throwable> throwables = AfterTestCallbackManager.get()
-				.triggerCallbacks();
+    List<Throwable> throwables = AfterTestCallbackManager.get().triggerCallbacks();
 
-		if (throwables.size() > 0) {
-			throw new GwtTestException(
-					throwables.size()
-							+ " exception(s) thrown during JUnit @After callback. First one is thrown :",
-					throwables.get(0));
-		}
+    if (throwables.size() > 0) {
+      throw new GwtTestException(
+          throwables.size()
+              + " exception(s) thrown during JUnit @After callback. First one is thrown :",
+          throwables.get(0));
+    }
 
-	}
+  }
 
-	/**
-	 * Create a test instance compatible with JUnit 3 {@link Test} so that the
-	 * current <code>GwtTest</code> can be added to a {@link TestSuite}.
-	 * 
-	 * @return A JUnit Test adapter for this test.
-	 */
-	protected Test createJUnit4TestAdapter() {
-		return new JUnit4TestAdapter(this.getClass());
-	}
+  /**
+   * Create a test instance compatible with JUnit 3 {@link Test} so that the
+   * current <code>GwtTest</code> can be added to a {@link TestSuite}.
+   * 
+   * @return A JUnit Test adapter for this test.
+   */
+  protected Test createJUnit4TestAdapter() {
+    return new JUnit4TestAdapter(this.getClass());
+  }
 
 }

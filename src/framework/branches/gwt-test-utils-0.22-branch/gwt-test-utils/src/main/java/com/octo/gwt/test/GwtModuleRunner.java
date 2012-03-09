@@ -6,6 +6,7 @@ import java.util.Map;
 import javax.servlet.ServletConfig;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.DomEvent;
 import com.google.gwt.i18n.client.Dictionary;
 import com.google.gwt.uibinder.client.UiConstructor;
 import com.google.gwt.user.client.Window;
@@ -49,6 +50,17 @@ public interface GwtModuleRunner {
    * @param factory The UiBinder Widget factory candidate.
    */
   void addUiObjectTagFactory(UiObjectTagFactory<? extends Widget> factory);
+
+  /**
+   * Specifies if The {@link Browser} helper methods can target not attached
+   * widgets or not.
+   * 
+   * @return True if {@link DomEvent} can be dispatched on detached widgets,
+   *         false otherwise.
+   * 
+   * @see Widget#isAttached()
+   */
+  boolean canDispatchDomEventOnDetachedWidget();
 
   /**
    * Specifies if the module runner is allowed the setup of debug id.

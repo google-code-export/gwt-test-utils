@@ -26,7 +26,7 @@ public class JavassistUtils {
 
     Set<CtConstructor> set = new HashSet<CtConstructor>();
 
-    findConstructors(ctClass, set);
+    findConstructors(ctClass, set, argsClasses);
 
     switch (set.size()) {
       case 0:

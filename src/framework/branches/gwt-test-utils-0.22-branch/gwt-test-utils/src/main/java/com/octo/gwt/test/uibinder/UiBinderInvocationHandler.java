@@ -7,6 +7,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.google.gwt.dev.Link;
+import com.google.gwt.event.dom.client.DomEvent;
+import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -48,8 +51,23 @@ class UiBinderInvocationHandler implements InvocationHandler {
         GwtEvent.Type<H> eventType = (GwtEvent.Type<H>) getEventType(entry.getKey());
 
         H handler = (H) createHandler(uiField, entry.getKey(), owner);
-        GwtReflectionUtils.callPrivateMethod(uiField, "addHandler", handler,
-            eventType);
+
+        if (eventType instanceof DomEvent.Type) {
+          GwtReflectionUtils.callPrivateMethod(uiField, "addHandler", handler,
+              eventType);
+        } else {
+
+          // special case for ValueChangeEvent and HasValueChangeHandlers
+
+          if (uiField instanceof HasValueChangeHandlers
+              && handler instanceof ValueChangeHandler) {
+            ((HasValueChangeHandlers<Object>) uiField).addValueChangeHandler((ValueChangeHandler<Object>) handler);
+          } else {
+            GwtReflectionUtils.callPrivateMethod(uiField, "addHandler",
+                handler, eventType);
+          }
+
+        }
       }
 
     }
@@ -118,7 +136,6 @@ class UiBinderInvocationHandler implements InvocationHandler {
 
   private GwtEvent.Type<?> getEventType(Method method) {
     Class<?> eventTypeClass = method.getParameterTypes()[0];
-
     try {
       return GwtReflectionUtils.callStaticMethod(eventTypeClass, "getType");
     } catch (ReflectionException e) {

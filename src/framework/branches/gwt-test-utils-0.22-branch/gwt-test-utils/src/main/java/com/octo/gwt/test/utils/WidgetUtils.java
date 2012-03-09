@@ -7,10 +7,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.InputElement;
 import com.google.gwt.event.dom.client.DomEvent.Type;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
@@ -109,9 +112,9 @@ public class WidgetUtils {
   }
 
   /**
-   * Check if the current widget and its possible parents are visible. NOTE : if
-   * the current widget is a Popup, it is the isShowing() flag which would be
-   * evaluate.
+   * Check if the current widget and its possible parents are visible.
+   * <strong>NOTE</strong> : if the current widget is a Popup, it is the
+   * isShowing() flag which would be evaluate.
    * 
    * @param object The widget to check.
    * @return True if the widget and its possible parents are visible, false
@@ -120,14 +123,31 @@ public class WidgetUtils {
   public static boolean isWidgetVisible(UIObject object) {
     // FIXME : remove this hack which is required for octo main GWT
     // project...
-    if (object instanceof RootPanel) {
+    if (object == null) {
+      return false;
+    } else if (object instanceof RootPanel) {
       return true;
     } else if (object instanceof PopupPanel) {
       PopupPanel popup = (PopupPanel) object;
       return popup.isShowing();
     } else {
+
       return isElementVisible(object.getElement());
     }
+  }
+
+  /**
+   * set a CheckBox value without firing any {@link ValueChangeEvent}.
+   * 
+   * @param checkBox the targeted checkBox
+   * @param newValue the new value, which could be retrieve through
+   *          {@link CheckBox#getValue()}
+   */
+  public static void setCheckBoxValueSilent(CheckBox checkBox, boolean newValue) {
+    InputElement inputElem = GwtReflectionUtils.getPrivateFieldValue(checkBox,
+        "inputElem");
+    inputElem.setChecked(newValue);
+    inputElem.setDefaultChecked(newValue);
   }
 
   private static boolean isElementVisible(Element element) {
