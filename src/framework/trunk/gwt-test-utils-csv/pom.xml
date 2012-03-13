@@ -26,16 +26,6 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.antlr</groupId>
-			<artifactId>antlr-runtime</artifactId>
-			<exclusions>
-				<exclusion>
-					<groupId>org.antlr</groupId>
-					<artifactId>stringtemplate</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
 			<groupId>com.google.inject</groupId>
 			<artifactId>guice</artifactId>
 			<scope>provided</scope>
@@ -56,32 +46,4 @@
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>
-
-	<profiles>
-		<profile>
-			<id>antlr</id>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.antlr</groupId>
-						<artifactId>antlr3-maven-plugin</artifactId>
-						<version>${antlr.runtime.version}</version>
-						<executions>
-							<execution>
-								<id>generate</id>
-								<goals>
-									<goal>antlr</goal>
-								</goals>
-							</execution>
-						</executions>
-						<configuration>
-							<sourceDirectory>${basedir}/src/main/resources/com/octo/gwt/test/csv/runner</sourceDirectory>
-							<outputDirectory>${basedir}/src/main/java/com/octo/gwt/test/csv/runner</outputDirectory>
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-	</profiles>
-
 </project>
