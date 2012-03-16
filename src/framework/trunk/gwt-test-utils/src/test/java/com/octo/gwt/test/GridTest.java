@@ -12,6 +12,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Grid;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SourcesTableEvents;
 import com.google.gwt.user.client.ui.TableListener;
 import com.google.gwt.user.client.ui.Widget;
@@ -164,6 +165,24 @@ public class GridTest extends GwtTestTest {
 
     // Act & Assert
     assertTrue("The button has not been removed from grid", g.remove(b));
+  }
+
+  @Test
+  public void resizeRow() {
+    // Arrange
+    Grid g = new Grid(1, 1);
+    g.setWidget(0, 0, new Label("first"));
+    // Pre-Assert
+    assertEquals("<div class=\"gwt-Label\">first</div>", g.getHTML(0, 0));
+
+    // Act
+    g.resize(2, 2);
+
+    // Assert
+    assertEquals("<div class=\"gwt-Label\">first</div>", g.getHTML(0, 0));
+    assertEquals("&nbsp;", g.getHTML(0, 1));
+    assertEquals("&nbsp;", g.getHTML(1, 0));
+    assertEquals("&nbsp;", g.getHTML(1, 1));
   }
 
   @Test
