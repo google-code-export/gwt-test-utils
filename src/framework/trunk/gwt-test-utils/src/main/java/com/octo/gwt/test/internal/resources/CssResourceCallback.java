@@ -2,6 +2,7 @@ package com.octo.gwt.test.internal.resources;
 
 import java.lang.reflect.Method;
 import java.net.URL;
+import java.util.List;
 
 import com.google.gwt.dom.client.StyleInjector;
 import com.google.gwt.resources.client.CssResource;
@@ -27,6 +28,21 @@ class CssResourceCallback implements ResourcePrototypeCallback {
 
   private final CssReader cssReader;
 
+  CssResourceCallback(final List<URL> resourceURLs) {
+
+    cssReader = new CssReader() {
+
+      public CssParsingResult readCss() throws Exception {
+        return CssResourceReader.get().readCss(resourceURLs);
+      }
+
+      public String readCssText() throws Exception {
+        return TextResourceReader.get().readFiles(resourceURLs);
+      }
+
+    };
+  }
+
   CssResourceCallback(final String text) {
 
     cssReader = new CssReader() {
@@ -37,21 +53,6 @@ class CssResourceCallback implements ResourcePrototypeCallback {
 
       public String readCssText() throws Exception {
         return text;
-      }
-
-    };
-  }
-
-  CssResourceCallback(final URL resourceURL) {
-
-    cssReader = new CssReader() {
-
-      public CssParsingResult readCss() throws Exception {
-        return CssResourceReader.get().readCss(resourceURL);
-      }
-
-      public String readCssText() throws Exception {
-        return TextResourceReader.get().readFile(resourceURL);
       }
 
     };
@@ -79,7 +80,7 @@ class CssResourceCallback implements ResourcePrototypeCallback {
 
   private String handleCustomMethod(String methodName) throws Exception {
     CssParsingResult result = cssReader.readCss();
-    String constant = result.getConstants().get(methodName);
+    String constant = result.getConstantValue(methodName);
     if (constant != null) {
       return constant;
     } else {

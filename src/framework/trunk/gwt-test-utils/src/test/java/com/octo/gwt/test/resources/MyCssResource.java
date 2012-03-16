@@ -2,7 +2,7 @@ package com.octo.gwt.test.resources;
 
 import com.google.gwt.resources.client.CssResource;
 
-public interface TestCssResource extends CssResource {
+public interface MyCssResource extends CssResource {
 
   public String notAvailableStyle();
 

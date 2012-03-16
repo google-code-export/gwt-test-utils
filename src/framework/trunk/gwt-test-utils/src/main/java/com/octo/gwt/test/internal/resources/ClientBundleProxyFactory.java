@@ -7,10 +7,8 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javassist.CtClass;
 import javassist.NotFoundException;
@@ -25,24 +23,24 @@ class ClientBundleProxyFactory {
   private static class ClientBundleMethodsRegistry {
 
     private final CtClass ctClass;
-    private final Map<Method, URL> resourceURLs = new HashMap<Method, URL>();
+    private final Map<Method, List<URL>> resourceURLMap = new HashMap<Method, List<URL>>();
 
     public ClientBundleMethodsRegistry(Class<? extends ClientBundle> clazz) {
       ctClass = GwtClassPool.getCtClass(clazz);
     }
 
-    public URL getResourceURL(Method method) throws Exception {
-      URL resourceURL = resourceURLs.get(method);
-      if (resourceURL == null) {
-        resourceURL = computeResourceURL(method);
-        resourceURLs.put(method, resourceURL);
+    public List<URL> getResourceURL(Method method) throws Exception {
+      List<URL> resourceURLs = resourceURLMap.get(method);
+      if (resourceURLs == null) {
+        resourceURLs = computeResourceURLs(method);
+        resourceURLMap.put(method, resourceURLs);
       }
 
-      return resourceURL;
+      return resourceURLs;
     }
 
-    private URL computeResourceURL(Method method) throws NotFoundException,
-        URISyntaxException {
+    private List<URL> computeResourceURLs(Method method)
+        throws NotFoundException, URISyntaxException {
 
       List<ResourceFileEntry> filesSimpleNames = new ArrayList<ResourceFileEntry>();
       boolean computeExtensions = false;
@@ -60,7 +58,7 @@ class ClientBundleProxyFactory {
         computeExtensions = true;
       }
 
-      Set<URL> existingFiles = new HashSet<URL>();
+      List<URL> existingFiles = new ArrayList<URL>();
 
       for (ResourceFileEntry resourceEntry : filesSimpleNames) {
         String resourceName = resourceEntry.resourceName;
@@ -80,29 +78,32 @@ class ClientBundleProxyFactory {
             URL url = this.getClass().getClassLoader().getResource(possibleFile);
             if (url != null) {
               existingFiles.add(url);
-            }
-
-            // try to find the file relative to the ClientBundle subinterface's
-            // package
-            String possibleFileWithPackage = resourceNameWithPackage
-                + extension;
-            URL urlWithPackage = this.getClass().getClassLoader().getResource(
-                possibleFileWithPackage);
-            if (urlWithPackage != null) {
-              existingFiles.add(urlWithPackage);
+            } else {
+              // try to find the file relative to the ClientBundle
+              // subinterface's package
+              String possibleFileWithPackage = resourceNameWithPackage
+                  + extension;
+              URL urlWithPackage = this.getClass().getClassLoader().getResource(
+                  possibleFileWithPackage);
+              if (urlWithPackage != null) {
+                existingFiles.add(urlWithPackage);
+              }
             }
           }
         } else {
           URL url = this.getClass().getClassLoader().getResource(resourceName);
           if (url != null) {
             existingFiles.add(url);
+          } else {
+            // try to find the file relative to the ClientBundle
+            // subinterface's package
+            URL urlWithPackage = this.getClass().getClassLoader().getResource(
+                resourceNameWithPackage);
+            if (urlWithPackage != null) {
+              existingFiles.add(urlWithPackage);
+            }
           }
 
-          URL urlWithPackage = this.getClass().getClassLoader().getResource(
-              resourceNameWithPackage);
-          if (urlWithPackage != null) {
-            existingFiles.add(urlWithPackage);
-          }
         }
       }
 
@@ -110,13 +111,9 @@ class ClientBundleProxyFactory {
         throw new GwtTestResourcesException(
             "No resource file found for method '" + ctClass.getName() + "."
                 + method.getName() + "()'");
-      } else if (existingFiles.size() > 1) {
-        throw new GwtTestResourcesException(
-            "Too many resource files found for method '" + ctClass.getName()
-                + "." + method.getName() + "()'");
       }
 
-      return existingFiles.iterator().next();
+      return existingFiles;
 
     }
 
@@ -185,10 +182,10 @@ class ClientBundleProxyFactory {
           // create a ResourcePrototypeProxyBuilder with the good args
           Class<?> resourcePrototypeClass = method.getReturnType();
           String name = method.getName();
-          URL resourceURL = methodRegistry.getResourceURL(method);
+          List<URL> resourceURL = methodRegistry.getResourceURL(method);
 
           ResourcePrototypeProxyBuilder builder = ResourcePrototypeProxyBuilder.createBuilder(
-              resourcePrototypeClass, proxiedClass).name(name).resourceURL(
+              resourcePrototypeClass, proxiedClass).name(name).resourceURLs(
               resourceURL);
 
           result = builder.build();

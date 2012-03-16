@@ -15,14 +15,14 @@ public class ImageTest extends GwtTestTest {
   @Test
   public void constructor() {
     // Arrange
-    ImageResource imageRessource = MyClientBundle.INSTANCE.testImageResource();
+    ImageResource imageRessource = MyClientBundle.INSTANCE.imageResource();
 
     // Act
     Image i = new Image(imageRessource);
 
     // Assert
     assertEquals(
-        "http://127.0.0.1:8888/gwt_test_utils_module/testImageResource.gif",
+        "http://127.0.0.1:8888/gwt_test_utils_module/imageResource.gif",
         i.getUrl());
     assertEquals(0, i.getOriginLeft());
     assertEquals(0, i.getOriginTop());
