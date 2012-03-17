@@ -60,18 +60,43 @@ public class UiGridTagFactory implements UiObjectTagFactory<Grid> {
     private void handleCell(Grid wrapped, Element element, int columnIndex) {
       checkGridSize(wrapped, columnIndex);
       wrapped.setHTML(currentRowIndex, columnIndex, element.getInnerHTML());
+
+      handleCellStyle(wrapped, element, columnIndex);
     }
 
-    private void handleCustomCell(Grid wrapped, List<IsWidget> childWidgets,
-        int columnIndex) {
+    private void handleCellStyle(Grid wrapped, Element element, int columnIndex) {
+      String styleName = element.getAttribute(STYLE_ATTR);
+      if (styleName.length() > 0) {
+        wrapped.getCellFormatter().setStyleName(currentRowIndex, columnIndex,
+            styleName);
+      }
+    }
+
+    private void handleCustomCell(Grid wrapped, Element element,
+        List<IsWidget> childWidgets, int columnIndex) {
       checkGridSize(wrapped, columnIndex);
       // should only contains one widget per <g:customCell> tag
       IsWidget w = (childWidgets.size() > 0) ? childWidgets.get(0) : null;
       wrapped.setWidget(currentRowIndex, columnIndex, w);
+
+      handleCellStyle(wrapped, element, columnIndex);
     }
 
     private void handleRow(Grid wrapped, Element element) {
+      // 1. insert
       wrapped.insertRow(currentRowIndex);
+
+      // 2. handle row style
+      String styleName = element.getAttribute(STYLE_ATTR);
+      if (styleName.length() > 0) {
+        wrapped.getRowFormatter().setStyleName(currentRowIndex, styleName);
+      }
+
+      // 3. handle child cells
+      handleRowCells(wrapped, element);
+    }
+
+    private void handleRowCells(Grid wrapped, Element element) {
       int columnIndex = 0;
       NodeList<Node> childs = element.getChildNodes();
       for (int i = 0; i < childs.getLength(); i++) {
@@ -79,7 +104,7 @@ public class UiGridTagFactory implements UiObjectTagFactory<Grid> {
         if (CELL_TAG.equals(e.getTagName())) {
           handleCell(wrapped, e, columnIndex++);
         } else if (CUSTOMCELL_TAG.equals(e.getTagName())) {
-          handleCustomCell(wrapped, UiBinderXmlUtils.getChildWidgets(e),
+          handleCustomCell(wrapped, e, UiBinderXmlUtils.getChildWidgets(e),
               columnIndex++);
         }
       }
@@ -89,8 +114,8 @@ public class UiGridTagFactory implements UiObjectTagFactory<Grid> {
 
   private static final String CELL_TAG = "cell";
   private static final String CUSTOMCELL_TAG = "customCell";
-
   private static final String ROW_TAG = "row";
+  private static final String STYLE_ATTR = "styleName";
 
   /*
    * (non-Javadoc)

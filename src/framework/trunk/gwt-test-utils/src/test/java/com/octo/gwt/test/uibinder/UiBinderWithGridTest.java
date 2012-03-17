@@ -25,6 +25,12 @@ public class UiBinderWithGridTest extends GwtTestTest {
         grid.getCellFormatter().getElement(1, 0).getInnerHTML());
     assertEquals(uiBinderGrid.mySpan.toString(),
         grid.getCellFormatter().getElement(1, 1).getInnerHTML());
+    // styles
+    assertEquals("optionalHeaderStyle", grid.getRowFormatter().getStyleName(0));
+    assertEquals("optionalFooCellStyle",
+        grid.getCellFormatter().getStyleName(0, 0));
+    assertEquals("optionalSpanCellStyle",
+        grid.getCellFormatter().getStyleName(1, 1));
   }
 
 }

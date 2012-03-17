@@ -6,7 +6,7 @@
 			<g:customCell styleName="optionalFooCellStyle">
 				<g:Label ui:field="myLabel">my label</g:Label>
 			</g:customCell>
-			<g:customCell styleName="optionalBarCellStyle">
+			<g:customCell>
 				<g:HTML ui:field="myHTML">my html</g:HTML>
 			</g:customCell>
 		</g:row>
@@ -14,7 +14,7 @@
 			<g:cell>
 				<div ui:field="myDiv">foo</div>
 			</g:cell>
-			<g:cell>
+			<g:cell styleName="optionalSpanCellStyle">
 				<span ui:field="mySpan">bar</span>
 			</g:cell>
 		</g:row>
