@@ -11,7 +11,7 @@ public abstract class GwtGxtTest extends GwtTest {
 
   @Override
   protected String getHostPagePath(String moduleFullQualifiedName) {
-    return null;
+    return "test.html";
   }
 
 }
