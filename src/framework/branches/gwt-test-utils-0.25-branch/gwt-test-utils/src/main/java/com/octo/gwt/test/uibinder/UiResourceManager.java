@@ -41,7 +41,7 @@ class UiResourceManager {
 
       // handle "src" attribute
       String src = (String) attributes.get("src");
-      builder.resourceURL(computeImageURL(owner, src));
+      builder.resourceURL(computeImageURLs(owner, src));
     }
 
     @Override
@@ -49,7 +49,7 @@ class UiResourceManager {
       return builder.build();
     }
 
-    private URL computeImageURL(Object owner, String src) {
+    private URL computeImageURLs(Object owner, String src) {
       URL imageURL = owner.getClass().getResource(src);
 
       if (imageURL == null) {

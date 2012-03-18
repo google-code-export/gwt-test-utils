@@ -1,4 +1,4 @@
-package com.octo.gwt.test.csv.runner;
+package com.octo.gwt.test.finder;
 
 import java.util.ArrayList;
 import java.util.Collections;
