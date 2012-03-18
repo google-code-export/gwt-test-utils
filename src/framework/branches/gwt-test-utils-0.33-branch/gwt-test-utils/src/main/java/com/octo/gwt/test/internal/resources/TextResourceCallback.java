@@ -2,6 +2,7 @@ package com.octo.gwt.test.internal.resources;
 
 import java.lang.reflect.Method;
 import java.net.URL;
+import java.util.List;
 
 import com.google.gwt.resources.client.TextResource;
 
@@ -21,21 +22,21 @@ class TextResourceCallback implements ResourcePrototypeCallback {
 
   private final TextReader textReader;
 
-  TextResourceCallback(final String text) {
+  TextResourceCallback(final List<URL> resourceURLs) {
     textReader = new TextReader() {
 
       public String readText() throws Exception {
-        return text;
+        return TextResourceReader.get().readFiles(resourceURLs);
       }
 
     };
   }
 
-  TextResourceCallback(final URL resourceURL) {
+  TextResourceCallback(final String text) {
     textReader = new TextReader() {
 
       public String readText() throws Exception {
-        return TextResourceReader.get().readFile(resourceURL);
+        return text;
       }
 
     };

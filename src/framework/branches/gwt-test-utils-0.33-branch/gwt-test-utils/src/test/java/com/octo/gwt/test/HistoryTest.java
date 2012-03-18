@@ -1,124 +1,217 @@
 package com.octo.gwt.test;
 
-import org.easymock.EasyMock;
-import org.easymock.IArgumentMatcher;
+import static org.junit.Assert.assertEquals;
+
+import java.util.LinkedList;
+
 import org.junit.Test;
 
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.HistoryListener;
+import com.octo.gwt.MockValueChangeHandler;
 
 @SuppressWarnings("deprecation")
-public class HistoryTest extends GwtTestWithEasyMock {
+public class HistoryTest extends GwtTestTest {
 
-  private static class ValueChangeEventMatcher<T> implements IArgumentMatcher {
+  private static class MockHistoryListener implements HistoryListener {
 
-    public static <X> ValueChangeEvent<X> eq(X expectedValue) {
-      EasyMock.reportMatcher(new ValueChangeEventMatcher<X>(expectedValue));
-      return null;
+    LinkedList<String> reccorded = new LinkedList<String>();
+
+    public int getCallCount() {
+      return reccorded.size();
     }
 
-    private final T expectedValue;
-
-    private ValueChangeEventMatcher(T expectedValue) {
-      this.expectedValue = expectedValue;
+    public String getLast() {
+      return reccorded.getLast();
     }
 
-    public void appendTo(StringBuffer buffer) {
-      buffer.append(expectedValue.toString());
-    }
-
-    public boolean matches(Object argument) {
-      if (argument instanceof ValueChangeEvent<?>) {
-        ValueChangeEvent<?> valueChangeEvent = (ValueChangeEvent<?>) argument;
-        return expectedValue.equals(valueChangeEvent.getValue());
-      }
-      return false;
+    public void onHistoryChanged(String historyToken) {
+      reccorded.add(historyToken);
     }
 
   }
 
-  @Mock
-  private HistoryListener listener;
+  @Test
+  public void back_forward_AfterNewItem() {
+    // Arrange
+    History.newItem("init");
+    History.newItem("myToken");
+    History.back();
+    History.newItem("newToken");
+    MockValueChangeHandler<String> changeListener = new MockValueChangeHandler<String>();
+    History.addValueChangeHandler(changeListener);
 
-  @Mock
-  private ValueChangeHandler<String> listener2;
+    // Act 1
+    History.back();
 
-  @Override
-  public String getModuleName() {
-    return "com.octo.gwt.test.GwtTestUtils";
+    // Assert 2
+    assertEquals(1, changeListener.getCallCount());
+    assertEquals("init", changeListener.getLast());
+
+    // Act 2
+    History.forward();
+
+    // Assert 2
+    assertEquals(2, changeListener.getCallCount());
+    assertEquals("newToken", changeListener.getLast());
+
+    // Act 3 : can't forward anymore
+    History.forward();
+
+    // Assert 3
+    assertEquals(2, changeListener.getCallCount());
+    assertEquals("newToken", changeListener.getLast());
+
+    // Act 4
+    History.back();
+
+    // Assert 4
+    assertEquals(3, changeListener.getCallCount());
+    assertEquals("init", changeListener.getLast());
+  }
+
+  @Test
+  public void back_forward_HistoryListener() {
+    // Arrange
+    History.newItem("init");
+    History.newItem("myToken");
+    MockHistoryListener listener = new MockHistoryListener();
+    History.addHistoryListener(listener);
+
+    // Act : first back
+    History.back();
+
+    // Assert
+    assertEquals(1, listener.getCallCount());
+    assertEquals("init", listener.getLast());
+
+    // Act 2 : second back : no more token
+    History.back();
+
+    // Assert 2
+    assertEquals(2, listener.getCallCount());
+    assertEquals("", listener.getLast());
+
+    // Act 3 : third back : no ValueChangeEvent
+    History.back();
+
+    // Assert 3
+    assertEquals(2, listener.getCallCount());
+    assertEquals("", listener.getLast());
+
+    // Act 4
+    History.forward();
+
+    // Assert 4
+    assertEquals(3, listener.getCallCount());
+    assertEquals("init", listener.getLast());
+
+    // Act 5
+    History.forward();
+
+    // Assert 5
+    assertEquals(4, listener.getCallCount());
+    assertEquals("myToken", listener.getLast());
+
+    // Act 6 : can't go forward
+    History.forward();
+
+    // Assert 5
+    assertEquals(4, listener.getCallCount());
+    assertEquals("myToken", listener.getLast());
+  }
+
+  @Test
+  public void back_forward_ValueChangeHandler() {
+    // Arrange
+    History.newItem("init");
+    History.newItem("myToken");
+    MockValueChangeHandler<String> changeHandler = new MockValueChangeHandler<String>();
+    History.addValueChangeHandler(changeHandler);
+
+    // Act : first back
+    History.back();
+
+    // Assert
+    assertEquals(1, changeHandler.getCallCount());
+    assertEquals("init", changeHandler.getLast());
+
+    // Act 2 : second back : no more token
+    History.back();
+
+    // Assert 2
+    assertEquals(2, changeHandler.getCallCount());
+    assertEquals("", changeHandler.getLast());
+
+    // Act 3 : third back : no ValueChangeEvent
+    History.back();
+
+    // Assert 3
+    assertEquals(2, changeHandler.getCallCount());
+    assertEquals("", changeHandler.getLast());
+
+    // Act 4
+    History.forward();
+
+    // Assert 4
+    assertEquals(3, changeHandler.getCallCount());
+    assertEquals("init", changeHandler.getLast());
+
+    // Act 5
+    History.forward();
+
+    // Assert 5
+    assertEquals(4, changeHandler.getCallCount());
+    assertEquals("myToken", changeHandler.getLast());
+
+    // Act 6 : can't go forward
+    History.forward();
+
+    // Assert 5
+    assertEquals(4, changeHandler.getCallCount());
+    assertEquals("myToken", changeHandler.getLast());
   }
 
   @Test
   public void newItem_HistoryListener() {
     // Arrange
-    listener.onHistoryChanged(EasyMock.eq("init"));
-    EasyMock.expectLastCall();
+    MockHistoryListener history = new MockHistoryListener();
+    History.addHistoryListener(history);
 
-    listener.onHistoryChanged(EasyMock.eq("myToken"));
-    EasyMock.expectLastCall();
-
-    replay();
     // Act
-    History.addHistoryListener(listener);
-
     History.newItem("init");
+
+    // Assert
+    assertEquals(1, history.getCallCount());
+    assertEquals("init", history.getLast());
+
+    // Act 2
     History.newItem("myToken");
 
-    // Assert
-    verify();
-
-    reset();
-
-    // Arrange
-
-    listener.onHistoryChanged(EasyMock.eq("init"));
-    EasyMock.expectLastCall();
-
-    replay();
-    // Act
-    History.back();
-
-    History.removeHistoryListener(listener);
-
-    History.newItem("myToken2");
-
-    // Assert
-    verify();
+    // Assert 2
+    assertEquals(2, history.getCallCount());
+    assertEquals("myToken", history.getLast());
   }
 
   @Test
   public void newItem_ValueChangeHandler() {
-    // Arrange 1
-    listener2.onValueChange(ValueChangeEventMatcher.eq("init"));
-    EasyMock.expectLastCall();
+    // Arrange
+    MockValueChangeHandler<String> changeHandler = new MockValueChangeHandler<String>();
+    History.addValueChangeHandler(changeHandler);
 
-    listener2.onValueChange(ValueChangeEventMatcher.eq("myToken"));
-    EasyMock.expectLastCall();
-
-    replay();
-    // Act 1
-    History.addValueChangeHandler(listener2);
-
-    History.newItem("init");
-    History.newItem("myToken");
-
-    // Assert 1
-    verify();
-
-    reset();
-
-    // Arrange 2
-    listener2.onValueChange(ValueChangeEventMatcher.eq("init"));
-    EasyMock.expectLastCall();
-
-    replay();
     // Act
-    History.back();
+    History.newItem("init");
 
     // Assert
-    verify();
+    assertEquals(1, changeHandler.getCallCount());
+    assertEquals("init", changeHandler.getLast());
+
+    // Act 2
+    History.newItem("myToken");
+
+    // Assert 2
+    assertEquals(2, changeHandler.getCallCount());
+    assertEquals("myToken", changeHandler.getLast());
   }
 
   @Override

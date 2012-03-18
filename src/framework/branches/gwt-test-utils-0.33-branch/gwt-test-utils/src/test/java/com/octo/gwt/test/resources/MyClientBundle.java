@@ -13,16 +13,19 @@ public interface MyClientBundle extends CellTable.Resources, Resources {
 
   public ImageResource doubleShouldThrowException();
 
+  @Source({"css/myCssResource.css", "css/addedStyles.css"})
+  public MultipleFileCssResource multipleFileCssResource();
+
   @Source("root-classpath-img.png")
   public ImageResource rootClasspathImg();
 
-  @Source("css/testCssResource.css")
-  public TestCssResource testCssResource();
+  @Source("css/myCssResource.css")
+  public MyCssResource cssResource();
 
   @Source("textResourceXml.xml")
-  public DataResource testDataResource();
+  public DataResource dataResource();
 
-  public ImageResource testImageResource();
+  public ImageResource imageResource();
 
   public TextResource textResourceTxt();
 

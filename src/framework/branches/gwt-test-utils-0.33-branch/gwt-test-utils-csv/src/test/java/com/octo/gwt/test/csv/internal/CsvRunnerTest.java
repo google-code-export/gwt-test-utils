@@ -16,7 +16,7 @@ import org.junit.Test;
 import com.octo.gwt.test.csv.CsvMethod;
 import com.octo.gwt.test.csv.runner.CsvRunner;
 import com.octo.gwt.test.csv.runner.CsvRunnerException;
-import com.octo.gwt.test.csv.runner.Node;
+import com.octo.gwt.test.finder.Node;
 
 public class CsvRunnerTest {
 

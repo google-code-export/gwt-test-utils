@@ -157,7 +157,8 @@ class ElementPatcher {
   @PatchMethod
   static void setAttribute(Element element, String attributeName, String value) {
     if (JavaScriptObjects.ID.equals(attributeName)) {
-      JavaScriptObjects.onSetId(element, value);
+      JavaScriptObjects.onSetId(element, value,
+          getPropertyString(element, JavaScriptObjects.ID));
     }
 
     PropertyContainer properties = JavaScriptObjects.getObject(element,
@@ -209,7 +210,8 @@ class ElementPatcher {
   static void setPropertyObject(Element element, String name, Object value) {
 
     if (JavaScriptObjects.ID.equals(name)) {
-      JavaScriptObjects.onSetId(element, value.toString());
+      JavaScriptObjects.onSetId(element, value.toString(),
+          getPropertyString(element, JavaScriptObjects.ID));
     }
 
     PropertyContainer properties = JavaScriptObjects.getObject(element,

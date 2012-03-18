@@ -65,7 +65,7 @@ import com.google.gwt.dom.client.TitleElement;
 import com.google.gwt.dom.client.UListElement;
 import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.ui.UIObject;
-import com.octo.gwt.test.internal.WidgetChangeHandlerManager;
+import com.octo.gwt.test.finder.GwtFinder;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 public class JavaScriptObjects {
@@ -268,11 +268,12 @@ public class JavaScriptObjects {
     return text;
   }
 
-  public static void onSetId(JavaScriptObject jso, String value) {
+  public static void onSetId(JavaScriptObject jso, String newId, String oldId) {
     EventListener listener = getObject(jso, JsoProperties.ELEM_EVENTLISTENER);
 
     if (UIObject.class.isInstance(listener)) {
-      WidgetChangeHandlerManager.get().fireSetIdEvent((UIObject) listener, value);
+      GwtReflectionUtils.callStaticMethod(GwtFinder.class, "onSetId", listener,
+          newId, oldId);
     }
   }
 
@@ -304,7 +305,7 @@ public class JavaScriptObjects {
       Object value) {
 
     if (ID.equals(propName)) {
-      onSetId(jso, value.toString());
+      onSetId(jso, value.toString(), getString(jso, ID));
     }
     getJsoProperties(jso, propName).put(propName, value);
   }

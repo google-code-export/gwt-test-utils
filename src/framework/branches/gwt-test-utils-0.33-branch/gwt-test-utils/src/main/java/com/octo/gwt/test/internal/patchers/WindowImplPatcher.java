@@ -9,7 +9,9 @@ class WindowImplPatcher {
 
   @PatchMethod
   static String getHash(WindowImpl windowImpl) {
-    return "";
+    String token = HistoryImplPatcher.BROWSER_HISTORY.getCurrentToken();
+
+    return (token.length() > 0) ? "#" + token : token;
   }
 
   @PatchMethod
