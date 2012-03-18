@@ -20,11 +20,15 @@ class GwtTranslator implements Translator {
   private static final Pattern TEST_PATTERN = Pattern.compile("^.*[T|t][E|e][S|s][T|t].*$");
 
   private final ConfigurationLoader configurationLoader;
+  private final HasHTMLModifier hasHTMLModifier;
+  private final HasNameModifier hasNameModifier;
   private final SerializableModifier serializableModifier;
 
   GwtTranslator(ConfigurationLoader configurationLoader) {
-    this.serializableModifier = new SerializableModifier();
     this.configurationLoader = configurationLoader;
+    this.hasHTMLModifier = new HasHTMLModifier();
+    this.hasNameModifier = new HasNameModifier();
+    this.serializableModifier = new SerializableModifier();
   }
 
   public void onLoad(ClassPool pool, String className) throws NotFoundException {
@@ -34,7 +38,7 @@ class GwtTranslator implements Translator {
   public void start(ClassPool pool) throws NotFoundException {
   }
 
-  private void applyJavaClassModifier(CtClass ctClass) {
+  private void applyJavaClassModifiers(CtClass ctClass) {
     try {
       // Apply remove-method
       configurationLoader.getMethodRemover().modify(ctClass);
@@ -42,8 +46,11 @@ class GwtTranslator implements Translator {
       // Apply substitute-class
       configurationLoader.getClassSubstituer().modify(ctClass);
 
-      // Apply serializable modifier
+      // Apply internal modifiers
       serializableModifier.modify(ctClass);
+      hasHTMLModifier.modify(ctClass);
+      hasNameModifier.modify(ctClass);
+
     } catch (Exception e) {
       if (GwtTestException.class.isInstance(e)) {
         throw (GwtTestException) e;
@@ -85,7 +92,7 @@ class GwtTranslator implements Translator {
     for (String clientPackage : ModuleData.get().getClientPaths()) {
       if (classToModify.getName().startsWith(clientPackage)) {
         // modifiy this class
-        applyJavaClassModifier(classToModify);
+        applyJavaClassModifiers(classToModify);
         return;
       }
     }
@@ -93,13 +100,13 @@ class GwtTranslator implements Translator {
     for (String scanPackage : configurationLoader.getScanPackages()) {
       if (classToModify.getName().startsWith(scanPackage)) {
         // modifiy this class
-        applyJavaClassModifier(classToModify);
+        applyJavaClassModifiers(classToModify);
         return;
       }
     }
 
     if (TEST_PATTERN.matcher(classToModify.getName()).matches()) {
-      applyJavaClassModifier(classToModify);
+      applyJavaClassModifiers(classToModify);
     }
   }
 

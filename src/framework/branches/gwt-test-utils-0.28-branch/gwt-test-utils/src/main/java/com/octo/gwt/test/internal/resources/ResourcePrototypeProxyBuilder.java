@@ -4,6 +4,8 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.CssResource;
@@ -80,7 +82,7 @@ public class ResourcePrototypeProxyBuilder {
   private final Class<?> ownerClass;
   private final Class<?> proxiedClass;
   private String text;
-  private URL url;
+  private List<URL> urls;
 
   private ResourcePrototypeProxyBuilder(Class<?> proxiedClass,
       Class<?> ownerClass) {
@@ -98,15 +100,15 @@ public class ResourcePrototypeProxyBuilder {
     ResourcePrototypeCallback callback;
 
     if (TextResource.class.isAssignableFrom(proxiedClass)) {
-      callback = url != null ? new TextResourceCallback(url)
+      callback = urls != null ? new TextResourceCallback(urls)
           : new TextResourceCallback(text);
     } else if (CssResource.class.isAssignableFrom(proxiedClass)) {
-      callback = url != null ? new CssResourceCallback(url)
+      callback = urls != null ? new CssResourceCallback(urls)
           : new CssResourceCallback(text);
     } else if (DataResource.class.isAssignableFrom(proxiedClass)) {
-      callback = new DataResourceCallback(computeUrl(url, ownerClass));
+      callback = new DataResourceCallback(computeUrl(urls, ownerClass));
     } else if (ImageResource.class.isAssignableFrom(proxiedClass)) {
-      callback = new ImageResourceCallback(computeUrl(url, ownerClass));
+      callback = new ImageResourceCallback(computeImageUrl(urls, ownerClass));
     } else {
       throw new GwtTestResourcesException(
           "Not managed return type for ClientBundle : "
@@ -124,7 +126,13 @@ public class ResourcePrototypeProxyBuilder {
   }
 
   public ResourcePrototypeProxyBuilder resourceURL(URL url) {
-    this.url = url;
+    urls = new ArrayList<URL>(1);
+    urls.add(url);
+    return this;
+  }
+
+  public ResourcePrototypeProxyBuilder resourceURLs(List<URL> url) {
+    this.urls = url;
     return this;
   }
 
@@ -133,11 +141,32 @@ public class ResourcePrototypeProxyBuilder {
     return this;
   }
 
-  private String computeUrl(URL resourceURL, Class<?> resourceClass) {
+  private String computeImageUrl(List<URL> resourceURLs, Class<?> resourceClass) {
+    if (resourceURLs.size() > 1) {
+      throw new GwtTestResourcesException(
+          "Too many ImageResource files found for method '"
+              + ownerClass.getName() + "." + name + "()'");
+    }
 
-    String resourceRelativePath = resourceURL.getPath().substring(
+    return computeUrl(resourceURLs, resourceClass);
+
+  }
+
+  private String computeUrl(List<URL> resourceURLs, Class<?> resourceClass) {
+
+    StringBuilder sb = new StringBuilder();
+
+    for (URL url : resourceURLs) {
+      sb.append(extractFileName(url, resourceClass)).append("_");
+    }
+
+    return GWT.getModuleBaseURL() + sb.substring(0, sb.length() - 1);
+  }
+
+  private String extractFileName(URL resourceURL, Class<?> resourceClass) {
+
+    return resourceURL.getPath().substring(
         resourceURL.getPath().lastIndexOf('/') + 1);
-    return GWT.getModuleBaseURL() + resourceRelativePath;
   }
 
   private InvocationHandler generateInvocationHandler(

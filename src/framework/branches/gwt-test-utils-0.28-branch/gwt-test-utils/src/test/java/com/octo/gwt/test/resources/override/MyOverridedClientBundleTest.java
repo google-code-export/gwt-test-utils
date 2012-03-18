@@ -14,7 +14,7 @@ public class MyOverridedClientBundleTest extends GwtTestTest {
   @Test
   public void testDataResource_NoOverride() {
     // Arrange
-    DataResource testDataResource = MyOverridedClientBundle.INSTANCE.testDataResource();
+    DataResource testDataResource = MyOverridedClientBundle.INSTANCE.dataResource();
 
     // Act
     String name = testDataResource.getName();
@@ -22,20 +22,20 @@ public class MyOverridedClientBundleTest extends GwtTestTest {
     String toString = testDataResource.toString();
 
     // Assert
-    assertEquals("testDataResource", name);
+    assertEquals("dataResource", name);
     assertEquals(
         "http://127.0.0.1:8888/gwt_test_utils_module/textResourceXml.xml", url);
     assertEquals(
-        "com.octo.gwt.test.internal.resources.DataResourceCallback generated for 'com.octo.gwt.test.resources.override.MyOverridedClientBundle.testDataResource()'",
+        "com.octo.gwt.test.internal.resources.DataResourceCallback generated for 'com.octo.gwt.test.resources.override.MyOverridedClientBundle.dataResource()'",
         toString);
     assertEquals(testDataResource,
-        MyOverridedClientBundle.INSTANCE.testDataResource());
+        MyOverridedClientBundle.INSTANCE.dataResource());
   }
 
   @Test
   public void testImageResource_OverrideWithAnnotation() {
     // Arrange
-    ImageResource testImageResource = MyOverridedClientBundle.INSTANCE.testImageResource();
+    ImageResource testImageResource = MyOverridedClientBundle.INSTANCE.imageResource();
 
     // Act
     String name = testImageResource.getName();
@@ -46,7 +46,7 @@ public class MyOverridedClientBundleTest extends GwtTestTest {
     int top = testImageResource.getTop();
 
     // Assert
-    assertEquals("testImageResource", name);
+    assertEquals("imageResource", name);
     assertEquals(
         "http://127.0.0.1:8888/gwt_test_utils_module/override_testImageResource.gif",
         url);
@@ -55,7 +55,7 @@ public class MyOverridedClientBundleTest extends GwtTestTest {
     assertEquals(0, width);
     assertEquals(0, top);
     assertEquals(testImageResource,
-        MyOverridedClientBundle.INSTANCE.testImageResource());
+        MyOverridedClientBundle.INSTANCE.imageResource());
   }
 
   @Test

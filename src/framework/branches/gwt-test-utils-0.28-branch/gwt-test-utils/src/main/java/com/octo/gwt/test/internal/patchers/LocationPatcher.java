@@ -5,9 +5,11 @@ import java.net.URL;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window.Location;
+import com.octo.gwt.test.GwtTest;
 import com.octo.gwt.test.exceptions.GwtTestConfigurationException;
 import com.octo.gwt.test.internal.AfterTestCallback;
 import com.octo.gwt.test.internal.AfterTestCallbackManager;
+import com.octo.gwt.test.internal.GwtConfig;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
 
@@ -64,18 +66,39 @@ class LocationPatcher {
   }
 
   @PatchMethod
+  static String getPath() {
+    return getURLToUse().getPath();
+  }
+
+  @PatchMethod
   static String getPort() {
     return getPort(getURLToUse());
   }
 
   @PatchMethod
   static String getProtocol() {
-    return getURLToUse().getProtocol();
+    return getURLToUse().getProtocol() + ":";
   }
 
   @PatchMethod
   static void replace(String newURL) {
     assign(newURL);
+  }
+
+  private static String computePath() {
+    String absolutePath = GwtConfig.get().getHostPagePath();
+    if (absolutePath == null) {
+      throw new GwtTestConfigurationException(
+          "Cannot find the actual HTML host page for module '"
+              + GWT.getModuleName()
+              + "'. You should override "
+              + GwtTest.class.getName()
+              + ".getHostPagePath(String moduleFullQualifiedName) method to specify it.");
+    }
+
+    int token = absolutePath.lastIndexOf("/") + 1;
+
+    return (token > 0) ? absolutePath.substring(token) : absolutePath;
   }
 
   private static String getPort(URL url) {
@@ -87,7 +110,7 @@ class LocationPatcher {
   private static URL getURLToUse() {
     try {
       return urlHolder.url != null ? urlHolder.url : new URL(
-          GWT.getModuleBaseURL());
+          GWT.getHostPageBaseURL() + computePath() + Location.getHash());
     } catch (MalformedURLException e) {
       throw new GwtTestConfigurationException(
           "GWT.getHostPageBaseURL() has failed to be parsed in a "
