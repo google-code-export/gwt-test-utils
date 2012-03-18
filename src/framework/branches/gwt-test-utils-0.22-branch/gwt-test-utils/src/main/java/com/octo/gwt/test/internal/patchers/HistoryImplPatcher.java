@@ -1,8 +1,10 @@
 package com.octo.gwt.test.internal.patchers;
 
-import java.util.Stack;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.google.gwt.user.client.History;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.impl.HistoryImpl;
 import com.octo.gwt.test.internal.AfterTestCallback;
 import com.octo.gwt.test.internal.AfterTestCallbackManager;
@@ -13,18 +15,38 @@ import com.octo.gwt.test.utils.GwtReflectionUtils;
 @PatchClass(HistoryImpl.class)
 class HistoryImplPatcher {
 
-  static class HistoryHolder implements AfterTestCallback {
+  static class GwtBrowserHistory implements AfterTestCallback {
 
-    Stack<String> stack = new Stack<String>();
-    String top;
+    private int currentIndex;
+    private final List<String> stack;
 
-    HistoryHolder() {
+    GwtBrowserHistory() {
+      this.stack = new ArrayList<String>();
+      this.currentIndex = -1;
       AfterTestCallbackManager.get().registerCallback(this);
+    }
+
+    /**
+     * Add a new token in the history if it does not equal the current token
+     * 
+     * @param token
+     */
+    public void addToken(String token) {
+      String current = getCurrentToken();
+      if (!current.equals(token)) {
+        // remove possible token which could be reach with a forward so it won't
+        // be possible anymore
+        while (stack.size() > currentIndex + 1) {
+          stack.remove(stack.size() - 1);
+        }
+        stack.add(token);
+        currentIndex = stack.size() - 1;
+      }
     }
 
     public void afterTest() throws Throwable {
       stack.clear();
-      top = null;
+      currentIndex = -1;
 
       HistoryImpl historyImpl = GwtReflectionUtils.getStaticFieldValue(
           History.class, "impl");
@@ -35,29 +57,97 @@ class HistoryImplPatcher {
                       "handlers"), "registry"), "map"), "clear");
     }
 
+    /**
+     * Simulate a Browser back button click
+     * 
+     * @return the previous token or an empty String
+     */
+    public String back() {
+      String token = null;
+      boolean fireEvent = false;
+      switch (currentIndex) {
+        case 0:
+          currentIndex--;
+          fireEvent = true;
+        case -1:
+          token = "";
+          break;
+        default:
+          fireEvent = true;
+          token = stack.get(--currentIndex);
+      }
+
+      if (fireEvent) {
+        fireHistoryChanged(token);
+      }
+
+      return token;
+    }
+
+    /**
+     * Simulate a Browser forward button click
+     * 
+     * @return the next token or an empty String
+     */
+    public String forward() {
+      if (currentIndex >= stack.size() - 1) {
+        return "";
+      } else {
+        String token = stack.get(++currentIndex);
+        fireHistoryChanged(token);
+        return token;
+      }
+    }
+
+    /**
+     * Return the current token in history
+     * 
+     * @return the current token in history or an empty String if no token is
+     *         set in the URL
+     */
+    public String getCurrentToken() {
+      return (currentIndex == -1) ? "" : stack.get(currentIndex);
+    }
+
+    private void fireHistoryChanged(String token) {
+      HistoryImpl impl = GwtReflectionUtils.getStaticFieldValue(History.class,
+          "impl");
+      impl.fireHistoryChangedImpl(token);
+    }
+
   }
 
-  static HistoryHolder HISTORY_HOLDER = new HistoryHolder();
+  static GwtBrowserHistory BROWSER_HISTORY = new GwtBrowserHistory();
 
   @PatchMethod
   static String getToken() {
-    return HISTORY_HOLDER.top;
+    return BROWSER_HISTORY.getCurrentToken();
   }
 
   @PatchMethod
   static boolean init(HistoryImpl historyImpl) {
+    String hash = Window.Location.getHash();
+    int index = hash.indexOf("#");
+    if (index > -1) {
+      String token = hash.substring(index + 1);
+      GwtReflectionUtils.callPrivateMethod(historyImpl, "setToken", token);
+      nativeUpdate(historyImpl, token);
+    }
     return true;
   }
 
   @PatchMethod
-  static void nativeUpdate(HistoryImpl historyImpl, String s) {
+  static void nativeUpdate(HistoryImpl historyImpl, String historyToken) {
 
   }
 
   @PatchMethod
   static void setToken(String token) {
-    HISTORY_HOLDER.stack.push(token);
-    HISTORY_HOLDER.top = token;
+    if (token == null) {
+      token = "";
+    }
+
+    BROWSER_HISTORY.addToken(token);
   }
 
 }

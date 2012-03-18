@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.octo.gwt.test.internal.AfterTestCallback;
@@ -36,7 +37,19 @@ class TextResourceReader implements AfterTestCallback {
     cache.clear();
   }
 
-  public String readFile(URL url) throws UnsupportedEncodingException,
+  public String readFiles(List<URL> urls) throws UnsupportedEncodingException,
+      IOException {
+
+    StringBuilder sb = new StringBuilder();
+
+    for (URL url : urls) {
+      sb.append(readFile(url));
+    }
+
+    return sb.toString();
+  }
+
+  private String readFile(URL url) throws UnsupportedEncodingException,
       IOException {
 
     if (!cache.containsKey(url)) {
@@ -65,6 +78,7 @@ class TextResourceReader implements AfterTestCallback {
     }
 
     return cache.get(url);
+
   }
 
 }

@@ -7,6 +7,7 @@ import java.util.Map;
 import com.octo.gwt.test.internal.GwtConfig;
 import com.octo.gwt.test.uibinder.widget.UiCellPanelTagFactory;
 import com.octo.gwt.test.uibinder.widget.UiDockLayoutPanelTagFactory;
+import com.octo.gwt.test.uibinder.widget.UiGridTagFactory;
 import com.octo.gwt.test.uibinder.widget.UiHTMLPanelTagFactory;
 import com.octo.gwt.test.uibinder.widget.UiImageTagFactory;
 import com.octo.gwt.test.uibinder.widget.UiLayoutPanelTagFactory;
@@ -37,6 +38,7 @@ class DefaultUiWidgetTagFactory implements UiObjectTagFactory<Object> {
     gwtTestUtilsFactories = new ArrayList<UiObjectTagFactory<?>>();
 
     gwtTestUtilsFactories.add(new UiCellPanelTagFactory());
+    gwtTestUtilsFactories.add(new UiGridTagFactory());
     gwtTestUtilsFactories.add(new UiDockLayoutPanelTagFactory());
     gwtTestUtilsFactories.add(new UiHTMLPanelTagFactory());
     gwtTestUtilsFactories.add(new UiImageTagFactory());

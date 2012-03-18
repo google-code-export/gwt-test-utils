@@ -19,34 +19,34 @@ public class ClientBundleTest extends GwtTestTest {
   @Test
   public void cssResource() {
     // Arrange
-    TestCssResource testCssResource = MyClientBundle.INSTANCE.testCssResource();
+    MyCssResource cssResource = MyClientBundle.INSTANCE.cssResource();
 
     // Act
-    String name = testCssResource.getName();
-    String testStyle = testCssResource.testStyle();
-    String testStyleWithHover = testCssResource.testStyleWithHover();
-    String testStyleOnSpecificElement = testCssResource.testStyleOnSpecificElement();
-    String testStyleOnSpecificStyle = testCssResource.testStyleOnSpecificStyle();
-    String constantValue = testCssResource.testConstant();
-    String toString = testCssResource.toString();
+    String name = cssResource.getName();
+    String testStyle = cssResource.testStyle();
+    String testStyleWithHover = cssResource.testStyleWithHover();
+    String testStyleOnSpecificElement = cssResource.testStyleOnSpecificElement();
+    String testStyleOnSpecificStyle = cssResource.testStyleOnSpecificStyle();
+    String constantValue = cssResource.testConstant();
+    String toString = cssResource.toString();
 
     // Assert
-    assertEquals("testCssResource", name);
+    assertEquals("cssResource", name);
     assertEquals("testStyle", testStyle);
     assertEquals("testStyleWithHover", testStyleWithHover);
     assertEquals("testStyleOnSpecificElement", testStyleOnSpecificElement);
     assertEquals("testStyleOnSpecificStyle", testStyleOnSpecificStyle);
     assertEquals("constant-value", constantValue);
     assertEquals(
-        "com.octo.gwt.test.internal.resources.CssResourceCallback generated for 'com.octo.gwt.test.resources.MyClientBundle.testCssResource()'",
+        "com.octo.gwt.test.internal.resources.CssResourceCallback generated for 'com.octo.gwt.test.resources.MyClientBundle.cssResource()'",
         toString);
-    assertEquals(testCssResource, MyClientBundle.INSTANCE.testCssResource());
+    assertEquals(cssResource, MyClientBundle.INSTANCE.cssResource());
   }
 
   @Test
   public void cssResourceEnsureInjected() {
     // Arrange
-    TestCssResource testCssResource = MyClientBundle.INSTANCE.testCssResource();
+    MyCssResource testCssResource = MyClientBundle.INSTANCE.cssResource();
 
     // Act & Assert
     assertTrue(testCssResource.ensureInjected());
@@ -56,7 +56,7 @@ public class ClientBundleTest extends GwtTestTest {
   @Test
   public void dataResource() {
     // Arrange
-    DataResource testDataResource = MyClientBundle.INSTANCE.testDataResource();
+    DataResource testDataResource = MyClientBundle.INSTANCE.dataResource();
 
     // Act
     String name = testDataResource.getName();
@@ -64,19 +64,19 @@ public class ClientBundleTest extends GwtTestTest {
     String toString = testDataResource.toString();
 
     // Assert
-    assertEquals("testDataResource", name);
+    assertEquals("dataResource", name);
     assertEquals(
         "http://127.0.0.1:8888/gwt_test_utils_module/textResourceXml.xml", url);
     assertEquals(
-        "com.octo.gwt.test.internal.resources.DataResourceCallback generated for 'com.octo.gwt.test.resources.MyClientBundle.testDataResource()'",
+        "com.octo.gwt.test.internal.resources.DataResourceCallback generated for 'com.octo.gwt.test.resources.MyClientBundle.dataResource()'",
         toString);
-    assertEquals(testDataResource, MyClientBundle.INSTANCE.testDataResource());
+    assertEquals(testDataResource, MyClientBundle.INSTANCE.dataResource());
   }
 
   @Test
   public void imageResource() {
     // Arrange
-    ImageResource testImageResource = MyClientBundle.INSTANCE.testImageResource();
+    ImageResource testImageResource = MyClientBundle.INSTANCE.imageResource();
 
     // Act
     String name = testImageResource.getName();
@@ -88,18 +88,17 @@ public class ClientBundleTest extends GwtTestTest {
     String toString = testImageResource.toString();
 
     // Assert
-    assertEquals("testImageResource", name);
+    assertEquals("imageResource", name);
     assertEquals(
-        "http://127.0.0.1:8888/gwt_test_utils_module/testImageResource.gif",
-        url);
+        "http://127.0.0.1:8888/gwt_test_utils_module/imageResource.gif", url);
     assertEquals(0, heigh);
     assertEquals(0, left);
     assertEquals(0, width);
     assertEquals(0, top);
     assertEquals(
-        "com.octo.gwt.test.internal.resources.ImageResourceCallback generated for 'com.octo.gwt.test.resources.MyClientBundle.testImageResource()'",
+        "com.octo.gwt.test.internal.resources.ImageResourceCallback generated for 'com.octo.gwt.test.resources.MyClientBundle.imageResource()'",
         toString);
-    assertEquals(testImageResource, MyClientBundle.INSTANCE.testImageResource());
+    assertEquals(testImageResource, MyClientBundle.INSTANCE.imageResource());
   }
 
   @Test
@@ -120,7 +119,7 @@ public class ClientBundleTest extends GwtTestTest {
   @Test
   public void imageResource_ShouldThrowExceptionWhenMultipleMatchingResourceFile() {
     // Arrange
-    String expectedMessage = "Too many resource files found for method 'com.octo.gwt.test.resources.MyClientBundle.doubleShouldThrowException()'";
+    String expectedMessage = "Too many ImageResource files found for method 'com.octo.gwt.test.resources.MyClientBundle.doubleShouldThrowException()'";
     try {
       // Act
       MyClientBundle.INSTANCE.doubleShouldThrowException();
@@ -130,6 +129,38 @@ public class ClientBundleTest extends GwtTestTest {
       assertEquals(expectedMessage, e.getMessage());
     }
 
+  }
+
+  @Test
+  public void multipleFileResource() {
+    // Arrange
+    MultipleFileCssResource multipleFileCssResource = MyClientBundle.INSTANCE.multipleFileCssResource();
+
+    // Act
+    String name = multipleFileCssResource.getName();
+    String testStyle = multipleFileCssResource.testStyle();
+    String testStyleWithHover = multipleFileCssResource.testStyleWithHover();
+    String testStyleOnSpecificElement = multipleFileCssResource.testStyleOnSpecificElement();
+    String testStyleOnSpecificStyle = multipleFileCssResource.testStyleOnSpecificStyle();
+    String addedStyle = multipleFileCssResource.addedStyle();
+    String constantValue = multipleFileCssResource.testConstant();
+    String addedConstantValue = multipleFileCssResource.addedConstant();
+    String toString = multipleFileCssResource.toString();
+
+    // Assert
+    assertEquals("multipleFileCssResource", name);
+    assertEquals("testStyle", testStyle);
+    assertEquals("testStyleWithHover", testStyleWithHover);
+    assertEquals("testStyleOnSpecificElement", testStyleOnSpecificElement);
+    assertEquals("testStyleOnSpecificStyle", testStyleOnSpecificStyle);
+    assertEquals("addedStyle", addedStyle);
+    assertEquals("constant-value", constantValue);
+    assertEquals("added-constant-value", addedConstantValue);
+    assertEquals(
+        "com.octo.gwt.test.internal.resources.CssResourceCallback generated for 'com.octo.gwt.test.resources.MyClientBundle.multipleFileCssResource()'",
+        toString);
+    assertEquals(multipleFileCssResource,
+        MyClientBundle.INSTANCE.multipleFileCssResource());
   }
 
   @Test

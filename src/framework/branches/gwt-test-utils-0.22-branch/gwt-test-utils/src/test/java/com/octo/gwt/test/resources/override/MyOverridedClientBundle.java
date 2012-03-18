@@ -10,7 +10,7 @@ public interface MyOverridedClientBundle extends MyClientBundle {
   public static final MyOverridedClientBundle INSTANCE = GWT.create(MyOverridedClientBundle.class);
 
   @Source("override_testImageResource.gif")
-  public ImageResource testImageResource();
+  public ImageResource imageResource();
 
   public TextResource textResourceTxt();
 

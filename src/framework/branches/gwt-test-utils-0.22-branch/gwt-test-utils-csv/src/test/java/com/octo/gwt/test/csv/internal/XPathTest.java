@@ -6,7 +6,7 @@ import static org.junit.Assert.assertNull;
 
 import org.junit.Test;
 
-import com.octo.gwt.test.csv.runner.Node;
+import com.octo.gwt.test.finder.Node;
 
 public class XPathTest {
 
@@ -36,8 +36,7 @@ public class XPathTest {
 
   @Test
   public void testE() {
-    assertEquals("/toto/tata{zyy}",
-        processString("/toto/tata[zyy]").toString());
+    assertEquals("/toto/tata{zyy}", processString("/toto/tata[zyy]").toString());
   }
 
   @Test

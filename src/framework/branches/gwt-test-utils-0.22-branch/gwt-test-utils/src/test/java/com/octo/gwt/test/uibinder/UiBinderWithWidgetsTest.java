@@ -65,7 +65,7 @@ public class UiBinderWithWidgetsTest extends GwtTestTest {
     assertEquals("MyRadioGroup", w.radioButton2.getName());
     assertFalse(w.radioButton2.getValue());
 
-    assertEquals(MyClientBundle.INSTANCE.testImageResource().getURL(),
+    assertEquals(MyClientBundle.INSTANCE.imageResource().getURL(),
         w.image.getUrl());
     assertEquals("http://slazzer.com/image.jpg", w.imageWithUrl.getUrl());
 

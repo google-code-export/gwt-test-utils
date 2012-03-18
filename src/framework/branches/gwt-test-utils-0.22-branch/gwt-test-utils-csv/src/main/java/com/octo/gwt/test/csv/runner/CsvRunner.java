@@ -21,8 +21,9 @@ import org.slf4j.LoggerFactory;
 import com.octo.gwt.test.csv.CsvMethod;
 import com.octo.gwt.test.csv.GwtCsvTest;
 import com.octo.gwt.test.csv.GwtTestCsvException;
-import com.octo.gwt.test.csv.tools.ObjectFinder;
-import com.octo.gwt.test.csv.tools.ObjectFinderManager;
+import com.octo.gwt.test.finder.GwtFinder;
+import com.octo.gwt.test.finder.Node;
+import com.octo.gwt.test.finder.ObjectFinder;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 public class CsvRunner {
@@ -43,66 +44,63 @@ public class CsvRunner {
 
   public void executeLine(String methodName, List<String> args, Object fixture)
       throws CsvRunnerException {
-    if (methodName.indexOf("**") != 0) {
-      List<String> filterArgs = new ArrayList<String>(args);
-      removeEmptyElements(filterArgs);
-      transformArgs(filterArgs);
-      Method m = getCsvMethod(fixture.getClass(), methodName);
-      if (m == null) {
-        fail(getAssertionErrorMessagePrefix() + "@"
-            + CsvMethod.class.getSimpleName() + " ' " + methodName
-            + " ' not found in object " + fixture);
-      }
-      GwtReflectionUtils.makeAccessible(m);
-      logger.debug(getProcessingMessagePrefix() + "Executing " + methodName
-          + ", params " + Arrays.toString(filterArgs.toArray()));
-      List<Object> argList = new ArrayList<Object>();
-      for (Class<?> clazz : m.getParameterTypes()) {
-        if (filterArgs.size() == 0) {
-          if (clazz.isArray()) {
-            argList.add(new String[]{});
-          } else {
-            fail(getAssertionErrorMessagePrefix() + "Too few args for "
-                + methodName);
-          }
+    if (methodName.indexOf("**") == 0) {
+      // commented line
+    }
+    List<String> filterArgs = new ArrayList<String>(args);
+    removeEmptyElements(filterArgs);
+    transformArgs(filterArgs);
+    Method m = getCsvMethod(fixture.getClass(), methodName);
+    if (m == null) {
+      fail(getAssertionErrorMessagePrefix() + "@"
+          + CsvMethod.class.getSimpleName() + " ' " + methodName
+          + " ' not found in object " + fixture);
+    }
+    GwtReflectionUtils.makeAccessible(m);
+    logger.debug(getProcessingMessagePrefix() + "Executing " + methodName
+        + ", params " + Arrays.toString(filterArgs.toArray()));
+    List<Object> argList = new ArrayList<Object>();
+    for (Class<?> clazz : m.getParameterTypes()) {
+      if (filterArgs.size() == 0) {
+        if (clazz.isArray()) {
+          argList.add(new String[]{});
         } else {
-          if (clazz.isArray()) {
-            argList.add(filterArgs.toArray(new String[]{}));
-            filterArgs.clear();
-          } else {
-            argList.add(filterArgs.get(0));
-            filterArgs.remove(0);
-          }
+          Assert.fail(getAssertionErrorMessagePrefix() + "Too few args for @"
+              + CsvMethod.class.getSimpleName() + " '" + methodName + "'");
+        }
+      } else {
+        if (clazz.isArray()) {
+          argList.add(filterArgs.toArray(new String[]{}));
+          filterArgs.clear();
+        } else {
+          argList.add(filterArgs.get(0));
+          filterArgs.remove(0);
         }
       }
-      if (filterArgs.size() != 0) {
-        fail(getAssertionErrorMessagePrefix() + "Too many args for "
-            + methodName);
-      }
-      try {
-        Object[] finalArgList = argList.toArray(new Object[]{});
-        m.invoke(fixture, finalArgList);
-      } catch (InvocationTargetException e) {
-        if (e.getCause() != null) {
-          if (e.getCause() instanceof AssertionError) {
-            throw (AssertionError) e.getCause();
-          } else if (e.getCause() != null
-              && e.getCause().getCause() instanceof AssertionError) {
-            throw (AssertionError) e.getCause().getCause();
-          }
-          throw createCsvExecutionException(e.getCause());
+    }
+    if (filterArgs.size() != 0) {
+      fail(getAssertionErrorMessagePrefix() + "Too many args for " + methodName);
+    }
+    try {
+      Object[] finalArgList = argList.toArray(new Object[]{});
+      m.invoke(fixture, finalArgList);
+    } catch (InvocationTargetException e) {
+      if (e.getCause() != null) {
+        if (e.getCause() instanceof AssertionError) {
+          throw (AssertionError) e.getCause();
+        } else if (e.getCause() != null
+            && e.getCause().getCause() instanceof AssertionError) {
+          throw (AssertionError) e.getCause().getCause();
         }
-        logger.error(getAssertionErrorMessagePrefix() + "Execution error", e);
-        fail(getAssertionErrorMessagePrefix() + "Error invoking " + methodName
-            + " in fixture : " + e.toString());
-      } catch (Exception e) {
-        logger.error(getAssertionErrorMessagePrefix() + "Execution error", e);
-        fail(getAssertionErrorMessagePrefix() + "Error invoking " + methodName
-            + " in fixture : " + e.toString());
+        throw createCsvExecutionException(e.getCause());
       }
-    } else {
-      logger.debug(getProcessingMessagePrefix() + "commented line : "
-          + methodName + " : " + args);
+      logger.error(getAssertionErrorMessagePrefix() + "Execution error", e);
+      fail(getAssertionErrorMessagePrefix() + "Error invoking " + methodName
+          + " in fixture : " + e.toString());
+    } catch (Exception e) {
+      logger.error(getAssertionErrorMessagePrefix() + "Execution error", e);
+      fail(getAssertionErrorMessagePrefix() + "Error invoking " + methodName
+          + " in fixture : " + e.toString());
     }
   }
 
@@ -214,7 +212,7 @@ public class CsvRunner {
 
   @SuppressWarnings("unchecked")
   public <T> T getObject(Class<T> clazz, boolean failOnError, String... params) {
-    Object o = ObjectFinderManager.get().findObject(this, params);
+    Object o = GwtFinder.find(params);
     if (clazz.isInstance(o)) {
       return (T) o;
     }
@@ -275,10 +273,7 @@ public class CsvRunner {
   private CsvRunnerException createCsvExecutionException(Throwable cause) {
     if (cause instanceof CsvRunnerException) {
       return (CsvRunnerException) cause;
-    } else if (AssertionError.class.isInstance(cause)) {
-      cause = cause.getCause();
     }
-
     return new CsvRunnerException(this, cause);
   }
 

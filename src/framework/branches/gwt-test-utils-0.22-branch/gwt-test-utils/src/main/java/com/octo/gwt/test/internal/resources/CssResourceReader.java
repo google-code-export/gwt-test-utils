@@ -7,9 +7,8 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.net.URL;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -26,14 +25,21 @@ class CssResourceReader implements AfterTestCallback {
 
   public static class CssParsingResult {
 
-    private final Map<String, String> constants;
+    private final Map<String, String> cssConstants;
 
-    private CssParsingResult(Map<String, String> constants, Set<String> styles) {
-      this.constants = constants;
+    private CssParsingResult(Map<String, String> cssConstants) {
+      this.cssConstants = cssConstants;
     }
 
-    public Map<String, String> getConstants() {
-      return constants;
+    /**
+     * Returns the value of the css constant passed as parameter
+     * 
+     * @param name The name of the constant to retrive the value
+     * @return The value of the corresponding constants, or null if it does not
+     *         exist
+     */
+    public String getConstantValue(String name) {
+      return cssConstants.get(name);
     }
   }
 
@@ -56,26 +62,35 @@ class CssResourceReader implements AfterTestCallback {
     cache.clear();
   }
 
+  public CssParsingResult readCss(List<URL> urls) throws IOException {
+
+    Map<String, String> cssConstants = new HashMap<String, String>();
+
+    for (URL url : urls) {
+      cssConstants.putAll(readCssFile(url).cssConstants);
+    }
+
+    return new CssParsingResult(cssConstants);
+  }
+
   public CssParsingResult readCss(String text) throws IOException {
     return parse(new StringReader(text));
   }
 
-  public CssParsingResult readCss(URL url) throws IOException {
+  public CssParsingResult readCssFile(URL url) throws IOException {
 
-    CssParsingResult parsingResult = cache.get(url);
-    if (parsingResult == null) {
-      parsingResult = parse(new InputStreamReader(url.openStream(), "UTF-8"));
-      cache.put(url, parsingResult);
+    CssParsingResult cssConstants = cache.get(url);
+    if (cssConstants == null) {
+      cssConstants = parse(new InputStreamReader(url.openStream(), "UTF-8"));
+      cache.put(url, cssConstants);
     }
 
-    return parsingResult;
+    return cssConstants;
   }
 
   private CssParsingResult parse(Reader reader) throws IOException {
 
-    Map<String, String> constants = new HashMap<String, String>();
-    Set<String> styles = new HashSet<String>();
-
+    Map<String, String> cssConstants = new HashMap<String, String>();
     BufferedReader br = null;
 
     try {
@@ -86,11 +101,11 @@ class CssResourceReader implements AfterTestCallback {
       while ((line = br.readLine()) != null) {
         m = CSS_CONSTANT_PATTERN.matcher(line);
         if (m.matches()) {
-          constants.put(m.group(1), m.group(2));
+          cssConstants.put(m.group(1), m.group(2));
         }
       }
 
-      return new CssParsingResult(constants, styles);
+      return new CssParsingResult(cssConstants);
 
     } finally {
       if (br != null) {
