@@ -174,7 +174,7 @@ public abstract class UiObjectTag<T> implements UiTag<T> {
   protected void appendElement(T wrapped, Element element, String namespaceURI,
       List<IsWidget> childWidgets) {
 
-    UiChildMethodHolder uiChildMethodHolder = uiChildMethodMap.get(element.getTagName().toLowerCase());
+    UiChildMethodHolder uiChildMethodHolder = uiChildMethodMap.get(element.getTagName());
 
     if (uiChildMethodHolder != null) {
       invokeUiChildMethod(wrapped, childWidgets, uiChildMethodHolder);
@@ -319,17 +319,41 @@ public abstract class UiObjectTag<T> implements UiTag<T> {
 
     Map<String, UiChildMethodHolder> map = new HashMap<String, UiObjectTag.UiChildMethodHolder>();
 
-    // TODO : collect
+    Map<Method, UiChild> uiChildMap = GwtReflectionUtils.getAnnotatedMethod(
+        clazz, UiChild.class);
+    for (Map.Entry<Method, UiChild> entry : uiChildMap.entrySet()) {
+      Method method = entry.getKey();
+      UiChild annotation = entry.getValue();
+      UiChildMethodHolder holder = new UiChildMethodHolder();
+      holder.uiChildMethod = method;
+      holder.invocationLimit = annotation.limit(); // default is -1
+      holder.invocationCount = 0;
+
+      String tagName = (annotation.tagname().equals(""))
+          ? computeUiChildMethodTagName(method) : annotation.tagname();
+
+      map.put(tagName, holder);
+    }
     return map;
+  }
+
+  private String computeUiChildMethodTagName(Method method) {
+    if (!method.getName().startsWith("add")) {
+      throw new GwtTestUiBinderException(
+          "Cannot compute tagname of @UiChild annotated method '"
+              + method.toGenericString()
+              + "': you have to fill the 'tagname' property of the @UiChild or to prefix your the method name with 'add'");
+    }
+    return method.getName().substring(3).toLowerCase();
   }
 
   private void invokeUiChildMethod(T wrapped, List<IsWidget> childWidgets,
       UiChildMethodHolder uiChildMethodHolder) {
-    if (uiChildMethodHolder.invocationLimit > 0
+    if (uiChildMethodHolder.invocationLimit > -1
         && uiChildMethodHolder.invocationCount > uiChildMethodHolder.invocationLimit) {
       throw new GwtTestUiBinderException("@UiChild method '"
           + uiChildMethodHolder.uiChildMethod.toGenericString()
-          + "' has cannot be invoked more than "
+          + "' cannot be invoked more than "
           + uiChildMethodHolder.invocationLimit + " times");
     } else if (childWidgets.size() != 1) {
       throw new GwtTestUiBinderException("@UiChild method '"
