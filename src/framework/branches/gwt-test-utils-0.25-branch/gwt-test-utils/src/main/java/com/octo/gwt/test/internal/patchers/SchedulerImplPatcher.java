@@ -17,7 +17,7 @@ class SchedulerImplPatcher {
 
   @PatchMethod
   static void scheduleEntry(SchedulerImpl impl, RepeatingCommand cmd) {
-    cmd.execute();
+    executeRepeatingCommand(cmd);
   }
 
   @PatchMethod
@@ -38,18 +38,25 @@ class SchedulerImplPatcher {
   @PatchMethod
   static void scheduleFixedDelay(SchedulerImpl impl, RepeatingCommand cmd,
       int delayMs) {
-    cmd.execute();
+    executeRepeatingCommand(cmd);
   }
 
   @PatchMethod
   static void scheduleFixedPeriod(SchedulerImpl impl, RepeatingCommand cmd,
       int delayMs) {
-    cmd.execute();
+    executeRepeatingCommand(cmd);
   }
 
   @PatchMethod
   static void scheduleIncremental(SchedulerImpl impl, RepeatingCommand cmd) {
-    cmd.execute();
+    executeRepeatingCommand(cmd);
+  }
+
+  private static void executeRepeatingCommand(RepeatingCommand cmd) {
+    boolean repeat = true;
+    while (repeat) {
+      repeat = cmd.execute();
+    }
   }
 
 }

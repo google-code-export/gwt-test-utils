@@ -37,10 +37,10 @@ class DefaultUiWidgetTagFactory implements UiObjectTagFactory<Object> {
   private DefaultUiWidgetTagFactory() {
     gwtTestUtilsFactories = new ArrayList<UiObjectTagFactory<?>>();
 
+    gwtTestUtilsFactories.add(new UiHTMLPanelTagFactory());
     gwtTestUtilsFactories.add(new UiCellPanelTagFactory());
     gwtTestUtilsFactories.add(new UiGridTagFactory());
     gwtTestUtilsFactories.add(new UiDockLayoutPanelTagFactory());
-    gwtTestUtilsFactories.add(new UiHTMLPanelTagFactory());
     gwtTestUtilsFactories.add(new UiImageTagFactory());
     gwtTestUtilsFactories.add(new UiLayoutPanelTagFactory());
     gwtTestUtilsFactories.add(new UiMenuBarTagFactory());

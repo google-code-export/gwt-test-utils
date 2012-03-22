@@ -1,8 +1,11 @@
 package com.octo.gwt.test.uibinder.widget;
 
+import java.util.List;
 import java.util.Map;
 
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.octo.gwt.test.uibinder.UiObjectTag;
 import com.octo.gwt.test.uibinder.UiObjectTagFactory;
 
@@ -15,6 +18,13 @@ import com.octo.gwt.test.uibinder.UiObjectTagFactory;
 public class UiHTMLPanelTagFactory implements UiObjectTagFactory<HTMLPanel> {
 
   private static class UiHTMLPanelTag extends UiObjectTag<HTMLPanel> {
+
+    @Override
+    protected void appendElement(HTMLPanel wrapped, Element element,
+        String namespaceURI, List<IsWidget> childWidgets) {
+
+      getElement(wrapped).appendChild(element);
+    }
 
     @Override
     protected void finalizeObject(HTMLPanel widget) {

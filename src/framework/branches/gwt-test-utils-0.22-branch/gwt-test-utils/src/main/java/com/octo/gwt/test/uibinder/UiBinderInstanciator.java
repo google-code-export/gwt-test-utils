@@ -41,7 +41,7 @@ class UiBinderInstanciator {
 
     if (instance == null && !UIObject.class.isAssignableFrom(clazz)
         && !Widget.class.isAssignableFrom(clazz)) {
-      instance = GWT.create(clazz);
+      instance = GWT.<U> create(clazz);
     }
 
     return instance;

@@ -10,6 +10,7 @@ import com.google.gwt.uibinder.client.UiConstructor;
 import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.HasHTML;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.UIObject;
@@ -22,16 +23,17 @@ import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 /**
  * Base handler for any object tag (e.g. &lt;g:Xxx /> tags, where Xxx is either
- * {@link UIObject} subclass or a {@link Widget} subtype. This class is expected
- * to be extended to add custom code to handle specific widget / attributes.
+ * {@link UIObject} subclass or a {@link IsWidget} subtype. This class is
+ * expected to be extended to add custom code to handle specific widget /
+ * attributes.
  * 
  * @author Gael Lazzari
  * 
  * @param <T> The wrapped object subtype
  * 
  * @see UiObjectTag#instanciate(Class)
- * @see UiObjectTag#initializeObject(Widget, Map)
- * @see UiObjectTag#finalizeObject(Widget)
+ * @see UiObjectTag#initializeObject(IsWidget, Map)
+ * @see UiObjectTag#finalizeObject(IsWidget)
  */
 public abstract class UiObjectTag<T> implements UiTag<T> {
 
@@ -107,52 +109,13 @@ public abstract class UiObjectTag<T> implements UiTag<T> {
   }
 
   /**
-   * Callback method called whenever a new uiBinder tag is opened, so
-   * implementation could apply some custom initialization.
-   * 
-   * @param clazz The class of the object to be wrapped in this UiTag.
-   * @param namespaceURI The namespace URI of the opened tag
-   * @param attributes map of attributes of the wrapped uiObject, with attribute
-   *          XML names as keys, corresponding objects as values.
-   * @param parentTag The parent tag
-   * @param owner The owner of the UiBinder template, with {@link UiField}
-   *          fields.
-   */
-  final void startTag(Class<? extends T> clazz, Map<String, Object> attributes,
-      UiTag<?> parentTag, Object owner) {
-
-    this.parentTag = parentTag;
-
-    wrapped = UiBinderInstanciator.getInstance(clazz, attributes, owner);
-
-    if (wrapped == null) {
-      wrapped = instanciate(clazz, attributes, owner);
-    }
-
-    String uiFieldValue = (String) attributes.get("ui:field");
-
-    if (uiFieldValue != null) {
-      attributes.remove("ui:field");
-      try {
-        GwtReflectionUtils.setPrivateFieldValue(owner, uiFieldValue, wrapped);
-      } catch (ReflectionException e) {
-        // ui:field has no corresponding @UiField declared : just ignore it
-      }
-    }
-
-    initializeObject(wrapped, attributes, owner);
-
-    UiBinderBeanUtils.populateObject(wrapped, attributes);
-  }
-
-  /**
-   * Add a new UIObject which is not a {@link Widget} instance as a child to
+   * Add a new UIObject which is not a {@link IsWidget} instance as a child to
    * this uiObject. This implementation does nothing, the method is expected to
    * be overridden.
    * 
    * @param wrapped The wrapped uiObject of this tag.
-   * @param uiObject The UIObject instance to add, which is not a {@link Widget}
-   *          instance.
+   * @param uiObject The UIObject instance to add, which is not a
+   *          {@link IsWidget} instance.
    * 
    */
   protected void addUIObject(T wrapped, UIObject uiObject) {
@@ -185,9 +148,15 @@ public abstract class UiObjectTag<T> implements UiTag<T> {
 
   /**
    * Append an element declared in the .ui.xml to this uiObject, which is
-   * supposed to be its parent. This implementation calls
-   * {@link Element#appendChild(com.google.gwt.dom.client.Node)} on the Widget's
-   * element.
+   * supposed to be its parent. This implementation has one of the following
+   * behavior :
+   * <ul>
+   * <li>If the wrapped {@link UIObject} implements {@link HasHTML}, the child
+   * would be appended through
+   * {@link Element#appendChild(com.google.gwt.dom.client.Node)}</li>
+   * <li>Otherwise, a {@link GwtTestUiBinderException} would be thrown with
+   * message: 'Found unexpected child element : <x:xxxx>'</li>
+   * </ul>
    * 
    * @param wrapped The wrapped uiObject of this tag.
    * @param element The child element to be appended.
@@ -197,7 +166,15 @@ public abstract class UiObjectTag<T> implements UiTag<T> {
    */
   protected void appendElement(T wrapped, Element element, String namespaceURI,
       List<Widget> childWidgets) {
-    getElement(wrapped).appendChild(element);
+
+    if (HasHTML.class.isInstance(wrapped)) {
+      getElement(wrapped).appendChild(element);
+    } else {
+      String elementToString = (namespaceURI != null && namespaceURI.length() > 0)
+          ? namespaceURI + ":" + element.getTagName() : element.getTagName();
+      throw new GwtTestUiBinderException("Found unexpected child element : <"
+          + elementToString + "> in " + wrapped.getClass().getName());
+    }
   }
 
   /**
@@ -284,6 +261,45 @@ public abstract class UiObjectTag<T> implements UiTag<T> {
               + UiObjectTagFactory.class.getSimpleName()
               + " by calling the protected method 'addUiObjectTagFactory' of your test class and override the 'instanciate(Class<T>) method in it");
     }
+  }
+
+  /**
+   * Callback method called whenever a new uiBinder tag is opened, so
+   * implementation could apply some custom initialization.
+   * 
+   * @param clazz The class of the object to be wrapped in this UiTag.
+   * @param namespaceURI The namespace URI of the opened tag
+   * @param attributes map of attributes of the wrapped uiObject, with attribute
+   *          XML names as keys, corresponding objects as values.
+   * @param parentTag The parent tag
+   * @param owner The owner of the UiBinder template, with {@link UiField}
+   *          fields.
+   */
+  final void startTag(Class<? extends T> clazz, Map<String, Object> attributes,
+      UiTag<?> parentTag, Object owner) {
+
+    this.parentTag = parentTag;
+
+    wrapped = UiBinderInstanciator.getInstance(clazz, attributes, owner);
+
+    if (wrapped == null) {
+      wrapped = instanciate(clazz, attributes, owner);
+    }
+
+    String uiFieldValue = (String) attributes.get("ui:field");
+
+    if (uiFieldValue != null) {
+      attributes.remove("ui:field");
+      try {
+        GwtReflectionUtils.setPrivateFieldValue(owner, uiFieldValue, wrapped);
+      } catch (ReflectionException e) {
+        // ui:field has no corresponding @UiField declared : just ignore it
+      }
+    }
+
+    initializeObject(wrapped, attributes, owner);
+
+    UiBinderBeanUtils.populateObject(wrapped, attributes);
   }
 
 }

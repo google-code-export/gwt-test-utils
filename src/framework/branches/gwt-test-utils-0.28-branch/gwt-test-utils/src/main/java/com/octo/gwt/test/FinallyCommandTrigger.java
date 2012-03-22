@@ -39,11 +39,18 @@ public class FinallyCommandTrigger implements AfterTestCallback {
 
   public static void triggerCommands() {
     while (!INSTANCE.repeatingCommands.isEmpty()) {
-      INSTANCE.repeatingCommands.poll().execute();
+      executeRepeatingCommand(INSTANCE.repeatingCommands.poll());
     }
 
     while (!INSTANCE.scheduledCommands.isEmpty()) {
       INSTANCE.scheduledCommands.poll().execute();
+    }
+  }
+
+  private static void executeRepeatingCommand(RepeatingCommand cmd) {
+    boolean repeat = true;
+    while (repeat) {
+      repeat = cmd.execute();
     }
   }
 

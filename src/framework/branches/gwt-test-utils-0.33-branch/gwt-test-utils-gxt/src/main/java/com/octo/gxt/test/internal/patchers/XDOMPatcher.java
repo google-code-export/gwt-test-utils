@@ -2,6 +2,7 @@ package com.octo.gxt.test.internal.patchers;
 
 import com.extjs.gxt.ui.client.core.XDOM;
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.user.client.Element;
 import com.octo.gwt.test.patchers.PatchClass;
 import com.octo.gwt.test.patchers.PatchMethod;
@@ -42,6 +43,15 @@ class XDOMPatcher {
   @PatchMethod
   static int getDocumentWidth() {
     return Document.get().getDocumentElement().getClientWidth();
+  }
+
+  @PatchMethod
+  static Element getHead() {
+    NodeList<com.google.gwt.dom.client.Element> heads = Document.get().getElementsByTagName(
+        "head");
+
+    return (heads.getLength() > 0) ? heads.getItem(0).<Element> cast()
+        : (Element) null;
   }
 
   @PatchMethod

@@ -13,6 +13,8 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasHTML;
 import com.google.gwt.user.client.ui.HasName;
 import com.google.gwt.user.client.ui.HasText;
+import com.google.gwt.user.client.ui.RootLayoutPanel;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 import com.octo.gwt.test.internal.AfterTestCallback;
@@ -20,6 +22,9 @@ import com.octo.gwt.test.internal.AfterTestCallbackManager;
 import com.octo.gwt.test.utils.GwtReflectionUtils;
 
 /**
+ * Helper class which expose some static methods to retrieve Widgets (or widget
+ * properties) that are attached to the {@link RootPanel} or
+ * {@link RootLayoutPanel}.
  * 
  * @author Gael Lazzari
  * 
@@ -122,20 +127,57 @@ public class GwtFinder implements AfterTestCallback {
 
   private static GwtFinder INSTANCE = new GwtFinder();
 
+  /**
+   * Find an attached widget or a property of an attached widget in the DOM
+   * which matchs the given introspection Node.
+   * 
+   * @param o The root object to apply the introspection path
+   * @param node The node introspection path
+   * @return The corresponding widget (or one of its properties), or null if
+   *         nothing was found.
+   */
   @SuppressWarnings("unchecked")
   public static <T> T find(Object o, Node node) {
     return (T) INSTANCE.findInternal(o, node);
   }
 
+  /**
+   * Find an attached widget or a property of an attached widget in the DOM
+   * which matchs the given params.
+   * 
+   * @param params An array of params, which could be either an introspection
+   *          path, a DOM id, a random text (for {@link HasText} widgets), a
+   *          random html (for {@link HasHTML} widget) or a name attribute (for
+   *          {@link HasName} widget).
+   * @return The corresponding widget (or one of its properties), or null if
+   *         nothing was found.
+   */
   @SuppressWarnings("unchecked")
   public static <T> T find(String... params) {
     return (T) INSTANCE.findInternal(params);
   }
 
+  /**
+   * Register a custom {@link ObjectFinder} implementation to handle
+   * {@link GwtFinder#find(String...)} calls with specific parameters.
+   * 
+   * @param finder The custom finder implementation
+   */
   public static void registerFinder(ObjectFinder finder) {
     INSTANCE.customObjectFinders.add(finder);
   }
 
+  /**
+   * Register a custom {@link NodeObjectFinder} implementation to handle
+   * {@link GwtFinder#find(Object, Node)} calls with a specific root
+   * introspection path.
+   * 
+   * @param prefix The root of the introspection path the custom
+   *          {@link NodeObjectFinder} is responsible for
+   * @param nodeObjectFinder The custom implementation which would be used
+   *          whenever the root label of the introspection node does equals the
+   *          registered prefix.
+   */
   public static void registerNodeFinder(String prefix,
       NodeObjectFinder nodeObjectFinder) {
     INSTANCE.defaultObjectFinder.nodeObjectFinders.put(prefix, nodeObjectFinder);

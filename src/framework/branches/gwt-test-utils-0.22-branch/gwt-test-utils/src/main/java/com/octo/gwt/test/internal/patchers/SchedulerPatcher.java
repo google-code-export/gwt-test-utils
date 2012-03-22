@@ -40,12 +40,19 @@ public class SchedulerPatcher {
 
     @Override
     public void scheduleFixedPeriod(RepeatingCommand cmd, int delayMs) {
-      cmd.execute();
+      executeRepeatingCommand(cmd);
     }
 
     @Override
     public void scheduleIncremental(RepeatingCommand cmd) {
-      cmd.execute();
+      executeRepeatingCommand(cmd);
+    }
+
+    private void executeRepeatingCommand(RepeatingCommand cmd) {
+      boolean repeat = true;
+      while (repeat) {
+        repeat = cmd.execute();
+      }
     }
 
   }
