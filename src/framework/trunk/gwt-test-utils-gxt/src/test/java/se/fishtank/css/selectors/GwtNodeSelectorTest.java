@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
-import com.octo.gwt.test.GwtTest;
+import com.googlecode.gwt.test.GwtTest;
 
 public class GwtNodeSelectorTest extends GwtTest {
 

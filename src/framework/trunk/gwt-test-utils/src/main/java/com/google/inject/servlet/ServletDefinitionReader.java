@@ -10,8 +10,8 @@ import com.google.inject.Binding;
 import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.google.inject.TypeLiteral;
-import com.octo.gwt.test.exceptions.GwtTestConfigurationException;
-import com.octo.gwt.test.utils.GwtReflectionUtils;
+import com.googlecode.gwt.test.exceptions.GwtTestConfigurationException;
+import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
 /**
  * 
