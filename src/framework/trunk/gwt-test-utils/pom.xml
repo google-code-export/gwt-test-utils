@@ -5,7 +5,7 @@
 	<name>${project.artifactId}</name>
 
 	<parent>
-		<groupId>com.octo.gwt.test</groupId>
+		<groupId>com.googlecode</groupId>
 		<artifactId>gwt-test-utils-parent</artifactId>
 		<version>0.37-SNAPSHOT</version>
 	</parent>
