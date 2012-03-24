@@ -124,7 +124,7 @@ public class WidgetUtils {
    *         otherwise.
    */
   public static boolean isWidgetVisible(UIObject object) {
-    // FIXME : remove this hack which is required for octo main GWT
+    // FIXME : remove this hack which is required for googlecode main GWT
     // project...
     if (object == null) {
       return false;

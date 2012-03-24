@@ -108,14 +108,19 @@ class LocationPatcher {
   }
 
   private static URL getURLToUse() {
-    try {
-      return urlHolder.url != null ? urlHolder.url : new URL(
-          GWT.getHostPageBaseURL() + computePath() + Location.getHash());
-    } catch (MalformedURLException e) {
-      throw new GwtTestConfigurationException(
-          "GWT.getHostPageBaseURL() has failed to be parsed in a "
-              + URL.class.getName() + " instance", e);
+    if (urlHolder.url == null) {
+      try {
+        urlHolder.url = new URL(GWT.getHostPageBaseURL() + computePath()
+            + Location.getHash());
+      } catch (MalformedURLException e) {
+        throw new GwtTestConfigurationException(
+            "GWT.getHostPageBaseURL() has failed to be parsed in a "
+                + URL.class.getName() + " instance", e);
+      }
     }
+
+    return urlHolder.url;
+
   }
 
 }
