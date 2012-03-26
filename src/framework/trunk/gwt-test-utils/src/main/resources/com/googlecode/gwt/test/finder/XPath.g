@@ -4,9 +4,9 @@ options {
 	output = AST;
 }
 
-@lexer::header { package com.octo.gwt.test.csv.runner; }
+@lexer::header { package com.googlecode.gwt.test.csv.runner; }
 
-@header { package com.octo.gwt.test.csv.runner; }
+@header { package com.octo.googlecode.test.csv.runner; }
 
 @members {
  public Node root; 

@@ -5,7 +5,7 @@
 	<name>${project.artifactId}</name>
 
 	<parent>
-		<groupId>com.googlecode</groupId>
+		<groupId>com.googlecode.gwt-test-utils</groupId>
 		<artifactId>gwt-test-utils-parent</artifactId>
 		<version>0.37-SNAPSHOT</version>
 	</parent>
@@ -109,8 +109,8 @@
 							</execution>
 						</executions>
 						<configuration>
-							<sourceDirectory>${basedir}/src/main/resources/com/octo/gwt/test/csv/runner</sourceDirectory>
-							<outputDirectory>${basedir}/src/main/java/com/octo/gwt/test/csv/runner</outputDirectory>
+							<sourceDirectory>${basedir}/src/main/resources/com/googlecode/gwt/test/csv/runner</sourceDirectory>
+							<outputDirectory>${basedir}/src/main/java/com/googlecode/gwt/test/csv/runner</outputDirectory>
 						</configuration>
 					</plugin>
 				</plugins>
