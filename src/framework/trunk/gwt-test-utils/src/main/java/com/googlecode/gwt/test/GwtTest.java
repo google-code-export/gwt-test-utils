@@ -86,9 +86,9 @@ public abstract class GwtTest extends GwtModuleRunnerAdapter implements Test {
   @After
   public final void tearDownGwtTest() throws Exception {
 
-    GwtReset.get().reset();
-
     List<Throwable> throwables = AfterTestCallbackManager.get().triggerCallbacks();
+
+    GwtReset.get().reset();
 
     if (throwables.size() > 0) {
       throw new GwtTestException(
