@@ -8,6 +8,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.gwt.dom.client.BodyElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
@@ -59,9 +62,13 @@ class DocumentPatcher {
 
   private static DocumentHolder DOCUMENT_HOLDER = new DocumentHolder();
 
-  private static final DoubleMap<String, String, Element> HTML_ELEMENT_PROTOTYPES = new DoubleMap<String, String, Element>();
+  private static final String EMPTY_HTML = "<html><head></head><body></body></html>";
+
+  private static final DoubleMap<String, String, String> HTML_ELEMENT_PROTOTYPES = new DoubleMap<String, String, String>();
 
   private static int ID = 0;
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(DocumentPatcher.class);
 
   @PatchMethod
   static Text createTextNode(Document document, String data) {
@@ -83,6 +90,7 @@ class DocumentPatcher {
         DOCUMENT_HOLDER.document.appendChild(e);
         JavaScriptObjects.setProperty(DOCUMENT_HOLDER.document,
             JsoProperties.DOCUMENT_ELEMENT, e);
+        return DOCUMENT_HOLDER.document;
       } catch (Exception e) {
         if (GwtTestException.class.isInstance(e)) {
           throw (GwtTestException) e;
@@ -149,8 +157,7 @@ class DocumentPatcher {
     return "";
   }
 
-  private static Element findHTMLElement(String hostPagePath,
-      NodeList<Node> nodes) {
+  private static Element findHTMLElement(NodeList<Node> nodes) {
     int i = 0;
     while (i < nodes.getLength()) {
       Node node = nodes.getItem(i);
@@ -162,8 +169,8 @@ class DocumentPatcher {
       }
       i++;
     }
-    throw new GwtTestDomException("Cannot find a root <html> element in file '"
-        + hostPagePath + "'");
+
+    return null;
   }
 
   private static NodeList<Node> getChildNodeList(Node node) {
@@ -172,24 +179,29 @@ class DocumentPatcher {
 
   private static String getHostPageHTML(String hostPagePath) {
 
+    // try classpath relative path
     InputStream is = JavaScriptObjects.class.getClassLoader().getResourceAsStream(
         hostPagePath);
 
     if (is == null) {
       try {
+        // try project relative or absolute path
         is = new FileInputStream(hostPagePath);
       } catch (FileNotFoundException e) {
         // handle just after
       }
     }
+
     if (is == null) {
-      throw new GwtTestConfigurationException(
-          "Cannot find file '"
-              + hostPagePath
-              + "', please override "
-              + GwtTest.class.getSimpleName()
-              + ".getHostPagePath() method by specifying the relative path from the root directory of your java project");
+      LOGGER.warn("Cannot find the host HTML file '"
+          + hostPagePath
+          + "', fallback to an empty HTML document instead. You may want to override "
+          + GwtTest.class.getSimpleName()
+          + ".getHostPagePath(String moduleFullQualifiedName) method to specify the relative path of the your HTML file from the root directory of your java project");
+
+      return EMPTY_HTML;
     }
+
     BufferedReader br = null;
     try {
       br = new BufferedReader(new InputStreamReader(is));
@@ -247,19 +259,23 @@ class DocumentPatcher {
       return defaultHTMLElement;
     }
 
-    Element htmlPrototype = HTML_ELEMENT_PROTOTYPES.get(moduleName,
-        hostPagePath);
+    String html = HTML_ELEMENT_PROTOTYPES.get(moduleName, hostPagePath);
 
-    if (htmlPrototype == null) {
+    if (html == null) {
       // parsing of the host page
-      String html = getHostPageHTML(hostPagePath);
-      NodeList<Node> list = GwtHtmlParser.parse(html, false);
-
-      htmlPrototype = findHTMLElement(hostPagePath, list);
-      HTML_ELEMENT_PROTOTYPES.put(moduleName, hostPagePath, htmlPrototype);
+      html = getHostPageHTML(hostPagePath);
+      HTML_ELEMENT_PROTOTYPES.put(moduleName, hostPagePath, html);
     }
 
-    return htmlPrototype.cloneNode(true).cast();
+    NodeList<Node> list = GwtHtmlParser.parse(html, false);
+    Element htmlElement = findHTMLElement(list);
+
+    if (htmlElement == null) {
+      throw new GwtTestDomException(
+          "Cannot find a root <html> element in file '" + hostPagePath + "'");
+    }
+
+    return htmlElement;
   }
 
 }

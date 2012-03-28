@@ -29,7 +29,9 @@ class UiBinderInstanciator {
 
   static <U> U getInstance(Class<U> clazz, Map<String, Object> attributes,
       Object owner) {
-    U instance = getProvidedUiField(clazz, owner);
+
+    String uiFieldValue = (String) attributes.get("ui:field");
+    U instance = getProvidedUiField(clazz, owner, uiFieldValue);
 
     if (instance == null) {
       instance = getObjectFromUiFactory(clazz, owner);
@@ -131,12 +133,17 @@ class UiBinderInstanciator {
     }
   }
 
-  private static <U> U getProvidedUiField(Class<U> clazz, Object owner) {
+  private static <U> U getProvidedUiField(Class<U> clazz, Object owner,
+      String uiFieldValue) {
     Map<Field, UiField> map = GwtReflectionUtils.getAnnotatedField(
         owner.getClass(), UiField.class);
 
     for (Map.Entry<Field, UiField> entry : map.entrySet()) {
-      if (entry.getKey().getType() == clazz && entry.getValue().provided()) {
+      if (!entry.getValue().provided()) {
+        // not a provided uiField
+        continue;
+      } else if (entry.getKey().getName().equals(uiFieldValue)
+          || (uiFieldValue == null && entry.getKey().getType() == clazz)) {
         Object providedObject = GwtReflectionUtils.getPrivateFieldValue(owner,
             entry.getKey());
         if (providedObject == null) {

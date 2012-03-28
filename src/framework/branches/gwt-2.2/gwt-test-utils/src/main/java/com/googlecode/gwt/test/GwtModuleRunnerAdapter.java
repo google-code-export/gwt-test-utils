@@ -8,9 +8,6 @@ import java.util.Map;
 
 import javax.servlet.ServletConfig;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.google.gwt.i18n.client.Dictionary;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.googlecode.gwt.test.exceptions.GwtTestPatchException;
@@ -26,7 +23,6 @@ public abstract class GwtModuleRunnerAdapter implements GwtModuleRunner,
     AfterTestCallback {
 
   private static final String DEFAULT_WAR_DIR = "war/";
-  private static final Logger LOGGER = LoggerFactory.getLogger(GwtConfig.class);
   private static final String MAVEN_DEFAULT_RES_DIR = "src/main/resources/";
   private static final String MAVEN_DEFAULT_WEB_DIR = "src/main/webapp/";
 
@@ -44,8 +40,8 @@ public abstract class GwtModuleRunnerAdapter implements GwtModuleRunner,
    * (non-Javadoc)
    * 
    * @see
-   * com.googlecode.gwt.test.GwtModuleRunner#addDictionaryEntries(java.lang.String,
-   * java.util.Map)
+   * com.googlecode.gwt.test.GwtModuleRunner#addDictionaryEntries(java.lang.
+   * String, java.util.Map)
    */
   public void addDictionaryEntries(String dictionaryName,
       Map<String, String> entries) {
@@ -58,8 +54,8 @@ public abstract class GwtModuleRunnerAdapter implements GwtModuleRunner,
    * (non-Javadoc)
    * 
    * @see
-   * com.googlecode.gwt.test.GwtModuleRunner#addGwtCreateHandler(com.googlecode.gwt.test
-   * .GwtCreateHandler)
+   * com.googlecode.gwt.test.GwtModuleRunner#addGwtCreateHandler(com.googlecode
+   * .gwt.test .GwtCreateHandler)
    */
   public void addGwtCreateHandler(GwtCreateHandler gwtCreateHandler) {
     GwtCreateHandlerManager.get().addGwtCreateHandler(gwtCreateHandler);
@@ -68,8 +64,9 @@ public abstract class GwtModuleRunnerAdapter implements GwtModuleRunner,
   /*
    * (non-Javadoc)
    * 
-   * @see com.googlecode.gwt.test.GwtModuleRunner#addUiObjectTagFactory(com.googlecode.gwt
-   * .test.uibinder.UiObjectTagFactory)
+   * @see
+   * com.googlecode.gwt.test.GwtModuleRunner#addUiObjectTagFactory(com.googlecode
+   * .gwt .test.uibinder.UiObjectTagFactory)
    */
   public void addUiObjectTagFactory(
       UiObjectTagFactory<? extends IsWidget> factory) {
@@ -92,7 +89,8 @@ public abstract class GwtModuleRunnerAdapter implements GwtModuleRunner,
    * (non-Javadoc)
    * 
    * @see
-   * com.googlecode.gwt.test.GwtModuleRunner#canDispatchDomEventOnDetachedWidget()
+   * com.googlecode.gwt.test.GwtModuleRunner#canDispatchDomEventOnDetachedWidget
+   * ()
    */
   public boolean canDispatchDomEventOnDetachedWidget() {
     return canDispatchDomEventOnDetachedWidget;
@@ -185,8 +183,8 @@ public abstract class GwtModuleRunnerAdapter implements GwtModuleRunner,
    * (non-Javadoc)
    * 
    * @see
-   * com.googlecode.gwt.test.GwtModuleRunner#registerUiConstructor(java.lang.Class,
-   * java.lang.String[])
+   * com.googlecode.gwt.test.GwtModuleRunner#registerUiConstructor(java.lang
+   * .Class, java.lang.String[])
    */
   public void registerUiConstructor(Class<? extends IsWidget> clazz,
       String... argNames) {
@@ -199,7 +197,8 @@ public abstract class GwtModuleRunnerAdapter implements GwtModuleRunner,
    * 
    * @param moduleFullQualifiedName The full qualifed name of the corresponding
    *          GWT module.
-   * @return The relative path of the HTML file used.
+   * @return The relative path of the HTML file used, or null if there is no
+   *         HTML file
    */
   protected String getHostPagePath(String moduleFullQualifiedName) {
     // try with gwt default structure
@@ -227,11 +226,7 @@ public abstract class GwtModuleRunnerAdapter implements GwtModuleRunner,
       return fileRelativePath;
     }
 
-    LOGGER.warn("Cannot find the actual HTML host page for module '"
-        + getModuleName() + "'. You should override "
-        + GwtModuleRunner.class.getName()
-        + ".getHostPagePath() method to specify it.");
-
+    // no HTML hostpage found
     return null;
   }
 
