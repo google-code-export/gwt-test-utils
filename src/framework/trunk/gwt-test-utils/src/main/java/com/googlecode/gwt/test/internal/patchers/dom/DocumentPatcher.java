@@ -40,11 +40,11 @@ class DocumentPatcher {
     private Document document;
 
     private DocumentHolder() {
-      AfterTestCallbackManager.get().registerCallback(this);
+      AfterTestCallbackManager.get().registerFinalCallback(this);
     }
 
     public void afterTest() throws Throwable {
-      recursiveClearDom(document);
+      // recursiveClearDom(document);
       document = null;
       GwtReflectionUtils.setStaticField(Document.class, "doc", null);
     }
