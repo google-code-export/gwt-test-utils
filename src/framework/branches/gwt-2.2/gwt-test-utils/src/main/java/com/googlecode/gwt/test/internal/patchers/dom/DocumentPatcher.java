@@ -43,7 +43,7 @@ class DocumentPatcher {
     }
 
     public void afterTest() throws Throwable {
-      recursiveClearDom(document);
+      // recursiveClearDom(document);
       document = null;
     }
 

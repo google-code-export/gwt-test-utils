@@ -79,6 +79,7 @@ class PlaceHistoryMapperCreateHandler implements GwtCreateHandler {
 
       while (tokenizerMap.containsKey(uniquePrefix)) {
         uniquePrefix = prefix + i;
+        i++;
       }
 
       return uniquePrefix;

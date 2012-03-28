@@ -9,6 +9,7 @@ import org.junit.Test;
 import com.extjs.gxt.ui.client.event.WindowEvent;
 import com.extjs.gxt.ui.client.event.WindowListener;
 import com.extjs.gxt.ui.client.widget.Window;
+import com.google.gwt.user.client.ui.RootPanel;
 
 public class WindowTest extends GwtGxtTest {
 
@@ -40,6 +41,19 @@ public class WindowTest extends GwtGxtTest {
 
     // Assert
     assertTrue(activate);
+  }
+
+  @Before
+  public void beforeWindowTest() {
+    window = new Window();
+    RootPanel.get().add(window);
+    activate = false;
+    deactivate = false;
+    hide = false;
+    maximize = false;
+    minimize = false;
+    restore = false;
+    show = false;
   }
 
   @Test
@@ -146,18 +160,6 @@ public class WindowTest extends GwtGxtTest {
 
     // Assert
     assertTrue(restore);
-  }
-
-  @Before
-  public void beforeWindowTest() {
-    window = new Window();
-    activate = false;
-    deactivate = false;
-    hide = false;
-    maximize = false;
-    minimize = false;
-    restore = false;
-    show = false;
   }
 
   @Test
