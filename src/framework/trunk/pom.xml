@@ -1,10 +1,9 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.googlecode.gwt-test-utils</groupId>
 	<artifactId>gwt-test-utils-parent</artifactId>
 	<packaging>pom</packaging>
-	<version>0.37-SNAPSHOT</version>
+	<version>0.37</version>
 	<name>${project.artifactId}</name>
 	<description>gwt-test-utils is a Java framework that allows to test GWT client side code in a efficient, easy way</description>
 	<url>http://code.google.com/p/gwt-test-utils/</url>
@@ -39,9 +38,9 @@
 		</mailingList>
 	</mailingLists>
 	<scm>
-		<connection>scm:svn:http://gwt-test-utils.googlecode.com/svn/src/framework/trunk</connection>
-		<developerConnection>scm:svn:https://gwt-test-utils.googlecode.com/svn/src/framework/trunk</developerConnection>
-		<url>http://gwt-test-utils.googlecode.com/svn/src/framework/trunk</url>
+		<connection>scm:svn:http://gwt-test-utils.googlecode.com/svn/src/framework/tags/gwt-test-utils-parent-0.37</connection>
+		<developerConnection>scm:svn:https://gwt-test-utils.googlecode.com/svn/src/framework/tags/gwt-test-utils-parent-0.37</developerConnection>
+		<url>http://gwt-test-utils.googlecode.com/svn/src/framework/tags/gwt-test-utils-parent-0.37</url>
 	</scm>
 	<parent>
 		<groupId>org.sonatype.oss</groupId>

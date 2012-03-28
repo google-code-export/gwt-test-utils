@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>com.googlecode.gwt-test-utils</groupId>
 		<artifactId>gwt-test-utils-parent</artifactId>
-		<version>0.37-SNAPSHOT</version>
+		<version>0.37</version>
 	</parent>
 
 	<dependencies>
