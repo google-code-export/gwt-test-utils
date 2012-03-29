@@ -3,13 +3,11 @@
 	<artifactId>gwt-test-utils-csv</artifactId>
 	<packaging>jar</packaging>
 	<name>${project.artifactId}</name>
-
 	<parent>
 		<groupId>com.googlecode.gwt-test-utils</groupId>
 		<artifactId>gwt-test-utils-parent</artifactId>
 		<version>0.33.3-SNAPSHOT</version>
 	</parent>
-
 	<dependencies>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
