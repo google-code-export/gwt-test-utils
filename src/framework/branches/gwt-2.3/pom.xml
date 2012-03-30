@@ -3,7 +3,7 @@
 	<groupId>com.googlecode.gwt-test-utils</groupId>
 	<artifactId>gwt-test-utils-parent</artifactId>
 	<packaging>pom</packaging>
-	<version>0.33.3</version>
+	<version>0.33.4-SNAPSHOT</version>
 	<name>${project.artifactId}</name>
 	<description>gwt-test-utils is a Java framework that allows to test GWT client side code in a efficient, easy way (for GWT 2.3.0)</description>
 	<url>http://code.google.com/p/gwt-test-utils/</url>
@@ -38,9 +38,9 @@
 		</mailingList>
 	</mailingLists>
 	<scm>
-		<connection>scm:svn:http://gwt-test-utils.googlecode.com/svn/src/framework/tags/gwt-test-utils-parent-0.33.3</connection>
-		<developerConnection>scm:svn:https://gwt-test-utils.googlecode.com/svn/src/framework/tags/gwt-test-utils-parent-0.33.3</developerConnection>
-		<url>http://gwt-test-utils.googlecode.com/svn/src/framework/tags/gwt-test-utils-parent-0.33.3</url>
+		<connection>scm:svn:http://gwt-test-utils.googlecode.com/svn/src/framework/branches/gwt-2.3</connection>
+		<developerConnection>scm:svn:https://gwt-test-utils.googlecode.com/svn/src/framework/branches/gwt-2.3</developerConnection>
+		<url>http://gwt-test-utils.googlecode.com/svn/src/framework/branches/gwt-2.3</url>
 	</scm>
 	<parent>
 		<groupId>org.sonatype.oss</groupId>
