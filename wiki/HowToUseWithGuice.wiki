@@ -17,7 +17,7 @@ public class DemoGuiceTest extends GwtGuiceTest {
 
   @Override
   public String getModuleName() {
-    return "com.octo.gwt.test.demo.Application";
+    return "com.googlecode.gwt.test.demo.Application";
   }
   
   // your test methods go here...
