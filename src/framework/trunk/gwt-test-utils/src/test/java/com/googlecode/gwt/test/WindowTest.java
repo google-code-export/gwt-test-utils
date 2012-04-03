@@ -9,7 +9,6 @@ import org.junit.Test;
 
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.user.client.Window;
-import com.googlecode.gwt.test.WindowOperationsHandler;
 
 public class WindowTest extends GwtTestTest {
 
@@ -32,6 +31,8 @@ public class WindowTest extends GwtTestTest {
   @Before
   public void beforeWindowTest() {
     EasyMock.reset(mockedHandler);
+
+    setWindowOperationsHandler(mockedHandler);
   }
 
   @Test
@@ -58,11 +59,6 @@ public class WindowTest extends GwtTestTest {
     Window.resizeBy(3, 6);
     Window.resizeTo(8, 9);
     Window.scrollTo(2, 4);
-  }
-
-  @Override
-  public WindowOperationsHandler getWindowOperationsHandler() {
-    return mockedHandler;
   }
 
   @Test

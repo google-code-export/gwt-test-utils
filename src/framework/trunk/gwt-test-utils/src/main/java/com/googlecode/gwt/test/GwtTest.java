@@ -1,5 +1,7 @@
 package com.googlecode.gwt.test;
 
+import static org.junit.Assert.fail;
+
 import java.util.List;
 
 import junit.framework.JUnit4TestAdapter;
@@ -17,6 +19,7 @@ import com.googlecode.gwt.test.exceptions.GwtTestException;
 import com.googlecode.gwt.test.internal.AfterTestCallbackManager;
 import com.googlecode.gwt.test.internal.GwtClassLoader;
 import com.googlecode.gwt.test.internal.GwtConfig;
+import com.googlecode.gwt.test.utils.events.Browser.BrowserErrorHandler;
 
 /**
  * <p>
@@ -42,6 +45,13 @@ import com.googlecode.gwt.test.internal.GwtConfig;
 @RunWith(GwtRunner.class)
 public abstract class GwtTest extends GwtModuleRunnerAdapter implements Test {
 
+  private static final BrowserErrorHandler JUNIT_BROWSER_ERROR_HANDLER = new BrowserErrorHandler() {
+
+    public void onError(String errorMessage) {
+      fail(errorMessage);
+    }
+  };
+
   /**
    * Bind the GwtClassLoader to the current thread
    */
@@ -65,6 +75,7 @@ public abstract class GwtTest extends GwtModuleRunnerAdapter implements Test {
   public GwtTest() {
     this.test = createJUnit4TestAdapter();
     this.setCanDispatchDomEventOnDetachedWidget(true);
+    this.setBrowserErrorHandler(JUNIT_BROWSER_ERROR_HANDLER);
   }
 
   public int countTestCases() {
@@ -107,6 +118,18 @@ public abstract class GwtTest extends GwtModuleRunnerAdapter implements Test {
    */
   protected Test createJUnit4TestAdapter() {
     return new JUnit4TestAdapter(this.getClass());
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * com.googlecode.gwt.test.GwtModuleRunnerAdapter#getDefaultBrowserErrorHandler
+   * ()
+   */
+  @Override
+  protected BrowserErrorHandler getDefaultBrowserErrorHandler() {
+    return JUNIT_BROWSER_ERROR_HANDLER;
   }
 
 }

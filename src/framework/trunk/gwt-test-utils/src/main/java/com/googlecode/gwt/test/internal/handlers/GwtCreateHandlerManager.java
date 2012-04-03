@@ -86,7 +86,7 @@ public class GwtCreateHandlerManager implements AfterTestCallback {
   public List<GwtCreateHandler> getGwtCreateHandlers() {
     List<GwtCreateHandler> list = new ArrayList<GwtCreateHandler>();
 
-    // than, declared @Mock objects creation
+    // declared @Mock objects creation
     if (mockCreateHandler != null) {
       list.add(mockCreateHandler);
     }
