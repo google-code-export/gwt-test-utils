@@ -26,8 +26,9 @@ public class AddressEditor extends Composite implements Editor<Address> {
   ValueListBox<String> state;
   @UiField
   TextBox street;
+
   @UiField
-  TextBox zip;
+  private TextBox zip;
 
   public AddressEditor() {
 
@@ -42,6 +43,10 @@ public class AddressEditor extends Composite implements Editor<Address> {
 
     initWidget(BINDER.createAndBindUi(this));
 
+  }
+
+  TextBox zip() {
+    return zip;
   }
 
   private Collection<String> buildCollection(String... string) {

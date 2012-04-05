@@ -5,8 +5,6 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import com.googlecode.gwt.test.utils.GwtReflectionUtils;
-
 public class GwtReflectionUtilsTest {
 
   private static class TestBean {

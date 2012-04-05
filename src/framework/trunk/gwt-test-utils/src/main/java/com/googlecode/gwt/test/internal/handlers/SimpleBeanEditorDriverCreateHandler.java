@@ -19,11 +19,31 @@ import com.google.gwt.editor.client.LeafValueEditor;
 import com.google.gwt.editor.client.SimpleBeanEditorDriver;
 import com.googlecode.gwt.test.GwtCreateHandler;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
+import com.googlecode.gwt.test.utils.GwtReflectionUtils.FieldCallback;
+import com.googlecode.gwt.test.utils.GwtReflectionUtils.FieldFilter;
+import com.googlecode.gwt.test.utils.GwtReflectionUtils.MethodCallback;
+import com.googlecode.gwt.test.utils.GwtReflectionUtils.MethodFilter;
 
 class SimpleBeanEditorDriverCreateHandler implements GwtCreateHandler {
 
   private static class SimpleBeanEditorDriverInvocationHandler implements
       InvocationHandler {
+
+    private static FieldFilter EDITOR_FIELD_FILTER = new FieldFilter() {
+
+      public boolean matches(Field field) {
+        return !Modifier.isPrivate(field.getModifiers())
+            && !field.isAnnotationPresent(Ignore.class);
+      }
+    };
+
+    private static MethodFilter EDITOR_METHOD_FILTER = new MethodFilter() {
+
+      public boolean matches(Method method) {
+        return !Modifier.isPrivate(method.getModifiers())
+            && !method.isAnnotationPresent(Ignore.class);
+      }
+    };
 
     private Object bean;
     private Editor<?> editor;
@@ -53,41 +73,70 @@ class SimpleBeanEditorDriverCreateHandler implements GwtCreateHandler {
       Map<String, Object> result = new HashMap<String, Object>();
 
       collectEditorFields(result, editor, "");
-      collectEditorMethods(result);
+      collectEditorMethods(result, editor, "");
 
       return result;
     }
 
-    private void collectEditorFields(Map<String, Object> result,
-        Editor<?> currentEditor, String pathPrefix) {
-      for (Field field : GwtReflectionUtils.getFields(currentEditor.getClass())) {
+    private void collectEditorFields(final Map<String, Object> result,
+        final Editor<?> currentEditor, final String pathPrefix) {
 
-        if (!Modifier.isPrivate(field.getModifiers())
-            && !field.isAnnotationPresent(Ignore.class)) {
+      GwtReflectionUtils.doWithFields(currentEditor.getClass(),
+          new FieldCallback() {
 
-          Editor<?> childEditor = getEditor(currentEditor, field);
+            public void doWith(Field field) throws IllegalArgumentException,
+                IllegalAccessException {
 
-          if (childEditor == null) {
-            continue;
-          }
+              Editor<?> childEditor = getEditor(currentEditor, field);
 
-          String editorPath = extractEditorPath(field);
+              // ignore null editors
+              if (childEditor == null) {
+                return;
+              }
 
-          if (childEditor instanceof LeafValueEditor) {
-            result.put(editorPath,
-                ((LeafValueEditor<?>) childEditor).getValue());
-          } else {
-            collectEditorFields(result, childEditor, pathPrefix + editorPath
-                + ".");
-          }
+              String editorPath = extractEditorPath(field);
 
-        }
-      }
+              if (childEditor instanceof LeafValueEditor) {
+                result.put(editorPath,
+                    ((LeafValueEditor<?>) childEditor).getValue());
+              } else {
+                collectEditorFields(result, childEditor, pathPrefix
+                    + editorPath + ".");
+              }
+
+            }
+          }, EDITOR_FIELD_FILTER);
     }
 
-    private void collectEditorMethods(Map<String, Object> result) {
-      // TODO Auto-generated method stub
+    private void collectEditorMethods(final Map<String, Object> result,
+        final Editor<?> currentEditor, final String pathPrefix) {
 
+      GwtReflectionUtils.doWithMethods(currentEditor.getClass(),
+          new MethodCallback() {
+
+            public void doWith(Method method) throws IllegalArgumentException,
+                IllegalAccessException {
+
+              Editor<?> childEditor = getEditor(currentEditor, method);
+
+              // ignore null editors
+              if (childEditor == null) {
+                return;
+              }
+
+              String editorPath = extractEditorPath(method);
+
+              if (childEditor instanceof LeafValueEditor) {
+                result.put(editorPath,
+                    ((LeafValueEditor<?>) childEditor).getValue());
+              } else {
+                collectEditorFields(result, childEditor, pathPrefix
+                    + editorPath + ".");
+              }
+
+            }
+
+          }, EDITOR_METHOD_FILTER);
     }
 
     private void edit(Object bean) {
@@ -105,6 +154,20 @@ class SimpleBeanEditorDriverCreateHandler implements GwtCreateHandler {
       }
 
       String path = field.getName();
+      if (path.endsWith("Editor")) {
+        path = path.substring(0, path.length() - 6);
+      }
+
+      return path;
+    }
+
+    private String extractEditorPath(Method method) {
+      Path pathAnnotation = method.getAnnotation(Path.class);
+      if (pathAnnotation != null) {
+        return pathAnnotation.value();
+      }
+
+      String path = method.getName();
       if (path.endsWith("Editor")) {
         path = path.substring(0, path.length() - 6);
       }
@@ -140,9 +203,24 @@ class SimpleBeanEditorDriverCreateHandler implements GwtCreateHandler {
       }
     }
 
+    private Editor<?> getEditor(Editor<?> currentEditor, Method method) {
+      if (Editor.class.isAssignableFrom(method.getReturnType())) {
+        return GwtReflectionUtils.<Editor<?>> callPrivateMethod(currentEditor,
+            method);
+      } else if (IsEditor.class.isAssignableFrom(method.getReturnType())) {
+        IsEditor<Editor<?>> isEditor = GwtReflectionUtils.<IsEditor<Editor<?>>> callPrivateMethod(
+            currentEditor, method);
+        return isEditor.asEditor();
+      } else {
+        // just ignore
+        return null;
+      }
+    }
+
     private void initialize(Editor<?> editor) {
       this.editor = editor;
     }
+
   }
 
   public Object create(Class<?> classLiteral) throws Exception {

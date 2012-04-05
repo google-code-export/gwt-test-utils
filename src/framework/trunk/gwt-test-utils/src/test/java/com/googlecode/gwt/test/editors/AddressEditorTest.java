@@ -28,7 +28,7 @@ public class AddressEditorTest extends GwtTestTest {
     // Act : edit widget
     Browser.fillText(editor.city, "Paris");
     Browser.fillText(editor.street, "Avenue des Champs Elysées");
-    Browser.fillText(editor.zip, "75008");
+    Browser.fillText(editor.zip(), "75008");
     // TODO : API Browser for ValueListBox
     editor.state.setValue("France", true);
     driver.flush();
