@@ -58,7 +58,7 @@ public abstract class GwtModuleRunnerAdapter implements GwtModuleRunner,
   private static final String DEFAULT_WAR_DIR = "war/";
   private static final String MAVEN_DEFAULT_RES_DIR = "src/main/resources/";
   private static final String MAVEN_DEFAULT_WEB_DIR = "src/main/webapp/";
-  
+
   private final BrowserErrorHandlerDelegate browserErrorHandlerDelegate;
   private boolean canDispatchDomEventOnDetachedWidget;
   private Locale locale;
@@ -68,7 +68,7 @@ public abstract class GwtModuleRunnerAdapter implements GwtModuleRunner,
 
   public GwtModuleRunnerAdapter() {
     browserErrorHandlerDelegate = new BrowserErrorHandlerDelegate();
-    AfterTestCallbackManager.get().registerCallback(this);
+    AfterTestCallbackManager.get().registerRemoveableCallback(this);
   }
 
   /*

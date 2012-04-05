@@ -23,17 +23,19 @@ public class AfterTestCallbackManager {
 
   private final Set<AfterTestCallback> callbacks;
   private final Set<AfterTestCallback> finalCallbacks;
+  private final Set<AfterTestCallback> removeableCallbacks;
 
   private AfterTestCallbackManager() {
     callbacks = new HashSet<AfterTestCallback>();
     finalCallbacks = new HashSet<AfterTestCallback>();
+    removeableCallbacks = new HashSet<AfterTestCallback>();
   }
 
   /**
-   * Register a callback to trigger after a test execution.
+   * Register a callback to be triggered after a test execution.
    * 
-   * @param callback The callback to register.
-   * @return <tt>true</tt> if the callback was not already registered.
+   * @param callback The callback to register
+   * @return <tt>true</tt> if the callback was not already registered
    */
   public boolean registerCallback(AfterTestCallback callback) {
     return callbacks.add(callback);
@@ -41,6 +43,17 @@ public class AfterTestCallbackManager {
 
   public boolean registerFinalCallback(AfterTestCallback finalCallback) {
     return finalCallbacks.add(finalCallback);
+  }
+
+  /**
+   * Register a callback to triggered after a test execution. This callback will
+   * be removed at the end of the test execution.
+   * 
+   * @param removeableCallback The callback to register
+   * @return <tt>true</tt> if the callback was not already registered.
+   */
+  public boolean registerRemoveableCallback(AfterTestCallback removeableCallback) {
+    return removeableCallbacks.add(removeableCallback);
   }
 
   /**
@@ -57,9 +70,15 @@ public class AfterTestCallbackManager {
       executeCallback(callback, throwables);
     }
 
+    for (AfterTestCallback callback : removeableCallbacks) {
+      executeCallback(callback, throwables);
+    }
+
     for (AfterTestCallback callback : finalCallbacks) {
       executeCallback(callback, throwables);
     }
+
+    removeableCallbacks.clear();
 
     return throwables;
   }

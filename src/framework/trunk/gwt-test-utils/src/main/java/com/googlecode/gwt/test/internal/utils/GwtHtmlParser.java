@@ -30,7 +30,7 @@ import com.googlecode.gwt.test.exceptions.GwtTestPatchException;
 public class GwtHtmlParser {
 
   /**
-   * Filter which keep "&nbsp" and "&nbsp;" strings instead of converting them
+   * Filter which keep "&nbsp;" and "&nbsp;" strings instead of converting them
    * in a ' ' character.
    * 
    */

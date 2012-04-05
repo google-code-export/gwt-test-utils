@@ -40,7 +40,7 @@ public class HTMLTest extends GwtTestTest {
   @Test
   public void getText() {
     // Arrange
-    HTML html = new HTML("<a href='#'>link</a><br/>test&nbsp;test&nbsp");
+    HTML html = new HTML("<a href='#'>link</a><br/>test&nbsp;test&nbsp;");
 
     // Act
     String result = html.getText();
@@ -73,7 +73,7 @@ public class HTMLTest extends GwtTestTest {
   @Test
   public void html_withSpecialChars() {
     // Arrange
-    HTML html = new HTML("<span>R&eacute;sidence&nbsp:&nbsp</span>");
+    HTML html = new HTML("<span>R&eacute;sidence&nbsp;:&nbsp;</span>");
 
     // Act
     String result = html.getHTML();
