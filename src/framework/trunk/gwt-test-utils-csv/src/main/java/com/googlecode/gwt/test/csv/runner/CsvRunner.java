@@ -19,13 +19,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.gwt.event.shared.UmbrellaException;
+import com.googlecode.gwt.test.csv.CsvMethod;
+import com.googlecode.gwt.test.csv.GwtCsvTest;
+import com.googlecode.gwt.test.csv.GwtTestCsvException;
 import com.googlecode.gwt.test.finder.GwtFinder;
 import com.googlecode.gwt.test.finder.Node;
 import com.googlecode.gwt.test.finder.ObjectFinder;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
-import com.googlecode.gwt.test.csv.CsvMethod;
-import com.googlecode.gwt.test.csv.GwtCsvTest;
-import com.googlecode.gwt.test.csv.GwtTestCsvException;
 
 public class CsvRunner {
 
@@ -47,6 +47,7 @@ public class CsvRunner {
       throws CsvRunnerException {
     if (methodName.indexOf("**") == 0) {
       // commented line
+      return;
     }
     List<String> filterArgs = new ArrayList<String>(args);
     removeEmptyElements(filterArgs);
