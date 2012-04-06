@@ -2,9 +2,22 @@ package com.googlecode.gwt.test.editors;
 
 public class Person {
 
+  public static Person createFilledPerson() {
+    Person person = new Person();
+    person.firstName = "John";
+    person.lastName = "Locke";
+    person.address.setStreet("Avenue des Champs Elysées");
+    person.address.setZip("75008");
+    person.address.setCity("Paris");
+    person.address.setState("France");
+
+    return person;
+  }
+
   private final Address address = new Address();
   private String firstName;
   private String id;
+
   private String lastName;
 
   public Address getAddress() {

@@ -2,6 +2,16 @@ package com.googlecode.gwt.test.editors;
 
 public class Address {
 
+  public static Address createFilledAddress() {
+    Address address = new Address();
+    address.street = "Avenue des Champs Elysées";
+    address.zip = "75008";
+    address.city = "Paris";
+    address.state = "France";
+
+    return address;
+  }
+
   private String city;
   private String state;
   private String street;

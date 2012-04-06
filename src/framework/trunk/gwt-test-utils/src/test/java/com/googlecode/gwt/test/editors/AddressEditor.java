@@ -22,31 +22,40 @@ public class AddressEditor extends Composite implements Editor<Address> {
 
   @UiField
   TextBox city;
+
   @UiField(provided = true)
-  ValueListBox<String> state;
-  @UiField
-  TextBox street;
+  @Path("state")
+  ValueListBox<String> stateWithPath;
 
   @UiField
-  private TextBox zip;
+  private TextBox street;
+
+  @UiField
+  private TextBox zipWithPath;
 
   public AddressEditor() {
 
-    state = new ValueListBox<String>(new AbstractRenderer<String>() {
+    stateWithPath = new ValueListBox<String>(new AbstractRenderer<String>() {
 
       public String render(String object) {
         return object;
       }
 
     });
-    state.setAcceptableValues(buildCollection("Austria", "France", "Germany"));
+    stateWithPath.setAcceptableValues(buildCollection("Austria", "France",
+        "Germany"));
 
     initWidget(BINDER.createAndBindUi(this));
 
   }
 
-  TextBox zip() {
-    return zip;
+  public TextBox street() {
+    return street;
+  }
+
+  @Path("zip")
+  TextBox zipWithPathEditor() {
+    return zipWithPath;
   }
 
   private Collection<String> buildCollection(String... string) {
