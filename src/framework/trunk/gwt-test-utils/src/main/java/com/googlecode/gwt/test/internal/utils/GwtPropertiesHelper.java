@@ -206,19 +206,18 @@ public class GwtPropertiesHelper implements AfterTestCallback {
   }
 
   public Properties getProperties(String path) {
-    Properties properties = cachedProperties.get(path);
-
-    if (properties != null) {
-      return properties;
+    if (cachedProperties.containsKey(path)) {
+      return cachedProperties.get(path);
     }
     String propertiesNameFile = "/" + path + ".properties";
     InputStream inputStream = path.getClass().getResourceAsStream(
         propertiesNameFile);
     if (inputStream == null) {
+      cachedProperties.put(path, null);
       return null;
     }
     try {
-      properties = new Properties();
+      Properties properties = new Properties();
       InputStreamReader inputStreamReader = new InputStreamReader(inputStream,
           "UTF-8");
       load(properties, inputStreamReader);
