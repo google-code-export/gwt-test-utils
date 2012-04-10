@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.googlecode.gwt.test.internal.GwtConfig;
 import com.googlecode.gwt.test.uibinder.widget.UiCellPanelTagFactory;
+import com.googlecode.gwt.test.uibinder.widget.UiDisclosurePanelTagFactory;
 import com.googlecode.gwt.test.uibinder.widget.UiDockLayoutPanelTagFactory;
 import com.googlecode.gwt.test.uibinder.widget.UiGridTagFactory;
 import com.googlecode.gwt.test.uibinder.widget.UiHTMLPanelTagFactory;
@@ -47,14 +48,15 @@ class DefaultUiWidgetTagFactory implements UiObjectTagFactory<Object> {
     gwtTestUtilsFactories.add(new UiMenuItemTagFactory());
     gwtTestUtilsFactories.add(new UiStackLayoutPanelTagFactory());
     gwtTestUtilsFactories.add(new UiTabLayoutPanelTagFactory());
+    gwtTestUtilsFactories.add(new UiDisclosurePanelTagFactory());
   }
 
   /*
    * (non-Javadoc)
    * 
    * @see
-   * com.googlecode.gwt.test.uibinder.UiObjectTagFactory#createUiObjectTag(java.lang
-   * .Class, java.util.Map)
+   * com.googlecode.gwt.test.uibinder.UiObjectTagFactory#createUiObjectTag(java
+   * .lang .Class, java.util.Map)
    */
   public UiObjectTag<Object> createUiObjectTag(Class<?> clazz,
       Map<String, Object> attributes) {

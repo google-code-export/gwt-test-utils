@@ -17,6 +17,7 @@ public class MyChildConstantsTest extends GwtTestTest {
   @Before
   public void beforeMyChildConstantsTest() {
     childConstants = GWT.create(MyChildConstants.class);
+    setLocale(Locale.ENGLISH);
   }
 
   @Test
@@ -37,8 +38,4 @@ public class MyChildConstantsTest extends GwtTestTest {
         valueWithoutLocaleToBeOverride);
   }
 
-  @Override
-  public Locale getLocale() {
-    return Locale.ENGLISH;
-  }
 }

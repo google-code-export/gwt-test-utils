@@ -122,7 +122,7 @@ public class GwtConfig implements AfterTestCallback {
     this.gwtModuleRunner = gwtModuleRunner;
     this.checkedModuleName = getCheckedModuleName();
 
-    setupDebugIdImpl(gwtModuleRunner);
+    setupDebugIdImpl(gwtModuleRunner.ensureDebugId());
 
     registerUiConstructor(NamedFrame.class, "name");
     registerUiConstructor(RadioButton.class, "name");
@@ -148,9 +148,9 @@ public class GwtConfig implements AfterTestCallback {
     return moduleAlias;
   }
 
-  private void setupDebugIdImpl(GwtModuleRunner gwtModuleRunner) {
-    DebugIdImpl debugIdImplToUse = gwtModuleRunner.ensureDebugId()
-        ? enabledInstance : disabledInstance;
+  private void setupDebugIdImpl(boolean ensureDebugId) {
+    DebugIdImpl debugIdImplToUse = ensureDebugId ? enabledInstance
+        : disabledInstance;
 
     GwtReflectionUtils.setStaticField(UIObject.class, "debugIdImpl",
         debugIdImplToUse);

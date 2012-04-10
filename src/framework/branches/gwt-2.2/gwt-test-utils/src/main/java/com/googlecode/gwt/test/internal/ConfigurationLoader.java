@@ -49,8 +49,8 @@ class ConfigurationLoader {
 
   private final Set<String> delegates;
   private final MethodRemover methodRemover;
-  private final Set<String> moduleFiles;
   private PatcherFactory patcherFactory;
+  private final Set<String> processedModuleFiles;
   private final Set<String> removeMethods;
   private final Set<String> scanPackages;
   private final Set<String> substituteClasses;
@@ -59,11 +59,10 @@ class ConfigurationLoader {
     this.classLoader = classLoader;
     this.classSubstituer = new ClassSubstituer();
     this.delegates = new HashSet<String>();
-    this.moduleFiles = new HashSet<String>();
+    this.processedModuleFiles = new HashSet<String>();
     this.scanPackages = new HashSet<String>();
     this.removeMethods = new HashSet<String>();
     this.substituteClasses = new HashSet<String>();
-
     this.methodRemover = new MethodRemover();
 
     readFiles();
@@ -112,7 +111,7 @@ class ConfigurationLoader {
   }
 
   private void processModuleFile(String string, URL url) {
-    if (!moduleFiles.add(string)) {
+    if (!processedModuleFiles.add(string)) {
       // already processed
       return;
     }
@@ -178,7 +177,7 @@ class ConfigurationLoader {
     }
 
     // check that at least one module file has been processed
-    if (moduleFiles.size() == 0) {
+    if (processedModuleFiles.size() == 0) {
       throw new GwtTestConfigurationException(
           "Cannot find any 'module-file' setup in configuration file 'META-INF/gwt-test-utils.properties'");
     }

@@ -47,6 +47,7 @@ public class CsvRunner {
       throws CsvRunnerException {
     if (methodName.indexOf("**") == 0) {
       // commented line
+      return;
     }
     List<String> filterArgs = new ArrayList<String>(args);
     removeEmptyElements(filterArgs);

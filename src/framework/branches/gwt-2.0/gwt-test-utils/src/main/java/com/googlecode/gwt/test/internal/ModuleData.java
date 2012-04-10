@@ -185,7 +185,7 @@ public class ModuleData {
     return replaceWithListMap;
   }
 
-  public void parseModule(String moduleFilePath) {
+  void parseModule(String moduleFilePath) {
     try {
       Document document = createDocument(moduleFilePath);
       XPath xpath = XPathFactory.newInstance().newXPath();

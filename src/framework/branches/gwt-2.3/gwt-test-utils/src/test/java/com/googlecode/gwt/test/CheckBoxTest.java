@@ -19,6 +19,13 @@ public class CheckBoxTest extends GwtTestTest {
   @Before
   public void beforeCheckBoxTest() {
     errorStringBuilder.delete(0, errorStringBuilder.length());
+
+    setBrowserErrorHandler(new BrowserErrorHandler() {
+
+      public void onError(String errorMessage) {
+        errorStringBuilder.append(errorMessage);
+      }
+    });
   }
 
   @Test
@@ -85,16 +92,6 @@ public class CheckBoxTest extends GwtTestTest {
     // Assert
     assertEquals("whatever", cb.getFormValue());
 
-  }
-
-  @Override
-  public BrowserErrorHandler getBrowserErrorHandler() {
-    return new BrowserErrorHandler() {
-
-      public void onError(String errorMessage) {
-        errorStringBuilder.append(errorMessage);
-      }
-    };
   }
 
   @Test

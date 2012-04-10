@@ -1,6 +1,7 @@
 package com.googlecode.gwt.test;
 
-import junit.framework.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.easymock.EasyMock;
 import org.junit.Before;
@@ -14,7 +15,7 @@ public class WindowTest extends GwtTestTest {
   private final WindowOperationsHandler mockedHandler = EasyMock.createStrictMock(WindowOperationsHandler.class);;
 
   @Test
-  public void checkAlert() {
+  public void alert() {
     // Arrange
     mockedHandler.alert(EasyMock.eq("this is an alert"));
     EasyMock.expectLastCall();
@@ -27,8 +28,15 @@ public class WindowTest extends GwtTestTest {
     EasyMock.verify(mockedHandler);
   }
 
+  @Before
+  public void beforeWindowTest() {
+    EasyMock.reset(mockedHandler);
+
+    setWindowOperationsHandler(mockedHandler);
+  }
+
   @Test
-  public void checkConfirm() {
+  public void confirm() {
     // Arrange
     mockedHandler.confirm(EasyMock.eq("this is a confirmation"));
     EasyMock.expectLastCall().andReturn(true);
@@ -39,11 +47,18 @@ public class WindowTest extends GwtTestTest {
 
     // Assert
     EasyMock.verify(mockedHandler);
-    Assert.assertTrue(result);
+    assertTrue(result);
   }
 
   @Test
-  public void checkMargin() {
+  public void emptyMethods() {
+    // Act & Assert
+    Window.enableScrolling(true);
+    Window.scrollTo(2, 4);
+  }
+
+  @Test
+  public void margin() {
     // Arrange
     Document.get().getBody().setAttribute("style", "");
 
@@ -51,13 +66,13 @@ public class WindowTest extends GwtTestTest {
     Window.setMargin("13px");
 
     // Assert
-    Assert.assertEquals("13px", Document.get().getBody().getStyle().getMargin());
-    Assert.assertEquals("margin: 13px; ",
+    assertEquals("13px", Document.get().getBody().getStyle().getMargin());
+    assertEquals("margin: 13px; ",
         Document.get().getBody().getAttribute("style"));
   }
 
   @Test
-  public void checkOpen() {
+  public void open() {
     // Arrange
     mockedHandler.open(EasyMock.eq("url"), EasyMock.eq("name"),
         EasyMock.eq("features"));
@@ -72,7 +87,7 @@ public class WindowTest extends GwtTestTest {
   }
 
   @Test
-  public void checkPrint() {
+  public void print() {
     // Arrange
     mockedHandler.print();
     EasyMock.expectLastCall();
@@ -86,7 +101,7 @@ public class WindowTest extends GwtTestTest {
   }
 
   @Test
-  public void checkPrompt() {
+  public void prompt() {
     // Arrange
     mockedHandler.prompt(EasyMock.eq("prompt message"),
         EasyMock.eq("initial value"));
@@ -98,11 +113,11 @@ public class WindowTest extends GwtTestTest {
 
     // Assert
     EasyMock.verify(mockedHandler);
-    Assert.assertEquals("mocked message", result);
+    assertEquals("mocked message", result);
   }
 
   @Test
-  public void checkTitle() {
+  public void title() {
     // Arrange
     Document.get().setTitle("arranged title");
 
@@ -110,18 +125,8 @@ public class WindowTest extends GwtTestTest {
     Window.setTitle("my title");
 
     // Assert
-    Assert.assertEquals("my title", Window.getTitle());
-    Assert.assertEquals("my title", Document.get().getTitle());
-  }
-
-  @Override
-  public WindowOperationsHandler getWindowOperationsHandler() {
-    return mockedHandler;
-  }
-
-  @Before
-  public void setupWindowTest() {
-    EasyMock.reset(mockedHandler);
+    assertEquals("my title", Window.getTitle());
+    assertEquals("my title", Document.get().getTitle());
   }
 
 }

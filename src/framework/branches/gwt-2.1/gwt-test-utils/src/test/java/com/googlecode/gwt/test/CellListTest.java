@@ -31,6 +31,13 @@ public class CellListTest extends GwtTestTest {
   public void beforeCellListTest() {
     sb.delete(0, sb.length());
 
+    setBrowserErrorHandler(new BrowserErrorHandler() {
+
+      public void onError(String errorMessage) {
+        sb.append(errorMessage);
+      }
+    });
+
     // Create a cell to render each value.
     TextCell textCell = new TextCell();
 
@@ -54,16 +61,6 @@ public class CellListTest extends GwtTestTest {
     assertEquals(5, cellList.getVisibleItemCount());
     assertEquals("Thursday",
         cellList.getVisibleItem(cellList.getVisibleItemCount() - 1));
-  }
-
-  @Override
-  public BrowserErrorHandler getBrowserErrorHandler() {
-    return new BrowserErrorHandler() {
-
-      public void onError(String errorMessage) {
-        sb.append(errorMessage);
-      }
-    };
   }
 
   @Test

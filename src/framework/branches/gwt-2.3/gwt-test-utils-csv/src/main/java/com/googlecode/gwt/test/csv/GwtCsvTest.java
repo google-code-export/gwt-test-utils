@@ -30,7 +30,6 @@ import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
-import com.googlecode.gwt.test.FinallyCommandTrigger;
 import com.googlecode.gwt.test.GwtTest;
 import com.googlecode.gwt.test.csv.internal.DirectoryTestReader;
 import com.googlecode.gwt.test.csv.runner.CsvRunner;
@@ -372,18 +371,6 @@ public abstract class GwtCsvTest extends GwtTest {
     Browser.focus(target);
   }
 
-  @Override
-  public BrowserErrorHandler getBrowserErrorHandler() {
-    return new BrowserErrorHandler() {
-
-      public void onError(String errorMessage) {
-        // remove pending tasks, no need to execute
-        FinallyCommandTrigger.clearPendingCommands();
-        Assert.fail(csvRunner.getAssertionErrorMessagePrefix() + errorMessage);
-      }
-    };
-  }
-
   @CsvMethod
   public void hasStyle(String style, String... params) {
     UIObject object = getObject(UIObject.class, params);
@@ -597,6 +584,23 @@ public abstract class GwtCsvTest extends GwtTest {
     }
 
     GwtFinder.registerNodeFinder("root", rootObjectFinder);
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * com.googlecode.gwt.test.GwtModuleRunnerAdapter#getDefaultBrowserErrorHandler
+   * ()
+   */
+  @Override
+  protected BrowserErrorHandler getDefaultBrowserErrorHandler() {
+    return new BrowserErrorHandler() {
+
+      public void onError(String errorMessage) {
+        Assert.fail(csvRunner.getAssertionErrorMessagePrefix() + errorMessage);
+      }
+    };
   }
 
   protected FocusWidget getFocusWidget(String... params) {

@@ -6,8 +6,10 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -26,9 +28,37 @@ import com.googlecode.gwt.test.internal.utils.DoubleMap;
 public class GwtReflectionUtils {
 
   /**
+   * Callback interface invoked on each field in the hierarchy.
+   */
+  public interface FieldCallback {
+
+    /**
+     * Perform an operation using the given field.
+     * 
+     * @param field the field to operate on
+     */
+    void doWith(Field field) throws IllegalArgumentException,
+        IllegalAccessException;
+  }
+
+  /**
+   * Callback optionally used to filter fields to be operated on by a field
+   * callback.
+   */
+  public interface FieldFilter {
+
+    /**
+     * Determine whether the given field matches.
+     * 
+     * @param field the field to check
+     */
+    boolean matches(Field field);
+  }
+
+  /**
    * Action to take on each method.
    */
-  public static interface MethodCallback {
+  public interface MethodCallback {
 
     /**
      * Perform an operation using the given method.
@@ -37,6 +67,20 @@ public class GwtReflectionUtils {
      */
     void doWith(Method method) throws IllegalArgumentException,
         IllegalAccessException;
+  }
+
+  /**
+   * Callback optionally used to method fields to be operated on by a method
+   * callback.
+   */
+  public interface MethodFilter {
+
+    /**
+     * Determine whether the given method matches.
+     * 
+     * @param method the method to check
+     */
+    boolean matches(Method method);
   }
 
   private static final String ASSERTIONS_FIELD_NAME = "$assertionsDisabled";
@@ -61,6 +105,8 @@ public class GwtReflectionUtils {
     } catch (InvocationTargetException e) {
       if (GwtTestException.class.isInstance(e.getCause())) {
         throw (GwtTestException) e.getCause();
+      } else if (AssertionError.class.isInstance(e.getCause())) {
+        throw (AssertionError) e.getCause();
       }
       throw new ReflectionException("Error while calling method '"
           + method.toString() + "'", e.getCause());
@@ -100,22 +146,101 @@ public class GwtReflectionUtils {
     }
   }
 
-  public static void doWithMethods(Class<?> targetClass, MethodCallback mc)
+  /**
+   * Invoke the given callback on all fields in the target class, going up the
+   * class hierarchy to get all declared fields.
+   * 
+   * @param clazz the target class to analyze
+   * @param fc the callback to invoke for each field
+   */
+  public static void doWithFields(Class<?> clazz, FieldCallback fc)
       throws IllegalArgumentException {
+    doWithFields(clazz, fc, null);
+  }
+
+  /**
+   * Invoke the given callback on all fields in the target class, going up the
+   * class hierarchy to get all declared fields.
+   * 
+   * @param clazz the target class to analyze
+   * @param fc the callback to invoke for each field
+   * @param ff the filter that determines the fields to apply the callback to
+   */
+  public static void doWithFields(Class<?> clazz, FieldCallback fc,
+      FieldFilter ff) throws IllegalArgumentException {
+
     // Keep backing up the inheritance hierarchy.
+    Class<?> targetClass = clazz;
     do {
-      Method[] methods = targetClass.getDeclaredMethods();
-      for (int i = 0; i < methods.length; i++) {
+      Field[] fields = targetClass.getDeclaredFields();
+      for (Field field : fields) {
+        // Skip static and final fields.
+        if (ff != null && !ff.matches(field)) {
+          continue;
+        }
         try {
-          mc.doWith(methods[i]);
+          fc.doWith(field);
         } catch (IllegalAccessException ex) {
           throw new IllegalStateException(
-              "Shouldn't be illegal to access method '" + methods[i].getName()
+              "Shouldn't be illegal to access field '" + field.getName()
                   + "': " + ex);
         }
       }
       targetClass = targetClass.getSuperclass();
-    } while (targetClass != null);
+    } while (targetClass != null && targetClass != Object.class);
+  }
+
+  /**
+   * Perform the given callback operation on all matching methods of the given
+   * class and superclasses.
+   * <p>
+   * The same named method occurring on subclass and superclass will appear
+   * twice, unless excluded by a {@link MethodFilter}.
+   * 
+   * @param clazz class to start looking at
+   * @param mc the callback to invoke for each method
+   * @see #doWithMethods(Class, MethodCallback, MethodFilter)
+   */
+  public static void doWithMethods(Class<?> clazz, MethodCallback mc)
+      throws IllegalArgumentException {
+    doWithMethods(clazz, mc, null);
+  }
+
+  /**
+   * Perform the given callback operation on all matching methods of the given
+   * class and superclasses (or given interface and super-interfaces).
+   * <p>
+   * The same named method occurring on subclass and superclass will appear
+   * twice, unless excluded by the specified {@link MethodFilter}.
+   * 
+   * @param clazz class to start looking at
+   * @param mc the callback to invoke for each method
+   * @param mf the filter that determines the methods to apply the callback to
+   */
+  public static void doWithMethods(Class<?> clazz, MethodCallback mc,
+      MethodFilter mf) throws IllegalArgumentException {
+
+    // Keep backing up the inheritance hierarchy.
+    Method[] methods = clazz.getDeclaredMethods();
+    for (Method method : methods) {
+      if (mf != null && !mf.matches(method)) {
+        continue;
+      }
+      try {
+        mc.doWith(method);
+      } catch (IllegalAccessException ex) {
+        throw new IllegalStateException(
+            "Shouldn't be illegal to access method '" + method.getName()
+                + "': " + ex);
+      }
+    }
+    if (clazz.getSuperclass() != null) {
+      doWithMethods(clazz.getSuperclass(), mc, mf);
+    } else if (clazz.isInterface()) {
+      for (Class<?> superIfc : clazz.getInterfaces()) {
+        doWithMethods(superIfc, mc, mf);
+      }
+    }
   }
 
   public static Method findMethod(Class<?> clazz, String name,
@@ -153,6 +278,21 @@ public class GwtReflectionUtils {
       searchType = searchType.getSuperclass();
     }
     return null;
+  }
+
+  /**
+   * Get all declared methods on the leaf class and all superclasses. Leaf class
+   * methods are included first.
+   */
+  public static Method[] getAllDeclaredMethods(Class<?> leafClass)
+      throws IllegalArgumentException {
+    final List<Method> methods = new ArrayList<Method>(32);
+    doWithMethods(leafClass, new MethodCallback() {
+      public void doWith(Method method) {
+        methods.add(method);
+      }
+    });
+    return methods.toArray(new Method[methods.size()]);
   }
 
   public static <T extends Annotation> Map<Field, T> getAnnotatedField(

@@ -43,6 +43,7 @@ public class GwtCreateHandlerManager implements AfterTestCallback {
   private final GwtCreateHandler placeHistoryMapperCreateHandler;
   private final GwtCreateHandler resizeLayoutPanelImplCreateHandler;
   private final GwtCreateHandler safeHtmlTemplatesCreateHandler;
+  private final GwtCreateHandler simpleBeanEditorDriverCreateHandler;
   private final TestRemoteServiceCreateHandler testRemoteServiceCreateHandler;
   private final GwtCreateHandler uiBinderCreateHandler;
   private final WebXmlRemoteServiceCreateHandler webXmlRemoteServiceCreateHandler;
@@ -62,6 +63,7 @@ public class GwtCreateHandlerManager implements AfterTestCallback {
     placeHistoryMapperCreateHandler = new PlaceHistoryMapperCreateHandler();
     resizeLayoutPanelImplCreateHandler = new ResizeLayoutPanelImplCreateHandler();
     safeHtmlTemplatesCreateHandler = new SafeHtmlTemplatesCreateHandler();
+    simpleBeanEditorDriverCreateHandler = new SimpleBeanEditorDriverCreateHandler();
     uiBinderCreateHandler = UiBinderCreateHandler.get();
     testRemoteServiceCreateHandler = TestRemoteServiceCreateHandler.get();
     webXmlRemoteServiceCreateHandler = new WebXmlRemoteServiceCreateHandler();
@@ -82,7 +84,7 @@ public class GwtCreateHandlerManager implements AfterTestCallback {
   public List<GwtCreateHandler> getGwtCreateHandlers() {
     List<GwtCreateHandler> list = new ArrayList<GwtCreateHandler>();
 
-    // than, declared @Mock objects creation
+    // declared @Mock objects creation
     if (mockCreateHandler != null) {
       list.add(mockCreateHandler);
     }
@@ -107,6 +109,7 @@ public class GwtCreateHandlerManager implements AfterTestCallback {
     list.add(defaultGwtCreateHandler);
     list.add(abstractClassCreateHandler);
     list.add(safeHtmlTemplatesCreateHandler);
+    list.add(simpleBeanEditorDriverCreateHandler);
     list.add(placeHistoryMapperCreateHandler);
 
     return Collections.unmodifiableList(list);

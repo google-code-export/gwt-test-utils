@@ -2,6 +2,7 @@ package com.googlecode.gwt.test;
 
 import static org.junit.Assert.assertEquals;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import com.google.gwt.core.client.GWT;
@@ -12,16 +13,16 @@ public class GwtLogTest extends GwtTestTest {
 
   private Throwable t;
 
-  @Override
-  public GwtLogHandler getLogHandler() {
-    return new GwtLogHandler() {
+  @Before
+  public void beforeGwtLogTest() {
+    setLogHandler(new GwtLogHandler() {
 
       public void log(String message, Throwable t) {
         GwtLogTest.this.message = message;
         GwtLogTest.this.t = t;
       }
 
-    };
+    });
   }
 
   @Test

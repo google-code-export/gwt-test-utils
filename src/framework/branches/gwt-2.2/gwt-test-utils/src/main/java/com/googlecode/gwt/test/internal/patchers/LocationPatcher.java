@@ -43,7 +43,7 @@ class LocationPatcher {
   @PatchMethod
   static void assign(String newURL) {
     try {
-      urlHolder.url = new URL(newURL);
+      urlHolder.url = new URL(urlHolder.url, newURL);
     } catch (MalformedURLException e) {
       GWT.log("Failed to assign new URL '" + newURL + "'", e);
     }
