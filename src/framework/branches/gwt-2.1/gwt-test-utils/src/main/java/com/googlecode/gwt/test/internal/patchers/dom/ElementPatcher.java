@@ -7,6 +7,7 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Style;
+import com.googlecode.gwt.test.internal.GwtConfig;
 import com.googlecode.gwt.test.internal.utils.GwtHtmlParser;
 import com.googlecode.gwt.test.internal.utils.GwtStringUtils;
 import com.googlecode.gwt.test.internal.utils.JavaScriptObjects;
@@ -171,6 +172,14 @@ class ElementPatcher {
 
   @PatchMethod
   static void setInnerHTML(Element element, String html) {
+    setInnerHTML(element, html, GwtConfig.get().isDomMocked());
+  }
+
+  static void setInnerHTML(Element element, String html, boolean domMocked) {
+    if (domMocked) {
+      JavaScriptObjects.setProperty(element,
+          JsoProperties.ELEMENT_MOCKED_INNER_HTML, html);
+    }
     // clear old childs
     List<Node> innerList = JavaScriptObjects.getObject(element.getChildNodes(),
         JsoProperties.NODE_LIST_INNER_LIST);

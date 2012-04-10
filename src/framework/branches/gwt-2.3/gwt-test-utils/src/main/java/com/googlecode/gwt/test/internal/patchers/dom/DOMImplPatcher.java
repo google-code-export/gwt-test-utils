@@ -18,6 +18,7 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Text;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.EventListener;
+import com.googlecode.gwt.test.internal.GwtConfig;
 import com.googlecode.gwt.test.internal.utils.EventUtils;
 import com.googlecode.gwt.test.internal.utils.JavaScriptObjects;
 import com.googlecode.gwt.test.internal.utils.JsoProperties;
@@ -301,27 +302,37 @@ class DOMImplPatcher {
 
   @PatchMethod
   static String getInnerHTML(Object domImpl, Element elem) {
-    StringBuilder sb = new StringBuilder();
-    for (int i = 0; i < elem.getChildNodes().getLength(); i++) {
-      Node current = elem.getChildNodes().getItem(i);
-      if (current.getNodeType() == Node.TEXT_NODE) {
-        Text text = current.cast();
-        sb.append(text.getData());
-      } else {
-        sb.append(current.toString());
+    if (GwtConfig.get().isDomMocked()) {
+      return JavaScriptObjects.getString(elem,
+          JsoProperties.ELEMENT_MOCKED_INNER_HTML);
+    } else {
+      StringBuilder sb = new StringBuilder();
+      for (int i = 0; i < elem.getChildNodes().getLength(); i++) {
+        Node current = elem.getChildNodes().getItem(i);
+        if (current.getNodeType() == Node.TEXT_NODE) {
+          Text text = current.cast();
+          sb.append(text.getData());
+        } else {
+          sb.append(current.toString());
+        }
       }
-    }
 
-    return sb.toString();
+      return sb.toString();
+    }
   }
 
   @PatchMethod
   static String getInnerText(Object domImpl, Element elem) {
-    StringBuilder sb = new StringBuilder("");
+    if (GwtConfig.get().isDomMocked()) {
+      return JavaScriptObjects.getString(elem,
+          JsoProperties.ELEMENT_MOCKED_INNER_HTML);
+    } else {
+      StringBuilder sb = new StringBuilder("");
 
-    appendInnerTextRecursive(elem, sb);
+      appendInnerTextRecursive(elem, sb);
 
-    return sb.toString();
+      return sb.toString();
+    }
   }
 
   @PatchMethod
@@ -469,8 +480,14 @@ class DOMImplPatcher {
 
   @PatchMethod
   static void setInnerText(Object domImpl, Element elem, String text) {
+    if (GwtConfig.get().isDomMocked()) {
+      JavaScriptObjects.setProperty(elem,
+          JsoProperties.ELEMENT_MOCKED_INNER_HTML, text);
+    }
+
     clearChildNodes(elem);
     elem.appendChild(JavaScriptObjects.newText(text, elem.getOwnerDocument()));
+
   }
 
   @PatchMethod

@@ -75,7 +75,6 @@ public abstract class GwtTest extends GwtModuleRunnerAdapter implements Test {
   public GwtTest() {
     this.test = createJUnit4TestAdapter();
     this.setCanDispatchDomEventOnDetachedWidget(true);
-    this.setBrowserErrorHandler(JUNIT_BROWSER_ERROR_HANDLER);
   }
 
   public int countTestCases() {
