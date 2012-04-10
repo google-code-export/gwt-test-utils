@@ -138,6 +138,14 @@ public interface GwtModuleRunner {
   WindowOperationsHandler getWindowOperationsHandler();
 
   /**
+   * Specifies if the GWT DOM should be simulated or mocked.
+   * 
+   * @return True if the DOM should be mocked, false if it should be simulated
+   *         well.
+   */
+  boolean isDomMocked();
+
+  /**
    * Declare a {@link UiConstructor} which might be use to handle some widget
    * creation according to its declaration in a .ui.xml UiBinder file.
    * 
