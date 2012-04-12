@@ -18,10 +18,6 @@ class AbstractHasDataPatcher {
   static void doAttach(AbstractHasData<?> abstractHasData, Widget child) {
     GwtReflectionUtils.callPrivateMethod(child, "onAttach");
   }
-  /*-{
-  }
-  child.@com.google.gwt.user.client.ui.Widget::onAttach()();
-  }-*/;
 
   @PatchMethod
   static void doDetach(AbstractHasData<?> abstractHasData, Widget child) {

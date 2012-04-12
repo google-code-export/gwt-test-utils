@@ -12,7 +12,6 @@ import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment.VerticalAlignmentConstant;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.googlecode.gwt.test.internal.utils.JavaScriptObjects;
-import com.googlecode.gwt.test.internal.utils.JsoProperties;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
 /**
@@ -57,7 +56,7 @@ public class UiBinderXmlUtils {
    */
   public static List<IsWidget> getChildWidgets(Element element) {
     List<IsWidget> childWidgets = JavaScriptObjects.getObject(element,
-        JsoProperties.UIBINDER_CHILD_WIDGETS_LIST);
+        UiElementTag.UIBINDER_CHILD_WIDGETS_LIST);
 
     return childWidgets != null ? childWidgets
         : Collections.<IsWidget> emptyList();

@@ -43,7 +43,6 @@ public class GwtConfig implements AfterTestCallback {
   private final DebugIdImpl enabledInstance = new DebugIdImplEnabled();
   private GwtModuleRunner gwtModuleRunner;
   private final Map<Class<?>, List<String[]>> uiConstructorsMap = new HashMap<Class<?>, List<String[]>>();
-
   private final List<UiObjectTagFactory<?>> uiObjectTagFactories = new ArrayList<UiObjectTagFactory<?>>();
 
   private GwtConfig() {

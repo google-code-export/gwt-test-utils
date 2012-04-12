@@ -18,13 +18,16 @@ import com.googlecode.gwt.test.patchers.PatchMethod;
 @PatchClass(TableElement.class)
 class TableElementPatcher {
 
+  private static final String TCAPTION = "TCAPTION";
+  private static final String TFOOT = "tFoot";
+  private static final String THEAD = "tHead";
+
   @PatchMethod
   static TableCaptionElement createCaption(TableElement e) {
-    TableCaptionElement caption = JavaScriptObjects.getObject(e,
-        JsoProperties.TCAPTION);
+    TableCaptionElement caption = JavaScriptObjects.getObject(e, TCAPTION);
     if (caption == null) {
       caption = Document.get().createCaptionElement();
-      JavaScriptObjects.setProperty(e, JsoProperties.TCAPTION, caption);
+      JavaScriptObjects.setProperty(e, TCAPTION, caption);
       e.insertFirst(caption);
     }
     return caption;
@@ -32,8 +35,7 @@ class TableElementPatcher {
 
   @PatchMethod
   static TableSectionElement createTFoot(TableElement e) {
-    TableSectionElement tfoot = JavaScriptObjects.getObject(e,
-        JsoProperties.TFOOT);
+    TableSectionElement tfoot = JavaScriptObjects.getObject(e, TFOOT);
     if (tfoot == null) {
       tfoot = Document.get().createTFootElement();
 
@@ -48,7 +50,7 @@ class TableElementPatcher {
           e.insertAfter(tfoot, caption);
         }
       }
-      JavaScriptObjects.setProperty(e, JsoProperties.TFOOT, tfoot);
+      JavaScriptObjects.setProperty(e, TFOOT, tfoot);
     }
 
     return tfoot;
@@ -56,8 +58,7 @@ class TableElementPatcher {
 
   @PatchMethod
   static TableSectionElement createTHead(TableElement e) {
-    TableSectionElement thead = JavaScriptObjects.getObject(e,
-        JsoProperties.THEAD);
+    TableSectionElement thead = JavaScriptObjects.getObject(e, THEAD);
     if (thead == null) {
       thead = Document.get().createTHeadElement();
       TableCaptionElement caption = e.getCaption();
@@ -66,7 +67,7 @@ class TableElementPatcher {
       } else {
         e.insertAfter(thead, caption);
       }
-      JavaScriptObjects.setProperty(e, JsoProperties.THEAD, thead);
+      JavaScriptObjects.setProperty(e, THEAD, thead);
     }
 
     return thead;
@@ -74,10 +75,9 @@ class TableElementPatcher {
 
   @PatchMethod
   static void deleteCaption(TableElement e) {
-    TableCaptionElement caption = JavaScriptObjects.getObject(e,
-        JsoProperties.TCAPTION);
+    TableCaptionElement caption = JavaScriptObjects.getObject(e, TCAPTION);
     if (caption != null) {
-      JavaScriptObjects.remove(e, JsoProperties.TCAPTION);
+      JavaScriptObjects.remove(e, TCAPTION);
       e.removeChild(caption);
     }
   }
@@ -100,27 +100,25 @@ class TableElementPatcher {
 
   @PatchMethod
   static void deleteTFoot(TableElement e) {
-    TableSectionElement tfoot = JavaScriptObjects.getObject(e,
-        JsoProperties.TFOOT);
+    TableSectionElement tfoot = JavaScriptObjects.getObject(e, TFOOT);
     if (tfoot != null) {
-      JavaScriptObjects.remove(e, JsoProperties.TFOOT);
+      JavaScriptObjects.remove(e, TFOOT);
       e.removeChild(tfoot);
     }
   }
 
   @PatchMethod
   static void deleteTHead(TableElement e) {
-    TableSectionElement thead = JavaScriptObjects.getObject(e,
-        JsoProperties.THEAD);
+    TableSectionElement thead = JavaScriptObjects.getObject(e, THEAD);
     if (thead != null) {
-      JavaScriptObjects.remove(e, JsoProperties.THEAD);
+      JavaScriptObjects.remove(e, THEAD);
       e.removeChild(thead);
     }
   }
 
   @PatchMethod
   static TableCaptionElement getCaption(TableElement e) {
-    return JavaScriptObjects.getObject(e, JsoProperties.TCAPTION);
+    return JavaScriptObjects.getObject(e, TCAPTION);
 
   }
 
@@ -137,12 +135,12 @@ class TableElementPatcher {
 
   @PatchMethod
   static TableSectionElement getTFoot(TableElement e) {
-    return JavaScriptObjects.getObject(e, JsoProperties.TFOOT);
+    return JavaScriptObjects.getObject(e, TFOOT);
   }
 
   @PatchMethod
   static TableSectionElement getTHead(TableElement e) {
-    return JavaScriptObjects.getObject(e, JsoProperties.THEAD);
+    return JavaScriptObjects.getObject(e, THEAD);
   }
 
   @PatchMethod
@@ -169,8 +167,7 @@ class TableElementPatcher {
 
   @PatchMethod
   static void setTFoot(TableElement e, TableSectionElement tFoot) {
-    TableSectionElement old = JavaScriptObjects.getObject(e,
-        JsoProperties.TFOOT);
+    TableSectionElement old = JavaScriptObjects.getObject(e, TFOOT);
 
     if (old != null && tFoot != null) {
       e.replaceChild(tFoot, old);
@@ -180,14 +177,13 @@ class TableElementPatcher {
       e.removeChild(old);
     }
 
-    JavaScriptObjects.setProperty(e, JsoProperties.TFOOT, tFoot);
+    JavaScriptObjects.setProperty(e, TFOOT, tFoot);
 
   }
 
   @PatchMethod
   static void setTHead(TableElement e, TableSectionElement tHead) {
-    TableSectionElement old = JavaScriptObjects.getObject(e,
-        JsoProperties.THEAD);
+    TableSectionElement old = JavaScriptObjects.getObject(e, THEAD);
 
     if (old != null && tHead != null) {
       e.replaceChild(tHead, old);
@@ -197,7 +193,7 @@ class TableElementPatcher {
       e.removeChild(old);
     }
 
-    JavaScriptObjects.setProperty(e, JsoProperties.THEAD, tHead);
+    JavaScriptObjects.setProperty(e, THEAD, tHead);
   }
 
   /**

@@ -1,4 +1,4 @@
-package com.googlecode.gwt.test.internal;
+package com.googlecode.gwt.test.internal.patchers;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.layout.client.Layout.AnimationCallback;

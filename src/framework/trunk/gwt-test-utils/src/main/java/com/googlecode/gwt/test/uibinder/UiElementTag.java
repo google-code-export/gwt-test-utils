@@ -11,7 +11,6 @@ import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.UIObject;
 import com.googlecode.gwt.test.exceptions.ReflectionException;
 import com.googlecode.gwt.test.internal.utils.JavaScriptObjects;
-import com.googlecode.gwt.test.internal.utils.JsoProperties;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
 /**
@@ -22,6 +21,11 @@ import com.googlecode.gwt.test.utils.GwtReflectionUtils;
  */
 class UiElementTag implements UiTag<Element> {
 
+  static final String UIBINDER_CHILD_WIDGETS_LIST = "UIBINDER_CHILD_WIDGETS_LIST";
+  static final String UIBINDER_XML_NAMESPACE = "UIBINDER_XML_NAMESPACE";
+
+  private static final String UIBINDER_CHILD_UIOBJECT_LIST = "UIBINDER_CHILD_UIOBJECT_LIST";
+
   private final UiTag<?> parentTag;
   private final Element wrapped;
 
@@ -30,7 +34,7 @@ class UiElementTag implements UiTag<Element> {
     this.wrapped = JavaScriptObjects.newElement(tagName, Document.get());
     this.parentTag = parentTag;
 
-    JavaScriptObjects.setProperty(wrapped, JsoProperties.XML_NAMESPACE, nsURI);
+    JavaScriptObjects.setProperty(wrapped, UIBINDER_XML_NAMESPACE, nsURI);
 
     for (Map.Entry<String, Object> entry : attributes.entrySet()) {
       String attrName = entry.getKey();
@@ -83,12 +87,12 @@ class UiElementTag implements UiTag<Element> {
 
   protected void addWidget(Element wrapped, IsWidget isWidget) {
     List<IsWidget> childWidgets = JavaScriptObjects.getObject(wrapped,
-        JsoProperties.UIBINDER_CHILD_WIDGETS_LIST);
+        UIBINDER_CHILD_WIDGETS_LIST);
 
     if (childWidgets == null) {
       childWidgets = new ArrayList<IsWidget>();
-      JavaScriptObjects.setProperty(wrapped,
-          JsoProperties.UIBINDER_CHILD_WIDGETS_LIST, childWidgets);
+      JavaScriptObjects.setProperty(wrapped, UIBINDER_CHILD_WIDGETS_LIST,
+          childWidgets);
     }
 
     childWidgets.add(isWidget);
@@ -106,12 +110,12 @@ class UiElementTag implements UiTag<Element> {
 
   protected void appendUiObject(Element wrapped2, UIObject uiObject) {
     List<UIObject> childObjects = JavaScriptObjects.getObject(wrapped,
-        JsoProperties.UIBINDER_CHILD_UIOBJECT_LIST);
+        UIBINDER_CHILD_UIOBJECT_LIST);
 
     if (childObjects == null) {
       childObjects = new ArrayList<UIObject>();
-      JavaScriptObjects.setProperty(wrapped,
-          JsoProperties.UIBINDER_CHILD_UIOBJECT_LIST, childObjects);
+      JavaScriptObjects.setProperty(wrapped, UIBINDER_CHILD_UIOBJECT_LIST,
+          childObjects);
     }
 
     childObjects.add(uiObject);

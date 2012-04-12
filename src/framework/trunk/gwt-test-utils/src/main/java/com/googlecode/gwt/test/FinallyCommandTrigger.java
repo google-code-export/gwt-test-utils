@@ -67,20 +67,23 @@ public class FinallyCommandTrigger implements AfterTestCallback {
    * {@link GwtTestPatchException} would we thrown.
    */
   public void afterTest() throws Throwable {
-    if (hasPendingCommands()) {
 
+    int nb = repeatingCommands.size() + scheduledCommands.size();
+
+    if (nb > 0) {
       repeatingCommands.clear();
       scheduledCommands.clear();
 
-      throw new GwtTestPatchException(
-          "There are pending commands which were scheduled to run after DOM manipulation. You have to trigger them by calling '"
-              + FinallyCommandTrigger.class.getName()
-              + ".triggerCommands() static method AFTER arranging your test");
+      String message = (nb > 1)
+          ? "There are "
+              + nb
+              + " pending commands which were scheduled to run after DOM manipulation. You have to trigger them by calling '"
+          : "There is one pending command which was scheduled to run after DOM manipulation. You have to trigger it by calling '";
+
+      throw new GwtTestPatchException(message
+          + FinallyCommandTrigger.class.getName()
+          + ".triggerCommands() static method AFTER arranging your test");
     }
-
   }
 
-  private boolean hasPendingCommands() {
-    return !(repeatingCommands.isEmpty() && scheduledCommands.isEmpty());
-  }
 }

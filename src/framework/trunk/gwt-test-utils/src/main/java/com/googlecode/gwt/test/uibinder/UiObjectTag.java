@@ -21,7 +21,6 @@ import com.google.gwt.user.client.ui.UIObject;
 import com.googlecode.gwt.test.exceptions.GwtTestUiBinderException;
 import com.googlecode.gwt.test.exceptions.ReflectionException;
 import com.googlecode.gwt.test.internal.utils.JavaScriptObjects;
-import com.googlecode.gwt.test.internal.utils.JsoProperties;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
 /**
@@ -54,13 +53,13 @@ public abstract class UiObjectTag<T> implements UiTag<T> {
    * (non-Javadoc)
    * 
    * @see
-   * com.googlecode.gwt.test.uibinder.UiTag#addElement(com.google.gwt.dom.client.Element
-   * )
+   * com.googlecode.gwt.test.uibinder.UiTag#addElement(com.google.gwt.dom.client
+   * .Element )
    */
   public final void addElement(Element element) {
 
     String namespaceURI = JavaScriptObjects.getString(element,
-        JsoProperties.XML_NAMESPACE);
+        UiElementTag.UIBINDER_XML_NAMESPACE);
 
     appendElement(this.wrapped, element, namespaceURI,
         UiBinderXmlUtils.getChildWidgets(element));
@@ -70,8 +69,8 @@ public abstract class UiObjectTag<T> implements UiTag<T> {
    * (non-Javadoc)
    * 
    * @see
-   * com.googlecode.gwt.test.uibinder.UiTag#addUiObject(com.google.gwt.user.client
-   * .ui.UIObject)
+   * com.googlecode.gwt.test.uibinder.UiTag#addUiObject(com.google.gwt.user.
+   * client .ui.UIObject)
    */
   public final void addUiObject(UIObject uiObject) {
     addUIObject(this.wrapped, uiObject);
@@ -81,8 +80,8 @@ public abstract class UiObjectTag<T> implements UiTag<T> {
    * (non-Javadoc)
    * 
    * @see
-   * com.googlecode.gwt.test.uibinder.UiTag#addWidget(com.google.gwt.user.client.ui
-   * .IsWidget)
+   * com.googlecode.gwt.test.uibinder.UiTag#addWidget(com.google.gwt.user.client
+   * .ui .IsWidget)
    */
   public final void addWidget(IsWidget isWidget) {
     addWidget(this.wrapped, isWidget);
