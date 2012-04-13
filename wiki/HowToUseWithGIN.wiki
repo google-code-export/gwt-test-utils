@@ -9,7 +9,7 @@ It could be done this way :
 
 {{{
 
-public MyGinTest extends GwtTest {
+public MyGinTest extends GwtTest { 
  
  @Before
   public void setupGIN() {
