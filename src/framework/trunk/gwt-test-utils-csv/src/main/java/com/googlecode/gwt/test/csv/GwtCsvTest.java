@@ -1,5 +1,7 @@
 package com.googlecode.gwt.test.csv;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -182,6 +184,20 @@ public abstract class GwtCsvTest extends GwtTest {
   }
 
   @CsvMethod
+  public void assertHTML(String html, String... params) {
+    Object o = getObject(Object.class, params);
+    if (HasHTML.class.isInstance(o)) {
+      assertEquals(html, ((HasHTML) o).getHTML());
+    } else if (UIObject.class.isInstance(o)) {
+      assertEquals(html, ((UIObject) o).getElement().getInnerHTML());
+    } else {
+      Assert.fail(csvRunner.getAssertionErrorMessagePrefix()
+          + "Cannot retrieve HTML from object of type "
+          + o.getClass().getName());
+    }
+  }
+
+  @CsvMethod
   public void assertInstanceOf(String className, String objectLocalisation) {
     try {
       Class<?> clazz = Class.forName(className);
@@ -257,6 +273,20 @@ public abstract class GwtCsvTest extends GwtTest {
       Assert.assertTrue(csvRunner.getAssertionErrorMessagePrefix()
           + "Current value <" + currentValue + "> is not smaller than <"
           + value + ">", currentValue < longValue);
+    }
+  }
+
+  @CsvMethod
+  public void assertText(String html, String... params) {
+    Object o = getObject(Object.class, params);
+    if (HasText.class.isInstance(o)) {
+      assertEquals(html, ((HasText) o).getText());
+    } else if (UIObject.class.isInstance(o)) {
+      assertEquals(html, ((UIObject) o).getElement().getInnerText());
+    } else {
+      Assert.fail(csvRunner.getAssertionErrorMessagePrefix()
+          + "Cannot retrieve text from object of type "
+          + o.getClass().getName());
     }
   }
 
