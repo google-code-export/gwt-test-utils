@@ -24,10 +24,10 @@ class StylePatcher {
       put("whiteSpace", "nowrap");
     }
   };
+
   private static final String STYLE_BORDER_BOTTOM_WIDTH = "border-bottom-width";
   private static final String STYLE_BORDER_LEFT_WIDTH = "border-left-width";
   private static final String STYLE_BORDER_RIGHT_WIDTH = "border-right-width";
-
   private static final String STYLE_BORDER_TOP_WIDTH = "border-top-width";
 
   @PatchMethod

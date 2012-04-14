@@ -44,9 +44,7 @@ class ConfigurationLoader {
   }
 
   private final ClassLoader classLoader;
-
   private final ClassSubstituer classSubstituer;
-
   private final Set<String> delegates;
   private final MethodRemover methodRemover;
   private PatcherFactory patcherFactory;

@@ -61,7 +61,6 @@ public abstract class GwtModuleRunnerAdapter implements GwtModuleRunner,
 
   private final BrowserErrorHandlerDelegate browserErrorHandlerDelegate;
   private boolean canDispatchDomEventOnDetachedWidget;
-  private boolean domMocked;
   private Locale locale;
   private GwtLogHandler logHandler;
   private ServletConfig servletConfig;
@@ -116,7 +115,6 @@ public abstract class GwtModuleRunnerAdapter implements GwtModuleRunner,
    */
   public final void afterTest() throws Throwable {
     this.locale = null;
-    this.domMocked = false;
     this.servletConfig = null;
     this.windowOperationsHandler = null;
     this.browserErrorHandlerDelegate.customHandler = null;
@@ -211,15 +209,6 @@ public abstract class GwtModuleRunnerAdapter implements GwtModuleRunner,
   /*
    * (non-Javadoc)
    * 
-   * @see com.googlecode.gwt.test.GwtModuleRunner#isDomMocked()
-   */
-  public boolean isDomMocked() {
-    return domMocked;
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
    * @see
    * com.googlecode.gwt.test.GwtModuleRunner#registerUiConstructor(java.lang
    * .Class, java.lang.String[])
@@ -278,10 +267,6 @@ public abstract class GwtModuleRunnerAdapter implements GwtModuleRunner,
   protected final void setCanDispatchDomEventOnDetachedWidget(
       boolean canDispatchDomEventOnDetachedWidget) {
     this.canDispatchDomEventOnDetachedWidget = canDispatchDomEventOnDetachedWidget;
-  }
-
-  protected final void setDomMocked(boolean domMocked) {
-    this.domMocked = domMocked;
   }
 
   protected final void setLocale(Locale locale) {

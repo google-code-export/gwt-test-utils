@@ -111,9 +111,13 @@ class GwtTranslator implements Translator {
   }
 
   private void patchClass(CtClass classToModify) {
-    LOGGER.debug("Load class '" + classToModify.getName() + "'");
+    if (LOGGER.isDebugEnabled()) {
+      LOGGER.debug("Load class '" + classToModify.getName() + "'");
+    }
     applyPatcher(classToModify);
     modifiyClass(classToModify);
-    LOGGER.debug("Class '" + classToModify.getName() + "' has been loaded");
+    if (LOGGER.isDebugEnabled()) {
+      LOGGER.debug("Class '" + classToModify.getName() + "' has been loaded");
+    }
   }
 }

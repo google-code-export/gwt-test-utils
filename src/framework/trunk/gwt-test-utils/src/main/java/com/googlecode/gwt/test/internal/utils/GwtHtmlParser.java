@@ -9,7 +9,6 @@ import org.apache.xerces.xni.XMLResourceIdentifier;
 import org.apache.xerces.xni.XMLString;
 import org.apache.xerces.xni.XNIException;
 import org.apache.xerces.xni.parser.XMLDocumentFilter;
-import org.cyberneko.html.filters.DefaultFilter;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
@@ -18,6 +17,7 @@ import org.xml.sax.helpers.XMLReaderFactory;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
 import com.googlecode.gwt.test.exceptions.GwtTestPatchException;
+import com.googlecode.html.filters.DefaultFilter;
 
 /**
  * 
@@ -87,15 +87,14 @@ public class GwtHtmlParser {
 
   private static XMLReader PARSER;
 
-  public static NodeList<Node> parse(String html, boolean innerHTML) {
+  public static NodeList<Node> parse(String html) {
     if (html == null || html.trim().length() == 0) {
       return JavaScriptObjects.newNodeList(Collections.<Node> emptyList());
     }
 
     try {
       XMLReader saxReader = getParser();
-      GwtHtmlContentHandler contentHandler = new GwtHtmlContentHandler(
-          innerHTML);
+      GwtHtmlContentHandler contentHandler = new GwtHtmlContentHandler();
       saxReader.setContentHandler(contentHandler);
       saxReader.parse(new InputSource(new StringReader(html)));
       return contentHandler.getParsedNodes();
@@ -107,7 +106,7 @@ public class GwtHtmlParser {
 
   private static XMLReader getParser() throws SAXException {
     if (PARSER == null) {
-      PARSER = XMLReaderFactory.createXMLReader("org.cyberneko.html.parsers.SAXParser");
+      PARSER = XMLReaderFactory.createXMLReader("com.googlecode.html.parsers.SAXParser");
 
       // FIXME : this feature does not work with the NekoHTML version
       // included

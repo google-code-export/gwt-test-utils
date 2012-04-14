@@ -8,8 +8,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
-import javassist.CtClass;
-
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.AnchorElement;
 import com.google.gwt.dom.client.AreaElement;
@@ -74,9 +72,10 @@ public class JavaScriptObjects {
 
   public static final String PROPERTIES = "JSO_PROPERTIES";
 
-  public static CtClass STRING_TYPE;
-
   private static final Map<String, Class<? extends Element>> ELEMENT_TAGS = new TreeMap<String, Class<? extends Element>>();
+
+  private static final String NODE_NAME = "nodeName";
+  private static final String SELECTED_INDEX_FIELD = "selectedIndex";
 
   static {
     ELEMENT_TAGS.put("a", AnchorElement.class);
@@ -186,7 +185,7 @@ public class JavaScriptObjects {
     setProperty(elem, JsoProperties.NODE_OWNER_DOCUMENT, ownerDocument);
 
     if (tag.equalsIgnoreCase("html")) {
-      setProperty(elem, JsoProperties.NODE_NAME, "HTML");
+      setProperty(elem, NODE_NAME, "HTML");
     }
 
     return elem;
@@ -227,7 +226,7 @@ public class JavaScriptObjects {
       nodeType = Node.ELEMENT_NODE;
 
       Element e = o.cast();
-      setProperty(o, JsoProperties.STYLE_OBJECT_FIELD, newStyle(e));
+      setProperty(o, JsoProperties.STYLE_OBJECT_FIELD, newStyle());
 
       // a propertyContainer with a LinkedHashMap to record the order of DOM
       // properties
@@ -235,7 +234,7 @@ public class JavaScriptObjects {
       setProperty(e, JsoProperties.ELEM_PROPERTIES, elemProperties);
 
       if (SelectElement.class.isAssignableFrom(jsoClass)) {
-        setProperty(o, JsoProperties.SELECTED_INDEX_FIELD, -1);
+        setProperty(o, SELECTED_INDEX_FIELD, -1);
         setProperty(o, JsoProperties.SELECTED_SIZE, -1);
       }
     } else if (Text.class.isAssignableFrom(jsoClass)) {
@@ -251,7 +250,7 @@ public class JavaScriptObjects {
     return o;
   }
 
-  public static Style newStyle(Element owner) {
+  public static Style newStyle() {
     Style style = newObject(Style.class);
 
     setProperty(style, JsoProperties.STYLE_PROPERTIES,

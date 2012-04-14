@@ -2,7 +2,6 @@ package com.googlecode.gwt.test.internal.utils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
@@ -23,17 +22,9 @@ import com.google.gwt.dom.client.Text;
  */
 class GwtHtmlContentHandler implements ContentHandler {
 
-  private static final Pattern ROOT_DOCUMENT_TAG_PATTERN = Pattern.compile("^HTML|HEAD|BODY$");
-
   private Node currentNode;
 
-  private final boolean innerHTML;
-
   private final List<Node> nodes = new ArrayList<Node>();
-
-  public GwtHtmlContentHandler(boolean innerHTML) {
-    this.innerHTML = innerHTML;
-  }
 
   public void characters(char[] ch, int start, int length) throws SAXException {
 
@@ -56,15 +47,6 @@ class GwtHtmlContentHandler implements ContentHandler {
 
   public void endElement(String nameSpaceURI, String localName, String rawName)
       throws SAXException {
-
-    // FIXME : big hack because NekoHTML 1.9.13 (included in gwt-dev.jar) has a
-    // bug with HTML fragment parsing, see :
-    // http://stackoverflow.com/questions/7294525/nekohtml-sax-fragment-parsing
-    if (innerHTML && ROOT_DOCUMENT_TAG_PATTERN.matcher(localName).matches()) {
-      // ignore HTML/HEAD/BODY element
-      return;
-    }
-
     currentNode = currentNode.getParentNode();
   }
 
@@ -94,14 +76,6 @@ class GwtHtmlContentHandler implements ContentHandler {
 
   public void startElement(String nameSpaceURI, String localName,
       String rawName, Attributes attributes) throws SAXException {
-
-    // FIXME : big hack because NekoHTML 1.9.13 (included in gwt-dev.jar) has a
-    // bug with HTML fragment parsing, see :
-    // http://stackoverflow.com/questions/7294525/nekohtml-sax-fragment-parsing
-    if (innerHTML && ROOT_DOCUMENT_TAG_PATTERN.matcher(localName).matches()) {
-      // ignore HTML/HEAD/BODY element
-      return;
-    }
 
     Element element = Document.get().createElement(localName);
 

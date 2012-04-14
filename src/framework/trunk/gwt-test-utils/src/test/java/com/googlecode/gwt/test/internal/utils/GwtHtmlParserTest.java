@@ -12,17 +12,16 @@ import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Text;
 import com.googlecode.gwt.test.GwtTestTest;
-import com.googlecode.gwt.test.internal.utils.GwtHtmlParser;
 
 public class GwtHtmlParserTest extends GwtTestTest {
 
   @Test
-  public void checkParse() throws Exception {
+  public void parse() throws Exception {
     // Arrange
     String html = "<div id=\"parent0\"></div><div id=\"parent1\"><div id=\"child0\"><span class=\"spanClass\" >test</span></div><BR><DIV id=\"child2\" style=\"color:red; font-style:italic; font-weight:bold; font-family:Arial\"></div>";
 
     // Act
-    NodeList<Node> nodes = GwtHtmlParser.parse(html, true);
+    NodeList<Node> nodes = GwtHtmlParser.parse(html);
 
     // Assert
     assertEquals(2, nodes.getLength());

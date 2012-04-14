@@ -15,8 +15,6 @@ import com.google.gwt.core.client.JavaScriptObject;
  */
 public class JsoProperties {
 
-  public static final String DOCUMENT_ELEMENT = "documentElement";
-
   public static final String ELEM_EVENTLISTENER = "ELEM_EVENTLISTENER";
   public static final String ELEM_PROPERTIES = "ELEM_PROPERTIES";
   public static final String ELEMENT_CLIENT_HEIGHT = "ELEMENT_CLIENT_HEIGHT";
@@ -46,10 +44,9 @@ public class JsoProperties {
   public static final String MOUSEEVENT_SCREENY = "EVENT_screenY";
   public static final String NODE_LIST_FIELD = "childNodes";
   public static final String NODE_LIST_INNER_LIST = "NODE_LIST_INNER_LIST";
-  public static final String NODE_NAME = "nodeName";
+
   public static final String NODE_NAMESPACE_URI = "namespaceURI";
   public static final String NODE_OWNER_DOCUMENT = "NODE_OWNER_DOCUMENT";
-  public static final String NODE_PARENT_NODE = "parentNode";
   public static final String NODE_TYPE_FIELD = "nodeType";
 
   // POTENTIAL ELEMENT PROPERTIES
@@ -59,23 +56,21 @@ public class JsoProperties {
 
   public static final String SCROLL_LEFT = "scrollLeft";
 
-  public static final String SELECTED_INDEX_FIELD = "selectedIndex";
   public static final String SELECTED_SIZE = "SELECTED_SIZE";
   public static final String SELECTION_END = "SELECTION_END";
-
   public static final String SELECTION_START = "SELECTION_START";
 
   public static final String STYLE_OBJECT_FIELD = "STYLE_OBJECT";
+
   public static final String STYLE_PROPERTIES = "STYLE_PROPERTIES";
-
   public static final String TAB_INDEX = "tabIndex";
-  public static final String TAG_NAME = "tagName";
 
+  public static final String TAG_NAME = "tagName";
   public static final String XML_ATTR_JSO = "XML_ATTR_JSO";
+
   public static final String XML_ATTR_NAME = "XML_ATTR_NAME";
   public static final String XML_ATTR_SET = "XML_ATTR_SET";
   public static final String XML_ATTR_VALUE = "XML_ATTR_VALUE";
-
   private static final JsoProperties INSTANCE = new JsoProperties();
 
   public static final JsoProperties get() {

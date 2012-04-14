@@ -20,6 +20,8 @@ import com.googlecode.gwt.test.patchers.PatchMethod;
 @PatchClass(Node.class)
 class NodePatcher {
 
+  private static final String PARENT_NODE_FIELD = "parentNode";
+
   @PatchMethod
   static Node appendChild(Node parent, Node newChild) {
     return insertAtIndex(parent, newChild, -1);
@@ -181,8 +183,7 @@ class NodePatcher {
     }
 
     // Manage getParentNode()
-    JavaScriptObjects.setProperty(newChild, JsoProperties.NODE_PARENT_NODE,
-        parent);
+    JavaScriptObjects.setProperty(newChild, PARENT_NODE_FIELD, parent);
 
     return newChild;
   }
@@ -262,7 +263,7 @@ class NodePatcher {
       JavaScriptObject oldJso, boolean deep) {
     for (Map.Entry<String, Object> entry : JavaScriptObjects.entrySet(oldJso)) {
 
-      if (JsoProperties.NODE_PARENT_NODE.equals(entry.getKey())) {
+      if (PARENT_NODE_FIELD.equals(entry.getKey())) {
         // Nothing to do : new cloned node does not have any parent
       } else if (JsoProperties.NODE_OWNER_DOCUMENT.equals(entry.getKey())) {
         JavaScriptObjects.setProperty(newJso,

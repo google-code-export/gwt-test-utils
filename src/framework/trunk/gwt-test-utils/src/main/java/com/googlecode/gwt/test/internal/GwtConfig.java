@@ -95,10 +95,6 @@ public class GwtConfig implements AfterTestCallback {
     return gwtModuleRunner.getWindowOperationsHandler();
   }
 
-  public boolean isDomMocked() {
-    return gwtModuleRunner.isDomMocked();
-  }
-
   public void registerUiConstructor(
       Class<? extends IsWidget> classWithUiConstructor, String... argNames) {
     List<String[]> uiConstructors = uiConstructorsMap.get(classWithUiConstructor);

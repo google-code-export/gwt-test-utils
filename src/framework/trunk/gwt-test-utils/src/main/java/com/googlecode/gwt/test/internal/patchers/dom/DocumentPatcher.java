@@ -62,6 +62,8 @@ class DocumentPatcher {
     }
   }
 
+  private static final String DOCUMENT_ELEMENT = "documentElement";
+
   private static DocumentHolder DOCUMENT_HOLDER = new DocumentHolder();
 
   private static final String EMPTY_HTML = "<html><head></head><body></body></html>";
@@ -146,7 +148,7 @@ class DocumentPatcher {
         Element e = parseHTMLElement(DOCUMENT_HOLDER.document);
         DOCUMENT_HOLDER.document.appendChild(e);
         JavaScriptObjects.setProperty(DOCUMENT_HOLDER.document,
-            JsoProperties.DOCUMENT_ELEMENT, e);
+            DOCUMENT_ELEMENT, e);
         return DOCUMENT_HOLDER.document;
       } catch (Exception e) {
         if (GwtTestException.class.isInstance(e)) {
@@ -269,7 +271,7 @@ class DocumentPatcher {
       HTML_ELEMENT_PROTOTYPES.put(moduleName, hostPagePath, html);
     }
 
-    NodeList<Node> list = GwtHtmlParser.parse(html, false);
+    NodeList<Node> list = GwtHtmlParser.parse(html);
     Element htmlElement = findHTMLElement(list);
 
     if (htmlElement == null) {
