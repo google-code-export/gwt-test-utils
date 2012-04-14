@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.io.Reader;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -21,17 +20,25 @@ import java.util.regex.Pattern;
 import javassist.CtClass;
 import javassist.CtMethod;
 
+import com.googlecode.gwt.test.csv.CsvDirectory;
+import com.googlecode.gwt.test.csv.CsvMacros;
+import com.googlecode.gwt.test.csv.GwtTestCsvException;
 import com.googlecode.gwt.test.exceptions.GwtTestException;
 import com.googlecode.gwt.test.internal.GwtClassLoader;
 import com.googlecode.gwt.test.internal.GwtClassPool;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
-import com.googlecode.gwt.test.csv.CsvDirectory;
-import com.googlecode.gwt.test.csv.CsvMacros;
-import com.googlecode.gwt.test.csv.GwtTestCsvException;
 
 public class DirectoryTestReader {
 
   static class CsvReader {
+
+    private static final Pattern REPLACE_PATTERN = Pattern.compile("\\\\;");
+
+    private static final String SEPARATOR = ";";
+    /**
+     * any ';' character which has not been escaped with a '\'
+     */
+    private static final Pattern SEPARATOR_PATTERN = Pattern.compile("(?<!\\\\);");
 
     public static List<List<String>> readCsv(Reader reader) throws IOException {
       BufferedReader br = new BufferedReader(reader);
@@ -45,11 +52,20 @@ public class DirectoryTestReader {
         if ("".equals(line)) {
           l.add(new ArrayList<String>());
         } else if (!line.startsWith("//")) {
-          String[] tab = line.split(";");
-          l.add(Arrays.asList(tab));
+          String[] tab = SEPARATOR_PATTERN.split(line);
+          l.add(treatParams(tab));
         }
       }
       return l;
+    }
+
+    private static List<String> treatParams(String[] csvParams) {
+      List<String> list = new ArrayList<String>(csvParams.length);
+      for (String csvParam : csvParams) {
+        list.add(REPLACE_PATTERN.matcher(csvParam).replaceAll(SEPARATOR));
+      }
+
+      return list;
     }
   }
 
