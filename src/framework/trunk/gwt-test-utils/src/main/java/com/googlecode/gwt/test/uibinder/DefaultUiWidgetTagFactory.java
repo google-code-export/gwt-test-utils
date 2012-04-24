@@ -13,6 +13,7 @@ import com.googlecode.gwt.test.uibinder.widget.UiGridTagFactory;
 import com.googlecode.gwt.test.uibinder.widget.UiHTMLPanelTagFactory;
 import com.googlecode.gwt.test.uibinder.widget.UiImageTagFactory;
 import com.googlecode.gwt.test.uibinder.widget.UiLayoutPanelTagFactory;
+import com.googlecode.gwt.test.uibinder.widget.UiListBoxTagFactory;
 import com.googlecode.gwt.test.uibinder.widget.UiMenuBarTagFactory;
 import com.googlecode.gwt.test.uibinder.widget.UiMenuItemTagFactory;
 import com.googlecode.gwt.test.uibinder.widget.UiStackLayoutPanelTagFactory;
@@ -42,6 +43,7 @@ class DefaultUiWidgetTagFactory implements UiObjectTagFactory<Object> {
     gwtTestUtilsFactories.add(new UiHTMLPanelTagFactory());
     gwtTestUtilsFactories.add(new UiCellPanelTagFactory());
     gwtTestUtilsFactories.add(new UiGridTagFactory());
+    gwtTestUtilsFactories.add(new UiListBoxTagFactory());
     gwtTestUtilsFactories.add(new UiDateLabelTagFactory());
     gwtTestUtilsFactories.add(new UiDockLayoutPanelTagFactory());
     gwtTestUtilsFactories.add(new UiImageTagFactory());
