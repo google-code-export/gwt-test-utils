@@ -29,22 +29,19 @@ public class JsoProperties {
   public static final String EVENT_KEY_META = "EVENT_metaKey";
   public static final String EVENT_KEY_SHIFT = "EVENT_shiftKey";
   public static final String EVENT_KEYCODE = "EVENT_keyCode";
+  public static final String EVENT_MOUSE_CLIENTX = "EVENT_clientX";
+  public static final String EVENT_MOUSE_CLIENTY = "EVENT_clientY";
+  public static final String EVENT_MOUSE_SCREENX = "EVENT_screenX";
+  public static final String EVENT_MOUSE_SCREENY = "EVENT_screenY";
   public static final String EVENT_PREVENTDEFAULT = "EVENT_preventDefault";
   public static final String EVENT_RELATEDTARGET = "EVENT_relatedTarget";
   public static final String EVENT_TARGET = "EVENT_target";
   public static final String EVENT_TYPE = "EVENT_type";
 
   public static final String JSARRAY_WRAPPED_LIST = "JSARRAY_WRAPPED_LIST";
-  // MOUSE EVENT PROPERTIES
-  public static final String MOUSEEVENT_CLIENTX = "EVENT_clientX";
 
-  public static final String MOUSEEVENT_CLIENTY = "EVENT_clientY";
-
-  public static final String MOUSEEVENT_SCREENX = "EVENT_screenX";
-  public static final String MOUSEEVENT_SCREENY = "EVENT_screenY";
   public static final String NODE_LIST_FIELD = "childNodes";
   public static final String NODE_LIST_INNER_LIST = "NODE_LIST_INNER_LIST";
-
   public static final String NODE_NAMESPACE_URI = "namespaceURI";
   public static final String NODE_OWNER_DOCUMENT = "NODE_OWNER_DOCUMENT";
   public static final String NODE_TYPE_FIELD = "nodeType";
@@ -66,8 +63,8 @@ public class JsoProperties {
   public static final String TAB_INDEX = "tabIndex";
 
   public static final String TAG_NAME = "tagName";
-  public static final String XML_ATTR_JSO = "XML_ATTR_JSO";
 
+  public static final String XML_ATTR_JSO = "XML_ATTR_JSO";
   public static final String XML_ATTR_NAME = "XML_ATTR_NAME";
   public static final String XML_ATTR_SET = "XML_ATTR_SET";
   public static final String XML_ATTR_VALUE = "XML_ATTR_VALUE";

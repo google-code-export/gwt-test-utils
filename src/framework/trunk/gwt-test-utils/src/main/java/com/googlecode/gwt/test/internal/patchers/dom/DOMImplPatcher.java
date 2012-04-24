@@ -30,6 +30,8 @@ import com.googlecode.gwt.test.utils.events.EventBuilder;
 @PatchClass(target = "com.google.gwt.dom.client.DOMImpl")
 class DOMImplPatcher {
 
+  private static final String TAB_INDEX = "tabIndex";
+
   @PatchMethod
   static void buttonClick(Object domImpl, ButtonElement button) {
 
@@ -174,12 +176,12 @@ class DOMImplPatcher {
 
   @PatchMethod
   static int eventGetClientX(Object domImpl, NativeEvent evt) {
-    return JavaScriptObjects.getInteger(evt, JsoProperties.MOUSEEVENT_CLIENTX);
+    return JavaScriptObjects.getInteger(evt, JsoProperties.EVENT_MOUSE_CLIENTX);
   }
 
   @PatchMethod
   static int eventGetClientY(Object domImpl, NativeEvent evt) {
-    return JavaScriptObjects.getInteger(evt, JsoProperties.MOUSEEVENT_CLIENTY);
+    return JavaScriptObjects.getInteger(evt, JsoProperties.EVENT_MOUSE_CLIENTY);
   }
 
   @PatchMethod
@@ -213,12 +215,12 @@ class DOMImplPatcher {
 
   @PatchMethod
   static int eventGetScreenX(Object domImpl, NativeEvent evt) {
-    return JavaScriptObjects.getInteger(evt, JsoProperties.MOUSEEVENT_SCREENX);
+    return JavaScriptObjects.getInteger(evt, JsoProperties.EVENT_MOUSE_SCREENX);
   }
 
   @PatchMethod
   static int eventGetScreenY(Object domImpl, NativeEvent evt) {
-    return JavaScriptObjects.getInteger(evt, JsoProperties.MOUSEEVENT_SCREENY);
+    return JavaScriptObjects.getInteger(evt, JsoProperties.EVENT_MOUSE_SCREENY);
   }
 
   @PatchMethod
@@ -367,7 +369,7 @@ class DOMImplPatcher {
 
   @PatchMethod
   static int getTabIndex(Object domImpl, Element elem) {
-    return JavaScriptObjects.getInteger(elem, JsoProperties.TAB_INDEX);
+    return JavaScriptObjects.getInteger(elem, TAB_INDEX);
   }
 
   @PatchMethod
