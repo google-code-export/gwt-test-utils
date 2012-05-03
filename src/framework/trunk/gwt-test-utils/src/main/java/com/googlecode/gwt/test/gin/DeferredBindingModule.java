@@ -1,8 +1,12 @@
 package com.googlecode.gwt.test.gin;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -12,8 +16,11 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.inject.client.Ginjector;
 import com.google.inject.AbstractModule;
 import com.google.inject.Binding;
+import com.google.inject.Inject;
 import com.google.inject.Module;
+import com.google.inject.ProvidedBy;
 import com.google.inject.Provider;
+import com.google.inject.Singleton;
 import com.google.inject.spi.DefaultElementVisitor;
 import com.google.inject.spi.Dependency;
 import com.google.inject.spi.Element;
@@ -21,6 +28,7 @@ import com.google.inject.spi.Elements;
 import com.google.inject.spi.HasDependencies;
 import com.google.inject.spi.InjectionPoint;
 import com.googlecode.gwt.test.exceptions.GwtTestPatchException;
+import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
 /**
  * Additional Guice module class which must be added when replacing a GIN
@@ -61,14 +69,31 @@ class DeferredBindingModule extends AbstractModule {
 
   }
 
+  private static final Map<Class<?>, DeferredBindingModule> DEFERRED_BINDING_MODULES_CACHE = new HashMap<Class<?>, DeferredBindingModule>();
+  private static final Map<Class<?>, Boolean> HAS_INJECTION_ANNOTATION_CACHE = new HashMap<Class<?>, Boolean>();
+
   private static final Logger LOGGER = LoggerFactory.getLogger(DeferredBindingModule.class);
 
+  static final DeferredBindingModule getDeferredBindingModule(
+      Class<? extends Ginjector> ginInjectorClass, Collection<Module> modules) {
+    DeferredBindingModule deferredBindingModule = DEFERRED_BINDING_MODULES_CACHE.get(ginInjectorClass);
+    if (deferredBindingModule == null) {
+      deferredBindingModule = new DeferredBindingModule(ginInjectorClass,
+          modules.toArray(new Module[modules.size()]));
+      DEFERRED_BINDING_MODULES_CACHE.put(ginInjectorClass,
+          deferredBindingModule);
+    }
+
+    return deferredBindingModule;
+  }
+
   private final Set<Class<?>> bindedClasses;
+
   private final Set<Class<?>> classesToInstanciate;
 
   private final Class<? extends Ginjector> ginInjectorClass;
 
-  DeferredBindingModule(Class<? extends Ginjector> ginInjectorClass,
+  private DeferredBindingModule(Class<? extends Ginjector> ginInjectorClass,
       Module[] modules) {
 
     this.ginInjectorClass = ginInjectorClass;
@@ -76,7 +101,6 @@ class DeferredBindingModule extends AbstractModule {
     this.classesToInstanciate = collectClassesToInstanciate(ginInjectorClass);
     this.classesToInstanciate.addAll(collectDependencies(elements));
     this.bindedClasses = collectBindedClasses(elements);
-
   }
 
   @SuppressWarnings({"unchecked"})
@@ -96,8 +120,16 @@ class DeferredBindingModule extends AbstractModule {
           // don't use Provider for generated code).
         }
 
-        bind((Class<Object>) toInstanciate).toProvider(
-            new DeferredBindingProvider(ginInjectorClass, toInstanciate));
+        if (hasAnyGuiceAnnotation(toInstanciate)) {
+          // bind to itself, to tell guice there are some injection to proceed
+          // although the binding is not declared in the module
+          bind(toInstanciate);
+        } else {
+          // by default use GWT deferred binding to create leaf instances to be
+          // injected
+          bind((Class<Object>) toInstanciate).toProvider(
+              new DeferredBindingProvider(ginInjectorClass, toInstanciate));
+        }
       }
     }
   }
@@ -177,5 +209,36 @@ class DeferredBindingModule extends AbstractModule {
     }
 
     return dependencies;
+  }
+
+  private boolean hasAnyGuiceAnnotation(Class<?> toInstanciate) {
+    Boolean hasAnyGuiceAnnotation = HAS_INJECTION_ANNOTATION_CACHE.get(toInstanciate);
+    if (hasAnyGuiceAnnotation != null) {
+      return hasAnyGuiceAnnotation;
+    }
+
+    if (GwtReflectionUtils.getAnnotation(toInstanciate, Singleton.class) != null) {
+      hasAnyGuiceAnnotation = true;
+    } else if (GwtReflectionUtils.getAnnotation(toInstanciate, ProvidedBy.class) != null) {
+      hasAnyGuiceAnnotation = true;
+    } else if (hasInjectAnnotatedConstructor(toInstanciate)) {
+      hasAnyGuiceAnnotation = true;
+    } else {
+      hasAnyGuiceAnnotation = GwtReflectionUtils.getAnnotatedField(
+          toInstanciate, Inject.class).size() > 0;
+    }
+
+    HAS_INJECTION_ANNOTATION_CACHE.put(toInstanciate, hasAnyGuiceAnnotation);
+
+    return hasAnyGuiceAnnotation;
+  }
+
+  private boolean hasInjectAnnotatedConstructor(Class<?> toInstanciate) {
+    for (Constructor<?> cons : toInstanciate.getDeclaredConstructors()) {
+      if (cons.getAnnotation(Inject.class) != null) {
+        return true;
+      }
+    }
+    return false;
   }
 }

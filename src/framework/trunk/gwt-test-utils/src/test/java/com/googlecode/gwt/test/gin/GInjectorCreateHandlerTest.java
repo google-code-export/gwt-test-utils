@@ -2,7 +2,7 @@ package com.googlecode.gwt.test.gin;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertSame;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -20,27 +20,63 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 import com.googlecode.gwt.test.GwtTestTest;
-import com.googlecode.gwt.test.gin.GInjectorCreateHandler;
 import com.googlecode.gwt.test.rpc.RemoteServiceCreateHandler;
 
 public class GInjectorCreateHandlerTest extends GwtTestTest {
 
-  @GinModules({M2.class})
-  static interface G2 extends Ginjector {
-    Virtual v();
+  @GinModules({Gin1Module.class})
+  static interface Gin1Injector extends Ginjector {
+    Virtual virtual();
   }
-  @GinModules({M3.class})
-  static interface G3 extends Ginjector {
-    VirtualMore more();
 
+  // This module will only contain a single binding
+  static final class Gin1Module extends AbstractGinModule {
+    @Override
+    protected void configure() {
+      bind(Virtual.class).to(Impl.class).in(Singleton.class);
+    }
+  }
+
+  @GinModules({Gin2Module.class})
+  static interface Gin2Injector extends Ginjector {
     SomeServiceAsync service();
 
-    Virtual v();
+    Virtual virtual();
+
+    VirtualMore virtualMore();
   }
 
-  @GinModules(M4.class)
-  interface G4 extends Ginjector {
-    Virtual v();
+  static final class Gin2Module extends AbstractGinModule {
+    @Override
+    protected void configure() {
+      bind(Virtual.class).to(Impl2.class);
+      bind(VirtualMore.class).to(ImplMore.class);
+    }
+  }
+
+  @GinModules({Gin3Module.class})
+  static interface Gin3Injector extends Ginjector {
+    ImplMore implMore();
+  }
+
+  static final class Gin3Module extends AbstractGinModule {
+    @Override
+    protected void configure() {
+      bind(Virtual.class).to(Impl2.class);
+    }
+  }
+
+  @GinModules(Gin4Module.class)
+  interface Gin4Injector extends Ginjector {
+    Virtual virtual();
+  }
+
+  static class Gin4Module extends AbstractGinModule {
+    @Override
+    protected void configure() {
+      bind(Virtual.class).to(ImplementationWithProviders.class);
+      bind(VirtualMore.class).to(ImplMore.class);
+    }
   }
 
   static class Impl implements Virtual {
@@ -61,38 +97,15 @@ public class GInjectorCreateHandlerTest extends GwtTestTest {
     }
   }
 
-  static class ImplMore2 implements VirtualMore {
+  static class ImplMore implements VirtualMore {
     Virtual core;
 
     @Inject
-    public ImplMore2(Virtual core) {
+    public ImplMore(Virtual core) {
       super();
       this.core = core;
     }
 
-  }
-
-  // This module will only contain a single binding
-  static final class M2 extends AbstractGinModule {
-    @Override
-    protected void configure() {
-      bind(Virtual.class).to(Impl.class).in(Singleton.class);
-    }
-  }
-
-  static final class M3 extends AbstractGinModule {
-    @Override
-    protected void configure() {
-      bind(Virtual.class).to(Impl2.class);
-      bind(VirtualMore.class).to(ImplMore2.class);
-    }
-  }
-  static class M4 extends AbstractGinModule {
-    @Override
-    protected void configure() {
-      bind(Virtual.class).to(ImplementationWithProviders.class);
-      bind(VirtualMore.class).to(ImplMore2.class);
-    }
   }
 
   // These bindings test the ability of Ginjector GwtCreateHandler
@@ -160,42 +173,54 @@ public class GInjectorCreateHandlerTest extends GwtTestTest {
   @Test
   public void shouldBindAndServe() {
     // Arrange
-    G2 g2 = GWT.create(G2.class);
+    Gin1Injector injector1 = GWT.create(Gin1Injector.class);
 
     // Act
-    Virtual v = g2.v();
+    Virtual v = injector1.virtual();
 
     // Assert
     assertEquals(Impl.class, v.getClass());
+    assertSame(v, injector1.virtual());
   }
 
   @Test
   public void shouldFallbackToGwtCreate() {
     // Arrange
-    G3 g3 = GWT.create(G3.class);
+    Gin2Injector injector2 = GWT.create(Gin2Injector.class);
 
     // Act
-    Virtual v = g3.v();
-    SomeServiceAsync service = g3.service();
+    Virtual virtual = injector2.virtual();
+    SomeServiceAsync service = injector2.service();
 
     // Assert
-    assertEquals(Impl2.class, v.getClass());
+    assertEquals(Impl2.class, virtual.getClass());
+    Assert.assertNotSame(virtual, injector2.virtual());
     assertNotNull(service);
-
-    Assert.assertNotNull(g3);
-    Assert.assertNotNull(g3.v());
   }
 
   @Test
   public void shouldInstantiateComplexObjectGraphs() {
     // Arrange
-    G3 g3 = GWT.create(G3.class);
+    Gin2Injector injector2 = GWT.create(Gin2Injector.class);
 
     // Act
-    VirtualMore more = g3.more();
+    VirtualMore more = injector2.virtualMore();
 
     // Assert
-    assertTrue(more instanceof ImplMore2);
+    assertEquals(ImplMore.class, more.getClass());
+  }
+
+  @Test
+  public void shouldInstantiateConcreteComplexObjectGraphs() {
+    // Arrange
+    Gin3Injector injector3 = GWT.create(Gin3Injector.class);
+
+    // Act
+    ImplMore more = injector3.implMore();
+
+    // Assert
+    assertEquals(Impl2.class, more.core.getClass());
+    assertNotNull(((Impl2) more.core).messages);
   }
 
   /**
@@ -207,8 +232,8 @@ public class GInjectorCreateHandlerTest extends GwtTestTest {
   @SuppressWarnings("unused")
   @Test
   public void shouldInstantiateObjectGraphsContainingProviders() {
-    final G4 injector = GWT.create(G4.class);
-    final Virtual virtual = injector.v();
+    final Gin4Injector injector4 = GWT.create(Gin4Injector.class);
+    final Virtual virtual = injector4.virtual();
   }
 
 }

@@ -4,7 +4,7 @@ import com.google.gwt.core.client.GWT;
 import com.googlecode.gwt.test.GwtCreateHandler;
 import com.googlecode.gwt.test.GwtLogHandler;
 import com.googlecode.gwt.test.Mock;
-import com.googlecode.gwt.test.exceptions.GwtTestConfigurationException;
+import com.googlecode.gwt.test.exceptions.GwtTestDeferredBindingException;
 import com.googlecode.gwt.test.exceptions.GwtTestException;
 import com.googlecode.gwt.test.exceptions.GwtTestPatchException;
 import com.googlecode.gwt.test.internal.GwtConfig;
@@ -34,7 +34,7 @@ class GwtPatcher {
       }
     }
 
-    throw new GwtTestConfigurationException(
+    throw new GwtTestDeferredBindingException(
         "No declared "
             + GwtCreateHandler.class.getSimpleName()
             + " has been able to create an instance of '"

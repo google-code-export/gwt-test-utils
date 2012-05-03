@@ -56,8 +56,16 @@ public class GInjectorCreateHandler implements GwtCreateHandler {
 
     Class<? extends GinModule>[] ginModules = readGinModules(ginInjectorClass);
 
-    // try to instantiate an injector, based on the modules read above.
-    Module[] guiceModules = readGuiceModules(ginInjectorClass, ginModules);
+    // create a set of Guice Module bases on the GinModules
+    Set<Module> guiceModules = readGuiceModules(ginInjectorClass, ginModules);
+
+    // Use Guice SPI to solve deferred binding dependencies
+    DeferredBindingModule deferredBindingModule = DeferredBindingModule.getDeferredBindingModule(
+        ginInjectorClass, guiceModules);
+    guiceModules.add(deferredBindingModule);
+
+    // Instantiate an injector, based on the modules read above + the
+    // deferredBindingModule
     Injector injector = Guice.createInjector(guiceModules);
 
     LOGGER.debug("creating new Proxy for class '" + ginInjectorClass.getName()
@@ -94,7 +102,8 @@ public class GInjectorCreateHandler implements GwtCreateHandler {
     return ginModules;
   }
 
-  private Module[] readGuiceModules(Class<? extends Ginjector> ginjectorClass,
+  private Set<Module> readGuiceModules(
+      Class<? extends Ginjector> ginjectorClass,
       Class<? extends GinModule>[] classLiterals) throws Exception {
 
     Set<Module> modules = new HashSet<Module>();
@@ -103,10 +112,7 @@ public class GInjectorCreateHandler implements GwtCreateHandler {
       modules.add(new GinModuleAdapter(literal.newInstance()));
     }
 
-    // Use Guice SPI to solve deferred binding dependencies.
-    modules.add(new DeferredBindingModule(ginjectorClass,
-        modules.toArray(new Module[modules.size()])));
-    return modules.toArray(new Module[modules.size()]);
+    return modules;
 
   }
 }
