@@ -3,6 +3,9 @@ package com.googlecode.gwt.test.internal.patchers;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window.Location;
 import com.googlecode.gwt.test.GwtTest;
@@ -37,6 +40,8 @@ class LocationPatcher {
       url = null;
     }
   }
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(LocationPatcher.class);
 
   private static UrlHolder urlHolder = new UrlHolder();
 
@@ -88,12 +93,13 @@ class LocationPatcher {
   private static String computePath() {
     String absolutePath = GwtConfig.get().getHostPagePath();
     if (absolutePath == null) {
-      throw new GwtTestConfigurationException(
-          "Cannot find the actual HTML host page for module '"
-              + GWT.getModuleName()
-              + "'. You should override "
-              + GwtTest.class.getName()
-              + ".getHostPagePath(String moduleFullQualifiedName) method to specify it.");
+      LOGGER.warn("The host page path for '"
+          + GwtConfig.get().getModuleName()
+          + "' is null, fallback to an empty HTML document instead. You may want to override "
+          + GwtTest.class.getSimpleName()
+          + ".getHostPagePath(String moduleFullQualifiedName) method to specify the relative path of the your HTML file from the root directory of your java project");
+
+      absolutePath = "index.html";
     }
 
     int token = absolutePath.lastIndexOf("/") + 1;
