@@ -428,6 +428,11 @@ public class Browser {
       if (!keyDownEventPreventDefault && !keyPressEventPreventDefault) {
         hasTextWidget.setText(value.substring(0, i + 1));
         changed = true;
+
+        JavaScriptObjects.setProperty(((Widget) hasTextWidget).getElement(),
+            JsoProperties.SELECTION_START, i);
+        JavaScriptObjects.setProperty(((Widget) hasTextWidget).getElement(),
+            JsoProperties.SELECTION_END, i);
       }
 
       // trigger keyUp

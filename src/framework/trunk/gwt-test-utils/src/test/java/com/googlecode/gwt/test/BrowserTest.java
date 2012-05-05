@@ -512,6 +512,7 @@ public class BrowserTest extends GwtTestTest {
     assertTextFilledCorrectly(textToFill, keyUpChars);
     assertTrue(onBlurTriggered);
     assertTrue(onChangeTriggered);
+    assertEquals(textToFill.length() - 1, tb.getCursorPos());
   }
 
   @Test
@@ -591,6 +592,7 @@ public class BrowserTest extends GwtTestTest {
     assertTextFilledCorrectly(textToFill, keyPressChars);
     assertTextFilledCorrectly(textToFill, keyUpChars);
     assertTrue(onBlurTriggered);
+    assertEquals(0, tb.getCursorPos());
   }
 
   @Test
@@ -670,6 +672,7 @@ public class BrowserTest extends GwtTestTest {
     assertTextFilledCorrectly(textToFill, keyPressChars);
     assertTextFilledCorrectly(textToFill, keyUpChars);
     assertTrue(onBlurTriggered);
+    assertEquals(0, tb.getCursorPos());
   }
 
   @Test
