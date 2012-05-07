@@ -4,14 +4,17 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.StatusCodeException;
+import com.google.gwt.user.server.rpc.AbstractRemoteServiceServlet;
 import com.googlecode.gwt.test.exceptions.GwtTestException;
 import com.googlecode.gwt.test.exceptions.GwtTestRpcException;
+import com.googlecode.gwt.test.internal.patchers.AbstractRemoteServiceServletPatcher;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
 class GwtRpcInvocationHandler implements InvocationHandler {
@@ -19,13 +22,14 @@ class GwtRpcInvocationHandler implements InvocationHandler {
   private static final Logger logger = LoggerFactory.getLogger(GwtRpcInvocationHandler.class);
 
   private final GwtRpcExceptionHandler exceptionHandler;
-  private final HashMap<Method, Method> methodTable;
+  private final Map<Method, Method> methodTable;
   private final GwtRpcSerializerHandler serializerHander;
   private final Object target;
 
   public GwtRpcInvocationHandler(Class<?> asyncClazz, Object target,
       GwtRpcExceptionHandler exceptionHandler,
       GwtRpcSerializerHandler serializerHandler) {
+
     this.target = target;
     this.exceptionHandler = exceptionHandler;
     this.serializerHander = serializerHandler;
@@ -55,8 +59,7 @@ class GwtRpcInvocationHandler implements InvocationHandler {
       callback.onFailure(new StatusCodeException(500, "No method found"));
     }
     try {
-      logger.debug("Invoking " + m + " on "
-          + target.getClass().getCanonicalName());
+      logger.debug("Invoking " + m + " on " + target.getClass().getName());
       // Serialize objects
       Object[] serializedArgs = new Object[subArgs.length];
       for (int i = 0; i < subArgs.length; i++) {
@@ -69,6 +72,11 @@ class GwtRpcInvocationHandler implements InvocationHandler {
               + method.getName() + "(..)", e);
         }
       }
+
+      if (target instanceof AbstractRemoteServiceServlet) {
+        AbstractRemoteServiceServletPatcher.currentCalledMethod = m;
+      }
+
       Object resultObject = m.invoke(target, serializedArgs);
       Object returnObject = null;
 

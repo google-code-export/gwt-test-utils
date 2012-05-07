@@ -77,7 +77,8 @@ public abstract class RemoteServiceCreateHandler implements GwtCreateHandler {
     String relativePath = getRemoveServiceRelativePath(classLiteral);
     Class<?> asyncClazz = Class.forName(asyncName);
     if (asyncClazz == null) {
-      throw new Exception("Remote serivce Async class not found : " + asyncName);
+      throw new GwtTestRpcException("Remote serivce Async class not found : "
+          + asyncName);
     }
     logger.debug("Searching remote service implementing " + className);
 

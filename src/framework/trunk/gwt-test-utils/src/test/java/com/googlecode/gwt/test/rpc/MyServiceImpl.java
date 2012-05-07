@@ -1,11 +1,18 @@
 package com.googlecode.gwt.test.rpc;
 
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
+import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.googlecode.gwt.test.client.MyChildObject;
 import com.googlecode.gwt.test.client.MyObject;
 
 @RemoteServiceRelativePath("myService")
-public class MyServiceImpl implements MyService {
+public class MyServiceImpl extends RemoteServiceServlet implements MyService {
+
+  private static final long serialVersionUID = 7323341628793612279L;
+
+  public String getHttpRequestHeader(String header) {
+    return getThreadLocalRequest().getHeader(header);
+  }
 
   public void someCallWithException() {
     throw new RuntimeException("Server side thrown exception !!");

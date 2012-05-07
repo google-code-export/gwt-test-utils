@@ -1,13 +1,10 @@
 package com.googlecode.gwt.test.spring;
 
-import javax.servlet.ServletConfig;
-
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.mock.web.MockServletConfig;
 import org.springframework.test.context.ContextConfiguration;
 
 import com.google.gwt.user.client.rpc.RemoteService;
@@ -57,16 +54,6 @@ public abstract class GwtSpringTest extends GwtTest implements
             remoteServiceClass, remoteServiceRelativePath);
       }
     });
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.googlecode.gwt.test.GwtModuleRunnerAdapter#getServletConfig()
-   */
-  @Override
-  public ServletConfig getServletConfig() {
-    return new MockServletConfig();
   }
 
   /*

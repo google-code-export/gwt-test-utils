@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window.Location;
-import com.googlecode.gwt.test.GwtTest;
 import com.googlecode.gwt.test.exceptions.GwtTestConfigurationException;
 import com.googlecode.gwt.test.internal.AfterTestCallback;
 import com.googlecode.gwt.test.internal.AfterTestCallbackManager;
@@ -96,7 +95,7 @@ class LocationPatcher {
       LOGGER.warn("The host page path for '"
           + GwtConfig.get().getModuleName()
           + "' is null, fallback to an empty HTML document instead. You may want to override "
-          + GwtTest.class.getSimpleName()
+          + GwtConfig.get().getCurrentModuleRunnerType().getSimpleName()
           + ".getHostPagePath(String moduleFullQualifiedName) method to specify the relative path of the your HTML file from the root directory of your java project");
 
       absolutePath = "index.html";

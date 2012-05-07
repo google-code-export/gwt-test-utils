@@ -1,21 +1,105 @@
 package com.googlecode.gwt.test.rpc;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
+import java.lang.reflect.Method;
+
+import javax.servlet.ServletConfig;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.mock.web.MockHttpServletRequest;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.server.rpc.AbstractRemoteServiceServlet;
 import com.googlecode.gwt.test.GwtTestTest;
 import com.googlecode.gwt.test.client.MyObject;
+import com.googlecode.gwt.test.exceptions.GwtTestRpcException;
 
 public class RemoteServiceTest extends GwtTestTest {
 
   private boolean failure;
   private boolean success;
+
+  @Test
+  public void accessToHttpRequest() {
+    // Arrange
+    MyServiceAsync myService = GWT.create(MyService.class);
+    setServletMockProvider(new ServletMockProvider() {
+
+      public ServletConfig getMockedConfig(
+          AbstractRemoteServiceServlet rpcService) {
+
+        return null;
+      }
+
+      public HttpServletRequest getMockedRequest(
+          AbstractRemoteServiceServlet rpcService, Method rpcMethod) {
+
+        // use spring's object for test purpose
+        MockHttpServletRequest mock = new MockHttpServletRequest();
+        mock.addHeader("myHeader", "mocked header's value");
+
+        return mock;
+      }
+
+      public HttpServletResponse getMockedResponse(
+          AbstractRemoteServiceServlet rpcService, Method rpcMethod) {
+
+        return null;
+      }
+    });
+
+    // Act
+    myService.getHttpRequestHeader("myHeader", new AsyncCallback<String>() {
+
+      public void onFailure(Throwable caught) {
+        fail("onFailure should not be called");
+      }
+
+      public void onSuccess(String result) {
+        success = true;
+        assertEquals("mocked header's value", result);
+
+      }
+    });
+
+    // Assert
+    assertTrue(
+        "The service callback should have been call in a synchronised way",
+        success);
+  }
+
+  @Test
+  public void accessToHttpRequest_ThrowsExceptionWhenNoMockConfigured() {
+    // Arrange
+    MyServiceAsync myService = GWT.create(MyService.class);
+
+    // Act
+    try {
+      myService.getHttpRequestHeader("myHeader", new AsyncCallback<String>() {
+
+        public void onFailure(Throwable caught) {
+          fail("onFailure should not be called");
+        }
+
+        public void onSuccess(String result) {
+          fail("onSucess should not be called");
+        }
+      });
+
+      fail("getHttpRequestHeader should have thrown a GwtTestRpcException");
+    } catch (GwtTestRpcException e) {
+      assertEquals(
+          "Illegal call to com.googlecode.gwt.test.rpc.MyServiceImpl.getThreadLocalRequest() : You have to set a valid ServletMockProvider instance through RemoteServiceTest.setServletMockProvider(..) method",
+          e.getMessage());
+    }
+  }
 
   @Before
   public void beforeRemoteServiceTest() {
@@ -38,7 +122,7 @@ public class RemoteServiceTest extends GwtTestTest {
       }
 
       public void onSuccess(Void result) {
-        success = true;
+        fail("onSucess should not be called");
       }
     });
 
@@ -46,7 +130,6 @@ public class RemoteServiceTest extends GwtTestTest {
     assertTrue(
         "The service callback should have been call in a synchronised way",
         failure);
-    assertFalse(success);
   }
 
   @Test
@@ -60,7 +143,7 @@ public class RemoteServiceTest extends GwtTestTest {
     myService.update(object, new AsyncCallback<MyObject>() {
 
       public void onFailure(Throwable caught) {
-        failure = true;
+        fail("onFailure should not be called");
       }
 
       public void onSuccess(MyObject result) {
@@ -88,7 +171,6 @@ public class RemoteServiceTest extends GwtTestTest {
     assertTrue(
         "The service callback should have been call in a synchronised way",
         success);
-    assertFalse(failure);
   }
 
 }

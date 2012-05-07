@@ -4,18 +4,22 @@ import java.io.File;
 import java.util.Locale;
 import java.util.Map;
 
-import javax.servlet.ServletConfig;
-
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.DomEvent;
 import com.google.gwt.i18n.client.Dictionary;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.server.rpc.AbstractRemoteServiceServlet;
 import com.googlecode.gwt.test.exceptions.GwtTestConfigurationException;
-import com.googlecode.gwt.test.exceptions.GwtTestPatchException;
 import com.googlecode.gwt.test.internal.AfterTestCallback;
 import com.googlecode.gwt.test.internal.AfterTestCallbackManager;
 import com.googlecode.gwt.test.internal.GwtConfig;
 import com.googlecode.gwt.test.internal.handlers.GwtCreateHandlerManager;
 import com.googlecode.gwt.test.internal.i18n.DictionaryUtils;
+import com.googlecode.gwt.test.rpc.ServletMockProvider;
 import com.googlecode.gwt.test.uibinder.UiObjectTagFactory;
+import com.googlecode.gwt.test.utils.events.Browser;
 import com.googlecode.gwt.test.utils.events.Browser.BrowserErrorHandler;
 
 public abstract class GwtModuleRunnerAdapter implements GwtModuleRunner,
@@ -63,7 +67,8 @@ public abstract class GwtModuleRunnerAdapter implements GwtModuleRunner,
   private boolean canDispatchDomEventOnDetachedWidget;
   private Locale locale;
   private GwtLogHandler logHandler;
-  private ServletConfig servletConfig;
+  private ServletMockProvider servletMockProvider;
+
   private WindowOperationsHandler windowOperationsHandler;
 
   public GwtModuleRunnerAdapter() {
@@ -115,9 +120,9 @@ public abstract class GwtModuleRunnerAdapter implements GwtModuleRunner,
    */
   public final void afterTest() throws Throwable {
     this.locale = null;
-    this.servletConfig = null;
     this.windowOperationsHandler = null;
     this.browserErrorHandlerDelegate.customHandler = null;
+    this.servletMockProvider = null;
   }
 
   /*
@@ -186,15 +191,10 @@ public abstract class GwtModuleRunnerAdapter implements GwtModuleRunner,
   /*
    * (non-Javadoc)
    * 
-   * @see com.googlecode.gwt.test.GwtModuleRunner#getLogHandler()
+   * @see com.googlecode.gwt.test.GwtModuleRunner#getServletMockProvider()
    */
-  public ServletConfig getServletConfig() {
-    if (servletConfig == null) {
-      throw new GwtTestPatchException(
-          "No ServletConfig specified. You have to set your own ServetConfig mocked instance with the protected 'setServletConfig' method available in your test class");
-    }
-
-    return servletConfig;
+  public ServletMockProvider getServletMockProvider() {
+    return servletMockProvider;
   }
 
   /*
@@ -259,28 +259,68 @@ public abstract class GwtModuleRunnerAdapter implements GwtModuleRunner,
     return null;
   }
 
+  /**
+   * Specifies the callback to use when a simulated {@link Browser} action
+   * throws an error. New BrowserErrorHandler <strong>must</strong> call
+   * {@link FinallyCommandTrigger#clearPendingCommands()}.
+   * 
+   * @param browserErrorHandler The custom browser error handler callback.
+   */
   protected final void setBrowserErrorHandler(
       BrowserErrorHandler browserErrorHandler) {
     this.browserErrorHandlerDelegate.customHandler = browserErrorHandler;
   }
 
+  /**
+   * Specifies if The {@link Browser} helper methods can target not attached
+   * widgets or not.
+   * 
+   * @return True if {@link DomEvent} can be dispatched on detached widgets,
+   *         false otherwise.
+   * 
+   * @see Widget#isAttached()
+   */
   protected final void setCanDispatchDomEventOnDetachedWidget(
       boolean canDispatchDomEventOnDetachedWidget) {
     this.canDispatchDomEventOnDetachedWidget = canDispatchDomEventOnDetachedWidget;
   }
 
+  /**
+   * Specifies the locale to use when running the GWT module.
+   * 
+   * @param locale The specific locale to use for this module execution.
+   */
   protected final void setLocale(Locale locale) {
     this.locale = locale;
   }
 
+  /**
+   * Specifies the callback to use to handle {@link GWT#log(String)} and
+   * {@link GWT#log(String, Throwable)} calls.
+   * 
+   * @param logHandler The callback to use to handle GWT log method calls.
+   */
   protected final void setLogHandler(GwtLogHandler logHandler) {
     this.logHandler = logHandler;
   }
 
-  protected final void setServletConfig(ServletConfig servletConfig) {
-    this.servletConfig = servletConfig;
+  /**
+   * Specifies the servlet mocks provider to use whenever a method from
+   * {@link AbstractRemoteServiceServlet} is invoked.
+   * 
+   * @param servletMockProvider The mock provider to use in the running test.
+   */
+  protected final void setServletMockProvider(
+      ServletMockProvider servletMockProvider) {
+    this.servletMockProvider = servletMockProvider;
   }
 
+  /**
+   * Specifies the callback to use to handle {@link Window} method calls.
+   * 
+   * @param windowOperationsHandler The callback to use to handle {@link Window}
+   *          method calls.
+   */
   protected final void setWindowOperationsHandler(
       WindowOperationsHandler windowOperationsHandler) {
     this.windowOperationsHandler = windowOperationsHandler;

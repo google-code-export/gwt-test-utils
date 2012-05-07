@@ -3,8 +3,6 @@ package com.googlecode.gwt.test;
 import java.util.Locale;
 import java.util.Map;
 
-import javax.servlet.ServletConfig;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.DomEvent;
 import com.google.gwt.i18n.client.Dictionary;
@@ -13,7 +11,8 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.google.gwt.user.server.rpc.AbstractRemoteServiceServlet;
+import com.googlecode.gwt.test.rpc.ServletMockProvider;
 import com.googlecode.gwt.test.uibinder.UiObjectTagFactory;
 import com.googlecode.gwt.test.utils.events.Browser;
 import com.googlecode.gwt.test.utils.events.Browser.BrowserErrorHandler;
@@ -123,12 +122,12 @@ public interface GwtModuleRunner {
   String getModuleName();
 
   /**
-   * Specifies the ServletConfig to use in {@link RemoteServiceServlet}
-   * instances.
+   * Specifies the servlet mocks provider to use whenever a method from
+   * {@link AbstractRemoteServiceServlet} is invoked.
    * 
-   * @return The servletConfig to use in {@link RemoteServiceServlet} instances.
+   * @return The servlet mock provider to use in the running test.
    */
-  ServletConfig getServletConfig();
+  ServletMockProvider getServletMockProvider();
 
   /**
    * Specifies the callback to use to handle {@link Window} method calls.

@@ -17,7 +17,6 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Text;
-import com.googlecode.gwt.test.GwtTest;
 import com.googlecode.gwt.test.exceptions.GwtTestConfigurationException;
 import com.googlecode.gwt.test.exceptions.GwtTestDomException;
 import com.googlecode.gwt.test.exceptions.GwtTestException;
@@ -200,7 +199,7 @@ class DocumentPatcher {
       LOGGER.warn("Cannot find the host HTML file '"
           + hostPagePath
           + "', fallback to an empty HTML document instead. You may want to override "
-          + GwtTest.class.getSimpleName()
+          + GwtConfig.get().getCurrentModuleRunnerType().getSimpleName()
           + ".getHostPagePath(String moduleFullQualifiedName) method to specify the relative path of the your HTML file from the root directory of your java project");
 
       return EMPTY_HTML;

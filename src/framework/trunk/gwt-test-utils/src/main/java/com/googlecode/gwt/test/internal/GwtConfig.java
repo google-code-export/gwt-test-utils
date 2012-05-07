@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import javax.servlet.ServletConfig;
-
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.NamedFrame;
 import com.google.gwt.user.client.ui.RadioButton;
@@ -19,6 +17,7 @@ import com.googlecode.gwt.test.GwtModuleRunner;
 import com.googlecode.gwt.test.WindowOperationsHandler;
 import com.googlecode.gwt.test.exceptions.GwtTestConfigurationException;
 import com.googlecode.gwt.test.exceptions.GwtTestException;
+import com.googlecode.gwt.test.rpc.ServletMockProvider;
 import com.googlecode.gwt.test.uibinder.UiObjectTagFactory;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 import com.googlecode.gwt.test.utils.events.Browser.BrowserErrorHandler;
@@ -63,6 +62,10 @@ public class GwtConfig implements AfterTestCallback {
     return gwtModuleRunner.getBrowserErrorHandler();
   }
 
+  public Class<? extends GwtModuleRunner> getCurrentModuleRunnerType() {
+    return gwtModuleRunner.getClass();
+  }
+
   public String getHostPagePath() {
     return gwtModuleRunner.getHostPagePath();
   }
@@ -79,8 +82,8 @@ public class GwtConfig implements AfterTestCallback {
     return checkedModuleName;
   }
 
-  public ServletConfig getServletConfig() {
-    return gwtModuleRunner.getServletConfig();
+  public ServletMockProvider getServletMockProvider() {
+    return gwtModuleRunner.getServletMockProvider();
   }
 
   public List<String[]> getUiConstructors(Class<?> clazz) {
