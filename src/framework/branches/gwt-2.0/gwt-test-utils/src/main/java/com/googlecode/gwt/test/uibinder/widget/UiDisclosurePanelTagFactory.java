@@ -8,7 +8,6 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.DisclosurePanel;
-import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.gwt.test.exceptions.GwtTestUiBinderException;
 import com.googlecode.gwt.test.uibinder.UiBinderXmlUtils;
@@ -27,7 +26,7 @@ public class UiDisclosurePanelTagFactory implements
 
     @Override
     protected void appendElement(DisclosurePanel wrapped, Element element,
-        String namespaceURI, List<IsWidget> childWidgets) {
+        String namespaceURI, List<Widget> childWidgets) {
 
       if ("header".equals(element.getTagName())
           && UiBinderXmlUtils.CLIENTUI_NSURI.equals(namespaceURI)) {
@@ -55,13 +54,13 @@ public class UiDisclosurePanelTagFactory implements
       // nothing to do
     }
 
-    private Widget getCustomHeaderWidget(List<IsWidget> childWidgets) {
+    private Widget getCustomHeaderWidget(List<Widget> childWidgets) {
       switch (childWidgets.size()) {
         case 0:
           throw new GwtTestUiBinderException(
               "Error while setting a customHeader to a UiBinder DisclosurePanel : no widget added");
         case 1:
-          return childWidgets.get(0).asWidget();
+          return childWidgets.get(0);
         default:
           throw new GwtTestUiBinderException(
               "Error while setting a customHeader to a UiBinder DisclosurePanel : too many widgets ("

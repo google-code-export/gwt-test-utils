@@ -10,15 +10,10 @@ import org.junit.Test;
 
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.SimplePanel;
-import com.google.gwt.user.client.ui.SuggestBox;
-import com.google.gwt.user.client.ui.SuggestBox.SuggestionDisplay;
-import com.googlecode.gwt.MockValueChangeHandler;
-import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 import com.googlecode.gwt.test.utils.WidgetUtils;
 
 public class WidgetUtilsTest extends GwtTestTest {
@@ -62,6 +57,20 @@ public class WidgetUtilsTest extends GwtTestTest {
 
     // Act & Assert
     assertTrue(WidgetUtils.assertListBoxDataMatch(lb, content));
+  }
+
+  @Test
+  public void checNewWidgetIsNotVisibleWhenParentIsNotVisible() {
+    MenuBar bar = new MenuBar();
+    bar.setVisible(false);
+    MenuItem item0 = bar.addItem("test0", (Command) null);
+    item0.setVisible(true);
+
+    // Act
+    Boolean isVisible = WidgetUtils.isWidgetVisible(item0);
+
+    // Assert
+    assertFalse(isVisible);
   }
 
   @Test
@@ -157,53 +166,6 @@ public class WidgetUtilsTest extends GwtTestTest {
 
     // Assert
     assertTrue(isVisible);
-  }
-
-  @Test
-  public void setCheckBoxValueSilent() {
-    // Arrange
-    CheckBox cb = new CheckBox();
-    cb.setValue(true);
-    MockValueChangeHandler<Boolean> mockChangeHandler = new MockValueChangeHandler<Boolean>();
-    cb.addValueChangeHandler(mockChangeHandler);
-
-    // Pre-Assert
-    assertTrue(cb.getValue());
-    assertEquals(0, mockChangeHandler.getCallCount());
-
-    // Act
-    WidgetUtils.setCheckBoxValueSilent(cb, false);
-
-    // Assert
-    assertEquals(false, cb.getValue());
-    assertEquals(0, mockChangeHandler.getCallCount());
-  }
-
-  @Test
-  public void suggestBoxItems() {
-    // Arrange
-    SuggestBox box = new SuggestBox();
-    SuggestionDisplay display = GwtReflectionUtils.getPrivateFieldValue(box,
-        "display");
-    MenuBar bar = GwtReflectionUtils.getPrivateFieldValue(display,
-        "suggestionMenu");
-
-    Command cmd = new Command() {
-      public void execute() {
-      }
-
-    };
-
-    MenuItem item0 = bar.addItem("item0", cmd);
-    MenuItem item1 = bar.addItem("item1", cmd);
-
-    // Act
-    List<MenuItem> items = WidgetUtils.getMenuItems(box);
-
-    // Assert
-    assertEquals(2, items.size());
-    assertEquals(item0, items.get(0));
-    assertEquals(item1, items.get(1));
   }
 
 }

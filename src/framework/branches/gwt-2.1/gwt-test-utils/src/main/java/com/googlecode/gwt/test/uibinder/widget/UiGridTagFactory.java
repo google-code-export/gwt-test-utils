@@ -77,7 +77,7 @@ public class UiGridTagFactory implements UiObjectTagFactory<Grid> {
       checkGridSize(wrapped, columnIndex);
       // should only contains one widget per <g:customCell> tag
       IsWidget w = (childWidgets.size() > 0) ? childWidgets.get(0) : null;
-      wrapped.setWidget(currentRowIndex, columnIndex, w);
+      wrapped.setWidget(currentRowIndex, columnIndex, w.asWidget());
 
       handleCellStyle(wrapped, element, columnIndex);
     }
@@ -121,8 +121,8 @@ public class UiGridTagFactory implements UiObjectTagFactory<Grid> {
    * (non-Javadoc)
    * 
    * @see
-   * com.googlecode.gwt.test.uibinder.UiObjectTagFactory#createUiObjectTag(java.lang
-   * .Class, java.util.Map)
+   * com.googlecode.gwt.test.uibinder.UiObjectTagFactory#createUiObjectTag(java
+   * .lang .Class, java.util.Map)
    */
   public UiObjectTag<Grid> createUiObjectTag(Class<?> clazz,
       Map<String, Object> attributes) {

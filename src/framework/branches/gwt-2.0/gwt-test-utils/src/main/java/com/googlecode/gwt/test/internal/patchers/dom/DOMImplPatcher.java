@@ -30,8 +30,6 @@ import com.googlecode.gwt.test.utils.events.EventBuilder;
 @PatchClass(target = "com.google.gwt.dom.client.DOMImpl")
 class DOMImplPatcher {
 
-  private static final String TAB_INDEX = "tabIndex";
-
   @PatchMethod
   static void buttonClick(Object domImpl, ButtonElement button) {
 
@@ -63,14 +61,6 @@ class DOMImplPatcher {
   }
 
   @PatchMethod
-  static InputElement createCheckInputElement(Object domImpl, Document doc) {
-    InputElement e = createInputElement(doc, "checkbox", null);
-    e.setValue("on");
-
-    return e;
-  }
-
-  @PatchMethod
   static Element createElement(Object domImpl, Document doc, String tag) {
     return JavaScriptObjects.newElement(tag, doc);
   }
@@ -93,26 +83,6 @@ class DOMImplPatcher {
   static InputElement createInputRadioElement(Object domImpl, Document doc,
       String name) {
     return DOMImplPatcher.createInputElement(doc, "RADIO", name);
-  }
-
-  @PatchMethod
-  static NativeEvent createKeyCodeEvent(Object domImpl, Document document,
-      String type, boolean ctrlKey, boolean altKey, boolean shiftKey,
-      boolean metaKey, int keyCode) {
-
-    int typeInt = EventUtils.getEventTypeInt(type);
-    return EventBuilder.create(typeInt).setCtrlKey(ctrlKey).setAltKey(altKey).setShiftKey(
-        shiftKey).setMetaKey(metaKey).setKeyCode(keyCode).build();
-
-  }
-
-  @PatchMethod
-  static NativeEvent createKeyPressEvent(Object domImpl, Document document,
-      boolean ctrlKey, boolean altKey, boolean shiftKey, boolean metaKey,
-      int charCode) {
-
-    return EventBuilder.create(Event.ONKEYPRESS).setCtrlKey(ctrlKey).setAltKey(
-        altKey).setShiftKey(shiftKey).setMetaKey(metaKey).setKeyCode(charCode).build();
   }
 
   @PatchMethod
@@ -165,13 +135,6 @@ class DOMImplPatcher {
   @PatchMethod
   static int eventGetButton(Object domImpl, NativeEvent evt) {
     return JavaScriptObjects.getInteger(evt, JsoProperties.EVENT_BUTTON);
-  }
-
-  @PatchMethod
-  static int eventGetCharCode(Object domImpl, NativeEvent evt) {
-    // FIXME : wrong : GetCharCode = ASCII, evt.getKeyCode =
-    // http://www.cambiaresearch.com/articles/15/javascript-char-codes-key-codes
-    return evt.getKeyCode();
   }
 
   @PatchMethod
@@ -319,7 +282,6 @@ class DOMImplPatcher {
 
   @PatchMethod
   static String getInnerText(Object domImpl, Element elem) {
-
     StringBuilder sb = new StringBuilder("");
 
     appendInnerTextRecursive(elem, sb);
@@ -365,11 +327,6 @@ class DOMImplPatcher {
   @PatchMethod
   static int getScrollLeft(Object domImpl, Element elem) {
     return JavaScriptObjects.getInteger(elem, JsoProperties.SCROLL_LEFT);
-  }
-
-  @PatchMethod
-  static int getTabIndex(Object domImpl, Element elem) {
-    return JavaScriptObjects.getInteger(elem, TAB_INDEX);
   }
 
   @PatchMethod
@@ -474,6 +431,7 @@ class DOMImplPatcher {
   static void setInnerText(Object domImpl, Element elem, String text) {
     clearChildNodes(elem);
     elem.appendChild(JavaScriptObjects.newText(text, elem.getOwnerDocument()));
+
   }
 
   @PatchMethod

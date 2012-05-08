@@ -8,7 +8,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.DomEvent;
 import com.google.gwt.i18n.client.Dictionary;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.server.rpc.AbstractRemoteServiceServlet;
 import com.googlecode.gwt.test.exceptions.GwtTestConfigurationException;
@@ -109,7 +108,7 @@ public abstract class GwtModuleRunnerAdapter implements GwtModuleRunner,
    * .gwt .test.uibinder.UiObjectTagFactory)
    */
   public final void addUiObjectTagFactory(
-      UiObjectTagFactory<? extends IsWidget> factory) {
+      UiObjectTagFactory<? extends Widget> factory) {
     GwtConfig.get().getUiObjectTagFactories().add(factory);
   }
 
@@ -213,7 +212,7 @@ public abstract class GwtModuleRunnerAdapter implements GwtModuleRunner,
    * com.googlecode.gwt.test.GwtModuleRunner#registerUiConstructor(java.lang
    * .Class, java.lang.String[])
    */
-  public final void registerUiConstructor(Class<? extends IsWidget> clazz,
+  public final void registerUiConstructor(Class<? extends Widget> clazz,
       String... argNames) {
     GwtConfig.get().registerUiConstructor(clazz, argNames);
   }

@@ -2,10 +2,10 @@ package com.googlecode.gwt.test.uibinder.widget;
 
 import java.util.Map;
 
-import com.google.gwt.safehtml.shared.SafeHtmlUtils;
-import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
+import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.gwt.test.uibinder.UiObjectTag;
 import com.googlecode.gwt.test.uibinder.UiObjectTagFactory;
 
@@ -20,7 +20,7 @@ public class UiMenuItemTagFactory implements UiObjectTagFactory<MenuItem> {
   private static class UiMenuItemTag extends UiObjectTag<MenuItem> {
 
     @Override
-    protected void addWidget(MenuItem wrapped, IsWidget isWidget) {
+    protected void addWidget(MenuItem wrapped, Widget isWidget) {
       if (isWidget instanceof MenuBar) {
         wrapped.setSubMenu((MenuBar) isWidget);
       } else {
@@ -44,7 +44,7 @@ public class UiMenuItemTagFactory implements UiObjectTagFactory<MenuItem> {
         Map<String, Object> attributes, Object owner) {
 
       if (clazz == MenuItem.class) {
-        return new MenuItem(SafeHtmlUtils.fromSafeConstant(""));
+        return new MenuItem("", (Command) null);
       }
       return super.instanciate(clazz, attributes, owner);
     }
@@ -55,8 +55,8 @@ public class UiMenuItemTagFactory implements UiObjectTagFactory<MenuItem> {
    * (non-Javadoc)
    * 
    * @see
-   * com.googlecode.gwt.test.uibinder.UiObjectTagFactory#createUiObjectTag(java.lang
-   * .Class, java.util.Map)
+   * com.googlecode.gwt.test.uibinder.UiObjectTagFactory#createUiObjectTag(java
+   * .lang .Class, java.util.Map)
    */
   public UiObjectTag<MenuItem> createUiObjectTag(Class<?> clazz,
       Map<String, Object> attributes) {

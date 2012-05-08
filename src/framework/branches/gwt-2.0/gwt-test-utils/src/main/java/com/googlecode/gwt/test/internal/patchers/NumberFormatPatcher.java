@@ -10,7 +10,7 @@ import com.googlecode.gwt.test.patchers.PatchMethod;
 class NumberFormatPatcher {
 
   @PatchMethod
-  static String toPrecision(double d, int digits) {
+  static String toFixed(double d, int digits) {
     return new BigDecimal(d).setScale(digits, BigDecimal.ROUND_DOWN).toString();
   }
 

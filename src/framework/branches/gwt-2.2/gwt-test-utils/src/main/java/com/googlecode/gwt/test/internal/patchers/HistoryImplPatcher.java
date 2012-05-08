@@ -145,4 +145,13 @@ class HistoryImplPatcher {
     BROWSER_HISTORY.addToken(historyToken);
   }
 
+  @PatchMethod
+  static void setToken(String token) {
+    if (token == null) {
+      token = "";
+    }
+
+    BROWSER_HISTORY.addToken(token);
+  }
+
 }

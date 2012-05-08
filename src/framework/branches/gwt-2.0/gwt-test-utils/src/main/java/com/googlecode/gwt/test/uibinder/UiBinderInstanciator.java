@@ -11,8 +11,8 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiConstructor;
 import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.UIObject;
+import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.gwt.test.exceptions.GwtTestUiBinderException;
 import com.googlecode.gwt.test.internal.GwtConfig;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
@@ -42,7 +42,7 @@ class UiBinderInstanciator {
     }
 
     if (instance == null && !UIObject.class.isAssignableFrom(clazz)
-        && !IsWidget.class.isAssignableFrom(clazz)) {
+        && !Widget.class.isAssignableFrom(clazz)) {
       instance = GWT.<U> create(clazz);
     }
 

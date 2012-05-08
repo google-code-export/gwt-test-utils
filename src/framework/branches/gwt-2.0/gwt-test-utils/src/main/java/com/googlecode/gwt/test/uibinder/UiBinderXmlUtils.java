@@ -10,7 +10,7 @@ import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment.HorizontalAlignmentConstant;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment.VerticalAlignmentConstant;
-import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.gwt.test.internal.utils.JavaScriptObjects;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
@@ -54,12 +54,12 @@ public class UiBinderXmlUtils {
    * @return The list of child widget, which would be empty if the element has
    *         no child.
    */
-  public static List<IsWidget> getChildWidgets(Element element) {
-    List<IsWidget> childWidgets = JavaScriptObjects.getObject(element,
+  public static List<Widget> getChildWidgets(Element element) {
+    List<Widget> childWidgets = JavaScriptObjects.getObject(element,
         UiElementTag.UIBINDER_CHILD_WIDGETS_LIST);
 
     return childWidgets != null ? childWidgets
-        : Collections.<IsWidget> emptyList();
+        : Collections.<Widget> emptyList();
   }
 
   public static String getEffectiveStyleName(String style) {

@@ -56,13 +56,13 @@ public class UiCellPanelTagFactory implements UiObjectTagFactory<CellPanel> {
         for (IsWidget widget : childWidgets) {
           wrapped.add(widget);
           if (width != null) {
-            wrapped.setCellWidth(widget, width);
+            wrapped.setCellWidth(widget.asWidget(), width);
           }
           if (hConstant != null) {
-            wrapped.setCellHorizontalAlignment(widget, hConstant);
+            wrapped.setCellHorizontalAlignment(widget.asWidget(), hConstant);
           }
           if (vConstant != null) {
-            wrapped.setCellVerticalAlignment(widget, vConstant);
+            wrapped.setCellVerticalAlignment(widget.asWidget(), vConstant);
           }
         }
 

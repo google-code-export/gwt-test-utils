@@ -1,23 +1,20 @@
 package com.googlecode.gwt.test.uibinder;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Text;
-import com.google.gwt.uibinder.client.UiChild;
 import com.google.gwt.uibinder.client.UiConstructor;
 import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HasHTML;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.HasWidgets;
-import com.google.gwt.user.client.ui.HasWidgets.ForIsWidget;
-import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.UIObject;
+import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.gwt.test.exceptions.GwtTestUiBinderException;
 import com.googlecode.gwt.test.exceptions.ReflectionException;
 import com.googlecode.gwt.test.internal.utils.JavaScriptObjects;
@@ -39,14 +36,7 @@ import com.googlecode.gwt.test.utils.GwtReflectionUtils;
  */
 public abstract class UiObjectTag<T> implements UiTag<T> {
 
-  private static class UiChildMethodHolder {
-    int invocationCount;
-    int invocationLimit;
-    Method uiChildMethod;
-  }
-
   private UiTag<?> parentTag;
-  private Map<String, UiChildMethodHolder> uiChildMethodMap;
   private T wrapped;
 
   /*
@@ -81,9 +71,9 @@ public abstract class UiObjectTag<T> implements UiTag<T> {
    * 
    * @see
    * com.googlecode.gwt.test.uibinder.UiTag#addWidget(com.google.gwt.user.client
-   * .ui .IsWidget)
+   * .ui .Widget)
    */
-  public final void addWidget(IsWidget isWidget) {
+  public final void addWidget(Widget isWidget) {
     addWidget(this.wrapped, isWidget);
   }
 
@@ -133,18 +123,24 @@ public abstract class UiObjectTag<T> implements UiTag<T> {
 
   /**
    * Add a new Widget as a child to this uiObject. This implementation just
-   * calls {@link ForIsWidget#add(IsWidget)} or
+   * calls {@link ForWidget#add(Widget)} or
    * {@link HasWidgets#add(com.google.gwt.user.client.ui.Widget)} according to
    * which interface the wrapped uiObject is implementing.
    * 
    * @param wrapped The wrapped uiObject of this tag.
    * @param isWidget The child widget to be added.
    */
-  protected void addWidget(T wrapped, IsWidget isWidget) {
-    if (ForIsWidget.class.isInstance(wrapped)) {
-      ((ForIsWidget) wrapped).add(isWidget);
-    } else if (HasWidgets.class.isInstance(wrapped)) {
-      ((HasWidgets) wrapped).add(isWidget.asWidget());
+  protected void addWidget(T wrapped, Widget isWidget) {
+    if (HasWidgets.class.isInstance(wrapped)) {
+
+      // hack for GWT 2.0.3
+      if (wrapped instanceof HTMLPanel) {
+        HTMLPanel htmlPanel = (HTMLPanel) wrapped;
+        GwtReflectionUtils.callPrivateMethod(htmlPanel, "add", isWidget,
+            htmlPanel.getElement());
+      } else {
+        ((HasWidgets) wrapped).add(isWidget);
+      }
     }
 
   }
@@ -154,11 +150,8 @@ public abstract class UiObjectTag<T> implements UiTag<T> {
    * supposed to be its parent. This implementation has one of the following
    * behavior :
    * <ul>
-   * <li>If a {@link UiChild} annotated method which correspond to the element
-   * to append is found, it will be called with the element's first child
-   * Widget.</li>
-   * <li>Else if the wrapped {@link UIObject} implements {@link HasHTML}, the
-   * child would be appended through
+   * <li>If the wrapped {@link UIObject} implements {@link HasHTML}, the child
+   * would be appended through
    * {@link Element#appendChild(com.google.gwt.dom.client.Node)}</li>
    * <li>Otherwise, a {@link GwtTestUiBinderException} would be thrown with
    * message: 'Found unexpected child element : <x:xxxx>'</li>
@@ -171,13 +164,9 @@ public abstract class UiObjectTag<T> implements UiTag<T> {
    *          no child has been added to it.
    */
   protected void appendElement(T wrapped, Element element, String namespaceURI,
-      List<IsWidget> childWidgets) {
+      List<Widget> childWidgets) {
 
-    UiChildMethodHolder uiChildMethodHolder = uiChildMethodMap.get(element.getTagName());
-
-    if (uiChildMethodHolder != null) {
-      invokeUiChildMethod(wrapped, childWidgets, uiChildMethodHolder);
-    } else if (HasHTML.class.isInstance(wrapped)) {
+    if (HasHTML.class.isInstance(wrapped)) {
       getElement(wrapped).appendChild(element);
     } else {
       String elementToString = (namespaceURI != null && namespaceURI.length() > 0)
@@ -218,8 +207,8 @@ public abstract class UiObjectTag<T> implements UiTag<T> {
   protected Element getElement(T wrapped) {
     if (wrapped instanceof UIObject) {
       return ((UIObject) wrapped).getElement();
-    } else if (wrapped instanceof IsWidget) {
-      return ((IsWidget) wrapped).asWidget().getElement();
+    } else if (wrapped instanceof Widget) {
+      return ((Widget) wrapped).getElement();
     } else {
       throw new GwtTestUiBinderException(
           "Cannot retrieve the Element instance in instances of '"
@@ -289,7 +278,6 @@ public abstract class UiObjectTag<T> implements UiTag<T> {
       UiTag<?> parentTag, Object owner) {
 
     this.parentTag = parentTag;
-    this.uiChildMethodMap = collectUiChildMethods(clazz);
 
     wrapped = UiBinderInstanciator.getInstance(clazz, attributes, owner);
 
@@ -311,64 +299,6 @@ public abstract class UiObjectTag<T> implements UiTag<T> {
     initializeObject(wrapped, attributes, owner);
 
     UiBinderBeanUtils.populateObject(wrapped, attributes);
-  }
-
-  private Map<String, UiChildMethodHolder> collectUiChildMethods(
-      Class<? extends T> clazz) {
-
-    Map<String, UiChildMethodHolder> map = new HashMap<String, UiObjectTag.UiChildMethodHolder>();
-
-    Map<Method, UiChild> uiChildMap = GwtReflectionUtils.getAnnotatedMethod(
-        clazz, UiChild.class);
-    for (Map.Entry<Method, UiChild> entry : uiChildMap.entrySet()) {
-      Method method = entry.getKey();
-      UiChild annotation = entry.getValue();
-      UiChildMethodHolder holder = new UiChildMethodHolder();
-      holder.uiChildMethod = method;
-      holder.invocationLimit = annotation.limit(); // default is -1
-      holder.invocationCount = 0;
-
-      String tagName = (annotation.tagname().equals(""))
-          ? computeUiChildMethodTagName(method) : annotation.tagname();
-
-      map.put(tagName, holder);
-    }
-    return map;
-  }
-
-  private String computeUiChildMethodTagName(Method method) {
-    if (!method.getName().startsWith("add")) {
-      throw new GwtTestUiBinderException(
-          "Cannot compute tagname of @UiChild annotated method '"
-              + method.toGenericString()
-              + "': you have to fill the 'tagname' property of the @UiChild or to prefix your the method name with 'add'");
-    }
-    return method.getName().substring(3).toLowerCase();
-  }
-
-  private void invokeUiChildMethod(T wrapped, List<IsWidget> childWidgets,
-      UiChildMethodHolder uiChildMethodHolder) {
-    if (uiChildMethodHolder.invocationLimit > -1
-        && uiChildMethodHolder.invocationCount > uiChildMethodHolder.invocationLimit) {
-      throw new GwtTestUiBinderException("@UiChild method '"
-          + uiChildMethodHolder.uiChildMethod.toGenericString()
-          + "' cannot be invoked more than "
-          + uiChildMethodHolder.invocationLimit + " times");
-    } else if (childWidgets.size() != 1) {
-      throw new GwtTestUiBinderException("@UiChild method '"
-          + uiChildMethodHolder.uiChildMethod.toGenericString()
-          + "' can only be applied to add one Widget, but "
-          + childWidgets.size() + " have been found");
-    }
-
-    try {
-      uiChildMethodHolder.uiChildMethod.invoke(wrapped, childWidgets.get(0));
-    } catch (Exception e) {
-      throw new GwtTestUiBinderException(
-          "An exception has been thrown during invocation of @UiChild method: "
-              + uiChildMethodHolder.uiChildMethod.toGenericString(), e);
-    }
-    uiChildMethodHolder.invocationCount++;
   }
 
 }

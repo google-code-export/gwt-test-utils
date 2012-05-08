@@ -7,7 +7,7 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.CellPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment.HorizontalAlignmentConstant;
 import com.google.gwt.user.client.ui.HasVerticalAlignment.VerticalAlignmentConstant;
-import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.gwt.test.uibinder.UiBinderXmlUtils;
 import com.googlecode.gwt.test.uibinder.UiObjectTag;
 import com.googlecode.gwt.test.uibinder.UiObjectTagFactory;
@@ -26,7 +26,7 @@ public class UiCellPanelTagFactory implements UiObjectTagFactory<CellPanel> {
 
     @Override
     protected void appendElement(CellPanel wrapped, Element element,
-        String namespaceURI, List<IsWidget> childWidgets) {
+        String namespaceURI, List<Widget> childWidgets) {
 
       if (!CELL_TAG.equals(element.getTagName())
           || !UiBinderXmlUtils.CLIENTUI_NSURI.equals(namespaceURI)) {
@@ -53,7 +53,7 @@ public class UiCellPanelTagFactory implements UiObjectTagFactory<CellPanel> {
         }
 
         // handle cell's child widget and set cell's attributes
-        for (IsWidget widget : childWidgets) {
+        for (Widget widget : childWidgets) {
           wrapped.add(widget);
           if (width != null) {
             wrapped.setCellWidth(widget, width);

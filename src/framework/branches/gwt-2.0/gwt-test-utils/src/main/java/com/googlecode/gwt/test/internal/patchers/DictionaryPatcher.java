@@ -32,6 +32,11 @@ class DictionaryPatcher {
   }
 
   @PatchMethod
+  static void createAccessedKeysArray(Dictionary dictionary) {
+
+  }
+
+  @PatchMethod
   static String get(Dictionary dictionary, String key) {
     Map<String, String> entries = DictionaryUtils.getEntries(dictionary);
 

@@ -2,7 +2,6 @@ package com.googlecode.gwt.test.uibinder;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.DataResource;
 import com.google.gwt.resources.client.ImageResource;
@@ -18,7 +17,6 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.RadioButton;
-import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class UiBinderWithWidgets extends Composite {
@@ -50,9 +48,6 @@ public class UiBinderWithWidgets extends Composite {
   ImageResource img;
 
   @UiField
-  IsWidgetLabel isWidgetLabel;
-
-  @UiField
   ListBox listBox;
 
   @UiField
@@ -77,9 +72,6 @@ public class UiBinderWithWidgets extends Composite {
   MyStyle style;
 
   @UiField
-  TextBox textBox;
-
-  @UiField
   UiConstructorLabel uiConstructorLabel;
 
   @UiField
@@ -100,11 +92,6 @@ public class UiBinderWithWidgets extends Composite {
     }
 
     providedLabel.setStyleName(style.disabled());
-  }
-
-  @UiHandler("textBox")
-  public void textBox_onValueChange(ValueChangeEvent<String> event) {
-    msgLabel.setText(event.getValue());
   }
 
   @UiHandler("button")

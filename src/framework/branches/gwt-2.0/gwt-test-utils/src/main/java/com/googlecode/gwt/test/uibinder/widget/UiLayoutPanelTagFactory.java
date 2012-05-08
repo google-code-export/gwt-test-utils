@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.LayoutPanel;
+import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.gwt.test.uibinder.UiBinderXmlUtils;
 import com.googlecode.gwt.test.uibinder.UiObjectTag;
 import com.googlecode.gwt.test.uibinder.UiObjectTagFactory;
@@ -22,7 +22,7 @@ public class UiLayoutPanelTagFactory implements UiObjectTagFactory<LayoutPanel> 
 
     @Override
     protected void appendElement(LayoutPanel wrapped, Element element,
-        String namespaceURI, List<IsWidget> childWidgets) {
+        String namespaceURI, List<Widget> childWidgets) {
 
       if (!UiBinderXmlUtils.CLIENTUI_NSURI.equals(namespaceURI)) {
         super.appendElement(wrapped, element, namespaceURI, childWidgets);
@@ -46,7 +46,7 @@ public class UiLayoutPanelTagFactory implements UiObjectTagFactory<LayoutPanel> 
     }
 
     private void handleLayoutPanelSpecifics(LayoutPanel wrapped,
-        Element element, List<IsWidget> childWidgets) {
+        Element element, List<Widget> childWidgets) {
 
       // The valid sets of horizontal constraints are:
       // (none) : Fill the parent's horizontal axis
@@ -73,7 +73,7 @@ public class UiLayoutPanelTagFactory implements UiObjectTagFactory<LayoutPanel> 
       // String bottom = element.getAttribute("bottom");
       // String height = element.getAttribute("height");
 
-      for (IsWidget child : childWidgets) {
+      for (Widget child : childWidgets) {
         wrapped.add(child);
         // TODO : handle layer size and position data
       }

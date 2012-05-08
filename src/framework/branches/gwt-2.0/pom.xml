@@ -3,9 +3,9 @@
 	<groupId>com.googlecode.gwt-test-utils</groupId>
 	<artifactId>gwt-test-utils-parent</artifactId>
 	<packaging>pom</packaging>
-	<version>0.39-SNAPSHOT</version>
+	<version>0.22.8-SNAPSHOT</version>
 	<name>${project.artifactId}</name>
-	<description>gwt-test-utils is a Java framework that allows to test GWT client side code in a efficient, easy way</description>
+	<description>gwt-test-utils is a Java framework that allows to test GWT client side code in a efficient, easy way (for GWT 2.0.x)</description>
 	<url>http://code.google.com/p/gwt-test-utils/</url>
 	<licenses>
 		<license>
@@ -38,9 +38,9 @@
 		</mailingList>
 	</mailingLists>
 	<scm>
-		<connection>scm:svn:http://gwt-test-utils.googlecode.com/svn/src/framework/trunk</connection>
-		<developerConnection>scm:svn:https://gwt-test-utils.googlecode.com/svn/src/framework/trunk</developerConnection>
-		<url>http://gwt-test-utils.googlecode.com/svn/src/framework/trunk</url>
+		<connection>scm:svn:http://gwt-test-utils.googlecode.com/svn/src/framework/branches/gwt-2.0</connection>
+		<developerConnection>scm:svn:https://gwt-test-utils.googlecode.com/svn/src/framework/branches/gwt-2.0</developerConnection>
+		<url>http://gwt-test-utils.googlecode.com/svn/src/framework/branches/gwt-2.0</url>
 	</scm>
 	<parent>
 		<groupId>org.sonatype.oss</groupId>
@@ -55,7 +55,7 @@
 	<properties>
 		<encoding>UTF-8</encoding>
 		<guice.version>3.0</guice.version>
-		<gwt.version>2.4.0</gwt.version>
+		<gwt.version>2.0.4</gwt.version>
 		<java.version>1.5</java.version>
 		<spring.version>3.0.5.RELEASE</spring.version>
 	</properties>

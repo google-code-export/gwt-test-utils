@@ -13,8 +13,8 @@ import com.google.gwt.resources.client.DataResource;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.UIObject;
+import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.gwt.test.exceptions.GwtTestUiBinderException;
 import com.googlecode.gwt.test.exceptions.ReflectionException;
 import com.googlecode.gwt.test.internal.resources.ResourcePrototypeProxyBuilder;
@@ -119,7 +119,7 @@ class UiResourceManager {
       // nothing to do
     }
 
-    public void addWidget(IsWidget widget) {
+    public void addWidget(Widget widget) {
       // nothing to do
     }
 
@@ -246,7 +246,7 @@ class UiResourceManager {
       parentTag.addUiObject(uiObject);
     }
 
-    public void addWidget(IsWidget isWidget) {
+    public void addWidget(Widget isWidget) {
       parentTag.addWidget(isWidget);
 
     }
@@ -294,7 +294,7 @@ class UiResourceManager {
       // adapter method
     }
 
-    public void addWidget(IsWidget widget) {
+    public void addWidget(Widget widget) {
       // adapter method
     }
 
@@ -401,7 +401,7 @@ class UiResourceManager {
       // nothing to do
     }
 
-    public void addWidget(IsWidget isWidget) {
+    public void addWidget(Widget isWidget) {
       // nothing to do
     }
 

@@ -21,7 +21,7 @@ public class JSONObjectTest extends GwtTestTest {
     String json = "{string: 'json string', \"int\": 3, float: 3.1415, \"bool\": true, 'array': [1, 33.7, \"l33t\"], \"object\": {\"int\": 4, \"array\": [5, 6, 7]}}";
 
     // Act
-    JSONObject o = JSONParser.parseLenient(json).isObject();
+    JSONObject o = JSONParser.parse(json).isObject();
     JSONString string = (JSONString) o.get("string");
     JSONNumber number = (JSONNumber) o.get("int");
     JSONNumber fl = (JSONNumber) o.get("float");
@@ -50,7 +50,7 @@ public class JSONObjectTest extends GwtTestTest {
     String json = "{\"string\": \"json string\", \"int\": 3.0, \"float\": 3.1415, \"bool\": true, \"array\": [1, 33.7, \"l33t\"], \"object\": {\"int\": 4, \"array\": [5, 6, 7]}}";
 
     // Act
-    JSONObject o = JSONParser.parseStrict(json).isObject();
+    JSONObject o = JSONParser.parse(json).isObject();
     JSONString string = (JSONString) o.get("string");
     JSONNumber number = (JSONNumber) o.get("int");
     JSONNumber fl = (JSONNumber) o.get("float");

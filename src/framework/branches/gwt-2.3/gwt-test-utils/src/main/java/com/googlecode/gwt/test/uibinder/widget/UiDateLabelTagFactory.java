@@ -2,8 +2,8 @@ package com.googlecode.gwt.test.uibinder.widget;
 
 import java.util.Map;
 
-import com.google.gwt.i18n.shared.DateTimeFormat;
-import com.google.gwt.i18n.shared.DateTimeFormat.PredefinedFormat;
+import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
 import com.google.gwt.user.client.ui.DateLabel;
 import com.googlecode.gwt.test.uibinder.UiObjectTag;
 import com.googlecode.gwt.test.uibinder.UiObjectTagFactory;

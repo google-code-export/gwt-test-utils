@@ -175,7 +175,7 @@ public class ButtonTest extends GwtTestTest {
     Button b = Button.wrap(element);
 
     // Assert 1
-    assertEquals(3, b.getTabIndex());
+    assertEquals(0, b.getTabIndex());
 
     // Act 2
     b.setTabIndex(1);

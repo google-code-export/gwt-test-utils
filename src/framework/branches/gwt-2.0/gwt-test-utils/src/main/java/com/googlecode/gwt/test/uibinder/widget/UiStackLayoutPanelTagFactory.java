@@ -6,8 +6,8 @@ import java.util.Map;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.StackLayoutPanel;
+import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.gwt.test.uibinder.UiBinderXmlUtils;
 import com.googlecode.gwt.test.uibinder.UiObjectTag;
 import com.googlecode.gwt.test.uibinder.UiObjectTagFactory;
@@ -26,7 +26,7 @@ public class UiStackLayoutPanelTagFactory implements
 
     @Override
     protected void appendElement(StackLayoutPanel wrapped, Element element,
-        String namespaceURI, List<IsWidget> childWidgets) {
+        String namespaceURI, List<Widget> childWidgets) {
 
       if (!UiBinderXmlUtils.CLIENTUI_NSURI.equals(namespaceURI)) {
         super.appendElement(wrapped, element, namespaceURI, childWidgets);
@@ -63,7 +63,7 @@ public class UiStackLayoutPanelTagFactory implements
     }
 
     private void handleStackLayoutPanelSpecifics(StackLayoutPanel wrapped,
-        Element element, List<IsWidget> childWidgets) {
+        Element element, List<Widget> childWidgets) {
 
       if ("stack".equals(element.getTagName())) {
         NodeList<Element> headers = element.getElementsByTagName("header");
@@ -71,13 +71,12 @@ public class UiStackLayoutPanelTagFactory implements
           // case of "header"
           String header = headers.getItem(0).getInnerHTML();
           String headerSize = headers.getItem(0).getAttribute("size");
-          wrapped.add(childWidgets.get(0).asWidget(), header,
-              Double.valueOf(headerSize));
+          wrapped.add(childWidgets.get(0), header, Double.valueOf(headerSize));
         } else {
           NodeList<Element> customHeaders = element.getElementsByTagName("customHeader");
           if (customHeaders.getLength() == 1 && childWidgets.size() == 1) {
             // case of "customHeader"
-            List<IsWidget> customHeaderChilds = UiBinderXmlUtils.getChildWidgets(customHeaders.getItem(0));
+            List<Widget> customHeaderChilds = UiBinderXmlUtils.getChildWidgets(customHeaders.getItem(0));
             if (customHeaderChilds.size() == 1) {
               String customHeaderSize = customHeaders.getItem(0).getAttribute(
                   "size");
@@ -96,8 +95,8 @@ public class UiStackLayoutPanelTagFactory implements
    * (non-Javadoc)
    * 
    * @see
-   * com.googlecode.gwt.test.uibinder.UiWidgetTagFactory#createUiObjectTag(java.lang
-   * .Class, java.util.Map)
+   * com.googlecode.gwt.test.uibinder.UiWidgetTagFactory#createUiObjectTag(java
+   * .lang .Class, java.util.Map)
    */
   public UiObjectTag<StackLayoutPanel> createUiObjectTag(Class<?> clazz,
       Map<String, Object> attributes) {

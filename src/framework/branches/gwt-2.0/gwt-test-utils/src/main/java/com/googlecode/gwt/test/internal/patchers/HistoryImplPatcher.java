@@ -54,7 +54,7 @@ class HistoryImplPatcher {
           GwtReflectionUtils.getPrivateFieldValue(
               GwtReflectionUtils.getPrivateFieldValue(
                   GwtReflectionUtils.getPrivateFieldValue(historyImpl,
-                      "handlers"), "eventBus"), "map"), "clear");
+                      "handlers"), "registry"), "map"), "clear");
     }
 
     /**
@@ -138,11 +138,16 @@ class HistoryImplPatcher {
 
   @PatchMethod
   static void nativeUpdate(HistoryImpl historyImpl, String historyToken) {
-    if (historyToken == null) {
-      historyToken = "";
+
+  }
+
+  @PatchMethod
+  static void setToken(String token) {
+    if (token == null) {
+      token = "";
     }
 
-    BROWSER_HISTORY.addToken(historyToken);
+    BROWSER_HISTORY.addToken(token);
   }
 
 }

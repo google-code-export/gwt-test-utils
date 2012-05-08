@@ -43,24 +43,7 @@ public class UiBinderWithWidgetsTest extends GwtTestTest {
   }
 
   @Test
-  public void fill_TextBox() {
-    // Arrange
-    UiBinderWithWidgets w = new UiBinderWithWidgets("gael", "eric");
-
-    // Pre-Assert
-    assertEquals("We <b>strongly</b> urge you to reconsider.",
-        w.msgLabel.getText());
-
-    // Act
-    Browser.fillText(w.textBox, "ValueChangeHandler has been triggered !");
-
-    // Assert
-    assertEquals("ValueChangeHandler has been triggered !",
-        w.msgLabel.getText());
-  }
-
-  @Test
-  public void uiObjectTag() {
+  public void uiBinderWidget() {
     // Arrange
     UiBinderWithWidgets w = new UiBinderWithWidgets("gael", "eric");
 
@@ -82,12 +65,8 @@ public class UiBinderWithWidgetsTest extends GwtTestTest {
     assertEquals("MyRadioGroup", w.radioButton2.getName());
     assertFalse(w.radioButton2.getValue());
 
-    assertEquals(
-        MyClientBundle.INSTANCE.cellTableLoading().getSafeUri().asString(),
+    assertEquals(MyClientBundle.INSTANCE.imageResource().getURL(),
         w.image.getUrl());
-    assertEquals("Loading...", w.image.getAltText());
-    assertEquals("pretty", w.image.getStyleName());
-
     assertEquals("http://slazzer.com/image.jpg", w.imageWithUrl.getUrl());
 
     assertEquals("my provided label", w.providedLabel.getText());
@@ -118,7 +97,7 @@ public class UiBinderWithWidgetsTest extends GwtTestTest {
         w.msgLabel.getText());
 
     assertEquals("9'00", w.msgInnerWidget.getText());
-    assertEquals(w.msgInnerWidget, wrappedPanel.getWidget(5));
+    assertEquals(w.msgInnerWidget, wrappedPanel.getWidget(4));
 
     assertEquals(HasHorizontalAlignment.ALIGN_LEFT,
         w.verticalPanel.getHorizontalAlignment());
@@ -139,15 +118,13 @@ public class UiBinderWithWidgetsTest extends GwtTestTest {
     // Assertion on inner image
     assertEquals("img", w.img.getName());
     assertEquals("http://127.0.0.1:8888/gwt_test_utils_module/img.jpg",
-        w.img.getSafeUri().asString());
+        w.img.getURL());
 
     // Assertion on inner data
     assertEquals("data", w.data.getName());
     assertEquals(
         "http://127.0.0.1:8888/gwt_test_utils_module/MyChildConstants.properties",
-        w.data.getSafeUri().asString());
+        w.data.getUrl());
 
-    // Assertion on "IsWidget
-    assertEquals("isWidget Label", w.isWidgetLabel.getText());
   }
 }

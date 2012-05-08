@@ -52,16 +52,16 @@ public class UiDockLayoutPanelTagFactory implements
     protected void finalizeObject(DockLayoutPanel widget) {
 
       if (northWidget != null) {
-        widget.addNorth(northWidget, northSize);
+        widget.addNorth(northWidget.asWidget(), northSize);
       }
       if (southWidget != null) {
-        widget.addSouth(southWidget, southSize);
+        widget.addSouth(southWidget.asWidget(), southSize);
       }
       if (eastWidget != null) {
-        widget.addEast(eastWidget, eastSize);
+        widget.addEast(eastWidget.asWidget(), eastSize);
       }
       if (westWidget != null) {
-        widget.addWest(westWidget, westSize);
+        widget.addWest(westWidget.asWidget(), westSize);
       }
       for (IsWidget centerWidget : centerWidgets) {
         widget.add(centerWidget);

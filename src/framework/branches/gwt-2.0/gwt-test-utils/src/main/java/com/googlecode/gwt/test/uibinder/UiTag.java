@@ -1,7 +1,6 @@
 package com.googlecode.gwt.test.uibinder;
 
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -33,7 +32,7 @@ public interface UiTag<T> {
    * 
    * @param widget The widget to add
    */
-  void addWidget(IsWidget widget);
+  void addWidget(Widget widget);
 
   /**
    * Append text to this UiBinder tag.

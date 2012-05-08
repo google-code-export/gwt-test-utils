@@ -18,7 +18,6 @@ import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.gwt.event.shared.UmbrellaException;
 import com.googlecode.gwt.test.csv.CsvMethod;
 import com.googlecode.gwt.test.csv.GwtCsvTest;
 import com.googlecode.gwt.test.csv.GwtTestCsvException;
@@ -275,9 +274,6 @@ public class CsvRunner {
   private CsvRunnerException createCsvExecutionException(Throwable cause) {
     if (cause instanceof CsvRunnerException) {
       return (CsvRunnerException) cause;
-    } else if (UmbrellaException.class.isInstance(cause)
-        || AssertionError.class.isInstance(cause)) {
-      cause = cause.getCause();
     }
 
     return new CsvRunnerException(this, cause);

@@ -20,7 +20,6 @@ import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SuggestBox;
-import com.google.gwt.user.client.ui.SuggestBox.SuggestionDisplay;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -103,10 +102,8 @@ public class WidgetUtils {
   }
 
   public static List<MenuItem> getMenuItems(SuggestBox suggestBox) {
-    SuggestionDisplay display = GwtReflectionUtils.getPrivateFieldValue(
-        suggestBox, "display");
-    MenuBar suggestionMenu = GwtReflectionUtils.getPrivateFieldValue(display,
-        "suggestionMenu");
+    MenuBar suggestionMenu = GwtReflectionUtils.getPrivateFieldValue(
+        suggestBox, "suggestionMenu");
     return getMenuItems(suggestionMenu);
   }
 

@@ -2,11 +2,10 @@ package com.googlecode.gwt.test.internal.patchers;
 
 import com.google.gwt.user.cellview.client.AbstractHasData;
 import com.google.gwt.user.client.ui.Widget;
-import com.googlecode.gwt.test.patchers.PatchClass;
 import com.googlecode.gwt.test.patchers.PatchMethod;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
-@PatchClass(AbstractHasData.class)
+// @PatchClass(AbstractHasData.class)
 class AbstractHasDataPatcher {
 
   @PatchMethod

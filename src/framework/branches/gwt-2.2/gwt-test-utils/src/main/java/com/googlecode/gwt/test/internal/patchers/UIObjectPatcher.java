@@ -2,7 +2,6 @@ package com.googlecode.gwt.test.internal.patchers;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
-import com.google.gwt.user.client.ui.PotentialElement;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.gwt.test.internal.utils.JavaScriptObjects;
@@ -63,7 +62,7 @@ class UIObjectPatcher {
       com.google.gwt.user.client.Element elem) {
     Element element = GwtReflectionUtils.getPrivateFieldValue(uiObject,
         "element");
-    assert element == null || PotentialElement.isPotential(element) : "Element may only be set once";
+    assert element == null : "Element may only be set once";
 
     GwtReflectionUtils.setPrivateFieldValue(uiObject, "element", elem);
 

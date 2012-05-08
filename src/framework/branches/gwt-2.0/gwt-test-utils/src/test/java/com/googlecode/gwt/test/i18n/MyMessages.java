@@ -2,7 +2,6 @@ package com.googlecode.gwt.test.i18n;
 
 import com.google.gwt.i18n.client.LocalizableResource.DefaultLocale;
 import com.google.gwt.i18n.client.Messages;
-import com.google.gwt.safehtml.shared.SafeHtml;
 
 @DefaultLocale("en")
 public interface MyMessages extends Messages {
@@ -31,7 +30,8 @@ public interface MyMessages extends Messages {
   // gender, @PluralCount int count);
 
   @DefaultMessage("No reference to the argument")
-  String optionalArg(@Optional String ignored);
+  String optionalArg(@Optional
+  String ignored);
 
   @Meaning("the color")
   @DefaultMessage("orange")
@@ -39,14 +39,15 @@ public interface MyMessages extends Messages {
 
   @Meaning("the fruit")
   @DefaultMessage("orange")
-  SafeHtml orangeFruit();
+  String orangeFruit();
 
   @DefaultMessage("Your cart total is {0,number,currency}")
   @Description("The total value of the items in the shopping cart in local currency")
-  String totalAmount(@Example("$5.00") double amount);
+  String totalAmount(@Example("$5.00")
+  double amount);
 
-  @SuppressWarnings("deprecation")
   @DefaultMessage("You have {0} widgets")
   @PluralText({"one", "You have {0} widget"})
-  String widgetCount(@PluralCount int count);
+  String widgetCount(@PluralCount
+  int count);
 }

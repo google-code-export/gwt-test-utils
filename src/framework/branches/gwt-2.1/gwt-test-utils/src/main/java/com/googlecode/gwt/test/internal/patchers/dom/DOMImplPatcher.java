@@ -63,14 +63,6 @@ class DOMImplPatcher {
   }
 
   @PatchMethod
-  static InputElement createCheckInputElement(Object domImpl, Document doc) {
-    InputElement e = createInputElement(doc, "checkbox", null);
-    e.setValue("on");
-
-    return e;
-  }
-
-  @PatchMethod
   static Element createElement(Object domImpl, Document doc, String tag) {
     return JavaScriptObjects.newElement(tag, doc);
   }

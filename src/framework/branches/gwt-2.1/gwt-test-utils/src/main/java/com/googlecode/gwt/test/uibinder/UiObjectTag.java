@@ -12,6 +12,7 @@ import com.google.gwt.uibinder.client.UiChild;
 import com.google.gwt.uibinder.client.UiConstructor;
 import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HasHTML;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.HasWidgets;
@@ -142,7 +143,14 @@ public abstract class UiObjectTag<T> implements UiTag<T> {
    */
   protected void addWidget(T wrapped, IsWidget isWidget) {
     if (ForIsWidget.class.isInstance(wrapped)) {
-      ((ForIsWidget) wrapped).add(isWidget);
+      // hack for GWT 2.1.0
+      if (wrapped instanceof HTMLPanel) {
+        HTMLPanel htmlPanel = (HTMLPanel) wrapped;
+        GwtReflectionUtils.callPrivateMethod(htmlPanel, "add",
+            isWidget.asWidget(), htmlPanel.getElement());
+      } else {
+        ((ForIsWidget) wrapped).add(isWidget);
+      }
     } else if (HasWidgets.class.isInstance(wrapped)) {
       ((HasWidgets) wrapped).add(isWidget.asWidget());
     }

@@ -1,15 +1,11 @@
 package com.googlecode.gwt.test.internal.patchers;
 
 import com.google.gwt.dom.client.Document;
-import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.Window;
 import com.googlecode.gwt.test.WindowOperationsHandler;
-import com.googlecode.gwt.test.exceptions.GwtTestConfigurationException;
 import com.googlecode.gwt.test.internal.GwtConfig;
 import com.googlecode.gwt.test.patchers.PatchClass;
 import com.googlecode.gwt.test.patchers.PatchMethod;
-import com.googlecode.gwt.test.utils.GwtDomUtils;
-import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
 @PatchClass(Window.class)
 class WindowPatcher {
@@ -25,30 +21,16 @@ class WindowPatcher {
   @PatchMethod
   static boolean confirm(String msg) {
     WindowOperationsHandler handler = GwtConfig.get().getWindowOperationsHandler();
-    if (handler == null) {
-      throw new GwtTestConfigurationException(
-          "A call to Window.confirm(msg) was triggered, but no "
-              + WindowOperationsHandler.class.getSimpleName()
-              + " has been registered. You need to setup your own with the protected 'setWindowOperationsHandler' method available in your test class");
-
+    if (handler != null) {
+      return handler.confirm(msg);
     }
 
-    return handler.confirm(msg);
+    return false;
   }
 
   @PatchMethod
   static String getTitle() {
     return Document.get().getTitle();
-  }
-
-  @PatchMethod
-  static void moveBy(int dx, int dy) {
-
-  }
-
-  @PatchMethod
-  static void moveTo(int x, int y) {
-
   }
 
   @PatchMethod
@@ -75,26 +57,6 @@ class WindowPatcher {
     }
 
     return null;
-  }
-
-  @PatchMethod
-  static void resizeBy(int width, int height) {
-    Element viewportElement = GwtReflectionUtils.callPrivateMethod(
-        Document.get(), "getViewportElement");
-    int currentWidth = Document.get().getClientWidth();
-    GwtDomUtils.setClientWidth(viewportElement, currentWidth + width);
-
-    int currentHeight = Document.get().getClientHeight();
-    GwtDomUtils.setClientHeight(viewportElement, currentHeight + height);
-  }
-
-  @PatchMethod
-  static void resizeTo(int width, int height) {
-    Element viewportElement = GwtReflectionUtils.callPrivateMethod(
-        Document.get(), "getViewportElement");
-
-    GwtDomUtils.setClientWidth(viewportElement, width);
-    GwtDomUtils.setClientHeight(viewportElement, height);
   }
 
   @PatchMethod

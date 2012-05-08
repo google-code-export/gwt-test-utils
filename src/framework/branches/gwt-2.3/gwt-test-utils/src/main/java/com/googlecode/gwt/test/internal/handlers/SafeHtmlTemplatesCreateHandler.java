@@ -10,7 +10,6 @@ import com.google.gwt.safehtml.client.SafeHtmlTemplates;
 import com.google.gwt.safehtml.client.SafeHtmlTemplates.Template;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
-import com.google.gwt.safehtml.shared.SafeUri;
 import com.googlecode.gwt.test.GwtCreateHandler;
 import com.googlecode.gwt.test.exceptions.GwtTestPatchException;
 
@@ -50,8 +49,6 @@ class SafeHtmlTemplatesCreateHandler implements GwtCreateHandler {
         for (int i = 0; i < args.length; i++) {
           if (SafeHtml.class.isInstance(args[i])) {
             newArgs[i] = ((SafeHtml) args[i]).asString();
-          } else if (SafeUri.class.isInstance(args[i])) {
-            newArgs[i] = ((SafeUri) args[i]).asString();
           } else if (SafeStyles.class.isInstance(args[i])) {
             newArgs[i] = ((SafeStyles) args[i]).asString();
           } else {

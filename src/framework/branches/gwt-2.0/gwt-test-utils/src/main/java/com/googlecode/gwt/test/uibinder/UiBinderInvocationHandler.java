@@ -53,7 +53,8 @@ class UiBinderInvocationHandler implements InvocationHandler {
         H handler = (H) createHandler(uiField, entry.getKey(), owner);
 
         if (eventType instanceof DomEvent.Type) {
-          uiField.addDomHandler(handler, (DomEvent.Type<H>) eventType);
+          GwtReflectionUtils.callPrivateMethod(uiField, "addHandler", handler,
+              eventType);
         } else {
 
           // special case for ValueChangeEvent and HasValueChangeHandlers
@@ -62,7 +63,8 @@ class UiBinderInvocationHandler implements InvocationHandler {
               && handler instanceof ValueChangeHandler) {
             ((HasValueChangeHandlers<Object>) uiField).addValueChangeHandler((ValueChangeHandler<Object>) handler);
           } else {
-            uiField.addHandler(handler, eventType);
+            GwtReflectionUtils.callPrivateMethod(uiField, "addHandler",
+                handler, eventType);
           }
 
         }

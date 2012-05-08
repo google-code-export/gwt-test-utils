@@ -8,7 +8,6 @@ import org.apache.commons.beanutils.Converter;
 
 import com.google.gwt.user.client.ui.HasHorizontalAlignment.HorizontalAlignmentConstant;
 import com.google.gwt.user.client.ui.HasVerticalAlignment.VerticalAlignmentConstant;
-import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.UIObject;
 import com.googlecode.gwt.test.exceptions.ReflectionException;
 
@@ -61,9 +60,7 @@ public class UiBinderBeanUtils {
     String[] styles = (String[]) properties.get("addStyleNames");
     if (styles != null) {
       for (String style : styles) {
-        if (o instanceof IsWidget) {
-          ((IsWidget) o).asWidget().addStyleName(style);
-        } else if (o instanceof UIObject) {
+        if (o instanceof UIObject) {
           ((UIObject) o).addStyleName(style);
         }
 

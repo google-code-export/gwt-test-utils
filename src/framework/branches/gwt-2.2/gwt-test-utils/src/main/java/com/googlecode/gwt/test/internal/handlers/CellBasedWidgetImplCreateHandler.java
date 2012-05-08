@@ -1,6 +1,5 @@
 package com.googlecode.gwt.test.internal.handlers;
 
-import com.google.gwt.user.cellview.client.CellBasedWidgetImplStandardBase;
 import com.googlecode.gwt.test.GwtCreateHandler;
 
 /**
@@ -18,7 +17,8 @@ class CellBasedWidgetImplCreateHandler implements GwtCreateHandler {
    */
   public Object create(Class<?> classLiteral) throws Exception {
     if ("com.google.gwt.user.cellview.client.CellBasedWidgetImpl".equals(classLiteral.getName())) {
-      return new CellBasedWidgetImplStandardBase();
+      return Class.forName(
+          "com.google.gwt.user.cellview.client.CellBasedWidgetImplStandard").newInstance();
     } else {
       return null;
     }

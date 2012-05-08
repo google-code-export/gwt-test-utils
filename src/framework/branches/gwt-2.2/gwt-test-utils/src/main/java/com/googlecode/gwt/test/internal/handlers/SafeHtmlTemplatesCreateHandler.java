@@ -5,12 +5,10 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.text.MessageFormat;
 
-import com.google.gwt.safecss.shared.SafeStyles;
 import com.google.gwt.safehtml.client.SafeHtmlTemplates;
 import com.google.gwt.safehtml.client.SafeHtmlTemplates.Template;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
-import com.google.gwt.safehtml.shared.SafeUri;
 import com.googlecode.gwt.test.GwtCreateHandler;
 import com.googlecode.gwt.test.exceptions.GwtTestPatchException;
 
@@ -45,15 +43,11 @@ class SafeHtmlTemplatesCreateHandler implements GwtCreateHandler {
                   + method.toGenericString());
         }
 
-        // convert SafeXXX params to String
+        // convert SafeHtml params to String
         Object[] newArgs = new Object[args.length];
         for (int i = 0; i < args.length; i++) {
           if (SafeHtml.class.isInstance(args[i])) {
             newArgs[i] = ((SafeHtml) args[i]).asString();
-          } else if (SafeUri.class.isInstance(args[i])) {
-            newArgs[i] = ((SafeUri) args[i]).asString();
-          } else if (SafeStyles.class.isInstance(args[i])) {
-            newArgs[i] = ((SafeStyles) args[i]).asString();
           } else {
             newArgs[i] = args[i];
           }

@@ -18,7 +18,7 @@ public class MyOverridedClientBundleTest extends GwtTestTest {
 
     // Act
     String name = testDataResource.getName();
-    String url = testDataResource.getSafeUri().asString();
+    String url = testDataResource.getUrl();
     String toString = testDataResource.toString();
 
     // Assert
@@ -39,7 +39,7 @@ public class MyOverridedClientBundleTest extends GwtTestTest {
 
     // Act
     String name = testImageResource.getName();
-    String url = testImageResource.getSafeUri().asString();
+    String url = testImageResource.getURL();
     int heigh = testImageResource.getHeight();
     int left = testImageResource.getLeft();
     int width = testImageResource.getWidth();

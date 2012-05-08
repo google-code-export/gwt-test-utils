@@ -3,7 +3,6 @@ package com.googlecode.gwt.test.internal.resources;
 import java.lang.reflect.Method;
 
 import com.google.gwt.resources.client.DataResource;
-import com.google.gwt.safehtml.shared.UriUtils;
 
 /**
  * Callback interface where {@link DataResource } methods calls are redirected.
@@ -23,8 +22,6 @@ class DataResourceCallback implements ResourcePrototypeCallback {
   public Object call(Method method, Object[] args) throws Exception {
     if (method.getName().equals("getUrl")) {
       return url;
-    } else if (method.getName().equals("getSafeUri")) {
-      return UriUtils.fromTrustedString(url);
     }
 
     return null;

@@ -7,8 +7,8 @@ import java.util.Map;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Text;
-import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.UIObject;
+import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.gwt.test.exceptions.ReflectionException;
 import com.googlecode.gwt.test.internal.utils.JavaScriptObjects;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
@@ -66,7 +66,7 @@ class UiElementTag implements UiTag<Element> {
 
   }
 
-  public void addWidget(IsWidget widget) {
+  public void addWidget(Widget widget) {
     addWidget(this.wrapped, widget);
 
   }
@@ -85,18 +85,18 @@ class UiElementTag implements UiTag<Element> {
     return parentTag;
   }
 
-  protected void addWidget(Element wrapped, IsWidget isWidget) {
-    List<IsWidget> childWidgets = JavaScriptObjects.getObject(wrapped,
+  protected void addWidget(Element wrapped, Widget widget) {
+    List<Widget> childWidgets = JavaScriptObjects.getObject(wrapped,
         UIBINDER_CHILD_WIDGETS_LIST);
 
     if (childWidgets == null) {
-      childWidgets = new ArrayList<IsWidget>();
+      childWidgets = new ArrayList<Widget>();
       JavaScriptObjects.setProperty(wrapped, UIBINDER_CHILD_WIDGETS_LIST,
           childWidgets);
     }
 
-    childWidgets.add(isWidget);
-    appendElement(wrapped, isWidget.asWidget().getElement());
+    childWidgets.add(widget);
+    appendElement(wrapped, widget.getElement());
   }
 
   protected void appendElement(Element wrapped, Element child) {

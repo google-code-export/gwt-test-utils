@@ -42,7 +42,6 @@ public class UiBinderWithSplitLayoutPanelTest extends GwtTestTest {
     assertEquals(li0, Document.get().getElementById("li-west0"));
     assertEquals(li1, Document.get().getElementById("li-west1"));
 
-    assertEquals(15, panel.getLayout().getSplitterSize());
   }
 
 }

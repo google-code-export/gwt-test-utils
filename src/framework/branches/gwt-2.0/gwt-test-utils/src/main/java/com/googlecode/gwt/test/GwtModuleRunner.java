@@ -8,7 +8,6 @@ import com.google.gwt.event.dom.client.DomEvent;
 import com.google.gwt.i18n.client.Dictionary;
 import com.google.gwt.uibinder.client.UiConstructor;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.server.rpc.AbstractRemoteServiceServlet;
@@ -49,7 +48,7 @@ public interface GwtModuleRunner {
    * 
    * @param factory The UiBinder Widget factory candidate.
    */
-  void addUiObjectTagFactory(UiObjectTagFactory<? extends IsWidget> factory);
+  void addUiObjectTagFactory(UiObjectTagFactory<? extends Widget> factory);
 
   /**
    * Specifies if The {@link Browser} helper methods can target not attached
@@ -143,6 +142,5 @@ public interface GwtModuleRunner {
    * @param clazz The widget class where the {@link UiConstructor} is declared.
    * @param argNames An ordered array of argument names
    */
-  void registerUiConstructor(Class<? extends IsWidget> clazz,
-      String... argNames);
+  void registerUiConstructor(Class<? extends Widget> clazz, String... argNames);
 }

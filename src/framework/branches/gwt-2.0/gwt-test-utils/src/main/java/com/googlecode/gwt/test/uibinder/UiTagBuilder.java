@@ -12,8 +12,8 @@ import org.xml.sax.Attributes;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.resources.client.CssResource;
-import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.UIObject;
+import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.gwt.test.exceptions.GwtTestException;
 import com.googlecode.gwt.test.exceptions.GwtTestUiBinderException;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
@@ -107,8 +107,8 @@ class UiTagBuilder<T> {
       }
     } else {
       // add to its parent
-      if (IsWidget.class.isInstance(currentObject)) {
-        parentTag.addWidget((IsWidget) currentObject);
+      if (Widget.class.isInstance(currentObject)) {
+        parentTag.addWidget((Widget) currentObject);
       } else if (UIObject.class.isInstance(currentObject)) {
         // UIObject instance that is not a Widget
         parentTag.addUiObject((UIObject) currentObject);
@@ -156,7 +156,7 @@ class UiTagBuilder<T> {
       }
 
       if (UIObject.class.isAssignableFrom(clazz)
-          || IsWidget.class.isAssignableFrom(clazz)) {
+          || Widget.class.isAssignableFrom(clazz)) {
 
         UiObjectTag<Object> uibinderTag = DefaultUiWidgetTagFactory.get().createUiObjectTag(
             clazz, attributes);
@@ -168,7 +168,7 @@ class UiTagBuilder<T> {
         throw new GwtTestUiBinderException("Not managed UiBinder type '"
             + clazz + "' declared in file '" + owner.getClass().getSimpleName()
             + ".ui.xml" + "', only implementation of '"
-            + IsWidget.class.getName() + "' or subclass of '"
+            + Widget.class.getName() + "' or subclass of '"
             + UIObject.class.getName() + "' are allowed");
       }
     } else if (UiBinderXmlUtils.isResourceTag(nameSpaceURI, localName)) {

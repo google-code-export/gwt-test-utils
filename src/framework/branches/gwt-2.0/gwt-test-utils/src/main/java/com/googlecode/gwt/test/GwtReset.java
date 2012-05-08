@@ -1,8 +1,6 @@
 package com.googlecode.gwt.test;
 
-import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.i18n.client.NumberFormat;
-import com.google.gwt.i18n.shared.DateTimeFormat;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
@@ -55,14 +53,6 @@ class GwtReset {
         "cachedPercentFormat", null);
     GwtReflectionUtils.setStaticField(NumberFormat.class,
         "cachedCurrencyFormat", null);
-
-    GwtReflectionUtils.setPrivateFieldValue(LocaleInfo.getCurrentLocale(),
-        "dateTimeConstants", null);
-    GwtReflectionUtils.setPrivateFieldValue(LocaleInfo.getCurrentLocale(),
-        "dateTimeFormatInfo", null);
-    GwtReflectionUtils.setPrivateFieldValue(LocaleInfo.getCurrentLocale(),
-        "numberConstants", null);
-    getStaticAndCallClear(DateTimeFormat.class, "cache");
 
     GwtReflectionUtils.setStaticField(Window.class, "handlers", null);
     GwtReflectionUtils.setStaticField(Event.class, "handlers", null);

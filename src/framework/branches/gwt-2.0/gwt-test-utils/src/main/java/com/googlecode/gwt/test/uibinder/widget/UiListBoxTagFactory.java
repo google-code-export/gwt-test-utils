@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.gwt.test.uibinder.UiBinderXmlUtils;
 import com.googlecode.gwt.test.uibinder.UiObjectTag;
 import com.googlecode.gwt.test.uibinder.UiObjectTagFactory;
@@ -16,7 +16,7 @@ public class UiListBoxTagFactory implements UiObjectTagFactory<ListBox> {
 
     @Override
     protected void appendElement(ListBox wrapped, Element element,
-        String namespaceURI, List<IsWidget> childWidgets) {
+        String namespaceURI, List<Widget> childWidgets) {
       if (!ITEM_TAG.equals(element.getTagName())
           || !UiBinderXmlUtils.CLIENTUI_NSURI.equals(namespaceURI)) {
         super.appendElement(wrapped, element, namespaceURI, childWidgets);

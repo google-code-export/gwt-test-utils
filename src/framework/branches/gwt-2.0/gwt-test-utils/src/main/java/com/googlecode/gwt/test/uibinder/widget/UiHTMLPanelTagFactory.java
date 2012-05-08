@@ -5,7 +5,7 @@ import java.util.Map;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.gwt.test.uibinder.UiObjectTag;
 import com.googlecode.gwt.test.uibinder.UiObjectTagFactory;
 
@@ -21,7 +21,7 @@ public class UiHTMLPanelTagFactory implements UiObjectTagFactory<HTMLPanel> {
 
     @Override
     protected void appendElement(HTMLPanel wrapped, Element element,
-        String namespaceURI, List<IsWidget> childWidgets) {
+        String namespaceURI, List<Widget> childWidgets) {
 
       getElement(wrapped).appendChild(element);
     }

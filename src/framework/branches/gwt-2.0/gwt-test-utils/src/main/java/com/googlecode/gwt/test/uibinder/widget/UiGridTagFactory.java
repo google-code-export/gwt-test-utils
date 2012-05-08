@@ -7,7 +7,7 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.user.client.ui.Grid;
-import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.gwt.test.uibinder.UiBinderXmlUtils;
 import com.googlecode.gwt.test.uibinder.UiObjectTag;
 import com.googlecode.gwt.test.uibinder.UiObjectTagFactory;
@@ -28,7 +28,7 @@ public class UiGridTagFactory implements UiObjectTagFactory<Grid> {
 
     @Override
     protected void appendElement(Grid wrapped, Element element,
-        String namespaceURI, List<IsWidget> childWidgets) {
+        String namespaceURI, List<Widget> childWidgets) {
       if (!ROW_TAG.equals(element.getTagName())
           || !UiBinderXmlUtils.CLIENTUI_NSURI.equals(namespaceURI)) {
         super.appendElement(wrapped, element, namespaceURI, childWidgets);
@@ -73,10 +73,10 @@ public class UiGridTagFactory implements UiObjectTagFactory<Grid> {
     }
 
     private void handleCustomCell(Grid wrapped, Element element,
-        List<IsWidget> childWidgets, int columnIndex) {
+        List<Widget> childWidgets, int columnIndex) {
       checkGridSize(wrapped, columnIndex);
       // should only contains one widget per <g:customCell> tag
-      IsWidget w = (childWidgets.size() > 0) ? childWidgets.get(0) : null;
+      Widget w = (childWidgets.size() > 0) ? childWidgets.get(0) : null;
       wrapped.setWidget(currentRowIndex, columnIndex, w);
 
       handleCellStyle(wrapped, element, columnIndex);
@@ -121,8 +121,8 @@ public class UiGridTagFactory implements UiObjectTagFactory<Grid> {
    * (non-Javadoc)
    * 
    * @see
-   * com.googlecode.gwt.test.uibinder.UiObjectTagFactory#createUiObjectTag(java.lang
-   * .Class, java.util.Map)
+   * com.googlecode.gwt.test.uibinder.UiObjectTagFactory#createUiObjectTag(java
+   * .lang .Class, java.util.Map)
    */
   public UiObjectTag<Grid> createUiObjectTag(Class<?> clazz,
       Map<String, Object> attributes) {

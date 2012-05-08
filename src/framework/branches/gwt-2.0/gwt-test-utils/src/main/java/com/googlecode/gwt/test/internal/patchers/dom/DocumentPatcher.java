@@ -29,7 +29,6 @@ import com.googlecode.gwt.test.internal.utils.JavaScriptObjects;
 import com.googlecode.gwt.test.internal.utils.JsoProperties;
 import com.googlecode.gwt.test.patchers.PatchClass;
 import com.googlecode.gwt.test.patchers.PatchMethod;
-import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
 @PatchClass(Document.class)
 class DocumentPatcher {
@@ -45,7 +44,6 @@ class DocumentPatcher {
     public void afterTest() throws Throwable {
       // recursiveClearDom(document);
       document = null;
-      GwtReflectionUtils.setStaticField(Document.class, "doc", null);
     }
 
     private void recursiveClearDom(Node node) {
@@ -82,6 +80,27 @@ class DocumentPatcher {
   static String createUniqueId(Document document) {
     ID++;
     return "elem_" + Long.toString(ID);
+  }
+
+  @PatchMethod
+  static Document get() {
+    if (DOCUMENT_HOLDER.document == null) {
+      try {
+        DOCUMENT_HOLDER.document = JavaScriptObjects.newObject(Document.class);
+        Element e = parseHTMLElement(DOCUMENT_HOLDER.document);
+        DOCUMENT_HOLDER.document.appendChild(e);
+        JavaScriptObjects.setProperty(DOCUMENT_HOLDER.document,
+            DOCUMENT_ELEMENT, e);
+        return DOCUMENT_HOLDER.document;
+      } catch (Exception e) {
+        if (GwtTestException.class.isInstance(e)) {
+          throw (GwtTestException) e;
+        } else {
+          throw new GwtTestDomException("Unable to create Document", e);
+        }
+      }
+    }
+    return DOCUMENT_HOLDER.document;
   }
 
   @PatchMethod
@@ -137,27 +156,6 @@ class DocumentPatcher {
   @PatchMethod
   static String getReferrer(Document document) {
     return "";
-  }
-
-  @PatchMethod
-  static Document nativeGet() {
-    if (DOCUMENT_HOLDER.document == null) {
-      try {
-        DOCUMENT_HOLDER.document = JavaScriptObjects.newObject(Document.class);
-        Element e = parseHTMLElement(DOCUMENT_HOLDER.document);
-        DOCUMENT_HOLDER.document.appendChild(e);
-        JavaScriptObjects.setProperty(DOCUMENT_HOLDER.document,
-            DOCUMENT_ELEMENT, e);
-        return DOCUMENT_HOLDER.document;
-      } catch (Exception e) {
-        if (GwtTestException.class.isInstance(e)) {
-          throw (GwtTestException) e;
-        } else {
-          throw new GwtTestDomException("Unable to create Document", e);
-        }
-      }
-    }
-    return DOCUMENT_HOLDER.document;
   }
 
   private static Element findHTMLElement(NodeList<Node> nodes) {

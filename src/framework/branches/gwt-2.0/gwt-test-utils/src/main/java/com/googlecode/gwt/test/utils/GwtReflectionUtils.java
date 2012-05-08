@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.google.web.bindery.event.shared.UmbrellaException;
 import com.googlecode.gwt.test.exceptions.GwtTestException;
 import com.googlecode.gwt.test.exceptions.ReflectionException;
 import com.googlecode.gwt.test.internal.utils.DoubleMap;
@@ -108,9 +107,6 @@ public class GwtReflectionUtils {
         throw (GwtTestException) e.getCause();
       } else if (AssertionError.class.isInstance(e.getCause())) {
         throw (AssertionError) e.getCause();
-      } else if (UmbrellaException.class.isInstance(e.getCause())) {
-        throw new ReflectionException("Error while calling method '"
-            + method.toString() + "'", e.getCause().getCause());
       }
       throw new ReflectionException("Error while calling method '"
           + method.toString() + "'", e.getCause());

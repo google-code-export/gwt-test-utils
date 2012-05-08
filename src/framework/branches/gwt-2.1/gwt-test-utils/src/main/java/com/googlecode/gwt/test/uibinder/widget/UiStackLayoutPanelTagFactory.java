@@ -81,7 +81,8 @@ public class UiStackLayoutPanelTagFactory implements
             if (customHeaderChilds.size() == 1) {
               String customHeaderSize = customHeaders.getItem(0).getAttribute(
                   "size");
-              wrapped.add(childWidgets.get(0), customHeaderChilds.get(0),
+              wrapped.add(childWidgets.get(0).asWidget(),
+                  customHeaderChilds.get(0).asWidget(),
                   Double.valueOf(customHeaderSize));
             }
           }
@@ -96,8 +97,8 @@ public class UiStackLayoutPanelTagFactory implements
    * (non-Javadoc)
    * 
    * @see
-   * com.googlecode.gwt.test.uibinder.UiWidgetTagFactory#createUiObjectTag(java.lang
-   * .Class, java.util.Map)
+   * com.googlecode.gwt.test.uibinder.UiWidgetTagFactory#createUiObjectTag(java
+   * .lang .Class, java.util.Map)
    */
   public UiObjectTag<StackLayoutPanel> createUiObjectTag(Class<?> clazz,
       Map<String, Object> attributes) {

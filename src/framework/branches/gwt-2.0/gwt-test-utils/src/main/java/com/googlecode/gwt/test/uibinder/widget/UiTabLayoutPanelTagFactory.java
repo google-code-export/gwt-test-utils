@@ -6,8 +6,8 @@ import java.util.Map;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.TabLayoutPanel;
+import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.gwt.test.exceptions.GwtTestUiBinderException;
 import com.googlecode.gwt.test.uibinder.UiBinderXmlUtils;
 import com.googlecode.gwt.test.uibinder.UiObjectTag;
@@ -26,7 +26,7 @@ public class UiTabLayoutPanelTagFactory implements
 
     @Override
     protected void appendElement(TabLayoutPanel wrapped, Element element,
-        String namespaceURI, List<IsWidget> childWidgets) {
+        String namespaceURI, List<Widget> childWidgets) {
 
       if (!UiBinderXmlUtils.CLIENTUI_NSURI.equals(namespaceURI)) {
         super.appendElement(wrapped, element, namespaceURI, childWidgets);
@@ -70,7 +70,7 @@ public class UiTabLayoutPanelTagFactory implements
     }
 
     private void handleTabLayoutPanelSpecifics(TabLayoutPanel wrapped,
-        Element element, List<IsWidget> childWidgets) {
+        Element element, List<Widget> childWidgets) {
 
       if ("tab".equals(element.getTagName())) {
         NodeList<Element> headers = element.getElementsByTagName("header");
@@ -82,7 +82,7 @@ public class UiTabLayoutPanelTagFactory implements
           NodeList<Element> customHeaders = element.getElementsByTagName("customHeader");
           if (customHeaders.getLength() == 1 && childWidgets.size() == 1) {
             // case of "customHeader"
-            List<IsWidget> customHeaderChilds = UiBinderXmlUtils.getChildWidgets(customHeaders.getItem(0));
+            List<Widget> customHeaderChilds = UiBinderXmlUtils.getChildWidgets(customHeaders.getItem(0));
             if (customHeaderChilds.size() == 1) {
               wrapped.add(childWidgets.get(0), customHeaderChilds.get(0));
             }

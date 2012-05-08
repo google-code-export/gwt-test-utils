@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.google.web.bindery.event.shared.UmbrellaException;
+import com.google.gwt.event.shared.UmbrellaException;
 import com.googlecode.gwt.test.exceptions.GwtTestException;
 import com.googlecode.gwt.test.exceptions.ReflectionException;
 import com.googlecode.gwt.test.internal.utils.DoubleMap;

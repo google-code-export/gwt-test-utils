@@ -3,7 +3,6 @@ package com.googlecode.gwt.test.utils.events;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -15,8 +14,6 @@ import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
-import com.google.gwt.event.shared.UmbrellaException;
-import com.google.gwt.user.cellview.client.AbstractHasData;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.ComplexPanel;
@@ -29,7 +26,6 @@ import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.view.client.HasData;
 import com.googlecode.gwt.test.FinallyCommandTrigger;
 import com.googlecode.gwt.test.internal.AfterTestCallback;
 import com.googlecode.gwt.test.internal.GwtConfig;
@@ -94,50 +90,6 @@ public class Browser {
    */
   public static void change(Widget target) {
     dispatchEvent(target, EventBuilder.create(Event.ONCHANGE).build());
-  }
-
-  /**
-   * Simulate a click on a specific element of a cell widget.
-   * 
-   * @param <T> The {@link HasData} generic type.
-   * @param hasData The cell widget.
-   * @param item The content of the row to click.
-   */
-  public static <T> void click(AbstractHasData<T> hasData, T item) {
-    // trigger finally scheduled command first
-    FinallyCommandTrigger.triggerCommands();
-
-    if (hasData.getSelectionModel() == null) {
-      return;
-    }
-
-    // compute the key for the item to click
-    Object itemKey = hasData.getKeyProvider() != null
-        ? hasData.getKeyProvider().getKey(item) : item;
-
-    Iterator<T> it = hasData.getVisibleItems().iterator();
-    while (it.hasNext()) {
-      // compute the key for the current visible item
-      T visibleContent = it.next();
-      Object visibleKey = hasData.getKeyProvider() != null
-          ? hasData.getKeyProvider().getKey(visibleContent) : visibleContent;
-
-      if (visibleKey.equals(itemKey)) {
-        hasData.getSelectionModel().setSelected(item,
-            !hasData.getSelectionModel().isSelected(item));
-
-        // run finally scheduled commands because some could have been
-        // scheduled
-        // when the event was dispatched.
-        FinallyCommandTrigger.triggerCommands();
-
-        return;
-      }
-    }
-
-    GwtConfig.get().getBrowserErrorHandler().onError(
-        "the item to click is now visible in the targeted "
-            + hasData.getClass().getSimpleName() + " instance");
   }
 
   /**
@@ -834,52 +786,41 @@ public class Browser {
   }
 
   private static void dispatchEventInternal(Widget target, Event event) {
-    try {
-      // special case of click on CheckBox : set the internal inputElement value
-      if (CheckBox.class.isInstance(target)
-          && event.getTypeInt() == Event.ONCLICK) {
-        clickOnCheckBox((CheckBox) target);
+    // special case of click on CheckBox : set the internal inputElement value
+    if (CheckBox.class.isInstance(target)
+        && event.getTypeInt() == Event.ONCLICK) {
+      clickOnCheckBox((CheckBox) target);
+    }
+
+    // set the related target
+    Element relatedTargetElement = JavaScriptObjects.getObject(event,
+        JsoProperties.EVENT_RELATEDTARGET);
+
+    if (relatedTargetElement == null) {
+      switch (event.getTypeInt()) {
+        case Event.ONMOUSEOVER:
+        case Event.ONMOUSEOUT:
+          Widget parent = target.getParent();
+          if (parent != null) {
+            relatedTargetElement = parent.getElement();
+          } else {
+            relatedTargetElement = Document.get().getDocumentElement();
+          }
+
+          JavaScriptObjects.setProperty(event,
+              JsoProperties.EVENT_RELATEDTARGET, relatedTargetElement);
+
+          break;
       }
+    }
 
-      // set the related target
-      Element relatedTargetElement = JavaScriptObjects.getObject(event,
-          JsoProperties.EVENT_RELATEDTARGET);
-
-      if (relatedTargetElement == null) {
-        switch (event.getTypeInt()) {
-          case Event.ONMOUSEOVER:
-          case Event.ONMOUSEOUT:
-            Widget parent = target.getParent();
-            if (parent != null) {
-              relatedTargetElement = parent.getElement();
-            } else {
-              relatedTargetElement = Document.get().getDocumentElement();
-            }
-
-            JavaScriptObjects.setProperty(event,
-                JsoProperties.EVENT_RELATEDTARGET, relatedTargetElement);
-
-            break;
-        }
-      }
-
-      if (BROWSER_PROPERTIES.eventsCanBubble) {
-        // fire with bubble support
-        Set<Widget> applied = new HashSet<Widget>();
-        dispatchEventWithBubble(target, event, applied);
-      } else {
-        // simple fire
-        target.onBrowserEvent(event);
-      }
-
-    } catch (UmbrellaException e) {
-      if (AssertionError.class.isInstance(e.getCause())) {
-        throw (AssertionError) e.getCause();
-      } else if (RuntimeException.class.isInstance(e.getCause())) {
-        throw (RuntimeException) e.getCause();
-      } else {
-        throw e;
-      }
+    if (BROWSER_PROPERTIES.eventsCanBubble) {
+      // fire with bubble support
+      Set<Widget> applied = new HashSet<Widget>();
+      dispatchEventWithBubble(target, event, applied);
+    } else {
+      // simple fire
+      target.onBrowserEvent(event);
     }
   }
 

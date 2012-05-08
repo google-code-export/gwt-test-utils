@@ -8,7 +8,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.safehtml.shared.SafeHtml;
 import com.googlecode.gwt.test.GwtTestTest;
 
 public class MyChildChildConstantsTest extends GwtTestTest {
@@ -24,13 +23,13 @@ public class MyChildChildConstantsTest extends GwtTestTest {
   @Test
   public void childChildConstant() {
     // Act
-    SafeHtml hello = childChildConstants.hello();
+    String hello = childChildConstants.hello();
     String valueWithoutDefaultAnnotationInChild = childChildConstants.valueWithoutDefaultAnnotationInChild();
     String valueWithoutLocale = childChildConstants.valueWithoutLocale();
     String valueWithoutLocaleToBeOverride = childChildConstants.valueWithoutLocaleToBeOverride();
 
     // Assert
-    assertEquals("Hello english !", hello.asString());
+    assertEquals("Hello english !", hello);
     assertEquals("Value in child default .properties",
         valueWithoutDefaultAnnotationInChild);
     assertEquals("Value from a default .properties file, without locale",

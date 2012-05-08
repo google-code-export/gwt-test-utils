@@ -9,8 +9,7 @@ import org.apache.commons.lang.StringUtils;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
-import com.google.gwt.user.client.ui.IsWidget;
-import com.google.gwt.user.client.ui.SplitLayoutPanel;
+import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.gwt.test.uibinder.UiBinderXmlUtils;
 import com.googlecode.gwt.test.uibinder.UiObjectTag;
 import com.googlecode.gwt.test.uibinder.UiObjectTagFactory;
@@ -27,19 +26,19 @@ public class UiDockLayoutPanelTagFactory implements
   private static class UiDockLayoutPanelTag extends
       UiObjectTag<DockLayoutPanel> {
 
-    private final List<IsWidget> centerWidgets = new ArrayList<IsWidget>();
+    private final List<Widget> centerWidgets = new ArrayList<Widget>();
     private double eastSize;
-    private IsWidget eastWidget;
+    private Widget eastWidget;
     private double northSize;
-    private IsWidget northWidget;
+    private Widget northWidget;
     private double southSize;
-    private IsWidget southWidget;
+    private Widget southWidget;
     private double westSize;
-    private IsWidget westWidget;
+    private Widget westWidget;
 
     @Override
     protected void appendElement(DockLayoutPanel wrapped, Element element,
-        String namespaceURI, List<IsWidget> childWidgets) {
+        String namespaceURI, List<Widget> childWidgets) {
 
       if (!UiBinderXmlUtils.CLIENTUI_NSURI.equals(namespaceURI)) {
         super.appendElement(wrapped, element, namespaceURI, childWidgets);
@@ -63,7 +62,7 @@ public class UiDockLayoutPanelTagFactory implements
       if (westWidget != null) {
         widget.addWest(westWidget, westSize);
       }
-      for (IsWidget centerWidget : centerWidgets) {
+      for (Widget centerWidget : centerWidgets) {
         widget.add(centerWidget);
       }
     }
@@ -85,13 +84,6 @@ public class UiDockLayoutPanelTagFactory implements
         Unit styleUnit = unit != null ? Unit.valueOf(unit) : Unit.PX;
 
         return new DockLayoutPanel(styleUnit);
-      } else if (clazz == SplitLayoutPanel.class) {
-
-        String splitterSize = (String) attributes.get("splitterSize");
-
-        return splitterSize != null ? new SplitLayoutPanel(
-            Integer.valueOf(splitterSize)) : new SplitLayoutPanel();
-
       }
 
       // use default instanciation system
@@ -99,7 +91,7 @@ public class UiDockLayoutPanelTagFactory implements
     }
 
     private void handleDockLayoutPanelSpecifics(DockLayoutPanel wrapped,
-        Element child, List<IsWidget> childWidgets) {
+        Element child, List<Widget> childWidgets) {
       String tagName = child.getTagName();
       if ("center".equals(tagName)) {
         centerWidgets.addAll(childWidgets);

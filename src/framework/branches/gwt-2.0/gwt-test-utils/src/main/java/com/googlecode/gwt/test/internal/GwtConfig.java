@@ -6,12 +6,12 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.NamedFrame;
 import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.UIObject.DebugIdImpl;
 import com.google.gwt.user.client.ui.UIObject.DebugIdImplEnabled;
+import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.gwt.test.GwtLogHandler;
 import com.googlecode.gwt.test.GwtModuleRunner;
 import com.googlecode.gwt.test.WindowOperationsHandler;
@@ -99,7 +99,7 @@ public class GwtConfig implements AfterTestCallback {
   }
 
   public void registerUiConstructor(
-      Class<? extends IsWidget> classWithUiConstructor, String... argNames) {
+      Class<? extends Widget> classWithUiConstructor, String... argNames) {
     List<String[]> uiConstructors = uiConstructorsMap.get(classWithUiConstructor);
     if (uiConstructors == null) {
       uiConstructors = new ArrayList<String[]>();

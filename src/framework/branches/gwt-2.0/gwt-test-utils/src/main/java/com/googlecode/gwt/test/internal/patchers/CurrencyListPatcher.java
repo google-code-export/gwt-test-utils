@@ -14,6 +14,7 @@ import com.googlecode.gwt.test.internal.AfterTestCallback;
 import com.googlecode.gwt.test.internal.AfterTestCallbackManager;
 import com.googlecode.gwt.test.internal.GwtConfig;
 import com.googlecode.gwt.test.internal.utils.GwtPropertiesHelper;
+import com.googlecode.gwt.test.internal.utils.JavaScriptObjects;
 import com.googlecode.gwt.test.patchers.PatchClass;
 import com.googlecode.gwt.test.patchers.PatchMethod;
 
@@ -59,7 +60,7 @@ class CurrencyListPatcher {
         defCurrencyCode = "USD";
       }
 
-      CurrencyData defCurrencyData = new CurrencyDataImpl(defCurrencyCode,
+      CurrencyData defCurrencyData = instanciateCurrencyData(defCurrencyCode,
           defCurrencyCode, 2, "");
 
       for (String currencyCode : currencies) {
@@ -119,7 +120,7 @@ class CurrencyListPatcher {
         }
 
         if (currencyCode.equals(defCurrencyCode)) {
-          return new CurrencyDataImpl(currencyCode, currencySymbol,
+          return instanciateCurrencyData(currencyCode, currencySymbol,
               currencyFlags, portableSymbol);
         }
       }
@@ -127,12 +128,28 @@ class CurrencyListPatcher {
       return defCurrencyData;
     }
 
+    // hack for GWT 2.0.4
+    private CurrencyData instanciateCurrencyData(String currencyCode,
+        String currencySymbol, int flagsAndPrecision,
+        String portableCurrencySymbol) {
+
+      CurrencyDataImpl defImpl = JavaScriptObjects.newObject(CurrencyDataImpl.class);
+      JavaScriptObjects.setProperty(defImpl, "currencyCode", currencyCode);
+      JavaScriptObjects.setProperty(defImpl, "currencySymbol", currencySymbol);
+      JavaScriptObjects.setProperty(defImpl, "flagsAndPrecision",
+          flagsAndPrecision);
+      JavaScriptObjects.setProperty(defImpl, "portableCurrencySymbol",
+          portableCurrencySymbol);
+
+      return defImpl;
+    }
+
   }
 
   private static final CurrencyDataHolder CURRENCY_DATA_HOLDER = new CurrencyDataHolder();
 
   @PatchMethod
-  static CurrencyData getDefaultJava(CurrencyList currencyList) {
+  static CurrencyData getDefault(CurrencyList currencyList) {
     Locale locale = GwtConfig.get().getLocale();
     if (locale == null) {
       locale = Locale.ENGLISH;

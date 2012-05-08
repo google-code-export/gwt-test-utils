@@ -54,10 +54,6 @@ public class WindowTest extends GwtTestTest {
   public void emptyMethods() {
     // Act & Assert
     Window.enableScrolling(true);
-    Window.moveBy(1, 2);
-    Window.moveTo(3, 4);
-    Window.resizeBy(3, 6);
-    Window.resizeTo(8, 9);
     Window.scrollTo(2, 4);
   }
 

@@ -16,11 +16,6 @@ class JsonUtilsPatcher {
   }
 
   @PatchMethod
-  static boolean hasJsonParse() {
-    return true;
-  }
-
-  @PatchMethod
   static JavaScriptObject initEscapeTable() {
     return null;
   }

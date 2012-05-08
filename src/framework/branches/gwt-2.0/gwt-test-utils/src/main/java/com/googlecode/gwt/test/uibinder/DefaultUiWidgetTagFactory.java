@@ -6,7 +6,6 @@ import java.util.Map;
 
 import com.googlecode.gwt.test.internal.GwtConfig;
 import com.googlecode.gwt.test.uibinder.widget.UiCellPanelTagFactory;
-import com.googlecode.gwt.test.uibinder.widget.UiDateLabelTagFactory;
 import com.googlecode.gwt.test.uibinder.widget.UiDisclosurePanelTagFactory;
 import com.googlecode.gwt.test.uibinder.widget.UiDockLayoutPanelTagFactory;
 import com.googlecode.gwt.test.uibinder.widget.UiGridTagFactory;
@@ -44,7 +43,6 @@ class DefaultUiWidgetTagFactory implements UiObjectTagFactory<Object> {
     gwtTestUtilsFactories.add(new UiCellPanelTagFactory());
     gwtTestUtilsFactories.add(new UiGridTagFactory());
     gwtTestUtilsFactories.add(new UiListBoxTagFactory());
-    gwtTestUtilsFactories.add(new UiDateLabelTagFactory());
     gwtTestUtilsFactories.add(new UiDockLayoutPanelTagFactory());
     gwtTestUtilsFactories.add(new UiImageTagFactory());
     gwtTestUtilsFactories.add(new UiLayoutPanelTagFactory());
