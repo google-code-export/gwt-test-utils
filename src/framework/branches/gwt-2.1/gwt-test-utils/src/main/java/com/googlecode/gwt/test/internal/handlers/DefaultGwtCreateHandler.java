@@ -17,10 +17,16 @@ class DefaultGwtCreateHandler implements GwtCreateHandler {
     }
 
     try {
-      Constructor<Object> cons = (Constructor<Object>) classLiteral.getDeclaredConstructor();
-      return GwtReflectionUtils.instantiateClass(cons);
-    } catch (NoSuchMethodException e) {
-      return null;
+      // try to call public default constructor
+      return classLiteral.newInstance();
+    } catch (Exception e) {
+      // search for a not-public default constructor to invoke
+      try {
+        Constructor<Object> cons = (Constructor<Object>) classLiteral.getDeclaredConstructor();
+        return GwtReflectionUtils.instantiateClass(cons);
+      } catch (NoSuchMethodException e2) {
+        return null;
+      }
     }
   }
 

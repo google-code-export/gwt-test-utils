@@ -15,6 +15,7 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import com.googlecode.gwt.test.GwtCreateHandler;
 import com.googlecode.gwt.test.exceptions.GwtTestRpcException;
 import com.googlecode.gwt.test.internal.GwtClassPool;
+import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
 /**
  * <p>
@@ -75,7 +76,7 @@ public abstract class RemoteServiceCreateHandler implements GwtCreateHandler {
 
     String asyncName = className + "Async";
     String relativePath = getRemoveServiceRelativePath(classLiteral);
-    Class<?> asyncClazz = Class.forName(asyncName);
+    Class<?> asyncClazz = GwtReflectionUtils.getClass(asyncName);
     if (asyncClazz == null) {
       throw new GwtTestRpcException("Remote serivce Async class not found : "
           + asyncName);

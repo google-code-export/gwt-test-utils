@@ -38,7 +38,7 @@ class GwtGuiceHelper {
     if (this.injector == null && !hasSearchedInjector) {
       for (String listenerClassName : WebXmlUtils.get().getListenerClasses()) {
         try {
-          Class<?> clazz = Class.forName(listenerClassName);
+          Class<?> clazz = GwtReflectionUtils.getClass(listenerClassName);
 
           if (GuiceServletContextListener.class.isAssignableFrom(clazz)) {
             Object instance = GwtReflectionUtils.instantiateClass(clazz);

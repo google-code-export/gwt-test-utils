@@ -19,6 +19,7 @@ import com.google.gwt.i18n.client.impl.plurals.DefaultRule;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.googlecode.gwt.test.exceptions.GwtTestI18NException;
+import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
 @SuppressWarnings("deprecation")
 class MessagesInvocationHandler extends LocalizableResourceInvocationHandler {
@@ -114,7 +115,7 @@ class MessagesInvocationHandler extends LocalizableResourceInvocationHandler {
           pluralRuleClassName += "_" + locale.getLanguage();
 
           try {
-            Class<? extends PluralRule> acutalRule = (Class<? extends PluralRule>) Class.forName(pluralRuleClassName);
+            Class<? extends PluralRule> acutalRule = (Class<? extends PluralRule>) GwtReflectionUtils.getClass(pluralRuleClassName);
             PluralRule ruleInstance = acutalRule.newInstance();
 
             sb.append(

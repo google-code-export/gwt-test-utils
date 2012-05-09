@@ -9,6 +9,7 @@ import com.google.gwt.core.client.GWT;
 import com.googlecode.gwt.test.GwtCreateHandler;
 import com.googlecode.gwt.test.internal.ModuleData;
 import com.googlecode.gwt.test.internal.ModuleData.ReplaceWithData;
+import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 import com.googlecode.gwt.test.utils.events.Browser;
 
 public class DeferredReplaceWithCreateHandler implements GwtCreateHandler {
@@ -27,7 +28,7 @@ public class DeferredReplaceWithCreateHandler implements GwtCreateHandler {
         Browser.getProperties());
 
     return (replaceWith != null && !replaceWith.equals(classLiteral))
-        ? GWT.create(Class.forName(replaceWith)) : null;
+        ? GWT.create(GwtReflectionUtils.getClass(replaceWith)) : null;
 
   }
 

@@ -101,7 +101,7 @@ class AutomaticPatcher implements Patcher {
       return;
     }
 
-    Class<?> clazz = Class.forName(initMethod.getDeclaringClass().getName());
+    Class<?> clazz = GwtReflectionUtils.getClass(initMethod.getDeclaringClass().getName());
     Method compiledMethod = clazz.getDeclaredMethod(initMethod.getName(),
         CtClass.class);
     // TODO : this should not be mandatory since AutomaticPatcher set every
@@ -140,8 +140,9 @@ class AutomaticPatcher implements Patcher {
       for (CtMethod ctMethod : patchClass.getDeclaredMethods()) {
         if (ctMethod.hasAnnotation(InitMethod.class)) {
           if (!Modifier.isStatic(ctMethod.getModifiers())) {
-            throw new GwtTestPatchException("@" + InitMethod.class.getSimpleName()
-                + " has to be static : '" + ctMethod.getLongName() + "'");
+            throw new GwtTestPatchException("@"
+                + InitMethod.class.getSimpleName() + " has to be static : '"
+                + ctMethod.getLongName() + "'");
           }
           try {
             if (ctMethod.getParameterTypes().length != 1

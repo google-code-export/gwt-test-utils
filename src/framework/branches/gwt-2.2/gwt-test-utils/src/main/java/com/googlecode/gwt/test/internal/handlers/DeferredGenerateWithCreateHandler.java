@@ -6,6 +6,7 @@ import java.util.Set;
 import com.googlecode.gwt.test.GwtCreateHandler;
 import com.googlecode.gwt.test.exceptions.GwtTestConfigurationException;
 import com.googlecode.gwt.test.internal.ModuleData;
+import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
 public class DeferredGenerateWithCreateHandler implements GwtCreateHandler {
 
@@ -32,7 +33,7 @@ public class DeferredGenerateWithCreateHandler implements GwtCreateHandler {
     Set<Class<?>> result = new HashSet<Class<?>>();
     for (String className : ModuleData.get().getCustomGeneratedClasses()) {
       try {
-        result.add(Class.forName(className));
+        result.add(GwtReflectionUtils.getClass(className));
       } catch (ClassNotFoundException e) {
         throw new GwtTestConfigurationException(
             "Cannot find class configured to be instanced with a custom 'generate-with' Generator : '"

@@ -44,7 +44,7 @@ public abstract class GwtTestWithMocks extends GwtTest {
     public Object create(Class<?> classLiteral) throws Exception {
       if (RemoteService.class.isAssignableFrom(classLiteral)) {
         String asyncName = classLiteral.getName() + "Async";
-        classLiteral = Class.forName(asyncName);
+        classLiteral = GwtReflectionUtils.getClass(asyncName);
       }
       return mockObjects.get(classLiteral);
     }

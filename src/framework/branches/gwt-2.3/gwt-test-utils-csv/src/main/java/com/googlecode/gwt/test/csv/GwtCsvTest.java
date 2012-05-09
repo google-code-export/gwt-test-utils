@@ -43,6 +43,7 @@ import com.googlecode.gwt.test.finder.NodeObjectFinder;
 import com.googlecode.gwt.test.internal.GwtConfig;
 import com.googlecode.gwt.test.internal.utils.ArrayUtils;
 import com.googlecode.gwt.test.internal.utils.GwtStringUtils;
+import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 import com.googlecode.gwt.test.utils.WidgetUtils;
 import com.googlecode.gwt.test.utils.events.Browser;
 import com.googlecode.gwt.test.utils.events.Browser.BrowserErrorHandler;
@@ -200,7 +201,7 @@ public abstract class GwtCsvTest extends GwtTest {
   @CsvMethod
   public void assertInstanceOf(String className, String objectLocalisation) {
     try {
-      Class<?> clazz = Class.forName(className);
+      Class<?> clazz = GwtReflectionUtils.getClass(className);
       Object o = getObject(Object.class, objectLocalisation);
       Assert.assertTrue(csvRunner.getAssertionErrorMessagePrefix()
           + "Target object is not an instance of [" + className

@@ -49,7 +49,7 @@ class DeferredBindingModule extends AbstractModule {
         Class<?> clazzToInstanciate) {
       if (clazzToInstanciate.getName().endsWith("Async")) {
         try {
-          this.clazzToInstanciate = Class.forName(clazzToInstanciate.getName().substring(
+          this.clazzToInstanciate = GwtReflectionUtils.getClass(clazzToInstanciate.getName().substring(
               0, clazzToInstanciate.getName().length() - 5));
         } catch (ClassNotFoundException e) {
           throw new GwtTestPatchException(

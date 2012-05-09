@@ -26,8 +26,8 @@ class WebXmlRemoteServiceCreateHandler extends RemoteServiceCreateHandler {
    * (non-Javadoc)
    * 
    * @see
-   * com.googlecode.gwt.test.server.RemoteServiceCreateHandler#findService(java.lang
-   * .Class, java.lang.String)
+   * com.googlecode.gwt.test.server.RemoteServiceCreateHandler#findService(java
+   * .lang .Class, java.lang.String)
    */
   @Override
   protected Object findService(Class<?> remoteServiceClass,
@@ -49,7 +49,7 @@ class WebXmlRemoteServiceCreateHandler extends RemoteServiceCreateHandler {
     }
 
     try {
-      serviceImpl = GwtReflectionUtils.instantiateClass(Class.forName(className));
+      serviceImpl = GwtReflectionUtils.instantiateClass(GwtReflectionUtils.getClass(className));
     } catch (ClassNotFoundException e) {
       // should not happen..
       throw new GwtTestConfigurationException(e);

@@ -123,7 +123,7 @@ class UiBinderInvocationHandler implements InvocationHandler {
         eventTypeClass.getName().lastIndexOf("Event"))
         + "Handler";
     try {
-      return (Class<EventHandler>) Class.forName(eventHandlerClassName);
+      return (Class<EventHandler>) GwtReflectionUtils.getClass(eventHandlerClassName);
     } catch (ClassNotFoundException e) {
       // should never happen
       throw new GwtTestUiBinderException(
