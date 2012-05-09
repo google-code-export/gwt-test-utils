@@ -16,6 +16,7 @@ import com.google.gwt.i18n.client.impl.cldr.DateTimeFormatInfoImpl;
 import com.googlecode.gwt.test.GwtCreateHandler;
 import com.googlecode.gwt.test.exceptions.GwtTestI18NException;
 import com.googlecode.gwt.test.internal.GwtConfig;
+import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
 /**
  * Class in charge of the instanciation of all {@link LocalizableResource}
@@ -103,12 +104,12 @@ public class LocalizableResourceCreateHandler implements GwtCreateHandler {
 
     Class<?> implementationClass;
     try {
-      implementationClass = Class.forName(localizedClass.getName() + "_"
-          + locale.getLanguage());
+      implementationClass = GwtReflectionUtils.getClass(localizedClass.getName()
+          + "_" + locale.getLanguage());
     } catch (ClassNotFoundException e) {
       try {
-        implementationClass = Class.forName(localizedClass.getName() + "_"
-            + locale.getCountry());
+        implementationClass = GwtReflectionUtils.getClass(localizedClass.getName()
+            + "_" + locale.getCountry());
       } catch (ClassNotFoundException e2) {
         implementationClass = null;
       }

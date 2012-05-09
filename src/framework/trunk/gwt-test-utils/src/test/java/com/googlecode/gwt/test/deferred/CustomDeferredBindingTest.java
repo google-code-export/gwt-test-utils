@@ -8,6 +8,8 @@ import org.junit.Test;
 
 import com.google.gwt.core.client.GWT;
 import com.googlecode.gwt.test.GwtTestTest;
+import com.googlecode.gwt.test.deferred.ReplaceWithDefault.ReplaceWithIE;
+import com.googlecode.gwt.test.deferred.ReplaceWithDefault.ReplaceWithMozilla;
 import com.googlecode.gwt.test.exceptions.GwtTestConfigurationException;
 import com.googlecode.gwt.test.utils.events.Browser;
 

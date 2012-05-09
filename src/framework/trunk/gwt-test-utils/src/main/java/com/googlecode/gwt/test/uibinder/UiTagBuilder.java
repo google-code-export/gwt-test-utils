@@ -148,7 +148,7 @@ class UiTagBuilder<T> {
 
       Class<?> clazz = null;
       try {
-        clazz = Class.forName(className);
+        clazz = GwtReflectionUtils.getClass(className);
       } catch (ClassNotFoundException e) {
         throw new GwtTestUiBinderException("Cannot find class '" + className
             + "' declared in file '" + owner.getClass().getSimpleName()
