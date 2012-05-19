@@ -1,27 +1,26 @@
 package com.googlecode.gxt.test;
 
 /**
- * Class in charge of reseting all necessary GXT internal objects after the
+ * Class in charge of reseting all necessary GXT 2.x internal objects after the
  * execution of a unit test. <strong>For internal use only.</strong>
  * 
- * @author Bertrand Paquet
  * @author Gael Lazzari
  * 
  */
-public class GxtReset {
+public class Gxt2Reset {
 
-  private static final GxtReset INSTANCE = new GxtReset();
+  private static final Gxt2Reset INSTANCE = new Gxt2Reset();
 
   /**
    * Return the GxtReset instance
    * 
    * @return
    */
-  public static GxtReset get() {
+  public static Gxt2Reset get() {
     return INSTANCE;
   }
 
-  private GxtReset() {
+  private Gxt2Reset() {
 
   }
 
