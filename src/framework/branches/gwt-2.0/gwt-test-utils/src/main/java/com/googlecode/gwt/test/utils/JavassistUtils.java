@@ -1,6 +1,7 @@
 package com.googlecode.gwt.test.utils;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -56,7 +57,44 @@ public class JavassistUtils {
     ctClass.defrost();
 
     AnnotationsAttribute attr = (AnnotationsAttribute) ctClass.getClassFile().getAttribute(
-        AnnotationsAttribute.invisibleTag);
+        AnnotationsAttribute.visibleTag);
+    if (attr == null) {
+      attr = (AnnotationsAttribute) ctClass.getClassFile().getAttribute(
+          AnnotationsAttribute.invisibleTag);
+    }
+    if (attr == null) {
+      return null;
+    }
+
+    javassist.bytecode.annotation.Annotation an = attr.getAnnotation(annotation.getName());
+
+    ctClass.freeze();
+
+    return an != null
+        ? ((StringMemberValue) an.getMemberValue(name)).getValue() : null;
+  }
+
+  /**
+   * Retrieve the String value of an annotation which is not available at
+   * runtime.
+   * 
+   * @param method The annotated method
+   * @param annotation The annotation which is not visible at runtime
+   * @param name The name of the String property of the annotation to retrieve
+   * @return The String value of the annotation or null if the annotation or its
+   *         property is not present
+   */
+  public static String getInvisibleAnnotationStringValue(Method method,
+      Class<? extends Annotation> annotation, String name) {
+    CtClass ctClass = GwtClassPool.getCtClass(method.getDeclaringClass());
+    ctClass.defrost();
+
+    AnnotationsAttribute attr = (AnnotationsAttribute) ctClass.getClassFile().getMethod(
+        method.getName()).getAttribute(AnnotationsAttribute.visibleTag);
+    if (attr == null) {
+      attr = (AnnotationsAttribute) ctClass.getClassFile().getMethod(
+          method.getName()).getAttribute(AnnotationsAttribute.invisibleTag);
+    }
     if (attr == null) {
       return null;
     }
