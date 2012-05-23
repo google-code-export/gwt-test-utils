@@ -514,7 +514,7 @@ public abstract class GwtCsvTest extends GwtTest {
         + object.getClass().getSimpleName() + " is not visible",
         WidgetUtils.isWidgetVisible(object));
 
-    if (!GwtConfig.get().canDispatchDomEventOnDetachedWidget()
+    if (!GwtConfig.get().getModuleRunner().canDispatchDomEventOnDetachedWidget()
         && Widget.class.isInstance(object)) {
       Assert.assertTrue(csvRunner.getAssertionErrorMessagePrefix()
           + "targeted " + object.getClass().getSimpleName()

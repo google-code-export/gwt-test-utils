@@ -24,7 +24,7 @@ public interface MyConstantsWithLookup extends ConstantsWithLookup {
   public String hello();
 
   @DefaultStringMapValue({"map1", "defaultMap1", "map2", "defaultMap2"})
-  public Map<String, Object> map();
+  public Map<String, String> map();
 
   @DefaultStringValue("no corresponding property in any file, value from @DefaultStringValue")
   public String noCorrespondance();

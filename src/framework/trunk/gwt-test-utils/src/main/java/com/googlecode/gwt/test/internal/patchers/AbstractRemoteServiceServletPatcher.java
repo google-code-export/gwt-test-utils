@@ -24,13 +24,13 @@ public class AbstractRemoteServiceServletPatcher {
 
   public static ServletMockProvider ensureServletMockProvider(
       AbstractRemoteServiceServlet servlet, String methodName) {
-    ServletMockProvider servletMockProvider = GwtConfig.get().getServletMockProvider();
+    ServletMockProvider servletMockProvider = GwtConfig.get().getModuleRunner().getServletMockProvider();
     if (servletMockProvider == null) {
       throw new GwtTestRpcException("Illegal call to "
           + servlet.getClass().getName() + "." + methodName
           + " : You have to set a valid "
           + ServletMockProvider.class.getSimpleName() + " instance through "
-          + GwtConfig.get().getCurrentModuleRunnerType().getSimpleName()
+          + GwtConfig.get().getModuleRunner().getClass().getSimpleName()
           + ".setServletMockProvider(..) method");
     }
 
