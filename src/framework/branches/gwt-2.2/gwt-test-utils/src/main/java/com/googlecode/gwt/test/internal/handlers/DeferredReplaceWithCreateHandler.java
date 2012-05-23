@@ -2,15 +2,14 @@ package com.googlecode.gwt.test.internal.handlers;
 
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
+import java.util.Set;
 
 import com.google.gwt.core.client.GWT;
 import com.googlecode.gwt.test.GwtCreateHandler;
+import com.googlecode.gwt.test.internal.GwtConfig;
 import com.googlecode.gwt.test.internal.ModuleData;
 import com.googlecode.gwt.test.internal.ModuleData.ReplaceWithData;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
-import com.googlecode.gwt.test.utils.events.Browser;
 
 public class DeferredReplaceWithCreateHandler implements GwtCreateHandler {
 
@@ -24,23 +23,23 @@ public class DeferredReplaceWithCreateHandler implements GwtCreateHandler {
       return null;
     }
 
-    String replaceWith = getReplaceWithClass(replaceWithList,
-        Browser.getProperties());
+    String replaceWith = getReplaceWithClass(replaceWithList);
 
     return (replaceWith != null && !replaceWith.equals(classLiteral))
         ? GWT.create(GwtReflectionUtils.getClass(replaceWith)) : null;
 
   }
 
-  private String getReplaceWithClass(List<ReplaceWithData> replaceWithList,
-      Map<String, String> browserProperties) {
+  private String getReplaceWithClass(List<ReplaceWithData> replaceWithList) {
 
     // the default <replace-with>, with no filter
     ReplaceWithData defaultReplaceWith = null;
 
+    Set<String> clientProperyNames = GwtConfig.get().getModuleRunner().getClientPropertyNames();
+
     for (ReplaceWithData replaceWithData : replaceWithList) {
 
-      if ((browserProperties == null || browserProperties.size() == 0)) {
+      if ((clientProperyNames.size() == 0)) {
 
         if (isDefault(replaceWithData)) {
           // default case : nothing is specified
@@ -60,13 +59,13 @@ public class DeferredReplaceWithCreateHandler implements GwtCreateHandler {
 
       if (replaceWithData.hasWhenPropertyIs()) {
         boolean validateProperties = true;
-        Iterator<Entry<String, String>> it = browserProperties.entrySet().iterator();
+        Iterator<String> it = clientProperyNames.iterator();
         while (it.hasNext() && validateProperties) {
-          Map.Entry<String, String> entry = it.next();
-          String browserPropertyName = entry.getKey();
-          String browserPropertyValue = entry.getValue();
+          String propertyName = it.next();
+          String value = GwtConfig.get().getModuleRunner().getClientProperty(
+              propertyName);
           validateProperties = replaceWithData.whenPropertyIsMatch(
-              browserPropertyName, browserPropertyValue);
+              propertyName, value);
         }
         if (!validateProperties) {
           continue;
@@ -75,14 +74,13 @@ public class DeferredReplaceWithCreateHandler implements GwtCreateHandler {
 
       // validate at least one any/when-property-is matches
       boolean validateAnyProperty = !replaceWithData.hasAnyWhenPropertyIs();
-      Iterator<Entry<String, String>> it = browserProperties.entrySet().iterator();
+      Iterator<String> it = clientProperyNames.iterator();
       while (it.hasNext() && !validateAnyProperty) {
-        Map.Entry<String, String> entry = it.next();
-        String browserPropertyName = entry.getKey();
-        String browserPropertyValue = entry.getValue();
+        String propertyName = it.next();
+        String value = GwtConfig.get().getModuleRunner().getClientProperty(
+            propertyName);
 
-        validateAnyProperty = replaceWithData.anyMatch(browserPropertyName,
-            browserPropertyValue);
+        validateAnyProperty = replaceWithData.anyMatch(propertyName, value);
       }
 
       if (validateAnyProperty) {

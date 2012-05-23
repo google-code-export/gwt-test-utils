@@ -11,7 +11,6 @@ import com.googlecode.gwt.test.GwtTestTest;
 import com.googlecode.gwt.test.deferred.ReplaceWithDefault.ReplaceWithIE;
 import com.googlecode.gwt.test.deferred.ReplaceWithDefault.ReplaceWithMozilla;
 import com.googlecode.gwt.test.exceptions.GwtTestConfigurationException;
-import com.googlecode.gwt.test.utils.events.Browser;
 
 public class CustomDeferredBindingTest extends GwtTestTest {
 
@@ -41,7 +40,7 @@ public class CustomDeferredBindingTest extends GwtTestTest {
   @Test
   public void create_replaceWith_gecko() {
     // Arrange
-    Browser.setProperty("user.agent", "gecko");
+    addClientProperty("user.agent", "gecko");
 
     // Act
     IReplaceWith replaceWith = GWT.create(IReplaceWith.class);
@@ -53,7 +52,7 @@ public class CustomDeferredBindingTest extends GwtTestTest {
   @Test
   public void create_replaceWith_gecko1_8() {
     // Arrange
-    Browser.setProperty("user.agent", "gecko1_8");
+    addClientProperty("user.agent", "gecko1_8");
 
     // Act
     IReplaceWith replaceWith = GWT.create(IReplaceWith.class);
@@ -65,7 +64,7 @@ public class CustomDeferredBindingTest extends GwtTestTest {
   @Test
   public void create_replaceWith_ie6() {
     // Arrange
-    Browser.setProperty("user.agent", "ie6");
+    addClientProperty("user.agent", "ie6");
 
     // Act
     IReplaceWith replaceWith = GWT.create(IReplaceWith.class);
@@ -77,7 +76,7 @@ public class CustomDeferredBindingTest extends GwtTestTest {
   @Test
   public void create_replaceWith_ie8() {
     // Arrange
-    Browser.setProperty("user.agent", "ie8");
+    addClientProperty("user.agent", "ie8");
 
     // Act
     IReplaceWith replaceWith = GWT.create(IReplaceWith.class);

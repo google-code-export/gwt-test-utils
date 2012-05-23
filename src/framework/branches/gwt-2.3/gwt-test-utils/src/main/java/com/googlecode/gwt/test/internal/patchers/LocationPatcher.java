@@ -90,12 +90,12 @@ class LocationPatcher {
   }
 
   private static String computePath() {
-    String absolutePath = GwtConfig.get().getHostPagePath();
+    String absolutePath = GwtConfig.get().getModuleRunner().getHostPagePath();
     if (absolutePath == null) {
       LOGGER.warn("The host page path for '"
           + GwtConfig.get().getModuleName()
           + "' is null, fallback to an empty HTML document instead. You may want to override "
-          + GwtConfig.get().getCurrentModuleRunnerType().getSimpleName()
+          + GwtConfig.get().getModuleRunner().getClass().getSimpleName()
           + ".getHostPagePath(String moduleFullQualifiedName) method to specify the relative path of the your HTML file from the root directory of your java project");
 
       absolutePath = "index.html";

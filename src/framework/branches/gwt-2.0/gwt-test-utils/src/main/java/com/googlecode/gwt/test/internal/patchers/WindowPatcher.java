@@ -12,7 +12,7 @@ class WindowPatcher {
 
   @PatchMethod
   static void alert(String msg) {
-    WindowOperationsHandler handler = GwtConfig.get().getWindowOperationsHandler();
+    WindowOperationsHandler handler = GwtConfig.get().getModuleRunner().getWindowOperationsHandler();
     if (handler != null) {
       handler.alert(msg);
     }
@@ -20,7 +20,7 @@ class WindowPatcher {
 
   @PatchMethod
   static boolean confirm(String msg) {
-    WindowOperationsHandler handler = GwtConfig.get().getWindowOperationsHandler();
+    WindowOperationsHandler handler = GwtConfig.get().getModuleRunner().getWindowOperationsHandler();
     if (handler != null) {
       return handler.confirm(msg);
     }
@@ -35,7 +35,7 @@ class WindowPatcher {
 
   @PatchMethod
   static void open(String url, String name, String features) {
-    WindowOperationsHandler handler = GwtConfig.get().getWindowOperationsHandler();
+    WindowOperationsHandler handler = GwtConfig.get().getModuleRunner().getWindowOperationsHandler();
     if (handler != null) {
       handler.open(url, name, features);
     }
@@ -43,7 +43,7 @@ class WindowPatcher {
 
   @PatchMethod
   static void print() {
-    WindowOperationsHandler handler = GwtConfig.get().getWindowOperationsHandler();
+    WindowOperationsHandler handler = GwtConfig.get().getModuleRunner().getWindowOperationsHandler();
     if (handler != null) {
       handler.print();
     }
@@ -51,7 +51,7 @@ class WindowPatcher {
 
   @PatchMethod
   static String prompt(String msg, String initialValue) {
-    WindowOperationsHandler handler = GwtConfig.get().getWindowOperationsHandler();
+    WindowOperationsHandler handler = GwtConfig.get().getModuleRunner().getWindowOperationsHandler();
     if (handler != null) {
       return handler.prompt(msg, initialValue);
     }

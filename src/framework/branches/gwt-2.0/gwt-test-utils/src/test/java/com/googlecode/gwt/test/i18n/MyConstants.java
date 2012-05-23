@@ -26,7 +26,7 @@ public interface MyConstants extends Constants {
   @DefaultStringMapValue({
       "map1", "default map1 value", "map2", "default map2 value", "map3",
       "default map3 value"})
-  public Map<String, Object> map();
+  public Map<String, String> map();
 
   @DefaultStringValue("Default String Message With Key")
   @Key("message.with.key")

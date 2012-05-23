@@ -40,7 +40,7 @@ class GwtPatcher {
             + " has been able to create an instance of '"
             + classLiteral.getName()
             + "'. You should add our own with "
-            + GwtConfig.get().getCurrentModuleRunnerType().getSimpleName()
+            + GwtConfig.get().getModuleRunner().getClass().getSimpleName()
             + ".addGwtCreateHandler(..) method or declared your tested object with @"
             + Mock.class.getSimpleName());
   }
@@ -57,7 +57,7 @@ class GwtPatcher {
 
   @PatchMethod
   static void log(String message, Throwable t) {
-    GwtLogHandler logHandler = GwtConfig.get().getLogHandler();
+    GwtLogHandler logHandler = GwtConfig.get().getModuleRunner().getLogHandler();
     if (logHandler != null) {
       logHandler.log(message, t);
     }

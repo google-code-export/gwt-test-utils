@@ -1,9 +1,6 @@
 package com.googlecode.gwt.test.utils.events;
 
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 import com.google.gwt.dom.client.Document;
@@ -27,7 +24,6 @@ import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.gwt.test.FinallyCommandTrigger;
-import com.googlecode.gwt.test.internal.AfterTestCallback;
 import com.googlecode.gwt.test.internal.GwtConfig;
 import com.googlecode.gwt.test.internal.utils.JavaScriptObjects;
 import com.googlecode.gwt.test.internal.utils.JsoProperties;
@@ -59,20 +55,6 @@ public class Browser {
      */
     void onError(String errorMessage);
   }
-
-  private static class BrowserProperties implements AfterTestCallback {
-
-    private boolean eventsCanBubble = true;
-    private final Map<String, String> properties = new HashMap<String, String>();
-
-    public void afterTest() throws Throwable {
-      properties.clear();
-      eventsCanBubble = true;
-    }
-
-  }
-
-  private static final BrowserProperties BROWSER_PROPERTIES = new BrowserProperties();
 
   /**
    * Simulates a blur event.
@@ -476,15 +458,6 @@ public class Browser {
   }
 
   /**
-   * Get all Browser current properties.
-   * 
-   * @return A set of properties (name/value as strings).
-   */
-  public static Map<String, String> getProperties() {
-    return Collections.unmodifiableMap(BROWSER_PROPERTIES.properties);
-  }
-
-  /**
    * Simulates a keydown event.
    * 
    * @param target The targeted widget.
@@ -681,31 +654,11 @@ public class Browser {
     }
   }
 
-  /**
-   * S
-   * 
-   * @param eventsCanBubble
-   */
-  public static void setEventsCanBubble(boolean eventsCanBubble) {
-    BROWSER_PROPERTIES.eventsCanBubble = eventsCanBubble;
-  }
-
-  /**
-   * Set a browser property, like its 'user-agent', which could be use for
-   * deferred binding, like 'replace-with' mechanism.
-   * 
-   * @param name The name of the property.
-   * @param value The value of the property.
-   */
-  public static void setProperty(String name, String value) {
-    BROWSER_PROPERTIES.properties.put(name, value);
-  }
-
   private static boolean canApplyEvent(Widget target, Event event) {
 
     if (!target.isAttached()
-        && !GwtConfig.get().canDispatchDomEventOnDetachedWidget()) {
-      GwtConfig.get().getBrowserErrorHandler().onError(
+        && !GwtConfig.get().getModuleRunner().canDispatchDomEventOnDetachedWidget()) {
+      GwtConfig.get().getModuleRunner().getBrowserErrorHandler().onError(
           "Cannot dispatch '" + event.getType()
               + "' event : the targeted widget has to be attached to the DOM");
       return false;
@@ -715,14 +668,14 @@ public class Browser {
 
     if (!WidgetUtils.isWidgetVisible(target)
         && isVisible(target, targetElement)) {
-      GwtConfig.get().getBrowserErrorHandler().onError(
+      GwtConfig.get().getModuleRunner().getBrowserErrorHandler().onError(
           "Cannot dispatch '"
               + event.getType()
               + "' event : the targeted element and its possible parents have to be visible");
 
       return false;
     } else if (isDisabled(targetElement)) {
-      GwtConfig.get().getBrowserErrorHandler().onError(
+      GwtConfig.get().getModuleRunner().getBrowserErrorHandler().onError(
           "Cannot dispatch '" + event.getType()
               + "' event : the targeted element has to be enabled : "
               + targetElement.toString());
@@ -814,14 +767,9 @@ public class Browser {
       }
     }
 
-    if (BROWSER_PROPERTIES.eventsCanBubble) {
-      // fire with bubble support
-      Set<Widget> applied = new HashSet<Widget>();
-      dispatchEventWithBubble(target, event, applied);
-    } else {
-      // simple fire
-      target.onBrowserEvent(event);
-    }
+    // fire with bubble support
+    Set<Widget> applied = new HashSet<Widget>();
+    dispatchEventWithBubble(target, event, applied);
   }
 
   private static void dispatchEventWithBubble(Widget widget, Event event,

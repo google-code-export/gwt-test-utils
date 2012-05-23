@@ -86,8 +86,8 @@ abstract class LocalizableResourceInvocationHandler implements
   }
 
   protected Locale getLocale() {
-    if (GwtConfig.get().getLocale() != null) {
-      return GwtConfig.get().getLocale();
+    if (GwtConfig.get().getModuleRunner().getLocale() != null) {
+      return GwtConfig.get().getModuleRunner().getLocale();
     }
 
     DefaultLocale annotation = GwtReflectionUtils.getAnnotation(proxiedClass,

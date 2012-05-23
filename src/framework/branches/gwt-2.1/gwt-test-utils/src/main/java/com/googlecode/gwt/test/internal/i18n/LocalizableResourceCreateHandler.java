@@ -97,7 +97,7 @@ public class LocalizableResourceCreateHandler implements GwtCreateHandler {
 
   private Object getLocalizedClassImpl(Class<?> localizedClass,
       Class<?> defaultImpl) throws Exception {
-    Locale locale = GwtConfig.get().getLocale();
+    Locale locale = GwtConfig.get().getModuleRunner().getLocale();
     if (locale == null) {
       return defaultImpl.newInstance();
     }

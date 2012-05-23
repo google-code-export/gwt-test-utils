@@ -32,7 +32,7 @@ public class MyConstantsTest extends GwtTestTest {
     String hello = constants.hello();
     String goodbye = constants.goodbye();
     String[] stringArray = constants.stringArray();
-    Map<String, Object> map = constants.map();
+    Map<String, String> map = constants.map();
     String valueWithoutLocale = constants.valueWithoutLocale();
     String valueWithoutLocaleToBeOverride = constants.valueWithoutLocaleToBeOverride();
     String messageWithKey = constants.messageWithKey();
@@ -98,7 +98,7 @@ public class MyConstantsTest extends GwtTestTest {
     // Act 1
     String hello = constants.hello();
     String[] stringArray = constants.stringArray();
-    Map<String, Object> map = constants.map();
+    Map<String, String> map = constants.map();
     int functionInt = constants.functionInt();
     double functionDouble = constants.functionDouble();
     float functionFloat = constants.functionFloat();
@@ -137,7 +137,7 @@ public class MyConstantsTest extends GwtTestTest {
     String hello = constants.hello();
     String goodbye = constants.goodbye();
     String[] stringArray = constants.stringArray();
-    Map<String, Object> map = constants.map();
+    Map<String, String> map = constants.map();
     int functionInt = constants.functionInt();
     double functionDouble = constants.functionDouble();
     float functionFloat = constants.functionFloat();

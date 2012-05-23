@@ -3,7 +3,6 @@ package com.googlecode.gwt.test.internal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import com.google.gwt.user.client.ui.NamedFrame;
@@ -12,15 +11,12 @@ import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.UIObject.DebugIdImpl;
 import com.google.gwt.user.client.ui.UIObject.DebugIdImplEnabled;
 import com.google.gwt.user.client.ui.Widget;
-import com.googlecode.gwt.test.GwtLogHandler;
 import com.googlecode.gwt.test.GwtModuleRunner;
 import com.googlecode.gwt.test.WindowOperationsHandler;
 import com.googlecode.gwt.test.exceptions.GwtTestConfigurationException;
 import com.googlecode.gwt.test.exceptions.GwtTestException;
-import com.googlecode.gwt.test.rpc.ServletMockProvider;
 import com.googlecode.gwt.test.uibinder.UiObjectTagFactory;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
-import com.googlecode.gwt.test.utils.events.Browser.BrowserErrorHandler;
 
 /**
  * Internal configuration of gwt-test-utils. <strong>For internal use
@@ -54,36 +50,12 @@ public class GwtConfig implements AfterTestCallback {
     uiConstructorsMap.clear();
   }
 
-  public boolean canDispatchDomEventOnDetachedWidget() {
-    return gwtModuleRunner.canDispatchDomEventOnDetachedWidget();
-  }
-
-  public BrowserErrorHandler getBrowserErrorHandler() {
-    return gwtModuleRunner.getBrowserErrorHandler();
-  }
-
-  public Class<? extends GwtModuleRunner> getCurrentModuleRunnerType() {
-    return gwtModuleRunner.getClass();
-  }
-
-  public String getHostPagePath() {
-    return gwtModuleRunner.getHostPagePath();
-  }
-
-  public Locale getLocale() {
-    return gwtModuleRunner.getLocale();
-  }
-
-  public GwtLogHandler getLogHandler() {
-    return gwtModuleRunner.getLogHandler();
-  }
-
   public String getModuleName() {
     return checkedModuleName;
   }
 
-  public ServletMockProvider getServletMockProvider() {
-    return gwtModuleRunner.getServletMockProvider();
+  public GwtModuleRunner getModuleRunner() {
+    return gwtModuleRunner;
   }
 
   public List<String[]> getUiConstructors(Class<?> clazz) {

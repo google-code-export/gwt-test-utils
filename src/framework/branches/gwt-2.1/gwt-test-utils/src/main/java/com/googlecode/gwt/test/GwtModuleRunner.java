@@ -2,6 +2,7 @@ package com.googlecode.gwt.test;
 
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.DomEvent;
@@ -23,6 +24,15 @@ import com.googlecode.gwt.test.utils.events.Browser.BrowserErrorHandler;
  * 
  */
 public interface GwtModuleRunner {
+
+  /**
+   * Add a client's property, such as the browser 'user-agent' which could be
+   * use to simulate the 'replace-with' deferred binding mechanism.
+   * 
+   * @param propertyName The name of the client's property
+   * @param value The value of the client's property
+   */
+  void addClientProperty(String propertyName, String value);
 
   /**
    * Add String key/value pairs to a GWT {@link Dictionary}.
@@ -80,6 +90,23 @@ public interface GwtModuleRunner {
    * @return The custom browser error handler callback.
    */
   BrowserErrorHandler getBrowserErrorHandler();
+
+  /**
+   * Retrieve a custom client's property, added through
+   * {@link GwtModuleRunner#addClientProperty(String, String)} method
+   * 
+   * @param propertyName The name of the client's property
+   * @return The value of the client's property, or null if it does not exist
+   */
+  String getClientProperty(String propertyName);
+
+  /**
+   * Return the set of client's property added through
+   * {@link GwtModuleRunner#addClientProperty(String, String)} method
+   * 
+   * @return A set which contains all added client's property names
+   */
+  Set<String> getClientPropertyNames();
 
   /**
    * Specifies the relative path in the project of the HTML file which is used

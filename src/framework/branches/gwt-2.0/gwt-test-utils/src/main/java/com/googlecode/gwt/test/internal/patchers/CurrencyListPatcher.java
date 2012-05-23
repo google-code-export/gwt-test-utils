@@ -150,7 +150,7 @@ class CurrencyListPatcher {
 
   @PatchMethod
   static CurrencyData getDefault(CurrencyList currencyList) {
-    Locale locale = GwtConfig.get().getLocale();
+    Locale locale = GwtConfig.get().getModuleRunner().getLocale();
     if (locale == null) {
       locale = Locale.ENGLISH;
     }

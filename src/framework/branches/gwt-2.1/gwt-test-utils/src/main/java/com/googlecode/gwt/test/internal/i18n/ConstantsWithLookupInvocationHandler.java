@@ -33,9 +33,8 @@ class ConstantsWithLookupInvocationHandler extends ConstantsInvocationHandler {
       try {
         return getProxiedClass().getMethod(methodName);
       } catch (Exception e) {
-        throw new GwtTestI18NException("i18n method '"
-            + getProxiedClass().getCanonicalName() + "." + methodName
-            + "()' does not exist");
+        throw new GwtTestI18NException("Cannot find constant '" + methodName
+            + "'; expecting a method name from " + getProxiedClass().getName());
       }
     } else {
       return method;

@@ -1,8 +1,10 @@
 package com.googlecode.gwt.test;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.DomEvent;
@@ -64,15 +66,27 @@ public abstract class GwtModuleRunnerAdapter implements GwtModuleRunner,
 
   private final BrowserErrorHandlerDelegate browserErrorHandlerDelegate;
   private boolean canDispatchDomEventOnDetachedWidget;
+  private final Map<String, String> clientProperties;
   private Locale locale;
   private GwtLogHandler logHandler;
   private ServletMockProvider servletMockProvider;
-
   private WindowOperationsHandler windowOperationsHandler;
 
   public GwtModuleRunnerAdapter() {
     browserErrorHandlerDelegate = new BrowserErrorHandlerDelegate();
+    clientProperties = new HashMap<String, String>();
     AfterTestCallbackManager.get().registerRemoveableCallback(this);
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * com.googlecode.gwt.test.GwtModuleRunner#addClientProperty(java.lang.String,
+   * java.lang.String)
+   */
+  public final void addClientProperty(String propertyName, String value) {
+    clientProperties.put(propertyName, value);
   }
 
   /*
@@ -151,6 +165,25 @@ public abstract class GwtModuleRunnerAdapter implements GwtModuleRunner,
    */
   public final BrowserErrorHandler getBrowserErrorHandler() {
     return browserErrorHandlerDelegate;
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * com.googlecode.gwt.test.GwtModuleRunner#getClientProperty(java.lang.String)
+   */
+  public final String getClientProperty(String propertyName) {
+    return clientProperties.get(propertyName);
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.googlecode.gwt.test.GwtModuleRunner#getClientPropertyNames()
+   */
+  public final Set<String> getClientPropertyNames() {
+    return clientProperties.keySet();
   }
 
   /*

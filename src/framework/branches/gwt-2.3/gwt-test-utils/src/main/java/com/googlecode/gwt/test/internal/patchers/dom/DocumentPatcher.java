@@ -199,7 +199,7 @@ class DocumentPatcher {
       LOGGER.warn("Cannot find the host HTML file '"
           + hostPagePath
           + "', fallback to an empty HTML document instead. You may want to override "
-          + GwtConfig.get().getCurrentModuleRunnerType().getSimpleName()
+          + GwtConfig.get().getModuleRunner().getClass().getSimpleName()
           + ".getHostPagePath(String moduleFullQualifiedName) method to specify the relative path of the your HTML file from the root directory of your java project");
 
       return EMPTY_HTML;
@@ -251,7 +251,7 @@ class DocumentPatcher {
 
   private static Element parseHTMLElement(Document document) {
     String moduleName = GwtConfig.get().getModuleName();
-    String hostPagePath = GwtConfig.get().getHostPagePath();
+    String hostPagePath = GwtConfig.get().getModuleRunner().getHostPagePath();
 
     if (hostPagePath == null) {
       // return a default empty HTML element
