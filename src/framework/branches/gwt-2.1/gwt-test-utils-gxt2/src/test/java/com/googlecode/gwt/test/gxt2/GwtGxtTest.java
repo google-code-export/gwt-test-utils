@@ -1,8 +1,7 @@
 package com.googlecode.gwt.test.gxt2;
 
-import com.googlecode.gwt.test.GwtTest;
 
-public abstract class GwtGxtTest extends GwtTest {
+public abstract class GwtGxtTest extends GxtTest {
 
   @Override
   public String getModuleName() {
