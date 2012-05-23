@@ -7,20 +7,20 @@ package com.googlecode.gwt.test.gxt2;
  * @author Gael Lazzari
  * 
  */
-public class Gxt2Reset {
+class GxtReset {
 
-  private static final Gxt2Reset INSTANCE = new Gxt2Reset();
+  private static final GxtReset INSTANCE = new GxtReset();
 
   /**
    * Return the GxtReset instance
    * 
    * @return
    */
-  public static Gxt2Reset get() {
+  public static GxtReset get() {
     return INSTANCE;
   }
 
-  private Gxt2Reset() {
+  private GxtReset() {
 
   }
 
@@ -28,8 +28,7 @@ public class Gxt2Reset {
    * Reset all necessary GXT internal objects.
    */
   public void reset() {
-    // nothing to do yet, this class is not used in code but allows
-    // maven-javadoc-plugin to generate gwt-test-utils-gxt-javadoc.jar
+    // nothing to do yet
   }
 
 }
