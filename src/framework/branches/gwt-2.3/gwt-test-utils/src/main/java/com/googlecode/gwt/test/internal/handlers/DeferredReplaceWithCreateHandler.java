@@ -16,7 +16,7 @@ public class DeferredReplaceWithCreateHandler implements GwtCreateHandler {
   public Object create(Class<?> classLiteral) throws Exception {
 
     List<ReplaceWithData> replaceWithList = ModuleData.get().getReplaceWithListMap().get(
-        classLiteral.getName());
+        classLiteral.getName().replaceAll("\\$", "."));
 
     // not handled by a <replace-with> element in any .gwt.xml file
     if (replaceWithList == null) {

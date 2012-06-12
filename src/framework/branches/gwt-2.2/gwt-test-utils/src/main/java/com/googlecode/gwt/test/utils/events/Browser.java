@@ -13,13 +13,17 @@ import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.shared.UmbrellaException;
+import com.google.gwt.user.cellview.client.AbstractCellTable;
 import com.google.gwt.user.cellview.client.AbstractHasData;
+import com.google.gwt.user.cellview.client.ColumnSortEvent;
+import com.google.gwt.user.cellview.client.SimplePager;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HasText;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.RadioButton;
@@ -33,6 +37,7 @@ import com.googlecode.gwt.test.internal.GwtConfig;
 import com.googlecode.gwt.test.internal.utils.JavaScriptObjects;
 import com.googlecode.gwt.test.internal.utils.JsoProperties;
 import com.googlecode.gwt.test.internal.utils.RadioButtonManager;
+import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 import com.googlecode.gwt.test.utils.WidgetUtils;
 
 /**
@@ -202,6 +207,63 @@ public class Browser {
    */
   public static void click(Widget target) {
     clickInternal(target, target);
+  }
+
+  /**
+   * Simulate a click event on a pager "first page" button
+   * 
+   * @param simplePager The targeted pager
+   */
+  public static void clickFirstPage(SimplePager simplePager) {
+    Image firstPage = GwtReflectionUtils.getPrivateFieldValue(simplePager,
+        "firstPage");
+    Browser.click(firstPage);
+  }
+
+  /**
+   * Click on a specific header of a cell table
+   * 
+   * @param table The targeted cell table
+   * @param index The targeted cell header index in the table
+   */
+  public static void clickHeader(AbstractCellTable<?> table, int index) {
+    FinallyCommandTrigger.triggerCommands();
+    table.getColumnSortList().push(table.getColumn(index));
+    ColumnSortEvent.fire(table, table.getColumnSortList());
+    FinallyCommandTrigger.triggerCommands();
+  }
+
+  /**
+   * Simulate a click event on a pager "last page" button
+   * 
+   * @param simplePager The targeted pager
+   */
+  public static void clickLastPage(SimplePager simplePager) {
+    Image lastPage = GwtReflectionUtils.getPrivateFieldValue(simplePager,
+        "lastPage");
+    Browser.click(lastPage);
+  }
+
+  /**
+   * Simulate a click event on a pager "next page" button
+   * 
+   * @param simplePager The targeted pager
+   */
+  public static void clickNextPage(SimplePager simplePager) {
+    Image nextPage = GwtReflectionUtils.getPrivateFieldValue(simplePager,
+        "nextPage");
+    Browser.click(nextPage);
+  }
+
+  /**
+   * Simulate a click event on a pager "previous page" button
+   * 
+   * @param simplePager The targeted pager
+   */
+  public static void clickPreviousPage(SimplePager simplePager) {
+    Image prevPage = GwtReflectionUtils.getPrivateFieldValue(simplePager,
+        "prevPage");
+    Browser.click(prevPage);
   }
 
   /**

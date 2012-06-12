@@ -109,7 +109,6 @@ public class ModuleData {
     {
       add("com.google.gwt.");
       add("com.googlecode.gwt.");
-      add("com.extjs.gxt.");
     }
   };
 

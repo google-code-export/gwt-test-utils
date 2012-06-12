@@ -24,6 +24,7 @@ import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.gwt.test.FinallyCommandTrigger;
+import com.googlecode.gwt.test.GwtModuleRunner;
 import com.googlecode.gwt.test.internal.GwtConfig;
 import com.googlecode.gwt.test.internal.utils.JavaScriptObjects;
 import com.googlecode.gwt.test.internal.utils.JsoProperties;
@@ -652,6 +653,23 @@ public class Browser {
       dispatchEvent((Widget) hasTextWidget,
           EventBuilder.create(Event.ONCHANGE).build());
     }
+  }
+
+  /**
+   * 
+   * <p>
+   * DEPRECATED : use {@link GwtModuleRunner#addClientProperty(String, String)}
+   * </p>
+   * instead Set a browser property, like its 'user-agent', which could be use
+   * for deferred binding, like 'replace-with' mechanism.
+   * 
+   * @param name The name of the property.
+   * @param value The value of the property.
+   * 
+   */
+  @Deprecated
+  public static void setProperty(String name, String value) {
+    GwtConfig.get().getModuleRunner().addClientProperty(name, value);
   }
 
   private static boolean canApplyEvent(Widget target, Event event) {

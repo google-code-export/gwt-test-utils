@@ -3,15 +3,27 @@ package com.googlecode.gwt.test.internal.i18n;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import com.google.gwt.i18n.client.Constants;
 import com.google.gwt.i18n.client.ConstantsWithLookup;
 import com.google.gwt.i18n.client.LocalizableResource;
 import com.google.gwt.i18n.client.Messages;
+import com.google.gwt.i18n.client.impl.CldrImpl;
 import com.googlecode.gwt.test.GwtCreateHandler;
 import com.googlecode.gwt.test.exceptions.GwtTestI18NException;
+import com.googlecode.gwt.test.internal.GwtConfig;
+import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
+/**
+ * Class in charge of the instanciation of all {@link LocalizableResource}
+ * sub-interfaces through deferred binding. <strong>For internal use
+ * only.</strong>
+ * 
+ * @author Gael Lazzari
+ * 
+ */
 public class LocalizableResourceCreateHandler implements GwtCreateHandler {
 
   private static class LocalizableResourceProxyFactory {
@@ -53,7 +65,7 @@ public class LocalizableResourceCreateHandler implements GwtCreateHandler {
       } else if (Messages.class.isAssignableFrom(clazz)) {
         return new MessagesInvocationHandler(clazz);
       } else {
-        throw new RuntimeException(
+        throw new GwtTestI18NException(
             "Not managed GWT i18n interface for testing : "
                 + clazz.getSimpleName());
       }
@@ -62,17 +74,47 @@ public class LocalizableResourceCreateHandler implements GwtCreateHandler {
 
   @SuppressWarnings("unchecked")
   public Object create(Class<?> classLiteral) throws Exception {
-    if (!LocalizableResource.class.isAssignableFrom(classLiteral)) {
-      return null;
+    if (LocalizableResource.class.isAssignableFrom(classLiteral)) {
+
+      if (!classLiteral.isInterface()) {
+        throw new GwtTestI18NException(classLiteral.getSimpleName()
+            + " must be an interface");
+      }
+      return LocalizableResourceProxyFactory.getFactory(
+          (Class<? extends LocalizableResource>) classLiteral).createProxy();
+    } else if (CldrImpl.class == classLiteral) {
+      return getLocalizedClassImpl(CldrImpl.class, CldrImpl.class);
     }
 
-    if (!classLiteral.isInterface()) {
-      throw new GwtTestI18NException(classLiteral.getSimpleName()
-          + " must be an interface");
+    return null;
+
+  }
+
+  private Object getLocalizedClassImpl(Class<?> localizedClass,
+      Class<?> defaultImpl) throws Exception {
+    Locale locale = GwtConfig.get().getModuleRunner().getLocale();
+    if (locale == null) {
+      return defaultImpl.newInstance();
     }
 
-    return LocalizableResourceProxyFactory.getFactory(
-        (Class<? extends LocalizableResource>) classLiteral).createProxy();
+    Class<?> implementationClass;
+    try {
+      implementationClass = GwtReflectionUtils.getClass(localizedClass.getName()
+          + "_" + locale.getLanguage());
+    } catch (ClassNotFoundException e) {
+      try {
+        implementationClass = GwtReflectionUtils.getClass(localizedClass.getName()
+            + "_" + locale.getCountry());
+      } catch (ClassNotFoundException e2) {
+        implementationClass = null;
+      }
+    }
+
+    if (implementationClass == null) {
+      implementationClass = defaultImpl;
+    }
+
+    return implementationClass.newInstance();
   }
 
 }

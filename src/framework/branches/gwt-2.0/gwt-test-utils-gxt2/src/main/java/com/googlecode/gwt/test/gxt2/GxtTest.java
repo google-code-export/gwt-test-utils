@@ -1,8 +1,10 @@
 package com.googlecode.gwt.test.gxt2;
 
 import org.junit.After;
+import org.junit.Before;
 
 import com.googlecode.gwt.test.GwtTest;
+import com.googlecode.gwt.test.gxt2.internal.handlers.BeanModelLookupCreateHandler;
 
 /**
  * <p>
@@ -11,6 +13,11 @@ import com.googlecode.gwt.test.GwtTest;
  * </p>
  */
 public abstract class GxtTest extends GwtTest {
+
+  @Before
+  public void setupGxtTest() {
+    addGwtCreateHandler(new BeanModelLookupCreateHandler());
+  }
 
   @After
   public final void tearDownGxTest() throws Exception {
