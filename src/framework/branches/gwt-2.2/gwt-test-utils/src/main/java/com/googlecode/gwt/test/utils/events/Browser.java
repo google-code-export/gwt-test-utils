@@ -13,8 +13,8 @@ import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.shared.UmbrellaException;
-import com.google.gwt.user.cellview.client.AbstractCellTable;
 import com.google.gwt.user.cellview.client.AbstractHasData;
+import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.ColumnSortEvent;
 import com.google.gwt.user.cellview.client.SimplePager;
 import com.google.gwt.user.client.Event;
@@ -226,7 +226,7 @@ public class Browser {
    * @param table The targeted cell table
    * @param index The targeted cell header index in the table
    */
-  public static void clickHeader(AbstractCellTable<?> table, int index) {
+  public static void clickHeader(CellTable<?> table, int index) {
     FinallyCommandTrigger.triggerCommands();
     table.getColumnSortList().push(table.getColumn(index));
     ColumnSortEvent.fire(table, table.getColumnSortList());

@@ -183,8 +183,10 @@ class DeferredBindingModule extends AbstractModule {
           if (binding instanceof HasDependencies) {
             HasDependencies deps = (HasDependencies) binding;
             for (Dependency<?> d : deps.getDependencies()) {
-              InjectionPoint point = InjectionPoint.forConstructorOf(d.getKey().getTypeLiteral());
-              dependencies.addAll(getDependencies(point));
+              if (!d.getKey().getTypeLiteral().getRawType().isInterface()) {
+                InjectionPoint point = InjectionPoint.forConstructorOf(d.getKey().getTypeLiteral());
+                dependencies.addAll(getDependencies(point));
+              }
             }
           } else {
             // At least try to fix the dependecies for untargeted bindings
