@@ -52,8 +52,6 @@ public class GInjectorCreateHandlerTest extends GwtTestTest {
     protected void configure() {
       bind(Virtual.class).to(Impl2.class);
       bind(VirtualMore.class).to(ImplMore.class);
-      
-      install(install)
     }
   }
 
