@@ -18,6 +18,7 @@ import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
+import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import com.googlecode.gwt.test.GwtTestTest;
 import com.googlecode.gwt.test.rpc.RemoteServiceCreateHandler;
@@ -79,6 +80,48 @@ public class GInjectorCreateHandlerTest extends GwtTestTest {
     }
   }
 
+  @GinModules(Gin5Module.class)
+  interface Gin5Injector extends Ginjector {
+    Impl singletonImpl();
+
+    Virtual singletonVirtual();
+
+  }
+
+  static class Gin5Module extends AbstractGinModule {
+
+    @Override
+    protected void configure() {
+      bind(Impl.class).in(Singleton.class);
+
+      bind(Virtual.class).to(Impl.class);
+    }
+
+  }
+
+  @GinModules(Gin6Module.class)
+  interface Gin6Injector extends Ginjector {
+    Virtual singletonImpl();
+
+    Impl3 wrapper();
+
+  }
+
+  static class Gin6Module extends AbstractGinModule {
+
+    @Override
+    protected void configure() {
+      bind(Virtual.class).to(Impl.class).in(Singleton.class);
+
+    }
+
+    @Provides
+    Impl3 provideImpl3(Virtual toWrap) {
+      return new Impl3(toWrap);
+    }
+
+  }
+
   static class Impl implements Virtual {
   }
 
@@ -88,6 +131,15 @@ public class GInjectorCreateHandlerTest extends GwtTestTest {
     @Inject
     public Impl2(TestMessages messages) {
       this.messages = messages;
+    }
+  }
+
+  static class Impl3 implements Virtual {
+
+    protected final Virtual wrapped;
+
+    public Impl3(Virtual impl) {
+      this.wrapped = impl;
     }
   }
 
@@ -196,6 +248,31 @@ public class GInjectorCreateHandlerTest extends GwtTestTest {
     assertEquals(Impl2.class, virtual.getClass());
     Assert.assertNotSame(virtual, injector2.virtual());
     assertNotNull(service);
+  }
+
+  @Test
+  public void shouldInstanciateSingletonOnce() {
+    // Arrange
+    Gin5Injector injector5 = GWT.create(Gin5Injector.class);
+
+    // Act
+    Impl impl = injector5.singletonImpl();
+    Virtual virtual = injector5.singletonVirtual();
+
+    // Assert
+    assertSame(impl, virtual);
+  }
+
+  @Test
+  public void shouldInstanciateUsingProvidesMethod() {
+    // Arrange
+    Gin6Injector injector6 = GWT.create(Gin6Injector.class);
+
+    // Act
+    Impl3 wrapper = injector6.wrapper();
+
+    // Assert
+    assertEquals(injector6.singletonImpl(), wrapper.wrapped);
   }
 
   @Test
