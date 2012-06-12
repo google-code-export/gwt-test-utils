@@ -51,7 +51,7 @@
 		<module>gwt-test-utils</module>
 		<module>gwt-test-utils-csv</module>
 		<module>gwt-test-utils-gxt2</module>
-		<module>gwt-test-utils-gxt3</module>
+		<!--<module>gwt-test-utils-gxt3</module> -->
 	</modules>
 	<properties>
 		<encoding>UTF-8</encoding>
