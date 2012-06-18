@@ -239,18 +239,6 @@ public abstract class GwtModuleRunnerAdapter implements GwtModuleRunner,
     return windowOperationsHandler;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see
-   * com.googlecode.gwt.test.GwtModuleRunner#registerUiConstructor(java.lang
-   * .Class, java.lang.String[])
-   */
-  public final void registerUiConstructor(Class<? extends IsWidget> clazz,
-      String... argNames) {
-    GwtConfig.get().registerUiConstructor(clazz, argNames);
-  }
-
   protected abstract BrowserErrorHandler getDefaultBrowserErrorHandler();
 
   /**

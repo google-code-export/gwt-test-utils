@@ -28,6 +28,14 @@
 			<groupId>org.javassist</groupId>
 			<artifactId>javassist</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>com.thoughtworks.paranamer</groupId>
+			<artifactId>paranamer</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.google.code.javaparser</groupId>
+			<artifactId>javaparser</artifactId>
+		</dependency>
 		<!-- Use commons-beanutils and commons-lang bundled in gwt-dev.jar <dependency> 
 			<groupId>commons-beanutils</groupId> <artifactId>commons-beanutils</artifactId> 
 			<exclusions> <exclusion> <groupId>commons-logging</groupId> <artifactId>commons-logging</artifactId> 
