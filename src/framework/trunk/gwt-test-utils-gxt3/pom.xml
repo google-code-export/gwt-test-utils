@@ -25,14 +25,6 @@
 			</exclusions>
 		</dependency>
 		<dependency>
-			<groupId>com.thoughtworks.paranamer</groupId>
-			<artifactId>paranamer</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.google.code.javaparser</groupId>
-			<artifactId>javaparser</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>org.freemarker</groupId>
 			<artifactId>freemarker</artifactId>
 		</dependency>
