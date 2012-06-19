@@ -7,7 +7,6 @@ import java.util.Set;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.DomEvent;
 import com.google.gwt.i18n.client.Dictionary;
-import com.google.gwt.uibinder.client.UiConstructor;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.UIObject;
@@ -163,13 +162,4 @@ public interface GwtModuleRunner {
    */
   WindowOperationsHandler getWindowOperationsHandler();
 
-  /**
-   * Declare a {@link UiConstructor} which might be use to handle some widget
-   * creation according to its declaration in a .ui.xml UiBinder file.
-   * 
-   * @param clazz The widget class where the {@link UiConstructor} is declared.
-   * @param argNames An ordered array of argument names
-   */
-  void registerUiConstructor(Class<? extends IsWidget> clazz,
-      String... argNames);
 }

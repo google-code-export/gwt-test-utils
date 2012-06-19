@@ -14,7 +14,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.UIObject;
 import com.googlecode.gwt.test.exceptions.GwtTestUiBinderException;
-import com.googlecode.gwt.test.internal.GwtConfig;
+import com.googlecode.gwt.test.internal.GwtParanamer;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
 /**
@@ -49,6 +49,16 @@ class UiBinderInstanciator {
     return instance;
   }
 
+  private static boolean allArgsAreDeclaredInUiFile(String[] argNames,
+      Map<String, Object> attributes) {
+    for (String argName : argNames) {
+      if (!attributes.containsKey(argName)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   private static List<Object> extractArgs(String[] argNames,
       Map<String, Object> attributes) {
 
@@ -70,43 +80,24 @@ class UiBinderInstanciator {
   private static <U> U getObjectFromUiConstructor(Class<U> clazz,
       Map<String, Object> attributes) {
 
-    List<String[]> registeredUiConstructors = GwtConfig.get().getUiConstructors(
-        clazz);
-
-    boolean hasUiConstructor = false;
-
     for (Constructor<?> cons : clazz.getDeclaredConstructors()) {
-      if (cons.getAnnotation(UiConstructor.class) != null) {
-
-        hasUiConstructor = true;
-        if (registeredUiConstructors == null) {
-          throw new GwtTestUiBinderException(
-              "gwt-test-utils has found a @UiConstructor in '"
-                  + clazz.getName()
-                  + "' which isn't registered. You should register it by calling the 'registerUiConstructor' with the approriate parameters in your test class");
-        }
-
-        Constructor<U> uiConstructor = (Constructor<U>) cons;
-
-        for (String[] argNames : registeredUiConstructors) {
-          List<Object> potentialArgs = extractArgs(argNames, attributes);
-          if (potentialArgs != null && matchs(uiConstructor, potentialArgs)) {
-            return instanciate(uiConstructor, potentialArgs);
-          }
-        }
-
+      if (cons.getAnnotation(UiConstructor.class) == null) {
+        continue;
       }
+
+      Constructor<U> uiConstructor = (Constructor<U>) cons;
+
+      String[] argNames = GwtParanamer.get().lookupParameterNames(
+          uiConstructor);
+
+      if (allArgsAreDeclaredInUiFile(argNames, attributes)) {
+        List<Object> constructorArgs = extractArgs(argNames, attributes);
+        return instanciate(uiConstructor, constructorArgs);
+      }
+
     }
 
-    if (!hasUiConstructor) {
-      return null;
-    } else {
-      throw new GwtTestUiBinderException(
-          "gwt-test-utils has found at least one @UiConstructor in '"
-              + clazz.getName()
-              + "' which isn't registered well. You should register it by calling the 'registerUiConstructor' with the approriate parameters in your test class");
-
-    }
+    return null;
   }
 
   private static <U> U getObjectFromUiFactory(Class<U> clazz, Object owner) {
@@ -183,21 +174,6 @@ class UiBinderInstanciator {
 
       throw new GwtTestUiBinderException(sb.toString(), e);
     }
-  }
-
-  private static boolean matchs(Constructor<?> cons, List<Object> args) {
-    Class<?>[] paramTypes = cons.getParameterTypes();
-    if (paramTypes.length != args.size()) {
-      return false;
-    }
-
-    for (int i = 0; i < args.size(); i++) {
-      if (!paramTypes[i].isInstance(args.get(i))) {
-        return false;
-      }
-    }
-
-    return true;
   }
 
 }

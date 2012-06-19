@@ -1,18 +1,12 @@
 package com.googlecode.gwt.test.internal;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import com.google.gwt.user.client.ui.NamedFrame;
-import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.UIObject.DebugIdImpl;
 import com.google.gwt.user.client.ui.UIObject.DebugIdImplEnabled;
-import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.gwt.test.GwtModuleRunner;
-import com.googlecode.gwt.test.WindowOperationsHandler;
 import com.googlecode.gwt.test.exceptions.GwtTestConfigurationException;
 import com.googlecode.gwt.test.exceptions.GwtTestException;
 import com.googlecode.gwt.test.uibinder.UiObjectTagFactory;
@@ -37,7 +31,7 @@ public class GwtConfig implements AfterTestCallback {
   private final DebugIdImpl disabledInstance = new DebugIdImpl();
   private final DebugIdImpl enabledInstance = new DebugIdImplEnabled();
   private GwtModuleRunner gwtModuleRunner;
-  private final Map<Class<?>, List<String[]>> uiConstructorsMap = new HashMap<Class<?>, List<String[]>>();
+
   private final List<UiObjectTagFactory<?>> uiObjectTagFactories = new ArrayList<UiObjectTagFactory<?>>();
 
   private GwtConfig() {
@@ -47,7 +41,6 @@ public class GwtConfig implements AfterTestCallback {
   public void afterTest() throws Throwable {
     gwtModuleRunner = null;
     uiObjectTagFactories.clear();
-    uiConstructorsMap.clear();
   }
 
   public String getModuleName() {
@@ -58,27 +51,8 @@ public class GwtConfig implements AfterTestCallback {
     return gwtModuleRunner;
   }
 
-  public List<String[]> getUiConstructors(Class<?> clazz) {
-    return uiConstructorsMap.get(clazz);
-  }
-
   public List<UiObjectTagFactory<?>> getUiObjectTagFactories() {
     return uiObjectTagFactories;
-  }
-
-  public WindowOperationsHandler getWindowOperationsHandler() {
-    return gwtModuleRunner.getWindowOperationsHandler();
-  }
-
-  public void registerUiConstructor(
-      Class<? extends Widget> classWithUiConstructor, String... argNames) {
-    List<String[]> uiConstructors = uiConstructorsMap.get(classWithUiConstructor);
-    if (uiConstructors == null) {
-      uiConstructors = new ArrayList<String[]>();
-      uiConstructorsMap.put(classWithUiConstructor, uiConstructors);
-    }
-
-    uiConstructors.add(argNames);
   }
 
   /**
@@ -98,8 +72,6 @@ public class GwtConfig implements AfterTestCallback {
 
     setupDebugIdImpl(gwtModuleRunner.ensureDebugId());
 
-    registerUiConstructor(NamedFrame.class, "name");
-    registerUiConstructor(RadioButton.class, "name");
   }
 
   private String getCheckedModuleName() {

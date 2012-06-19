@@ -2,7 +2,6 @@ package com.googlecode.gwt.test.uibinder;
 
 import static org.junit.Assert.assertEquals;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import com.google.gwt.user.client.ui.RootPanel;
@@ -10,11 +9,6 @@ import com.googlecode.gwt.test.GwtTestTest;
 import com.googlecode.gwt.test.utils.events.Browser;
 
 public class UiBinderWithWidgetsChildTest extends GwtTestTest {
-
-  @Before
-  public void before() {
-    registerUiConstructor(UiConstructorLabel.class, "uiConstructorLabel");
-  }
 
   @Test
   public void click_UiHandler() {

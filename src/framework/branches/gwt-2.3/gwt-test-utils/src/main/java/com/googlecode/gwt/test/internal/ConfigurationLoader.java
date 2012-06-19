@@ -101,6 +101,8 @@ class ConfigurationLoader {
         processSubstituteClass(key, url);
       } else if ("module-file".equals(value)) {
         processModuleFile(key, url);
+      } else if ("src-directory".equals(value)) {
+        SrcDirectoriesHolder.SRC_DIRECTORIES.add(key);
       } else {
         throw new GwtTestConfigurationException("Error in '" + url.getPath()
             + "' : unknown value '" + value + "'");

@@ -5,7 +5,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import com.google.gwt.dom.client.Document;
@@ -21,11 +20,6 @@ import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 import com.googlecode.gwt.test.utils.events.Browser;
 
 public class UiBinderWithWidgetsTest extends GwtTestTest {
-
-  @Before
-  public void before() {
-    registerUiConstructor(UiConstructorLabel.class, "uiConstructorLabel");
-  }
 
   @Test
   public void click_UiHandler() {
