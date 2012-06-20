@@ -10,10 +10,32 @@ import java.lang.annotation.Target;
  * version of a particular method.
  * 
  * @author Bertrand Paquet
+ * @author Gael Lazzari
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface PatchMethod {
+
+  /**
+   * Indicates the actual class of a parameter. Use this annotation for a @PatchMethod
+   * parameter whenever the type of the argument is not accessible.
+   * 
+   * @author Gael Lazzari
+   * 
+   */
+  @Retention(RetentionPolicy.RUNTIME)
+  @Target(ElementType.PARAMETER)
+  public @interface ParamType {
+
+    /**
+     * The full qualifed name of the parameter's type
+     * 
+     * @return The type of the parameter in the method to patch.
+     * 
+     * @see Class#forName(String)
+     */
+    String value() default "";
+  }
 
   /**
    * <p>
