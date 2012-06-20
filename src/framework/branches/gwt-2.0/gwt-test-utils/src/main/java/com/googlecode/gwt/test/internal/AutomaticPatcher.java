@@ -4,6 +4,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -15,10 +16,13 @@ import javassist.CtClass;
 import javassist.CtMethod;
 import javassist.NotFoundException;
 import javassist.bytecode.Descriptor;
+import javassist.bytecode.annotation.AnnotationImpl;
+import javassist.bytecode.annotation.StringMemberValue;
 
 import com.googlecode.gwt.test.exceptions.GwtTestPatchException;
 import com.googlecode.gwt.test.patchers.InitMethod;
 import com.googlecode.gwt.test.patchers.PatchMethod;
+import com.googlecode.gwt.test.patchers.PatchMethod.ParamType;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
 /**
@@ -116,6 +120,36 @@ class AutomaticPatcher implements Patcher {
         throw e;
       }
     }
+  }
+
+  private String[] extractPatchMethodParameterTypes(CtMethod patchMethod,
+      boolean isStatic) throws NotFoundException, ClassNotFoundException {
+
+    CtClass[] patchMethodParamTypes = patchMethod.getParameterTypes();
+    int length = isStatic ? patchMethodParamTypes.length
+        : patchMethodParamTypes.length - 1;
+    String[] result = new String[length];
+
+    Object[][] parameterAnntations = patchMethod.getParameterAnnotations();
+
+    for (int i = isStatic ? 0 : 1; i < patchMethodParamTypes.length; i++) {
+      Object[] annotations = parameterAnntations[i];
+
+      String paramType = null;
+      if (annotations.length > 0) {
+        paramType = tryExtractFromParamTypeAnnotation(annotations);
+      }
+
+      if (paramType == null) {
+        // default
+        paramType = patchMethodParamTypes[i].getName();
+      }
+
+      result[isStatic ? i : i - 1] = paramType;
+
+    }
+
+    return result;
   }
 
   private CtMethod findPatchMethod(CtMethod m) throws Exception {
@@ -266,37 +300,30 @@ class AutomaticPatcher implements Patcher {
 
   private boolean hasCompatibleSignature(CtMethod methodFound,
       CtMethod patchMethod) throws Exception {
-    CtClass[] methodFoundParams = methodFound.getParameterTypes();
-    CtClass[] patchMethodParams = patchMethod.getParameterTypes();
 
-    boolean compat = hasSameSignature(patchMethodParams, methodFoundParams);
+    boolean isStatic = Modifier.isStatic(methodFound.getModifiers());
 
-    // account for the case where the method is non static in the original class
-    // and we need to pass the object into the static patching method
-    if (!compat && patchMethodParams.length >= 1
-        && methodFound.getDeclaringClass().subtypeOf(patchMethodParams[0])) {
-      CtClass[] classesWithoutThis = new CtClass[patchMethodParams.length - 1];
-      for (int i = 1; i < patchMethodParams.length; i++) {
-        classesWithoutThis[i - 1] = patchMethodParams[i];
-      }
+    if (!isStatic
+        && !methodFound.getDeclaringClass().subtypeOf(
+            patchMethod.getParameterTypes()[0])) {
 
-      compat = hasSameSignature(classesWithoutThis, methodFoundParams);
-    }
-
-    return compat;
-  }
-
-  private boolean hasSameSignature(CtClass[] classesAsked,
-      CtClass[] classesFound) throws Exception {
-    if (classesAsked.length != classesFound.length) {
       return false;
     }
-    for (int i = 0; i < classesAsked.length; i++) {
-      CtClass classFound = classesFound[i];
-      if (!classFound.getName().equals(classesAsked[i].getName())) {
+
+    CtClass[] orgMethodParamTypes = methodFound.getParameterTypes();
+    String[] patchMethodParamTypes = extractPatchMethodParameterTypes(
+        patchMethod, isStatic);
+
+    if (orgMethodParamTypes.length != patchMethodParamTypes.length) {
+      return false;
+    }
+
+    for (int i = 0; i < orgMethodParamTypes.length; i++) {
+      if (!orgMethodParamTypes[i].getName().equals(patchMethodParamTypes[i])) {
         return false;
       }
     }
+
     return true;
   }
 
@@ -308,4 +335,18 @@ class AutomaticPatcher implements Patcher {
     }
   }
 
+  private String tryExtractFromParamTypeAnnotation(Object[] annotations) {
+    for (Object o : annotations) {
+
+      AnnotationImpl annotation = (AnnotationImpl) Proxy.getInvocationHandler(o);
+      if (annotation.getTypeName().equals(ParamType.class.getName())) {
+        String value = ((StringMemberValue) annotation.getAnnotation().getMemberValue(
+            "value")).getValue();
+
+        return value.equals("") ? null : value;
+      }
+    }
+
+    return null;
+  }
 }

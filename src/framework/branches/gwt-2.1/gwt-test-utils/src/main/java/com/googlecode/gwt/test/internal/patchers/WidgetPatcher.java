@@ -21,7 +21,7 @@ class WidgetPatcher {
     CtMethod onAttach = c.getMethod("onAttach", "()V");
     onAttach.insertBefore(GwtFinder.class.getName() + ".onAttach(this);");
 
-    // add behavior to RadioButton.setName method
+    // add behavior to Widget.onDetach method
     CtMethod onDetach = c.getMethod("onDetach", "()V");
     onDetach.insertBefore(GwtFinder.class.getName() + ".onDetach(this);");
   }

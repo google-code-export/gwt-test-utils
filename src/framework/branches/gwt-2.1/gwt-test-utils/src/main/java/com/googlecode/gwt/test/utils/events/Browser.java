@@ -828,10 +828,6 @@ public class Browser {
   private static void dispatchEventInternal(Widget target, boolean check,
       Event... events) {
 
-    // run finally scheduled commands first because they may modify the DOM
-    // structure
-    FinallyCommandTrigger.triggerCommands();
-
     if (events.length == 0) {
       return;
     }
@@ -845,10 +841,6 @@ public class Browser {
         dispatchEventInternal(target, event);
       }
     }
-
-    // run finally scheduled commands because some could have been scheduled
-    // when the event was dispatched.
-    FinallyCommandTrigger.triggerCommands();
   }
 
   private static void dispatchEventInternal(Widget target, Event event) {

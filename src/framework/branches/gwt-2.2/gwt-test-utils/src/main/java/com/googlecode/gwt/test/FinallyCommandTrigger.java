@@ -38,6 +38,12 @@ public class FinallyCommandTrigger implements AfterTestCallback {
   }
 
   public static void triggerCommands() {
+    if (INSTANCE.isTriggering) {
+      return;
+    }
+
+    INSTANCE.isTriggering = true;
+
     while (!INSTANCE.repeatingCommands.isEmpty()) {
       executeRepeatingCommand(INSTANCE.repeatingCommands.poll());
     }
@@ -45,6 +51,8 @@ public class FinallyCommandTrigger implements AfterTestCallback {
     while (!INSTANCE.scheduledCommands.isEmpty()) {
       INSTANCE.scheduledCommands.poll().execute();
     }
+
+    INSTANCE.isTriggering = false;
   }
 
   private static void executeRepeatingCommand(RepeatingCommand cmd) {
@@ -54,6 +62,7 @@ public class FinallyCommandTrigger implements AfterTestCallback {
     }
   }
 
+  private boolean isTriggering;
   private final Queue<RepeatingCommand> repeatingCommands = new LinkedList<Scheduler.RepeatingCommand>();
 
   private final Queue<ScheduledCommand> scheduledCommands = new LinkedList<Scheduler.ScheduledCommand>();
@@ -84,6 +93,7 @@ public class FinallyCommandTrigger implements AfterTestCallback {
           + FinallyCommandTrigger.class.getName()
           + ".triggerCommands() static method AFTER arranging your test");
     }
+
   }
 
 }
