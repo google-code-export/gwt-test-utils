@@ -5,12 +5,10 @@ import javassist.CtClass;
 import javassist.CtMethod;
 import javassist.NotFoundException;
 
-import com.google.web.bindery.event.shared.SimpleEventBus;
 import com.googlecode.gwt.test.internal.AsyncCallbackRecorder;
 import com.googlecode.gwt.test.patchers.InitMethod;
-import com.googlecode.gwt.test.patchers.PatchClass;
 
-@PatchClass(SimpleEventBus.class)
+// @PatchClass(SimpleEventBus.class)
 class SimpleEventBusPatcher {
 
   @InitMethod

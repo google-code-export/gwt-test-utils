@@ -15,6 +15,7 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.MenuBar;
@@ -23,12 +24,12 @@ import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
-import com.googlecode.gwt.test.FinallyCommandTrigger;
 import com.googlecode.gwt.test.GwtModuleRunner;
 import com.googlecode.gwt.test.internal.GwtConfig;
 import com.googlecode.gwt.test.internal.utils.JavaScriptObjects;
 import com.googlecode.gwt.test.internal.utils.JsoProperties;
 import com.googlecode.gwt.test.internal.utils.RadioButtonManager;
+import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 import com.googlecode.gwt.test.utils.WidgetUtils;
 
 /**
@@ -670,6 +671,37 @@ public class Browser {
   @Deprecated
   public static void setProperty(String name, String value) {
     GwtConfig.get().getModuleRunner().addClientProperty(name, value);
+  }
+
+  /**
+   * Simulate the submission of a form with the expected html result from the
+   * server. The targeted form is expected to be attached to the DOM.
+   * 
+   * @param form The form to submit
+   * @param resultsHtml The mocked results to return from submitting the form
+   * 
+   * @return true is the form was submitted, false otherwise.
+   * 
+   * @see BrowserErrorHandler#onError(String)
+   * 
+   */
+  public static boolean submit(FormPanel form, String resultsHtml) {
+    Element synthesizedFrame = GwtReflectionUtils.getPrivateFieldValue(form,
+        "synthesizedFrame");
+
+    if (synthesizedFrame == null) {
+      // the form has not been attached to the DOM
+      GwtConfig.get().getModuleRunner().getBrowserErrorHandler().onError(
+          "Cannot submit form which is not attached to the DOM '");
+
+      return false;
+    } else {
+      synthesizedFrame.setInnerHTML(resultsHtml);
+      form.submit();
+
+      return true;
+    }
+
   }
 
   private static boolean canApplyEvent(Widget target, Event event) {

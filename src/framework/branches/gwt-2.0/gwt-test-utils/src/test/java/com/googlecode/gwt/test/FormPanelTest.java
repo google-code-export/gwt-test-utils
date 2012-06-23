@@ -20,9 +20,8 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class FormPanelTest extends GwtTestTest {
 
-  private boolean completeSubmitted;
   private FormPanel form;
-  private boolean submitted;
+  private StringBuilder sb;
 
   @Test
   public void add() {
@@ -52,10 +51,30 @@ public class FormPanelTest extends GwtTestTest {
 
   @Before
   public void beforeFormPanel() {
+    sb = new StringBuilder();
     form = new FormPanel();
     assertFalse(form.isAttached());
     RootPanel.get().add(form);
     assertTrue(form.isAttached());
+  }
+
+  @Test
+  public void configureForm() {
+    // Act
+    form.setAction("/myFormHandler");
+    form.setEncoding(FormPanel.ENCODING_MULTIPART);
+
+    form.setMethod(FormPanel.METHOD_POST);
+    form.setTitle("formTitle");
+    form.setStyleName("formStyleName");
+    form.addStyleName("addition");
+
+    // Assert
+    assertEquals("/myFormHandler", form.getAction());
+    assertEquals(FormPanel.ENCODING_MULTIPART, form.getEncoding());
+    assertEquals(FormPanel.METHOD_POST, form.getMethod());
+    assertEquals("formTitle", form.getTitle());
+    assertEquals("formStyleName addition", form.getStyleName());
   }
 
   @Test
@@ -90,25 +109,6 @@ public class FormPanelTest extends GwtTestTest {
   }
 
   @Test
-  public void setup() {
-    // Act
-    form.setAction("/myFormHandler");
-    form.setEncoding(FormPanel.ENCODING_MULTIPART);
-
-    form.setMethod(FormPanel.METHOD_POST);
-    form.setTitle("formTitle");
-    form.setStyleName("formStyleName");
-    form.addStyleName("addition");
-
-    // Assert
-    assertEquals("/myFormHandler", form.getAction());
-    assertEquals(FormPanel.ENCODING_MULTIPART, form.getEncoding());
-    assertEquals(FormPanel.METHOD_POST, form.getMethod());
-    assertEquals("formTitle", form.getTitle());
-    assertEquals("formStyleName addition", form.getStyleName());
-  }
-
-  @Test
   public void setWidget() {
     // Arrange
     Button b1 = new Button();
@@ -134,36 +134,31 @@ public class FormPanelTest extends GwtTestTest {
   }
 
   @Test
-  public void submit() {
-    // Arrange
-    TextBox tb = new TextBox();
-    setupFormForSubmitTest(tb);
-    submitted = false;
-    completeSubmitted = false;
-
-    // Act
-    form.submit();
-
-    // Assert
-    assertTrue(submitted);
-    assertFalse(completeSubmitted);
-  }
-
-  @Test
   public void submitComplete() {
     // Arrange
     TextBox tb = new TextBox();
     tb.setText("some text");
     setupFormForSubmitTest(tb);
-    submitted = false;
-    completeSubmitted = false;
 
     // Act
     form.submit();
 
     // Assert
-    assertTrue(submitted);
-    assertTrue(completeSubmitted);
+    assertEquals("onSubmit onSubmitCompleted", sb.toString());
+  }
+
+  @Test
+  public void submitWithCancel() {
+    // Arrange
+    TextBox tb = new TextBox();
+    setupFormForSubmitTest(tb);
+    assertEquals(0, sb.length());
+
+    // Act
+    form.submit();
+
+    // Assert
+    assertEquals("onSubmit", sb.toString());
   }
 
   private void setupFormForSubmitTest(final TextBox tb) {
@@ -205,7 +200,7 @@ public class FormPanelTest extends GwtTestTest {
           event.cancel();
         }
 
-        submitted = true;
+        sb.append("onSubmit");
       }
     });
     form.addSubmitCompleteHandler(new FormPanel.SubmitCompleteHandler() {
@@ -214,10 +209,9 @@ public class FormPanelTest extends GwtTestTest {
         // fired. Assuming the service returned a response of type text/html,
         // we can get the result text here (see the FormPanel documentation for
         // further explanation).
-        completeSubmitted = true;
+        sb.append(" onSubmitCompleted");
       }
     });
 
   }
-
 }
