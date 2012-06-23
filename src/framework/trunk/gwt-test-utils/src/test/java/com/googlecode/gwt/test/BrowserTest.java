@@ -45,6 +45,11 @@ import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.FocusPanel;
+import com.google.gwt.user.client.ui.FormPanel;
+import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
+import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteHandler;
+import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
+import com.google.gwt.user.client.ui.FormPanel.SubmitHandler;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTMLTable.Cell;
 import com.google.gwt.user.client.ui.MultiWordSuggestOracle;
@@ -53,6 +58,7 @@ import com.google.gwt.user.client.ui.StackPanel;
 import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.googlecode.gwt.test.utils.events.Browser;
+import com.googlecode.gwt.test.utils.events.Browser.BrowserErrorHandler;
 import com.googlecode.gwt.test.utils.events.EventBuilder;
 
 public class BrowserTest extends GwtTestTest {
@@ -1139,6 +1145,70 @@ public class BrowserTest extends GwtTestTest {
     assertEquals(2, keyUpCount);
     assertTrue(onBlurTriggered);
     assertFalse(onChangeTriggered);
+  }
+
+  @Test
+  public void submit() {
+    // Arrange
+    final StringBuilder sb = new StringBuilder();
+    FormPanel form = new FormPanel();
+    form.addSubmitHandler(new SubmitHandler() {
+
+      public void onSubmit(SubmitEvent event) {
+        sb.append("onSubmit");
+      }
+    });
+    form.addSubmitCompleteHandler(new SubmitCompleteHandler() {
+
+      public void onSubmitComplete(SubmitCompleteEvent event) {
+        sb.append(" complete : ").append(event.getResults());
+      }
+    });
+    setBrowserErrorHandler(new BrowserErrorHandler() {
+
+      public void onError(String errorMessage) {
+        sb.append("ERROR : not attached");
+      }
+    });
+    // Attach to the DOM
+    RootPanel.get().add(form);
+
+    // Arrange
+    Browser.submit(form, "mock result");
+
+    // Assert
+    assertEquals("onSubmit complete : mock result", sb.toString());
+  }
+
+  @Test
+  public void submitThrowsErrorIfNotAttached() {
+    // Arrange
+    final StringBuilder sb = new StringBuilder();
+    FormPanel form = new FormPanel();
+    form.addSubmitHandler(new SubmitHandler() {
+
+      public void onSubmit(SubmitEvent event) {
+        sb.append("onSubmit");
+      }
+    });
+    form.addSubmitCompleteHandler(new SubmitCompleteHandler() {
+
+      public void onSubmitComplete(SubmitCompleteEvent event) {
+        sb.append(" complete : ").append(event.getResults());
+      }
+    });
+    setBrowserErrorHandler(new BrowserErrorHandler() {
+
+      public void onError(String errorMessage) {
+        sb.append("ERROR : not attached");
+      }
+    });
+
+    // Arrange
+    Browser.submit(form, "mock result");
+
+    // Assert
+    assertEquals("ERROR : not attached", sb.toString());
   }
 
   private void assertTextFilledCorrectly(String filledText,
