@@ -1,3 +1,33 @@
+* Version 0.39 (GWT 2.4) : _06/23/2012_
+
+ * rename 'gwt-test-utils-gxt' artifactId to 'gwt-test-utils-gxt2' and add a new 'gwt-test-utils-gxt3' one
+ * Rename 'com.googlecode.gxt.test' package to 'com.googlecode.gwt.test.gxt2'
+ * Start support for GXT 3.0
+ * Add GxtTest base class
+ * API adaptations to prepare for GXT 3.0 integration (GwtModuleRunner ClientProperties methods)
+ * Remove "registerUiConstructor" method : use a custom Paranamer implementation to be able to retrieve method and constructor parameter names
+ * Improve JavassistUtils
+ * Fix 'replace-with' deferred binding support for inner classes
+ * Add BeanModelLookupCreateHandler to fix build
+ * Add new CellTable methods in Browser
+ * Add Browser.submit(..) helper method
+ * Some cleaning on how event are fired within SimpleEventBus, buffer rpc calls, etc..
+ * Fix [http://code.google.com/p/gwt-test-utils/issues/detail?id=116 issue 116] : fix support for @Provides methods with interface type parameters
+ * Fix [http://code.google.com/p/gwt-test-utils/issues/detail?id=139 issue 139] : Add the possibility to mock HttpServletRequest, HttpServletResponse, ServletConfig and ServletContext through ServletMockProvider
+ * Fix [http://code.google.com/p/gwt-test-utils/issues/detail?id=144 issue 144] : DeferredReplaceWithCreateHandler didn't correctly handle inner classes
+ * Fix uibinder test resource
+
+* Version 0.38 (GWT 2.4) : _04/02/2012_
+
+ * change groupId to com.googlecode.gwt-test-utils and deploy on Maven Central
+ * rename all package to "com.googlecode.xxx"
+ * Fix [http://code.google.com/p/gwt-test-utils/issues/detail?id=132 issue 132] : fix PlaceHistoryMapperCreateHandler
+ * Fix support for provided @UiFied
+
+* Version 0.37 (GWT 2.4)  : _04/02/2012_
+
+ * Maven Central release tentative
+
 * Version 0.36 (GWT 2.4) :
 
  * New GwtFinder API to be able to find attached Widgets by id, text, html, introspection path...
