@@ -69,12 +69,10 @@ But testing it with {{{GWTTestCase}}} would not be so simple. You would have to 
 
 1) Add all librairies required by gwt-test-utils : 
 
- * {{{gwt-test-utils-0.28.jar}}} (or higher)
- * {{{commons-beanutils-1.8.3.jar}}}
- * {{{htmlparser-1.6.jar}}}
- * {{{javassist-3.12.1.GA.jar}}}
- * {{{junit-4.8.2.jar}}}
- * {{{slf4j-api-1.6.1.jar}}}
+ * {{{gwt-test-utils-X.jar}}}
+ * {{{javassist-3.12.1.GA+.jar}}}
+ * {{{junit-4.5+.jar}}}
+ * {{{slf4j-api-1.6+.jar}}}
 
 2) Create a META-INF/gwt-test-utils.properties file in your test classpath, e.g., in "test" directory. Add this line in it :
 
@@ -117,7 +115,9 @@ public class GwtTestSample implements EntryPoint {
 }
 }}}
 
-Note that they are declared as "package-protected" class properties to be accessible directly in the test you are gonna write (in the same package).
+This is absolutely not mandatory, you could retrieve each widget directly from the RootPanel instance where it is registered. For Example : {{{TextBox nameField = (TextBox) RootPanel.get("nameFieldContainer").getWidget(0);}}}. But it would not be very flexible : your test would need to know your exact DOM structure. Changing it would break your test.
+
+Also note those widgets are declared as "package-protected" class properties to be accessible directly in the test you are gonna write (in the same package).
 But you could make them private if you want and use java reflection to access them without any GWT constraint ;-)
 
 4) Now, you can create the test class, like this :
