@@ -1,6 +1,6 @@
 package com.octo.gwt.test.demo.client;
 
-import com.octo.gwt.test.GwtTest;
+import com.googlecode.gwt.test.GwtTest;
 
 public abstract class DemoSimpleTest extends GwtTest {
 

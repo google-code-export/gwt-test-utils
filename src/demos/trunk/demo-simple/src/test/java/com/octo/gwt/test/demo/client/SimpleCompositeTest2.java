@@ -9,8 +9,8 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
-import com.octo.gwt.test.utils.GwtReflectionUtils;
-import com.octo.gwt.test.utils.events.Browser;
+import com.googlecode.gwt.test.utils.GwtReflectionUtils;
+import com.googlecode.gwt.test.utils.events.Browser;
 
 public class SimpleCompositeTest2 extends DemoSimpleTest {
 

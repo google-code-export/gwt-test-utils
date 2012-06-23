@@ -9,11 +9,11 @@ import org.junit.Test;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Label;
 import com.google.inject.Inject;
+import com.googlecode.gwt.test.guice.GwtGuiceTest;
+import com.googlecode.gwt.test.utils.GwtReflectionUtils;
+import com.googlecode.gwt.test.utils.events.Browser;
 import com.octo.gwt.test.demo.server.FooBeanFactory;
 import com.octo.gwt.test.demo.server.FooBeanFactorySimple;
-import com.octo.gwt.test.guice.GwtGuiceTest;
-import com.octo.gwt.test.utils.GwtReflectionUtils;
-import com.octo.gwt.test.utils.events.Browser;
 
 public class DemoGuiceTest extends GwtGuiceTest {
 

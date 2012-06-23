@@ -10,12 +10,12 @@ import org.springframework.test.context.ContextConfiguration;
 
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Label;
+import com.googlecode.gwt.test.spring.GwtSpringTest;
+import com.googlecode.gwt.test.spring.GwtTestContextLoader;
+import com.googlecode.gwt.test.utils.GwtReflectionUtils;
+import com.googlecode.gwt.test.utils.events.Browser;
 import com.octo.gwt.test.demo.server.FooBeanFactory;
 import com.octo.gwt.test.demo.server.FooBeanFactorySimple;
-import com.octo.gwt.test.spring.GwtSpringTest;
-import com.octo.gwt.test.spring.GwtTestContextLoader;
-import com.octo.gwt.test.utils.GwtReflectionUtils;
-import com.octo.gwt.test.utils.events.Browser;
 
 @ContextConfiguration(locations = {"classpath:applicationContext.xml"}, loader = GwtTestContextLoader.class)
 public class DemoSpringTest extends GwtSpringTest {

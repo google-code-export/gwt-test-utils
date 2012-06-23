@@ -12,10 +12,10 @@ import com.octo.gwt.test.demo.beans.FooBean;
 
 public class RPCComposite extends Composite {
 
-  private Button button;
-  private Label label;
+  private final Button button;
+  private final Label label;
 
-  private MyServiceAsync service = GWT.create(MyService.class);
+  private final MyServiceAsync service = GWT.create(MyService.class);
 
   public RPCComposite() {
     button = new Button();

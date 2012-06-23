@@ -12,10 +12,10 @@ import org.mockito.Mock;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Label;
-import com.octo.gwt.test.GwtTestWithMockito;
+import com.googlecode.gwt.test.GwtTestWithMockito;
+import com.googlecode.gwt.test.utils.GwtReflectionUtils;
+import com.googlecode.gwt.test.utils.events.Browser;
 import com.octo.gwt.test.demo.beans.FooBean;
-import com.octo.gwt.test.utils.GwtReflectionUtils;
-import com.octo.gwt.test.utils.events.Browser;
 
 public class DemoMockitoTest extends GwtTestWithMockito {
 
