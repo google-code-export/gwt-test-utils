@@ -251,7 +251,7 @@
  * r319 : Enable @Source to specify an absolute path in specific case
  * r318 : Patch css possible custom methods
  * r317 : Refactor ClientBundle proxy generation mecanism
- * r316 : Patch StyleInjector inject* methods
+ * r316 : Patch StyleInjector inject methods
  * r315 : Add unit test on GWT.runAsync
  * r314 : Create new test package for "resources" stuff and start to patch CssResource
  * r313 : Patch ClientBundle TextResource stuff and GWT convinent methods (getModuleName....)
