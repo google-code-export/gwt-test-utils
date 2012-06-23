@@ -1,3 +1,46 @@
+* Version 0.36 (GWT 2.4) :
+
+ * New GwtFinder API to be able to find attached Widgets by id, text, html, introspection path...
+ * Reduce de memory footprint of gwt-test-utils by cleaning the DOM heriarchy after each test
+ * HTML parsing improvements
+ * Improvements on Browser class
+ * Improvements on the CSV API
+ * Implement requested feature 46 : provide support for PlaceHistoryMapper
+ * Fix [http://code.google.com/p/gwt-test-utils/issues/detail?id=104 issue 104] & [http://code.google.com/p/gwt-test-utils/issues/detail?id=105 105] : Gin support attempts to bind a Provider, and Guice complains
+ * Fix [http://code.google.com/p/gwt-test-utils/issues/detail?id=106 issue 106] : Support for @UiTemplate
+ * Fix [http://code.google.com/p/gwt-test-utils/issues/detail?id=110 issue 110] : Refactor the computing mechanism of resources relative URL
+ * Fix [http://code.google.com/p/gwt-test-utils/issues/detail?id=112 issue 112] : ignore XML namespaces while parsing XML with DOM (.gwt.xml and web.xml files)
+ * Fix [http://code.google.com/p/gwt-test-utils/issues/detail?id=113 issue 113] : implement JSONObject.toString()
+ * Fix [http://code.google.com/p/gwt-test-utils/issues/detail?id=114 issue 114] : handle @Source path relative to the classpath
+ * Fix [http://code.google.com/p/gwt-test-utils/issues/detail?id=117 issue 117] : Improve support for Window.Location and History
+ * Fix [http://code.google.com/p/gwt-test-utils/issues/detail?id=119 issue 119] : provide support for Grid UiBinding
+ * Fix [http://code.google.com/p/gwt-test-utils/issues/detail?id=122 issue 122] : don't substitute IsSerializable with Serializable when a class implements both interfaces
+ * Fix [http://code.google.com/p/gwt-test-utils/issues/detail?id=124 issue 124] : enable creation of Resources with multiple @Source paths
+ * Fix [http://code.google.com/p/gwt-test-utils/issues/detail?id=127 issue 127] : support for RepeatingCommand in Scheduler
+ * Fix [http://code.google.com/p/gwt-test-utils/issues/detail?id=129 issue 129] : implement support for @UiChild
+ * Fix [http://code.google.com/p/gwt-test-utils/issues/detail?id=130 issue 130] : patch gxt CSS class
+ * Fix support of RadioButton in radiogroup
+
+* Version 0.35 (GWT 2.4) :
+
+ * Full support for CellList, CellTable and DataGrid. 
+ * Fix [http://code.google.com/p/gwt-test-utils/issues/detail?id=74 issue 74] : provide support for GWT JSON API
+ * Fix [http://code.google.com/p/gwt-test-utils/issues/detail?id=75 issue 75] : events were not dispatched on some widgets which are not attached to the DOM
+ * Fix [http://code.google.com/p/gwt-test-utils/issues/detail?id=76 issue 76] : mocked element didn't have an initialized PropertyContainer
+ * Fix [http://code.google.com/p/gwt-test-utils/issues/detail?id=77 issue 77] : apply ServletDefinitionReader patch to improve Guice errors stacktrace
+ * Fix [http://code.google.com/p/gwt-test-utils/issues/detail?id=79 issue 79] : patch Dictionary
+ * Fix [http://code.google.com/p/gwt-test-utils/issues/detail?id=81 issue 81] : enable gxt-uibinder
+ * Fix [http://code.google.com/p/gwt-test-utils/issues/detail?id=82 issue 82] : Patch XT WidgetComponent setParent method
+ * Fix [http://code.google.com/p/gwt-test-utils/issues/detail?id=83 issue 83] : add URL.encodePathSegmentImpl, add support for setting the url used by Location, add missing XMLParserImpl methods: createTextNode, getOwnerDocument, setAttribute
+ * Fix [http://code.google.com/p/gwt-test-utils/issues/detail?id=84 issue 84] : support UiBinder CellPanel and <ui:import> tags.
+ * Fix [http://code.google.com/p/gwt-test-utils/issues/detail?id=87 issue 87] : refactor UiBinder classes so that each UiBinderTag can retrieve ui:resource references, improve Resource support (when a Resource interface extends more than one other interfaces) and fix all AssertionErrors
+ * Fix [http://code.google.com/p/gwt-test-utils/issues/detail?id=88 issue 88] : Better HTML attribute support
+ * Fix [http://code.google.com/p/gwt-test-utils/issues/detail?id=90 issue 90] : add support for i18n @Key
+ * Fix [http://code.google.com/p/gwt-test-utils/issues/detail?id=93 issue 93] : allow the same gwt-test-utils.properties configuration file to be process more than once by ignoring duplicated properties
+ * Fix [http://code.google.com/p/gwt-test-utils/issues/detail?id=98 issue 98] : Improve GwtReflectionUtils.findMethod to be able to retrieve method with primitive types
+ * Fix [http://code.google.com/p/gwt-test-utils/issues/detail?id=100 issue 100] : Update javassist dependency
+ * Fix [http://code.google.com/p/gwt-test-utils/issues/detail?id=101 issue 101] : add support for UiBinder LayoutPanel, StackLayoutPanel, SplitLayoutPanel, MenuBar and MenuItem. Ignore external DTD while parsing XML with DOM
+
 * Version 0.34 (GWT 2.4) :
 
  * Adaptation to GWT 2.4.0
@@ -5,7 +48,7 @@
 * Version 0.33 (GWT 2.3) : 
 
  * Support for Guice & GIN ! If you're interested in those features, you should read the related wiki pages in the User Guide
- * Fix [http://code.google.com/p/gwt-test-utils/issues/detail?id=51 issue 51] : better Generator <replace-with> support
+ * Fix [http://code.google.com/p/gwt-test-utils/issues/detail?id=51 issue 51] : better Generator 'replace-with' support
  * Fix [http://code.google.com/p/gwt-test-utils/issues/detail?id=70 issue 70]: Replace HTMLParser library with NekoHTML which is packaged in gwt-dev.jar
  * Fix [http://code.google.com/p/gwt-test-utils/issues/detail?id=72 issue 72]: GXT's BeanModelFactory not testable
  * Fix [http://code.google.com/p/gwt-test-utils/issues/detail?id=73 issue 73]: Provide support for IsWidget in UiBinder
@@ -16,7 +59,7 @@
  * Fix [http://code.google.com/p/gwt-test-utils/issues/detail?id=51 issue 51] : Add support for custom deferred binding
  * Fix [http://code.google.com/p/gwt-test-utils/issues/detail?id=55 issue 55] : Event type touchmove not supported
  * Fix [http://code.google.com/p/gwt-test-utils/issues/detail?id=56 issue 56] : Cannot fire event with mouse position
- * Fix [http://code.google.com/p/gwt-test-utils/issues/detail?id=57 issue 57] : Improve implementation of <ui:image>, <ui:style> and <ui:data>
+ * Fix [http://code.google.com/p/gwt-test-utils/issues/detail?id=57 issue 57] : Improve implementation of 'ui:image', 'ui:style' and 'ui:data'
  * Fix [http://code.google.com/p/gwt-test-utils/issues/detail?id=58 issue 58] : Add support for JUnit 3 & 4 TestSuite
  * Fix [http://code.google.com/p/gwt-test-utils/issues/detail?id=59 issue 59] : Improve LocalizableCreateHandler stacktrace.
  * Fix [http://code.google.com/p/gwt-test-utils/issues/detail?id=60 issue 60] : gwt-test-utils doesn't include the default 'client' path in classes to patch
@@ -42,7 +85,7 @@
  * Introduction of a gwt-test-utils exception hierarchy (no more RuntimeException)
  * change the use abstract GwtTest.getModuleName() method, which is now the equivalent of GWTTestCase.getModuleName() Implementations are now expected expected to return the fully qualified name of the tested GWT module. 
  * gwt-test-utils now needs a META-INF/gwt-test-utils.properties file in the test classpath, with at least the .gwt.xml module configuration file declarations.
- * gwt-test-utils now read RemoteService mappings from <servlet> elements in your .gwt.xml files, or directly in web.xml if necessary.
+ * gwt-test-utils now read RemoteService mappings from 'servlet' elements in your .gwt.xml files, or directly in web.xml if necessary.
  * Fix [http://code.google.com/p/gwt-test-utils/issues/detail?id=32  issue 32]
  * Fix [http://code.google.com/p/gwt-test-utils/issues/detail?id=33  issue 33]
  * Fix [http://code.google.com/p/gwt-test-utils/issues/detail?id=34  issue 34]
