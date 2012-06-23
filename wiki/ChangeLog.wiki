@@ -1,3 +1,5 @@
+#summary gwt-test-utils changelog
+
 * Version 0.39 (GWT 2.4) : _06/23/2012_ *
 
  * rename 'gwt-test-utils-gxt' artifactId to 'gwt-test-utils-gxt2' and add a new 'gwt-test-utils-gxt3' one
