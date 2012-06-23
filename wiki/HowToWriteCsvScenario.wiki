@@ -93,35 +93,28 @@ public class MyTestShell extends GwtCsvTest {
       myApp.onModuleLoad();
    }
 
-   @Override
-   protected NodeObjectFinder getNodeObjectFinder(String prefix) {
-      if ("myApp".equals(prefix)) {
-         return new NodeObjectFinder() {
+   @Before
+   public void setup() {
+      GwtFinder.registerNodeFinder("myApp", new NodeObjectFinder() {
+         public Object find(Node node) {
+            return csvRunner.getNodeValue(myApp, node);
+          }
+      });
 
-            public Object find(CsvRunner csvRunner, Node node) {
-               return csvRunner.getNodeValue(myApp, node);
-            }
-
-         };
-      } else if ("simpleComposite".equals(prefix)) {
-         return new NodeObjectFinder() {
-
-            public Object find(CsvRunner csvRunner, Node node) {
-               return csvRunner.getNodeValue(RootPanel.get().getWidget(0), node);
-            }
-         };
-      } 
-
-      return super.getNodeObjectFinder(prefix);
+      GwtFinder.registerNodeFinder("simpleComposite", new NodeObjectFinder() {
+         public Object find(Node node) {
+            return csvRunner.getNodeValue(RootPanel.get().getWidget(0), node);
+           }
+      });
    }
+}
 }}}
 
 The {{{@CsvDirectory}}} class annotation tells *gwt-test-utils* where to find CSV files. In this case, all files with the extension _*.csv*_ in the project folder _functional-tests_ will be loaded. The _extension_ property is optional and equals "*.csv*" by default.
 
 We also write a simple {{{initApp}}} method which initialize the application. This method is annoted with a markup annotation : {{{@CsvMethod}}}, which tells the framework {{{initApp}}} can be used directly in CSV tests.
 
-Finally, we overrided the {{{GwtCsvTest.getNodeObjectFinder(String prefix)}}} to provide a cool way to access the UI components.
-
+Finally, we register some custom {{{NodeObjectFinder}}} to the {{{GwtFinder}}} helper object. Those finders relies on the inherited {{{CsvRunner}}} runner instance to provide a cool way to access the UI components.
 
 Now, we can write the corresponding CSV senario and assertions which will use {{{MyTestShell}}} functionalities : 
 
@@ -133,6 +126,7 @@ mouseMove;/simpleComposite/img
 assertExact;mouse moved on picture !;/simpleComposite/label/text
 assertExact;mouse moved on picture !;/root/widget(0)/label/text
 assertExact;mouse moved on picture !;/myApp/c1/label/text
+assertText;mouse moved on picture !;/myApp/c1/label
 }}}
 
 First, we had to start the script with the instruction {{{start}}}.
@@ -140,16 +134,16 @@ Than, we called the {{{@CsvMethod MyTestShell.initApp()}}} method to instanciate
 
 Since the application is initialized, we can do some actions. So, let's explain the line {{{assertNotExist;/simpleComposite/label/text}}} : 
 
- * The first CSV cell desribe the action to do. Each action *must* have a corresponding {{{@CsvMethod}}} in the run test class (or any of its superclass), which can be retrieved by name. {{{GwtCsvTest}}} provides some generic test statements, such as {{{assertNotExist}}}, {{{assertExact}}}, {{{assertNumberExact}}}, {{{assertContains}}} and so on.
+ * The first CSV cell desribe the action to do. Each action *must* have a corresponding {{{@CsvMethod}}} in the run test class (or any of its superclass), which can be retrieved by name. {{{GwtCsvTest}}} provides some generic test statements, such as {{{assertNotExist}}}, {{{assertExact}}}, {{{assertNumberExact}}}, {{{assertText}}},  [{{{assertContains}}} and so on.
  * Other cells are the action arguments. In that case, the {{{GwtCsvTest.assertNotExist(String... params)}}} requiers one only argument, the object localisation in the UI.
 
-Object localization strings used to retrived objects in the UI use a _XPath-like_ syntax which is very easy to understand : {{{/simpleComposite/label/text}}} will retrieve the object binded to the "simpleComposite" prefix we defined by overriding {{{GwtCsvTest.getNodeObjectFinder(String prefix)}}} method.
+Object localization strings used to retrived objects in the UI use a _XPath-like_ syntax which is very easy to understand : {{{/simpleComposite/label/text}}} will retrieve the object binded to the "simpleComposite" prefix we defined by registering a custom {{{NodeObjectFinder}}} to {{{GwtFinder}}}.
 It assumes this object have an inner property called "label" which have a method "getText" with *no argument*.
 So this line just assert the label of the text of our {{{SimpleComposite}}} is null when the application just has been initialized. 
 
 Then, we can simule the browser event on the image : {{{mouseMove;/simpleComposite/img}}}.
 
-In addition to assertion method, {{{GwtCsvTest}}} provides a lot {{{@CsvMethod}}} to launch events on a widget : "click", "blur", "change", "mouseDown", "mouseUp" and so on.
+In addition to assertion methods, {{{GwtCsvTest}}} provides a lot {{{@CsvMethod}}} to launch events on a widget : "click", "blur", "change", "mouseDown", "mouseUp" and so on.
 
 Finally, we have to assert that the label is correctly filled : 
 
@@ -157,12 +151,14 @@ Finally, we have to assert that the label is correctly filled :
 assertExact;mouse moved on picture !;/simpleComposite/label/text
 assertExact;mouse moved on picture !;/root/widget(0)/label/text
 assertExact;mouse moved on picture !;/myApp/c1/label/text
+assertText;mouse moved on picture !;/myApp/c1/label
 }}}
 
-Those 3 lines do exactly the same thing with 3 different prefix processors : 
+Those 4 lines do exactly the same thing with 3 different prefix processors : 
  * *simpleComposite* refers to the {{{SimpleComposite}}} instance we added in the {{{RootPanel}}} in {{{MyApp.onModuleLoad()}}}
  * *root* refers to the {{{RootPanel}}} itself. The corresponding {{{NodeObjectFinder}}} is registered in the {{{GwtCsvTest.getNodeObjectFinder(prefix)}}} we called after overriding it.
  * *myApp* refers to the custom {{{EntryPoint}}} instance we initialize though the {{{MyTestShell.initApp()}}} method.
+ * The _assertText_ csv method can be used to validate {{{HasText.getText()}}} values. To validate {{{HasHTML.getHTML()}}} values, you should use the _assertHTML_.
 
 
 By the way, this scenario could have been written simply with the GWT API just like we did to write [http://code.google.com/p/gwt-test-utils/wiki/HowToWriteUnitTests UI unit tests]. But it would have been a lot more verbose (by using reflection tools explicitly, etc).
@@ -208,41 +204,30 @@ public class MyTestShell extends GwtCsvTest {
       myApp.onModuleLoad();
    }
 
-   @Override
-   protected NodeObjectFinder getNodeObjectFinder(String prefix) {
-      if ("myApp".equals(prefix)) {
-         return new NodeObjectFinder() {
-
-            public Object find(CsvRunner csvRunner, Node node) {
-               return csvRunner.getNodeValue(myApp, node);
-            }
-
-         };
-      } else if ("simpleComposite".equals(prefix)) {
-         return new NodeObjectFinder() {
-
-            public Object find(CsvRunner csvRunner, Node node) {
-               return csvRunner.getNodeValue(RootPanel.get().getWidget(0), node);
-            }
-         };
-      } else if ("rpcComposite".equals(prefix)) {
-         return new NodeObjectFinder() {
-
-            public Object find(CsvRunner csvRunner, Node node) {
-               return csvRunner.getNodeValue(RootPanel.get().getWidget(1), node);
-            }
-         };
-      } 
-
-      return super.getNodeObjectFinder(prefix);
-   }
-
    @Before
-   public void setUpMyTestShell() throws Exception {
-      addGwtCreateHandler(createGwtCreateHandler());
+   public void setup() {
+      GwtFinder.registerNodeFinder("myApp", new NodeObjectFinder() {
+         public Object find(Node node) {
+            return csvRunner.getNodeValue(myApp, node);
+          }
+      });
+
+      GwtFinder.registerNodeFinder("simpleComposite", new NodeObjectFinder() {
+         public Object find(Node node) {
+            return csvRunner.getNodeValue(RootPanel.get().getWidget(0), node);
+           }
+      });
+
+      GwtFinder.registerNodeFinder("rpcComposite", new NodeObjectFinder() {
+         public Object find(Node node) {
+            return csvRunner.getNodeValue(RootPanel.get().getWidget(1), node);
+           }
+      });
+
+      addGwtCreateHandler(createRemoteServiceCreateHandler());
    }
 
-   private GwtCreateHandler createGwtCreateHandler() {
+   private GwtCreateHandler createRemoteServiceCreateHandler() {
       return new RemoteServiceCreateHandler() {
 
          @Override
@@ -258,9 +243,9 @@ public class MyTestShell extends GwtCsvTest {
 }
 }}}
 
-First, we added a new {{{NodeObjectFinder}}} for string "rpcComposite".
+First, we register a new {{{NodeObjectFinder}}} for string "rpcComposite".
 
-Than, we had to add a custom GwtCreateHandler to handle the {{{MyServiceAsync service = (MyServiceAsync) GWT.create(MyService.class);}}} instruction.
+Than, we add a custom GwtCreateHandler to handle the {{{MyServiceAsync service = (MyServiceAsync) GWT.create(MyService.class);}}} instruction.
 We used the out-of-the-box {{{RemoteServiceCreateHandler}}} implementation which handle RPC service creation and RPC calls exception. The only thing to do is to implement the abstract function {{{RemoteServiceCreateHandler.findService(Class<?> remoteServiceClazz)}}}.
 In our case, to ask for a {{{MyService}}} service will return an instance of its simple implementation {{{MyServiceImpl}}}.
 
@@ -297,6 +282,7 @@ mouseMove;/simpleComposite/img
 assertExact;mouse moved on picture !;/simpleComposite/label/text
 assertExact;mouse moved on picture !;/root/widget(0)/label/text
 assertExact;mouse moved on picture !;/myApp/c1/label/text
+assertText;mouse moved on picture !;/myApp/c1/label
 }}}
 
  * In {{{TestRPCComposite.csv}}} : 
@@ -335,6 +321,7 @@ mouseMove;/simpleComposite/img
 assertExact;mouse moved on picture !;/root/widget(0)/label/text
 assertExact;mouse moved on picture !;/myApp/c1/label/text
 assertExact;mouse moved on picture !;/simpleComposite/label/text
+assertText;mouse moved on picture !;/myApp/c1/label
 }}}
 
  * In {{{TestRPCComposite.csv}}} : 
