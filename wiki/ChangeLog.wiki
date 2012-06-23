@@ -32,7 +32,7 @@
  * Fix [http://code.google.com/p/gwt-test-utils/issues/detail?id=81 issue 81] : enable gxt-uibinder
  * Fix [http://code.google.com/p/gwt-test-utils/issues/detail?id=82 issue 82] : Patch XT WidgetComponent setParent method
  * Fix [http://code.google.com/p/gwt-test-utils/issues/detail?id=83 issue 83] : add URL.encodePathSegmentImpl, add support for setting the url used by Location, add missing XMLParserImpl methods: createTextNode, getOwnerDocument, setAttribute
- * Fix [http://code.google.com/p/gwt-test-utils/issues/detail?id=84 issue 84] : support UiBinder CellPanel and <ui:import> tags.
+ * Fix [http://code.google.com/p/gwt-test-utils/issues/detail?id=84 issue 84] : support UiBinder CellPanel and 'ui:import' tags.
  * Fix [http://code.google.com/p/gwt-test-utils/issues/detail?id=87 issue 87] : refactor UiBinder classes so that each UiBinderTag can retrieve ui:resource references, improve Resource support (when a Resource interface extends more than one other interfaces) and fix all AssertionErrors
  * Fix [http://code.google.com/p/gwt-test-utils/issues/detail?id=88 issue 88] : Better HTML attribute support
  * Fix [http://code.google.com/p/gwt-test-utils/issues/detail?id=90 issue 90] : add support for i18n @Key
