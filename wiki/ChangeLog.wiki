@@ -174,7 +174,7 @@
  * r592 : Fix the Document.getElementById method to retrieve a body's child element and test the Label.wrap method
  * r591 : Add "org.springframework" to the list of package from which classes should not be loaded by the gwt-test-utils classloader
  * r590 : Fix bug on multiple clicks on the same radiobutton, which use update the radioButton.getValue() property (not expected).
- * r589 : Fix [issue : ]http://code.google.com/p/gwt-test-utils/issues/detail?id=15  issue 15] : handle the FormPanel.removeFromParent() nicely
+ * r589 : Fix [issue : http://code.google.com/p/gwt-test-utils/issues/detail?id=15  issue 15] : handle the FormPanel.removeFromParent() nicely
  * r574 : Moved mock operations (replay(), verify(), etc.) from MockCreateHandler to AbstractGwtEasyMockTest
 
 
