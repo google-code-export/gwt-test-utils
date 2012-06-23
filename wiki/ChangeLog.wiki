@@ -1,0 +1,225 @@
+* Version 0.34 (GWT 2.4) :
+
+ * Adaptation to GWT 2.4.0
+
+* Version 0.33 (GWT 2.3) : 
+
+ * Support for Guice & GIN ! If you're interested in those features, you should read the related wiki pages in the User Guide
+ * Fix [http://code.google.com/p/gwt-test-utils/issues/detail?id=51 issue 51] : better Generator <replace-with> support
+ * Fix [http://code.google.com/p/gwt-test-utils/issues/detail?id=70 issue 70]: Replace HTMLParser library with NekoHTML which is packaged in gwt-dev.jar
+ * Fix [http://code.google.com/p/gwt-test-utils/issues/detail?id=72 issue 72]: GXT's BeanModelFactory not testable
+ * Fix [http://code.google.com/p/gwt-test-utils/issues/detail?id=73 issue 73]: Provide support for IsWidget in UiBinder
+
+* Version 0.32 (GWT 2.3) :
+
+ * Browser class now bubbles dispatched events
+ * Fix [http://code.google.com/p/gwt-test-utils/issues/detail?id=51 issue 51] : Add support for custom deferred binding
+ * Fix [http://code.google.com/p/gwt-test-utils/issues/detail?id=55 issue 55] : Event type touchmove not supported
+ * Fix [http://code.google.com/p/gwt-test-utils/issues/detail?id=56 issue 56] : Cannot fire event with mouse position
+ * Fix [http://code.google.com/p/gwt-test-utils/issues/detail?id=57 issue 57] : Improve implementation of <ui:image>, <ui:style> and <ui:data>
+ * Fix [http://code.google.com/p/gwt-test-utils/issues/detail?id=58 issue 58] : Add support for JUnit 3 & 4 TestSuite
+ * Fix [http://code.google.com/p/gwt-test-utils/issues/detail?id=59 issue 59] : Improve LocalizableCreateHandler stacktrace.
+ * Fix [http://code.google.com/p/gwt-test-utils/issues/detail?id=60 issue 60] : gwt-test-utils doesn't include the default 'client' path in classes to patch
+ * Fix [http://code.google.com/p/gwt-test-utils/issues/detail?id=61 issue 61] : Dispatching event on any SimplePanel returns a NPE
+ * Fix [http://code.google.com/p/gwt-test-utils/issues/detail?id=62 issue 62] : LocalizableResourcesInvocationHandler doesn't support SafeHtml return type
+ * Fix [http://code.google.com/p/gwt-test-utils/issues/detail?id=63 issue 63] : GWT DOM issue
+ * Fix [http://code.google.com/p/gwt-test-utils/issues/detail?id=64 issue 64] : Patch for DOMImpl.hasAttribute() is missing
+ * Fix [http://code.google.com/p/gwt-test-utils/issues/detail?id=65 issue 65] : Patch for DOMImpl.getEventListener() is missing
+ * Fix [http://code.google.com/p/gwt-test-utils/issues/detail?id=66 issue 66] : Event fired twice on Composite
+ * Fix [http://code.google.com/p/gwt-test-utils/issues/detail?id=67 issue 67] : Fix DOMImpl.isOrHasChild() implementation
+ * Fix [http://code.google.com/p/gwt-test-utils/issues/detail?id=68 issue 68] : JavaScriptObject is missing creation functions
+ * Fix [http://code.google.com/p/gwt-test-utils/issues/detail?id=69 issue 69] : NPE in CookiePatcher 
+
+* Version 0.29 (GWT 2.3) :
+
+ * Adaptation to GWT 2.3.0
+
+* Version 0.28 (GWT 2.2) : 
+
+ * UiBinder support
+ * Widget.toString() & Element.toString() are now implemented in a fidel fashion to help when debugging. Css styles are also correctly displayed.
+ * XMLParser support
+ * Introduction of a gwt-test-utils exception hierarchy (no more RuntimeException)
+ * change the use abstract GwtTest.getModuleName() method, which is now the equivalent of GWTTestCase.getModuleName() Implementations are now expected expected to return the fully qualified name of the tested GWT module. 
+ * gwt-test-utils now needs a META-INF/gwt-test-utils.properties file in the test classpath, with at least the .gwt.xml module configuration file declarations.
+ * gwt-test-utils now read RemoteService mappings from <servlet> elements in your .gwt.xml files, or directly in web.xml if necessary.
+ * Fix [http://code.google.com/p/gwt-test-utils/issues/detail?id=32  issue 32]
+ * Fix [http://code.google.com/p/gwt-test-utils/issues/detail?id=33  issue 33]
+ * Fix [http://code.google.com/p/gwt-test-utils/issues/detail?id=34  issue 34]
+ * Fix [http://code.google.com/p/gwt-test-utils/issues/detail?id=35  issue 35]
+ * A lot of internal refactor for you to fork gwt-test-utils easier ;-)
+
+* Version 0.27 (GWT 2.2) : 
+
+ * possibility to use Mockito over Easymock for mocking. Wiki pages which explain Mocking in gwt-test-utils have been updated (here and here).
+ * Fix [http://code.google.com/p/gwt-test-utils/issues/detail?id=29 issue 29]
+ * Fix [http://code.google.com/p/gwt-test-utils/issues/detail?id=22 issue 22] (again)
+ * Code-style change : we have adopt the eclipse formatter provided by the GWT development team
+
+* Version 0.26 (GWT 2.2) :
+
+ * Adaptation to GWT 2.2.0
+ * support for the new I18n Messages.AlternateMessage annotation.
+
+* Version 0.25 (GWT 2.1) : 
+
+ * new gwt-test-utils-gxt artifact
+ * new gwt-test-utils-csv artifact
+ * Many bug fixes
+
+* Version 0.24 (GWT 2.1) :
+
+ * r606 : Fix Element getInnerText and getInnerHTML method : they should never return null, but an empty string instead
+ * r609 : Fix [http://code.google.com/p/gwt-test-utils/issues/detail?id=22 issue 22] : parse the HTML Host page, which is provided be overriding the getHostPagePath() method in AbstractGwtConfigurableTest and update demo
+ * r610 : Some code cleanup and refactor the demo UI to be more elegant
+
+* Version 0.23 (GWT 2.1) :
+ 
+ * r602 : remove some useless code
+ * r601 : Fix [http://code.google.com/p/gwt-test-utils/issues/detail?id=21 issue 21] : handle Element.getPropertyString nicely : it should have never return null value
+ * r600 : fillText method factorization
+ * r599 : Migration to GWT 2.1.0 and first adaptations
+ * r597 : Fix [http://code.google.com/p/gwt-test-utils/issues/detail?id=17 issue 17] : patch Navigator
+ * r593 : Some refactor and fix problem with the serialization of transient fields with gwt rpc serialzation mecanism
+ * r592 : Fix the Document.getElementById method to retrieve a body's child element and test the Label.wrap method
+ * r591 : Add "org.springframework" to the list of package from which classes should not be loaded by the gwt-test-utils classloader
+ * r590 : Fix bug on multiple clicks on the same radiobutton, which use update the radioButton.getValue() property (not expected).
+ * r589 : Fix [issue : ]http://code.google.com/p/gwt-test-utils/issues/detail?id=15  issue 15] : handle the FormPanel.removeFromParent() nicely
+ * r574 : Moved mock operations (replay(), verify(), etc.) from MockCreateHandler to AbstractGwtEasyMockTest
+
+
+
+* Version 0.17 (GWT 2.0) : 
+
+ * r393 : Add some utility methods
+ * r394 : Remove code warnings
+ * r396 : Fix isNotVisible CSV integration test method
+ * r397 : Refactor i18n Constants patching mecanism
+ * r398 : More refactor on i18n Constants patching mecanism
+ * r399 : More refactor on i18n Constants patching mecanism : handle all possible function return type : String, String[], Map, boolean, int, double & float
+ * r400 : Patch ConstantsWithLookup mecanism
+ * r401 : Refactor scan-package mechanism : assert declared package will be scan only once
+ * r402 : Patch GWT i18n Constants mecansim
+ * r403 : Some improvements on CSS parsing mechanism
+
+* Version 0.16 : 
+
+ * r378 : Add Reflection method utility : callPrivateMethod
+ * r379 : Add a @CsvMethod markup annotation for CSV tests
+ * r380 : add assertBiggerThan and assertSmallerThan CSV methods
+ * r381 : Some cleaning in csv test methods and enable space in XPath Label Lexer 
+ * r382 : Refactor some csv test and utility methods
+
+* Version 0.15 (GWT 2.0) :
+
+ * r368 : Refactor CSV test macros detection system (use separate folder and a fileName pattern)
+ * r369 : Patch CssRessource : enable style which are applied on a specific DOM element only
+ * r370 : Refactor CSV Directory and CSV Macros localization system
+ * r371 : Add tests on specific CSV macros loading system
+ * r372 : delegate cglib and easymock classes loading to the parent classloader
+ * r373 : Escape special characters (\n, \t...) for integration tests String comparisons
+ * r374 : Manage null and empty input when resolving backslash
+
+* Version 0.14 (GWT 2.0) :
+
+ * r347 : Add more patches to respect DOM hierarchy
+ * r349 : Add a cache mecanism for properties file reading mecanism
+ * r351 : Merge noBootstrap branch into trunk
+ * r352 : Pom refactoring
+ * r353 : Move test resource to src/test/resource
+ * r354 : New configuration system
+ * r355 : Refactor exception handler
+ * r356 : Some minor adaptation
+ * r357 : Code formatting
+ * r358 : Refactor logging
+ * r359 : Correct problem with space in paths
+ * r360 : Lower logger level
+ * r361 : Space in directory problem
+ * r362 : Patch CssResource ensureInjected() method
+ * r363 : Avoid dependency to JDK 1.6 (load properties with Reader)
+ * r364 : Avoid dependency to JDK 1.6 (load properties with Reader)
+
+* Version 0.13 (GWT 2.0) : 
+
+ * r340 : Patch ClientBundle DataResource
+ * r339 : Add a getLogHandler() method which works the same as getLocale() or getCurrentTestedModuleFile()
+ * r336 : Refactor replacement
+ * r333 : More refactoring
+ * r332 : Use getMethodInfo which work on frozen class
+ * r331 : Some code simplification
+ * r330 : Correct problem with getCurrentTestedModuleFile
+ * r329 : Split and rename PatchUtils
+ * r328 : Add unique classpool reference
+ * r327 : Refactor setCurrentTestedModuleFile
+ * r326 : More code organization
+ * r325 : Missing added files
+ * r324 : Some refactoring and code organization
+ * r323 : Some refactoring
+ * r322 : Remove commented code
+ * r321 : Improve method finding with Dan Diephouse patch
+ * r320 : Manage ':' '>' '~' '+' and '-' characters in css style names
+ * r319 : Enable @Source to specify an absolute path in specific case
+ * r318 : Patch css possible custom methods
+ * r317 : Refactor ClientBundle proxy generation mecanism
+ * r316 : Patch StyleInjector inject* methods
+ * r315 : Add unit test on GWT.runAsync
+ * r314 : Create new test package for "resources" stuff and start to patch CssResource
+ * r313 : Patch ClientBundle TextResource stuff and GWT convinent methods (getModuleName....)
+ * r312 : Commit the new framework implementation !
+
+* Version 0.12 (GWT 2.0) : 
+
+ * r289 : Add "assertTrue" and "assertFalse" integration test methods
+ * r290 : Rename utils class
+ * r291 : Refactor signature
+ * r292 : Use sets instead of list
+ * r293 : Add cache in ReflectionUtils
+ * r295 : Implements parametrized marcros
+ * r296 : Change GWT version
+ * r297 : Add caching
+ * r298 : assertExact doesn't fail anymore when target object is null, in order to test "assertExact;*null*;view/myNullObject"
+ * r302 : Fix parametrized macros mecanism
+
+* Version 0.10 (GWT 2.0) :
+
+ * r263 : delete empty packages
+ * r262 : delete empty packages
+ * r261 : refactor package names and artifactId
+ * r260 : remove useless code
+ * r257 : Clean and format code
+ * r256 : change groupId to com.octo.gwt2.test and version to 0.1-SNAPSHOT
+ * r255 : migrate to GWT 2.0 and adapt to work with soft-cu project
+
+* Version 0.7 (GWT 1.7) :
+
+ * r216 : Add override Label mecanism and check getTagName() + as() methods
+
+* Version 0.6 (GWT 1.7) :
+
+ * r203 : Add Octo forge for snapshot deployement. [pkernevez]
+ * r204 : add changelog.xsl [bertrand.paquet@gmail.com]
+ * r205 : changelog improvment [bertrand.paquet@gmail.com]
+ * r206 : use forge.octo.com for releases [bertrand.paquet@gmail.com]
+ * r207 : Add and test mouseOver and mouseOut event mecanism [gael.lazzari]
+ * r211 : Patch DateBox creation. [gael.lazzari]
+
+* Version 0.5 (GWT 1.7) :
+
+ * r181 : Refactor Patch mecanism to enable constructor patchs if needed. [gael.lazzari]
+ * r182 : write a unit test for the get/setTarget patch and correct implementation [gael.lazzari]
+ * r183 : Correct the patchClazz method signature to take a Patch[] argument [gael.lazzari]
+ * r184 : Add PatchConstructor mecanism [gael.lazzari]
+ * r185 : Rename "PatchGWT.patchClazz" to "PatchGWT.patch" [gael.lazzari]
+ * r186 : Add GWTLogHandler interface [bertrand.paquet@gmail.com]
+ * r187 : Add a new test with code in patched constructor [gael.lazzari]
+ * r188 : Add patch on HeadingElement [gael.lazzari]
+ * r189 : Refactor key event simulator, add mock method and Array utils [gael.lazzari]
+ * r190 : Patch DOM to enable ul + li elements creation. [gael.lazzari]
+ * r191 : Test qui pose pb pour pb @BeforeClass [pkernevez]
+ * r192 : Add WidgetUtils.getIndexInListBox() which is used in AbstractGwtIntegrationShell.selectInListBoxByText new method [gael.lazzari]
+ * r193 : Add more specific failure messages when clicking disabled or invisible widgets in csv tests. [gael.lazzari]
+ * r194 : Remove dangerous code, that authorize the execution of code before the "super" call. [pkernevez]
+ * r195 : simplify code of PatchMethod [bertrand.paquet@gmail.com]
+ * r196 : Add test for Patch constructor [pkernevez]
+ * r197 : Add a space character in the error message when clicking a disabled / invisible widget [gael.lazzari]
+ * r198 : Add an explicit error message if getObject() method return null [gael.lazzari]
