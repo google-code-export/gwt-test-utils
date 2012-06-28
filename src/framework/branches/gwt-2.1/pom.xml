@@ -89,7 +89,12 @@
 			</dependency>
 			<dependency>
 				<groupId>${project.groupId}</groupId>
-				<artifactId>gwt-test-utils-gxt</artifactId>
+				<artifactId>gwt-test-utils-gxt2</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>gwt-test-utils-gxt3</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
@@ -151,6 +156,11 @@
 				<groupId>com.google.code.javaparser</groupId>
 				<artifactId>javaparser</artifactId>
 				<version>1.0.8</version>
+			</dependency>
+			<dependency>
+			    <groupId>org.easytesting</groupId>
+			    <artifactId>fest-assert</artifactId>
+			    <version>1.4</version>
 			</dependency>
 			<dependency>
 				<groupId>org.easymock</groupId>
