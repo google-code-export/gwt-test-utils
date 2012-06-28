@@ -1,7 +1,5 @@
 package com.googlecode.gwt.test;
 
-import static org.junit.Assert.fail;
-
 import java.util.List;
 
 import junit.framework.JUnit4TestAdapter;
@@ -9,6 +7,7 @@ import junit.framework.Test;
 import junit.framework.TestResult;
 import junit.framework.TestSuite;
 
+import org.fest.assertions.Fail;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -19,6 +18,7 @@ import com.googlecode.gwt.test.exceptions.GwtTestException;
 import com.googlecode.gwt.test.internal.AfterTestCallbackManager;
 import com.googlecode.gwt.test.internal.GwtClassLoader;
 import com.googlecode.gwt.test.internal.GwtConfig;
+import com.googlecode.gwt.test.internal.GwtTestErrorHolder;
 import com.googlecode.gwt.test.utils.events.Browser.BrowserErrorHandler;
 
 /**
@@ -48,7 +48,7 @@ public abstract class GwtTest extends GwtModuleRunnerAdapter implements Test {
   private static final BrowserErrorHandler JUNIT_BROWSER_ERROR_HANDLER = new BrowserErrorHandler() {
 
     public void onError(String errorMessage) {
-      fail(errorMessage);
+      Fail.fail(errorMessage);
     }
   };
 
@@ -90,6 +90,7 @@ public abstract class GwtTest extends GwtModuleRunnerAdapter implements Test {
 
   @Before
   public final void setUpGwtTest() throws Exception {
+    GwtTestErrorHolder.get().setCurrentTestFailed(false);
     GwtConfig.get().setup(this);
   }
 
@@ -100,11 +101,14 @@ public abstract class GwtTest extends GwtModuleRunnerAdapter implements Test {
 
     List<Throwable> throwables = AfterTestCallbackManager.get().triggerCallbacks();
 
-    if (throwables.size() > 0) {
-      throw new GwtTestException(
-          throwables.size()
-              + " exception(s) thrown during JUnit @After callback. First one is thrown :",
-          throwables.get(0));
+    if (!GwtTestErrorHolder.get().isCurrentTestFailed()
+        && throwables.size() > 0) {
+      String error = (throwables.size() == 1)
+          ? "One exception thrown during gwt-test-utils cleanup phase : "
+          : throwables.size()
+              + " exceptions thrown during gwt-test-utils cleanup phase. First one is thrown :";
+
+      throw new GwtTestException(error, throwables.get(0));
     }
 
   }

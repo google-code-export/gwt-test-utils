@@ -1,7 +1,7 @@
 package com.googlecode.gwt.test.spring;
 
-import com.googlecode.gwt.test.internal.runner.AbstractGwtRunner;
-import com.googlecode.gwt.test.internal.runner.AbstractGwtRunnerFactory;
+import com.googlecode.gwt.test.internal.junit.AbstractGwtRunner;
+import com.googlecode.gwt.test.internal.junit.AbstractGwtRunnerFactory;
 
 public class GwtSpringRunner extends AbstractGwtRunner {
 

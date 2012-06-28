@@ -1,15 +1,15 @@
 package com.googlecode.gwt.test;
 
-import com.googlecode.gwt.test.internal.runner.AbstractGwtRunnerFactory;
+import com.googlecode.gwt.test.internal.junit.AbstractGwtRunnerFactory;
 
 class GwtRunnerFactory extends AbstractGwtRunnerFactory {
 
   @Override
   protected String getRunnerClassName(boolean hasJUnit45OrHigher) {
     if (hasJUnit45OrHigher) {
-      return "org.junit.runners.BlockJUnit4ClassRunner";
+      return "com.googlecode.gwt.test.internal.junit.GwtBlockJUnit4ClassRunner";
     } else {
-      return "org.junit.internal.runners.JUnit4ClassRunner";
+      return "com.googlecode.gwt.test.internal.junit.GwtJUnit4ClassRunner";
     }
   }
 

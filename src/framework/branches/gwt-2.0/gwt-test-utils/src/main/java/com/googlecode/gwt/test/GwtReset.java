@@ -16,11 +16,11 @@ import com.googlecode.gwt.test.utils.GwtReflectionUtils;
  * @author Gael Lazzari
  * 
  */
-class GwtReset {
+public class GwtReset {
 
   private static final GwtReset INSTANCE = new GwtReset();
 
-  static GwtReset get() {
+  public static GwtReset get() {
     return INSTANCE;
   }
 
@@ -32,7 +32,7 @@ class GwtReset {
   private GwtReset() {
   }
 
-  void reset() throws Exception {
+  public void reset() throws Exception {
     getStaticAndCallClear(Timer.class, "timers");
     getStaticAndCallClear(RootPanel.class, "rootPanels");
     GwtReflectionUtils.setStaticField(RootLayoutPanel.class, "singleton", null);

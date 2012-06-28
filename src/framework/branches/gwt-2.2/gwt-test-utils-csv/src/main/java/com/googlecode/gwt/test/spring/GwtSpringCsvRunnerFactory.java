@@ -1,14 +1,14 @@
 package com.googlecode.gwt.test.spring;
 
-import com.googlecode.gwt.test.internal.runner.AbstractGwtRunnerFactory;
+import com.googlecode.gwt.test.internal.junit.AbstractGwtRunnerFactory;
 
 class GwtSpringCsvRunnerFactory extends AbstractGwtRunnerFactory {
 
   @Override
   protected String getRunnerClassName(boolean hasJUnit45OrHigher) {
     return hasJUnit45OrHigher
-        ? "com.googlecode.gwt.test.spring.internal.Spring3CsvJUnit4ClassRunner"
-        : "com.googlecode.gwt.test.spring.internal.Spring2CsvJUnit4ClassRunner";
+        ? "com.googlecode.gwt.test.csv.internal.GwtSpring3CsvJUnit4ClassRunner"
+        : "com.googlecode.gwt.test.csv.internal.GwtSpring2CsvJUnit4ClassRunner";
   }
 
 }

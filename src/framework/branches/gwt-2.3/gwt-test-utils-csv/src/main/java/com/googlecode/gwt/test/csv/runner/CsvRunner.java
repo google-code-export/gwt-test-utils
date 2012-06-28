@@ -1,7 +1,7 @@
 package com.googlecode.gwt.test.csv.runner;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
+import static org.fest.assertions.Assertions.assertThat;
+import static org.fest.assertions.Fail.fail;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -244,7 +244,7 @@ public class CsvRunner {
 
   public int runSheet(List<List<String>> sheet, Object fixture)
       throws Exception {
-    assertNotNull("Fixture have to be not null", fixture);
+    assertThat(fixture).as("Fixture have to be not null").isNotNull();
     boolean execute = false;
     int lineExecuted = 0;
     lineNumber = 0;
@@ -294,9 +294,11 @@ public class CsvRunner {
         found = n;
       }
     }
-    assertNotNull(getAssertionErrorMessagePrefix() + "Not found " + before
-        + "=" + after + " in " + current.getClass().getCanonicalName()
-        + (m != null ? " method " + m.getName() : ""), found);
+    assertThat(found).as(
+        getAssertionErrorMessagePrefix() + "Not found " + before + "=" + after
+            + " in " + current.getClass().getCanonicalName()
+            + (m != null ? " method " + m.getName() : "")).isNotNull();
+
     return found;
   }
 

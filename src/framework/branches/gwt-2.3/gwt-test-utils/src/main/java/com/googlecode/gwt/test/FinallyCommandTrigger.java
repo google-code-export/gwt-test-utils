@@ -42,17 +42,19 @@ public class FinallyCommandTrigger implements AfterTestCallback {
       return;
     }
 
-    INSTANCE.isTriggering = true;
+    try {
+      INSTANCE.isTriggering = true;
 
-    while (!INSTANCE.repeatingCommands.isEmpty()) {
-      executeRepeatingCommand(INSTANCE.repeatingCommands.poll());
+      while (!INSTANCE.repeatingCommands.isEmpty()) {
+        executeRepeatingCommand(INSTANCE.repeatingCommands.poll());
+      }
+
+      while (!INSTANCE.scheduledCommands.isEmpty()) {
+        INSTANCE.scheduledCommands.poll().execute();
+      }
+    } finally {
+      INSTANCE.isTriggering = false;
     }
-
-    while (!INSTANCE.scheduledCommands.isEmpty()) {
-      INSTANCE.scheduledCommands.poll().execute();
-    }
-
-    INSTANCE.isTriggering = false;
   }
 
   private static void executeRepeatingCommand(RepeatingCommand cmd) {
