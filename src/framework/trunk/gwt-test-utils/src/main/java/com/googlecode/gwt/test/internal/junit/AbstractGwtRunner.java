@@ -1,4 +1,4 @@
-package com.googlecode.gwt.test.internal.runner;
+package com.googlecode.gwt.test.internal.junit;
 
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
@@ -7,10 +7,13 @@ import org.junit.runner.manipulation.Filterable;
 import org.junit.runner.manipulation.NoTestsRemainException;
 import org.junit.runner.notification.RunNotifier;
 
+import com.googlecode.gwt.test.internal.GwtClassLoader;
+
 /**
  * <p>
- * Base class for gwt-test-utils JUnit {@link Runner}, which aims to wrap an
- * existing {@link Runner} implementation
+ * Base class for gwt-test-utils JUnit {@link Runner}, which aims to wrap
+ * another custom {@link Runner} implementation loaded by {@link GwtClassLoader}
+ * . <strong>For internal use only.</strong>
  * </p>
  * 
  * @author Gael Lazzari

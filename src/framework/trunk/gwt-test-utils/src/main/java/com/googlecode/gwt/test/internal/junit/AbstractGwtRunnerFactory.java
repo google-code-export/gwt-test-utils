@@ -1,4 +1,4 @@
-package com.googlecode.gwt.test.internal.runner;
+package com.googlecode.gwt.test.internal.junit;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;

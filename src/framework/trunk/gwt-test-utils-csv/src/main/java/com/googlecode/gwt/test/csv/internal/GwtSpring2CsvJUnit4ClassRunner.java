@@ -1,4 +1,4 @@
-package com.googlecode.gwt.test.spring.internal;
+package com.googlecode.gwt.test.csv.internal;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -14,11 +14,12 @@ import org.junit.Test;
 import org.junit.internal.runners.InitializationError;
 import org.junit.internal.runners.TestClass;
 import org.junit.runner.Runner;
+import org.junit.runner.notification.RunNotifier;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.googlecode.gwt.test.utils.GwtReflectionUtils;
-import com.googlecode.gwt.test.csv.internal.DirectoryTestReader;
+import com.googlecode.gwt.test.internal.junit.GwtRunListener;
 import com.googlecode.gwt.test.spring.GwtSpringCsvRunner;
+import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
 /**
  * JUnit {@link Runner} implementation for spring CSV tests. Intent to be
@@ -29,7 +30,7 @@ import com.googlecode.gwt.test.spring.GwtSpringCsvRunner;
  * 
  */
 @SuppressWarnings("deprecation")
-public class Spring2CsvJUnit4ClassRunner extends SpringJUnit4ClassRunner {
+public class GwtSpring2CsvJUnit4ClassRunner extends SpringJUnit4ClassRunner {
 
   class CsvMethodValidator {
     private final List<Throwable> fErrors = new ArrayList<Throwable>();
@@ -105,10 +106,17 @@ public class Spring2CsvJUnit4ClassRunner extends SpringJUnit4ClassRunner {
 
   private DirectoryTestReader reader;
 
-  public Spring2CsvJUnit4ClassRunner(Class<?> clazz) throws Exception {
+  public GwtSpring2CsvJUnit4ClassRunner(Class<?> clazz) throws Exception {
     super(clazz);
   }
 
+  @Override
+  public void run(RunNotifier notifier) {
+    notifier.addListener(new GwtRunListener());
+    super.run(notifier);
+  }
+
+  @Override
   protected Object createTest() throws Exception {
     Object testInstance = reader.createObject();
     GwtReflectionUtils.callPrivateMethod(testInstance, "setReader", reader);

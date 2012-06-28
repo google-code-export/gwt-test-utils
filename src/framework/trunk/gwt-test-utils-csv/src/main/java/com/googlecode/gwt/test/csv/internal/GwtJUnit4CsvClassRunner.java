@@ -12,13 +12,13 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.internal.runners.InitializationError;
-import org.junit.internal.runners.JUnit4ClassRunner;
 import org.junit.internal.runners.TestClass;
 
+import com.googlecode.gwt.test.internal.junit.GwtJUnit4ClassRunner;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
 @SuppressWarnings("deprecation")
-public class JUnit4CsvClassRunner extends JUnit4ClassRunner {
+public class GwtJUnit4CsvClassRunner extends GwtJUnit4ClassRunner {
 
   class CsvMethodValidator {
     private final List<Throwable> fErrors = new ArrayList<Throwable>();
@@ -93,7 +93,7 @@ public class JUnit4CsvClassRunner extends JUnit4ClassRunner {
 
   private DirectoryTestReader reader;
 
-  public JUnit4CsvClassRunner(Class<?> clazz) throws InitializationError,
+  public GwtJUnit4CsvClassRunner(Class<?> clazz) throws InitializationError,
       ClassNotFoundException {
     super(clazz);
   }
