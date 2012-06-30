@@ -30,6 +30,7 @@ import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.UIObject;
+import com.google.gwt.user.client.ui.ValueBoxBase;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.HasData;
 import com.googlecode.gwt.test.FinallyCommandTrigger;
@@ -65,6 +66,91 @@ public class Browser {
      * @param errorMessage The error's message.
      */
     void onError(String errorMessage);
+  }
+
+  /**
+   * <p>
+   * Add some text in a text widget, starting at
+   * {@link ValueBoxBase#getCursorPos()} index and deleting
+   * {@link ValueBoxBase#getSelectedText()}.
+   * </p>
+   * <p>
+   * <ul>
+   * <li>Like {@link Browser#fillText(HasText, String)}, {@link KeyDownEvent},
+   * {@link KeyPressEvent} and {@link KeyUpEvent} are triggered for each
+   * character in the value to add. They can be prevented with normal effect.</li>
+   * 
+   * <li>Contrary to {@link Browser#fillText(HasText, String)}, neither
+   * {@link BlurEvent} nor {@link ChangeEvent} are triggered.
+   * </ul>
+   * </p>
+   * 
+   * @param valueBox The widget to fill. <strong>It has to be attached and
+   *          visible</strong>
+   * @param value The value to fill. Cannot be null or empty.
+   * 
+   * @throws IllegalArgumentException if the value to fill is null or empty.
+   */
+  public static void addText(ValueBoxBase<?> valueBox, String value)
+      throws IllegalArgumentException {
+    if (value == null || "".equals(value)) {
+      throw new IllegalArgumentException(
+          "Cannot fill a null or empty text. If you intent to remove some text, use '"
+              + Browser.class.getSimpleName() + ".emptyText(..)' instead");
+    }
+
+    boolean changed = false;
+
+    StringBuilder sb = new StringBuilder(valueBox.getText());
+
+    int selectionStart = JavaScriptObjects.getInteger(valueBox.getElement(),
+        JsoProperties.SELECTION_START);
+    int selectionEnd = JavaScriptObjects.getInteger(valueBox.getElement(),
+        JsoProperties.SELECTION_END);
+
+    for (int i = 0; i < value.length(); i++) {
+
+      char charToAppend = value.charAt(i);
+      int keyCode = charToAppend;
+
+      // trigger keyDown and keyPress
+      Event keyDownEvent = EventBuilder.create(Event.ONKEYDOWN).setKeyCode(
+          keyCode).build();
+      Event keyPressEvent = EventBuilder.create(Event.ONKEYPRESS).setKeyCode(
+          keyCode).build();
+      dispatchEventsInternal(valueBox, true, keyDownEvent, keyPressEvent);
+
+      // check if one on the events has been prevented
+      boolean keyDownEventPreventDefault = JavaScriptObjects.getBoolean(
+          keyDownEvent, JsoProperties.EVENT_PREVENTDEFAULT);
+      boolean keyPressEventPreventDefault = JavaScriptObjects.getBoolean(
+          keyPressEvent, JsoProperties.EVENT_PREVENTDEFAULT);
+
+      if (!keyDownEventPreventDefault && !keyPressEventPreventDefault) {
+
+        if (!changed) {
+          // first time : remove selectionRange
+          sb.replace(selectionStart, selectionEnd, "");
+          changed = true;
+        }
+
+        sb.insert(selectionStart, charToAppend);
+
+        selectionStart = selectionEnd = selectionStart + 1;
+
+        valueBox.setText(sb.toString());
+
+        JavaScriptObjects.setProperty(valueBox.getElement(),
+            JsoProperties.SELECTION_START, selectionStart);
+        JavaScriptObjects.setProperty(valueBox.getElement(),
+            JsoProperties.SELECTION_END, selectionEnd);
+      }
+
+      // trigger keyUp
+      Event keyUpEvent = EventBuilder.create(Event.ONKEYUP).setKeyCode(keyCode).build();
+      dispatchEventsInternal(valueBox, true, keyUpEvent);
+
+    }
   }
 
   /**
@@ -286,7 +372,7 @@ public class Browser {
    * @param events Some events to dispatch.
    */
   public static void dispatchEvent(Widget target, Event... events) {
-    dispatchEventInternal(target, true, events);
+    dispatchEventsInternal(target, true, events);
   }
 
   /**
@@ -462,7 +548,7 @@ public class Browser {
           keyCode).build();
       Event keyPressEvent = EventBuilder.create(Event.ONKEYPRESS).setKeyCode(
           keyCode).build();
-      dispatchEventInternal((Widget) hasTextWidget, check, keyDownEvent,
+      dispatchEventsInternal((Widget) hasTextWidget, check, keyDownEvent,
           keyPressEvent);
 
       // check if one on the events has been prevented
@@ -475,25 +561,27 @@ public class Browser {
         hasTextWidget.setText(value.substring(0, i + 1));
         changed = true;
 
-        JavaScriptObjects.setProperty(((Widget) hasTextWidget).getElement(),
-            JsoProperties.SELECTION_START, i);
-        JavaScriptObjects.setProperty(((Widget) hasTextWidget).getElement(),
-            JsoProperties.SELECTION_END, i);
+        if (hasTextWidget instanceof ValueBoxBase) {
+          JavaScriptObjects.setProperty(((Widget) hasTextWidget).getElement(),
+              JsoProperties.SELECTION_START, i + 1);
+          JavaScriptObjects.setProperty(((Widget) hasTextWidget).getElement(),
+              JsoProperties.SELECTION_END, i + 1);
+        }
       }
 
       // trigger keyUp
       Event keyUpEvent = EventBuilder.create(Event.ONKEYUP).setKeyCode(keyCode).build();
-      dispatchEventInternal((Widget) hasTextWidget, check, keyUpEvent);
+      dispatchEventsInternal((Widget) hasTextWidget, check, keyUpEvent);
 
     }
 
     if (blur) {
       // no need to check event anymore
-      dispatchEventInternal((Widget) hasTextWidget, false,
+      dispatchEventsInternal((Widget) hasTextWidget, false,
           EventBuilder.create(Event.ONBLUR).build());
 
       if (changed) {
-        dispatchEventInternal((Widget) hasTextWidget, false,
+        dispatchEventsInternal((Widget) hasTextWidget, false,
             EventBuilder.create(Event.ONCHANGE).build());
       }
     }
@@ -662,7 +750,7 @@ public class Browser {
         keyCode).build();
     Event keyPressEvent = EventBuilder.create(Event.ONKEYPRESS).setKeyCode(
         keyCode).build();
-    dispatchEventInternal(widget, true, keyDownEvent, keyPressEvent);
+    dispatchEventsInternal(widget, true, keyDownEvent, keyPressEvent);
 
     // check if one on the events has been prevented
     boolean keyDownEventPreventDefault = JavaScriptObjects.getBoolean(
@@ -707,7 +795,7 @@ public class Browser {
 
       // trigger keyUp
       Event keyUpEvent = EventBuilder.create(Event.ONKEYUP).setKeyCode(keyCode).build();
-      dispatchEventInternal(widget, true, keyUpEvent);
+      dispatchEventsInternal(widget, true, keyUpEvent);
     }
   }
 
@@ -872,24 +960,6 @@ public class Browser {
     }
   }
 
-  private static void dispatchEventInternal(Widget target, boolean check,
-      Event... events) {
-
-    if (events.length == 0) {
-      return;
-    }
-
-    prepareEvents(target, events);
-
-    boolean dipsatch = check ? canApplyEvent(target, events[0]) : true;
-
-    if (dipsatch) {
-      for (Event event : events) {
-        dispatchEventInternal(target, event);
-      }
-    }
-  }
-
   private static void dispatchEventInternal(Widget target, Event event) {
     try {
       // special case of click on CheckBox : set the internal inputElement value
@@ -931,6 +1001,24 @@ public class Browser {
         throw (RuntimeException) e.getCause();
       } else {
         throw e;
+      }
+    }
+  }
+
+  private static void dispatchEventsInternal(Widget target, boolean check,
+      Event... events) {
+
+    if (events.length == 0) {
+      return;
+    }
+
+    prepareEvents(target, events);
+
+    boolean dipsatch = check ? canApplyEvent(target, events[0]) : true;
+
+    if (dipsatch) {
+      for (Event event : events) {
+        dispatchEventInternal(target, event);
       }
     }
   }
