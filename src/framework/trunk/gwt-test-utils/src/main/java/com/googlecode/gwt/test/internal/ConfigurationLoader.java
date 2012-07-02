@@ -46,7 +46,9 @@ class ConfigurationLoader {
   private final ClassLoader classLoader;
   private final ClassSubstituer classSubstituer;
   private final Set<String> delegates;
+  private final CtClass jsoCtClass;
   private final MethodRemover methodRemover;
+  private final Set<String> overlayTypes;
   private PatcherFactory patcherFactory;
   private final Set<String> processedModuleFiles;
   private final Set<String> removeMethods;
@@ -62,6 +64,8 @@ class ConfigurationLoader {
     this.removeMethods = new HashSet<String>();
     this.substituteClasses = new HashSet<String>();
     this.methodRemover = new MethodRemover();
+    this.overlayTypes = new HashSet<String>();
+    this.jsoCtClass = GwtClassPool.getClass("com.google.gwt.core.client.JavaScriptObject");
 
     readFiles();
     visitPatchClasses();
@@ -77,6 +81,10 @@ class ConfigurationLoader {
 
   public JavaClassModifier getMethodRemover() {
     return methodRemover;
+  }
+
+  public Set<String> getOverlayTypes() {
+    return overlayTypes;
   }
 
   public PatcherFactory getPatcherFactory() {
@@ -185,6 +193,7 @@ class ConfigurationLoader {
 
   private void visitPatchClasses() {
     final Map<String, Set<CtClass>> patchClassMap = new HashMap<String, Set<CtClass>>();
+
     ClassVisitor patchClassVisitor = new ClassVisitor() {
 
       public void visit(CtClass ctClass) {
@@ -196,19 +205,20 @@ class ConfigurationLoader {
                 classLoader);
             annotation = GwtReflectionUtils.getAnnotation(patchClass,
                 PatchClass.class);
+
+            String classToPatchName = annotation.value() != PatchClass.class
+                ? annotation.value().getName() : annotation.target().trim();
+
+            if (!"".equals(classToPatchName)) {
+              addPatchClass(classToPatchName, ctClass);
+            }
+          } else if (ctClass.subclassOf(jsoCtClass)) {
+            // collect Overlay types
+            overlayTypes.add(ctClass.getName());
           }
         } catch (ClassNotFoundException e) {
           // should never happen
           throw new GwtTestPatchException(e);
-        }
-
-        if (annotation != null) {
-          String classToPatchName = annotation.value() != PatchClass.class
-              ? annotation.value().getName() : annotation.target().trim();
-
-          if (!"".equals(classToPatchName)) {
-            addPatchClass(classToPatchName, ctClass);
-          }
         }
       }
 

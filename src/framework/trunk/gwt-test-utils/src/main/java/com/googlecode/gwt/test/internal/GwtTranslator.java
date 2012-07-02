@@ -32,10 +32,15 @@ class GwtTranslator implements Translator {
   }
 
   public void onLoad(ClassPool pool, String className) throws NotFoundException {
-    patchClass(pool.get(className));
+    if (!configurationLoader.getOverlayTypes().contains(className)) {
+      patchClass(pool.get(className));
+    }
   }
 
   public void start(ClassPool pool) throws NotFoundException {
+    for (String overlayType : configurationLoader.getOverlayTypes()) {
+      patchClass(pool.get(overlayType));
+    }
   }
 
   private void applyJavaClassModifiers(CtClass ctClass) {

@@ -49,7 +49,8 @@ class OverlayPatcher implements Patcher {
     String newBody = decoratedPatcher != null ? decoratedPatcher.getNewBody(m)
         : null;
 
-    if (newBody != null || !Modifier.isNative(m.getModifiers())) {
+    if (newBody != null || !Modifier.isNative(m.getModifiers())
+        || Modifier.isStatic(m.getModifiers())) {
       return newBody;
     }
 

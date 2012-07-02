@@ -17,7 +17,7 @@ import com.googlecode.gwt.test.exceptions.GwtTestConfigurationException;
 import com.googlecode.gwt.test.internal.AfterTestCallback;
 import com.googlecode.gwt.test.internal.AfterTestCallbackManager;
 import com.googlecode.gwt.test.internal.GwtConfig;
-import com.googlecode.gwt.test.internal.handlers.GwtCreateHandlerManager;
+import com.googlecode.gwt.test.internal.handlers.GwtTestGWTBridge;
 import com.googlecode.gwt.test.internal.i18n.DictionaryUtils;
 import com.googlecode.gwt.test.rpc.ServletMockProvider;
 import com.googlecode.gwt.test.uibinder.UiObjectTagFactory;
@@ -76,6 +76,7 @@ public abstract class GwtModuleRunnerAdapter implements GwtModuleRunner,
   public GwtModuleRunnerAdapter() {
     browserErrorHandlerDelegate = new BrowserErrorHandlerDelegate();
     clientProperties = new HashMap<String, String>();
+    GwtTestGWTBridge.get(this);
     AfterTestCallbackManager.get().registerRemoveableCallback(this);
   }
 
@@ -112,7 +113,7 @@ public abstract class GwtModuleRunnerAdapter implements GwtModuleRunner,
    * .gwt.test .GwtCreateHandler)
    */
   public final void addGwtCreateHandler(GwtCreateHandler gwtCreateHandler) {
-    GwtCreateHandlerManager.get().addGwtCreateHandler(gwtCreateHandler);
+    GwtTestGWTBridge.get(this).addGwtCreateHandler(gwtCreateHandler);
   }
 
   /*

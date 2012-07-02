@@ -46,6 +46,10 @@ class ClassesScanner {
     for (String rootPackage : rootPackages) {
       String path = rootPackage.replaceAll("\\.", "/");
       logger.debug("Scan package " + rootPackage);
+
+      if (rootPackage.endsWith(".")) {
+        rootPackage = rootPackage.substring(0, rootPackage.length() - 1);
+      }
       try {
         Enumeration<URL> l = Thread.currentThread().getContextClassLoader().getResources(
             path);
@@ -58,8 +62,8 @@ class ClassesScanner {
             scanClassesFromDirectory(new File(directoryName), rootPackage,
                 classVisitor);
           } else if (u.startsWith("jar:file:")) {
-            scanClassesFromJarFile(u.substring("jar:file:".length()),
-                rootPackage, classVisitor);
+            scanClassesFromJarFile(u.substring("jar:file:".length()), path,
+                classVisitor);
           } else {
             throw new IllegalArgumentException("Not managed class container "
                 + u);
@@ -81,10 +85,8 @@ class ClassesScanner {
           scanClassesFromDirectory(f, scanPackage + "." + f.getName(),
               classVisitor);
         }
-      } else {
-        if (f.getName().endsWith(".class")) {
-          visitClass(scanPackage + "." + f.getName(), classVisitor);
-        }
+      } else if (f.getName().endsWith(".class")) {
+        visitClass(scanPackage + "." + f.getName(), classVisitor);
       }
     }
     logger.debug("Directory scanned " + directoryToScan);

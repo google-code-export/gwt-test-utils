@@ -37,7 +37,7 @@ public class JsoScanner {
     };
 
     Set<String> rootPackages = new HashSet<String>();
-    rootPackages.add("com.google.");
+    rootPackages.add("com.google");
 
     ClassesScanner.getInstance().scanPackages(jsoVisitor, rootPackages);
 

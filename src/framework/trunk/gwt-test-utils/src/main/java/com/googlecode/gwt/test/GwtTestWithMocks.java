@@ -11,7 +11,7 @@ import java.util.Set;
 import org.junit.After;
 
 import com.google.gwt.user.client.rpc.RemoteService;
-import com.googlecode.gwt.test.internal.handlers.GwtCreateHandlerManager;
+import com.googlecode.gwt.test.internal.handlers.GwtTestGWTBridge;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
 /**
@@ -56,7 +56,7 @@ public abstract class GwtTestWithMocks extends GwtTest {
   protected Map<Class<?>, Object> mockObjects = new HashMap<Class<?>, Object>();
 
   public GwtTestWithMocks() {
-    GwtCreateHandlerManager.get().setMockCreateHandler(
+    GwtTestGWTBridge.get(this).setMockCreateHandler(
         new MockCreateHandler(mockObjects));
     mockFields = getMockFields();
     for (Field f : mockFields) {

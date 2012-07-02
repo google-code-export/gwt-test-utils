@@ -4,7 +4,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -154,10 +153,6 @@ public class ModuleData {
 
   public String getModuleAlias(String module) {
     return moduleAlias.get(module);
-  }
-
-  public Set<String> getModuleNames() {
-    return Collections.unmodifiableSet(moduleAlias.keySet());
   }
 
   public Class<?> getRemoteServiceImplClass(String remoteServicePath) {

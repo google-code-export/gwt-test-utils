@@ -1,8 +1,12 @@
 package com.googlecode.gwt.test.internal;
 
+import java.security.ProtectionDomain;
+
 import javassist.CannotCompileException;
+import javassist.ClassPool;
 import javassist.Loader;
 import javassist.NotFoundException;
+import javassist.Translator;
 
 import com.googlecode.gwt.test.GwtTest;
 import com.googlecode.gwt.test.exceptions.GwtTestException;
@@ -47,16 +51,61 @@ public class GwtClassLoader extends Loader {
     return INSTANCE;
   }
 
+  private ProtectionDomain domain;
+  private final ClassPool source;
+  private final Translator translator;
+
   private GwtClassLoader() throws NotFoundException, CannotCompileException {
     super(GwtClassPool.get());
-
+    this.source = GwtClassPool.get();
     ConfigurationLoader configurationLoader = ConfigurationLoader.createInstance(this.getParent());
+    this.translator = new GwtTranslator(configurationLoader);
 
     for (String s : configurationLoader.getDelegates()) {
       delegateLoadingOf(s);
     }
 
     addTranslator(GwtClassPool.get(), new GwtTranslator(configurationLoader));
+  }
+
+  @Override
+  public void setDomain(ProtectionDomain domain) {
+    super.setDomain(domain);
+    this.domain = domain;
+  }
+
+  @Override
+  protected Class<?> findClass(String name) throws ClassNotFoundException {
+    byte[] classfile;
+    try {
+      translator.onLoad(source, name);
+
+      try {
+        classfile = source.get(name).toBytecode();
+      } catch (NotFoundException e) {
+        return null;
+      }
+    } catch (Exception e) {
+      throw new ClassNotFoundException(
+          "caught an exception while obtaining a class file for " + name, e);
+    }
+
+    int i = name.lastIndexOf('.');
+    if (i != -1) {
+      String pname = name.substring(0, i);
+      if (getPackage(pname) == null)
+        try {
+          definePackage(pname, null, null, null, null, null, null, null);
+        } catch (IllegalArgumentException e) {
+          // ignore. maybe the package object for the same
+          // name has been created just right away.
+        }
+    }
+
+    if (domain == null)
+      return defineClass(name, classfile, 0, classfile.length);
+    else
+      return defineClass(name, classfile, 0, classfile.length, domain);
   }
 
 }
