@@ -74,9 +74,10 @@ public abstract class GwtModuleRunnerAdapter implements GwtModuleRunner,
   private WindowOperationsHandler windowOperationsHandler;
 
   public GwtModuleRunnerAdapter() {
+    GwtConfig.get().setTestClass(getClass());
     browserErrorHandlerDelegate = new BrowserErrorHandlerDelegate();
     clientProperties = new HashMap<String, String>();
-    GwtTestGWTBridge.get(this);
+    GwtTestGWTBridge.get();
     AfterTestCallbackManager.get().registerRemoveableCallback(this);
   }
 
@@ -113,7 +114,7 @@ public abstract class GwtModuleRunnerAdapter implements GwtModuleRunner,
    * .gwt.test .GwtCreateHandler)
    */
   public final void addGwtCreateHandler(GwtCreateHandler gwtCreateHandler) {
-    GwtTestGWTBridge.get(this).addGwtCreateHandler(gwtCreateHandler);
+    GwtTestGWTBridge.get().addGwtCreateHandler(gwtCreateHandler);
   }
 
   /*
@@ -194,7 +195,7 @@ public abstract class GwtModuleRunnerAdapter implements GwtModuleRunner,
    * @see com.googlecode.gwt.test.GwtModuleRunner#getHostPagePath()
    */
   public final String getHostPagePath() {
-    return getHostPagePath(getModuleName());
+    return getHostPagePath(GwtConfig.get().getTestedModuleName());
   }
 
   /*
@@ -214,13 +215,6 @@ public abstract class GwtModuleRunnerAdapter implements GwtModuleRunner,
   public final GwtLogHandler getLogHandler() {
     return logHandler;
   }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.googlecode.gwt.test.GwtModuleRunner#getModuleName()
-   */
-  public abstract String getModuleName();
 
   /*
    * (non-Javadoc)

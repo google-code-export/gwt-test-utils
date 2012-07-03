@@ -5,6 +5,7 @@ import java.util.Set;
 
 import com.googlecode.gwt.test.GwtCreateHandler;
 import com.googlecode.gwt.test.exceptions.GwtTestConfigurationException;
+import com.googlecode.gwt.test.internal.GwtConfig;
 import com.googlecode.gwt.test.internal.ModuleData;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
@@ -31,7 +32,8 @@ public class DeferredGenerateWithCreateHandler implements GwtCreateHandler {
 
   private Set<Class<?>> initCustomGeneratedClasses() {
     Set<Class<?>> result = new HashSet<Class<?>>();
-    for (String className : ModuleData.get().getCustomGeneratedClasses()) {
+    String moduleName = GwtConfig.get().getTestedModuleName();
+    for (String className : ModuleData.get(moduleName).getCustomGeneratedClasses()) {
       try {
         result.add(GwtReflectionUtils.getClass(className));
       } catch (ClassNotFoundException e) {

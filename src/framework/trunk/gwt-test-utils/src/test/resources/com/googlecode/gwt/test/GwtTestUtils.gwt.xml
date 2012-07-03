@@ -8,7 +8,7 @@
 	<!-- Specify the app entry point class. -->
 	<entry-point class='com.googlecode.gwt.demo.client.Gwt_test_utils_demo' />
 
-	<servlet path="myService" class="com.googlecode.gwt.test.rpc.MyServiceImpl" />
+	<servlet path="/myService" class="com.googlecode.gwt.test.rpc.MyServiceImpl" />
 
 	<!-- Specify the paths for translatable code -->
 	<source path='client' />
@@ -38,7 +38,7 @@
 	</replace-with>
 
 	<generate-with
-		class="dont.care.fake.Generator">
+		class="com.googlecode.gwt.test.deferred.MyGenerator">
 		<when-type-assignable class="com.googlecode.gwt.test.deferred.IGenerateWith" />
 	</generate-with>
 

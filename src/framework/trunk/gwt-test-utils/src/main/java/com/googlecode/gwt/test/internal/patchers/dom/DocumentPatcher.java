@@ -250,7 +250,7 @@ class DocumentPatcher {
   }
 
   private static Element parseHTMLElement(Document document) {
-    String moduleName = GwtConfig.get().getModuleName();
+    String moduleName = GwtConfig.get().getModuleAlias();
     String hostPagePath = GwtConfig.get().getModuleRunner().getHostPagePath();
 
     if (hostPagePath == null) {

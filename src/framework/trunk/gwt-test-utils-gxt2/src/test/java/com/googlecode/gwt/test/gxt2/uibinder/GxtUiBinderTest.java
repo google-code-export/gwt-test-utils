@@ -7,18 +7,15 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.googlecode.gwt.test.GwtModule;
 import com.googlecode.gwt.test.GwtTest;
 import com.googlecode.gwt.test.gxt2.handlers.GxtUiBinderCreateHandler;
 import com.googlecode.gwt.test.utils.events.Browser;
 
+@GwtModule("com.googlecode.gwt.test.gxt2.uibinder.UiBinderApp")
 public class GxtUiBinderTest extends GwtTest {
 
   private UiBinderApp app;
-
-  @Override
-  public String getModuleName() {
-    return "com.googlecode.gwt.test.gxt2.uibinder.UiBinderApp";
-  }
 
   @Before
   public void setupTest() {

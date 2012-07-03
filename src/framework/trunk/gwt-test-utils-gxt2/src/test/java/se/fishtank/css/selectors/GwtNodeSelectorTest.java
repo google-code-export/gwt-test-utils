@@ -14,8 +14,10 @@ import org.slf4j.LoggerFactory;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
+import com.googlecode.gwt.test.GwtModule;
 import com.googlecode.gwt.test.GwtTest;
 
+@GwtModule("se.fishtank.css.selectors.CssSelectorTest")
 public class GwtNodeSelectorTest extends GwtTest {
 
   private static Logger LOGGER = LoggerFactory.getLogger(GwtNodeSelectorTest.class);
@@ -79,11 +81,6 @@ public class GwtNodeSelectorTest extends GwtTest {
   @Before
   public void beforeDOMNodeSelectorTest() throws Exception {
     nodeSelector = new GwtNodeSelector(Document.get());
-  }
-
-  @Override
-  public String getModuleName() {
-    return "se.fishtank.css.selectors.CssSelectorTest";
   }
 
   @Test

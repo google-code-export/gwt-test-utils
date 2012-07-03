@@ -9,7 +9,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.GWTBridge;
 import com.googlecode.gwt.test.GwtCreateHandler;
 import com.googlecode.gwt.test.GwtLogHandler;
-import com.googlecode.gwt.test.GwtModuleRunner;
 import com.googlecode.gwt.test.Mock;
 import com.googlecode.gwt.test.exceptions.GwtTestDeferredBindingException;
 import com.googlecode.gwt.test.exceptions.GwtTestException;
@@ -35,11 +34,11 @@ public class GwtTestGWTBridge extends GWTBridge implements AfterTestCallback {
 
   private static final Map<String, GwtTestGWTBridge> INSTANCES = new HashMap<String, GwtTestGWTBridge>();
 
-  public static GwtTestGWTBridge get(GwtModuleRunner gwtModuleRunner) {
-    GwtTestGWTBridge bridge = INSTANCES.get(gwtModuleRunner.getModuleName());
+  public static GwtTestGWTBridge get() {
+    GwtTestGWTBridge bridge = INSTANCES.get(GwtConfig.get().getTestedModuleName());
     if (bridge == null) {
       bridge = new GwtTestGWTBridge();
-      INSTANCES.put(gwtModuleRunner.getModuleName(), bridge);
+      INSTANCES.put(GwtConfig.get().getTestedModuleName(), bridge);
     }
 
     GwtReflectionUtils.setStaticField(GWT.class, "sGWTBridge", bridge);
@@ -114,7 +113,7 @@ public class GwtTestGWTBridge extends GWTBridge implements AfterTestCallback {
         if (GwtTestException.class.isInstance(e)) {
           throw (GwtTestException) e;
         } else {
-          throw new GwtTestPatchException("Error while creation instance of '"
+          throw new GwtTestPatchException("Error while creating instance of '"
               + classLiteral.getName() + "' through '"
               + gwtCreateHandler.getClass().getName() + "' instance", e);
         }

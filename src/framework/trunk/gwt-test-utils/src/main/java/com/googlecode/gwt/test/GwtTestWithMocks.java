@@ -56,7 +56,7 @@ public abstract class GwtTestWithMocks extends GwtTest {
   protected Map<Class<?>, Object> mockObjects = new HashMap<Class<?>, Object>();
 
   public GwtTestWithMocks() {
-    GwtTestGWTBridge.get(this).setMockCreateHandler(
+    GwtTestGWTBridge.get().setMockCreateHandler(
         new MockCreateHandler(mockObjects));
     mockFields = getMockFields();
     for (Field f : mockFields) {

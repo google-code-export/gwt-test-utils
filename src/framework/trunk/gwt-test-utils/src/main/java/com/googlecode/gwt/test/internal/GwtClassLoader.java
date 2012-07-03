@@ -8,6 +8,10 @@ import javassist.Loader;
 import javassist.NotFoundException;
 import javassist.Translator;
 
+import com.google.gwt.core.ext.TreeLogger;
+import com.google.gwt.dev.cfg.ModuleDef;
+import com.google.gwt.dev.shell.ModuleSpace;
+import com.google.gwt.dev.shell.ModuleSpaceHost;
 import com.googlecode.gwt.test.GwtTest;
 import com.googlecode.gwt.test.exceptions.GwtTestException;
 import com.googlecode.gwt.test.exceptions.GwtTestPatchException;
@@ -52,6 +56,14 @@ public class GwtClassLoader extends Loader {
   }
 
   private ProtectionDomain domain;
+
+  private final TreeLogger logger = TreeLogger.NULL;
+
+  private ModuleDef moduleDef;
+
+  private ModuleSpace moduleSpace;
+
+  private ModuleSpaceHost moduleSpaceHost;
   private final ClassPool source;
   private final Translator translator;
 

@@ -45,7 +45,7 @@ import com.googlecode.gwt.test.utils.events.Browser.BrowserErrorHandler;
 @RunWith(GwtRunner.class)
 public abstract class GwtTest extends GwtModuleRunnerAdapter implements Test {
 
-  private static final BrowserErrorHandler JUNIT_BROWSER_ERROR_HANDLER = new BrowserErrorHandler() {
+  private static final BrowserErrorHandler FEST_BROWSER_ERROR_HANDLER = new BrowserErrorHandler() {
 
     public void onError(String errorMessage) {
       Fail.fail(errorMessage);
@@ -85,6 +85,7 @@ public abstract class GwtTest extends GwtModuleRunnerAdapter implements Test {
    * Runs a test and collects its result in a TestResult instance.
    */
   public void run(TestResult result) {
+    GwtConfig.get().setTestClass(this.getClass());
     test.run(result);
   }
 
@@ -132,7 +133,7 @@ public abstract class GwtTest extends GwtModuleRunnerAdapter implements Test {
    */
   @Override
   protected BrowserErrorHandler getDefaultBrowserErrorHandler() {
-    return JUNIT_BROWSER_ERROR_HANDLER;
+    return FEST_BROWSER_ERROR_HANDLER;
   }
 
 }

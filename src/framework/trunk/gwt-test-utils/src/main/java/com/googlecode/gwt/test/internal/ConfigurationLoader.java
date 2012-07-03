@@ -50,7 +50,6 @@ class ConfigurationLoader {
   private final MethodRemover methodRemover;
   private final Set<String> overlayTypes;
   private PatcherFactory patcherFactory;
-  private final Set<String> processedModuleFiles;
   private final Set<String> removeMethods;
   private final Set<String> scanPackages;
   private final Set<String> substituteClasses;
@@ -59,7 +58,6 @@ class ConfigurationLoader {
     this.classLoader = classLoader;
     this.classSubstituer = new ClassSubstituer();
     this.delegates = new HashSet<String>();
-    this.processedModuleFiles = new HashSet<String>();
     this.scanPackages = new HashSet<String>();
     this.removeMethods = new HashSet<String>();
     this.substituteClasses = new HashSet<String>();
@@ -107,8 +105,6 @@ class ConfigurationLoader {
         processRemoveMethod(key, url);
       } else if ("substitute-class".equals(value)) {
         processSubstituteClass(key, url);
-      } else if ("module-file".equals(value)) {
-        processModuleFile(key, url);
       } else if ("src-directory".equals(value)) {
         SrcDirectoriesHolder.SRC_DIRECTORIES.add(key);
       } else {
@@ -116,15 +112,6 @@ class ConfigurationLoader {
             + "' : unknown value '" + value + "'");
       }
     }
-  }
-
-  private void processModuleFile(String string, URL url) {
-    if (!processedModuleFiles.add(string)) {
-      // already processed
-      return;
-    }
-
-    ModuleData.get().parseModule(string);
   }
 
   private void processRemoveMethod(String string, URL url) {
@@ -182,12 +169,6 @@ class ConfigurationLoader {
     } catch (IOException e) {
       throw new GwtTestConfigurationException("Error while reading '"
           + CONFIG_FILENAME + "' files", e);
-    }
-
-    // check that at least one module file has been processed
-    if (processedModuleFiles.size() == 0) {
-      throw new GwtTestConfigurationException(
-          "Cannot find any 'module-file' setup in configuration file 'META-INF/gwt-test-utils.properties'");
     }
   }
 

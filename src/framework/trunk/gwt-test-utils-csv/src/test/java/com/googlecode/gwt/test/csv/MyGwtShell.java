@@ -4,19 +4,18 @@ import org.junit.Before;
 import org.junit.runner.RunWith;
 
 import com.google.gwt.user.client.ui.Widget;
-import com.googlecode.gwt.test.finder.GwtFinder;
-import com.googlecode.gwt.test.finder.Node;
-import com.googlecode.gwt.test.finder.NodeObjectFinder;
-import com.googlecode.gwt.test.rpc.RemoteServiceCreateHandler;
-import com.googlecode.gwt.test.csv.CsvMethod;
-import com.googlecode.gwt.test.csv.GwtCsvRunner;
-import com.googlecode.gwt.test.csv.GwtCsvTest;
+import com.googlecode.gwt.test.GwtModule;
 import com.googlecode.gwt.test.csv.data.MyBeautifulApp;
 import com.googlecode.gwt.test.csv.data.MyRemoteService;
 import com.googlecode.gwt.test.csv.data.MyService;
 import com.googlecode.gwt.test.csv.data.MyStringStore;
+import com.googlecode.gwt.test.finder.GwtFinder;
+import com.googlecode.gwt.test.finder.Node;
+import com.googlecode.gwt.test.finder.NodeObjectFinder;
+import com.googlecode.gwt.test.rpc.RemoteServiceCreateHandler;
 
 @RunWith(GwtCsvRunner.class)
+@GwtModule("com.googlecode.gwt.test.csv.GwtCsvTest")
 public abstract class MyGwtShell extends GwtCsvTest {
 
   private MyBeautifulApp app;
@@ -30,11 +29,6 @@ public abstract class MyGwtShell extends GwtCsvTest {
   public void detachWidget(String... params) {
     Widget w = getObject(Widget.class, params);
     w.removeFromParent();
-  }
-
-  @Override
-  public String getModuleName() {
-    return "com.googlecode.gwt.test.csv.GwtCsvTest";
   }
 
   @CsvMethod

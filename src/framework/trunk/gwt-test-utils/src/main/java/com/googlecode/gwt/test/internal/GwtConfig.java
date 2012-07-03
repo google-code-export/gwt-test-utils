@@ -6,6 +6,7 @@ import java.util.List;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.UIObject.DebugIdImpl;
 import com.google.gwt.user.client.ui.UIObject.DebugIdImplEnabled;
+import com.googlecode.gwt.test.GwtModule;
 import com.googlecode.gwt.test.GwtModuleRunner;
 import com.googlecode.gwt.test.exceptions.GwtTestConfigurationException;
 import com.googlecode.gwt.test.exceptions.GwtTestException;
@@ -27,10 +28,12 @@ public class GwtConfig implements AfterTestCallback {
     return INSTANCE;
   }
 
-  private String checkedModuleName;
   private final DebugIdImpl disabledInstance = new DebugIdImpl();
   private final DebugIdImpl enabledInstance = new DebugIdImplEnabled();
   private GwtModuleRunner gwtModuleRunner;
+  private Class<?> testClass;
+
+  private String testedModuleAlias;
 
   private final List<UiObjectTagFactory<?>> uiObjectTagFactories = new ArrayList<UiObjectTagFactory<?>>();
 
@@ -43,16 +46,42 @@ public class GwtConfig implements AfterTestCallback {
     uiObjectTagFactories.clear();
   }
 
-  public String getModuleName() {
-    return checkedModuleName;
+  public String getModuleAlias() {
+    return testedModuleAlias;
   }
 
   public GwtModuleRunner getModuleRunner() {
     return gwtModuleRunner;
   }
 
+  public String getTestedModuleName() {
+
+    GwtModule gwtModule = testClass.getAnnotation(GwtModule.class);
+
+    if (gwtModule == null) {
+      throw new GwtTestConfigurationException("The test class "
+          + testClass.getName() + " must be annotated with @"
+          + GwtModule.class.getSimpleName()
+          + " to specify the fully qualified name of the GWT module to test");
+    }
+
+    String moduleName = gwtModule.value();
+
+    if (moduleName == null || "".equals(moduleName.trim())) {
+      throw new GwtTestConfigurationException("Incorrect value for @"
+          + GwtModule.class.getSimpleName() + " on " + testClass.getName()
+          + ": " + moduleName);
+    }
+
+    return moduleName;
+  }
+
   public List<UiObjectTagFactory<?>> getUiObjectTagFactories() {
     return uiObjectTagFactories;
+  }
+
+  public void setTestClass(Class<?> testClass) {
+    this.testClass = testClass;
   }
 
   /**
@@ -68,30 +97,9 @@ public class GwtConfig implements AfterTestCallback {
     }
 
     this.gwtModuleRunner = gwtModuleRunner;
-    this.checkedModuleName = getCheckedModuleName();
+    this.testedModuleAlias = ModuleData.get(getTestedModuleName()).getModuleDef().getName();
 
     setupDebugIdImpl(gwtModuleRunner.ensureDebugId());
-
-  }
-
-  private String getCheckedModuleName() {
-    String moduleName = gwtModuleRunner.getModuleName();
-    if (moduleName == null || "".equals(moduleName.trim())) {
-      throw new GwtTestConfigurationException(
-          "The tested module name returned by "
-              + gwtModuleRunner.getClass().getName()
-              + ".getModuleName() should not be null or empty");
-    }
-
-    String moduleAlias = ModuleData.get().getModuleAlias(moduleName);
-    if (moduleAlias == null) {
-      throw new GwtTestConfigurationException(
-          "The tested module '"
-              + moduleName
-              + "' has not been found. Did you forget to declare a 'module-file' property in your 'META-INF/gwt-test-utils.properties' configuration file ?");
-    }
-
-    return moduleAlias;
   }
 
   private void setupDebugIdImpl(boolean ensureDebugId) {
