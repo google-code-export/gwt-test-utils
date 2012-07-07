@@ -65,7 +65,7 @@ import com.googlecode.gwt.test.utils.GwtReflectionUtils;
  * 
  * <p>
  * The java serialization is then done by a set of optimized object from the
- * internal API. ({@link DeepCopy}).
+ * internal API. (com.googlecode.gwt.test.rpc.DeepCopy).
  * </p>
  * 
  * @author Gael Lazzari

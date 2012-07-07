@@ -1,9 +1,7 @@
 package com.googlecode.gwt.test.internal.handlers;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.GWTBridge;
@@ -20,7 +18,6 @@ import com.googlecode.gwt.test.internal.i18n.LocalizableResourceCreateHandler;
 import com.googlecode.gwt.test.internal.resources.ClientBundleCreateHandler;
 import com.googlecode.gwt.test.internal.resources.ImageBundleCreateHandler;
 import com.googlecode.gwt.test.uibinder.UiBinderCreateHandler;
-import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
 /**
  * gwt-test-utils {@link GWTBridge} implementation, which manages an ordered
@@ -32,21 +29,14 @@ import com.googlecode.gwt.test.utils.GwtReflectionUtils;
  */
 public class GwtTestGWTBridge extends GWTBridge implements AfterTestCallback {
 
-  private static final Map<String, GwtTestGWTBridge> INSTANCES = new HashMap<String, GwtTestGWTBridge>();
+  private static final GwtTestGWTBridge INSTANCE = new GwtTestGWTBridge();
 
   public static GwtTestGWTBridge get() {
-    GwtTestGWTBridge bridge = INSTANCES.get(GwtConfig.get().getTestedModuleName());
-    if (bridge == null) {
-      bridge = new GwtTestGWTBridge();
-      INSTANCES.put(GwtConfig.get().getTestedModuleName(), bridge);
-    }
-
-    GwtReflectionUtils.setStaticField(GWT.class, "sGWTBridge", bridge);
-
-    return bridge;
+    return INSTANCE;
   }
 
   private final GwtCreateHandler abstractClassCreateHandler;
+
   private final List<GwtCreateHandler> addedHandlers;
   private final GwtCreateHandler animationSchedulerCreateHandler;
   private final GwtCreateHandler cellBasedWidgetImplCreateHandler;

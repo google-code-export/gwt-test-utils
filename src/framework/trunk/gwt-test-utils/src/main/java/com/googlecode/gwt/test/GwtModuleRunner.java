@@ -47,7 +47,6 @@ public interface GwtModuleRunner {
    *          entries should be added
    * @param entries The Dictionary's entries to add
    * 
-   * @see {@link Dictionary#get(String)}
    */
   void addDictionaryEntries(String dictionaryName, Map<String, String> entries);
 

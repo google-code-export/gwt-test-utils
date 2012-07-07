@@ -20,17 +20,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import com.google.gwt.core.ext.TreeLogger;
-import com.google.gwt.core.ext.UnableToCompleteException;
-import com.google.gwt.dev.cfg.ModuleDef;
-import com.google.gwt.dev.cfg.ModuleDefLoader;
-import com.google.gwt.dev.javac.JsniMethod;
-import com.google.gwt.dev.javac.rebind.RebindCache;
-import com.google.gwt.dev.shell.DispatchIdOracle;
-import com.google.gwt.dev.shell.JsValue;
-import com.google.gwt.dev.shell.ModuleSpace;
-import com.google.gwt.dev.shell.ModuleSpaceHost;
-import com.google.gwt.dev.shell.ShellModuleSpaceHost;
 import com.googlecode.gwt.test.exceptions.GwtTestConfigurationException;
 import com.googlecode.gwt.test.exceptions.GwtTestException;
 import com.googlecode.gwt.test.internal.utils.XmlUtils;
@@ -114,8 +103,6 @@ public class ModuleData {
       "src/main/java/", "src/main/resources/", "src/test/java/",
       "src/test/resources/", "src/", "resources/", "res/"};
 
-  private static final RebindCache REBIND_CACHE = new RebindCache();
-
   public static ModuleData get(String moduleName) {
     ModuleData moduleData = CACHE.get(moduleName);
     if (moduleData == null) {
@@ -126,16 +113,15 @@ public class ModuleData {
     return moduleData;
   }
 
+  private String alias;
+
   private final Set<String> customGeneratedClasses;
-  private ModuleDef moduleDef;
-  private final String moduleName;
-  private ModuleSpaceHost moduleSpaceHost;
+
   private final Set<String> parsedModules;
 
   private final Map<String, List<ReplaceWithData>> replaceWithListMap;
 
   private ModuleData(String moduleName) {
-    this.moduleName = moduleName;
     this.replaceWithListMap = new HashMap<String, List<ReplaceWithData>>();
     this.customGeneratedClasses = new HashSet<String>();
     this.parsedModules = new HashSet<String>();
@@ -143,42 +129,12 @@ public class ModuleData {
     parseModule(moduleName);
   }
 
+  public String getAlias() {
+    return alias;
+  }
+
   public Set<String> getCustomGeneratedClasses() {
     return customGeneratedClasses;
-  }
-
-  public ModuleDef getModuleDef() {
-    if (moduleDef == null) {
-      try {
-        moduleDef = ModuleDefLoader.loadFromClassPath(
-            TreeLoggerHolder.getTreeLogger(), moduleName, false);
-      } catch (UnableToCompleteException e) {
-        throw new GwtTestConfigurationException(
-            "Error while creating ModuleDef for module '" + moduleName + "' :",
-            e);
-      }
-    }
-
-    return moduleDef;
-  }
-
-  public ModuleSpaceHost getModuleSpaceHost() {
-    if (moduleSpaceHost == null) {
-      try {
-        moduleSpaceHost = new ShellModuleSpaceHost(
-            TreeLoggerHolder.getTreeLogger(),
-            getModuleDef().getCompilationState(TreeLoggerHolder.getTreeLogger()),
-            getModuleDef(), null, null, REBIND_CACHE);
-        ModuleSpace moduleSpace = createModuleSpace(moduleSpaceHost);
-        moduleSpaceHost.onModuleReady(moduleSpace);
-      } catch (UnableToCompleteException e) {
-        throw new GwtTestConfigurationException(
-            "Error while creating ModuleDef for module '" + moduleName + "' :",
-            e);
-      }
-    }
-
-    return moduleSpaceHost;
   }
 
   public Class<?> getRemoteServiceImplClass(String remoteServicePath) {
@@ -187,7 +143,7 @@ public class ModuleData {
       remoteServicePath = "/" + remoteServicePath;
     }
 
-    String servletClassName = getModuleDef().findServletForPath(
+    String servletClassName = GwtFactory.get().getModuleDef().findServletForPath(
         remoteServicePath);
 
     if (servletClassName == null) {
@@ -195,7 +151,8 @@ public class ModuleData {
     }
 
     try {
-      return Class.forName(servletClassName, true, GwtClassLoader.get());
+      return Class.forName(servletClassName, true,
+          GwtFactory.get().getClassLoader());
     } catch (ClassNotFoundException e) {
       throw new GwtTestConfigurationException("Cannot find servlet class '"
           + servletClassName + "' configured for servlet path '"
@@ -224,43 +181,9 @@ public class ModuleData {
     }
   }
 
-  private ModuleSpace createModuleSpace(ModuleSpaceHost host) {
-
-    return new ModuleSpace(TreeLoggerHolder.getTreeLogger(), host,
-        getModuleDef().getCanonicalName()) {
-
-      public void createNativeMethods(TreeLogger logger,
-          List<JsniMethod> jsniMethods, DispatchIdOracle dispatchIdOracle) {
-        // this method should never be called
-        throw new UnsupportedOperationException(
-            "ModuleSpace.createNativeMethods(..) not supported by gwt-test-utils");
-      }
-
-      @Override
-      protected void createStaticDispatcher(TreeLogger logger) {
-        // this method should never be called
-        throw new UnsupportedOperationException(
-            "ModuleSpace.createStaticDispatcher(..) not supported by gwt-test-utils");
-
-      }
-
-      @Override
-      protected JsValue doInvoke(String name, Object jthis, Class<?>[] types,
-          Object[] args) throws Throwable {
-        // this method should never be called
-        throw new UnsupportedOperationException(
-            "ModuleSpace.doInvoke(..) not supported by gwt-test-utils");
-      }
-
-      @Override
-      protected Object getStaticDispatcher() {
-        // this method should never be called
-        throw new UnsupportedOperationException(
-            "ModuleSpace.getStaticDispatcher() not supported by gwt-test-utils");
-
-      }
-    };
-
+  private String getModuleAlias(Document document, XPath xpath)
+      throws XPathExpressionException {
+    return xpath.evaluate("/module/@rename-to", document).trim();
   }
 
   private InputStream getModuleFileAsStream(String moduleFilePath) {
@@ -395,6 +318,7 @@ public class ModuleData {
     String moduleFilePath = moduleName.replaceAll("\\.", "/") + ".gwt.xml";
     Document document = createDocument(moduleFilePath);
 
+    alias = getModuleAlias(document, xpath);
     initializeInherits(document, xpath);
     initializeReplaceWith(document, xpath);
     initializeGenerateWith(document, xpath);

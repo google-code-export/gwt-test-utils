@@ -6,9 +6,11 @@ import java.lang.reflect.InvocationTargetException;
 import org.junit.runner.Runner;
 
 import com.googlecode.gwt.test.internal.GwtClassLoader;
+import com.googlecode.gwt.test.internal.GwtFactory;
 
 /**
- * Internal {@link Runner} factory. <strong>For internal use only.</strong>
+ * Internal {@link Runner} factory which load the runner and the test class
+ * through {@link GwtClassLoader}. <strong>For internal use only.</strong>
  * 
  * @author Gael Lazzari
  * 
@@ -49,8 +51,8 @@ public abstract class AbstractGwtRunnerFactory {
       throws Exception {
     Constructor<?> constructor;
 
-    Class<?> runnerClass = GwtClassLoader.get().loadClass(runnerClassName);
-    Class<?> testedClass = GwtClassLoader.get().loadClass(
+    Class<?> runnerClass = GwtFactory.get().getClassLoader().loadClass(runnerClassName);
+    Class<?> testedClass = GwtFactory.get().getClassLoader().loadClass(
         constructorParam.getName());
     constructor = runnerClass.getConstructor(Class.class.getClass());
     return (Runner) constructor.newInstance(testedClass);

@@ -17,6 +17,7 @@ import org.junit.runner.Runner;
 import org.junit.runner.notification.RunNotifier;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.googlecode.gwt.test.internal.GwtConfig;
 import com.googlecode.gwt.test.internal.junit.GwtRunListener;
 import com.googlecode.gwt.test.spring.GwtSpringCsvRunner;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
@@ -104,14 +105,18 @@ public class GwtSpring2CsvJUnit4ClassRunner extends SpringJUnit4ClassRunner {
     }
   }
 
+  private final Class<?> klass;
+
   private DirectoryTestReader reader;
 
-  public GwtSpring2CsvJUnit4ClassRunner(Class<?> clazz) throws Exception {
-    super(clazz);
+  public GwtSpring2CsvJUnit4ClassRunner(Class<?> klass) throws Exception {
+    super(klass);
+    this.klass = klass;
   }
 
   @Override
   public void run(RunNotifier notifier) {
+    GwtConfig.get().setTestClass(klass);
     notifier.addListener(new GwtRunListener());
     super.run(notifier);
   }

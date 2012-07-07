@@ -20,7 +20,7 @@ public class TreeLoggerHolder {
   /**
    * Gets the TreeLogger to use. Never null.
    * 
-   * @return
+   * @return the singleton instance
    */
   public static TreeLogger getTreeLogger() {
     if (treeLogger == null) {

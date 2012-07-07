@@ -80,7 +80,8 @@ class WindowPatcher {
   @PatchMethod
   static void resizeBy(int width, int height) {
     Element viewportElement = GwtReflectionUtils.callPrivateMethod(
-        Document.get(), "getViewportElement");
+        Document.get(), "getViewportElement",
+        "com.google.gwt.dom.client.Document");
     int currentWidth = Document.get().getClientWidth();
     GwtDomUtils.setClientWidth(viewportElement, currentWidth + width);
 
@@ -91,7 +92,8 @@ class WindowPatcher {
   @PatchMethod
   static void resizeTo(int width, int height) {
     Element viewportElement = GwtReflectionUtils.callPrivateMethod(
-        Document.get(), "getViewportElement");
+        Document.get(), "getViewportElement",
+        "com.google.gwt.dom.client.Document");
 
     GwtDomUtils.setClientWidth(viewportElement, width);
     GwtDomUtils.setClientHeight(viewportElement, height);

@@ -1,5 +1,6 @@
 package com.googlecode.gwt.test.internal;
 
+import java.io.IOException;
 import java.security.ProtectionDomain;
 
 import javassist.CannotCompileException;
@@ -8,13 +9,10 @@ import javassist.Loader;
 import javassist.NotFoundException;
 import javassist.Translator;
 
-import com.google.gwt.core.ext.TreeLogger;
-import com.google.gwt.dev.cfg.ModuleDef;
-import com.google.gwt.dev.shell.ModuleSpace;
-import com.google.gwt.dev.shell.ModuleSpaceHost;
 import com.googlecode.gwt.test.GwtTest;
 import com.googlecode.gwt.test.exceptions.GwtTestException;
 import com.googlecode.gwt.test.exceptions.GwtTestPatchException;
+import com.googlecode.gwt.test.internal.rewrite.OverlayTypesRewriter;
 
 /**
  * <p>
@@ -23,13 +21,21 @@ import com.googlecode.gwt.test.exceptions.GwtTestPatchException;
  * do not refer directly to this classloader in your client code.</strong>
  * </p>
  * <p>
- * Its aim is to provide JVM-compliant versions of classes referenced in those
- * test classes. To obtain JVM-compliant code, the class loader relies on a set
- * of class {@link Patcher} which can be configured using the
+ * It aims to provide JVM-compliant versions of classes referenced in those test
+ * classes. To obtain JVM-compliant code, this class loader relies on a set of
+ * class {@link Patcher} which can be configured using the
  * <strong>META-INF\gwt-test-utils.properties</strong> file of your application.
  * </p>
  * 
+ * <p>
+ * In addition to {@link Patcher}, this classloader also perform some bytecode
+ * modification on every GWT JavaScriptObject subtype, also known as
+ * <strong>Overlay types</strong>.
+ * </p>
+ * 
+ * 
  * @see GwtTranslator
+ * @see OverlayTypesRewriter
  * 
  * @author Bertrand Paquet
  * @author Gael Lazzari
@@ -37,40 +43,76 @@ import com.googlecode.gwt.test.exceptions.GwtTestPatchException;
  */
 public class GwtClassLoader extends Loader {
 
-  private static final GwtClassLoader INSTANCE;
+  private static class GwtClassLoaderWithRewriter extends GwtClassLoader {
 
-  static {
-    try {
-      INSTANCE = new GwtClassLoader();
-    } catch (Exception e) {
-      if (GwtTestException.class.isInstance(e)) {
-        throw (GwtTestException) e;
-      } else {
-        throw new GwtTestPatchException(e);
+    private final OverlayTypesRewriter overlayRewriter;
+
+    private GwtClassLoaderWithRewriter(ConfigurationLoader configurationLoader,
+        OverlayTypesRewriter overlayRewriter) throws NotFoundException,
+        CannotCompileException {
+      super(configurationLoader);
+
+      this.overlayRewriter = overlayRewriter;
+    }
+
+    /**
+     * Performs Overlay type support bytecode manipulation
+     * 
+     * @param className the name of the class to find
+     * @param rewriter
+     * @return the class byte array, or null if class has not been found
+     * @throws NotFoundException
+     * @throws CannotCompileException
+     * @throws IOException
+     */
+    @Override
+    protected byte[] findClassBytes(String className)
+        throws ClassNotFoundException {
+
+      if (overlayRewriter.isJsoIntf(className)) {
+        // Generate a synthetic JSO interface class.
+        return overlayRewriter.writeJsoIntf(className);
       }
+
+      // A JSO impl class needs the class bytes for the original class.
+      String classFromPool = (overlayRewriter.isJsoImpl(className))
+          ? className.substring(0, className.length() - 1) : className;
+
+      // Apply Patchers
+      byte[] classBytes = super.findClassBytes(classFromPool);
+
+      // perform Overlay types bytecode transformation
+      classBytes = overlayRewriter.rewrite(className, classBytes);
+
+      return classBytes;
     }
   }
 
-  public static GwtClassLoader get() {
-    return INSTANCE;
+  static GwtClassLoader createClassLoader(
+      ConfigurationLoader configurationLoader,
+      OverlayTypesRewriter overlayRewriter) {
+    try {
+      if (overlayRewriter == null) {
+        return new GwtClassLoader(configurationLoader);
+      } else {
+        return new GwtClassLoaderWithRewriter(configurationLoader,
+            overlayRewriter);
+      }
+    } catch (Exception e) {
+      throw new GwtTestException("Error during "
+          + GwtClassLoader.class.getSimpleName() + " instanciation :", e);
+    }
   }
 
   private ProtectionDomain domain;
-
-  private final TreeLogger logger = TreeLogger.NULL;
-
-  private ModuleDef moduleDef;
-
-  private ModuleSpace moduleSpace;
-
-  private ModuleSpaceHost moduleSpaceHost;
   private final ClassPool source;
+
   private final Translator translator;
 
-  private GwtClassLoader() throws NotFoundException, CannotCompileException {
+  private GwtClassLoader(ConfigurationLoader configurationLoader)
+      throws NotFoundException, CannotCompileException {
     super(GwtClassPool.get());
     this.source = GwtClassPool.get();
-    ConfigurationLoader configurationLoader = ConfigurationLoader.createInstance(this.getParent());
     this.translator = new GwtTranslator(configurationLoader);
 
     for (String s : configurationLoader.getDelegates()) {
@@ -87,24 +129,12 @@ public class GwtClassLoader extends Loader {
   }
 
   @Override
-  protected Class<?> findClass(String name) throws ClassNotFoundException {
-    byte[] classfile;
-    try {
-      translator.onLoad(source, name);
+  protected Class<?> findClass(String className) throws ClassNotFoundException {
+    byte[] classfile = findClassBytes(className);
 
-      try {
-        classfile = source.get(name).toBytecode();
-      } catch (NotFoundException e) {
-        return null;
-      }
-    } catch (Exception e) {
-      throw new ClassNotFoundException(
-          "caught an exception while obtaining a class file for " + name, e);
-    }
-
-    int i = name.lastIndexOf('.');
+    int i = className.lastIndexOf('.');
     if (i != -1) {
-      String pname = name.substring(0, i);
+      String pname = className.substring(0, i);
       if (getPackage(pname) == null)
         try {
           definePackage(pname, null, null, null, null, null, null, null);
@@ -114,10 +144,32 @@ public class GwtClassLoader extends Loader {
         }
     }
 
-    if (domain == null)
-      return defineClass(name, classfile, 0, classfile.length);
-    else
-      return defineClass(name, classfile, 0, classfile.length, domain);
+    try {
+      if (domain == null)
+        return defineClass(className, classfile, 0, classfile.length);
+      else
+        return defineClass(className, classfile, 0, classfile.length, domain);
+    } catch (Throwable t) {
+      throw new GwtTestPatchException("Error while defining " + className
+          + " from modified bytecode", t);
+    }
+  }
+
+  protected byte[] findClassBytes(String className)
+      throws ClassNotFoundException {
+    try {
+      // Apply Patchers
+      translator.onLoad(source, className);
+      try {
+        return source.get(className).toBytecode();
+      } catch (NotFoundException e) {
+        return null;
+      }
+    } catch (Exception e) {
+      throw new ClassNotFoundException(
+          "caught an exception while obtaining a class file for " + className,
+          e);
+    }
   }
 
 }

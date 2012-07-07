@@ -31,9 +31,9 @@ public class GwtConfig implements AfterTestCallback {
   private final DebugIdImpl disabledInstance = new DebugIdImpl();
   private final DebugIdImpl enabledInstance = new DebugIdImplEnabled();
   private GwtModuleRunner gwtModuleRunner;
-  private Class<?> testClass;
+  private String moduleAlias;
 
-  private String testedModuleAlias;
+  private String testedModuleName;
 
   private final List<UiObjectTagFactory<?>> uiObjectTagFactories = new ArrayList<UiObjectTagFactory<?>>();
 
@@ -47,7 +47,7 @@ public class GwtConfig implements AfterTestCallback {
   }
 
   public String getModuleAlias() {
-    return testedModuleAlias;
+    return moduleAlias;
   }
 
   public GwtModuleRunner getModuleRunner() {
@@ -55,6 +55,14 @@ public class GwtConfig implements AfterTestCallback {
   }
 
   public String getTestedModuleName() {
+    return testedModuleName;
+  }
+
+  public List<UiObjectTagFactory<?>> getUiObjectTagFactories() {
+    return uiObjectTagFactories;
+  }
+
+  public void setTestClass(Class<?> testClass) {
 
     GwtModule gwtModule = testClass.getAnnotation(GwtModule.class);
 
@@ -73,15 +81,17 @@ public class GwtConfig implements AfterTestCallback {
           + ": " + moduleName);
     }
 
-    return moduleName;
-  }
+    if (!GwtFactory.get().getConfigurationLoader().getGwtModules().contains(
+        moduleName)) {
+      throw new GwtTestConfigurationException(
+          "The tested @GwtModule '"
+              + moduleName
+              + "' configured in "
+              + testClass.getName()
+              + " has not been found. Did you forget to declare a 'gwt-module' property in your 'META-INF/gwt-test-utils.properties' configuration file ?");
+    }
 
-  public List<UiObjectTagFactory<?>> getUiObjectTagFactories() {
-    return uiObjectTagFactories;
-  }
-
-  public void setTestClass(Class<?> testClass) {
-    this.testClass = testClass;
+    this.testedModuleName = moduleName;
   }
 
   /**
@@ -97,8 +107,7 @@ public class GwtConfig implements AfterTestCallback {
     }
 
     this.gwtModuleRunner = gwtModuleRunner;
-    this.testedModuleAlias = ModuleData.get(getTestedModuleName()).getModuleDef().getName();
-
+    this.moduleAlias = ModuleData.get(testedModuleName).getAlias();
     setupDebugIdImpl(gwtModuleRunner.ensureDebugId());
   }
 

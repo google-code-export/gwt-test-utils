@@ -2,10 +2,10 @@ package com.googlecode.gwt.test.internal.patchers.dom;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Node;
 import com.google.gwt.user.client.ui.PotentialElement;
 import com.google.gwt.user.client.ui.UIObject;
 import com.googlecode.gwt.test.internal.utils.JavaScriptObjects;
-import com.googlecode.gwt.test.internal.utils.JsoProperties;
 import com.googlecode.gwt.test.patchers.PatchClass;
 import com.googlecode.gwt.test.patchers.PatchMethod;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
@@ -13,33 +13,37 @@ import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 @PatchClass(PotentialElement.class)
 class PotentialElementPatcher {
 
+  private static final String POTENTIALELEMENT_TAG = "POTENTIALELEMENT_TAG";
+  private static final String POTENTIALELEMENT_UIOBJECT = "POTENTIALELEMENT_UIOBJECT";
+  private static final String POTENTIALELEMENT_WRAPPED_ELEMENT = "POTENTIALELEMENT_WRAPPED_ELEMENT";
+
   @PatchMethod
   static PotentialElement build(UIObject o, String tagName) {
-    PotentialElement e = JavaScriptObjects.newObject(PotentialElement.class);
+    PotentialElement e = JavaScriptObjects.newNode(Node.ELEMENT_NODE).cast();
     Element wrappedElement = JavaScriptObjects.newElement(tagName,
         o.getElement().getOwnerDocument());
-    JavaScriptObjects.setProperty(e, JsoProperties.POTENTIALELEMENT_TAG, true);
-    JavaScriptObjects.setProperty(e,
-        JsoProperties.POTENTIALELEMENT_WRAPPED_ELEMENT, wrappedElement);
-    JavaScriptObjects.setProperty(e, JsoProperties.POTENTIALELEMENT_UIOBJECT, o);
+    JavaScriptObjects.setProperty(e, POTENTIALELEMENT_TAG, true);
+    JavaScriptObjects.setProperty(e, POTENTIALELEMENT_WRAPPED_ELEMENT,
+        wrappedElement);
+    JavaScriptObjects.setProperty(e, POTENTIALELEMENT_UIOBJECT, o);
 
     return e;
   }
 
   @PatchMethod
   static boolean isPotential(JavaScriptObject o) {
-    return JavaScriptObjects.getBoolean(o, JsoProperties.POTENTIALELEMENT_TAG);
+    return JavaScriptObjects.getBoolean(o, POTENTIALELEMENT_TAG);
   }
 
   @PatchMethod
   static Element resolve(Element maybePotential) {
     if (isPotential(maybePotential)) {
       UIObject o = JavaScriptObjects.getObject(maybePotential,
-          JsoProperties.POTENTIALELEMENT_UIOBJECT);
+          POTENTIALELEMENT_UIOBJECT);
       GwtReflectionUtils.callPrivateMethod(o, "resolvePotentialElement");
 
       return JavaScriptObjects.getObject(maybePotential,
-          JsoProperties.POTENTIALELEMENT_WRAPPED_ELEMENT);
+          POTENTIALELEMENT_WRAPPED_ELEMENT);
 
     } else {
       return maybePotential;
@@ -48,8 +52,7 @@ class PotentialElementPatcher {
 
   @PatchMethod
   static Element setResolver(PotentialElement pe, UIObject resolver) {
-    JavaScriptObjects.setProperty(pe, JsoProperties.POTENTIALELEMENT_UIOBJECT,
-        resolver);
+    JavaScriptObjects.setProperty(pe, POTENTIALELEMENT_UIOBJECT, resolver);
 
     return pe;
 

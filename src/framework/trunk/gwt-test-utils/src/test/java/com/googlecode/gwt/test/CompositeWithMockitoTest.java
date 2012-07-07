@@ -21,7 +21,7 @@ public class CompositeWithMockitoTest extends GwtTestWithMockito {
     }
   }
 
-  @Mock
+  @com.googlecode.gwt.test.Mock
   private Element element;
 
   @Mock

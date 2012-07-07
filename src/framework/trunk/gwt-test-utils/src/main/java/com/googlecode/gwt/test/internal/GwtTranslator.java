@@ -28,24 +28,20 @@ class GwtTranslator implements Translator {
   }
 
   public void onLoad(ClassPool pool, String className) throws NotFoundException {
-    if (!configurationLoader.getOverlayTypes().contains(className)) {
-      patchClass(pool.get(className));
-    }
+    patchClass(pool.get(className));
   }
 
   public void start(ClassPool pool) throws NotFoundException {
-    for (String overlayType : configurationLoader.getOverlayTypes()) {
-      patchClass(pool.get(overlayType));
-    }
+
   }
 
   private void applyJavaClassModifiers(CtClass ctClass) {
     try {
       // Apply remove-method
-      configurationLoader.getMethodRemover().modify(ctClass);
+      // configurationLoader.getMethodRemover().modify(ctClass);
 
       // Apply substitute-class
-      configurationLoader.getClassSubstituer().modify(ctClass);
+      // configurationLoader.getClassSubstituer().modify(ctClass);
 
       // Apply internal modifiers
       serializableModifier.modify(ctClass);
@@ -85,6 +81,7 @@ class GwtTranslator implements Translator {
     if (LOGGER.isDebugEnabled()) {
       LOGGER.debug("Load class '" + classToModify.getName() + "'");
     }
+
     applyPatcher(classToModify);
     applyJavaClassModifiers(classToModify);
     if (LOGGER.isDebugEnabled()) {

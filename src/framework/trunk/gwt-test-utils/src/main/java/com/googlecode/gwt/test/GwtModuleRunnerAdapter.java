@@ -74,10 +74,8 @@ public abstract class GwtModuleRunnerAdapter implements GwtModuleRunner,
   private WindowOperationsHandler windowOperationsHandler;
 
   public GwtModuleRunnerAdapter() {
-    GwtConfig.get().setTestClass(getClass());
     browserErrorHandlerDelegate = new BrowserErrorHandlerDelegate();
     clientProperties = new HashMap<String, String>();
-    GwtTestGWTBridge.get();
     AfterTestCallbackManager.get().registerRemoveableCallback(this);
   }
 
@@ -291,8 +289,8 @@ public abstract class GwtModuleRunnerAdapter implements GwtModuleRunner,
    * Specifies if The {@link Browser} helper methods can target not attached
    * widgets or not.
    * 
-   * @return True if {@link DomEvent} can be dispatched on detached widgets,
-   *         false otherwise.
+   * @param canDispatchDomEventOnDetachedWidget True if {@link DomEvent} can be
+   *          dispatched on detached widgets, false otherwise.
    * 
    * @see Widget#isAttached()
    */

@@ -17,8 +17,8 @@ import java.lang.annotation.Target;
 public @interface PatchMethod {
 
   /**
-   * Indicates the actual class of a parameter. Use this annotation for a @PatchMethod
-   * parameter whenever the type of the argument is not accessible.
+   * Indicates the actual class of a parameter. Use this annotation for a
+   * PatchMethod parameter whenever the type of the argument is not accessible.
    * 
    * @author Gael Lazzari
    * 
@@ -53,8 +53,8 @@ public @interface PatchMethod {
   boolean override() default false;
 
   /**
-   * The name of the method to patch. If not set, {@link AutomaticPatcher} will
-   * check for a method with the same name as the annotated one.
+   * The name of the method to patch. If not set, gwt-test-utils will check for
+   * a method with the same name as the annotated one.
    * 
    * @return The name of the method to patch.
    */

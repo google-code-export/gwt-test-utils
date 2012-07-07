@@ -290,7 +290,7 @@ public class Browser {
   /**
    * Simulates a click event.
    * 
-   * @param The targeted widget.
+   * @param target The targeted widget.
    */
   public static void click(Widget target) {
     clickInternal(target, target);
@@ -356,7 +356,7 @@ public class Browser {
   /**
    * Simulates a dblclick event.
    * 
-   * @param The targeted widget.
+   * @param target The targeted widget.
    */
   public static void dblClick(Widget target) {
     dispatchEvent(target, EventBuilder.create(Event.ONDBLCLICK).build());
@@ -367,8 +367,6 @@ public class Browser {
    * target widget.
    * 
    * @param target The targeted widget.
-   * @param browserErrorHandler The errorHandler to notify if a browser error
-   *          occurs.
    * @param events Some events to dispatch.
    */
   public static void dispatchEvent(Widget target, Event... events) {

@@ -16,8 +16,8 @@ import org.junit.runner.RunWith;
 
 import com.googlecode.gwt.test.exceptions.GwtTestException;
 import com.googlecode.gwt.test.internal.AfterTestCallbackManager;
-import com.googlecode.gwt.test.internal.GwtClassLoader;
 import com.googlecode.gwt.test.internal.GwtConfig;
+import com.googlecode.gwt.test.internal.GwtFactory;
 import com.googlecode.gwt.test.internal.GwtTestErrorHolder;
 import com.googlecode.gwt.test.utils.events.Browser.BrowserErrorHandler;
 
@@ -57,7 +57,8 @@ public abstract class GwtTest extends GwtModuleRunnerAdapter implements Test {
    */
   @BeforeClass
   public static final void bindClassLoader() {
-    Thread.currentThread().setContextClassLoader(GwtClassLoader.get());
+    Thread.currentThread().setContextClassLoader(
+        GwtFactory.get().getClassLoader());
   }
 
   /**
@@ -67,7 +68,7 @@ public abstract class GwtTest extends GwtModuleRunnerAdapter implements Test {
   @AfterClass
   public static final void unbindClassLoader() {
     Thread.currentThread().setContextClassLoader(
-        GwtClassLoader.get().getParent());
+        GwtFactory.get().getClassLoader().getParent());
   }
 
   private final Test test;
@@ -85,7 +86,6 @@ public abstract class GwtTest extends GwtModuleRunnerAdapter implements Test {
    * Runs a test and collects its result in a TestResult instance.
    */
   public void run(TestResult result) {
-    GwtConfig.get().setTestClass(this.getClass());
     test.run(result);
   }
 

@@ -6,6 +6,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import com.googlecode.gwt.test.exceptions.GwtTestConfigurationException;
+
 /**
  * Specifies the GWT module to test in a {@link GwtModuleRunner}.
  * 
@@ -17,7 +19,10 @@ import java.lang.annotation.Target;
 public @interface GwtModule {
 
   /**
-   * Specifies the full qualified name of the GWT module under test
+   * Specifies the full qualified name of the GWT module under test. A
+   * {@link GwtTestConfigurationException} would be thrown if the name is null
+   * or empty or is not declared as a 'gwt-module' in the
+   * META-INF/gwt-test-utils.properties
    * 
    * @return the full qualified name of the GWT module under test
    */

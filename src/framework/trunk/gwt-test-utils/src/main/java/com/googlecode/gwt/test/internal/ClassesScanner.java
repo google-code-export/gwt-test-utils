@@ -23,7 +23,7 @@ import com.googlecode.gwt.test.exceptions.GwtTestPatchException;
  * @author Gael Lazzari
  * 
  */
-class ClassesScanner {
+final class ClassesScanner {
 
   static interface ClassVisitor {
 

@@ -73,7 +73,7 @@ public abstract class GwtTestWithMocks extends GwtTest {
    * Adds a mock object to the list of mocks used in the context of this test
    * class.
    * 
-   * @param clazz The class for which a mock object is being defined
+   * @param createClass The class for which a mock object is being defined
    * @param mock the mock instance
    */
   protected Object addMockedObject(Class<?> createClass, Object mock) {

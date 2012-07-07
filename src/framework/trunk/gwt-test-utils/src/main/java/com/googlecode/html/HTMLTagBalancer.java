@@ -33,6 +33,7 @@ import org.apache.xerces.xni.parser.XMLComponentManager;
 import org.apache.xerces.xni.parser.XMLConfigurationException;
 import org.apache.xerces.xni.parser.XMLDocumentFilter;
 import org.apache.xerces.xni.parser.XMLDocumentSource;
+
 import com.googlecode.html.HTMLElements.Element;
 import com.googlecode.html.filters.NamespaceBinder;
 import com.googlecode.html.xercesbridge.XercesBridge;

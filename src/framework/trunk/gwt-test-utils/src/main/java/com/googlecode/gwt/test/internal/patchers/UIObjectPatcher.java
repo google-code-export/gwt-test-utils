@@ -2,11 +2,10 @@ package com.googlecode.gwt.test.internal.patchers;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.PotentialElement;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
-import com.googlecode.gwt.test.internal.utils.JavaScriptObjects;
-import com.googlecode.gwt.test.internal.utils.JsoProperties;
 import com.googlecode.gwt.test.patchers.PatchClass;
 import com.googlecode.gwt.test.patchers.PatchMethod;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
@@ -70,8 +69,7 @@ class UIObjectPatcher {
     // Bind the widget to listen to element so we can trigger event on it even
     // if the widget has not been attached yet
     if (Widget.class.isInstance(uiObject)) {
-      JavaScriptObjects.setProperty(elem, JsoProperties.ELEM_EVENTLISTENER,
-          uiObject);
+      DOM.setEventListener(elem, (Widget) uiObject);
     }
 
   }

@@ -40,11 +40,6 @@
 			<groupId>com.google.code.javaparser</groupId>
 			<artifactId>javaparser</artifactId>
 		</dependency>
-		<!-- Use commons-beanutils and commons-lang bundled in gwt-dev.jar <dependency> 
-			<groupId>commons-beanutils</groupId> <artifactId>commons-beanutils</artifactId> 
-			<exclusions> <exclusion> <groupId>commons-logging</groupId> <artifactId>commons-logging</artifactId> 
-			</exclusion> </exclusions> </dependency> <dependency> <groupId>commons-lang</groupId> 
-			<artifactId>commons-lang</artifactId> </dependency> -->
 		<dependency>
 			<groupId>org.easymock</groupId>
 			<artifactId>easymock</artifactId>
@@ -109,7 +104,6 @@
 					<plugin>
 						<groupId>org.antlr</groupId>
 						<artifactId>antlr3-maven-plugin</artifactId>
-						<version>${antlr.runtime.version}</version>
 						<executions>
 							<execution>
 								<id>generate</id>

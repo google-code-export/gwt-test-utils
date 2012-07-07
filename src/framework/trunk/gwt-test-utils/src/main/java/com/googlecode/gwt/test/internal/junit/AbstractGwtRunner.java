@@ -8,6 +8,7 @@ import org.junit.runner.manipulation.NoTestsRemainException;
 import org.junit.runner.notification.RunNotifier;
 
 import com.googlecode.gwt.test.internal.GwtClassLoader;
+import com.googlecode.gwt.test.internal.GwtFactory;
 
 /**
  * <p>
@@ -18,12 +19,15 @@ import com.googlecode.gwt.test.internal.GwtClassLoader;
  * 
  * @author Gael Lazzari
  * 
+ * @see AbstractGwtRunnerFactory
+ * 
  */
 public abstract class AbstractGwtRunner extends Runner implements Filterable {
 
   private final Runner runner;
 
   public AbstractGwtRunner(Class<?> clazz) throws Throwable {
+    GwtFactory.initializeIfNeeded();
     runner = getRunnerFactory().create(clazz);
   }
 
