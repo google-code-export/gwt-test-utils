@@ -14,7 +14,7 @@ More important, it would introduce some overhead at the loading of your custom c
 
 But today, we realized avoiding overlay types support is not possible anymore : a lot of coming features, such as [https://developers.google.com/web-toolkit/articles/elemental Elemental] (GWT 2.5) or [http://dev.sencha.com/deploy/gxt-3.0.0/javadoc/gxt/com/sencha/gxt/core/client/dom/XElement.html XElement] (GXT 3.0) directly rely on overlays and we can't use our existing ugly hacks to make them work.
 
-Even more than (amazing) test performances, what matters the most to us is that you continue to rely on gwt-test-utils to write your UI tests and not to be stuck with an old version of GWT / GXT.
+While we continue to focus on achieving great test performances, we don't want you to be stuck on using some old GWT or GXT version because of _gwt-test-utils_.
 Don't be afraid, *gwt-test-utils still remains about 10 times faster than {{{GWTTestCase}}} !* It still doesn't need to run the entire GWT stack.
 
 = How to migrate =
