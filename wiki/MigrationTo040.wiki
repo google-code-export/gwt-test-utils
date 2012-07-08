@@ -6,7 +6,7 @@ As many current users won't care, it is a major improvement, which opens a lot o
 
 = Why now ? =
 
-Until today, there were (very) hugly hacks in _gwt-test-utils_ to avoid {{{ClassCastException}}} when some GWT's code does some JavaScriptObject upcasting. And when some people asked how to test some code which relies directly on overlay types feature, we had to tell them to use {{{GWTTestCase}}}.. (see [http://code.google.com/p/gwt-test-utils/issues/detail?id=97 here] for example).
+Until today, there were (very) hugly hacks in _gwt-test-utils_ to avoid {{{ClassCastException}}} when some GWT's code does some {{{JavaScriptObject}}} upcasting. And when some people asked how to test some code which relies directly on overlay types feature, we had to tell them to use {{{GWTTestCase}}}.. (see [http://code.google.com/p/gwt-test-utils/issues/detail?id=97 here] for example).
 
 We were aware of the fact that supporting overlays would include some changes in _gwt-test-utils_ public API.
 More important, it would introduce some overhead at the loading of your custom classloader, since overlay types emulation in the JVM is not possible without an iteration through every class in the GWT frontend and and in your module(s), searching for {{{JavaScriptObject}}} subtypes and {{{SingleJsoImpl}}} annotated classes.
