@@ -10,7 +10,7 @@ Until today, there were (very) hugly hacks in _gwt-test-utils_ to avoid {{{Class
 
 We were aware of the fact that supporting overlays would include some changes in _gwt-test-utils_ public API.
 More important, it would introduce some overhead at the loading of your custom classloader, since overlay types emulation in the JVM is not possible without an iteration through every class in the GWT frontend and and in your module(s), searching for {{{JavaScriptObject}}} subtypes and {{{SingleJsoImpl}}} annotated classes in order to make the necessary (and heavy) bytecode modifications.
-*For us, it was not admissible to wait 4-5 secondes to launch your tests.*
+*For us, it was not admissible to wait 4-5 secondes to launch our tests.*
 
 But today, we realized avoiding overlay types support is not possible anymore : a lot of coming features, such as [https://developers.google.com/web-toolkit/articles/elemental Elemental] (GWT 2.5) or [http://dev.sencha.com/deploy/gxt-3.0.0/javadoc/gxt/com/sencha/gxt/core/client/dom/XElement.html XElement] (GXT 3.0) directly relies on overlays and we can't use your existing hugly hacks to make them work.
 
