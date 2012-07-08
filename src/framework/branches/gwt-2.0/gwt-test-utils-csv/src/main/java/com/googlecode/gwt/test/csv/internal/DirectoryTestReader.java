@@ -24,7 +24,6 @@ import com.googlecode.gwt.test.csv.CsvDirectory;
 import com.googlecode.gwt.test.csv.CsvMacros;
 import com.googlecode.gwt.test.csv.GwtTestCsvException;
 import com.googlecode.gwt.test.exceptions.GwtTestException;
-import com.googlecode.gwt.test.internal.GwtClassLoader;
 import com.googlecode.gwt.test.internal.GwtClassPool;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
@@ -202,7 +201,7 @@ public class DirectoryTestReader {
       m.setBody("launchTest(\"" + entry.getKey() + "\");");
       newClazz.addMethod(m);
     }
-    generatedClazz = newClazz.toClass(GwtClassLoader.get(), null);
+    generatedClazz = newClazz.toClass(getClass().getClassLoader(), null);
     for (String methodName : methodList) {
       Method m = generatedClazz.getMethod(methodName);
       testMethods.add(m);
