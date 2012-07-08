@@ -99,57 +99,8 @@ public class Browser {
               + Browser.class.getSimpleName() + ".emptyText(..)' instead");
     }
 
-    boolean changed = false;
-
-    StringBuilder sb = new StringBuilder(valueBox.getText());
-
-    int selectionStart = JavaScriptObjects.getInteger(valueBox.getElement(),
-        JsoProperties.SELECTION_START);
-    int selectionEnd = JavaScriptObjects.getInteger(valueBox.getElement(),
-        JsoProperties.SELECTION_END);
-
     for (int i = 0; i < value.length(); i++) {
-
-      char charToAppend = value.charAt(i);
-      int keyCode = charToAppend;
-
-      // trigger keyDown and keyPress
-      Event keyDownEvent = EventBuilder.create(Event.ONKEYDOWN).setKeyCode(
-          keyCode).build();
-      Event keyPressEvent = EventBuilder.create(Event.ONKEYPRESS).setKeyCode(
-          keyCode).build();
-      dispatchEventsInternal(valueBox, true, keyDownEvent, keyPressEvent);
-
-      // check if one on the events has been prevented
-      boolean keyDownEventPreventDefault = JavaScriptObjects.getBoolean(
-          keyDownEvent, JsoProperties.EVENT_PREVENTDEFAULT);
-      boolean keyPressEventPreventDefault = JavaScriptObjects.getBoolean(
-          keyPressEvent, JsoProperties.EVENT_PREVENTDEFAULT);
-
-      if (!keyDownEventPreventDefault && !keyPressEventPreventDefault) {
-
-        if (!changed) {
-          // first time : remove selectionRange
-          sb.replace(selectionStart, selectionEnd, "");
-          changed = true;
-        }
-
-        sb.insert(selectionStart, charToAppend);
-
-        selectionStart = selectionEnd = selectionStart + 1;
-
-        valueBox.setText(sb.toString());
-
-        JavaScriptObjects.setProperty(valueBox.getElement(),
-            JsoProperties.SELECTION_START, selectionStart);
-        JavaScriptObjects.setProperty(valueBox.getElement(),
-            JsoProperties.SELECTION_END, selectionEnd);
-      }
-
-      // trigger keyUp
-      Event keyUpEvent = EventBuilder.create(Event.ONKEYUP).setKeyCode(keyCode).build();
-      dispatchEventsInternal(valueBox, true, keyUpEvent);
-
+      pressKey(valueBox, value.charAt(i));
     }
   }
 
@@ -739,16 +690,17 @@ public class Browser {
     dispatchEvent(target, EventBuilder.create(Event.ONMOUSEWHEEL).build());
   }
 
-  public static void pressKey(Widget widget, int keyCode) {
-    if (widget == null) {
+  public static void pressKey(ValueBoxBase<?> valueBox, int keyCode) {
+    if (valueBox == null) {
       return;
     }
+
     // trigger keyDown and keyPress
     Event keyDownEvent = EventBuilder.create(Event.ONKEYDOWN).setKeyCode(
         keyCode).build();
     Event keyPressEvent = EventBuilder.create(Event.ONKEYPRESS).setKeyCode(
         keyCode).build();
-    dispatchEventsInternal(widget, true, keyDownEvent, keyPressEvent);
+    dispatchEventsInternal(valueBox, true, keyDownEvent, keyPressEvent);
 
     // check if one on the events has been prevented
     boolean keyDownEventPreventDefault = JavaScriptObjects.getBoolean(
@@ -758,42 +710,60 @@ public class Browser {
 
     if (!keyDownEventPreventDefault && !keyPressEventPreventDefault) {
 
-      if (widget instanceof HasText) {
-        HasText hasTextWidget = (HasText) widget;
-        String oldText;
-        switch (keyCode) {
-          case KeyCodes.KEY_ALT:
-          case KeyCodes.KEY_CTRL:
-          case KeyCodes.KEY_DELETE:
-          case KeyCodes.KEY_DOWN:
-          case KeyCodes.KEY_END:
-          case KeyCodes.KEY_ENTER:
-          case KeyCodes.KEY_ESCAPE:
-          case KeyCodes.KEY_HOME:
-          case KeyCodes.KEY_LEFT:
-          case KeyCodes.KEY_PAGEDOWN:
-          case KeyCodes.KEY_PAGEUP:
-          case KeyCodes.KEY_RIGHT:
-          case KeyCodes.KEY_SHIFT:
-          case KeyCodes.KEY_UP:
-            // nothing to do
-            break;
-          case KeyCodes.KEY_TAB:
-            blur(widget);
-            break;
-          case KeyCodes.KEY_BACKSPACE:
-            oldText = hasTextWidget.getText();
-            hasTextWidget.setText(oldText.substring(0, oldText.length() - 1));
-            break;
-          default:
-            oldText = hasTextWidget.getText();
-            hasTextWidget.setText(oldText + (char) keyCode);
-        }
+      StringBuilder sb = new StringBuilder(valueBox.getText());
+
+      // remove selectionRange
+      int selectionStart = JavaScriptObjects.getInteger(valueBox.getElement(),
+          JsoProperties.SELECTION_START);
+      int selectionEnd = JavaScriptObjects.getInteger(valueBox.getElement(),
+          JsoProperties.SELECTION_END);
+
+      switch (keyCode) {
+        case KeyCodes.KEY_ALT:
+        case KeyCodes.KEY_CTRL:
+        case KeyCodes.KEY_DELETE:
+        case KeyCodes.KEY_DOWN:
+        case KeyCodes.KEY_END:
+        case KeyCodes.KEY_ENTER:
+        case KeyCodes.KEY_ESCAPE:
+        case KeyCodes.KEY_HOME:
+        case KeyCodes.KEY_LEFT:
+        case KeyCodes.KEY_PAGEDOWN:
+        case KeyCodes.KEY_PAGEUP:
+        case KeyCodes.KEY_RIGHT:
+        case KeyCodes.KEY_SHIFT:
+        case KeyCodes.KEY_UP:
+          // nothing to do
+          break;
+        case KeyCodes.KEY_TAB:
+          blur(valueBox);
+          break;
+        case KeyCodes.KEY_BACKSPACE:
+          if (selectionStart == selectionEnd) {
+            sb.deleteCharAt(selectionStart);
+          } else {
+            sb.replace(selectionStart, selectionEnd, "");
+          }
+          valueBox.setText(sb.toString());
+          break;
+        default:
+          sb.replace(selectionStart, selectionEnd, "");
+
+          sb.insert(selectionStart, (char) keyCode);
+
+          selectionStart = selectionEnd = selectionStart + 1;
+
+          valueBox.setText(sb.toString());
+
+          JavaScriptObjects.setProperty(valueBox.getElement(),
+              JsoProperties.SELECTION_START, selectionStart);
+          JavaScriptObjects.setProperty(valueBox.getElement(),
+              JsoProperties.SELECTION_END, selectionEnd);
       }
 
       // trigger keyUp
       Event keyUpEvent = EventBuilder.create(Event.ONKEYUP).setKeyCode(keyCode).build();
-      dispatchEventsInternal(widget, true, keyUpEvent);
+      dispatchEventsInternal(valueBox, true, keyUpEvent);
     }
   }
 
