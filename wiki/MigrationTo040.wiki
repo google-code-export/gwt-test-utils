@@ -44,7 +44,7 @@ to :
       com.googlecode.gwt.test.SampleModule = gwt-module
  }}}
 
- * If you had some '{{{substitute-class}}}' or '{{{{remove-method}}}' entries in your {{{META-INF/gwt-test-utils.properties}}}, you can now remove them (it was the ugly hacks I was speaking about).
+ * If you had some '{{{substitute-class}}}' or '{{{remove-method}}}' entries in your {{{META-INF/gwt-test-utils.properties}}}, you can now remove them (it was the ugly hacks I was speaking about).
 
 = Future =
 
