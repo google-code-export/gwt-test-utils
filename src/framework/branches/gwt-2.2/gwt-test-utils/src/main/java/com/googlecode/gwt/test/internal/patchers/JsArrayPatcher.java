@@ -1,16 +1,18 @@
 package com.googlecode.gwt.test.internal.patchers;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 import com.googlecode.gwt.test.internal.utils.JavaScriptObjects;
-import com.googlecode.gwt.test.internal.utils.JsoProperties;
 import com.googlecode.gwt.test.patchers.PatchClass;
 import com.googlecode.gwt.test.patchers.PatchMethod;
 
 @PatchClass(JsArray.class)
 class JsArrayPatcher {
+
+  static final String JSARRAY_WRAPPED_LIST = "JSARRAY_WRAPPED_LIST";
 
   @PatchMethod
   static JavaScriptObject get(JsArray<JavaScriptObject> array, int index) {
@@ -93,8 +95,16 @@ class JsArrayPatcher {
   @SuppressWarnings("unchecked")
   private static <T extends JavaScriptObject> List<T> getWrappedList(
       JsArray<T> array) {
-    return (List<T>) JavaScriptObjects.getObject(array,
-        JsoProperties.JSARRAY_WRAPPED_LIST);
+
+    List<T> wrappedList = (List<T>) JavaScriptObjects.getObject(array,
+        JSARRAY_WRAPPED_LIST);
+
+    if (wrappedList == null) {
+      wrappedList = new ArrayList<T>();
+      JavaScriptObjects.setProperty(array, JSARRAY_WRAPPED_LIST, wrappedList);
+    }
+
+    return wrappedList;
   }
 
 }

@@ -16,6 +16,7 @@ import com.google.gwt.dom.client.OptionElement;
 import com.google.gwt.dom.client.SelectElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Text;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.EventListener;
 import com.googlecode.gwt.test.internal.utils.EventUtils;
@@ -24,12 +25,12 @@ import com.googlecode.gwt.test.internal.utils.JsoProperties;
 import com.googlecode.gwt.test.internal.utils.PropertyContainer;
 import com.googlecode.gwt.test.patchers.PatchClass;
 import com.googlecode.gwt.test.patchers.PatchMethod;
-import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 import com.googlecode.gwt.test.utils.events.EventBuilder;
 
 @PatchClass(target = "com.google.gwt.dom.client.DOMImpl")
 class DOMImplPatcher {
 
+  private static final String SCROLL_LEFT = "scrollLeft";
   private static final String TAB_INDEX = "tabIndex";
 
   @PatchMethod
@@ -84,7 +85,7 @@ class DOMImplPatcher {
   @PatchMethod
   static InputElement createInputRadioElement(Object domImpl, Document doc,
       String name) {
-    return DOMImplPatcher.createInputElement(doc, "RADIO", name);
+    return createInputElement(doc, "RADIO", name);
   }
 
   @PatchMethod
@@ -135,8 +136,7 @@ class DOMImplPatcher {
 
   @PatchMethod
   static void dispatchEvent(Object domImpl, Element target, NativeEvent evt) {
-    EventListener listener = JavaScriptObjects.getObject(target,
-        JsoProperties.ELEM_EVENTLISTENER);
+    EventListener listener = DOM.getEventListener(target.<com.google.gwt.user.client.Element> cast());
     if (listener != null && evt instanceof Event) {
       listener.onBrowserEvent((Event) evt);
     }
@@ -260,10 +260,9 @@ class DOMImplPatcher {
       return elem.getStyle().toString();
     }
 
-    PropertyContainer properties = JavaScriptObjects.getObject(elem,
-        JsoProperties.ELEM_PROPERTIES);
+    PropertyContainer properties = JavaScriptObjects.getDomProperties(elem);
 
-    String propertyName = JsoProperties.get().getDOMPropertyName(name);
+    String propertyName = getDOMPropertyName(name);
 
     return properties.getString(propertyName);
 
@@ -279,13 +278,23 @@ class DOMImplPatcher {
     return 0;
   }
 
+  static String getDOMPropertyName(String propertyNameCaseInsensitive) {
+    propertyNameCaseInsensitive = propertyNameCaseInsensitive.toLowerCase();
+    if ("class".equals(propertyNameCaseInsensitive)) {
+      return "className";
+    }
+
+    return propertyNameCaseInsensitive;
+
+  }
+
   @PatchMethod
   static Element getFirstChildElement(Object domImpl, Element elem) {
     NodeList<Node> nodeList = elem.getChildNodes();
 
     for (int i = 0; i < nodeList.getLength(); i++) {
       Node node = nodeList.getItem(i);
-      if (node instanceof Element) {
+      if (node.getNodeType() == Node.ELEMENT_NODE) {
         return node.cast();
       }
     }
@@ -326,14 +335,14 @@ class DOMImplPatcher {
       return null;
     }
 
-    NodeList<Node> list = getChildNodeList(parent);
+    NodeList<Node> list = parent.getChildNodes();
 
     for (int i = 0; i < list.getLength(); i++) {
       Node current = list.getItem(i);
       if (current.equals(elem) && i < list.getLength() - 1) {
         while (i < list.getLength() - 1) {
           i++;
-          if (list.getItem(i) instanceof Element) {
+          if (list.getItem(i).getNodeType() == Node.ELEMENT_NODE) {
             return list.getItem(i).cast();
           }
         }
@@ -347,7 +356,7 @@ class DOMImplPatcher {
   static Element getParentElement(Object domImpl, Node elem) {
     Node parent = elem.getParentNode();
 
-    if (parent == null || !(parent instanceof Element)) {
+    if (parent == null || !(parent.getNodeType() == Node.ELEMENT_NODE)) {
       return null;
     }
 
@@ -356,7 +365,7 @@ class DOMImplPatcher {
 
   @PatchMethod
   static int getScrollLeft(Object domImpl, Element elem) {
-    return JavaScriptObjects.getInteger(elem, JsoProperties.SCROLL_LEFT);
+    return JavaScriptObjects.getInteger(elem, SCROLL_LEFT);
   }
 
   @PatchMethod
@@ -366,23 +375,14 @@ class DOMImplPatcher {
 
   @PatchMethod
   static String getTagName(Object domImpl, Element elem) {
-    if (elem == null) {
-      return null;
-    }
-
-    String tagName = JavaScriptObjects.getObject(elem, JsoProperties.TAG_NAME);
-
-    return tagName != null ? tagName
-        : (String) GwtReflectionUtils.getStaticFieldValue(elem.getClass(),
-            "TAG");
+    return JavaScriptObjects.getTagName(elem);
   }
 
   @PatchMethod
   static boolean hasAttribute(Object domImpl, Element elem, String name) {
-    PropertyContainer properties = JavaScriptObjects.getObject(elem,
-        JsoProperties.ELEM_PROPERTIES);
+    PropertyContainer properties = JavaScriptObjects.getDomProperties(elem);
 
-    String propertyName = JsoProperties.get().getDOMPropertyName(name);
+    String propertyName = getDOMPropertyName(name);
 
     return properties.contains(propertyName);
   }
@@ -454,11 +454,8 @@ class DOMImplPatcher {
 
   @PatchMethod
   static void selectRemoveOption(Object domImpl, SelectElement select, int index) {
-    NodeList<Node> childNodes = select.getChildNodes();
-    List<Node> list = JavaScriptObjects.getObject(childNodes,
-        JsoProperties.NODE_LIST_INNER_LIST);
+    List<Node> list = JavaScriptObjects.getChildNodeInnerList(select);
     list.remove(index);
-
     refreshSelect(select);
   }
 
@@ -470,7 +467,7 @@ class DOMImplPatcher {
 
   @PatchMethod
   static void setScrollLeft(Object domImpl, Element elem, int left) {
-    JavaScriptObjects.setProperty(elem, JsoProperties.SCROLL_LEFT, left);
+    JavaScriptObjects.setProperty(elem, SCROLL_LEFT, left);
   }
 
   @PatchMethod
@@ -499,9 +496,7 @@ class DOMImplPatcher {
   }
 
   private static void clearChildNodes(Element elem) {
-    List<Node> innerList = JavaScriptObjects.getObject(elem.getChildNodes(),
-        JsoProperties.NODE_LIST_INNER_LIST);
-
+    List<Node> innerList = JavaScriptObjects.getChildNodeInnerList(elem);
     innerList.clear();
   }
 
@@ -516,10 +511,6 @@ class DOMImplPatcher {
     }
 
     return e;
-  }
-
-  private static NodeList<Node> getChildNodeList(Node node) {
-    return JavaScriptObjects.getObject(node, JsoProperties.NODE_LIST_FIELD);
   }
 
   private static void refreshSelect(SelectElement select) {

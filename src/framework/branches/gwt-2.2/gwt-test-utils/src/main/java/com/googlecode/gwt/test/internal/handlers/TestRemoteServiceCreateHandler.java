@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.googlecode.gwt.test.exceptions.GwtTestConfigurationException;
+import com.googlecode.gwt.test.internal.GwtConfig;
 import com.googlecode.gwt.test.internal.ModuleData;
 import com.googlecode.gwt.test.rpc.RemoteServiceCreateHandler;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
@@ -34,8 +35,8 @@ class TestRemoteServiceCreateHandler extends RemoteServiceCreateHandler {
    * (non-Javadoc)
    * 
    * @see
-   * com.googlecode.gwt.test.server.RemoteServiceCreateHandler#findService(java.lang
-   * .Class, java.lang.String)
+   * com.googlecode.gwt.test.server.RemoteServiceCreateHandler#findService(java
+   * .lang .Class, java.lang.String)
    */
   @Override
   protected Object findService(Class<?> remoteServiceClass,
@@ -56,7 +57,8 @@ class TestRemoteServiceCreateHandler extends RemoteServiceCreateHandler {
   private <T> T instanciateRemoteServiceInstance(Class<T> remoteServiceClass,
       String remoteServiceRelativePath) {
 
-    Class<?> remoteServiceImplClass = ModuleData.get().getRemoteServiceImplClass(
+    String moduleName = GwtConfig.get().getTestedModuleName();
+    Class<?> remoteServiceImplClass = ModuleData.get(moduleName).getRemoteServiceImplClass(
         remoteServiceRelativePath);
 
     if (remoteServiceImplClass == null) {

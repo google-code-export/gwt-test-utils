@@ -18,6 +18,7 @@ package com.googlecode.html.parsers;
 
 import org.apache.xerces.xni.Augmentations;
 import org.apache.xerces.xni.XNIException;
+
 import com.googlecode.html.HTMLConfiguration;
 import com.googlecode.html.xercesbridge.XercesBridge;
 

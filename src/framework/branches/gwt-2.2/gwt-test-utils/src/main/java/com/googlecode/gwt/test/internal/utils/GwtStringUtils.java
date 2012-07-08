@@ -123,7 +123,7 @@ public class GwtStringUtils {
    * 250px => 250px 250.1px => 250.1px 250.0px => 250px
    * 
    * @param string
-   * @return
+   * @return The transformed value
    */
   public static String treatDoubleValue(String string) {
 

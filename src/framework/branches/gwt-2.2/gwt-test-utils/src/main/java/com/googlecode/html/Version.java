@@ -4,17 +4,14 @@ package com.googlecode.html;
 
 /**
  * This class holds version information for the CyberNeko HTML Parser.
- *
+ * 
  * @author Andy Clark, Marc Guillemot
  */
 public class Version {
 
-    /** Returns the version string. */
-    public static String getVersion() { return "NekoHTML 1.9.15"; }
-
-    /** Prints the version string to standard output. */
-    public static void main(String[] argv) {
-        System.out.println(getVersion());
-    } // main(String[])
+  /** Returns the version string. */
+  public static String getVersion() {
+    return "NekoHTML 1.9.15";
+  }
 
 } // class Version

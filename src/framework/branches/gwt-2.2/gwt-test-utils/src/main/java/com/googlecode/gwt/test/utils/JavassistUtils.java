@@ -2,6 +2,7 @@ package com.googlecode.gwt.test.utils;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -9,6 +10,7 @@ import javassist.CtClass;
 import javassist.CtConstructor;
 import javassist.NotFoundException;
 import javassist.bytecode.AnnotationsAttribute;
+import javassist.bytecode.annotation.AnnotationImpl;
 import javassist.bytecode.annotation.StringMemberValue;
 
 import com.googlecode.gwt.test.exceptions.GwtTestPatchException;
@@ -39,6 +41,23 @@ public class JavassistUtils {
             + ") in class " + ctClass.getName()
             + ", you have to set parameter types discriminators");
     }
+  }
+
+  @SuppressWarnings("unchecked")
+  public static <T extends Annotation> javassist.bytecode.annotation.Annotation getAnnotation(
+      CtClass ctClass, Class<T> annotationClass) throws ClassNotFoundException {
+
+    T proxiedAnnot = (T) ctClass.getAnnotation(annotationClass);
+
+    if (proxiedAnnot == null) {
+      return null;
+    } else if (!Proxy.isProxyClass(proxiedAnnot.getClass())) {
+      return null;
+    }
+
+    AnnotationImpl impl = (AnnotationImpl) Proxy.getInvocationHandler(proxiedAnnot);
+
+    return impl.getAnnotation();
   }
 
   /**

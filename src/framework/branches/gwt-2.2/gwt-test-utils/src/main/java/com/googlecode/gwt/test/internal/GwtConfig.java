@@ -6,6 +6,7 @@ import java.util.List;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.UIObject.DebugIdImpl;
 import com.google.gwt.user.client.ui.UIObject.DebugIdImplEnabled;
+import com.googlecode.gwt.test.GwtModule;
 import com.googlecode.gwt.test.GwtModuleRunner;
 import com.googlecode.gwt.test.exceptions.GwtTestConfigurationException;
 import com.googlecode.gwt.test.exceptions.GwtTestException;
@@ -27,10 +28,12 @@ public class GwtConfig implements AfterTestCallback {
     return INSTANCE;
   }
 
-  private String checkedModuleName;
   private final DebugIdImpl disabledInstance = new DebugIdImpl();
   private final DebugIdImpl enabledInstance = new DebugIdImplEnabled();
   private GwtModuleRunner gwtModuleRunner;
+  private String moduleAlias;
+
+  private String testedModuleName;
 
   private final List<UiObjectTagFactory<?>> uiObjectTagFactories = new ArrayList<UiObjectTagFactory<?>>();
 
@@ -43,12 +46,16 @@ public class GwtConfig implements AfterTestCallback {
     uiObjectTagFactories.clear();
   }
 
-  public String getModuleName() {
-    return checkedModuleName;
+  public String getModuleAlias() {
+    return moduleAlias;
   }
 
   public GwtModuleRunner getModuleRunner() {
     return gwtModuleRunner;
+  }
+
+  public String getTestedModuleName() {
+    return testedModuleName;
   }
 
   public List<UiObjectTagFactory<?>> getUiObjectTagFactories() {
@@ -67,31 +74,39 @@ public class GwtConfig implements AfterTestCallback {
           "Because of the single-threaded nature of the GWT environment, gwt-test-utils tests can not be run in multiple thread at the same time");
     }
 
-    this.gwtModuleRunner = gwtModuleRunner;
-    this.checkedModuleName = getCheckedModuleName();
+    GwtModule gwtModule = gwtModuleRunner.getClass().getAnnotation(
+        GwtModule.class);
 
-    setupDebugIdImpl(gwtModuleRunner.ensureDebugId());
+    if (gwtModule == null) {
+      throw new GwtTestConfigurationException("The test class "
+          + gwtModuleRunner.getClass().getName() + " must be annotated with @"
+          + GwtModule.class.getSimpleName()
+          + " to specify the fully qualified name of the GWT module to test");
+    }
 
-  }
+    String moduleName = gwtModule.value();
 
-  private String getCheckedModuleName() {
-    String moduleName = gwtModuleRunner.getModuleName();
     if (moduleName == null || "".equals(moduleName.trim())) {
-      throw new GwtTestConfigurationException(
-          "The tested module name returned by "
-              + gwtModuleRunner.getClass().getName()
-              + ".getModuleName() should not be null or empty");
+      throw new GwtTestConfigurationException("Incorrect value for @"
+          + GwtModule.class.getSimpleName() + " on "
+          + gwtModuleRunner.getClass().getName() + ": " + moduleName);
     }
 
-    String moduleAlias = ModuleData.get().getModuleAlias(moduleName);
-    if (moduleAlias == null) {
+    if (!GwtFactory.get().getConfigurationLoader().getGwtModules().contains(
+        moduleName)) {
       throw new GwtTestConfigurationException(
-          "The tested module '"
+          "The tested @GwtModule '"
               + moduleName
-              + "' has not been found. Did you forget to declare a 'module-file' property in your 'META-INF/gwt-test-utils.properties' configuration file ?");
+              + "' configured in "
+              + gwtModuleRunner.getClass().getName()
+              + " has not been found. Did you forget to declare a 'gwt-module' property in your 'META-INF/gwt-test-utils.properties' configuration file ?");
     }
 
-    return moduleAlias;
+    this.testedModuleName = moduleName;
+
+    this.gwtModuleRunner = gwtModuleRunner;
+    this.moduleAlias = ModuleData.get(testedModuleName).getAlias();
+    setupDebugIdImpl(gwtModuleRunner.ensureDebugId());
   }
 
   private void setupDebugIdImpl(boolean ensureDebugId) {

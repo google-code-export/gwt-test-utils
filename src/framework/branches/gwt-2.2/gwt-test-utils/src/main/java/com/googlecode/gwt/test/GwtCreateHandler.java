@@ -1,7 +1,7 @@
 package com.googlecode.gwt.test;
 
 import com.google.gwt.core.client.GWT;
-import com.googlecode.gwt.test.internal.handlers.GwtCreateHandlerManager;
+import com.googlecode.gwt.test.internal.handlers.GwtTestGWTBridge;
 
 /**
  * <p>
@@ -11,7 +11,7 @@ import com.googlecode.gwt.test.internal.handlers.GwtCreateHandlerManager;
  * 
  * <p>
  * All GwtCreateHandler instances are managed by a
- * {@link GwtCreateHandlerManager} which is responsible for chaining those
+ * {@link GwtTestGWTBridge} which is responsible for chaining those
  * instances in a logical order.
  * </p>
  * 

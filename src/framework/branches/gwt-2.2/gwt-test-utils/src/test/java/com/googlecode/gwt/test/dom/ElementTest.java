@@ -5,7 +5,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -44,20 +43,6 @@ public class ElementTest extends GwtTestTest {
   @Before
   public void beforeElementTest() {
     e = Document.get().createDivElement();
-  }
-
-  @Test
-  public void cast_KO() {
-    try {
-      // Act
-      ButtonElement notCasted = e.cast();
-      fail("A [" + DivElement.class.getCanonicalName()
-          + "] should not be cast in an instance of ["
-          + notCasted.getClass().getCanonicalName() + "]");
-    } catch (Exception e) {
-      // Assert
-      assertTrue(e instanceof ClassCastException);
-    }
   }
 
   @Test

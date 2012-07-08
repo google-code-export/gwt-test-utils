@@ -37,6 +37,7 @@ import org.apache.xerces.xni.parser.XMLErrorHandler;
 import org.apache.xerces.xni.parser.XMLInputSource;
 import org.apache.xerces.xni.parser.XMLParseException;
 import org.apache.xerces.xni.parser.XMLPullParserConfiguration;
+
 import com.googlecode.html.filters.NamespaceBinder;
 import com.googlecode.html.xercesbridge.XercesBridge;
                                       

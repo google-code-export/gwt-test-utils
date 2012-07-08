@@ -1,5 +1,6 @@
 package com.googlecode.gwt.test.internal.patchers.dom;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gwt.dom.client.Document;
@@ -11,7 +12,6 @@ import com.google.gwt.dom.client.TableElement;
 import com.google.gwt.dom.client.TableRowElement;
 import com.google.gwt.dom.client.TableSectionElement;
 import com.googlecode.gwt.test.internal.utils.JavaScriptObjects;
-import com.googlecode.gwt.test.internal.utils.JsoProperties;
 import com.googlecode.gwt.test.patchers.PatchClass;
 import com.googlecode.gwt.test.patchers.PatchMethod;
 
@@ -206,18 +206,18 @@ class TableElementPatcher {
       String tagName) {
 
     NodeList<Node> childs = e.getChildNodes();
-    NodeList<Element> result = JavaScriptObjects.newNodeList();
-
-    List<Node> list = JavaScriptObjects.getObject(result,
-        JsoProperties.NODE_LIST_INNER_LIST);
+    List<Element> list = new ArrayList<Element>();
 
     for (int i = 0; i < childs.getLength(); i++) {
       Node n = childs.getItem(i);
-      if (tagName.equalsIgnoreCase(n.getNodeName())) {
-        list.add(n);
+      if (Element.is(n)) {
+        Element childElement = n.cast();
+        if (tagName.equalsIgnoreCase(childElement.getTagName())) {
+          list.add(childElement);
+        }
       }
     }
 
-    return result;
+    return JavaScriptObjects.newNodeList(list);
   }
 }

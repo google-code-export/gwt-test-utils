@@ -9,8 +9,8 @@ import javassist.CtConstructor;
 import javassist.CtMethod;
 
 import com.googlecode.gwt.test.GwtCreateHandler;
-import com.googlecode.gwt.test.internal.GwtClassLoader;
 import com.googlecode.gwt.test.internal.GwtClassPool;
+import com.googlecode.gwt.test.internal.GwtFactory;
 import com.googlecode.gwt.test.internal.GwtPatcherUtils;
 import com.googlecode.gwt.test.utils.JavassistUtils;
 
@@ -80,7 +80,7 @@ class AbstractClassCreateHandler implements GwtCreateHandler {
 
     GwtPatcherUtils.patch(subClass, null);
 
-    newClass = subClass.toClass(GwtClassLoader.get(), null);
+    newClass = subClass.toClass(GwtFactory.get().getClassLoader(), null);
     cache.put(classLiteral, newClass);
 
     return newClass.newInstance();

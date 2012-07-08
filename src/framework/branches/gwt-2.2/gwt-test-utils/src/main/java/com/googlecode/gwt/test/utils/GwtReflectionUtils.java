@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.google.gwt.event.shared.UmbrellaException;
+import com.google.gwt.core.client.JavaScriptObject;
 import com.googlecode.gwt.test.exceptions.GwtTestException;
 import com.googlecode.gwt.test.exceptions.ReflectionException;
 import com.googlecode.gwt.test.internal.utils.DoubleMap;
@@ -97,6 +97,42 @@ public class GwtReflectionUtils {
 
   private static DoubleMap<Class<?>, String, Field> cacheUniqueField = new DoubleMap<Class<?>, String, Field>();
 
+  public static <T> T callPrivateMethod(JavaScriptObject target,
+      String methodName, String overlayOriginalType, Object... args) {
+    if (overlayOriginalType == null) {
+      throw new IllegalArgumentException(
+          "The specified overlay type should not be null");
+    }
+
+    overlayOriginalType = overlayOriginalType.trim();
+    if (overlayOriginalType.equals("")) {
+      throw new IllegalArgumentException(
+          "The specified overlay type should not be blank");
+    }
+
+    if (overlayOriginalType.endsWith("$")) {
+      throw new IllegalArgumentException(
+          "The specified overlay type should not be a rewritten type : "
+              + overlayOriginalType);
+    }
+
+    Class<?> rewrittenOverlayType = null;
+    try {
+      rewrittenOverlayType = Class.forName(overlayOriginalType + "$");
+    } catch (ClassNotFoundException e) {
+      throw new ReflectionException(
+          "Error while calling overlay rewritten method " + overlayOriginalType
+              + "$." + methodName + "$(..) :", e);
+    }
+
+    Object[] newArgs = new Object[args.length + 1];
+    newArgs[0] = target;
+
+    System.arraycopy(args, 0, newArgs, 1, args.length);
+
+    return callStaticMethod(rewrittenOverlayType, methodName + "$", newArgs);
+  }
+
   public static <T> T callPrivateMethod(Object target, Method method,
       Object... args) {
     try {
@@ -108,9 +144,6 @@ public class GwtReflectionUtils {
         throw (GwtTestException) e.getCause();
       } else if (AssertionError.class.isInstance(e.getCause())) {
         throw (AssertionError) e.getCause();
-      } else if (UmbrellaException.class.isInstance(e.getCause())) {
-        throw new ReflectionException("Error while calling method '"
-            + method.toString() + "'", e.getCause().getCause());
       }
       throw new ReflectionException("Error while calling method '"
           + method.toString() + "'", e.getCause());
@@ -123,6 +156,11 @@ public class GwtReflectionUtils {
 
   public static <T> T callPrivateMethod(Object target, String methodName,
       Object... args) {
+    if (target instanceof JavaScriptObject) {
+      throw new UnsupportedOperationException(
+          "Cannot call instance method on Overlay types without specifying its base type");
+    }
+
     Method method = findMethod(target.getClass(), methodName, args);
     if (method == null) {
       throw new ReflectionException("Cannot find method '"

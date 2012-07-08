@@ -6,7 +6,7 @@ import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.test.context.support.GenericXmlContextLoader;
 
-import com.googlecode.gwt.test.internal.GwtClassLoader;
+import com.googlecode.gwt.test.internal.GwtFactory;
 
 public class GwtTestContextLoader extends GenericXmlContextLoader {
 
@@ -16,7 +16,7 @@ public class GwtTestContextLoader extends GenericXmlContextLoader {
     XmlBeanDefinitionReader beanDefinitionReader = new XmlBeanDefinitionReader(
         context);
     beanDefinitionReader.setResourceLoader(new DefaultResourceLoader(
-        GwtClassLoader.get()));
+        GwtFactory.get().getClassLoader()));
     return beanDefinitionReader;
   }
 

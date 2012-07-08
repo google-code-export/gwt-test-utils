@@ -80,8 +80,8 @@ public class GwtParanamer {
 
       for (String srcDirectory : SrcDirectoriesHolder.SRC_DIRECTORIES) {
         File root = new File(srcDirectory);
-        if (root.exists()) {
-          File javaFile = new File(root, javaPath);
+        File javaFile = new File(root, javaPath);
+        if (javaFile.exists()) {
           try {
             return new FileInputStream(javaFile);
           } catch (Exception e) {
