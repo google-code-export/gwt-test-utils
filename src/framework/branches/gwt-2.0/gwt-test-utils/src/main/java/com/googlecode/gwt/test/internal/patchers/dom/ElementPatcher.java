@@ -77,22 +77,19 @@ class ElementPatcher {
 
   @PatchMethod
   static boolean getPropertyBoolean(Element element, String propertyName) {
-    PropertyContainer properties = JavaScriptObjects.getObject(element,
-        JsoProperties.ELEM_PROPERTIES);
+    PropertyContainer properties = JavaScriptObjects.getDomProperties(element);
     return properties.getBoolean(propertyName);
   }
 
   @PatchMethod
   static double getPropertyDouble(Element element, String propertyName) {
-    PropertyContainer properties = JavaScriptObjects.getObject(element,
-        JsoProperties.ELEM_PROPERTIES);
+    PropertyContainer properties = JavaScriptObjects.getDomProperties(element);
     return properties.getDouble(propertyName);
   }
 
   @PatchMethod
   static int getPropertyInt(Element element, String propertyName) {
-    PropertyContainer properties = JavaScriptObjects.getObject(element,
-        JsoProperties.ELEM_PROPERTIES);
+    PropertyContainer properties = JavaScriptObjects.getDomProperties(element);
     return properties.getInteger(propertyName);
   }
 
@@ -109,8 +106,7 @@ class ElementPatcher {
       return element.getStyle();
     }
 
-    PropertyContainer properties = JavaScriptObjects.getObject(element,
-        JsoProperties.ELEM_PROPERTIES);
+    PropertyContainer properties = JavaScriptObjects.getDomProperties(element);
 
     return properties.getObject(propertyName);
   }
@@ -122,8 +118,7 @@ class ElementPatcher {
 
     // null (javascript undefined) is a possible value here if not a DOM
     // standard property
-    if (value == null
-        && JsoProperties.get().isStandardDOMProperty(propertyName)) {
+    if (value == null && JavaScriptObjects.isStandardDOMProperty(propertyName)) {
       return "";
     } else if (value == null) {
       return null;
@@ -136,21 +131,16 @@ class ElementPatcher {
   @PatchMethod
   static Style getStyle(Element element) {
     // mark the style as being modified
-    PropertyContainer properties = JavaScriptObjects.getObject(element,
-        JsoProperties.ELEM_PROPERTIES);
+    PropertyContainer properties = JavaScriptObjects.getDomProperties(element);
     properties.put("style", "");
 
-    return JavaScriptObjects.getObject(element,
-        JsoProperties.STYLE_OBJECT_FIELD);
+    return JavaScriptObjects.getStyle(element);
   }
 
   @PatchMethod
   static void removeAttribute(Element element, String name) {
-    PropertyContainer properties = JavaScriptObjects.getObject(element,
-        JsoProperties.ELEM_PROPERTIES);
-
-    String propertyName = JsoProperties.get().getDOMPropertyName(name);
-
+    PropertyContainer properties = JavaScriptObjects.getDomProperties(element);
+    String propertyName = DOMImplPatcher.getDOMPropertyName(name);
     properties.remove(propertyName);
   }
 
@@ -161,10 +151,9 @@ class ElementPatcher {
           getPropertyString(element, JavaScriptObjects.ID));
     }
 
-    PropertyContainer properties = JavaScriptObjects.getObject(element,
-        JsoProperties.ELEM_PROPERTIES);
+    PropertyContainer properties = JavaScriptObjects.getDomProperties(element);
 
-    String propertyName = JsoProperties.get().getDOMPropertyName(attributeName);
+    String propertyName = DOMImplPatcher.getDOMPropertyName(attributeName);
 
     properties.put(propertyName, value);
   }
@@ -172,8 +161,7 @@ class ElementPatcher {
   @PatchMethod
   static void setInnerHTML(Element element, String html) {
     // clear old childs
-    List<Node> innerList = JavaScriptObjects.getObject(element.getChildNodes(),
-        JsoProperties.NODE_LIST_INNER_LIST);
+    List<Node> innerList = JavaScriptObjects.getChildNodeInnerList(element);
     innerList.clear();
 
     // parse new childs
@@ -214,8 +202,7 @@ class ElementPatcher {
           getPropertyString(element, JavaScriptObjects.ID));
     }
 
-    PropertyContainer properties = JavaScriptObjects.getObject(element,
-        JsoProperties.ELEM_PROPERTIES);
+    PropertyContainer properties = JavaScriptObjects.getDomProperties(element);
 
     if ("style".equals(value)) {
       StyleUtils.overrideStyle(element.getStyle(), value.toString());

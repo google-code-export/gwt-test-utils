@@ -1,7 +1,6 @@
 package com.googlecode.gwt.test;
 
 import com.google.gwt.i18n.client.NumberFormat;
-import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
@@ -55,7 +54,9 @@ public class GwtReset {
         "cachedCurrencyFormat", null);
 
     GwtReflectionUtils.setStaticField(Window.class, "handlers", null);
-    GwtReflectionUtils.setStaticField(Event.class, "handlers", null);
+
+    Class<?> clazz = Class.forName("com.google.gwt.user.client.Event$");
+    GwtReflectionUtils.setStaticField(clazz, "handlers", null);
 
   }
 }

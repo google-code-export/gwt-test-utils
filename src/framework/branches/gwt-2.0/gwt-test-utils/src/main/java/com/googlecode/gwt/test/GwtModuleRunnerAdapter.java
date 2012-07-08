@@ -16,7 +16,7 @@ import com.googlecode.gwt.test.exceptions.GwtTestConfigurationException;
 import com.googlecode.gwt.test.internal.AfterTestCallback;
 import com.googlecode.gwt.test.internal.AfterTestCallbackManager;
 import com.googlecode.gwt.test.internal.GwtConfig;
-import com.googlecode.gwt.test.internal.handlers.GwtCreateHandlerManager;
+import com.googlecode.gwt.test.internal.handlers.GwtTestGWTBridge;
 import com.googlecode.gwt.test.internal.i18n.DictionaryUtils;
 import com.googlecode.gwt.test.rpc.ServletMockProvider;
 import com.googlecode.gwt.test.uibinder.UiObjectTagFactory;
@@ -111,7 +111,7 @@ public abstract class GwtModuleRunnerAdapter implements GwtModuleRunner,
    * .gwt.test .GwtCreateHandler)
    */
   public final void addGwtCreateHandler(GwtCreateHandler gwtCreateHandler) {
-    GwtCreateHandlerManager.get().addGwtCreateHandler(gwtCreateHandler);
+    GwtTestGWTBridge.get().addGwtCreateHandler(gwtCreateHandler);
   }
 
   /*
@@ -192,7 +192,7 @@ public abstract class GwtModuleRunnerAdapter implements GwtModuleRunner,
    * @see com.googlecode.gwt.test.GwtModuleRunner#getHostPagePath()
    */
   public final String getHostPagePath() {
-    return getHostPagePath(getModuleName());
+    return getHostPagePath(GwtConfig.get().getTestedModuleName());
   }
 
   /*
@@ -212,13 +212,6 @@ public abstract class GwtModuleRunnerAdapter implements GwtModuleRunner,
   public final GwtLogHandler getLogHandler() {
     return logHandler;
   }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.googlecode.gwt.test.GwtModuleRunner#getModuleName()
-   */
-  public abstract String getModuleName();
 
   /*
    * (non-Javadoc)
@@ -295,8 +288,8 @@ public abstract class GwtModuleRunnerAdapter implements GwtModuleRunner,
    * Specifies if The {@link Browser} helper methods can target not attached
    * widgets or not.
    * 
-   * @return True if {@link DomEvent} can be dispatched on detached widgets,
-   *         false otherwise.
+   * @param canDispatchDomEventOnDetachedWidget True if {@link DomEvent} can be
+   *          dispatched on detached widgets, false otherwise.
    * 
    * @see Widget#isAttached()
    */

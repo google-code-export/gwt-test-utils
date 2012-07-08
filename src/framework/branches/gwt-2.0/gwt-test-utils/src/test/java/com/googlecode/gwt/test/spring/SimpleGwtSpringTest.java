@@ -9,20 +9,17 @@ import org.springframework.test.context.ContextConfiguration;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.googlecode.gwt.test.GwtModule;
 import com.googlecode.gwt.test.client.MyObject;
 import com.googlecode.gwt.test.rpc.MyService;
 import com.googlecode.gwt.test.rpc.MyServiceAsync;
 
+@GwtModule("com.googlecode.gwt.test.GwtTestUtils")
 @ContextConfiguration(locations = {"classpath:com/googlecode/gwt/test/spring/applicationContext-test.xml"}, loader = GwtTestContextLoader.class)
 public class SimpleGwtSpringTest extends GwtSpringTest {
 
   private boolean failure;
   private boolean success;
-
-  @Override
-  public String getModuleName() {
-    return "com.googlecode.gwt.test.GwtTestUtils";
-  }
 
   @Test
   public void rpcCall() {

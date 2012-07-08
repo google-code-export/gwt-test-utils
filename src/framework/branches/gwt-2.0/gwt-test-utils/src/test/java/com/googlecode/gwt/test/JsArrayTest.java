@@ -6,10 +6,10 @@ import static org.junit.Assert.assertNull;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
-import com.googlecode.gwt.test.internal.utils.JavaScriptObjects;
 
 public class JsArrayTest extends GwtTestTest {
 
@@ -18,7 +18,7 @@ public class JsArrayTest extends GwtTestTest {
   @Before
   public void beforeJsArrayStringTest() {
     // Arrange
-    jsArray = JavaScriptObjects.newObject(JsArray.class).cast();
+    jsArray = JavaScriptObject.createObject().cast();
     assertEquals(0, jsArray.length());
 
     // Act

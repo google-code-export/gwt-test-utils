@@ -18,10 +18,6 @@ public class StyleUtils {
 
   private static final Pattern STYLE_PATTERN = Pattern.compile("(.+):(.+)");
 
-  public static LinkedHashMap<String, String> getProperties(Style style) {
-    return JavaScriptObjects.getObject(style, JsoProperties.STYLE_PROPERTIES);
-  }
-
   public static LinkedHashMap<String, String> getStyleProperties(String style) {
     LinkedHashMap<String, String> result = new LinkedHashMap<String, String>();
 

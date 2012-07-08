@@ -27,6 +27,7 @@ import org.apache.xerces.xni.XMLLocator;
 import org.apache.xerces.xni.XNIException;
 import org.apache.xerces.xni.parser.XMLComponentManager;
 import org.apache.xerces.xni.parser.XMLConfigurationException;
+
 import com.googlecode.html.HTMLElements;
 import com.googlecode.html.xercesbridge.XercesBridge;
 

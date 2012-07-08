@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.i18n.client.CurrencyData;
 import com.google.gwt.i18n.client.CurrencyList;
 import com.google.gwt.i18n.client.impl.CurrencyDataImpl;
@@ -133,7 +134,7 @@ class CurrencyListPatcher {
         String currencySymbol, int flagsAndPrecision,
         String portableCurrencySymbol) {
 
-      CurrencyDataImpl defImpl = JavaScriptObjects.newObject(CurrencyDataImpl.class);
+      CurrencyDataImpl defImpl = JavaScriptObject.createObject().cast();
       JavaScriptObjects.setProperty(defImpl, "currencyCode", currencyCode);
       JavaScriptObjects.setProperty(defImpl, "currencySymbol", currencySymbol);
       JavaScriptObjects.setProperty(defImpl, "flagsAndPrecision",

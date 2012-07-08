@@ -1,7 +1,5 @@
 package com.googlecode.gwt.test.internal;
 
-import java.util.regex.Pattern;
-
 import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.NotFoundException;
@@ -16,8 +14,6 @@ import com.googlecode.gwt.test.exceptions.GwtTestPatchException;
 class GwtTranslator implements Translator {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(GwtTranslator.class);
-
-  private static final Pattern TEST_PATTERN = Pattern.compile("^.*[T|t][E|e][S|s][T|t].*$");
 
   private final ConfigurationLoader configurationLoader;
   private final HasHTMLModifier hasHTMLModifier;
@@ -36,15 +32,16 @@ class GwtTranslator implements Translator {
   }
 
   public void start(ClassPool pool) throws NotFoundException {
+
   }
 
   private void applyJavaClassModifiers(CtClass ctClass) {
     try {
       // Apply remove-method
-      configurationLoader.getMethodRemover().modify(ctClass);
+      // configurationLoader.getMethodRemover().modify(ctClass);
 
       // Apply substitute-class
-      configurationLoader.getClassSubstituer().modify(ctClass);
+      // configurationLoader.getClassSubstituer().modify(ctClass);
 
       // Apply internal modifiers
       serializableModifier.modify(ctClass);
@@ -80,42 +77,13 @@ class GwtTranslator implements Translator {
     }
   }
 
-  private void modifiyClass(CtClass classToModify) {
-
-    for (String exclusion : ModuleData.get().getClientExclusions()) {
-      if (classToModify.getName().equals(exclusion)) {
-        // don't modify this class
-        return;
-      }
-    }
-
-    for (String clientPackage : ModuleData.get().getClientPaths()) {
-      if (classToModify.getName().startsWith(clientPackage)) {
-        // modifiy this class
-        applyJavaClassModifiers(classToModify);
-        return;
-      }
-    }
-
-    for (String scanPackage : configurationLoader.getScanPackages()) {
-      if (classToModify.getName().startsWith(scanPackage)) {
-        // modifiy this class
-        applyJavaClassModifiers(classToModify);
-        return;
-      }
-    }
-
-    if (TEST_PATTERN.matcher(classToModify.getName()).matches()) {
-      applyJavaClassModifiers(classToModify);
-    }
-  }
-
   private void patchClass(CtClass classToModify) {
     if (LOGGER.isDebugEnabled()) {
       LOGGER.debug("Load class '" + classToModify.getName() + "'");
     }
+
     applyPatcher(classToModify);
-    modifiyClass(classToModify);
+    applyJavaClassModifiers(classToModify);
     if (LOGGER.isDebugEnabled()) {
       LOGGER.debug("Class '" + classToModify.getName() + "' has been loaded");
     }

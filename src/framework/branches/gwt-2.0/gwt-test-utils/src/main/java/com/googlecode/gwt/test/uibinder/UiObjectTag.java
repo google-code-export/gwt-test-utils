@@ -30,9 +30,9 @@ import com.googlecode.gwt.test.utils.GwtReflectionUtils;
  * 
  * @param <T> The wrapped object subtype
  * 
- * @see UiObjectTag#instanciate(Class)
- * @see UiObjectTag#initializeObject(IsWidget, Map)
- * @see UiObjectTag#finalizeObject(IsWidget)
+ * @see UiObjectTag#instanciate(Class, Map, Object)
+ * @see UiObjectTag#initializeObject(Object, Map, Object)
+ * @see UiObjectTag#finalizeObject(Object)
  */
 public abstract class UiObjectTag<T> implements UiTag<T> {
 
@@ -229,7 +229,6 @@ public abstract class UiObjectTag<T> implements UiTag<T> {
    *          would be executed.
    * @param owner The owner of the UiBinder template, with {@link UiField}
    *          fields.
-   * @return The created instance
    */
   protected abstract void initializeObject(T wrapped,
       Map<String, Object> attributes, Object owner);

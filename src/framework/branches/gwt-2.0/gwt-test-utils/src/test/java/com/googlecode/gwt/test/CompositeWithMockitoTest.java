@@ -10,8 +10,8 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.CustomButton;
 import com.google.gwt.user.client.ui.PushButton;
-import com.googlecode.gwt.test.GwtTestWithMockito;
 
+@GwtModule("com.googlecode.gwt.test.GwtTestUtils")
 public class CompositeWithMockitoTest extends GwtTestWithMockito {
 
   public class MyComposite extends Composite {
@@ -21,16 +21,11 @@ public class CompositeWithMockitoTest extends GwtTestWithMockito {
     }
   }
 
-  @Mock
+  @com.googlecode.gwt.test.Mock
   private Element element;
 
   @Mock
   private PushButton injectedButton;
-
-  @Override
-  public String getModuleName() {
-    return "com.googlecode.gwt.test.GwtTestUtils";
-  }
 
   @Test
   public void testComposite() {

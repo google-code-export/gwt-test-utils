@@ -2,145 +2,249 @@ package com.googlecode.gwt.test.internal.utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
 
 import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.dom.client.AnchorElement;
-import com.google.gwt.dom.client.AreaElement;
-import com.google.gwt.dom.client.BRElement;
-import com.google.gwt.dom.client.BaseElement;
-import com.google.gwt.dom.client.BodyElement;
-import com.google.gwt.dom.client.ButtonElement;
-import com.google.gwt.dom.client.DListElement;
-import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.FieldSetElement;
-import com.google.gwt.dom.client.FormElement;
-import com.google.gwt.dom.client.FrameElement;
-import com.google.gwt.dom.client.FrameSetElement;
-import com.google.gwt.dom.client.HRElement;
-import com.google.gwt.dom.client.HeadElement;
-import com.google.gwt.dom.client.HeadingElement;
-import com.google.gwt.dom.client.IFrameElement;
-import com.google.gwt.dom.client.ImageElement;
-import com.google.gwt.dom.client.InputElement;
-import com.google.gwt.dom.client.LIElement;
-import com.google.gwt.dom.client.LabelElement;
-import com.google.gwt.dom.client.LegendElement;
-import com.google.gwt.dom.client.LinkElement;
-import com.google.gwt.dom.client.MapElement;
-import com.google.gwt.dom.client.MetaElement;
-import com.google.gwt.dom.client.ModElement;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
-import com.google.gwt.dom.client.OListElement;
-import com.google.gwt.dom.client.ObjectElement;
-import com.google.gwt.dom.client.OptGroupElement;
-import com.google.gwt.dom.client.OptionElement;
-import com.google.gwt.dom.client.ParagraphElement;
-import com.google.gwt.dom.client.ParamElement;
-import com.google.gwt.dom.client.PreElement;
-import com.google.gwt.dom.client.QuoteElement;
-import com.google.gwt.dom.client.ScriptElement;
-import com.google.gwt.dom.client.SelectElement;
-import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style;
-import com.google.gwt.dom.client.StyleElement;
-import com.google.gwt.dom.client.TableCaptionElement;
-import com.google.gwt.dom.client.TableCellElement;
-import com.google.gwt.dom.client.TableColElement;
-import com.google.gwt.dom.client.TableElement;
-import com.google.gwt.dom.client.TableRowElement;
-import com.google.gwt.dom.client.TableSectionElement;
 import com.google.gwt.dom.client.Text;
-import com.google.gwt.dom.client.TextAreaElement;
-import com.google.gwt.dom.client.TitleElement;
-import com.google.gwt.dom.client.UListElement;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.ui.UIObject;
 import com.googlecode.gwt.test.finder.GwtFinder;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
+/**
+ * Utilities for Overlay types support in gwt-test-utils. <strong>For internal
+ * use only.<strong>
+ * 
+ * @author Gael Lazzari
+ * 
+ */
 public class JavaScriptObjects {
 
   public static final String ID = "id";
 
-  public static final String PROPERTIES = "JSO_PROPERTIES";
+  /**
+   * The name of the internal {@link PropertyContainer} which is add in
+   * {@link JavaScriptObject} class during class rewrite process
+   */
+  public static final String PROPERTIES = "properties";
 
-  private static final Map<String, Class<? extends Element>> ELEMENT_TAGS = new TreeMap<String, Class<? extends Element>>();
+  private static final Set<String> DOM_PROPERTIES = new HashSet<String>() {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
 
+    {
+      /*
+       * 
+       * Parse HTML standard attributes here :
+       * http://www.w3.org/TR/html4/index/attributes.html
+       * 
+       * With this jQuery script :
+       * 
+       * <script language="Javascript"> var array = new Array();
+       * $('td[title=Name]').each(function() { var text = $(this).text().trim();
+       * if (jQuery.inArray(text, array) == -1) { array.push(text); } });
+       * 
+       * var java = '<p>'; var length = array.length;
+       * 
+       * for (var i=0; i < length; i++) { java += 'add("' + array[i] +
+       * '");<br/>'; }
+       * 
+       * java += '</p>';
+       * 
+       * $('table').parent().html(java); </script>
+       */
+      add("abbr");
+      add("accept-charset");
+      add("accept");
+      add("accesskey");
+      add("action");
+      add("align");
+      add("alink");
+      add("alt");
+      add("archive");
+      add("axis");
+      add("background");
+      add("bgcolor");
+      add("border");
+      add("cellpadding");
+      add("cellspacing");
+      add("char");
+      add("charoff");
+      add("charset");
+      add("checked");
+      add("cite");
+      add("class");
+      add("classid");
+      add("clear");
+      add("code");
+      add("codebase");
+      add("codetype");
+      add("color");
+      add("cols");
+      add("colspan");
+      add("compact");
+      add("content");
+      add("coords");
+      add("data");
+      add("datetime");
+      add("declare");
+      add("defer");
+      add("dir");
+      add("disabled");
+      add("enctype");
+      add("face");
+      add("for");
+      add("frame");
+      add("frameborder");
+      add("headers");
+      add("height");
+      add("href");
+      add("hreflang");
+      add("hspace");
+      add("http-equiv");
+      add("id");
+      add("ismap");
+      add("label");
+      add("lang");
+      add("language");
+      add("link");
+      add("longdesc");
+      add("marginheight");
+      add("marginwidth");
+      add("maxlength");
+      add("media");
+      add("method");
+      add("multiple");
+      add("name");
+      add("nohref");
+      add("noresize");
+      add("noshade");
+      add("nowrap");
+      add("object");
+      add("onblur");
+      add("onchange");
+      add("onclick");
+      add("ondblclick");
+      add("onfocus");
+      add("onkeydown");
+      add("onkeypress");
+      add("onkeyup");
+      add("onload");
+      add("onmousedown");
+      add("onmousemove");
+      add("onmouseout");
+      add("onmouseover");
+      add("onmouseup");
+      add("onreset");
+      add("onselect");
+      add("onsubmit");
+      add("onunload");
+      add("profile");
+      add("prompt");
+      add("readonly");
+      add("rel");
+      add("rev");
+      add("rows");
+      add("rowspan");
+      add("rules");
+      add("scheme");
+      add("scope");
+      add("scrolling");
+      add("selected");
+      add("shape");
+      add("size");
+      add("span");
+      add("src");
+      add("standby");
+      add("start");
+      add("style");
+      add("summary");
+      add("tabindex");
+      add("target");
+      add("text");
+      add("title");
+      add("type");
+      add("usemap");
+      add("valign");
+      add("value");
+      add("valuetype");
+      add("version");
+      add("vlink");
+      add("vspace");
+      add("width");
+    }
+  };
+
+  private static final String ELEM_PROPERTIES = "ELEM_PROPERTIES";
+  private static final String NODE_LIST_FIELD = "childNodes";
+  private static final String NODE_LIST_INNER_LIST = "NODE_LIST_INNER_LIST";
   private static final String NODE_NAME = "nodeName";
-  private static final String SELECTED_INDEX_FIELD = "selectedIndex";
-
-  static {
-    ELEMENT_TAGS.put("a", AnchorElement.class);
-    ELEMENT_TAGS.put("area", AreaElement.class);
-    ELEMENT_TAGS.put("base", BaseElement.class);
-    ELEMENT_TAGS.put("body", BodyElement.class);
-    ELEMENT_TAGS.put("br", BRElement.class);
-    ELEMENT_TAGS.put("button", ButtonElement.class);
-    ELEMENT_TAGS.put("div", DivElement.class);
-    ELEMENT_TAGS.put("dl", DListElement.class);
-    ELEMENT_TAGS.put("fieldset", FieldSetElement.class);
-    ELEMENT_TAGS.put("form", FormElement.class);
-    ELEMENT_TAGS.put("frame", FrameElement.class);
-    ELEMENT_TAGS.put("frameset", FrameSetElement.class);
-    ELEMENT_TAGS.put("head", HeadElement.class);
-    ELEMENT_TAGS.put("hr", HRElement.class);
-    ELEMENT_TAGS.put("h1", HeadingElement.class);
-    ELEMENT_TAGS.put("h2", HeadingElement.class);
-    ELEMENT_TAGS.put("h3", HeadingElement.class);
-    ELEMENT_TAGS.put("h4", HeadingElement.class);
-    ELEMENT_TAGS.put("h5", HeadingElement.class);
-    ELEMENT_TAGS.put("h6", HeadingElement.class);
-    ELEMENT_TAGS.put("hr", HRElement.class);
-    ELEMENT_TAGS.put("iframe", IFrameElement.class);
-    ELEMENT_TAGS.put("img", ImageElement.class);
-    ELEMENT_TAGS.put("ins", ModElement.class);
-    ELEMENT_TAGS.put("del", ModElement.class);
-    ELEMENT_TAGS.put("input", InputElement.class);
-    ELEMENT_TAGS.put("label", LabelElement.class);
-    ELEMENT_TAGS.put("legend", LegendElement.class);
-    ELEMENT_TAGS.put("li", LIElement.class);
-    ELEMENT_TAGS.put("link", LinkElement.class);
-    ELEMENT_TAGS.put("map", MapElement.class);
-    ELEMENT_TAGS.put("meta", MetaElement.class);
-    ELEMENT_TAGS.put("object", ObjectElement.class);
-    ELEMENT_TAGS.put("ol", OListElement.class);
-    ELEMENT_TAGS.put("optgroup", OptGroupElement.class);
-    ELEMENT_TAGS.put("option", OptionElement.class);
-    ELEMENT_TAGS.put("options", OptionElement.class);
-    ELEMENT_TAGS.put("p", ParagraphElement.class);
-    ELEMENT_TAGS.put("param", ParamElement.class);
-    ELEMENT_TAGS.put("pre", PreElement.class);
-    ELEMENT_TAGS.put("q", QuoteElement.class);
-    ELEMENT_TAGS.put("blockquote", QuoteElement.class);
-    ELEMENT_TAGS.put("script", ScriptElement.class);
-    ELEMENT_TAGS.put("select", SelectElement.class);
-    ELEMENT_TAGS.put("span", SpanElement.class);
-    ELEMENT_TAGS.put("style", StyleElement.class);
-    ELEMENT_TAGS.put("caption", TableCaptionElement.class);
-    ELEMENT_TAGS.put("td", TableCellElement.class);
-    ELEMENT_TAGS.put("th", TableCellElement.class);
-    ELEMENT_TAGS.put("col", TableColElement.class);
-    ELEMENT_TAGS.put("colgroup", TableColElement.class);
-    ELEMENT_TAGS.put("table", TableElement.class);
-    ELEMENT_TAGS.put("tr", TableRowElement.class);
-    ELEMENT_TAGS.put("tbody", TableSectionElement.class);
-    ELEMENT_TAGS.put("tfoot", TableSectionElement.class);
-    ELEMENT_TAGS.put("thead", TableSectionElement.class);
-    ELEMENT_TAGS.put("textarea", TextAreaElement.class);
-    ELEMENT_TAGS.put("title", TitleElement.class);
-    ELEMENT_TAGS.put("ul", UListElement.class);
-  }
+  private static final String NODE_TYPE_FIELD = "nodeType";
+  private static final String PARENT_NODE_FIELD = "parentNode";
+  private static final String STYLE_OBJECT_FIELD = "STYLE_OBJECT";
+  private static final String STYLE_PROPERTIES = "STYLE_PROPERTIES";
+  private static final String TAG_NAME = "tagName";
 
   public static void clearProperties(JavaScriptObject jso) {
     getJsoProperties(jso).clear();
+  }
+
+  public static JavaScriptObject cloneJso(JavaScriptObject oldJso, boolean deep) {
+    JavaScriptObject newJso = JavaScriptObject.createObject();
+
+    if (Node.is(oldJso)) {
+      short nodeType = oldJso.<Node> cast().getNodeType();
+      setProperty(newJso, NODE_TYPE_FIELD, nodeType);
+    }
+
+    for (Map.Entry<String, Object> entry : JavaScriptObjects.entrySet(oldJso)) {
+
+      if (PARENT_NODE_FIELD.equals(entry.getKey())) {
+        // Nothing to do : new cloned node does not have any parent
+      } else if (NODE_TYPE_FIELD.equals(entry.getKey())) {
+        // ignore it since it has to be handled at the very beginning of cloning
+      } else if (JsoProperties.NODE_OWNER_DOCUMENT.equals(entry.getKey())) {
+        JavaScriptObjects.setProperty(newJso,
+            JsoProperties.NODE_OWNER_DOCUMENT, JavaScriptObjects.getObject(
+                oldJso, JsoProperties.NODE_OWNER_DOCUMENT));
+      } else if (STYLE_OBJECT_FIELD.equals(entry.getKey())) {
+        cloneStyle(newJso, (Style) entry.getValue());
+      } else if (NODE_LIST_FIELD.equals(entry.getKey())) {
+        Node newNode = newJso.cast();
+        Node oldNode = oldJso.cast();
+        cloneChildNodes(newNode, oldNode, deep);
+      } else if (ELEM_PROPERTIES.equals(entry.getKey())) {
+        PropertyContainer newPc = getDomProperties(newJso.<Element> cast());
+        PropertyContainer oldPc = getDomProperties(oldJso.<Element> cast());
+
+        for (Map.Entry<String, Object> entry2 : oldPc.entrySet()) {
+          newPc.put(entry2.getKey(), entry2.getValue());
+        }
+      } else if (JavaScriptObject.class.isInstance(entry.getValue())) {
+        JavaScriptObject oldChildJso = (JavaScriptObject) entry.getValue();
+        JavaScriptObject newChildJso = cloneJso(oldChildJso, deep);
+        JavaScriptObjects.setProperty(newJso, entry.getKey(), newChildJso);
+      } else {
+        // copy the property, which should be a String or a primitive type (or
+        // corresponding wrapper object)
+        JavaScriptObjects.setProperty(newJso, entry.getKey(), entry.getValue());
+      }
+    }
+
+    return newJso;
+
   }
 
   public static Set<Map.Entry<String, Object>> entrySet(JavaScriptObject jso) {
@@ -151,12 +255,59 @@ public class JavaScriptObjects {
     return getJsoProperties(jso, propName).getBoolean(propName);
   }
 
+  @SuppressWarnings("unchecked")
+  public static List<Node> getChildNodeInnerList(Node node) {
+    NodeList<Node> nodeList = getChildNodes(node);
+    return (List<Node>) JavaScriptObjects.getObject(nodeList,
+        NODE_LIST_INNER_LIST);
+  }
+
+  @SuppressWarnings("unchecked")
+  public static <T extends Node> List<T> getChildNodeInnerList(
+      NodeList<T> nodeList) {
+    assert isNodeList(nodeList) : "not a NodeList";
+
+    return (List<T>) JavaScriptObjects.getObject(nodeList, NODE_LIST_INNER_LIST);
+  }
+
+  public static NodeList<Node> getChildNodes(Node node) {
+    assert Node.is(node) : "not a Node";
+    NodeList<Node> nodeList = JavaScriptObjects.getObject(node, NODE_LIST_FIELD);
+
+    if (nodeList == null) {
+      nodeList = newNodeList();
+      JavaScriptObjects.setProperty(node, NODE_LIST_FIELD, nodeList);
+    }
+
+    return nodeList;
+  }
+
+  public static PropertyContainer getDomProperties(Element element) {
+    assert Node.is(element) : "not a Node";
+
+    PropertyContainer pc = getObject(element, ELEM_PROPERTIES);
+
+    if (pc == null) {
+      // a propertyContainer with a LinkedHashMap to record the order of DOM
+      // properties
+      pc = PropertyContainer.newInstance(new LinkedHashMap<String, Object>());
+      setProperty(element, ELEM_PROPERTIES, pc);
+    }
+
+    return pc;
+  }
+
   public static double getDouble(JavaScriptObject jso, String propName) {
     return getJsoProperties(jso, propName).getDouble(propName);
   }
 
   public static int getInteger(JavaScriptObject jso, String propName) {
     return getJsoProperties(jso, propName).getInteger(propName);
+  }
+
+  public static short getNodeType(JavaScriptObject jso) {
+    return hasProperty(jso, NODE_TYPE_FIELD) ? getShort(jso, NODE_TYPE_FIELD)
+        : -1;
   }
 
   @SuppressWarnings("unchecked")
@@ -172,16 +323,61 @@ public class JavaScriptObjects {
     return getJsoProperties(jso, propName).getString(propName);
   }
 
-  public static Element newElement(String tag, Document ownerDocument) {
-    Class<? extends Element> clazz = ELEMENT_TAGS.get(tag.toLowerCase());
+  public static Style getStyle(Element element) {
+    assert Element.is(element) : "not an Element";
 
-    if (clazz == null) {
-      clazz = Element.class;
+    Style style = getObject(element, STYLE_OBJECT_FIELD);
+    if (style == null) {
+      style = newStyle();
+      setProperty(element, STYLE_OBJECT_FIELD, style);
     }
 
-    Element elem = newObject(clazz);
+    return style;
 
-    setProperty(elem, JsoProperties.TAG_NAME, tag);
+  }
+
+  public static LinkedHashMap<String, String> getStyleProperties(Style style) {
+    LinkedHashMap<String, String> properties = getObject(style,
+        STYLE_PROPERTIES);
+
+    assert properties != null : "not a Style";
+
+    return properties;
+  }
+
+  public static String getTagName(Element element) {
+    assert Element.is(element) : "not an Element";
+
+    return getString(element, TAG_NAME);
+  }
+
+  public static boolean hasProperty(JavaScriptObject jso, String propName) {
+    return getJsoProperties(jso).contains(propName);
+  }
+
+  public static boolean isNodeList(JavaScriptObject jso) {
+    return hasProperty(jso, NODE_LIST_INNER_LIST);
+  }
+
+  public static boolean isStandardDOMProperty(String propertyName) {
+    return "className".equals(propertyName) || !"class".equals(propertyName)
+        && DOM_PROPERTIES.contains(propertyName);
+  }
+
+  public static boolean isStyle(JavaScriptObject jso) {
+    return hasProperty(jso, STYLE_PROPERTIES);
+  }
+
+  public static Document newDocument() {
+    Document document = newNode(Node.DOCUMENT_NODE).cast();
+    setProperty(document, JsoProperties.NODE_OWNER_DOCUMENT, document);
+    return document;
+
+  }
+
+  public static Element newElement(String tag, Document ownerDocument) {
+    Element elem = newNode(Node.ELEMENT_NODE).cast();
+    setProperty(elem, TAG_NAME, tag);
     setProperty(elem, JsoProperties.NODE_OWNER_DOCUMENT, ownerDocument);
 
     if (tag.equalsIgnoreCase("html")) {
@@ -191,84 +387,41 @@ public class JavaScriptObjects {
     return elem;
   }
 
+  public static Node newNode(int nodeType) {
+    Node newNode = JavaScriptObject.createObject().cast();
+    setProperty(newNode, NODE_TYPE_FIELD, (short) nodeType);
+    return newNode;
+  }
+
   public static <T extends Node> NodeList<T> newNodeList() {
     return newNodeList(new ArrayList<T>());
   }
 
   @SuppressWarnings("unchecked")
   public static <T extends Node> NodeList<T> newNodeList(List<T> innerList) {
-    NodeList<T> nodeList = newObject(NodeList.class);
-
-    setProperty(nodeList, JsoProperties.NODE_LIST_INNER_LIST, innerList);
-
+    NodeList<T> nodeList = (NodeList<T>) JavaScriptObject.createObject().cast();
+    setProperty(nodeList, NODE_LIST_INNER_LIST, innerList);
     return nodeList;
   }
 
-  public static <T extends JavaScriptObject> T newObject(Class<T> jsoClass) {
-    // TODO : need to work with => JavaScriptObject.createObject().cast()
-    T o = GwtReflectionUtils.instantiateClass(jsoClass);
-
-    short nodeType = -1;
-
-    if (Node.class.isAssignableFrom(jsoClass)) {
-      setProperty(o, JsoProperties.NODE_LIST_FIELD, newNodeList());
-    }
-
-    if (Node.class.isAssignableFrom(jsoClass)
-        && !Document.class.isAssignableFrom(jsoClass)) {
-      setProperty(o, JsoProperties.NODE_OWNER_DOCUMENT, Document.get());
-    }
-
-    if (Document.class.isAssignableFrom(jsoClass)) {
-      nodeType = Node.DOCUMENT_NODE;
-      setProperty(o, JsoProperties.NODE_OWNER_DOCUMENT, o);
-    } else if (Element.class.isAssignableFrom(jsoClass)) {
-      nodeType = Node.ELEMENT_NODE;
-
-      Element e = o.cast();
-      setProperty(o, JsoProperties.STYLE_OBJECT_FIELD, newStyle());
-
-      // a propertyContainer with a LinkedHashMap to record the order of DOM
-      // properties
-      PropertyContainer elemProperties = PropertyContainer.newInstance(new LinkedHashMap<String, Object>());
-      setProperty(e, JsoProperties.ELEM_PROPERTIES, elemProperties);
-
-      if (SelectElement.class.isAssignableFrom(jsoClass)) {
-        setProperty(o, SELECTED_INDEX_FIELD, -1);
-        setProperty(o, JsoProperties.SELECTED_SIZE, -1);
-      }
-    } else if (Text.class.isAssignableFrom(jsoClass)) {
-      nodeType = Node.TEXT_NODE;
-    } else if (jsoClass.getName().startsWith("com.google.gwt")
-        && jsoClass.getSimpleName().startsWith("JsArray")) {
-      setProperty(o, JsoProperties.JSARRAY_WRAPPED_LIST,
-          new ArrayList<Object>());
-    }
-
-    setProperty(o, JsoProperties.NODE_TYPE_FIELD, nodeType);
-
-    return o;
-  }
-
   public static Style newStyle() {
-    Style style = newObject(Style.class);
+    Style style = JavaScriptObject.createObject().cast();
 
-    setProperty(style, JsoProperties.STYLE_PROPERTIES,
-        new LinkedHashMap<String, String>());
+    setProperty(style, STYLE_PROPERTIES, new LinkedHashMap<String, String>());
 
     return style;
   }
 
   public static Text newText(String data, Document ownerDocument) {
-    Text text = newObject(Text.class);
-    text.setData(data);
+    Text text = newNode(Node.TEXT_NODE).cast();
     setProperty(text, JsoProperties.NODE_OWNER_DOCUMENT, ownerDocument);
+    text.setData(data);
 
     return text;
   }
 
   public static void onSetId(JavaScriptObject jso, String newId, String oldId) {
-    EventListener listener = getObject(jso, JsoProperties.ELEM_EVENTLISTENER);
+    EventListener listener = DOM.getEventListener(jso.<com.google.gwt.user.client.Element> cast());
 
     if (UIObject.class.isInstance(listener)) {
       GwtReflectionUtils.callStaticMethod(GwtFinder.class, "onSetId", listener,
@@ -278,6 +431,10 @@ public class JavaScriptObjects {
 
   public static void remove(JavaScriptObject jso, String propName) {
     getJsoProperties(jso, propName).remove(propName);
+  }
+
+  public static void setParentNode(Node child, Node parent) {
+    JavaScriptObjects.setProperty(child, PARENT_NODE_FIELD, parent);
   }
 
   public static void setProperty(JavaScriptObject jso, String propName,
@@ -314,6 +471,33 @@ public class JavaScriptObjects {
     getJsoProperties(jso, propName).put(propName, Short.valueOf(value));
   }
 
+  private static void cloneChildNodes(Node newNode, Node oldNode, boolean deep) {
+
+    List<Node> childs = JavaScriptObjects.getChildNodeInnerList(oldNode);
+    if (deep) {
+      // copy all child nodes
+      for (Node child : childs) {
+        newNode.appendChild(child.cloneNode(deep));
+      }
+    } else {
+      // only copy the TextNode if exists
+      for (Node child : childs) {
+        if (Node.TEXT_NODE == child.getNodeType()) {
+          newNode.appendChild(Document.get().createTextNode(
+              child.getNodeValue()));
+          break;
+        }
+      }
+    }
+  }
+
+  private static void cloneStyle(JavaScriptObject newNode, Style oldStyle) {
+    Style newStyle = getStyle(newNode.<Element> cast());
+    Map<String, String> oldProperties = getStyleProperties(oldStyle);
+    Map<String, String> newProperties = getStyleProperties(newStyle);
+    newProperties.putAll(oldProperties);
+  }
+
   private static PropertyContainer getJsoProperties(JavaScriptObject o) {
     PropertyContainer pc = GwtReflectionUtils.getPrivateFieldValue(o,
         PROPERTIES);
@@ -328,10 +512,9 @@ public class JavaScriptObjects {
 
   private static PropertyContainer getJsoProperties(JavaScriptObject o,
       String propertyName) {
-    if (o instanceof Element
-        && JsoProperties.get().isStandardDOMProperty(propertyName)) {
+    if (isStandardDOMProperty(propertyName)) {
       // case for standard dom properties, like "id", "name", "title"...
-      return getJsoProperties(o).getObject(JsoProperties.ELEM_PROPERTIES);
+      return getDomProperties(o.<Element> cast());
     } else {
       return getJsoProperties(o);
     }
