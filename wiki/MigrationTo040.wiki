@@ -2,7 +2,7 @@
 
 Version 0.40 (and 0.33.5, 0.28.12, 0.25.9, 0.22.9 branches) of _gwt-test-utils_ introduces the support for [http://code.google.com/p/google-web-toolkit/wiki/OverlayTypes GWT overlay types].
 
-As many current users won't care, it is a major improvement, which opens a lot of possibilities to support GWT DOM related features in a better way.
+Although many current users won't care, it is a major improvement, which opens a lot of possibilities to support GWT DOM related features in a better way.
 
 = Why now ? =
 
