@@ -63,7 +63,7 @@ class GwtXmlContentHandler implements ContentHandler {
   }
 
   public void startDocument() throws SAXException {
-    document = JavaScriptObjects.newObject(Document.class);
+    document = JavaScriptObjects.newDocument();
     currentNode = document;
   }
 

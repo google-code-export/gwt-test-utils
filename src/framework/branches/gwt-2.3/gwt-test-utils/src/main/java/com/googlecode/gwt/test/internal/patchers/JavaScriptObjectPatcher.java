@@ -3,77 +3,71 @@ package com.googlecode.gwt.test.internal.patchers;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import javassist.CannotCompileException;
-import javassist.CtClass;
-import javassist.CtField;
-
 import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.core.client.JsArrayString;
-import com.google.gwt.dom.client.Document;
+import com.google.gwt.dev.shell.JsValueGlue;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Text;
+import com.googlecode.gwt.test.exceptions.GwtTestPatchException;
 import com.googlecode.gwt.test.internal.utils.GwtStringUtils;
 import com.googlecode.gwt.test.internal.utils.JavaScriptObjects;
-import com.googlecode.gwt.test.internal.utils.JsoProperties;
 import com.googlecode.gwt.test.internal.utils.PropertyContainer;
-import com.googlecode.gwt.test.patchers.InitMethod;
 import com.googlecode.gwt.test.patchers.PatchClass;
 import com.googlecode.gwt.test.patchers.PatchMethod;
+import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
 @PatchClass(JavaScriptObject.class)
 class JavaScriptObjectPatcher {
 
   @PatchMethod
   static JavaScriptObject createArray() {
-    return JavaScriptObjects.newObject(JsArrayString.class);
+    return createObject();
   }
 
   @PatchMethod
   static JavaScriptObject createFunction() {
-    return JavaScriptObjects.newObject(JavaScriptObject.class);
+    return createObject();
   }
 
   @PatchMethod
   static JavaScriptObject createObject() {
-    return JavaScriptObjects.newObject(JavaScriptObject.class);
-  }
-
-  @InitMethod
-  static void initClass(CtClass c) throws CannotCompileException {
-    // add field "protected PropertyContainer JSO_PROPERTIES;"
-    CtField propertiesField = CtField.make("protected "
-        + PropertyContainer.class.getName() + " "
-        + JavaScriptObjects.PROPERTIES + ";", c);
-    c.addField(propertiesField);
-
-    // BECAUSE OF MOCKED element, we need to check if PropertyContainer is null
-    // when calling JavaScriptObjects.getProperties(e)
-    // CtConstructor defaultConstructor = JavassistUtils.findConstructor(c);
-    // defaultConstructor.insertAfter(JavaScriptObjects.PROPERTIES + " = "
-    // + PropertyContainer.class.getName()
-    // + ".newInstance(new java.util.HashMap());");
+    try {
+      Class<?> clazz = Class.forName(JsValueGlue.JSO_IMPL_CLASS);
+      return (JavaScriptObject) GwtReflectionUtils.instantiateClass(clazz);
+    } catch (Exception e) {
+      // should never happen
+      throw new GwtTestPatchException(
+          "Error while instanciating JavaScriptObject :", e);
+    }
   }
 
   @PatchMethod
   static String toString(JavaScriptObject jso) {
-    // TODO : remove this code when overlay will be OK
-    if (Text.class.isInstance(jso)) {
-      Text text = jso.cast();
-      return "'" + text.getData() + "'";
-    } else if (Document.class.isInstance(jso)) {
-      return "[object HTMLDocument]";
-    } else if (Style.class.isInstance(jso)) {
-      return styleToString((Style) jso);
-    } else if (Element.class.isInstance(jso)) {
-      return elementToString((Element) jso);
-    } else if (NodeList.class.isInstance(jso)) {
-      return JavaScriptObjects.getObject(jso,
-          JsoProperties.NODE_LIST_INNER_LIST).toString();
-    } else {
-      return jso.getClass().getSimpleName();
+    short nodeType = jso.<Node> cast().getNodeType();
+
+    switch (nodeType) {
+      case Node.DOCUMENT_NODE:
+        return "[object HTMLDocument]";
+      case Node.TEXT_NODE:
+        Text text = jso.cast();
+        return "'" + text.getData() + "'";
+      case Node.ELEMENT_NODE:
+        return elementToString(jso.<Element> cast());
+      default:
+        if (JavaScriptObjects.isNodeList(jso)) {
+          NodeList<?> nodeList = jso.cast();
+          return JavaScriptObjects.getChildNodeInnerList(nodeList).toString();
+        } else if (JavaScriptObjects.isStyle(jso)) {
+          Style style = jso.cast();
+          return styleToString(style);
+        } else {
+          return jso.getClass().getSimpleName();
+        }
+
     }
+
   }
 
   private static String elementToString(Element elem) {
@@ -87,8 +81,7 @@ class JavaScriptObjectPatcher {
     StringBuilder sb = new StringBuilder();
     sb.append("<").append(tagName).append(" ");
 
-    PropertyContainer attrs = JavaScriptObjects.getObject(elem,
-        JsoProperties.ELEM_PROPERTIES);
+    PropertyContainer attrs = JavaScriptObjects.getDomProperties(elem);
     for (Map.Entry<String, Object> entry : attrs.entrySet()) {
       // special treatment for "disabled" property, which should be a empty
       // string attribute if the DOM element is disabled
@@ -120,9 +113,7 @@ class JavaScriptObjectPatcher {
   }
 
   private static String styleToString(Style style) {
-    LinkedHashMap<String, String> styleProperties = JavaScriptObjects.getObject(
-        style, JsoProperties.STYLE_PROPERTIES);
-
+    LinkedHashMap<String, String> styleProperties = JavaScriptObjects.getStyleProperties(style);
     StringBuilder sb = new StringBuilder();
 
     for (Map.Entry<String, String> entry : styleProperties.entrySet()) {

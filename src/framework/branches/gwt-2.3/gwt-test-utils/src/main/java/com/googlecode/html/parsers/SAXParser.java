@@ -17,6 +17,7 @@
 package com.googlecode.html.parsers;
 
 import org.apache.xerces.parsers.AbstractSAXParser;
+
 import com.googlecode.html.HTMLConfiguration;
 
 /**

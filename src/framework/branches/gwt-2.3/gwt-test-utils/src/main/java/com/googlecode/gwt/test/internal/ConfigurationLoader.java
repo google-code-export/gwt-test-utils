@@ -1,17 +1,23 @@
 package com.googlecode.gwt.test.internal;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
 
 import javassist.CtClass;
+import javassist.bytecode.annotation.Annotation;
+import javassist.bytecode.annotation.ClassMemberValue;
+import javassist.bytecode.annotation.StringMemberValue;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,63 +26,43 @@ import com.googlecode.gwt.test.exceptions.GwtTestConfigurationException;
 import com.googlecode.gwt.test.exceptions.GwtTestPatchException;
 import com.googlecode.gwt.test.internal.ClassesScanner.ClassVisitor;
 import com.googlecode.gwt.test.patchers.PatchClass;
-import com.googlecode.gwt.test.utils.GwtReflectionUtils;
+import com.googlecode.gwt.test.utils.JavassistUtils;
 
-class ConfigurationLoader {
+/**
+ * Class in charge of parsing META-INF/gwt-test-utils.properties configuration
+ * files. <strong>For internal use only.</strong>
+ * 
+ * @author Bertrand Paquet
+ * @author Gael Lazzari
+ * 
+ */
+public final class ConfigurationLoader {
 
   private static final String CONFIG_FILENAME = "META-INF/gwt-test-utils.properties";
+  private static final Logger LOGGER = LoggerFactory.getLogger(ConfigurationLoader.class);
 
-  private static ConfigurationLoader INSTANCE;
-
-  private static final Logger logger = LoggerFactory.getLogger(ConfigurationLoader.class);
-
-  public static synchronized final ConfigurationLoader createInstance(
-      ClassLoader classLoader) {
-    if (INSTANCE != null) {
-      throw new GwtTestConfigurationException(
-          ConfigurationLoader.class.getSimpleName()
-              + " instance has already been initialized");
-    }
-
-    INSTANCE = new ConfigurationLoader(classLoader);
-
-    return INSTANCE;
-  }
-
-  private final ClassLoader classLoader;
-  private final ClassSubstituer classSubstituer;
   private final Set<String> delegates;
-  private final MethodRemover methodRemover;
+  private final List<String> gwtModules;
   private PatcherFactory patcherFactory;
-  private final Set<String> processedModuleFiles;
-  private final Set<String> removeMethods;
   private final Set<String> scanPackages;
-  private final Set<String> substituteClasses;
+  private final List<URL> srcDirectories;
 
-  private ConfigurationLoader(ClassLoader classLoader) {
-    this.classLoader = classLoader;
-    this.classSubstituer = new ClassSubstituer();
+  ConfigurationLoader() {
+    this.gwtModules = new ArrayList<String>();
     this.delegates = new HashSet<String>();
-    this.processedModuleFiles = new HashSet<String>();
     this.scanPackages = new HashSet<String>();
-    this.removeMethods = new HashSet<String>();
-    this.substituteClasses = new HashSet<String>();
-    this.methodRemover = new MethodRemover();
+    this.srcDirectories = new ArrayList<URL>();
 
     readFiles();
     visitPatchClasses();
-  }
-
-  public JavaClassModifier getClassSubstituer() {
-    return classSubstituer;
   }
 
   public Set<String> getDelegates() {
     return delegates;
   }
 
-  public JavaClassModifier getMethodRemover() {
-    return methodRemover;
+  public List<String> getGwtModules() {
+    return gwtModules;
   }
 
   public PatcherFactory getPatcherFactory() {
@@ -87,128 +73,110 @@ class ConfigurationLoader {
     return scanPackages;
   }
 
+  public URL[] getSrcUrls() {
+    return srcDirectories.toArray(new URL[srcDirectories.size()]);
+  }
+
   private void process(Properties p, URL url) {
     for (Entry<Object, Object> entry : p.entrySet()) {
       String key = ((String) entry.getKey()).trim();
       String value = ((String) entry.getValue()).trim();
-      if ("scan-package".equals(value)) {
+      if ("gwt-module".equals(value)) {
+        gwtModules.add(key);
+      } else if ("scan-package".equals(value)) {
         scanPackages.add(key);
       } else if ("delegate".equals(value)) {
         delegates.add(key);
-      } else if ("remove-method".equals(value)) {
-        processRemoveMethod(key, url);
-      } else if ("substitute-class".equals(value)) {
-        processSubstituteClass(key, url);
-      } else if ("module-file".equals(value)) {
-        processModuleFile(key, url);
       } else if ("src-directory".equals(value)) {
-        SrcDirectoriesHolder.SRC_DIRECTORIES.add(key);
+        processSrcDirectory(key);
       } else {
         throw new GwtTestConfigurationException("Error in '" + url.getPath()
             + "' : unknown value '" + value + "'");
       }
     }
-  }
 
-  private void processModuleFile(String string, URL url) {
-    if (!processedModuleFiles.add(string)) {
-      // already processed
-      return;
-    }
-
-    ModuleData.get().parseModule(string);
-  }
-
-  private void processRemoveMethod(String string, URL url) {
-    if (!removeMethods.add(string)) {
-      // already processed
-      return;
-    }
-
-    String[] array = string.split("\\s*,\\s*");
-    if (array.length != 3) {
+    if (gwtModules.size() == 0) {
       throw new GwtTestConfigurationException(
-          "Invalid 'remove-method' property format for value '" + string
-              + "' in file '" + url.getPath() + "'");
+          "No declared module. Did you forget to add your own META-INF/gwt-test-utils.properties file with a 'gwt-module' property in the test classpath?");
     }
-
-    String methodClass = array[0];
-    String methodName = array[1];
-    String methodSignature = array[2];
-
-    methodRemover.removeMethod(methodClass, methodName, methodSignature);
   }
 
-  private void processSubstituteClass(String string, URL url) {
-    if (!substituteClasses.add(string)) {
-      // already processed
-      return;
+  private void processSrcDirectory(String srcDir) {
+    SrcDirectoriesHolder.SRC_DIRECTORIES.add(srcDir);
+
+    StringBuilder sb = new StringBuilder();
+    sb.append(new File("").getAbsolutePath()).append("/").append(srcDir);
+    if (!srcDir.endsWith("/")) {
+      sb.append("/");
     }
 
-    String[] array = string.split("\\s*,\\s*");
-    if (array.length != 2) {
-      throw new GwtTestConfigurationException(
-          "Invalid 'substitute-class' property format for value '" + string
-              + "' in file '" + url.getPath() + "'");
+    File file = new File(sb.toString());
+
+    if (file.exists()) {
+
+      try {
+        srcDirectories.add(file.toURI().toURL());
+
+      } catch (Exception e) {
+        // skip : should never happen
+      }
     }
 
-    String originalClass = array[0];
-    String substitutionClass = array[1];
-    // add in second position, just after method-substituer
-    this.classSubstituer.registerSubstitution(originalClass, substitutionClass);
   }
 
   private void readFiles() {
     try {
-      Enumeration<URL> l = classLoader.getResources(CONFIG_FILENAME);
-      while (l.hasMoreElements()) {
-        URL url = l.nextElement();
-        logger.debug("Load config file " + url.toString());
+      Enumeration<URL> configFiles = Thread.currentThread().getContextClassLoader().getResources(
+          CONFIG_FILENAME);
+      while (configFiles.hasMoreElements()) {
+        URL url = configFiles.nextElement();
+        LOGGER.debug("Load config file " + url.toString());
         Properties p = new Properties();
         InputStream inputStream = url.openStream();
         p.load(inputStream);
         inputStream.close();
         process(p, url);
-        logger.debug("File loaded and processed " + url.toString());
+        LOGGER.debug("File loaded and processed " + url.toString());
       }
     } catch (IOException e) {
       throw new GwtTestConfigurationException("Error while reading '"
           + CONFIG_FILENAME + "' files", e);
     }
-
-    // check that at least one module file has been processed
-    if (processedModuleFiles.size() == 0) {
-      throw new GwtTestConfigurationException(
-          "Cannot find any 'module-file' setup in configuration file 'META-INF/gwt-test-utils.properties'");
-    }
   }
 
   private void visitPatchClasses() {
     final Map<String, Set<CtClass>> patchClassMap = new HashMap<String, Set<CtClass>>();
+
     ClassVisitor patchClassVisitor = new ClassVisitor() {
 
       public void visit(CtClass ctClass) {
-        PatchClass annotation = null;
+
         try {
           if (ctClass.hasAnnotation(PatchClass.class)) {
-            // load the Patch class in the main classloader
-            Class<?> patchClass = Class.forName(ctClass.getName(), false,
-                classLoader);
-            annotation = GwtReflectionUtils.getAnnotation(patchClass,
+
+            Annotation annotation = JavassistUtils.getAnnotation(ctClass,
                 PatchClass.class);
+
+            String classToPatchName = PatchClass.class.getName();
+
+            ClassMemberValue value = (ClassMemberValue) annotation.getMemberValue("value");
+
+            if (value != null) {
+              classToPatchName = value.getValue();
+            }
+
+            if (classToPatchName.equals(PatchClass.class.getName())) {
+              StringMemberValue target = (StringMemberValue) annotation.getMemberValue("target");
+              classToPatchName = (target != null) ? target.getValue() : "";
+            }
+
+            if (!"".equals(classToPatchName)) {
+              addPatchClass(classToPatchName, ctClass);
+            }
           }
         } catch (ClassNotFoundException e) {
           // should never happen
           throw new GwtTestPatchException(e);
-        }
-
-        if (annotation != null) {
-          String classToPatchName = annotation.value() != PatchClass.class
-              ? annotation.value().getName() : annotation.target().trim();
-
-          if (!"".equals(classToPatchName)) {
-            addPatchClass(classToPatchName, ctClass);
-          }
         }
       }
 
@@ -221,7 +189,7 @@ class ConfigurationLoader {
 
         patchClasses.add(patchClass);
 
-        logger.debug("Add patch for class '" + targetName + "' : '"
+        LOGGER.debug("Add patch for class '" + targetName + "' : '"
             + patchClass.getName() + "'");
       }
 

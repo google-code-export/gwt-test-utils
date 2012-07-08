@@ -27,7 +27,7 @@ class ImplPatcher {
 
   @PatchMethod
   static String getModuleName() {
-    return GwtConfig.get().getModuleName();
+    return GwtConfig.get().getModuleAlias();
   }
 
 }

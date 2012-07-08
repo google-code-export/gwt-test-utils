@@ -9,9 +9,12 @@ import org.easymock.EasyMock;
 import org.easymock.IAnswer;
 import org.junit.Before;
 
+import com.google.gwt.dev.shell.JsValueGlue;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.googlecode.gwt.test.exceptions.GwtTestException;
+import com.googlecode.gwt.test.exceptions.GwtTestPatchException;
 import com.googlecode.gwt.test.exceptions.ReflectionException;
+import com.googlecode.gwt.test.internal.GwtFactory;
 import com.googlecode.gwt.test.internal.utils.ArrayUtils;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils.MethodCallback;
@@ -27,10 +30,8 @@ import com.googlecode.gwt.test.utils.GwtReflectionUtils.MethodCallback;
  * will result in the injection of mock objects of the corresponding type.
  * 
  * Mock objects not declared using this annotation (e.g. objects instantiated by
- * calling directly the {@link org.easymock.EasyMock#createMock(Class)
- * EasyMock.createMock()} method) should be added to the test context using the
- * {@link GwtTestWithMocks#addMockedObject(Class<?>,Object) addMockedObject}
- * method.
+ * calling directly the {@link EasyMock#createMock(Class)} should be added to
+ * the test context using the addMockedObject protected method.
  * </p>
  * 
  * <p>
@@ -81,7 +82,7 @@ public abstract class GwtTestWithEasyMock extends GwtTestWithMocks {
   @Before
   public void beforeGwtTestWithEasyMock() {
     for (Class<?> clazz : mockedClasses) {
-      Object mock = EasyMock.createMock(clazz);
+      Object mock = createMock(clazz);
       addMockedObject(clazz, mock);
     }
     try {
@@ -195,6 +196,22 @@ public abstract class GwtTestWithEasyMock extends GwtTestWithMocks {
   protected void verify() {
     for (Object o : mockObjects.values()) {
       EasyMock.verify(o);
+    }
+  }
+
+  private Object createMock(Class<?> clazz) {
+
+    if (GwtFactory.get().getOverlayRewriter().isJsoIntf(clazz.getName())) {
+      try {
+        return EasyMock.createMock(Class.forName(JsValueGlue.JSO_IMPL_CLASS));
+      } catch (ClassNotFoundException e) {
+        // should never happen
+        throw new GwtTestPatchException(
+            "Error while creating a mock with EasyMock for " + clazz.getName(),
+            e);
+      }
+    } else {
+      return EasyMock.createMock(clazz);
     }
   }
 

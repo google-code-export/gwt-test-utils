@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -26,7 +27,6 @@ import com.googlecode.gwt.test.internal.GwtConfig;
 import com.googlecode.gwt.test.internal.utils.DoubleMap;
 import com.googlecode.gwt.test.internal.utils.GwtHtmlParser;
 import com.googlecode.gwt.test.internal.utils.JavaScriptObjects;
-import com.googlecode.gwt.test.internal.utils.JsoProperties;
 import com.googlecode.gwt.test.patchers.PatchClass;
 import com.googlecode.gwt.test.patchers.PatchMethod;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
@@ -45,7 +45,9 @@ class DocumentPatcher {
     public void afterTest() throws Throwable {
       // recursiveClearDom(document);
       document = null;
-      GwtReflectionUtils.setStaticField(Document.class, "doc", null);
+
+      Class<?> documentClass = Class.forName("com.google.gwt.dom.client.Document$");
+      GwtReflectionUtils.setStaticField(documentClass, "doc", null);
     }
 
     private void recursiveClearDom(Node node) {
@@ -106,10 +108,9 @@ class DocumentPatcher {
 
   @PatchMethod
   static Element getElementById(Node document, String elementId) {
-    NodeList<Node> childs = getChildNodeList(document);
+    List<Node> childs = JavaScriptObjects.getChildNodeInnerList(document);
 
-    for (int i = 0; i < childs.getLength(); i++) {
-      Node n = childs.getItem(i);
+    for (Node n : childs) {
       if (Node.ELEMENT_NODE == n.getNodeType()) {
         Element currentElement = n.cast();
         if (elementId.equals(currentElement.getId())) {
@@ -127,11 +128,10 @@ class DocumentPatcher {
 
   @PatchMethod
   static NodeList<Element> getElementsByTagName(Node node, String tagName) {
-    NodeList<Element> result = JavaScriptObjects.newNodeList();
-
+    List<Element> result = new ArrayList<Element>();
     inspectDomForTag(node, tagName, result);
 
-    return result;
+    return JavaScriptObjects.newNodeList(result);
   }
 
   @PatchMethod
@@ -143,7 +143,7 @@ class DocumentPatcher {
   static Document nativeGet() {
     if (DOCUMENT_HOLDER.document == null) {
       try {
-        DOCUMENT_HOLDER.document = JavaScriptObjects.newObject(Document.class);
+        DOCUMENT_HOLDER.document = JavaScriptObjects.newDocument();
         Element e = parseHTMLElement(DOCUMENT_HOLDER.document);
         DOCUMENT_HOLDER.document.appendChild(e);
         JavaScriptObjects.setProperty(DOCUMENT_HOLDER.document,
@@ -174,10 +174,6 @@ class DocumentPatcher {
     }
 
     return null;
-  }
-
-  private static NodeList<Node> getChildNodeList(Node node) {
-    return JavaScriptObjects.getObject(node, JsoProperties.NODE_LIST_FIELD);
   }
 
   private static String getHostPageHTML(String hostPagePath) {
@@ -231,18 +227,15 @@ class DocumentPatcher {
   }
 
   private static void inspectDomForTag(Node node, String tagName,
-      NodeList<Element> result) {
-    NodeList<Node> childs = getChildNodeList(node);
-    List<Node> list = JavaScriptObjects.getObject(result,
-        JsoProperties.NODE_LIST_INNER_LIST);
+      List<Element> result) {
+    List<Node> childs = JavaScriptObjects.getChildNodeInnerList(node);
 
-    for (int i = 0; i < childs.getLength(); i++) {
-      Node n = childs.getItem(i);
+    for (Node n : childs) {
       if (Node.ELEMENT_NODE == n.getNodeType()) {
         Element childElem = n.cast();
         if ("*".equals(tagName)
             || tagName.equalsIgnoreCase(childElem.getTagName())) {
-          list.add(childElem);
+          result.add(childElem);
         }
       }
       inspectDomForTag(n, tagName, result);
@@ -250,7 +243,7 @@ class DocumentPatcher {
   }
 
   private static Element parseHTMLElement(Document document) {
-    String moduleName = GwtConfig.get().getModuleName();
+    String moduleName = GwtConfig.get().getModuleAlias();
     String hostPagePath = GwtConfig.get().getModuleRunner().getHostPagePath();
 
     if (hostPagePath == null) {
