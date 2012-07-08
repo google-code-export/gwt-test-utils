@@ -9,8 +9,8 @@ import org.junit.Test;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.googlecode.gwt.test.GwtTestWithMockito;
 
+@GwtModule("com.googlecode.gwt.test.GwtTestUtils")
 public class GwtRpcWithMockitoTest extends GwtTestWithMockito {
 
   static class MyGwtClass {
@@ -36,11 +36,6 @@ public class GwtRpcWithMockitoTest extends GwtTestWithMockito {
 
   @org.mockito.Mock
   private MyRemoteServiceAsync mockedService;
-
-  @Override
-  public String getModuleName() {
-    return "com.googlecode.gwt.test.GwtTestUtils";
-  }
 
   @SuppressWarnings("unchecked")
   @Test

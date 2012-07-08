@@ -7,9 +7,8 @@ import org.junit.Test;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.googlecode.gwt.test.GwtTestWithEasyMock;
-import com.googlecode.gwt.test.Mock;
 
+@GwtModule("com.googlecode.gwt.test.GwtTestUtils")
 public class GwtRpcWithEasyMockTest extends GwtTestWithEasyMock {
 
   static class MyGwtClass {
@@ -35,11 +34,6 @@ public class GwtRpcWithEasyMockTest extends GwtTestWithEasyMock {
 
   @Mock
   private MyRemoteServiceAsync mockedService;
-
-  @Override
-  public String getModuleName() {
-    return "com.googlecode.gwt.test.GwtTestUtils";
-  }
 
   @SuppressWarnings("unchecked")
   @Test
