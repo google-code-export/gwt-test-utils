@@ -14,7 +14,7 @@ More important, it would introduce some overhead at the loading of your custom c
 
 But today, we realized avoiding overlay types support is not possible anymore : a lot of coming features, such as [https://developers.google.com/web-toolkit/articles/elemental Elemental] (GWT 2.5) or [http://dev.sencha.com/deploy/gxt-3.0.0/javadoc/gxt/com/sencha/gxt/core/client/dom/XElement.html XElement] (GXT 3.0) directly relies on overlays and we can't use your existing hugly hacks to make them work.
 
-Before (incredible) test performances, what is the most important for us is you to continue to rely on gwt-test-utils to write your UI tests and not to be stuck with an old version of GWT / GXT.
+Before (amazing) test performances, what is the most important for us is you to continue to rely on gwt-test-utils to write your UI tests and not to be stuck with an old version of GWT / GXT.
 Don't be afraid, *gwt-test-utils still remains about 10 times faster than {{{GWTTestCase}}} !* It still doesn't need to run the entire GWT stack.
 
 = Migration =
@@ -43,3 +43,8 @@ to :
 {{{
       com.googlecode.gwt.test.SampleModule = gwt-module
  }}}
+
+= Future =
+
+By using {{{gwt-dev}}} internal features to load modules data (see [http://code.google.com/p/google-web-toolkit/source/browse/trunk/dev/core/src/com/google/gwt/dev/cfg/ModuleDef.java ModuleDef] and [http://code.google.com/p/google-web-toolkit/source/browse/trunk/dev/core/src/com/google/gwt/dev/javac/CompilationState.java CompilationState]), we've opened the way to support some other features _gwt-test-utils_ was unable to handle, such as code Generators, on which a lot of GWT APIs relies.
+Some of those are already supported ({{{UiBinder}}}, {{{ClientBundle}}}), others not ({{{Editors}}}). In future releases, It would be great if _gwt-test-utils_ could transparently create, compile and run the Java code from every Generators !
