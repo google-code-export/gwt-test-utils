@@ -6,14 +6,15 @@ As many current users won't care, it is a major improvement, which opens a lot o
 
 = Why now ? =
 
-Until today, there were (very) hugly hacks in _gwt-test-utils_ to avoid {{{ClassCastException}}} when some GWT's code does some JavaScriptObject upcasting. And when someone asked how to test some code which relies directly on overlay types feature, we had to tell him not to use gwt-test-utils for that... (see [http://code.google.com/p/gwt-test-utils/issues/detail?id=97 here] for example).
+Until today, there were (very) hugly hacks in _gwt-test-utils_ to avoid {{{ClassCastException}}} when some GWT's code does some JavaScriptObject upcasting. And when someone asked how to test some code which relies directly on overlay types feature, we had to tell him to use {{{GWTTestCase}}} for that... (see [http://code.google.com/p/gwt-test-utils/issues/detail?id=97 here] for example).
 
-We were aware of the fact that supporting overlays would include some changes in gwt-test-utils public API and would introduce some overhead at the loading of your custom classloader, since overlay types emulation in the JVM is not possible without an iteration through every class in the GWT frontend and the user's module, searching for {{{JavaScriptObject}}} subtypes and {{{SingleJsoImpl}}} annotated classes.
-For us, it was not admissible to wait 4-5 secondes to launch your GwtTests...
+We were aware of the fact that supporting overlays would include some changes in gwt-test-utils public API.
+More important, it would introduce some overhead at the loading of your custom classloader, since overlay types emulation in the JVM is not possible without an iteration through every class in the GWT frontend and and in your module(s), searching for {{{JavaScriptObject}}} subtypes and {{{SingleJsoImpl}}} annotated classes.
+*For us, it was not admissible to wait 4-5 secondes to launch your GwtTests.*
 
 But today, we realized avoiding overlay types support is not possible anymore : a lot of coming features, such as [https://developers.google.com/web-toolkit/articles/elemental Elemental] (GWT 2.5) or [http://dev.sencha.com/deploy/gxt-3.0.0/javadoc/gxt/com/sencha/gxt/core/client/dom/XElement.html XElement] (GXT 3.0) directly relies on overlays and we can't use your existing hugly hacks to make them work.
 
-Before (incredible) test performances, what is the most important for us is you continuing to use gwt-test-utils and not be stuck with an old version of GWT.
+Before (incredible) test performances, what is the most important for us is you to continue to rely on gwt-test-utils to write your UI tests and not to be stuck with an old version of GWT / GXT.
 Don't be afraid, *gwt-test-utils still remains about 10 times faster than {{{GWTTestCase}}} !* We still don't need to run the entire GWT stack for your tests.
 
 = Migration =
