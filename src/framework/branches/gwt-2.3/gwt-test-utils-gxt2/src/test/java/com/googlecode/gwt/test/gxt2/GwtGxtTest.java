@@ -1,12 +1,9 @@
 package com.googlecode.gwt.test.gxt2;
 
+import com.googlecode.gwt.test.GwtModule;
 
+@GwtModule("com.extjs.gxt.samples.desktop.DesktopApp")
 public abstract class GwtGxtTest extends GxtTest {
-
-  @Override
-  public String getModuleName() {
-    return "com.extjs.gxt.samples.desktop.DesktopApp";
-  }
 
   @Override
   protected String getHostPagePath(String moduleFullQualifiedName) {

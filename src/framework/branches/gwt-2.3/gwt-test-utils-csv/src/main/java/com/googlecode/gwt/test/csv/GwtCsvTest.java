@@ -157,7 +157,7 @@ public abstract class GwtCsvTest extends GwtTest {
   /**
    * 
    * @param value
-   * @param objectLocalization
+   * @param params
    */
   @CsvMethod
   public void assertExact(String value, String... params) {
@@ -206,10 +206,10 @@ public abstract class GwtCsvTest extends GwtTest {
   }
 
   @CsvMethod
-  public void assertInstanceOf(String className, String objectLocalisation) {
+  public void assertInstanceOf(String className, String... params) {
     try {
       Class<?> clazz = GwtReflectionUtils.getClass(className);
-      Object o = getObject(Object.class, objectLocalisation);
+      Object o = getObject(Object.class, params);
       assertThat(o).as(
           csvRunner.getAssertionErrorMessagePrefix()
               + "Target object is not an instance of [" + className
@@ -253,7 +253,7 @@ public abstract class GwtCsvTest extends GwtTest {
   /**
    * 
    * @param value
-   * @param objectLocalization
+   * @param params
    */
   @CsvMethod
   public void assertNumberExact(String value, String... params) {

@@ -16,9 +16,9 @@ public class GwtSpring3CsvJUnit4ClassRunner extends SpringJUnit4ClassRunner {
 
   private DirectoryTestReader reader;
 
-  public GwtSpring3CsvJUnit4ClassRunner(Class<?> clazz)
+  public GwtSpring3CsvJUnit4ClassRunner(Class<?> klass)
       throws InitializationError, ClassNotFoundException {
-    super(clazz);
+    super(klass);
   }
 
   @Override

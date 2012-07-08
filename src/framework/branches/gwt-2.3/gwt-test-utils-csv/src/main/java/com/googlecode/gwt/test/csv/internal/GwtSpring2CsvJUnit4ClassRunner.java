@@ -106,8 +106,8 @@ public class GwtSpring2CsvJUnit4ClassRunner extends SpringJUnit4ClassRunner {
 
   private DirectoryTestReader reader;
 
-  public GwtSpring2CsvJUnit4ClassRunner(Class<?> clazz) throws Exception {
-    super(clazz);
+  public GwtSpring2CsvJUnit4ClassRunner(Class<?> klass) throws Exception {
+    super(klass);
   }
 
   @Override
