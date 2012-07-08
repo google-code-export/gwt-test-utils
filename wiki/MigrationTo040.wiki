@@ -23,7 +23,7 @@ Since we need more informations at the very beginning of a test class instanciat
 
   * Update your _gwt-test-utils_ dependency (it's a good way to start !)
 
-  * The {{{GwtTest.getModuleName()}}} abstract method does not exist anymore. Instead, you have to your {{{GwtTest}}} sublclasses like that :
+  * The {{{GwtTest.getModuleName()}}} abstract method does not exist anymore. Instead, you have to annotate your {{{GwtTest}}} sublclasses like that :
 
 {{{
       @GwtModule("com.googlecode.gwt.test.SampleModule")
