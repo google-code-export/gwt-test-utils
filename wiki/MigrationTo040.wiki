@@ -30,5 +30,5 @@ Since we need more informations at the very beginning of a test class instanciat
       public class SampleTest extends GwtTest { ... }
 }}}
 
-_{{{GwtModule}}} is an inherited annotation, which means you can use it on an parent test class if you have one._
+_      Note : {{{GwtModule}}} is an inherited annotation, which means you can use it on an parent test class if you have one._
  
