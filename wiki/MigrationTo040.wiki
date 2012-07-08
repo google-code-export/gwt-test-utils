@@ -1,0 +1,22 @@
+#summary This page explains how to migrate to versions 0.40, 0.33.5, 0.28.12, 0.25.9 or 0.22.9
+
+Version 0.40 (and 0.33.5, 0.28.12, 0.25.9, 0.22.9 branches) of _gwt-test-utils_ introduces the support for [http://code.google.com/p/google-web-toolkit/wiki/OverlayTypes GWT overlay types].
+
+As many gwt-test-utils current users won't care, it is a major improvement, which opens a lot of possibilities to support GWT DOM related features in a better way.
+
+= Why now ? =
+
+Until today, there were (very) hugly hacks in gwt-test-utils to avoid ClassCastException when some GWT's code does some JavaScriptObject upcasting. And when someone asked how to test some code which relies directly on overlay types feature, we had to tell him not to use gwt-test-utils for that... (see [http://code.google.com/p/gwt-test-utils/issues/detail?id=97 here] for example).
+
+We were aware of the fact that supporting overlays would include some changes in gwt-test-utils public API and would introduce some overhead at the loading of your custom classloader, since overlay types emulation in the JVM is not possible without an iteration through every class in the GWT frontend and the user's module, searching for JavaScriptObject subtypes and SingleJsoImpl annotated classes.
+For us, it was not admissible to wait 4-5 secondes to launch your GwtTests...
+
+But today, we realized avoiding overlay types support is not possible anymore : a lot of coming features, such as Elemental (GWT 2.5) or XElement (GXT 3.0) directly relies on overlays and we can't use your existing hugly hacks to make them work.
+
+Before (incredible) test performances, what is the most important for us is you continuing to use gwt-test-utils and not be stuck with an old version of GWT.
+Don't be afraid, *gwt-test-utils still remains about 10 times faster than {{{GWTTestCase}}} !* We still don't need to run the entire GWT stack for your tests.
+
+= Migration =
+
+Since we need more informations at the very beginning of a test class instanciation, we had to make some breaking changes in the way _gwt-test-utils_ is setup.
+ 
