@@ -19,5 +19,15 @@ Don't be afraid, *gwt-test-utils still remains about 10 times faster than {{{GWT
 
 = Migration =
 
-Since we need more informations at the very beginning of a test class instanciation, we had to make some breaking changes in the way _gwt-test-utils_ is setup.
+Since we need more informations at the very beginning of a test class instanciation, we had to make some breaking changes in the way _gwt-test-utils_ is setup. Following thoses steps, migration would take you less than five minutes :
+
+  * Update your _gwt-test-utils_ dependency (it's a good way to start !)
+
+  * The {{{GwtTest.getModuleName()}}} abstract method does not exist anymore. Instead, you have to your {{{GwtTest}}} sublclasses like that :
+
+{{{
+      @GwtModule("com.googlecode.gwt.test.SampleModule")
+      public class SampleTest extends GwtTest { ... }
+}}}
+
  
