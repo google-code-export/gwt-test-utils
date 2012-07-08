@@ -30,5 +30,16 @@ Since we need more informations at the very beginning of a test class instanciat
       public class SampleTest extends GwtTest { ... }
 }}}
 
-_      Note : {{{GwtModule}}} is an inherited annotation, which means you can use it on an parent test class if you have one._
- 
+_Note : {{{GwtModule}}} is an inherited annotation, which means you can use it on an parent test class if you have one._
+
+ * In your {{{META-INF/gwt-test-utils.properties}}} configuration file, the value 'module-file' value is not supported anymore. You have to change lines such as :
+
+{{{ 
+      com/googlecode/gwt/test/SampleModule.gwt.xml = module-file 
+}}}
+
+to :
+
+{{{
+      com.googlecode.gwt.test.SampleModule = gwt-module
+ }}}
