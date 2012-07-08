@@ -18,6 +18,13 @@ import com.googlecode.gwt.test.utils.events.Browser;
 import com.googlecode.gwt.test.utils.events.Browser.BrowserErrorHandler;
 
 /**
+ * <p>
+ * Base interface for gwt-test-utils tests. It provides every necessary
+ * information to the framework internals to emulate GWT without any browser,
+ * regardless of which unit test framework is used. <strong>Every implementation
+ * must be annotated with {@link GwtModule} to provide the fully qualified name
+ * of GWT module under test.</strong>
+ * </p>
  * 
  * @author Gael Lazzari
  * 
@@ -40,7 +47,6 @@ public interface GwtModuleRunner {
    *          entries should be added
    * @param entries The Dictionary's entries to add
    * 
-   * @see {@link Dictionary#get(String)}
    */
   void addDictionaryEntries(String dictionaryName, Map<String, String> entries);
 
@@ -59,6 +65,24 @@ public interface GwtModuleRunner {
    * @param factory The UiBinder Widget factory candidate.
    */
   void addUiObjectTagFactory(UiObjectTagFactory<? extends IsWidget> factory);
+
+  /**
+   * <p>
+   * Specifies the module to run.
+   * 
+   * <p>
+   * If the return module name is not present in the gwt-test-utils
+   * configuration file (e.g. "META-INF/gwt-test-utils.properties"), an
+   * exception will be thrown.
+   * </p>
+   * 
+   * @return the fully qualified name of a module. <strong>It cannot be null or
+   *         empty</strong>.
+   * 
+   * @deprecated Use the {@link GwtModule} annotation on your test class instead
+   * 
+   @Deprecated String getModuleName();
+   */
 
   /**
    * Specifies if The {@link Browser} helper methods can target not attached
@@ -129,23 +153,6 @@ public interface GwtModuleRunner {
    * @return The callback to use to handle GWT log method calls.
    */
   GwtLogHandler getLogHandler();
-
-  /**
-   * <p>
-   * Specifies the module to run.
-   * 
-   * <p>
-   * If the return module name is not present in the gwt-test-utils
-   * configuration file (e.g. "META-INF/gwt-test-utils.properties"), an
-   * exception will be thrown.
-   * </p>
-   * 
-   * @return the fully qualified name of a module. <strong>It cannot be null or
-   *         empty</strong>.
-   * 
-   * 
-   */
-  String getModuleName();
 
   /**
    * Specifies the servlet mocks provider to use whenever a method from

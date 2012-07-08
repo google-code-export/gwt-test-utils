@@ -5,7 +5,6 @@ import java.util.List;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
 import com.googlecode.gwt.test.internal.utils.JavaScriptObjects;
-import com.googlecode.gwt.test.internal.utils.JsoProperties;
 import com.googlecode.gwt.test.patchers.PatchClass;
 import com.googlecode.gwt.test.patchers.PatchMethod;
 
@@ -14,19 +13,17 @@ class NodeListPatcher {
 
   @PatchMethod
   static <T extends Node> T getItem(NodeList<T> nodeList, int index) {
-    if (nodeList.getLength() <= index) {
+    List<T> innerList = JavaScriptObjects.getChildNodeInnerList(nodeList);
+    if (innerList.size() <= index) {
       return null;
     } else {
-      List<T> innerList = JavaScriptObjects.getObject(nodeList,
-          JsoProperties.NODE_LIST_INNER_LIST);
       return innerList.get(index);
     }
   }
 
   @PatchMethod
   static <T extends Node> int getLength(NodeList<T> nodeList) {
-    List<T> innerList = JavaScriptObjects.getObject(nodeList,
-        JsoProperties.NODE_LIST_INNER_LIST);
+    List<T> innerList = JavaScriptObjects.getChildNodeInnerList(nodeList);
     return innerList.size();
   }
 

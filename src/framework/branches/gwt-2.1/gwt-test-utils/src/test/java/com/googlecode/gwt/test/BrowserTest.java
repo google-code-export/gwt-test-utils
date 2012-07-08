@@ -1,10 +1,11 @@
 package com.googlecode.gwt.test;
 
+import static org.fest.assertions.Assertions.assertThat;
+import static org.fest.assertions.Fail.fail;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +40,8 @@ import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.event.dom.client.MouseWheelEvent;
 import com.google.gwt.event.dom.client.MouseWheelHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Anchor;
@@ -58,7 +61,6 @@ import com.google.gwt.user.client.ui.StackPanel;
 import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.googlecode.gwt.test.utils.events.Browser;
-import com.googlecode.gwt.test.utils.events.Browser.BrowserErrorHandler;
 import com.googlecode.gwt.test.utils.events.EventBuilder;
 
 public class BrowserTest extends GwtTestTest {
@@ -72,6 +74,70 @@ public class BrowserTest extends GwtTestTest {
   private FocusPanel panel;
   private boolean panelTested;
   private boolean tested;
+
+  @Test
+  public void addText_delete_SelectedText() {
+    // Arrange
+    TextBox textBox = new TextBox();
+    // must be attached to use "addText"
+    RootPanel.get().add(textBox);
+    textBox.setText("toto titi");
+    // select "titi"
+    textBox.setSelectionRange(5, 4);
+    // Pre-Assert
+    assertThat("titi").isEqualTo(textBox.getSelectedText());
+
+    // Act
+    Browser.addText(textBox, "tutu");
+
+    // Assert
+    assertThat(textBox.getText()).isEqualTo("toto tutu");
+    assertThat(textBox.getCursorPos()).isEqualTo(9);
+  }
+
+  @Test
+  public void addText_DoesNot_Fire_ValueChangeEvent() {
+    // Arrange
+    TextBox textBox = new TextBox();
+    // must be attached to use "addText"
+    RootPanel.get().add(textBox);
+
+    textBox.addValueChangeHandler(new ValueChangeHandler<String>() {
+
+      public void onValueChange(ValueChangeEvent<String> event) {
+        fail("ValueChangeEvent should not be fired with Browser.addText(..)");
+      }
+    });
+
+    // Act
+    Browser.addText(textBox, "toto");
+
+    // Assert
+    assertEquals("toto", textBox.getText());
+  }
+
+  @Test
+  public void addText_insertAtCursorPos() {
+    // Arrange
+    TextBox textBox = new TextBox();
+    // must be attached to use "addText"
+    RootPanel.get().add(textBox);
+
+    textBox.setText("toto");
+    // Pre-Assert
+    assertThat(textBox.getCursorPos()).isEqualTo(4);
+
+    // change the position
+    textBox.setCursorPos(2);
+    assertThat(textBox.getCursorPos()).isEqualTo(2);
+
+    // Act
+    Browser.addText(textBox, "titi");
+
+    // Assert
+    assertThat(textBox.getText()).isEqualTo("totitito");
+    assertThat(textBox.getCursorPos()).isEqualTo(6);
+  }
 
   @Before
   public void beforeBrowserTest() {
@@ -518,7 +584,7 @@ public class BrowserTest extends GwtTestTest {
     assertTextFilledCorrectly(textToFill, keyUpChars);
     assertTrue(onBlurTriggered);
     assertTrue(onChangeTriggered);
-    assertEquals(textToFill.length() - 1, tb.getCursorPos());
+    assertEquals(textToFill.length(), tb.getCursorPos());
   }
 
   @Test
@@ -1147,7 +1213,7 @@ public class BrowserTest extends GwtTestTest {
     assertFalse(onChangeTriggered);
   }
 
-  @Test
+  @Test()
   public void submit() {
     // Arrange
     final StringBuilder sb = new StringBuilder();
@@ -1164,12 +1230,7 @@ public class BrowserTest extends GwtTestTest {
         sb.append(" complete : ").append(event.getResults());
       }
     });
-    setBrowserErrorHandler(new BrowserErrorHandler() {
 
-      public void onError(String errorMessage) {
-        sb.append("ERROR : not attached");
-      }
-    });
     // Attach to the DOM
     RootPanel.get().add(form);
 
@@ -1180,7 +1241,7 @@ public class BrowserTest extends GwtTestTest {
     assertEquals("onSubmit complete : mock result", sb.toString());
   }
 
-  @Test
+  @Test(expected = AssertionError.class)
   public void submitThrowsErrorIfNotAttached() {
     // Arrange
     final StringBuilder sb = new StringBuilder();
@@ -1197,18 +1258,9 @@ public class BrowserTest extends GwtTestTest {
         sb.append(" complete : ").append(event.getResults());
       }
     });
-    setBrowserErrorHandler(new BrowserErrorHandler() {
 
-      public void onError(String errorMessage) {
-        sb.append("ERROR : not attached");
-      }
-    });
-
-    // Arrange
+    // Act
     Browser.submit(form, "mock result");
-
-    // Assert
-    assertEquals("ERROR : not attached", sb.toString());
   }
 
   private void assertTextFilledCorrectly(String filledText,

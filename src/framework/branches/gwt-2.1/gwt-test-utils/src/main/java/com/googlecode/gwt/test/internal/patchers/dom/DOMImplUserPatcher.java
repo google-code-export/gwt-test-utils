@@ -13,6 +13,8 @@ import com.googlecode.gwt.test.patchers.PatchMethod;
 @PatchClass(DOMImpl.class)
 class DOMImplUserPatcher {
 
+  private static final String ELEM_EVENTLISTENER = "ELEM_EVENTLISTENER";
+
   @PatchMethod
   static void eventCancelBubble(DOMImpl domImpl, Event evt, boolean cancel) {
     JavaScriptObjects.setProperty(evt, JsoProperties.EVENT_IS_STOPPED, cancel);
@@ -54,7 +56,7 @@ class DOMImplUserPatcher {
 
   @PatchMethod
   static EventListener getEventListener(DOMImpl domImpl, Element elem) {
-    return JavaScriptObjects.getObject(elem, JsoProperties.ELEM_EVENTLISTENER);
+    return JavaScriptObjects.getObject(elem, ELEM_EVENTLISTENER);
   }
 
   @PatchMethod
@@ -85,8 +87,7 @@ class DOMImplUserPatcher {
   @PatchMethod
   static void setEventListener(DOMImpl domImpl, Element elem,
       EventListener listener) {
-    JavaScriptObjects.setProperty(elem, JsoProperties.ELEM_EVENTLISTENER,
-        listener);
+    JavaScriptObjects.setProperty(elem, ELEM_EVENTLISTENER, listener);
   }
 
   @PatchMethod

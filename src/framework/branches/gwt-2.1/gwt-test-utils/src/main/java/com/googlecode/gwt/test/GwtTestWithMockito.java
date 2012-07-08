@@ -22,10 +22,9 @@ import com.googlecode.gwt.test.utils.GwtReflectionUtils;
  * 
  * Test classes can declare mock objects using fields annotated with Mockito's
  * {@link org.mockito.Mock Mock} annotation. Mock objects not declared using
- * this annotation (e.g. objects instantiated by the {@link
- * org.mockito.Mockito#mock(Class<?>) Mockito.mock()} method) should be added to
- * the test context using the {@link
- * GwtTestWithMocks#addMockedObject(Class<?>,Object) addMockedObject} method.
+ * this annotation (e.g. objects instantiated by the {@link Mockito#mock(Class)}
+ * method) should be added to the test context using the addMockedObject
+ * protected method.
  * 
  * @author Eric Therond
  */

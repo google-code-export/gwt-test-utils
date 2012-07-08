@@ -1,35 +1,42 @@
 package com.googlecode.gwt.test.internal.handlers;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.GWTBridge;
 import com.googlecode.gwt.test.GwtCreateHandler;
+import com.googlecode.gwt.test.GwtLogHandler;
+import com.googlecode.gwt.test.Mock;
+import com.googlecode.gwt.test.exceptions.GwtTestDeferredBindingException;
+import com.googlecode.gwt.test.exceptions.GwtTestException;
+import com.googlecode.gwt.test.exceptions.GwtTestPatchException;
 import com.googlecode.gwt.test.internal.AfterTestCallback;
 import com.googlecode.gwt.test.internal.AfterTestCallbackManager;
+import com.googlecode.gwt.test.internal.GwtConfig;
 import com.googlecode.gwt.test.internal.i18n.LocalizableResourceCreateHandler;
 import com.googlecode.gwt.test.internal.resources.ClientBundleCreateHandler;
 import com.googlecode.gwt.test.internal.resources.ImageBundleCreateHandler;
 import com.googlecode.gwt.test.uibinder.UiBinderCreateHandler;
 
 /**
- * Manages the ordered list of GwtCreateHandler to call to try to emulate
- * {@link GWT#create(Class)} instructions. <strong>For internal use
- * only.</strong>
+ * gwt-test-utils {@link GWTBridge} implementation, which manages an ordered
+ * list of GwtCreateHandler where {@link GWT#create(Class)} instructions are
+ * delegated. <strong>For internal use only.</strong>
  * 
  * @author Gael Lazzari
  * 
  */
-public class GwtCreateHandlerManager implements AfterTestCallback {
+public class GwtTestGWTBridge extends GWTBridge implements AfterTestCallback {
 
-  private static final GwtCreateHandlerManager INSTANCE = new GwtCreateHandlerManager();
+  private static final GwtTestGWTBridge INSTANCE = new GwtTestGWTBridge();
 
-  public static GwtCreateHandlerManager get() {
+  public static GwtTestGWTBridge get() {
     return INSTANCE;
   }
 
   private final GwtCreateHandler abstractClassCreateHandler;
+
   private final List<GwtCreateHandler> addedHandlers;
   private final GwtCreateHandler cellBasedWidgetImplCreateHandler;
   private final GwtCreateHandler clientBundleCreateHander;
@@ -48,7 +55,7 @@ public class GwtCreateHandlerManager implements AfterTestCallback {
   private final GwtCreateHandler uiBinderCreateHandler;
   private final WebXmlRemoteServiceCreateHandler webXmlRemoteServiceCreateHandler;
 
-  private GwtCreateHandlerManager() {
+  private GwtTestGWTBridge() {
     // TODO : all createHandler should be singleton ?
     abstractClassCreateHandler = new AbstractClassCreateHandler();
     addedHandlers = new ArrayList<GwtCreateHandler>();
@@ -81,7 +88,60 @@ public class GwtCreateHandlerManager implements AfterTestCallback {
     mockCreateHandler = null;
   }
 
-  public List<GwtCreateHandler> getGwtCreateHandlers() {
+  @SuppressWarnings("unchecked")
+  @Override
+  public <T> T create(Class<?> classLiteral) {
+    for (GwtCreateHandler gwtCreateHandler : getGwtCreateHandlers()) {
+      try {
+        Object o = gwtCreateHandler.create(classLiteral);
+        if (o != null) {
+          return (T) o;
+        }
+      } catch (Exception e) {
+        if (GwtTestException.class.isInstance(e)) {
+          throw (GwtTestException) e;
+        } else {
+          throw new GwtTestPatchException("Error while creating instance of '"
+              + classLiteral.getName() + "' through '"
+              + gwtCreateHandler.getClass().getName() + "' instance", e);
+        }
+      }
+    }
+
+    throw new GwtTestDeferredBindingException(
+        "No declared "
+            + GwtCreateHandler.class.getSimpleName()
+            + " has been able to create an instance of '"
+            + classLiteral.getName()
+            + "'. You should add our own with "
+            + GwtConfig.get().getModuleRunner().getClass().getSimpleName()
+            + ".addGwtCreateHandler(..) method or declared your tested object with @"
+            + Mock.class.getSimpleName());
+  }
+
+  @Override
+  public String getVersion() {
+    return "GWT by gwt-test-utils";
+  }
+
+  @Override
+  public boolean isClient() {
+    return true;
+  }
+
+  @Override
+  public void log(String message, Throwable e) {
+    GwtLogHandler logHandler = GwtConfig.get().getModuleRunner().getLogHandler();
+    if (logHandler != null) {
+      logHandler.log(message, e);
+    }
+  }
+
+  public void setMockCreateHandler(GwtCreateHandler mockCreateHandler) {
+    this.mockCreateHandler = mockCreateHandler;
+  }
+
+  private List<GwtCreateHandler> getGwtCreateHandlers() {
     List<GwtCreateHandler> list = new ArrayList<GwtCreateHandler>();
 
     // declared @Mock objects creation
@@ -112,11 +172,7 @@ public class GwtCreateHandlerManager implements AfterTestCallback {
     list.add(simpleBeanEditorDriverCreateHandler);
     list.add(placeHistoryMapperCreateHandler);
 
-    return Collections.unmodifiableList(list);
-  }
-
-  public void setMockCreateHandler(GwtCreateHandler mockCreateHandler) {
-    this.mockCreateHandler = mockCreateHandler;
+    return list;
   }
 
 }

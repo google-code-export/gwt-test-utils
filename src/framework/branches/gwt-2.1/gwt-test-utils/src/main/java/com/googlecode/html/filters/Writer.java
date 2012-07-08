@@ -32,6 +32,7 @@ import org.apache.xerces.xni.XNIException;
 import org.apache.xerces.xni.parser.XMLDocumentFilter;
 import org.apache.xerces.xni.parser.XMLInputSource;
 import org.apache.xerces.xni.parser.XMLParserConfiguration;
+
 import com.googlecode.html.HTMLConfiguration;
 import com.googlecode.html.HTMLElements;
 import com.googlecode.html.HTMLEntities;

@@ -1,14 +1,13 @@
 package com.googlecode.gwt.test.internal.patchers.dom;
 
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Float;
 import com.google.gwt.dom.client.Style.Unit;
 import com.googlecode.gwt.test.internal.utils.GwtStringUtils;
-import com.googlecode.gwt.test.internal.utils.StyleUtils;
+import com.googlecode.gwt.test.internal.utils.JavaScriptObjects;
 import com.googlecode.gwt.test.patchers.PatchClass;
 import com.googlecode.gwt.test.patchers.PatchMethod;
 
@@ -32,15 +31,16 @@ class StylePatcher {
 
   @PatchMethod
   static void clearBorderWidth(Style style) {
-    StyleUtils.getProperties(style).remove(STYLE_BORDER_BOTTOM_WIDTH);
-    StyleUtils.getProperties(style).remove(STYLE_BORDER_LEFT_WIDTH);
-    StyleUtils.getProperties(style).remove(STYLE_BORDER_RIGHT_WIDTH);
-    StyleUtils.getProperties(style).remove(STYLE_BORDER_TOP_WIDTH);
+    Map<String, String> properties = JavaScriptObjects.getStyleProperties(style);
+    properties.remove(STYLE_BORDER_BOTTOM_WIDTH);
+    properties.remove(STYLE_BORDER_LEFT_WIDTH);
+    properties.remove(STYLE_BORDER_RIGHT_WIDTH);
+    properties.remove(STYLE_BORDER_TOP_WIDTH);
   }
 
   @PatchMethod
   static void clearFloat(Style style) {
-    StyleUtils.getProperties(style).remove("float");
+    JavaScriptObjects.getStyleProperties(style).remove("float");
   }
 
   @PatchMethod
@@ -50,7 +50,7 @@ class StylePatcher {
 
   @PatchMethod
   static String getPropertyImpl(Style style, String propertyName) {
-    String value = StyleUtils.getProperties(style).get(propertyName);
+    String value = JavaScriptObjects.getStyleProperties(style).get(propertyName);
 
     if (value == null) {
       String defaultValue = DEFAULT_STYLE_VALUES.get(propertyName);
@@ -82,7 +82,7 @@ class StylePatcher {
     // treat case when propertyValue = "250.0px" => "250px" instead
     propertyValue = GwtStringUtils.treatDoubleValue(propertyValue);
 
-    LinkedHashMap<String, String> styleProperties = StyleUtils.getProperties(style);
+    Map<String, String> styleProperties = JavaScriptObjects.getStyleProperties(style);
 
     // ensure the style will be added at the end of the LinkedHashMap
     styleProperties.remove(propertyName);
