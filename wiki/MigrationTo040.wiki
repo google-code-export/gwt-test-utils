@@ -44,6 +44,8 @@ to :
       com.googlecode.gwt.test.SampleModule = gwt-module
  }}}
 
+ * If you had some '{{{substitute-class}}}' or '{{{{remove-method}}}' entries in your {{{META-INF/gwt-test-utils.properties}}}, you can now remove them (it was the ugly hacks I was speaking about).
+
 = Future =
 
 By using {{{gwt-dev}}} internal features to load modules data (see [http://code.google.com/p/google-web-toolkit/source/browse/trunk/dev/core/src/com/google/gwt/dev/cfg/ModuleDef.java ModuleDef] and [http://code.google.com/p/google-web-toolkit/source/browse/trunk/dev/core/src/com/google/gwt/dev/javac/CompilationState.java CompilationState]), we've opened the way to support some other features _gwt-test-utils_ was unable to handle, such as code Generators, on which a lot of GWT APIs relies.
