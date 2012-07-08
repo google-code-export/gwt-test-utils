@@ -19,7 +19,7 @@ Don't be afraid, *gwt-test-utils still remains about 10 times faster than {{{GWT
 
 = Migration =
 
-Since we need more informations at the very beginning of a test class instanciation, we had to make some breaking changes in the way _gwt-test-utils_ is setup. Following thoses steps, migration would take you less than five minutes :
+Since we need more informations at the very beginning of a test class instanciation, we had to make some breaking changes in the way _gwt-test-utils_ is setup. Following thoses steps, migration would take you *less than five minutes* :
 
   * Update your _gwt-test-utils_ dependency (it's a good way to start !)
 
@@ -30,4 +30,5 @@ Since we need more informations at the very beginning of a test class instanciat
       public class SampleTest extends GwtTest { ... }
 }}}
 
+_{{{GwtModule}}} is an inherited annotation, which means you can use it on an parent test class if you have one._
  
