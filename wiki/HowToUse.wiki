@@ -107,14 +107,14 @@ Sometimes, it could be helpfull to get the lastest snapshot. It's done with the 
    ...
    <repository>
       <id>sonatype-snapshots</id>
-         <url>http://oss.sonatype.org/content/repositories/snapshots</url>
-         <snapshots>
-            <enabled>true</enabled>
-         </snapshots>
-         <releases>
-            <enabled>false</enabled>
-         </releases>
-      </repository>
+      <url>http://oss.sonatype.org/content/repositories/snapshots</url>
+      <snapshots>
+         <enabled>true</enabled>
+      </snapshots>
+      <releases>
+         <enabled>false</enabled>
+      </releases>
+   </repository>
    ...
 </repositories>
 }}}
