@@ -17,6 +17,8 @@ But today, we realized avoiding overlay types support is not possible anymore : 
 While we continue to focus on achieving great test performances, we don't want you to be stuck on using some old GWT or GXT version because of _gwt-test-utils_.
 Don't be afraid, *gwt-test-utils still remains about 10 times faster than {{{GWTTestCase}}} !* It still doesn't need to run the entire GWT stack.
 
+If you realize the new latency won't be acceptable (because you're doing TDD for example), you definitely should considere using [http://infinitest.github.com/ Infinitest] in addition to _gwt-test-utils_, it would solve the problem :-)
+
 = How to migrate =
 
 Since we need more informations at the very beginning of a test class instanciation, we had to make some breaking changes in the way _gwt-test-utils_ is setup. Following thoses steps, migration would take you *less than five minutes* :
