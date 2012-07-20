@@ -9,6 +9,7 @@ import org.junit.Test;
 
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.SpanElement;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
@@ -131,5 +132,7 @@ public class UiBinderWithWidgetsTest extends GwtTestTest {
 
       // Assertion on "IsWidget
       assertEquals("isWidget Label", w.isWidgetLabel.getText());
+
+      assertEquals("justify", DOM.getStyleAttribute(w.textBox.getElement(), "textAlign"));
    }
 }

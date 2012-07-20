@@ -32,7 +32,7 @@
 		<g:ListBox ui:field='listBox' visibleItemCount='1' />
 		<g:Label>Keep your ducks</g:Label>
 		
-		<g:TextBox ui:field='textBox'></g:TextBox>
+		<g:TextBox ui:field='textBox' textAlignment="justify"></g:TextBox>
 		.
 		<g:Label ui:field='msgLabel'>
 			<ui:msg description="Greeting">We <b>strongly</b> urge you to reconsider.</ui:msg>
