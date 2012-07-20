@@ -3,7 +3,6 @@ package se.fishtank.css.selectors;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;

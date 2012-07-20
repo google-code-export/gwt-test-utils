@@ -2,7 +2,6 @@ package se.fishtank.css.selectors;
 
 import java.util.Set;
 
-
 import com.google.gwt.dom.client.Node;
 
 /**
