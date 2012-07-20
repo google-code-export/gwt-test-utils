@@ -25,89 +25,84 @@ import com.googlecode.gwt.test.utils.JavassistUtils;
  */
 class UiBinderParser {
 
-  /**
-   * Parse the .ui.xml file to fill the corresponding objects.
-   * 
-   * @param rootComponentClass the root component's class that UiBinder has to
-   *          instanciated.
-   * @param uiBinderClass the UiBinder subinterface which is used
-   * @param owner The owner of the UiBinder template, with {@link UiField}
-   *          fields.
-   */
-  <T> T createUiComponent(Class<UiBinder<?, ?>> uiBinderClass, Object owner) {
-    @SuppressWarnings("unchecked")
-    Class<T> rootComponentClass = (Class<T>) getRootElementClass(uiBinderClass);
-    InputStream uiXmlStream = getUiXmlFile(owner.getClass(), uiBinderClass);
-    if (uiXmlStream == null) {
-      throw new GwtTestUiBinderException(
-          "Cannot find the .ui.xml file corresponding to '"
-              + owner.getClass().getName() + "'");
-    }
-
-    UiXmlContentHandler<T> contentHandler = new UiXmlContentHandler<T>(
-        rootComponentClass, owner);
-
-    XMLReader saxReader = XmlUtils.newXMLReader();
-
-    try {
-      saxReader.setContentHandler(contentHandler);
-      saxReader.parse(new InputSource(uiXmlStream));
-    } catch (Exception e) {
-      if (GwtTestException.class.isInstance(e)) {
-        throw (GwtTestException) e;
-      } else {
-        throw new GwtTestUiBinderException("Error while parsing '"
-            + owner.getClass().getSimpleName() + ".ui.xml'", e);
+   /**
+    * Parse the .ui.xml file to fill the corresponding objects.
+    * 
+    * @param rootComponentClass the root component's class that UiBinder has to
+    *           instanciated.
+    * @param uiBinderClass the UiBinder subinterface which is used
+    * @param owner The owner of the UiBinder template, with {@link UiField}
+    *           fields.
+    */
+   <T> T createUiComponent(Class<UiBinder<?, ?>> uiBinderClass, Object owner) {
+      @SuppressWarnings("unchecked")
+      Class<T> rootComponentClass = (Class<T>) getRootElementClass(uiBinderClass);
+      InputStream uiXmlStream = getUiXmlFile(owner.getClass(), uiBinderClass);
+      if (uiXmlStream == null) {
+         throw new GwtTestUiBinderException("Cannot find the .ui.xml file corresponding to '"
+                  + owner.getClass().getName() + "'");
       }
-    } finally {
+
+      UiXmlContentHandler<T> contentHandler = new UiXmlContentHandler<T>(rootComponentClass, owner);
+
+      XMLReader saxReader = XmlUtils.newXMLReader();
+
       try {
-        uiXmlStream.close();
-      } catch (IOException e) {
-        // do nothing
+         saxReader.setContentHandler(contentHandler);
+         saxReader.parse(new InputSource(uiXmlStream));
+      } catch (Exception e) {
+         if (GwtTestException.class.isInstance(e)) {
+            throw (GwtTestException) e;
+         } else {
+            throw new GwtTestUiBinderException("Error while parsing '"
+                     + owner.getClass().getSimpleName() + ".ui.xml'", e);
+         }
+      } finally {
+         try {
+            uiXmlStream.close();
+         } catch (IOException e) {
+            // do nothing
+         }
       }
-    }
 
-    return contentHandler.getRootComponent();
-  }
+      return contentHandler.getRootComponent();
+   }
 
-  /**
-   * Get the actual class of the <U> parameter.
-   * 
-   * @return The class of the root element or widget generated from UiBinder.
-   */
-  private Class<?> getRootElementClass(Class<UiBinder<?, ?>> uiBinderClass) {
-    for (Type type : uiBinderClass.getGenericInterfaces()) {
+   /**
+    * Get the actual class of the <U> parameter.
+    * 
+    * @return The class of the root element or widget generated from UiBinder.
+    */
+   private Class<?> getRootElementClass(Class<UiBinder<?, ?>> uiBinderClass) {
+      for (Type type : uiBinderClass.getGenericInterfaces()) {
 
-      if (type instanceof ParameterizedType) {
-        ParameterizedType pType = (ParameterizedType) type;
+         if (type instanceof ParameterizedType) {
+            ParameterizedType pType = (ParameterizedType) type;
 
-        return (Class<?>) pType.getActualTypeArguments()[0];
+            return (Class<?>) pType.getActualTypeArguments()[0];
+         }
       }
-    }
 
-    throw new GwtTestUiBinderException("The UiBinder subinterface '"
-        + uiBinderClass.getName()
-        + "' is not parameterized. Please add its generic types.");
-  }
+      throw new GwtTestUiBinderException("The UiBinder subinterface '" + uiBinderClass.getName()
+               + "' is not parameterized. Please add its generic types.");
+   }
 
-  private InputStream getUiXmlFile(Class<?> ownerClass,
-      Class<UiBinder<?, ?>> uiBinderClass) {
-    InputStream is = ownerClass.getResourceAsStream(ownerClass.getSimpleName()
-        + ".ui.xml");
+   private InputStream getUiXmlFile(Class<?> ownerClass, Class<UiBinder<?, ?>> uiBinderClass) {
+      InputStream is = ownerClass.getResourceAsStream(ownerClass.getSimpleName() + ".ui.xml");
 
-    if (is == null) {
-      String uiTemplateValue = JavassistUtils.getInvisibleAnnotationStringValue(
-          uiBinderClass, UiTemplate.class, "value");
-      if (uiTemplateValue != null) {
-        is = ownerClass.getResourceAsStream(uiTemplateValue);
+      if (is == null) {
+         String uiTemplateValue = JavassistUtils.getInvisibleAnnotationStringValue(uiBinderClass,
+                  UiTemplate.class, "value");
+         if (uiTemplateValue != null) {
+            is = ownerClass.getResourceAsStream(uiTemplateValue);
+         }
       }
-    }
 
-    if (is == null && ownerClass.getSuperclass() != Object.class) {
-      is = getUiXmlFile(ownerClass.getSuperclass(), uiBinderClass);
-    }
+      if (is == null && ownerClass.getSuperclass() != Object.class) {
+         is = getUiXmlFile(ownerClass.getSuperclass(), uiBinderClass);
+      }
 
-    return is;
-  }
+      return is;
+   }
 
 }

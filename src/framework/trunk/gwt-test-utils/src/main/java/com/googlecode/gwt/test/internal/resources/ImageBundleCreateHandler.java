@@ -25,63 +25,60 @@ import com.googlecode.gwt.test.exceptions.GwtTestResourcesException;
 @SuppressWarnings("deprecation")
 public class ImageBundleCreateHandler implements GwtCreateHandler {
 
-  private static final String[] IMAGE_DEFAULT_EXTENSIONS = ImageResource.class.getAnnotation(
-      DefaultExtensions.class).value();
+   private static final String[] IMAGE_DEFAULT_EXTENSIONS = ImageResource.class.getAnnotation(
+            DefaultExtensions.class).value();
 
-  public Object create(Class<?> classLiteral) throws Exception {
-    if (!ImageBundle.class.isAssignableFrom(classLiteral)) {
-      return null;
-    }
-
-    return generateImageWrapper(classLiteral);
-  }
-
-  private Object generateImageWrapper(Class<?> clazz) {
-    InvocationHandler ih = new InvocationHandler() {
-
-      public Object invoke(Object proxy, Method method, Object[] args)
-          throws Throwable {
-        if (method.getReturnType() == AbstractImagePrototype.class) {
-          String url = getImageUrl(method);
-          return new ClippedImagePrototype(url, 0, 0, 0, 0);
-        }
-        throw new GwtTestResourcesException(
-            "Not managed return type for image bundle : "
-                + method.getReturnType().getSimpleName());
+   public Object create(Class<?> classLiteral) throws Exception {
+      if (!ImageBundle.class.isAssignableFrom(classLiteral)) {
+         return null;
       }
 
-      private String computeFileSimpleName(Method method) {
-        String packagePath = method.getDeclaringClass().getPackage().getName().replaceAll(
-            "\\.", "/");
+      return generateImageWrapper(classLiteral);
+   }
 
-        String relativePath = packagePath + "/" + method.getName();
+   private Object generateImageWrapper(Class<?> clazz) {
+      InvocationHandler ih = new InvocationHandler() {
 
-        for (String extension : IMAGE_DEFAULT_EXTENSIONS) {
-          String possiblePath = relativePath + extension;
-          if (this.getClass().getResource("/" + possiblePath) != null) {
-            return method.getName() + extension;
-          }
-        }
+         public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+            if (method.getReturnType() == AbstractImagePrototype.class) {
+               String url = getImageUrl(method);
+               return new ClippedImagePrototype(url, 0, 0, 0, 0);
+            }
+            throw new GwtTestResourcesException("Not managed return type for image bundle : "
+                     + method.getReturnType().getSimpleName());
+         }
 
-        // should never happened
-        throw new GwtTestResourcesException(
-            "Cannot find an image with path relative to '" + relativePath + "'");
-      }
+         private String computeFileSimpleName(Method method) {
+            String packagePath = method.getDeclaringClass().getPackage().getName().replaceAll(
+                     "\\.", "/");
 
-      private String getImageUrl(Method method) {
-        String fileName;
-        Resource resource = method.getAnnotation(Resource.class);
-        if (resource != null) {
-          fileName = resource.value();
-        } else {
-          fileName = computeFileSimpleName(method);
-        }
+            String relativePath = packagePath + "/" + method.getName();
 
-        return GWT.getModuleBaseURL() + fileName;
-      }
+            for (String extension : IMAGE_DEFAULT_EXTENSIONS) {
+               String possiblePath = relativePath + extension;
+               if (this.getClass().getResource("/" + possiblePath) != null) {
+                  return method.getName() + extension;
+               }
+            }
 
-    };
-    return Proxy.newProxyInstance(clazz.getClassLoader(),
-        new Class<?>[]{clazz}, ih);
-  }
+            // should never happened
+            throw new GwtTestResourcesException("Cannot find an image with path relative to '"
+                     + relativePath + "'");
+         }
+
+         private String getImageUrl(Method method) {
+            String fileName;
+            Resource resource = method.getAnnotation(Resource.class);
+            if (resource != null) {
+               fileName = resource.value();
+            } else {
+               fileName = computeFileSimpleName(method);
+            }
+
+            return GWT.getModuleBaseURL() + fileName;
+         }
+
+      };
+      return Proxy.newProxyInstance(clazz.getClassLoader(), new Class<?>[]{clazz}, ih);
+   }
 }

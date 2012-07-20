@@ -25,19 +25,19 @@ import javassist.CtClass;
 @Target(ElementType.METHOD)
 public @interface InitMethod {
 
-  /**
-   * <p>
-   * Specify if this initialization method should override an existing one,
-   * declared in another {@link PatchClass}. Only one <code>InitMethod</code>
-   * with override = true can exist. Otherwise, an exception will be thrown.
-   * </p>
-   * <p>
-   * Default value is <strong>false</strong>.
-   * </p>
-   * 
-   * @return True is this initialization method should override an existing one,
-   *         false otherwise.
-   */
-  boolean override() default false;
+   /**
+    * <p>
+    * Specify if this initialization method should override an existing one,
+    * declared in another {@link PatchClass}. Only one <code>InitMethod</code>
+    * with override = true can exist. Otherwise, an exception will be thrown.
+    * </p>
+    * <p>
+    * Default value is <strong>false</strong>.
+    * </p>
+    * 
+    * @return True is this initialization method should override an existing
+    *         one, false otherwise.
+    */
+   boolean override() default false;
 
 }

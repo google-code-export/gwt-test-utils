@@ -11,20 +11,20 @@ import com.googlecode.gwt.test.GwtTestTest;
 
 public class BodyElementTest extends GwtTestTest {
 
-  private BodyElement b;
+   private BodyElement b;
 
-  @Test
-  public void as() {
-    // Act
-    BodyElement asElement = BodyElement.as(b);
+   @Test
+   public void as() {
+      // Act
+      BodyElement asElement = BodyElement.as(b);
 
-    // Assert
-    assertEquals(b, asElement);
-  }
+      // Assert
+      assertEquals(b, asElement);
+   }
 
-  @Before
-  public void initDocument() {
-    b = (BodyElement) Document.get().createElement("body");
-  }
+   @Before
+   public void initDocument() {
+      b = (BodyElement) Document.get().createElement("body");
+   }
 
 }

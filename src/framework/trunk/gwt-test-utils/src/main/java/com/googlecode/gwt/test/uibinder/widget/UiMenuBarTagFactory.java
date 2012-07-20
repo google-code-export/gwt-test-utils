@@ -16,55 +16,53 @@ import com.googlecode.gwt.test.uibinder.UiObjectTagFactory;
  */
 public class UiMenuBarTagFactory implements UiObjectTagFactory<MenuBar> {
 
-  private static class UiMenuBarTag extends UiObjectTag<MenuBar> {
+   private static class UiMenuBarTag extends UiObjectTag<MenuBar> {
 
-    @Override
-    protected void addUIObject(MenuBar wrapped, UIObject uiObject) {
-      if (uiObject instanceof MenuItem) {
-        wrapped.addItem((MenuItem) uiObject);
-      } else {
-        super.addUIObject(wrapped, uiObject);
-      }
-    }
-
-    @Override
-    protected void finalizeObject(MenuBar widget) {
-      // nothing to do
-    }
-
-    @Override
-    protected void initializeObject(MenuBar wrapped,
-        Map<String, Object> attributes, Object owner) {
-      // nothing to do
-    }
-
-    @Override
-    protected MenuBar instanciate(Class<? extends MenuBar> clazz,
-        Map<String, Object> attributes, Object owner) {
-
-      if (clazz != MenuBar.class) {
-        // use default instanciation system
-        return super.instanciate(clazz, attributes, owner);
+      @Override
+      protected void addUIObject(MenuBar wrapped, UIObject uiObject) {
+         if (uiObject instanceof MenuItem) {
+            wrapped.addItem((MenuItem) uiObject);
+         } else {
+            super.addUIObject(wrapped, uiObject);
+         }
       }
 
-      String vertical = (String) attributes.get("vertical");
-      boolean isVertical = vertical != null ? Boolean.valueOf(vertical) : false;
+      @Override
+      protected void finalizeObject(MenuBar widget) {
+         // nothing to do
+      }
 
-      return new MenuBar(isVertical);
+      @Override
+      protected void initializeObject(MenuBar wrapped, Map<String, Object> attributes, Object owner) {
+         // nothing to do
+      }
 
-    }
+      @Override
+      protected MenuBar instanciate(Class<? extends MenuBar> clazz, Map<String, Object> attributes,
+               Object owner) {
 
-  }
+         if (clazz != MenuBar.class) {
+            // use default instanciation system
+            return super.instanciate(clazz, attributes, owner);
+         }
 
-  public UiObjectTag<MenuBar> createUiObjectTag(Class<?> clazz,
-      Map<String, Object> attributes) {
+         String vertical = (String) attributes.get("vertical");
+         boolean isVertical = vertical != null ? Boolean.valueOf(vertical) : false;
 
-    if (MenuBar.class.isAssignableFrom(clazz)) {
-      return new UiMenuBarTag();
-    }
+         return new MenuBar(isVertical);
 
-    return null;
+      }
 
-  }
+   }
+
+   public UiObjectTag<MenuBar> createUiObjectTag(Class<?> clazz, Map<String, Object> attributes) {
+
+      if (MenuBar.class.isAssignableFrom(clazz)) {
+         return new UiMenuBarTag();
+      }
+
+      return null;
+
+   }
 
 }

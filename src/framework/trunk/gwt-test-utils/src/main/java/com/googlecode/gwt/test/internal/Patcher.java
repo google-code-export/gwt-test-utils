@@ -37,32 +37,32 @@ import javassist.CtMethod;
  */
 interface Patcher {
 
-  /**
-   * Finalizes the patching mechanism for the specified class.
-   * 
-   * @param c the javassist representation for the current class to patch.
-   * @throws Exception If any error occurs during the finalization.
-   */
-  void finalizeClass(CtClass c) throws Exception;
+   /**
+    * Finalizes the patching mechanism for the specified class.
+    * 
+    * @param c the javassist representation for the current class to patch.
+    * @throws Exception If any error occurs during the finalization.
+    */
+   void finalizeClass(CtClass c) throws Exception;
 
-  /**
-   * Returns the new body for the specified method.
-   * 
-   * @param m the method to patch
-   * @return the new java code of the method, or null if the method should not
-   *         be modified.
-   * @throws Exception If any error occurs when getting the new java code.
-   */
-  String getNewBody(CtMethod m) throws Exception;
+   /**
+    * Returns the new body for the specified method.
+    * 
+    * @param m the method to patch
+    * @return the new java code of the method, or null if the method should not
+    *         be modified.
+    * @throws Exception If any error occurs when getting the new java code.
+    */
+   String getNewBody(CtMethod m) throws Exception;
 
-  /**
-   * Initializes patching for the specified class. If you want to add some
-   * member to a class, or modify any existing constructor, you should do it
-   * during this initialization phase.
-   * 
-   * @param c the javassist representation for the current class to patch.
-   * @throws Exception If any error occurs during the initialization.
-   */
-  void initClass(CtClass c) throws Exception;
+   /**
+    * Initializes patching for the specified class. If you want to add some
+    * member to a class, or modify any existing constructor, you should do it
+    * during this initialization phase.
+    * 
+    * @param c the javassist representation for the current class to patch.
+    * @throws Exception If any error occurs during the initialization.
+    */
+   void initClass(CtClass c) throws Exception;
 
 }

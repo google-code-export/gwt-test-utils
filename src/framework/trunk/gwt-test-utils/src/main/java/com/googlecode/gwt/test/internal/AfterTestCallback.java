@@ -12,12 +12,12 @@ package com.googlecode.gwt.test.internal;
  */
 public interface AfterTestCallback {
 
-  /**
-   * The callback method, executed by a {@link AfterTestCallbackManager}.
-   * 
-   * @throws Throwable If any exception occurs during the callback. It will be
-   *           handled by the manager.
-   */
-  void afterTest() throws Throwable;
+   /**
+    * The callback method, executed by a {@link AfterTestCallbackManager}.
+    * 
+    * @throws Throwable If any exception occurs during the callback. It will be
+    *            handled by the manager.
+    */
+   void afterTest() throws Throwable;
 
 }

@@ -10,24 +10,24 @@ import com.googlecode.gwt.test.patchers.PatchMethod;
 @PatchClass(Impl.class)
 class ImplPatcher {
 
-  @PatchMethod
-  static int getHashCode(Object o) {
-    return HashCodeBuilder.reflectionHashCode(o);
-  }
+   @PatchMethod
+   static int getHashCode(Object o) {
+      return HashCodeBuilder.reflectionHashCode(o);
+   }
 
-  @PatchMethod
-  static String getHostPageBaseURL() {
-    return "http://127.0.0.1:8888/";
-  }
+   @PatchMethod
+   static String getHostPageBaseURL() {
+      return "http://127.0.0.1:8888/";
+   }
 
-  @PatchMethod
-  static String getModuleBaseURL() {
-    return getHostPageBaseURL() + getModuleName() + "/";
-  }
+   @PatchMethod
+   static String getModuleBaseURL() {
+      return getHostPageBaseURL() + getModuleName() + "/";
+   }
 
-  @PatchMethod
-  static String getModuleName() {
-    return GwtConfig.get().getModuleAlias();
-  }
+   @PatchMethod
+   static String getModuleName() {
+      return GwtConfig.get().getModuleAlias();
+   }
 
 }

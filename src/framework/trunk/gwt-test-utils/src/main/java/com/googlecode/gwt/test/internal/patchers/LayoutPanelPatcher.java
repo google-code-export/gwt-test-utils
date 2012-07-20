@@ -10,12 +10,10 @@ import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 @PatchClass(LayoutPanel.class)
 class LayoutPanelPatcher {
 
-  @PatchMethod
-  static void animate(LayoutPanel panel, final int duration,
-      final AnimationCallback callback) {
-    LayoutCommand layoutCmd = GwtReflectionUtils.getPrivateFieldValue(panel,
-        "layoutCmd");
-    layoutCmd.schedule(0, callback);
-  }
+   @PatchMethod
+   static void animate(LayoutPanel panel, final int duration, final AnimationCallback callback) {
+      LayoutCommand layoutCmd = GwtReflectionUtils.getPrivateFieldValue(panel, "layoutCmd");
+      layoutCmd.schedule(0, callback);
+   }
 
 }

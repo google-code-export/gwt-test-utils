@@ -15,50 +15,49 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class AddressEditor extends Composite implements Editor<Address> {
 
-  interface Binder extends UiBinder<Widget, AddressEditor> {
-  }
+   interface Binder extends UiBinder<Widget, AddressEditor> {
+   }
 
-  private static final Binder BINDER = GWT.create(Binder.class);
+   private static final Binder BINDER = GWT.create(Binder.class);
 
-  @UiField
-  TextBox city;
+   @UiField
+   TextBox city;
 
-  @UiField(provided = true)
-  @Path("state")
-  ValueListBox<String> stateWithPath;
+   @UiField(provided = true)
+   @Path("state")
+   ValueListBox<String> stateWithPath;
 
-  @UiField
-  private TextBox street;
+   @UiField
+   private TextBox street;
 
-  @UiField
-  private TextBox zipWithPath;
+   @UiField
+   private TextBox zipWithPath;
 
-  public AddressEditor() {
+   public AddressEditor() {
 
-    stateWithPath = new ValueListBox<String>(new AbstractRenderer<String>() {
+      stateWithPath = new ValueListBox<String>(new AbstractRenderer<String>() {
 
-      public String render(String object) {
-        return object;
-      }
+         public String render(String object) {
+            return object;
+         }
 
-    });
-    stateWithPath.setAcceptableValues(buildCollection("Austria", "France",
-        "Germany"));
+      });
+      stateWithPath.setAcceptableValues(buildCollection("Austria", "France", "Germany"));
 
-    initWidget(BINDER.createAndBindUi(this));
+      initWidget(BINDER.createAndBindUi(this));
 
-  }
+   }
 
-  public TextBox street() {
-    return street;
-  }
+   public TextBox street() {
+      return street;
+   }
 
-  @Path("zip")
-  TextBox zipWithPathEditor() {
-    return zipWithPath;
-  }
+   @Path("zip")
+   TextBox zipWithPathEditor() {
+      return zipWithPath;
+   }
 
-  private Collection<String> buildCollection(String... string) {
-    return Arrays.asList(string);
-  }
+   private Collection<String> buildCollection(String... string) {
+      return Arrays.asList(string);
+   }
 }

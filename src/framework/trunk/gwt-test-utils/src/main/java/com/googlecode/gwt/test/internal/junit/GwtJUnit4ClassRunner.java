@@ -18,14 +18,14 @@ import org.junit.runner.notification.RunNotifier;
 @Deprecated
 public class GwtJUnit4ClassRunner extends JUnit4ClassRunner {
 
-  public GwtJUnit4ClassRunner(Class<?> klass) throws InitializationError {
-    super(klass);
-  }
+   public GwtJUnit4ClassRunner(Class<?> klass) throws InitializationError {
+      super(klass);
+   }
 
-  @Override
-  public void run(RunNotifier notifier) {
-    notifier.addListener(new GwtRunListener());
-    super.run(notifier);
-  }
+   @Override
+   public void run(RunNotifier notifier) {
+      notifier.addListener(new GwtRunListener());
+      super.run(notifier);
+   }
 
 }

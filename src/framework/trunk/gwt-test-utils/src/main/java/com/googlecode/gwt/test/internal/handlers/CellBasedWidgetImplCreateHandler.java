@@ -11,17 +11,17 @@ import com.googlecode.gwt.test.GwtCreateHandler;
  */
 class CellBasedWidgetImplCreateHandler implements GwtCreateHandler {
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.googlecode.gwt.test.GwtCreateHandler#create(java.lang.Class)
-   */
-  public Object create(Class<?> classLiteral) throws Exception {
-    if ("com.google.gwt.user.cellview.client.CellBasedWidgetImpl".equals(classLiteral.getName())) {
-      return new CellBasedWidgetImplStandardBase();
-    } else {
-      return null;
-    }
-  }
+   /*
+    * (non-Javadoc)
+    * 
+    * @see com.googlecode.gwt.test.GwtCreateHandler#create(java.lang.Class)
+    */
+   public Object create(Class<?> classLiteral) throws Exception {
+      if ("com.google.gwt.user.cellview.client.CellBasedWidgetImpl".equals(classLiteral.getName())) {
+         return new CellBasedWidgetImplStandardBase();
+      } else {
+         return null;
+      }
+   }
 
 }

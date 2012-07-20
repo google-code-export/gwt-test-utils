@@ -23,154 +23,144 @@ import com.googlecode.gwt.test.exceptions.GwtTestRpcException;
 
 public class RemoteServiceTest extends GwtTestTest {
 
-  private boolean failure;
-  private boolean success;
+   private boolean failure;
+   private boolean success;
 
-  @Test
-  public void accessToHttpRequest() {
-    // Arrange
-    MyServiceAsync myService = GWT.create(MyService.class);
-    setServletMockProvider(new ServletMockProvider() {
+   @Test
+   public void accessToHttpRequest() {
+      // Arrange
+      MyServiceAsync myService = GWT.create(MyService.class);
+      setServletMockProvider(new ServletMockProvider() {
 
-      public ServletConfig getMockedConfig(
-          AbstractRemoteServiceServlet rpcService) {
+         public ServletConfig getMockedConfig(AbstractRemoteServiceServlet rpcService) {
 
-        return null;
-      }
+            return null;
+         }
 
-      public HttpServletRequest getMockedRequest(
-          AbstractRemoteServiceServlet rpcService, Method rpcMethod) {
+         public HttpServletRequest getMockedRequest(AbstractRemoteServiceServlet rpcService,
+                  Method rpcMethod) {
 
-        // use spring's object for test purpose
-        MockHttpServletRequest mock = new MockHttpServletRequest();
-        mock.addHeader("myHeader", "mocked header's value");
+            // use spring's object for test purpose
+            MockHttpServletRequest mock = new MockHttpServletRequest();
+            mock.addHeader("myHeader", "mocked header's value");
 
-        return mock;
-      }
+            return mock;
+         }
 
-      public HttpServletResponse getMockedResponse(
-          AbstractRemoteServiceServlet rpcService, Method rpcMethod) {
+         public HttpServletResponse getMockedResponse(AbstractRemoteServiceServlet rpcService,
+                  Method rpcMethod) {
 
-        return null;
-      }
-    });
-
-    // Act
-    myService.getHttpRequestHeader("myHeader", new AsyncCallback<String>() {
-
-      public void onFailure(Throwable caught) {
-        fail("onFailure should not be called");
-      }
-
-      public void onSuccess(String result) {
-        success = true;
-        assertEquals("mocked header's value", result);
-
-      }
-    });
-
-    // Assert
-    assertTrue(
-        "The service callback should have been call in a synchronised way",
-        success);
-  }
-
-  @Test
-  public void accessToHttpRequest_ThrowsExceptionWhenNoMockConfigured() {
-    // Arrange
-    MyServiceAsync myService = GWT.create(MyService.class);
-
-    // Act
-    try {
-      myService.getHttpRequestHeader("myHeader", new AsyncCallback<String>() {
-
-        public void onFailure(Throwable caught) {
-          fail("onFailure should not be called");
-        }
-
-        public void onSuccess(String result) {
-          fail("onSucess should not be called");
-        }
+            return null;
+         }
       });
 
-      fail("getHttpRequestHeader should have thrown a GwtTestRpcException");
-    } catch (GwtTestRpcException e) {
-      assertEquals(
-          "Illegal call to com.googlecode.gwt.test.rpc.MyServiceImpl.getThreadLocalRequest() : You have to set a valid ServletMockProvider instance through RemoteServiceTest.setServletMockProvider(..) method",
-          e.getMessage());
-    }
-  }
+      // Act
+      myService.getHttpRequestHeader("myHeader", new AsyncCallback<String>() {
 
-  @Before
-  public void beforeRemoteServiceTest() {
-    failure = false;
-    success = false;
-  }
+         public void onFailure(Throwable caught) {
+            fail("onFailure should not be called");
+         }
 
-  @Test
-  public void rpcCall_WithException() {
-    // Arrange
-    MyServiceAsync myService = GWT.create(MyService.class);
+         public void onSuccess(String result) {
+            success = true;
+            assertEquals("mocked header's value", result);
 
-    // Act
-    myService.someCallWithException(new AsyncCallback<Void>() {
+         }
+      });
 
-      public void onFailure(Throwable caught) {
+      // Assert
+      assertTrue("The service callback should have been call in a synchronised way", success);
+   }
 
-        assertEquals("Server side thrown exception !!", caught.getMessage());
-        failure = true;
+   @Test
+   public void accessToHttpRequest_ThrowsExceptionWhenNoMockConfigured() {
+      // Arrange
+      MyServiceAsync myService = GWT.create(MyService.class);
+
+      // Act
+      try {
+         myService.getHttpRequestHeader("myHeader", new AsyncCallback<String>() {
+
+            public void onFailure(Throwable caught) {
+               fail("onFailure should not be called");
+            }
+
+            public void onSuccess(String result) {
+               fail("onSucess should not be called");
+            }
+         });
+
+         fail("getHttpRequestHeader should have thrown a GwtTestRpcException");
+      } catch (GwtTestRpcException e) {
+         assertEquals(
+                  "Illegal call to com.googlecode.gwt.test.rpc.MyServiceImpl.getThreadLocalRequest() : You have to set a valid ServletMockProvider instance through RemoteServiceTest.setServletMockProvider(..) method",
+                  e.getMessage());
       }
+   }
 
-      public void onSuccess(Void result) {
-        fail("onSucess should not be called");
-      }
-    });
+   @Before
+   public void beforeRemoteServiceTest() {
+      failure = false;
+      success = false;
+   }
 
-    // Assert
-    assertTrue(
-        "The service callback should have been call in a synchronised way",
-        failure);
-  }
+   @Test
+   public void rpcCall_WithException() {
+      // Arrange
+      MyServiceAsync myService = GWT.create(MyService.class);
 
-  @Test
-  public void rpcCall_WithSuccess() {
-    // Arrange
-    MyObject object = new MyObject("my field initialized during test setup");
+      // Act
+      myService.someCallWithException(new AsyncCallback<Void>() {
 
-    MyServiceAsync myService = GWT.create(MyService.class);
+         public void onFailure(Throwable caught) {
 
-    // Act
-    myService.update(object, new AsyncCallback<MyObject>() {
+            assertEquals("Server side thrown exception !!", caught.getMessage());
+            failure = true;
+         }
 
-      public void onFailure(Throwable caught) {
-        fail("onFailure should not be called");
-      }
+         public void onSuccess(Void result) {
+            fail("onSucess should not be called");
+         }
+      });
 
-      public void onSuccess(MyObject result) {
-        // Assert 1
-        assertEquals("updated field by server side code", result.getMyField());
-        assertEquals("transient field", result.getMyTransientField());
+      // Assert
+      assertTrue("The service callback should have been call in a synchronised way", failure);
+   }
 
-        assertEquals(
-            "A single child object should have been instanciate in server code",
-            1, result.getMyChildObjects().size());
-        assertEquals("this is a child !",
-            result.getMyChildObjects().get(0).getMyChildField());
-        assertEquals("child object transient field",
-            result.getMyChildObjects().get(0).getMyChildTransientField());
+   @Test
+   public void rpcCall_WithSuccess() {
+      // Arrange
+      MyObject object = new MyObject("my field initialized during test setup");
 
-        assertEquals("the field inherited from the parent has been updated !",
-            result.getMyChildObjects().get(0).getMyField());
-        assertEquals("transient field",
-            result.getMyChildObjects().get(0).getMyTransientField());
-        success = true;
-      }
-    });
+      MyServiceAsync myService = GWT.create(MyService.class);
 
-    // Assert 2
-    assertTrue(
-        "The service callback should have been call in a synchronised way",
-        success);
-  }
+      // Act
+      myService.update(object, new AsyncCallback<MyObject>() {
+
+         public void onFailure(Throwable caught) {
+            fail("onFailure should not be called");
+         }
+
+         public void onSuccess(MyObject result) {
+            // Assert 1
+            assertEquals("updated field by server side code", result.getMyField());
+            assertEquals("transient field", result.getMyTransientField());
+
+            assertEquals("A single child object should have been instanciate in server code", 1,
+                     result.getMyChildObjects().size());
+            assertEquals("this is a child !", result.getMyChildObjects().get(0).getMyChildField());
+            assertEquals("child object transient field",
+                     result.getMyChildObjects().get(0).getMyChildTransientField());
+
+            assertEquals("the field inherited from the parent has been updated !",
+                     result.getMyChildObjects().get(0).getMyField());
+            assertEquals("transient field", result.getMyChildObjects().get(0).getMyTransientField());
+            success = true;
+         }
+      });
+
+      // Assert 2
+      assertTrue("The service callback should have been call in a synchronised way", success);
+   }
 
 }

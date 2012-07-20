@@ -45,96 +45,94 @@ import com.googlecode.gwt.test.utils.events.Browser.BrowserErrorHandler;
 @RunWith(GwtRunner.class)
 public abstract class GwtTest extends GwtModuleRunnerAdapter implements Test {
 
-  private static final BrowserErrorHandler FEST_BROWSER_ERROR_HANDLER = new BrowserErrorHandler() {
+   private static final BrowserErrorHandler FEST_BROWSER_ERROR_HANDLER = new BrowserErrorHandler() {
 
-    public void onError(String errorMessage) {
-      Fail.fail(errorMessage);
-    }
-  };
+      public void onError(String errorMessage) {
+         Fail.fail(errorMessage);
+      }
+   };
 
-  /**
-   * Bind the GwtClassLoader to the current thread
-   */
-  @BeforeClass
-  public static final void bindClassLoader() {
-    Thread.currentThread().setContextClassLoader(
-        GwtFactory.get().getClassLoader());
-  }
+   /**
+    * Bind the GwtClassLoader to the current thread
+    */
+   @BeforeClass
+   public static final void bindClassLoader() {
+      Thread.currentThread().setContextClassLoader(GwtFactory.get().getClassLoader());
+   }
 
-  /**
-   * Unbind the static classloader instance from the current thread by binding
-   * the system classloader instead.
-   */
-  @AfterClass
-  public static final void unbindClassLoader() {
-    Thread.currentThread().setContextClassLoader(
-        GwtFactory.get().getClassLoader().getParent());
-  }
+   /**
+    * Unbind the static classloader instance from the current thread by binding
+    * the system classloader instead.
+    */
+   @AfterClass
+   public static final void unbindClassLoader() {
+      Thread.currentThread().setContextClassLoader(GwtFactory.get().getClassLoader().getParent());
+   }
 
-  private final Test test;
+   private final Test test;
 
-  public GwtTest() {
-    this.test = createJUnit4TestAdapter();
-    this.setCanDispatchDomEventOnDetachedWidget(true);
-  }
+   public GwtTest() {
+      this.test = createJUnit4TestAdapter();
+      this.setCanDispatchDomEventOnDetachedWidget(true);
+   }
 
-  public int countTestCases() {
-    return test.countTestCases();
-  }
+   public int countTestCases() {
+      return test.countTestCases();
+   }
 
-  /**
-   * Runs a test and collects its result in a TestResult instance.
-   */
-  public void run(TestResult result) {
-    test.run(result);
-  }
+   /**
+    * Runs a test and collects its result in a TestResult instance.
+    */
+   public void run(TestResult result) {
+      test.run(result);
+   }
 
-  @Before
-  public final void setUpGwtTest() throws Exception {
-    GwtTestDataHolder.get().setCurrentTestFailed(false);
-    GwtConfig.get().setup(this);
-  }
+   @Before
+   public final void setUpGwtTest() throws Exception {
+      GwtTestDataHolder.get().setCurrentTestFailed(false);
+      GwtConfig.get().setup(this);
+   }
 
-  @After
-  public final void tearDownGwtTest() throws Exception {
+   @After
+   public final void tearDownGwtTest() throws Exception {
 
-    GwtReset.get().reset();
+      GwtReset.get().reset();
 
-    boolean currentTestFailed = GwtTestDataHolder.get().isCurrentTestFailed();
+      boolean currentTestFailed = GwtTestDataHolder.get().isCurrentTestFailed();
 
-    List<Throwable> throwables = AfterTestCallbackManager.get().triggerCallbacks();
+      List<Throwable> throwables = AfterTestCallbackManager.get().triggerCallbacks();
 
-    if (!currentTestFailed && throwables.size() > 0) {
-      String error = (throwables.size() == 1)
-          ? "One exception thrown during gwt-test-utils cleanup phase : "
-          : throwables.size()
-              + " exceptions thrown during gwt-test-utils cleanup phase. First one is thrown :";
+      if (!currentTestFailed && throwables.size() > 0) {
+         String error = (throwables.size() == 1)
+                  ? "One exception thrown during gwt-test-utils cleanup phase : "
+                  : throwables.size()
+                           + " exceptions thrown during gwt-test-utils cleanup phase. First one is thrown :";
 
-      throw new GwtTestException(error, throwables.get(0));
-    }
+         throw new GwtTestException(error, throwables.get(0));
+      }
 
-  }
+   }
 
-  /**
-   * Create a test instance compatible with JUnit 3 {@link Test} so that the
-   * current <code>GwtTest</code> can be added to a {@link TestSuite}.
-   * 
-   * @return A JUnit Test adapter for this test.
-   */
-  protected Test createJUnit4TestAdapter() {
-    return new JUnit4TestAdapter(this.getClass());
-  }
+   /**
+    * Create a test instance compatible with JUnit 3 {@link Test} so that the
+    * current <code>GwtTest</code> can be added to a {@link TestSuite}.
+    * 
+    * @return A JUnit Test adapter for this test.
+    */
+   protected Test createJUnit4TestAdapter() {
+      return new JUnit4TestAdapter(this.getClass());
+   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see
-   * com.googlecode.gwt.test.GwtModuleRunnerAdapter#getDefaultBrowserErrorHandler
-   * ()
-   */
-  @Override
-  protected BrowserErrorHandler getDefaultBrowserErrorHandler() {
-    return FEST_BROWSER_ERROR_HANDLER;
-  }
+   /*
+    * (non-Javadoc)
+    * 
+    * @see
+    * com.googlecode.gwt.test.GwtModuleRunnerAdapter#getDefaultBrowserErrorHandler
+    * ()
+    */
+   @Override
+   protected BrowserErrorHandler getDefaultBrowserErrorHandler() {
+      return FEST_BROWSER_ERROR_HANDLER;
+   }
 
 }

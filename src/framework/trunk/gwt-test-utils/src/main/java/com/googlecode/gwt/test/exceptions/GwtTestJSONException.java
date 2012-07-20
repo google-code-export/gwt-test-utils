@@ -8,20 +8,20 @@ package com.googlecode.gwt.test.exceptions;
  */
 public class GwtTestJSONException extends GwtTestException {
 
-  private static final long serialVersionUID = -7518261539641239910L;
+   private static final long serialVersionUID = -7518261539641239910L;
 
-  public GwtTestJSONException() {
-  }
+   public GwtTestJSONException() {
+   }
 
-  public GwtTestJSONException(String message) {
-    super(message);
-  }
+   public GwtTestJSONException(String message) {
+      super(message);
+   }
 
-  public GwtTestJSONException(String message, Throwable cause) {
-    super(message, cause);
-  }
+   public GwtTestJSONException(String message, Throwable cause) {
+      super(message, cause);
+   }
 
-  public GwtTestJSONException(Throwable cause) {
-    super(cause);
-  }
+   public GwtTestJSONException(Throwable cause) {
+      super(cause);
+   }
 }

@@ -19,24 +19,23 @@ import com.googlecode.gwt.test.utils.JavassistUtils;
 @PatchClass(ValueBoxBase.class)
 class ValueBoxBasePatcher {
 
-  @InitMethod
-  static void initClass(CtClass c) throws CannotCompileException {
-    CtConstructor cons = JavassistUtils.findConstructor(c, Element.class,
-        Renderer.class, Parser.class);
-    cons.insertAfter("setText(\"\");");
-  }
+   @InitMethod
+   static void initClass(CtClass c) throws CannotCompileException {
+      CtConstructor cons = JavassistUtils.findConstructor(c, Element.class, Renderer.class,
+               Parser.class);
+      cons.insertAfter("setText(\"\");");
+   }
 
-  @PatchMethod
-  static void setText(ValueBoxBase<?> valueBoxBase, String text) {
-    DOM.setElementProperty(valueBoxBase.getElement(), "value", text != null
-        ? text : "");
-    AutoDirectionHandler autoDirHandler = GwtReflectionUtils.getPrivateFieldValue(
-        valueBoxBase, "autoDirHandler");
-    autoDirHandler.refreshDirection();
+   @PatchMethod
+   static void setText(ValueBoxBase<?> valueBoxBase, String text) {
+      DOM.setElementProperty(valueBoxBase.getElement(), "value", text != null ? text : "");
+      AutoDirectionHandler autoDirHandler = GwtReflectionUtils.getPrivateFieldValue(valueBoxBase,
+               "autoDirHandler");
+      autoDirHandler.refreshDirection();
 
-    int cursorPos = text != null ? text.length() : 0;
+      int cursorPos = text != null ? text.length() : 0;
 
-    valueBoxBase.setCursorPos(cursorPos);
-  }
+      valueBoxBase.setCursorPos(cursorPos);
+   }
 
 }

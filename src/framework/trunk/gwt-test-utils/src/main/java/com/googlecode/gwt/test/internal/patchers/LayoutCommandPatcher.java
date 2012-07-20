@@ -10,32 +10,30 @@ import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 @PatchClass(LayoutCommand.class)
 class LayoutCommandPatcher {
 
-  /*
-   * To replace Scheduler.get().scheduleFinally(this) by
-   * Scheduler.get().scheduleDeferred(this)
-   * 
-   * @param cmd
-   * 
-   * @param duration
-   * 
-   * @param callback
-   */
-  @PatchMethod
-  static void schedule(LayoutCommand cmd, int duration,
-      AnimationCallback callback) {
+   /*
+    * To replace Scheduler.get().scheduleFinally(this) by
+    * Scheduler.get().scheduleDeferred(this)
+    * 
+    * @param cmd
+    * 
+    * @param duration
+    * 
+    * @param callback
+    */
+   @PatchMethod
+   static void schedule(LayoutCommand cmd, int duration, AnimationCallback callback) {
 
-    GwtReflectionUtils.setPrivateFieldValue(cmd, "duration", duration);
-    GwtReflectionUtils.setPrivateFieldValue(cmd, "callback", callback);
+      GwtReflectionUtils.setPrivateFieldValue(cmd, "duration", duration);
+      GwtReflectionUtils.setPrivateFieldValue(cmd, "callback", callback);
 
-    GwtReflectionUtils.setPrivateFieldValue(cmd, "canceled", false);
+      GwtReflectionUtils.setPrivateFieldValue(cmd, "canceled", false);
 
-    boolean scheduled = (Boolean) GwtReflectionUtils.getPrivateFieldValue(cmd,
-        "scheduled");
+      boolean scheduled = (Boolean) GwtReflectionUtils.getPrivateFieldValue(cmd, "scheduled");
 
-    if (!scheduled) {
-      GwtReflectionUtils.setPrivateFieldValue(cmd, "scheduled", true);
-      Scheduler.get().scheduleDeferred(cmd);
-    }
-  }
+      if (!scheduled) {
+         GwtReflectionUtils.setPrivateFieldValue(cmd, "scheduled", true);
+         Scheduler.get().scheduleDeferred(cmd);
+      }
+   }
 
 }

@@ -13,21 +13,21 @@ import com.googlecode.gwt.test.patchers.PatchClass;
 @PatchClass(GwtFinder.class)
 class GwtFinderPatcher {
 
-  @InitMethod
-  static void initClass(CtClass c) throws Exception {
+   @InitMethod
+   static void initClass(CtClass c) throws Exception {
 
-    makeMethodPublicStatic(c, "onAttach");
-    makeMethodPublicStatic(c, "onDetach");
-    makeMethodPublicStatic(c, "onSetHTML");
-    makeMethodPublicStatic(c, "onSetId");
-    makeMethodPublicStatic(c, "onSetName");
-    makeMethodPublicStatic(c, "onSetText");
+      makeMethodPublicStatic(c, "onAttach");
+      makeMethodPublicStatic(c, "onDetach");
+      makeMethodPublicStatic(c, "onSetHTML");
+      makeMethodPublicStatic(c, "onSetId");
+      makeMethodPublicStatic(c, "onSetName");
+      makeMethodPublicStatic(c, "onSetText");
 
-  }
+   }
 
-  private static void makeMethodPublicStatic(CtClass c, String methodName)
-      throws NotFoundException {
-    CtMethod method = c.getDeclaredMethod(methodName);
-    method.setModifiers(Modifier.PUBLIC + Modifier.STATIC);
-  }
+   private static void makeMethodPublicStatic(CtClass c, String methodName)
+            throws NotFoundException {
+      CtMethod method = c.getDeclaredMethod(methodName);
+      method.setModifiers(Modifier.PUBLIC + Modifier.STATIC);
+   }
 }

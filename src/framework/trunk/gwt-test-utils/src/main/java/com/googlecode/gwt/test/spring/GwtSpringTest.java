@@ -34,74 +34,70 @@ import com.googlecode.gwt.test.rpc.RemoteServiceCreateHandler;
  * 
  */
 @RunWith(GwtSpringRunner.class)
-public abstract class GwtSpringTest extends GwtTest implements
-    ApplicationContextAware {
+public abstract class GwtSpringTest extends GwtTest implements ApplicationContextAware {
 
-  private ApplicationContext applicationContext;
+   private ApplicationContext applicationContext;
 
-  /**
-   * Spring test initialization method.
-   */
-  @Before
-  public void beforeGwtSpringTest() {
-    // add a new RemoteServiceHandler which will call Spring context
-    addGwtCreateHandler(new RemoteServiceCreateHandler() {
+   /**
+    * Spring test initialization method.
+    */
+   @Before
+   public void beforeGwtSpringTest() {
+      // add a new RemoteServiceHandler which will call Spring context
+      addGwtCreateHandler(new RemoteServiceCreateHandler() {
 
-      @Override
-      protected Object findService(Class<?> remoteServiceClass,
-          String remoteServiceRelativePath) {
-        return findRpcServiceInSpringContext(applicationContext,
-            remoteServiceClass, remoteServiceRelativePath);
-      }
-    });
-  }
+         @Override
+         protected Object findService(Class<?> remoteServiceClass, String remoteServiceRelativePath) {
+            return findRpcServiceInSpringContext(applicationContext, remoteServiceClass,
+                     remoteServiceRelativePath);
+         }
+      });
+   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see
-   * org.springframework.context.ApplicationContextAware#setApplicationContext
-   * (org.springframework.context.ApplicationContext)
-   */
-  public void setApplicationContext(ApplicationContext applicationContext)
-      throws BeansException {
-    this.applicationContext = applicationContext;
-  }
+   /*
+    * (non-Javadoc)
+    * 
+    * @see
+    * org.springframework.context.ApplicationContextAware#setApplicationContext
+    * (org.springframework.context.ApplicationContext)
+    */
+   public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+      this.applicationContext = applicationContext;
+   }
 
-  /**
-   * Retrieve a GWT RPC service from a spring context. This implementation
-   * collects all assignable beans in the context. If no assignable bean can be
-   * found, it would returns <code>null</code>. If one an only one assignable
-   * bean can be found, it would be returned. If many assignable beans are
-   * found, this implementation would check if one of it has a matching
-   * {@link RemoteServiceRelativePath} annotation on its class. If so, it is
-   * returned. Otherwise, <code>null</code> is returned.
-   * 
-   * @param applicationContext The Spring context.
-   * @param remoteServiceClass The remote service interface of the Spring bean
-   *          to retrieve.
-   * @param remoteServiceRelativePath The remote service relative path of the
-   *          Spring bean to retrieve.
-   * @return The corresponding Spring bean, or null if no bean has been found
-   *         for this type and path.
-   */
-  protected Object findRpcServiceInSpringContext(
-      ApplicationContext applicationContext, Class<?> remoteServiceClass,
-      String remoteServiceRelativePath) {
+   /**
+    * Retrieve a GWT RPC service from a spring context. This implementation
+    * collects all assignable beans in the context. If no assignable bean can be
+    * found, it would returns <code>null</code>. If one an only one assignable
+    * bean can be found, it would be returned. If many assignable beans are
+    * found, this implementation would check if one of it has a matching
+    * {@link RemoteServiceRelativePath} annotation on its class. If so, it is
+    * returned. Otherwise, <code>null</code> is returned.
+    * 
+    * @param applicationContext The Spring context.
+    * @param remoteServiceClass The remote service interface of the Spring bean
+    *           to retrieve.
+    * @param remoteServiceRelativePath The remote service relative path of the
+    *           Spring bean to retrieve.
+    * @return The corresponding Spring bean, or null if no bean has been found
+    *         for this type and path.
+    */
+   protected Object findRpcServiceInSpringContext(ApplicationContext applicationContext,
+            Class<?> remoteServiceClass, String remoteServiceRelativePath) {
 
-    return GwtSpringHelper.findRpcServiceInSpringContext(applicationContext,
-        remoteServiceClass, remoteServiceRelativePath);
-  }
+      return GwtSpringHelper.findRpcServiceInSpringContext(applicationContext, remoteServiceClass,
+               remoteServiceRelativePath);
+   }
 
-  /**
-   * Get the Spring context which as been injected in the test class.
-   * 
-   * @return The injected Spring context.
-   * 
-   * @see ApplicationContextAware
-   */
-  protected ApplicationContext getApplicationContext() {
-    return applicationContext;
-  }
+   /**
+    * Get the Spring context which as been injected in the test class.
+    * 
+    * @return The injected Spring context.
+    * 
+    * @see ApplicationContextAware
+    */
+   protected ApplicationContext getApplicationContext() {
+      return applicationContext;
+   }
 
 }

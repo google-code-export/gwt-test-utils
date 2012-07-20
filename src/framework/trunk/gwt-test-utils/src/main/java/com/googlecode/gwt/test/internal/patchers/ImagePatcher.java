@@ -11,29 +11,29 @@ import com.googlecode.gwt.test.patchers.PatchMethod;
 @PatchClass(Image.class)
 class ImagePatcher {
 
-  private static final Pattern PATTERN = Pattern.compile("^(\\d+).*$");
+   private static final Pattern PATTERN = Pattern.compile("^(\\d+).*$");
 
-  @PatchMethod
-  static int getHeight(Image image) {
-    return getDim(image, "height");
-  }
+   @PatchMethod
+   static int getHeight(Image image) {
+      return getDim(image, "height");
+   }
 
-  @PatchMethod
-  static int getWidth(Image image) {
-    return getDim(image, "width");
-  }
+   @PatchMethod
+   static int getWidth(Image image) {
+      return getDim(image, "width");
+   }
 
-  private static int getDim(Image image, String dim) {
-    ImageElement elem = image.getElement().cast();
-    String width = elem.getStyle().getProperty(dim);
-    if (width == null) {
+   private static int getDim(Image image, String dim) {
+      ImageElement elem = image.getElement().cast();
+      String width = elem.getStyle().getProperty(dim);
+      if (width == null) {
+         return 0;
+      }
+      Matcher m = PATTERN.matcher(width);
+      if (m.matches()) {
+         return Integer.parseInt(m.group(1));
+      }
       return 0;
-    }
-    Matcher m = PATTERN.matcher(width);
-    if (m.matches()) {
-      return Integer.parseInt(m.group(1));
-    }
-    return 0;
-  }
+   }
 
 }

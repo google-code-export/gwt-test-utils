@@ -9,26 +9,26 @@ import com.google.gwt.core.client.Scheduler.RepeatingCommand;
 
 public class SchedulerTest extends GwtTestTest {
 
-  @Test
-  public void scheduleIncremental() {
-    // Arrange
-    final StringBuilder sb = new StringBuilder();
-    final int COUNT = 2;
+   @Test
+   public void scheduleIncremental() {
+      // Arrange
+      final StringBuilder sb = new StringBuilder();
+      final int COUNT = 2;
 
-    RepeatingCommand command = new RepeatingCommand() {
+      RepeatingCommand command = new RepeatingCommand() {
 
-      private int index = 0;
+         private int index = 0;
 
-      public boolean execute() {
-        sb.append(index++);
-        return index <= COUNT;
-      }
-    };
+         public boolean execute() {
+            sb.append(index++);
+            return index <= COUNT;
+         }
+      };
 
-    // Act
-    Scheduler.get().scheduleIncremental(command);
+      // Act
+      Scheduler.get().scheduleIncremental(command);
 
-    // Assert
-    assertEquals("012", sb.toString());
-  }
+      // Assert
+      assertEquals("012", sb.toString());
+   }
 }

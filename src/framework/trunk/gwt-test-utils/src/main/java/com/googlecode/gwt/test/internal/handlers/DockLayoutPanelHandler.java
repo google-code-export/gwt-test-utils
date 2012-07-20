@@ -15,18 +15,18 @@ import com.googlecode.gwt.test.utils.GwtReflectionUtils;
  */
 class DockLayoutPanelHandler implements GwtCreateHandler {
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.googlecode.gwt.test.GwtCreateHandler#create(java.lang.Class)
-   */
-  public Object create(Class<?> classLiteral) throws Exception {
-    if (!DockLayoutPanel.class.isAssignableFrom(classLiteral)) {
-      return null;
-    }
+   /*
+    * (non-Javadoc)
+    * 
+    * @see com.googlecode.gwt.test.GwtCreateHandler#create(java.lang.Class)
+    */
+   public Object create(Class<?> classLiteral) throws Exception {
+      if (!DockLayoutPanel.class.isAssignableFrom(classLiteral)) {
+         return null;
+      }
 
-    Constructor<?> cons = classLiteral.getConstructor(Unit.class);
-    return GwtReflectionUtils.instantiateClass(cons, Unit.EM);
-  }
+      Constructor<?> cons = classLiteral.getConstructor(Unit.class);
+      return GwtReflectionUtils.instantiateClass(cons, Unit.EM);
+   }
 
 }

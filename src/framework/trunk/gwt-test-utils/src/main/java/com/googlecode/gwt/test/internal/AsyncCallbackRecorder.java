@@ -14,63 +14,63 @@ import com.googlecode.gwt.test.exceptions.GwtTestPatchException;
  */
 public class AsyncCallbackRecorder implements AfterTestCallback {
 
-  public static final AsyncCallbackRecorder INSTANCE = new AsyncCallbackRecorder();
+   public static final AsyncCallbackRecorder INSTANCE = new AsyncCallbackRecorder();
 
-  public static AsyncCallbackRecorder get() {
-    return INSTANCE;
-  }
+   public static AsyncCallbackRecorder get() {
+      return INSTANCE;
+   }
 
-  private final Queue<Command> asyncCallbackCommands;
+   private final Queue<Command> asyncCallbackCommands;
 
-  private int recordingCount = 0;
+   private int recordingCount = 0;
 
-  private AsyncCallbackRecorder() {
-    this.asyncCallbackCommands = new LinkedList<Command>();
-    AfterTestCallbackManager.get().registerCallback(this);
-  }
+   private AsyncCallbackRecorder() {
+      this.asyncCallbackCommands = new LinkedList<Command>();
+      AfterTestCallbackManager.get().registerCallback(this);
+   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.googlecode.gwt.test.internal.AfterTestCallback#afterTest()
-   */
-  public void afterTest() throws Throwable {
-    if (asyncCallbackCommands.size() > 0) {
-      asyncCallbackCommands.clear();
-      recordingCount = 0;
-      throw new GwtTestPatchException(
-          "There are "
-              + asyncCallbackCommands.size()
-              + " pending asynchronus server calls. You have to trigger their callbacks manually be calling "
-              + AsyncCallbackRecorder.class.getName()
-              + ".triggerRecordedCallbacks() method in your test");
-    }
-  }
-
-  /**
-   * 
-   * @param asyncCallbackCommand
-   */
-  public void handleAsyncCallback(Command asyncCallbackCommand) {
-    if (recordingCount > 0) {
-      asyncCallbackCommands.add(asyncCallbackCommand);
-    } else {
-      asyncCallbackCommand.execute();
-    }
-  }
-
-  public void recordAsyncCalls() {
-    recordingCount++;
-  }
-
-  public void triggerRecordedAsyncCallbacks() {
-    recordingCount--;
-
-    if (recordingCount == 0) {
-      while (!asyncCallbackCommands.isEmpty()) {
-        asyncCallbackCommands.poll().execute();
+   /*
+    * (non-Javadoc)
+    * 
+    * @see com.googlecode.gwt.test.internal.AfterTestCallback#afterTest()
+    */
+   public void afterTest() throws Throwable {
+      if (asyncCallbackCommands.size() > 0) {
+         asyncCallbackCommands.clear();
+         recordingCount = 0;
+         throw new GwtTestPatchException(
+                  "There are "
+                           + asyncCallbackCommands.size()
+                           + " pending asynchronus server calls. You have to trigger their callbacks manually be calling "
+                           + AsyncCallbackRecorder.class.getName()
+                           + ".triggerRecordedCallbacks() method in your test");
       }
-    }
-  }
+   }
+
+   /**
+    * 
+    * @param asyncCallbackCommand
+    */
+   public void handleAsyncCallback(Command asyncCallbackCommand) {
+      if (recordingCount > 0) {
+         asyncCallbackCommands.add(asyncCallbackCommand);
+      } else {
+         asyncCallbackCommand.execute();
+      }
+   }
+
+   public void recordAsyncCalls() {
+      recordingCount++;
+   }
+
+   public void triggerRecordedAsyncCallbacks() {
+      recordingCount--;
+
+      if (recordingCount == 0) {
+         while (!asyncCallbackCommands.isEmpty()) {
+            asyncCallbackCommands.poll().execute();
+         }
+      }
+   }
 
 }

@@ -10,14 +10,12 @@ import com.googlecode.gwt.test.internal.GwtFactory;
 
 public class GwtTestContextLoader extends GenericXmlContextLoader {
 
-  @Override
-  protected BeanDefinitionReader createBeanDefinitionReader(
-      GenericApplicationContext context) {
-    XmlBeanDefinitionReader beanDefinitionReader = new XmlBeanDefinitionReader(
-        context);
-    beanDefinitionReader.setResourceLoader(new DefaultResourceLoader(
-        GwtFactory.get().getClassLoader()));
-    return beanDefinitionReader;
-  }
+   @Override
+   protected BeanDefinitionReader createBeanDefinitionReader(GenericApplicationContext context) {
+      XmlBeanDefinitionReader beanDefinitionReader = new XmlBeanDefinitionReader(context);
+      beanDefinitionReader.setResourceLoader(new DefaultResourceLoader(
+               GwtFactory.get().getClassLoader()));
+      return beanDefinitionReader;
+   }
 
 }

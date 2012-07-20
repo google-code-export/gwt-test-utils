@@ -6,14 +6,14 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 public class GwtSpringJUnit4ClassRunner extends SpringJUnit4ClassRunner {
 
-  public GwtSpringJUnit4ClassRunner(Class<?> clazz) throws InitializationError {
-    super(clazz);
-  }
+   public GwtSpringJUnit4ClassRunner(Class<?> clazz) throws InitializationError {
+      super(clazz);
+   }
 
-  @Override
-  public void run(RunNotifier notifier) {
-    notifier.addListener(new GwtRunListener());
-    super.run(notifier);
-  }
+   @Override
+   public void run(RunNotifier notifier) {
+      notifier.addListener(new GwtRunListener());
+      super.run(notifier);
+   }
 
 }

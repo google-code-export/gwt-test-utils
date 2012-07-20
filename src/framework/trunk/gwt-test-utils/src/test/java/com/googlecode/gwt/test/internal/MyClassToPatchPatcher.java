@@ -14,29 +14,26 @@ import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 @PatchClass(MyClassToPatch.class)
 class MyClassToPatchPatcher {
 
-  @PatchClass(MyInnerClass.class)
-  static class MyInnerClassPatcher {
+   @PatchClass(MyInnerClass.class)
+   static class MyInnerClassPatcher {
 
-    @PatchMethod
-    static String getInnerString(MyInnerClass innerObject) {
-      String value = GwtReflectionUtils.getPrivateFieldValue(innerObject,
-          "new_string_attr");
-      return "patched by " + MyInnerClassOverridePatcher.class.getSimpleName()
-          + " : " + value;
-    }
+      @PatchMethod
+      static String getInnerString(MyInnerClass innerObject) {
+         String value = GwtReflectionUtils.getPrivateFieldValue(innerObject, "new_string_attr");
+         return "patched by " + MyInnerClassOverridePatcher.class.getSimpleName() + " : " + value;
+      }
 
-    @InitMethod
-    static void initMyInnerClass(CtClass c) throws CannotCompileException {
-      CtField field = CtField.make(
-          "private String new_string_attr = \"new field added in init\";", c);
-      c.addField(field);
-    }
-  }
+      @InitMethod
+      static void initMyInnerClass(CtClass c) throws CannotCompileException {
+         CtField field = CtField.make(
+                  "private String new_string_attr = \"new field added in init\";", c);
+         c.addField(field);
+      }
+   }
 
-  @PatchMethod
-  static String myStringMethod(MyClassToPatch myClassToPatch,
-      MyInnerClass innerObject) {
-    return "myStringMethod has been patched : " + innerObject.getInnerString();
-  }
+   @PatchMethod
+   static String myStringMethod(MyClassToPatch myClassToPatch, MyInnerClass innerObject) {
+      return "myStringMethod has been patched : " + innerObject.getInnerString();
+   }
 
 }

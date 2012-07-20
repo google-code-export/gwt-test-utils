@@ -13,15 +13,13 @@ import com.googlecode.gwt.test.patchers.PatchClass;
 @PatchClass(SimpleEventBus.class)
 class SimpleEventBusPatcher {
 
-  @InitMethod
-  static void initCtClass(CtClass c) throws NotFoundException,
-      CannotCompileException {
-    CtMethod doFire = c.getDeclaredMethod("doFire");
+   @InitMethod
+   static void initCtClass(CtClass c) throws NotFoundException, CannotCompileException {
+      CtMethod doFire = c.getDeclaredMethod("doFire");
 
-    doFire.insertBefore(AsyncCallbackRecorder.class.getName()
-        + ".get().recordAsyncCalls();");
-    doFire.insertAfter(AsyncCallbackRecorder.class.getName()
-        + ".get().triggerRecordedAsyncCallbacks();");
-  }
+      doFire.insertBefore(AsyncCallbackRecorder.class.getName() + ".get().recordAsyncCalls();");
+      doFire.insertAfter(AsyncCallbackRecorder.class.getName()
+               + ".get().triggerRecordedAsyncCallbacks();");
+   }
 
 }

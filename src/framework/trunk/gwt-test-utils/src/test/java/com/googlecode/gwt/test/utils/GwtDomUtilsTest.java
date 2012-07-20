@@ -11,28 +11,28 @@ import com.googlecode.gwt.test.utils.GwtDomUtils;
 
 public class GwtDomUtilsTest extends GwtTestTest {
 
-  @Test
-  public void setClientHeight() {
-    // Arrange
-    Element e = Document.get().createAnchorElement();
+   @Test
+   public void setClientHeight() {
+      // Arrange
+      Element e = Document.get().createAnchorElement();
 
-    // Act
-    GwtDomUtils.setClientHeight(e, 4);
+      // Act
+      GwtDomUtils.setClientHeight(e, 4);
 
-    // Assert
-    assertEquals(4, e.getClientHeight());
-  }
+      // Assert
+      assertEquals(4, e.getClientHeight());
+   }
 
-  @Test
-  public void setClientWidth() {
-    // Arrange
-    Element e = Document.get().createAnchorElement();
+   @Test
+   public void setClientWidth() {
+      // Arrange
+      Element e = Document.get().createAnchorElement();
 
-    // Act
-    GwtDomUtils.setClientWidth(e, 4);
+      // Act
+      GwtDomUtils.setClientWidth(e, 4);
 
-    // Assert
-    assertEquals(4, e.getClientWidth());
-  }
+      // Assert
+      assertEquals(4, e.getClientWidth());
+   }
 
 }

@@ -12,13 +12,12 @@ import com.googlecode.gwt.test.patchers.PatchClass;
 @PatchClass(GWT.class)
 class GwtPatcher {
 
-  @InitMethod
-  static void init(CtClass ctClass) throws CannotCompileException {
+   @InitMethod
+   static void init(CtClass ctClass) throws CannotCompileException {
 
-    CtConstructor staticInitializer = ctClass.makeClassInitializer();
+      CtConstructor staticInitializer = ctClass.makeClassInitializer();
 
-    staticInitializer.insertAfter("setBridge("
-        + GwtTestGWTBridge.class.getName() + ".get());");
-  }
+      staticInitializer.insertAfter("setBridge(" + GwtTestGWTBridge.class.getName() + ".get());");
+   }
 
 }

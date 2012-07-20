@@ -20,101 +20,100 @@ import com.googlecode.gwt.test.utils.events.Browser.BrowserErrorHandler;
 
 public class CellListTest extends GwtTestTest {
 
-  private static final List<String> DAYS = Arrays.asList("Sunday", "Monday",
-      "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday");
+   private static final List<String> DAYS = Arrays.asList("Sunday", "Monday", "Tuesday",
+            "Wednesday", "Thursday", "Friday", "Saturday");
 
-  private CellList<String> cellList;
+   private CellList<String> cellList;
 
-  private final StringBuilder sb = new StringBuilder();
+   private final StringBuilder sb = new StringBuilder();
 
-  @Before
-  public void beforeCellListTest() {
-    sb.delete(0, sb.length());
+   @Before
+   public void beforeCellListTest() {
+      sb.delete(0, sb.length());
 
-    setBrowserErrorHandler(new BrowserErrorHandler() {
+      setBrowserErrorHandler(new BrowserErrorHandler() {
 
-      public void onError(String errorMessage) {
-        sb.append(errorMessage);
-      }
-    });
+         public void onError(String errorMessage) {
+            sb.append(errorMessage);
+         }
+      });
 
-    // Create a cell to render each value.
-    TextCell textCell = new TextCell();
+      // Create a cell to render each value.
+      TextCell textCell = new TextCell();
 
-    // Create the CellList that uses the cell.
-    cellList = new CellList<String>(textCell);
+      // Create the CellList that uses the cell.
+      cellList = new CellList<String>(textCell);
 
-    // Set the total row count. This isn't strictly necessary, but it affects
-    // paging calculations, so its good habit to keep the row count up to date.
-    cellList.setRowCount(DAYS.size(), true);
+      // Set the total row count. This isn't strictly necessary, but it affects
+      // paging calculations, so its good habit to keep the row count up to
+      // date.
+      cellList.setRowCount(DAYS.size(), true);
 
-    // Push the data into the widget.
-    cellList.setRowData(0, DAYS);
+      // Push the data into the widget.
+      cellList.setRowData(0, DAYS);
 
-    cellList.setVisibleRange(0, 5);
+      cellList.setVisibleRange(0, 5);
 
-    // Add it to the root panel.
-    RootPanel.get().add(cellList);
+      // Add it to the root panel.
+      RootPanel.get().add(cellList);
 
-    // Pre-Assert
-    assertEquals(DAYS.size(), cellList.getRowCount());
-    assertEquals(5, cellList.getVisibleItemCount());
-    assertEquals("Thursday",
-        cellList.getVisibleItem(cellList.getVisibleItemCount() - 1));
-  }
+      // Pre-Assert
+      assertEquals(DAYS.size(), cellList.getRowCount());
+      assertEquals(5, cellList.getVisibleItemCount());
+      assertEquals("Thursday", cellList.getVisibleItem(cellList.getVisibleItemCount() - 1));
+   }
 
-  @Test
-  public void selectWithClick() {
-    // Arrange
-    final StringBuilder sb = new StringBuilder();
+   @Test
+   public void selectWithClick() {
+      // Arrange
+      final StringBuilder sb = new StringBuilder();
 
-    final SingleSelectionModel<String> selectionModel = new SingleSelectionModel<String>();
-    cellList.setSelectionModel(selectionModel);
-    selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
-      public void onSelectionChange(SelectionChangeEvent event) {
-        String selected = selectionModel.getSelectedObject();
-        if (selected != null) {
-          sb.append("selected : " + selected);
-        }
-      }
-    });
+      final SingleSelectionModel<String> selectionModel = new SingleSelectionModel<String>();
+      cellList.setSelectionModel(selectionModel);
+      selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
+         public void onSelectionChange(SelectionChangeEvent event) {
+            String selected = selectionModel.getSelectedObject();
+            if (selected != null) {
+               sb.append("selected : " + selected);
+            }
+         }
+      });
 
-    // Act 1
-    Browser.click(cellList, "Wednesday");
+      // Act 1
+      Browser.click(cellList, "Wednesday");
 
-    // Assert 1
-    assertEquals("selected : Wednesday", sb.toString());
-    assertTrue(cellList.getSelectionModel().isSelected("Wednesday"));
+      // Assert 1
+      assertEquals("selected : Wednesday", sb.toString());
+      assertTrue(cellList.getSelectionModel().isSelected("Wednesday"));
 
-    // Act 2 : deselect
+      // Act 2 : deselect
 
-    Browser.click(cellList, "Wednesday");
+      Browser.click(cellList, "Wednesday");
 
-    // Assert 2
-    assertEquals("selected : Wednesday", sb.toString());
-    assertFalse(cellList.getSelectionModel().isSelected("Wednesday"));
-  }
+      // Assert 2
+      assertEquals("selected : Wednesday", sb.toString());
+      assertFalse(cellList.getSelectionModel().isSelected("Wednesday"));
+   }
 
-  @Test
-  public void selectWithClick_OutOfRange() {
-    // Arrange
-    final SingleSelectionModel<String> selectionModel = new SingleSelectionModel<String>();
-    cellList.setSelectionModel(selectionModel);
-    selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
-      public void onSelectionChange(SelectionChangeEvent event) {
-        String selected = selectionModel.getSelectedObject();
-        if (selected != null) {
-          sb.append("selected : " + selected);
-        }
-      }
-    });
+   @Test
+   public void selectWithClick_OutOfRange() {
+      // Arrange
+      final SingleSelectionModel<String> selectionModel = new SingleSelectionModel<String>();
+      cellList.setSelectionModel(selectionModel);
+      selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
+         public void onSelectionChange(SelectionChangeEvent event) {
+            String selected = selectionModel.getSelectedObject();
+            if (selected != null) {
+               sb.append("selected : " + selected);
+            }
+         }
+      });
 
-    Browser.click(cellList, "Saturday");
+      Browser.click(cellList, "Saturday");
 
-    // Assert : no trigger because "Saturday" is not visible
-    assertEquals(
-        "the item to click is now visible in the targeted CellList instance",
-        sb.toString());
-    assertFalse(cellList.getSelectionModel().isSelected("Saturday"));
-  }
+      // Assert : no trigger because "Saturday" is not visible
+      assertEquals("the item to click is now visible in the targeted CellList instance",
+               sb.toString());
+      assertFalse(cellList.getSelectionModel().isSelected("Saturday"));
+   }
 }

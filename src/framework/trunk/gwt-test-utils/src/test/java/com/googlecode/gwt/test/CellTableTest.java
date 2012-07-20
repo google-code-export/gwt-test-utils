@@ -18,94 +18,93 @@ import com.googlecode.gwt.test.utils.events.Browser;
 
 public class CellTableTest extends GwtTestTest {
 
-  // A simple data type that represents a contact.
-  private static class Contact {
-    private final String address;
-    private final String name;
+   // A simple data type that represents a contact.
+   private static class Contact {
+      private final String address;
+      private final String name;
 
-    public Contact(String name, String address) {
-      this.name = name;
-      this.address = address;
-    }
-  }
-
-  // The list of data to display.
-  private static List<Contact> CONTACTS = Arrays.asList(new Contact("Gael",
-      "666 Evil"), new Contact("John", "123 Fourth Road"), new Contact("Mary",
-      "222 Lancer Lane"));
-
-  private CellTable<Contact> table;
-
-  @Before
-  public void beforeCellTableTest() {
-    // Create a CellTable.
-    table = new CellTable<Contact>();
-
-    // Create name column.
-    TextColumn<Contact> nameColumn = new TextColumn<Contact>() {
-      @Override
-      public String getValue(Contact contact) {
-        return contact.name;
+      public Contact(String name, String address) {
+         this.name = name;
+         this.address = address;
       }
-    };
+   }
 
-    // Create address column.
-    TextColumn<Contact> addressColumn = new TextColumn<Contact>() {
-      @Override
-      public String getValue(Contact contact) {
-        return contact.address;
-      }
-    };
+   // The list of data to display.
+   private static List<Contact> CONTACTS = Arrays.asList(new Contact("Gael", "666 Evil"),
+            new Contact("John", "123 Fourth Road"), new Contact("Mary", "222 Lancer Lane"));
 
-    // Add the columns.
-    table.addColumn(nameColumn, "Name");
-    table.addColumn(addressColumn, "Address");
+   private CellTable<Contact> table;
 
-    // Set the total row count. This isn't strictly necessary, but it affects
-    // paging calculations, so its good habit to keep the row count up to
-    // date.
-    table.setRowCount(CONTACTS.size(), true);
+   @Before
+   public void beforeCellTableTest() {
+      // Create a CellTable.
+      table = new CellTable<Contact>();
 
-    // Push the data into the widget.
-    table.setRowData(0, CONTACTS);
+      // Create name column.
+      TextColumn<Contact> nameColumn = new TextColumn<Contact>() {
+         @Override
+         public String getValue(Contact contact) {
+            return contact.name;
+         }
+      };
 
-    table.setVisibleRange(0, 2);
+      // Create address column.
+      TextColumn<Contact> addressColumn = new TextColumn<Contact>() {
+         @Override
+         public String getValue(Contact contact) {
+            return contact.address;
+         }
+      };
 
-    // Pre-Assert
-    assertEquals(3, table.getRowCount());
-    assertEquals(2, table.getVisibleItemCount());
-  }
+      // Add the columns.
+      table.addColumn(nameColumn, "Name");
+      table.addColumn(addressColumn, "Address");
 
-  @Test
-  public void click() {
-    // Arrange
-    final StringBuilder sb = new StringBuilder();
+      // Set the total row count. This isn't strictly necessary, but it affects
+      // paging calculations, so its good habit to keep the row count up to
+      // date.
+      table.setRowCount(CONTACTS.size(), true);
 
-    // Add a selection model to handle user selection.
-    final SingleSelectionModel<Contact> selectionModel = new SingleSelectionModel<Contact>();
-    table.setSelectionModel(selectionModel);
-    selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
-      public void onSelectionChange(SelectionChangeEvent event) {
-        Contact selected = selectionModel.getSelectedObject();
-        if (selected != null) {
-          sb.append(selected.name).append(" : ").append(selected.address);
-        }
-      }
-    });
+      // Push the data into the widget.
+      table.setRowData(0, CONTACTS);
 
-    // Act 1
-    Browser.click(table, CONTACTS.get(0));
+      table.setVisibleRange(0, 2);
 
-    // Assert 1
-    assertEquals("Gael : 666 Evil", sb.toString());
-    assertTrue(table.getSelectionModel().isSelected(CONTACTS.get(0)));
+      // Pre-Assert
+      assertEquals(3, table.getRowCount());
+      assertEquals(2, table.getVisibleItemCount());
+   }
 
-    // Act 2 : deselect
-    Browser.click(table, CONTACTS.get(0));
+   @Test
+   public void click() {
+      // Arrange
+      final StringBuilder sb = new StringBuilder();
 
-    // Assert 2
-    assertEquals("Gael : 666 Evil", sb.toString());
-    assertFalse(table.getSelectionModel().isSelected(CONTACTS.get(0)));
+      // Add a selection model to handle user selection.
+      final SingleSelectionModel<Contact> selectionModel = new SingleSelectionModel<Contact>();
+      table.setSelectionModel(selectionModel);
+      selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
+         public void onSelectionChange(SelectionChangeEvent event) {
+            Contact selected = selectionModel.getSelectedObject();
+            if (selected != null) {
+               sb.append(selected.name).append(" : ").append(selected.address);
+            }
+         }
+      });
 
-  }
+      // Act 1
+      Browser.click(table, CONTACTS.get(0));
+
+      // Assert 1
+      assertEquals("Gael : 666 Evil", sb.toString());
+      assertTrue(table.getSelectionModel().isSelected(CONTACTS.get(0)));
+
+      // Act 2 : deselect
+      Browser.click(table, CONTACTS.get(0));
+
+      // Assert 2
+      assertEquals("Gael : 666 Evil", sb.toString());
+      assertFalse(table.getSelectionModel().isSelected(CONTACTS.get(0)));
+
+   }
 }

@@ -14,14 +14,14 @@ import org.junit.runners.model.InitializationError;
  */
 public class GwtBlockJUnit4ClassRunner extends BlockJUnit4ClassRunner {
 
-  public GwtBlockJUnit4ClassRunner(Class<?> klass) throws InitializationError {
-    super(klass);
-  }
+   public GwtBlockJUnit4ClassRunner(Class<?> klass) throws InitializationError {
+      super(klass);
+   }
 
-  @Override
-  public void run(RunNotifier notifier) {
-    notifier.addListener(new GwtRunListener());
-    super.run(notifier);
-  }
+   @Override
+   public void run(RunNotifier notifier) {
+      notifier.addListener(new GwtRunListener());
+      super.run(notifier);
+   }
 
 }

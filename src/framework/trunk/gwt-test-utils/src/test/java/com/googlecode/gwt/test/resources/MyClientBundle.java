@@ -9,27 +9,27 @@ import com.google.gwt.user.client.impl.WindowImplIE.Resources;
 
 public interface MyClientBundle extends CellTable.Resources, Resources {
 
-  public static final MyClientBundle INSTANCE = GWT.create(MyClientBundle.class);
+   public static final MyClientBundle INSTANCE = GWT.create(MyClientBundle.class);
 
-  public ImageResource doubleShouldThrowException();
+   public ImageResource doubleShouldThrowException();
 
-  @Source({"css/myCssResource.css", "css/addedStyles.css"})
-  public MultipleFileCssResource multipleFileCssResource();
+   @Source({"css/myCssResource.css", "css/addedStyles.css"})
+   public MultipleFileCssResource multipleFileCssResource();
 
-  @Source("root-classpath-img.png")
-  public ImageResource rootClasspathImg();
+   @Source("root-classpath-img.png")
+   public ImageResource rootClasspathImg();
 
-  @Source("css/myCssResource.css")
-  public MyCssResource cssResource();
+   @Source("css/myCssResource.css")
+   public MyCssResource cssResource();
 
-  @Source("textResourceXml.xml")
-  public DataResource dataResource();
+   @Source("textResourceXml.xml")
+   public DataResource dataResource();
 
-  public ImageResource imageResource();
+   public ImageResource imageResource();
 
-  public TextResource textResourceTxt();
+   public TextResource textResourceTxt();
 
-  @Source("textResourceXml.xml")
-  public TextResource textResourceXml();
+   @Source("textResourceXml.xml")
+   public TextResource textResourceXml();
 
 }

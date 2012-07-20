@@ -29,153 +29,151 @@ import com.googlecode.gwt.test.uibinder.UiBinderCreateHandler;
  */
 public class GwtTestGWTBridge extends GWTBridge implements AfterTestCallback {
 
-  private static final GwtTestGWTBridge INSTANCE = new GwtTestGWTBridge();
+   private static final GwtTestGWTBridge INSTANCE = new GwtTestGWTBridge();
 
-  public static GwtTestGWTBridge get() {
-    return INSTANCE;
-  }
+   public static GwtTestGWTBridge get() {
+      return INSTANCE;
+   }
 
-  private final GwtCreateHandler abstractClassCreateHandler;
+   private final GwtCreateHandler abstractClassCreateHandler;
 
-  private final List<GwtCreateHandler> addedHandlers;
-  private final GwtCreateHandler animationSchedulerCreateHandler;
-  private final GwtCreateHandler cellBasedWidgetImplCreateHandler;
-  private final GwtCreateHandler clientBundleCreateHander;
-  private final GwtCreateHandler defaultGwtCreateHandler;
-  private final GwtCreateHandler deferredGenerateWithCreateHandler;
-  private final GwtCreateHandler deferredReplaceWithCreateHandler;
-  private final GwtCreateHandler dockLayoutPanelCreateHandler;
-  private final GwtCreateHandler imageBundleCreateHandler;
-  private final GwtCreateHandler localizableResourceCreateHandler;
-  private GwtCreateHandler mockCreateHandler;
-  private final GwtCreateHandler placeHistoryMapperCreateHandler;
-  private final GwtCreateHandler resizeLayoutPanelImplCreateHandler;
-  private final GwtCreateHandler safeHtmlTemplatesCreateHandler;
-  private final GwtCreateHandler simpleBeanEditorDriverCreateHandler;
-  private final TestRemoteServiceCreateHandler testRemoteServiceCreateHandler;
-  private final GwtCreateHandler uiBinderCreateHandler;
-  private final WebXmlRemoteServiceCreateHandler webXmlRemoteServiceCreateHandler;
+   private final List<GwtCreateHandler> addedHandlers;
+   private final GwtCreateHandler animationSchedulerCreateHandler;
+   private final GwtCreateHandler cellBasedWidgetImplCreateHandler;
+   private final GwtCreateHandler clientBundleCreateHander;
+   private final GwtCreateHandler defaultGwtCreateHandler;
+   private final GwtCreateHandler deferredGenerateWithCreateHandler;
+   private final GwtCreateHandler deferredReplaceWithCreateHandler;
+   private final GwtCreateHandler dockLayoutPanelCreateHandler;
+   private final GwtCreateHandler imageBundleCreateHandler;
+   private final GwtCreateHandler localizableResourceCreateHandler;
+   private GwtCreateHandler mockCreateHandler;
+   private final GwtCreateHandler placeHistoryMapperCreateHandler;
+   private final GwtCreateHandler resizeLayoutPanelImplCreateHandler;
+   private final GwtCreateHandler safeHtmlTemplatesCreateHandler;
+   private final GwtCreateHandler simpleBeanEditorDriverCreateHandler;
+   private final TestRemoteServiceCreateHandler testRemoteServiceCreateHandler;
+   private final GwtCreateHandler uiBinderCreateHandler;
+   private final WebXmlRemoteServiceCreateHandler webXmlRemoteServiceCreateHandler;
 
-  private GwtTestGWTBridge() {
-    // TODO : all createHandler should be singleton ?
-    abstractClassCreateHandler = new AbstractClassCreateHandler();
-    addedHandlers = new ArrayList<GwtCreateHandler>();
-    animationSchedulerCreateHandler = new AnimationSchedulerCreateHandler();
-    cellBasedWidgetImplCreateHandler = new CellBasedWidgetImplCreateHandler();
-    clientBundleCreateHander = new ClientBundleCreateHandler();
-    defaultGwtCreateHandler = new DefaultGwtCreateHandler();
-    deferredGenerateWithCreateHandler = new DeferredGenerateWithCreateHandler();
-    deferredReplaceWithCreateHandler = new DeferredReplaceWithCreateHandler();
-    dockLayoutPanelCreateHandler = new DockLayoutPanelHandler();
-    imageBundleCreateHandler = new ImageBundleCreateHandler();
-    localizableResourceCreateHandler = new LocalizableResourceCreateHandler();
-    placeHistoryMapperCreateHandler = new PlaceHistoryMapperCreateHandler();
-    resizeLayoutPanelImplCreateHandler = new ResizeLayoutPanelImplCreateHandler();
-    safeHtmlTemplatesCreateHandler = new SafeHtmlTemplatesCreateHandler();
-    simpleBeanEditorDriverCreateHandler = new SimpleBeanEditorDriverCreateHandler();
-    uiBinderCreateHandler = UiBinderCreateHandler.get();
-    testRemoteServiceCreateHandler = TestRemoteServiceCreateHandler.get();
-    webXmlRemoteServiceCreateHandler = new WebXmlRemoteServiceCreateHandler();
+   private GwtTestGWTBridge() {
+      // TODO : all createHandler should be singleton ?
+      abstractClassCreateHandler = new AbstractClassCreateHandler();
+      addedHandlers = new ArrayList<GwtCreateHandler>();
+      animationSchedulerCreateHandler = new AnimationSchedulerCreateHandler();
+      cellBasedWidgetImplCreateHandler = new CellBasedWidgetImplCreateHandler();
+      clientBundleCreateHander = new ClientBundleCreateHandler();
+      defaultGwtCreateHandler = new DefaultGwtCreateHandler();
+      deferredGenerateWithCreateHandler = new DeferredGenerateWithCreateHandler();
+      deferredReplaceWithCreateHandler = new DeferredReplaceWithCreateHandler();
+      dockLayoutPanelCreateHandler = new DockLayoutPanelHandler();
+      imageBundleCreateHandler = new ImageBundleCreateHandler();
+      localizableResourceCreateHandler = new LocalizableResourceCreateHandler();
+      placeHistoryMapperCreateHandler = new PlaceHistoryMapperCreateHandler();
+      resizeLayoutPanelImplCreateHandler = new ResizeLayoutPanelImplCreateHandler();
+      safeHtmlTemplatesCreateHandler = new SafeHtmlTemplatesCreateHandler();
+      simpleBeanEditorDriverCreateHandler = new SimpleBeanEditorDriverCreateHandler();
+      uiBinderCreateHandler = UiBinderCreateHandler.get();
+      testRemoteServiceCreateHandler = TestRemoteServiceCreateHandler.get();
+      webXmlRemoteServiceCreateHandler = new WebXmlRemoteServiceCreateHandler();
 
-    AfterTestCallbackManager.get().registerCallback(this);
-  }
+      AfterTestCallbackManager.get().registerCallback(this);
+   }
 
-  public boolean addGwtCreateHandler(GwtCreateHandler gwtCreateHandler) {
-    return addedHandlers.add(gwtCreateHandler);
-  }
+   public boolean addGwtCreateHandler(GwtCreateHandler gwtCreateHandler) {
+      return addedHandlers.add(gwtCreateHandler);
+   }
 
-  public void afterTest() throws Throwable {
-    addedHandlers.clear();
-    testRemoteServiceCreateHandler.reset();
-    mockCreateHandler = null;
-  }
+   public void afterTest() throws Throwable {
+      addedHandlers.clear();
+      testRemoteServiceCreateHandler.reset();
+      mockCreateHandler = null;
+   }
 
-  @SuppressWarnings("unchecked")
-  @Override
-  public <T> T create(Class<?> classLiteral) {
-    for (GwtCreateHandler gwtCreateHandler : getGwtCreateHandlers()) {
-      try {
-        Object o = gwtCreateHandler.create(classLiteral);
-        if (o != null) {
-          return (T) o;
-        }
-      } catch (Exception e) {
-        if (GwtTestException.class.isInstance(e)) {
-          throw (GwtTestException) e;
-        } else {
-          throw new GwtTestPatchException("Error while creating instance of '"
-              + classLiteral.getName() + "' through '"
-              + gwtCreateHandler.getClass().getName() + "' instance", e);
-        }
+   @SuppressWarnings("unchecked")
+   @Override
+   public <T> T create(Class<?> classLiteral) {
+      for (GwtCreateHandler gwtCreateHandler : getGwtCreateHandlers()) {
+         try {
+            Object o = gwtCreateHandler.create(classLiteral);
+            if (o != null) {
+               return (T) o;
+            }
+         } catch (Exception e) {
+            if (GwtTestException.class.isInstance(e)) {
+               throw (GwtTestException) e;
+            } else {
+               throw new GwtTestPatchException("Error while creating instance of '"
+                        + classLiteral.getName() + "' through '"
+                        + gwtCreateHandler.getClass().getName() + "' instance", e);
+            }
+         }
       }
-    }
 
-    throw new GwtTestDeferredBindingException(
-        "No declared "
-            + GwtCreateHandler.class.getSimpleName()
-            + " has been able to create an instance of '"
-            + classLiteral.getName()
-            + "'. You should add our own with "
-            + GwtConfig.get().getModuleRunner().getClass().getSimpleName()
-            + ".addGwtCreateHandler(..) method or declared your tested object with @"
-            + Mock.class.getSimpleName());
-  }
+      throw new GwtTestDeferredBindingException("No declared "
+               + GwtCreateHandler.class.getSimpleName()
+               + " has been able to create an instance of '" + classLiteral.getName()
+               + "'. You should add our own with "
+               + GwtConfig.get().getModuleRunner().getClass().getSimpleName()
+               + ".addGwtCreateHandler(..) method or declared your tested object with @"
+               + Mock.class.getSimpleName());
+   }
 
-  @Override
-  public String getVersion() {
-    return "GWT by gwt-test-utils";
-  }
+   @Override
+   public String getVersion() {
+      return "GWT by gwt-test-utils";
+   }
 
-  @Override
-  public boolean isClient() {
-    return true;
-  }
+   @Override
+   public boolean isClient() {
+      return true;
+   }
 
-  @Override
-  public void log(String message, Throwable e) {
-    GwtLogHandler logHandler = GwtConfig.get().getModuleRunner().getLogHandler();
-    if (logHandler != null) {
-      logHandler.log(message, e);
-    }
-  }
+   @Override
+   public void log(String message, Throwable e) {
+      GwtLogHandler logHandler = GwtConfig.get().getModuleRunner().getLogHandler();
+      if (logHandler != null) {
+         logHandler.log(message, e);
+      }
+   }
 
-  public void setMockCreateHandler(GwtCreateHandler mockCreateHandler) {
-    this.mockCreateHandler = mockCreateHandler;
-  }
+   public void setMockCreateHandler(GwtCreateHandler mockCreateHandler) {
+      this.mockCreateHandler = mockCreateHandler;
+   }
 
-  private List<GwtCreateHandler> getGwtCreateHandlers() {
-    List<GwtCreateHandler> list = new ArrayList<GwtCreateHandler>();
+   private List<GwtCreateHandler> getGwtCreateHandlers() {
+      List<GwtCreateHandler> list = new ArrayList<GwtCreateHandler>();
 
-    // declared @Mock objects creation
-    if (mockCreateHandler != null) {
-      list.add(mockCreateHandler);
-    }
+      // declared @Mock objects creation
+      if (mockCreateHandler != null) {
+         list.add(mockCreateHandler);
+      }
 
-    // than, add all user custom createHandlers
-    list.addAll(addedHandlers);
+      // than, add all user custom createHandlers
+      list.addAll(addedHandlers);
 
-    // than, add custom deferred bindings
-    list.add(deferredReplaceWithCreateHandler);
-    list.add(deferredGenerateWithCreateHandler);
+      // than, add custom deferred bindings
+      list.add(deferredReplaceWithCreateHandler);
+      list.add(deferredGenerateWithCreateHandler);
 
-    // finally, add all default gwt-test-utils createHandlers
-    list.add(localizableResourceCreateHandler);
-    list.add(clientBundleCreateHander);
-    list.add(imageBundleCreateHandler);
-    list.add(dockLayoutPanelCreateHandler);
-    list.add(resizeLayoutPanelImplCreateHandler);
-    list.add(uiBinderCreateHandler);
-    list.add(testRemoteServiceCreateHandler);
-    list.add(webXmlRemoteServiceCreateHandler);
-    list.add(cellBasedWidgetImplCreateHandler);
-    list.add(animationSchedulerCreateHandler);
-    list.add(defaultGwtCreateHandler);
-    list.add(abstractClassCreateHandler);
-    list.add(safeHtmlTemplatesCreateHandler);
-    list.add(simpleBeanEditorDriverCreateHandler);
-    list.add(placeHistoryMapperCreateHandler);
+      // finally, add all default gwt-test-utils createHandlers
+      list.add(localizableResourceCreateHandler);
+      list.add(clientBundleCreateHander);
+      list.add(imageBundleCreateHandler);
+      list.add(dockLayoutPanelCreateHandler);
+      list.add(resizeLayoutPanelImplCreateHandler);
+      list.add(uiBinderCreateHandler);
+      list.add(testRemoteServiceCreateHandler);
+      list.add(webXmlRemoteServiceCreateHandler);
+      list.add(cellBasedWidgetImplCreateHandler);
+      list.add(animationSchedulerCreateHandler);
+      list.add(defaultGwtCreateHandler);
+      list.add(abstractClassCreateHandler);
+      list.add(safeHtmlTemplatesCreateHandler);
+      list.add(simpleBeanEditorDriverCreateHandler);
+      list.add(placeHistoryMapperCreateHandler);
 
-    return list;
-  }
+      return list;
+   }
 
 }

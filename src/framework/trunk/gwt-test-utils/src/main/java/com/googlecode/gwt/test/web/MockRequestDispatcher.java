@@ -36,57 +36,53 @@ import org.slf4j.LoggerFactory;
  */
 public class MockRequestDispatcher implements RequestDispatcher {
 
-  private final Logger logger = LoggerFactory.getLogger(getClass());
+   private final Logger logger = LoggerFactory.getLogger(getClass());
 
-  private final String url;
+   private final String url;
 
-  /**
-   * Create a new MockRequestDispatcher for the given URL.
-   * 
-   * @param url the URL to dispatch to.
-   */
-  public MockRequestDispatcher(String url) {
-    assertThat(url).as("URL must not be null").isNotNull();
-    this.url = url;
-  }
+   /**
+    * Create a new MockRequestDispatcher for the given URL.
+    * 
+    * @param url the URL to dispatch to.
+    */
+   public MockRequestDispatcher(String url) {
+      assertThat(url).as("URL must not be null").isNotNull();
+      this.url = url;
+   }
 
-  public void forward(ServletRequest request, ServletResponse response) {
-    assertThat(request).as("Request must not be null").isNotNull();
-    assertThat(response).as("Response must not be null").isNotNull();
-    if (response.isCommitted()) {
-      throw new IllegalStateException(
-          "Cannot perform forward - response is already committed");
-    }
-    getMockHttpServletResponse(response).setForwardedUrl(this.url);
-    if (logger.isDebugEnabled()) {
-      logger.debug("MockRequestDispatcher: forwarding to URL [" + this.url
-          + "]");
-    }
-  }
+   public void forward(ServletRequest request, ServletResponse response) {
+      assertThat(request).as("Request must not be null").isNotNull();
+      assertThat(response).as("Response must not be null").isNotNull();
+      if (response.isCommitted()) {
+         throw new IllegalStateException("Cannot perform forward - response is already committed");
+      }
+      getMockHttpServletResponse(response).setForwardedUrl(this.url);
+      if (logger.isDebugEnabled()) {
+         logger.debug("MockRequestDispatcher: forwarding to URL [" + this.url + "]");
+      }
+   }
 
-  public void include(ServletRequest request, ServletResponse response) {
-    assertThat(request).as("Request must not be null").isNotNull();
-    assertThat(response).as("Response must not be null").isNotNull();
-    getMockHttpServletResponse(response).addIncludedUrl(this.url);
-    if (logger.isDebugEnabled()) {
-      logger.debug("MockRequestDispatcher: including URL [" + this.url + "]");
-    }
-  }
+   public void include(ServletRequest request, ServletResponse response) {
+      assertThat(request).as("Request must not be null").isNotNull();
+      assertThat(response).as("Response must not be null").isNotNull();
+      getMockHttpServletResponse(response).addIncludedUrl(this.url);
+      if (logger.isDebugEnabled()) {
+         logger.debug("MockRequestDispatcher: including URL [" + this.url + "]");
+      }
+   }
 
-  /**
-   * Obtain the underlying MockHttpServletResponse, unwrapping
-   * {@link HttpServletResponseWrapper} decorators if necessary.
-   */
-  protected MockHttpServletResponse getMockHttpServletResponse(
-      ServletResponse response) {
-    if (response instanceof MockHttpServletResponse) {
-      return (MockHttpServletResponse) response;
-    }
-    if (response instanceof HttpServletResponseWrapper) {
-      return getMockHttpServletResponse(((HttpServletResponseWrapper) response).getResponse());
-    }
-    throw new IllegalArgumentException(
-        "MockRequestDispatcher requires MockHttpServletResponse");
-  }
+   /**
+    * Obtain the underlying MockHttpServletResponse, unwrapping
+    * {@link HttpServletResponseWrapper} decorators if necessary.
+    */
+   protected MockHttpServletResponse getMockHttpServletResponse(ServletResponse response) {
+      if (response instanceof MockHttpServletResponse) {
+         return (MockHttpServletResponse) response;
+      }
+      if (response instanceof HttpServletResponseWrapper) {
+         return getMockHttpServletResponse(((HttpServletResponseWrapper) response).getResponse());
+      }
+      throw new IllegalArgumentException("MockRequestDispatcher requires MockHttpServletResponse");
+   }
 
 }

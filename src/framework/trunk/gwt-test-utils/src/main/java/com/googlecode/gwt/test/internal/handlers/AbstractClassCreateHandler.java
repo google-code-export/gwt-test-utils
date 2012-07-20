@@ -32,58 +32,56 @@ import com.googlecode.gwt.test.utils.JavassistUtils;
  */
 class AbstractClassCreateHandler implements GwtCreateHandler {
 
-  private final Map<Class<?>, Class<?>> cache = new HashMap<Class<?>, Class<?>>();
+   private final Map<Class<?>, Class<?>> cache = new HashMap<Class<?>, Class<?>>();
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.googlecode.gwt.test.GwtCreateHandler#create(java.lang.Class)
-   */
-  public Object create(Class<?> classLiteral) throws Exception {
-    if (classLiteral.isAnnotation() || classLiteral.isArray()
-        || classLiteral.isEnum() || classLiteral.isInterface()
-        || !Modifier.isAbstract(classLiteral.getModifiers())) {
-      return null;
-    }
-
-    Class<?> newClass = cache.get(classLiteral);
-
-    if (newClass != null) {
-      return newClass.newInstance();
-    }
-
-    CtClass ctClass = GwtClassPool.getCtClass(classLiteral);
-    CtClass subClass = GwtClassPool.get().makeClass(
-        classLiteral.getCanonicalName() + "SubClass");
-
-    subClass.setSuperclass(ctClass);
-
-    subClass.setModifiers(Modifier.PUBLIC);
-
-    // handle case where the default constructor is declared in a super class
-    CtConstructor defaultConstructor = JavassistUtils.findConstructor(subClass);
-    if (defaultConstructor.getDeclaringClass() != subClass) {
-      defaultConstructor = new CtConstructor(defaultConstructor, subClass, null);
-      subClass.addConstructor(defaultConstructor);
-    }
-
-    if (!Modifier.isPublic(defaultConstructor.getModifiers())) {
-      defaultConstructor.setModifiers(Modifier.PUBLIC);
-    }
-
-    for (CtMethod m : ctClass.getDeclaredMethods()) {
-      if (javassist.Modifier.isAbstract(m.getModifiers())) {
-        CtMethod copy = new CtMethod(m, subClass, null);
-        subClass.addMethod(copy);
+   /*
+    * (non-Javadoc)
+    * 
+    * @see com.googlecode.gwt.test.GwtCreateHandler#create(java.lang.Class)
+    */
+   public Object create(Class<?> classLiteral) throws Exception {
+      if (classLiteral.isAnnotation() || classLiteral.isArray() || classLiteral.isEnum()
+               || classLiteral.isInterface() || !Modifier.isAbstract(classLiteral.getModifiers())) {
+         return null;
       }
-    }
 
-    GwtPatcherUtils.patch(subClass, null);
+      Class<?> newClass = cache.get(classLiteral);
 
-    newClass = subClass.toClass(GwtFactory.get().getClassLoader(), null);
-    cache.put(classLiteral, newClass);
+      if (newClass != null) {
+         return newClass.newInstance();
+      }
 
-    return newClass.newInstance();
-  }
+      CtClass ctClass = GwtClassPool.getCtClass(classLiteral);
+      CtClass subClass = GwtClassPool.get().makeClass(classLiteral.getCanonicalName() + "SubClass");
+
+      subClass.setSuperclass(ctClass);
+
+      subClass.setModifiers(Modifier.PUBLIC);
+
+      // handle case where the default constructor is declared in a super class
+      CtConstructor defaultConstructor = JavassistUtils.findConstructor(subClass);
+      if (defaultConstructor.getDeclaringClass() != subClass) {
+         defaultConstructor = new CtConstructor(defaultConstructor, subClass, null);
+         subClass.addConstructor(defaultConstructor);
+      }
+
+      if (!Modifier.isPublic(defaultConstructor.getModifiers())) {
+         defaultConstructor.setModifiers(Modifier.PUBLIC);
+      }
+
+      for (CtMethod m : ctClass.getDeclaredMethods()) {
+         if (javassist.Modifier.isAbstract(m.getModifiers())) {
+            CtMethod copy = new CtMethod(m, subClass, null);
+            subClass.addMethod(copy);
+         }
+      }
+
+      GwtPatcherUtils.patch(subClass, null);
+
+      newClass = subClass.toClass(GwtFactory.get().getClassLoader(), null);
+      cache.put(classLiteral, newClass);
+
+      return newClass.newInstance();
+   }
 
 }

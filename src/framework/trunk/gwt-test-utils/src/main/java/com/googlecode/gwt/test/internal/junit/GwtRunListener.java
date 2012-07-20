@@ -21,20 +21,20 @@ import com.googlecode.gwt.test.internal.GwtTestDataHolder;
  */
 public class GwtRunListener extends RunListener {
 
-  @Override
-  public void testAssumptionFailure(Failure failure) {
-    GwtTestDataHolder.get().setCurrentTestFailed(true);
-  }
+   @Override
+   public void testAssumptionFailure(Failure failure) {
+      GwtTestDataHolder.get().setCurrentTestFailed(true);
+   }
 
-  @Override
-  public void testFailure(Failure failure) throws Exception {
-    GwtTestDataHolder.get().setCurrentTestFailed(true);
-  }
+   @Override
+   public void testFailure(Failure failure) throws Exception {
+      GwtTestDataHolder.get().setCurrentTestFailed(true);
+   }
 
-  @Override
-  public void testStarted(Description description) throws Exception {
-    WithProperties withProperties = description.getAnnotation(WithProperties.class);
-    GwtTestDataHolder.get().setCurrentWithProperties(withProperties);
-  }
+   @Override
+   public void testStarted(Description description) throws Exception {
+      WithProperties withProperties = description.getAnnotation(WithProperties.class);
+      GwtTestDataHolder.get().setCurrentWithProperties(withProperties);
+   }
 
 }

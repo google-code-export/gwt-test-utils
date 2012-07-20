@@ -18,99 +18,98 @@ import com.googlecode.gwt.test.internal.AfterTestCallbackManager;
  */
 public class RadioButtonManager implements AfterTestCallback {
 
-  private static RadioButtonManager INSTANCE;
+   private static RadioButtonManager INSTANCE;
 
-  public static void beforeSetName(RadioButton rb, String newName) {
+   public static void beforeSetName(RadioButton rb, String newName) {
 
-    Set<RadioButton> rbs = get().getRadioButtons(rb);
-
-    if (rbs == null) {
-      // not attached, do nothing
-      return;
-    }
-
-    // 1. remove from the old radiogroup
-    rbs.remove(rb);
-
-    // 3. register in the new radiogroup
-    get().registerWithNewName(rb, newName);
-
-  }
-
-  public static RadioButtonManager get() {
-    if (INSTANCE == null) {
-      INSTANCE = new RadioButtonManager();
-    }
-
-    return INSTANCE;
-  }
-
-  public static void onLoad(RadioButton rb) {
-    get().register(rb);
-  }
-
-  public static void onRadioGroupChanged(RadioButton rb, Boolean value,
-      boolean fireEvents) {
-    if (value != null && value) {
       Set<RadioButton> rbs = get().getRadioButtons(rb);
 
       if (rbs == null) {
-        // not attached, do nothing
-        return;
+         // not attached, do nothing
+         return;
       }
-      for (RadioButton radioButton : rbs) {
-        if (!rb.equals(radioButton) && radioButton.getValue()) {
-          radioButton.setValue(false, fireEvents);
-        }
-      }
-    }
-  }
 
-  public static void onUnload(RadioButton rb) {
-    get().deregister(rb);
-  }
-
-  private final Map<String, Set<RadioButton>> map = new HashMap<String, Set<RadioButton>>();
-
-  private RadioButtonManager() {
-    AfterTestCallbackManager.get().registerCallback(this);
-  }
-
-  public void afterTest() {
-    map.clear();
-  }
-
-  private void deregister(RadioButton rb) {
-    Set<RadioButton> rbs = getRadioButtons(rb);
-    if (rbs != null) {
+      // 1. remove from the old radiogroup
       rbs.remove(rb);
-    }
-  }
 
-  private Set<RadioButton> getRadioButtons(RadioButton rb) {
-    if (!rb.isAttached()) {
-      return null;
-    }
+      // 3. register in the new radiogroup
+      get().registerWithNewName(rb, newName);
 
-    return getRadioButtons(rb.getName());
-  }
+   }
 
-  private Set<RadioButton> getRadioButtons(String groupName) {
-    Set<RadioButton> set = map.get(groupName);
-    if (set == null) {
-      set = new HashSet<RadioButton>();
-      map.put(groupName, set);
-    }
+   public static RadioButtonManager get() {
+      if (INSTANCE == null) {
+         INSTANCE = new RadioButtonManager();
+      }
 
-    return set;
-  }
+      return INSTANCE;
+   }
 
-  private void register(RadioButton rb) {
-    getRadioButtons(rb).add(rb);
-  }
+   public static void onLoad(RadioButton rb) {
+      get().register(rb);
+   }
 
-  private void registerWithNewName(RadioButton rb, String newName) {
-    getRadioButtons(newName).add(rb);
-  }
+   public static void onRadioGroupChanged(RadioButton rb, Boolean value, boolean fireEvents) {
+      if (value != null && value) {
+         Set<RadioButton> rbs = get().getRadioButtons(rb);
+
+         if (rbs == null) {
+            // not attached, do nothing
+            return;
+         }
+         for (RadioButton radioButton : rbs) {
+            if (!rb.equals(radioButton) && radioButton.getValue()) {
+               radioButton.setValue(false, fireEvents);
+            }
+         }
+      }
+   }
+
+   public static void onUnload(RadioButton rb) {
+      get().deregister(rb);
+   }
+
+   private final Map<String, Set<RadioButton>> map = new HashMap<String, Set<RadioButton>>();
+
+   private RadioButtonManager() {
+      AfterTestCallbackManager.get().registerCallback(this);
+   }
+
+   public void afterTest() {
+      map.clear();
+   }
+
+   private void deregister(RadioButton rb) {
+      Set<RadioButton> rbs = getRadioButtons(rb);
+      if (rbs != null) {
+         rbs.remove(rb);
+      }
+   }
+
+   private Set<RadioButton> getRadioButtons(RadioButton rb) {
+      if (!rb.isAttached()) {
+         return null;
+      }
+
+      return getRadioButtons(rb.getName());
+   }
+
+   private Set<RadioButton> getRadioButtons(String groupName) {
+      Set<RadioButton> set = map.get(groupName);
+      if (set == null) {
+         set = new HashSet<RadioButton>();
+         map.put(groupName, set);
+      }
+
+      return set;
+   }
+
+   private void register(RadioButton rb) {
+      getRadioButtons(rb).add(rb);
+   }
+
+   private void registerWithNewName(RadioButton rb, String newName) {
+      getRadioButtons(newName).add(rb);
+   }
 
 }

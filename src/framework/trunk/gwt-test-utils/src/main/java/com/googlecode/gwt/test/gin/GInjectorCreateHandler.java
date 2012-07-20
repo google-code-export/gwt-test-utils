@@ -28,91 +28,87 @@ import com.googlecode.gwt.test.GwtCreateHandler;
  */
 public class GInjectorCreateHandler implements GwtCreateHandler {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(GInjectorCreateHandler.class);
+   private static final Logger LOGGER = LoggerFactory.getLogger(GInjectorCreateHandler.class);
 
-  // map used as cache to store bindings between gin and guice proxy injectors
-  private Map<Class<? extends Ginjector>, Object> injectors;
+   // map used as cache to store bindings between gin and guice proxy injectors
+   private Map<Class<? extends Ginjector>, Object> injectors;
 
-  public Object create(Class<?> classLiteral) throws Exception {
-    // Make sure this is a Ginjector
-    if (!Ginjector.class.isAssignableFrom(classLiteral)) {
-      return null;
-    }
+   public Object create(Class<?> classLiteral) throws Exception {
+      // Make sure this is a Ginjector
+      if (!Ginjector.class.isAssignableFrom(classLiteral)) {
+         return null;
+      }
 
-    @SuppressWarnings("unchecked")
-    Class<? extends Ginjector> ginInjectorClass = (Class<? extends Ginjector>) classLiteral;
+      @SuppressWarnings("unchecked")
+      Class<? extends Ginjector> ginInjectorClass = (Class<? extends Ginjector>) classLiteral;
 
-    if (injectors == null) {
-      injectors = new HashMap<Class<? extends Ginjector>, Object>();
-    }
+      if (injectors == null) {
+         injectors = new HashMap<Class<? extends Ginjector>, Object>();
+      }
 
-    Object guiceInjectorProxy = injectors.get(classLiteral);
+      Object guiceInjectorProxy = injectors.get(classLiteral);
 
-    if (guiceInjectorProxy != null) {
-      LOGGER.debug("Proxy for class '" + ginInjectorClass.getName()
-          + "'has been found in cache. It is returned");
+      if (guiceInjectorProxy != null) {
+         LOGGER.debug("Proxy for class '" + ginInjectorClass.getName()
+                  + "'has been found in cache. It is returned");
+         return guiceInjectorProxy;
+      }
+
+      Class<? extends GinModule>[] ginModules = readGinModules(ginInjectorClass);
+
+      // create a set of Guice Module bases on the GinModules
+      Set<Module> guiceModules = readGuiceModules(ginInjectorClass, ginModules);
+
+      // Use Guice SPI to solve deferred binding dependencies
+      DeferredBindingModule deferredBindingModule = DeferredBindingModule.getDeferredBindingModule(
+               ginInjectorClass, guiceModules);
+      guiceModules.add(deferredBindingModule);
+
+      // Instantiate an injector, based on the modules read above + the
+      // deferredBindingModule
+      Injector injector = Guice.createInjector(guiceModules);
+
+      LOGGER.debug("creating new Proxy for class '" + ginInjectorClass.getName() + "'");
+
+      guiceInjectorProxy = Proxy.newProxyInstance(this.getClass().getClassLoader(),
+               new Class[]{ginInjectorClass}, new GinInjectorInvocationHandler(injector));
+
+      injectors.put(ginInjectorClass, guiceInjectorProxy);
+
       return guiceInjectorProxy;
-    }
+   }
 
-    Class<? extends GinModule>[] ginModules = readGinModules(ginInjectorClass);
+   private Class<? extends GinModule>[] readGinModules(Class<? extends Ginjector> classLiteral) {
+      LOGGER.debug("inspecting classLiteral " + classLiteral);
+      GinModules annotation = classLiteral.getAnnotation(GinModules.class);
+      if (annotation == null) {
+         // Throw an exception if we don't find this specific annotation.
+         throw new IllegalArgumentException(classLiteral.getName()
+                  + " doesn't have any @GinModules annotation present");
+      }
 
-    // create a set of Guice Module bases on the GinModules
-    Set<Module> guiceModules = readGuiceModules(ginInjectorClass, ginModules);
+      Class<? extends GinModule>[] ginModules = annotation.value();
 
-    // Use Guice SPI to solve deferred binding dependencies
-    DeferredBindingModule deferredBindingModule = DeferredBindingModule.getDeferredBindingModule(
-        ginInjectorClass, guiceModules);
-    guiceModules.add(deferredBindingModule);
+      if (ginModules == null || ginModules.length == 0) {
+         // there are no GinModules present in the Ginjector.
+         throw new IllegalArgumentException(classLiteral.getName()
+                  + " doesn't have any GinModules. " + "Runtime should not work.");
+      }
 
-    // Instantiate an injector, based on the modules read above + the
-    // deferredBindingModule
-    Injector injector = Guice.createInjector(guiceModules);
+      LOGGER.debug("discovered modules " + annotation);
+      return ginModules;
+   }
 
-    LOGGER.debug("creating new Proxy for class '" + ginInjectorClass.getName()
-        + "'");
+   private Set<Module> readGuiceModules(Class<? extends Ginjector> ginjectorClass,
+            Class<? extends GinModule>[] classLiterals) throws Exception {
 
-    guiceInjectorProxy = Proxy.newProxyInstance(
-        this.getClass().getClassLoader(), new Class[]{ginInjectorClass},
-        new GinInjectorInvocationHandler(injector));
+      Set<Module> modules = new HashSet<Module>();
+      for (Class<? extends GinModule> literal : classLiterals) {
+         LOGGER.debug("wrapping GinModule literal " + literal);
+         modules.add(new GinModuleAdapter(literal.newInstance()));
+      }
 
-    injectors.put(ginInjectorClass, guiceInjectorProxy);
+      return modules;
 
-    return guiceInjectorProxy;
-  }
-
-  private Class<? extends GinModule>[] readGinModules(
-      Class<? extends Ginjector> classLiteral) {
-    LOGGER.debug("inspecting classLiteral " + classLiteral);
-    GinModules annotation = classLiteral.getAnnotation(GinModules.class);
-    if (annotation == null) {
-      // Throw an exception if we don't find this specific annotation.
-      throw new IllegalArgumentException(classLiteral.getName()
-          + " doesn't have any @GinModules annotation present");
-    }
-
-    Class<? extends GinModule>[] ginModules = annotation.value();
-
-    if (ginModules == null || ginModules.length == 0) {
-      // there are no GinModules present in the Ginjector.
-      throw new IllegalArgumentException(classLiteral.getName()
-          + " doesn't have any GinModules. " + "Runtime should not work.");
-    }
-
-    LOGGER.debug("discovered modules " + annotation);
-    return ginModules;
-  }
-
-  private Set<Module> readGuiceModules(
-      Class<? extends Ginjector> ginjectorClass,
-      Class<? extends GinModule>[] classLiterals) throws Exception {
-
-    Set<Module> modules = new HashSet<Module>();
-    for (Class<? extends GinModule> literal : classLiterals) {
-      LOGGER.debug("wrapping GinModule literal " + literal);
-      modules.add(new GinModuleAdapter(literal.newInstance()));
-    }
-
-    return modules;
-
-  }
+   }
 }

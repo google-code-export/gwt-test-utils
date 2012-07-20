@@ -11,17 +11,17 @@ import com.googlecode.gwt.test.GwtTestTest;
 
 public class XMLElementTest extends GwtTestTest {
 
-  @Test
-  public void setAttribute() {
-    // Arrange
-    Document document = XMLParser.createDocument();
-    Element element = document.createElement("elem");
+   @Test
+   public void setAttribute() {
+      // Arrange
+      Document document = XMLParser.createDocument();
+      Element element = document.createElement("elem");
 
-    // Act
-    element.setAttribute("myAttr", "myValue");
+      // Act
+      element.setAttribute("myAttr", "myValue");
 
-    // Assert
-    assertEquals("myValue", element.getAttribute("myAttr"));
-  }
+      // Assert
+      assertEquals("myValue", element.getAttribute("myAttr"));
+   }
 
 }

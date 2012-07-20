@@ -29,109 +29,101 @@ import com.googlecode.html.filters.DefaultFilter;
  */
 public class GwtHtmlParser {
 
-  /**
-   * Filter which keep "&nbsp;" and "&nbsp;" strings instead of converting them
-   * in a ' ' character.
-   * 
-   */
-  private static class NbspRemover extends DefaultFilter {
+   /**
+    * Filter which keep "&nbsp;" and "&nbsp;" strings instead of converting them
+    * in a ' ' character.
+    * 
+    */
+   private static class NbspRemover extends DefaultFilter {
 
-    private static final String NBSP_ENTITY_NAME = "nbsp";
+      private static final String NBSP_ENTITY_NAME = "nbsp";
 
-    boolean inNbspEntityRef;
+      boolean inNbspEntityRef;
 
-    XMLString nbspXMLString;
+      XMLString nbspXMLString;
 
-    private NbspRemover() {
-      nbspXMLString = new XMLString();
-      char[] c = {'&', 'n', 'b', 's', 'p', ';'};
-      nbspXMLString.setValues(c, 0, 6);
-    }
-
-    @Override
-    public void characters(XMLString text, Augmentations augs)
-        throws XNIException {
-
-      if (!inNbspEntityRef) {
-        super.characters(text, augs);
+      private NbspRemover() {
+         nbspXMLString = new XMLString();
+         char[] c = {'&', 'n', 'b', 's', 'p', ';'};
+         nbspXMLString.setValues(c, 0, 6);
       }
-    }
 
-    @Override
-    public void endGeneralEntity(String name, Augmentations augs)
-        throws XNIException {
+      @Override
+      public void characters(XMLString text, Augmentations augs) throws XNIException {
 
-      inNbspEntityRef = false;
-    }
-
-    @Override
-    public void startDocument(XMLLocator locator, String encoding,
-        Augmentations augs) throws XNIException {
-
-      super.startDocument(locator, encoding, augs);
-      inNbspEntityRef = false;
-    }
-
-    @Override
-    public void startGeneralEntity(String name, XMLResourceIdentifier id,
-        String encoding, Augmentations augs) throws XNIException {
-
-      if (NBSP_ENTITY_NAME.equals(name)) {
-        inNbspEntityRef = true;
-        super.characters(nbspXMLString, augs);
-      } else {
-        super.startGeneralEntity(name, id, encoding, augs);
+         if (!inNbspEntityRef) {
+            super.characters(text, augs);
+         }
       }
-    }
-  }
 
-  private static XMLReader PARSER;
+      @Override
+      public void endGeneralEntity(String name, Augmentations augs) throws XNIException {
 
-  public static NodeList<Node> parse(String html) {
-    if (html == null || html.trim().length() == 0) {
-      return JavaScriptObjects.newNodeList(Collections.<Node> emptyList());
-    }
+         inNbspEntityRef = false;
+      }
 
-    try {
-      XMLReader saxReader = getParser();
-      GwtHtmlContentHandler contentHandler = new GwtHtmlContentHandler();
-      saxReader.setContentHandler(contentHandler);
-      saxReader.parse(new InputSource(new StringReader(html)));
-      return contentHandler.getParsedNodes();
-    } catch (Exception e) {
-      throw new GwtTestPatchException(
-          "Error while parsing HTML '" + html + "'", e);
-    }
-  }
+      @Override
+      public void startDocument(XMLLocator locator, String encoding, Augmentations augs)
+               throws XNIException {
 
-  private static XMLReader getParser() throws SAXException {
-    if (PARSER == null) {
-      PARSER = XMLReaderFactory.createXMLReader("com.googlecode.html.parsers.SAXParser");
+         super.startDocument(locator, encoding, augs);
+         inNbspEntityRef = false;
+      }
 
-      // FIXME : this feature does not work with the NekoHTML version
-      // included
-      // in
-      // gwt-dev.jar (1.9.13)
-      // need to use the boolean "innerHTML)
-      PARSER.setFeature(
-          "http://cyberneko.org/html/features/balance-tags/document-fragment",
-          true);
+      @Override
+      public void startGeneralEntity(String name, XMLResourceIdentifier id, String encoding,
+               Augmentations augs) throws XNIException {
 
-      PARSER.setFeature(
-          "http://cyberneko.org/html/features/scanner/notify-builtin-refs",
-          true);
+         if (NBSP_ENTITY_NAME.equals(name)) {
+            inNbspEntityRef = true;
+            super.characters(nbspXMLString, augs);
+         } else {
+            super.startGeneralEntity(name, id, encoding, augs);
+         }
+      }
+   }
 
-      PARSER.setProperty(
-          "http://cyberneko.org/html/properties/default-encoding", "UTF-8");
+   private static XMLReader PARSER;
 
-      XMLDocumentFilter[] filters = {new NbspRemover()};
+   public static NodeList<Node> parse(String html) {
+      if (html == null || html.trim().length() == 0) {
+         return JavaScriptObjects.newNodeList(Collections.<Node> emptyList());
+      }
 
-      PARSER.setProperty("http://cyberneko.org/html/properties/filters",
-          filters);
-    }
+      try {
+         XMLReader saxReader = getParser();
+         GwtHtmlContentHandler contentHandler = new GwtHtmlContentHandler();
+         saxReader.setContentHandler(contentHandler);
+         saxReader.parse(new InputSource(new StringReader(html)));
+         return contentHandler.getParsedNodes();
+      } catch (Exception e) {
+         throw new GwtTestPatchException("Error while parsing HTML '" + html + "'", e);
+      }
+   }
 
-    return PARSER;
+   private static XMLReader getParser() throws SAXException {
+      if (PARSER == null) {
+         PARSER = XMLReaderFactory.createXMLReader("com.googlecode.html.parsers.SAXParser");
 
-  }
+         // FIXME : this feature does not work with the NekoHTML version
+         // included
+         // in
+         // gwt-dev.jar (1.9.13)
+         // need to use the boolean "innerHTML)
+         PARSER.setFeature("http://cyberneko.org/html/features/balance-tags/document-fragment",
+                  true);
+
+         PARSER.setFeature("http://cyberneko.org/html/features/scanner/notify-builtin-refs", true);
+
+         PARSER.setProperty("http://cyberneko.org/html/properties/default-encoding", "UTF-8");
+
+         XMLDocumentFilter[] filters = {new NbspRemover()};
+
+         PARSER.setProperty("http://cyberneko.org/html/properties/filters", filters);
+      }
+
+      return PARSER;
+
+   }
 
 }

@@ -21,35 +21,35 @@ import com.googlecode.gwt.test.Mock;
  */
 public class MockitoConfiguration implements IMockitoConfiguration {
 
-  @SuppressWarnings({"unchecked", "rawtypes"})
-  static void assertNoAnnotations(Class<? extends Annotation> annotation,
-      Field field, Class... undesiredAnnotations) {
+   @SuppressWarnings({"unchecked", "rawtypes"})
+   static void assertNoAnnotations(Class<? extends Annotation> annotation, Field field,
+            Class... undesiredAnnotations) {
 
-    for (Class<? extends Annotation> undesiredAnnotation : undesiredAnnotations) {
-      if (field.isAnnotationPresent(undesiredAnnotation)) {
-        new Reporter().unsupportedCombinationOfAnnotations(
-            undesiredAnnotation.getSimpleName(), annotation.getSimpleName());
+      for (Class<? extends Annotation> undesiredAnnotation : undesiredAnnotations) {
+         if (field.isAnnotationPresent(undesiredAnnotation)) {
+            new Reporter().unsupportedCombinationOfAnnotations(undesiredAnnotation.getSimpleName(),
+                     annotation.getSimpleName());
+         }
       }
-    }
-  }
+   }
 
-  private final IMockitoConfiguration delegate = new DefaultMockitoConfiguration();
+   private final IMockitoConfiguration delegate = new DefaultMockitoConfiguration();
 
-  public boolean cleansStackTrace() {
-    return delegate.cleansStackTrace();
-  }
+   public boolean cleansStackTrace() {
+      return delegate.cleansStackTrace();
+   }
 
-  public AnnotationEngine getAnnotationEngine() {
-    return new GwtInjectingAnnotationEngine();
-  }
+   public AnnotationEngine getAnnotationEngine() {
+      return new GwtInjectingAnnotationEngine();
+   }
 
-  public Answer<Object> getDefaultAnswer() {
-    return delegate.getDefaultAnswer();
-  }
+   public Answer<Object> getDefaultAnswer() {
+      return delegate.getDefaultAnswer();
+   }
 
-  @SuppressWarnings("deprecation")
-  public ReturnValues getReturnValues() {
-    return delegate.getReturnValues();
-  }
+   @SuppressWarnings("deprecation")
+   public ReturnValues getReturnValues() {
+      return delegate.getReturnValues();
+   }
 
 }

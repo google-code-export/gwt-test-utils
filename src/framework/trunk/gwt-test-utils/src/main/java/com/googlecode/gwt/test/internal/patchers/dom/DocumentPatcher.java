@@ -34,244 +34,238 @@ import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 @PatchClass(Document.class)
 class DocumentPatcher {
 
-  private static class DocumentHolder implements AfterTestCallback {
+   private static class DocumentHolder implements AfterTestCallback {
 
-    private Document document;
+      private Document document;
 
-    private DocumentHolder() {
-      AfterTestCallbackManager.get().registerFinalCallback(this);
-    }
-
-    public void afterTest() throws Throwable {
-      // recursiveClearDom(document);
-      document = null;
-
-      Class<?> documentClass = Class.forName("com.google.gwt.dom.client.Document$");
-      GwtReflectionUtils.setStaticField(documentClass, "doc", null);
-    }
-
-    private void recursiveClearDom(Node node) {
-      if (node == null) {
-        return;
+      private DocumentHolder() {
+         AfterTestCallbackManager.get().registerFinalCallback(this);
       }
-      NodeList<Node> childs = node.getChildNodes();
-      for (int i = 0; i < childs.getLength(); i++) {
-        recursiveClearDom(node.getChild(i));
+
+      public void afterTest() throws Throwable {
+         // recursiveClearDom(document);
+         document = null;
+
+         Class<?> documentClass = Class.forName("com.google.gwt.dom.client.Document$");
+         GwtReflectionUtils.setStaticField(documentClass, "doc", null);
       }
-      JavaScriptObjects.clearProperties(node);
-      node = null;
-    }
-  }
 
-  private static final String DOCUMENT_ELEMENT = "documentElement";
+      private void recursiveClearDom(Node node) {
+         if (node == null) {
+            return;
+         }
+         NodeList<Node> childs = node.getChildNodes();
+         for (int i = 0; i < childs.getLength(); i++) {
+            recursiveClearDom(node.getChild(i));
+         }
+         JavaScriptObjects.clearProperties(node);
+         node = null;
+      }
+   }
 
-  private static DocumentHolder DOCUMENT_HOLDER = new DocumentHolder();
+   private static final String DOCUMENT_ELEMENT = "documentElement";
 
-  private static final String EMPTY_HTML = "<html><head></head><body></body></html>";
+   private static DocumentHolder DOCUMENT_HOLDER = new DocumentHolder();
 
-  private static final DoubleMap<String, String, String> HTML_ELEMENT_PROTOTYPES = new DoubleMap<String, String, String>();
+   private static final String EMPTY_HTML = "<html><head></head><body></body></html>";
 
-  private static int ID = 0;
+   private static final DoubleMap<String, String, String> HTML_ELEMENT_PROTOTYPES = new DoubleMap<String, String, String>();
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(DocumentPatcher.class);
+   private static int ID = 0;
 
-  @PatchMethod
-  static Text createTextNode(Document document, String data) {
-    return JavaScriptObjects.newText(data, document);
-  }
+   private static final Logger LOGGER = LoggerFactory.getLogger(DocumentPatcher.class);
 
-  @PatchMethod
-  static String createUniqueId(Document document) {
-    ID++;
-    return "elem_" + Long.toString(ID);
-  }
+   @PatchMethod
+   static Text createTextNode(Document document, String data) {
+      return JavaScriptObjects.newText(data, document);
+   }
 
-  @PatchMethod
-  static BodyElement getBody(Document document) {
-    NodeList<Element> bodyList = getElementsByTagName(document, "body");
-    if (bodyList.getLength() < 1) {
+   @PatchMethod
+   static String createUniqueId(Document document) {
+      ID++;
+      return "elem_" + Long.toString(ID);
+   }
+
+   @PatchMethod
+   static BodyElement getBody(Document document) {
+      NodeList<Element> bodyList = getElementsByTagName(document, "body");
+      if (bodyList.getLength() < 1) {
+         return null;
+      } else {
+         return bodyList.getItem(0).cast();
+      }
+   }
+
+   @PatchMethod
+   static String getCompatMode(Document document) {
+      return "toto";
+   }
+
+   @PatchMethod
+   static String getDomain(Document document) {
       return null;
-    } else {
-      return bodyList.getItem(0).cast();
-    }
-  }
+   }
 
-  @PatchMethod
-  static String getCompatMode(Document document) {
-    return "toto";
-  }
+   @PatchMethod
+   static Element getElementById(Node document, String elementId) {
+      List<Node> childs = JavaScriptObjects.getChildNodeInnerList(document);
 
-  @PatchMethod
-  static String getDomain(Document document) {
-    return null;
-  }
-
-  @PatchMethod
-  static Element getElementById(Node document, String elementId) {
-    List<Node> childs = JavaScriptObjects.getChildNodeInnerList(document);
-
-    for (Node n : childs) {
-      if (Node.ELEMENT_NODE == n.getNodeType()) {
-        Element currentElement = n.cast();
-        if (elementId.equals(currentElement.getId())) {
-          return currentElement;
-        }
+      for (Node n : childs) {
+         if (Node.ELEMENT_NODE == n.getNodeType()) {
+            Element currentElement = n.cast();
+            if (elementId.equals(currentElement.getId())) {
+               return currentElement;
+            }
+         }
+         Element result = getElementById(n, elementId);
+         if (result != null) {
+            return result;
+         }
       }
-      Element result = getElementById(n, elementId);
-      if (result != null) {
-        return result;
+
+      return null;
+   }
+
+   @PatchMethod
+   static NodeList<Element> getElementsByTagName(Node node, String tagName) {
+      List<Element> result = new ArrayList<Element>();
+      inspectDomForTag(node, tagName, result);
+
+      return JavaScriptObjects.newNodeList(result);
+   }
+
+   @PatchMethod
+   static String getReferrer(Document document) {
+      return "";
+   }
+
+   @PatchMethod
+   static Document nativeGet() {
+      if (DOCUMENT_HOLDER.document == null) {
+         try {
+            DOCUMENT_HOLDER.document = JavaScriptObjects.newDocument();
+            Element e = parseHTMLElement(DOCUMENT_HOLDER.document);
+            DOCUMENT_HOLDER.document.appendChild(e);
+            JavaScriptObjects.setProperty(DOCUMENT_HOLDER.document, DOCUMENT_ELEMENT, e);
+            return DOCUMENT_HOLDER.document;
+         } catch (Exception e) {
+            if (GwtTestException.class.isInstance(e)) {
+               throw (GwtTestException) e;
+            } else {
+               throw new GwtTestDomException("Unable to create Document", e);
+            }
+         }
       }
-    }
+      return DOCUMENT_HOLDER.document;
+   }
 
-    return null;
-  }
+   private static Element findHTMLElement(NodeList<Node> nodes) {
+      int i = 0;
+      while (i < nodes.getLength()) {
+         Node node = nodes.getItem(i);
+         if (Node.ELEMENT_NODE == node.getNodeType()) {
+            Element e = node.cast();
+            if ("html".equalsIgnoreCase(e.getTagName())) {
+               return e;
+            }
+         }
+         i++;
+      }
 
-  @PatchMethod
-  static NodeList<Element> getElementsByTagName(Node node, String tagName) {
-    List<Element> result = new ArrayList<Element>();
-    inspectDomForTag(node, tagName, result);
+      return null;
+   }
 
-    return JavaScriptObjects.newNodeList(result);
-  }
+   private static String getHostPageHTML(String hostPagePath) {
 
-  @PatchMethod
-  static String getReferrer(Document document) {
-    return "";
-  }
+      // try classpath relative path
+      InputStream is = JavaScriptObjects.class.getClassLoader().getResourceAsStream(hostPagePath);
 
-  @PatchMethod
-  static Document nativeGet() {
-    if (DOCUMENT_HOLDER.document == null) {
+      if (is == null) {
+         try {
+            // try project relative or absolute path
+            is = new FileInputStream(hostPagePath);
+         } catch (FileNotFoundException e) {
+            // handle just after
+         }
+      }
+
+      if (is == null) {
+         LOGGER.warn("Cannot find the host HTML file '"
+                  + hostPagePath
+                  + "', fallback to an empty HTML document instead. You may want to override "
+                  + GwtConfig.get().getModuleRunner().getClass().getSimpleName()
+                  + ".getHostPagePath(String moduleFullQualifiedName) method to specify the relative path of the your HTML file from the root directory of your java project");
+
+         return EMPTY_HTML;
+      }
+
+      BufferedReader br = null;
       try {
-        DOCUMENT_HOLDER.document = JavaScriptObjects.newDocument();
-        Element e = parseHTMLElement(DOCUMENT_HOLDER.document);
-        DOCUMENT_HOLDER.document.appendChild(e);
-        JavaScriptObjects.setProperty(DOCUMENT_HOLDER.document,
-            DOCUMENT_ELEMENT, e);
-        return DOCUMENT_HOLDER.document;
-      } catch (Exception e) {
-        if (GwtTestException.class.isInstance(e)) {
-          throw (GwtTestException) e;
-        } else {
-          throw new GwtTestDomException("Unable to create Document", e);
-        }
-      }
-    }
-    return DOCUMENT_HOLDER.document;
-  }
+         br = new BufferedReader(new InputStreamReader(is));
+         StringBuilder sb = new StringBuilder();
+         String line;
+         while ((line = br.readLine()) != null) {
+            sb.append(line);
+         }
 
-  private static Element findHTMLElement(NodeList<Node> nodes) {
-    int i = 0;
-    while (i < nodes.getLength()) {
-      Node node = nodes.getItem(i);
-      if (Node.ELEMENT_NODE == node.getNodeType()) {
-        Element e = node.cast();
-        if ("html".equalsIgnoreCase(e.getTagName())) {
-          return e;
-        }
-      }
-      i++;
-    }
-
-    return null;
-  }
-
-  private static String getHostPageHTML(String hostPagePath) {
-
-    // try classpath relative path
-    InputStream is = JavaScriptObjects.class.getClassLoader().getResourceAsStream(
-        hostPagePath);
-
-    if (is == null) {
-      try {
-        // try project relative or absolute path
-        is = new FileInputStream(hostPagePath);
-      } catch (FileNotFoundException e) {
-        // handle just after
-      }
-    }
-
-    if (is == null) {
-      LOGGER.warn("Cannot find the host HTML file '"
-          + hostPagePath
-          + "', fallback to an empty HTML document instead. You may want to override "
-          + GwtConfig.get().getModuleRunner().getClass().getSimpleName()
-          + ".getHostPagePath(String moduleFullQualifiedName) method to specify the relative path of the your HTML file from the root directory of your java project");
-
-      return EMPTY_HTML;
-    }
-
-    BufferedReader br = null;
-    try {
-      br = new BufferedReader(new InputStreamReader(is));
-      StringBuilder sb = new StringBuilder();
-      String line;
-      while ((line = br.readLine()) != null) {
-        sb.append(line);
+         return sb.toString();
+      } catch (IOException e) {
+         throw new GwtTestConfigurationException("Error while reading module HTML host page '"
+                  + hostPagePath + "'", e);
+      } finally {
+         if (br != null) {
+            try {
+               br.close();
+            } catch (IOException e) {
+               // don't care
+            }
+         }
       }
 
-      return sb.toString();
-    } catch (IOException e) {
-      throw new GwtTestConfigurationException(
-          "Error while reading module HTML host page '" + hostPagePath + "'", e);
-    } finally {
-      if (br != null) {
-        try {
-          br.close();
-        } catch (IOException e) {
-          // don't care
-        }
+   }
+
+   private static void inspectDomForTag(Node node, String tagName, List<Element> result) {
+      List<Node> childs = JavaScriptObjects.getChildNodeInnerList(node);
+
+      for (Node n : childs) {
+         if (Node.ELEMENT_NODE == n.getNodeType()) {
+            Element childElem = n.cast();
+            if ("*".equals(tagName) || tagName.equalsIgnoreCase(childElem.getTagName())) {
+               result.add(childElem);
+            }
+         }
+         inspectDomForTag(n, tagName, result);
       }
-    }
+   }
 
-  }
+   private static Element parseHTMLElement(Document document) {
+      String moduleName = GwtConfig.get().getModuleAlias();
+      String hostPagePath = GwtConfig.get().getModuleRunner().getHostPagePath();
 
-  private static void inspectDomForTag(Node node, String tagName,
-      List<Element> result) {
-    List<Node> childs = JavaScriptObjects.getChildNodeInnerList(node);
-
-    for (Node n : childs) {
-      if (Node.ELEMENT_NODE == n.getNodeType()) {
-        Element childElem = n.cast();
-        if ("*".equals(tagName)
-            || tagName.equalsIgnoreCase(childElem.getTagName())) {
-          result.add(childElem);
-        }
+      if (hostPagePath == null) {
+         // return a default empty HTML element
+         Element defaultHTMLElement = JavaScriptObjects.newElement("HTML", document);
+         defaultHTMLElement.appendChild(JavaScriptObjects.newElement("body", document));
+         return defaultHTMLElement;
       }
-      inspectDomForTag(n, tagName, result);
-    }
-  }
 
-  private static Element parseHTMLElement(Document document) {
-    String moduleName = GwtConfig.get().getModuleAlias();
-    String hostPagePath = GwtConfig.get().getModuleRunner().getHostPagePath();
+      String html = HTML_ELEMENT_PROTOTYPES.get(moduleName, hostPagePath);
 
-    if (hostPagePath == null) {
-      // return a default empty HTML element
-      Element defaultHTMLElement = JavaScriptObjects.newElement("HTML",
-          document);
-      defaultHTMLElement.appendChild(JavaScriptObjects.newElement("body",
-          document));
-      return defaultHTMLElement;
-    }
+      if (html == null) {
+         // parsing of the host page
+         html = getHostPageHTML(hostPagePath);
+         HTML_ELEMENT_PROTOTYPES.put(moduleName, hostPagePath, html);
+      }
 
-    String html = HTML_ELEMENT_PROTOTYPES.get(moduleName, hostPagePath);
+      NodeList<Node> list = GwtHtmlParser.parse(html);
+      Element htmlElement = findHTMLElement(list);
 
-    if (html == null) {
-      // parsing of the host page
-      html = getHostPageHTML(hostPagePath);
-      HTML_ELEMENT_PROTOTYPES.put(moduleName, hostPagePath, html);
-    }
+      if (htmlElement == null) {
+         throw new GwtTestDomException("Cannot find a root <html> element in file '" + hostPagePath
+                  + "'");
+      }
 
-    NodeList<Node> list = GwtHtmlParser.parse(html);
-    Element htmlElement = findHTMLElement(list);
-
-    if (htmlElement == null) {
-      throw new GwtTestDomException(
-          "Cannot find a root <html> element in file '" + hostPagePath + "'");
-    }
-
-    return htmlElement;
-  }
+      return htmlElement;
+   }
 
 }

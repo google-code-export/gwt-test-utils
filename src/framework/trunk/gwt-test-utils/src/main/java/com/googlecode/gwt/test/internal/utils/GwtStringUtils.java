@@ -12,134 +12,134 @@ import java.util.regex.Pattern;
  */
 public class GwtStringUtils {
 
-  private static Pattern DOUBLE_PATTERN = Pattern.compile("^\\s*\\d+\\.(\\d+).*$");
+   private static Pattern DOUBLE_PATTERN = Pattern.compile("^\\s*\\d+\\.(\\d+).*$");
 
-  private static Pattern NUMBER_PATTERN = Pattern.compile("^\\s*(\\d+).*$");
+   private static Pattern NUMBER_PATTERN = Pattern.compile("^\\s*(\\d+).*$");
 
-  public static String camelize(String s) {
-    String[] strings = s.split("[-|_|\\s]");
+   public static String camelize(String s) {
+      String[] strings = s.split("[-|_|\\s]");
 
-    if (strings.length <= 0) {
-      return "";
-    }
-
-    StringBuilder sb = new StringBuilder(strings[0].toLowerCase());
-
-    for (int i = 1; i < strings.length; i++) {
-      String string = strings[i];
-      if (string.length() > 0) {
-        sb.append(Character.toUpperCase(string.charAt(0))).append(
-            string.substring(1).toLowerCase());
+      if (strings.length <= 0) {
+         return "";
       }
-    }
 
-    return sb.toString();
-  }
+      StringBuilder sb = new StringBuilder(strings[0].toLowerCase());
 
-  public static String dehyphenize(String string) {
-    StringBuilder buffer = new StringBuilder(string);
-
-    for (int c = 0; c < buffer.length(); c++) {
-      char character = buffer.charAt(c);
-      if (character == '-') {
-        buffer.deleteCharAt(c);
-        character = buffer.charAt(c);
-        buffer.setCharAt(c, Character.toUpperCase(character));
+      for (int i = 1; i < strings.length; i++) {
+         String string = strings[i];
+         if (string.length() > 0) {
+            sb.append(Character.toUpperCase(string.charAt(0))).append(
+                     string.substring(1).toLowerCase());
+         }
       }
-    }
 
-    return buffer.toString();
-  }
+      return sb.toString();
+   }
 
-  public static String hyphenize(String string) {
-    StringBuilder sb = new StringBuilder(string);
+   public static String dehyphenize(String string) {
+      StringBuilder buffer = new StringBuilder(string);
 
-    for (int c = 0; c < sb.length(); c++) {
-      char character = sb.charAt(c);
-      if (Character.isUpperCase(character)) {
-        sb.setCharAt(c, Character.toLowerCase(character));
-        sb.insert(c, '-');
-        c++;
+      for (int c = 0; c < buffer.length(); c++) {
+         char character = buffer.charAt(c);
+         if (character == '-') {
+            buffer.deleteCharAt(c);
+            character = buffer.charAt(c);
+            buffer.setCharAt(c, Character.toUpperCase(character));
+         }
       }
-    }
 
-    return sb.toString();
-  }
+      return buffer.toString();
+   }
 
-  public static int parseInt(String value, int defaultValue) {
-    Matcher m = NUMBER_PATTERN.matcher(value);
-    if (m.matches()) {
-      return Integer.parseInt(m.group(1));
-    } else {
-      return defaultValue;
-    }
-  }
+   public static String hyphenize(String string) {
+      StringBuilder sb = new StringBuilder(string);
 
-  public static String resolveBackSlash(String input) {
-    if (input == null || "".equals(input.trim())) {
-      return input;
-    }
+      for (int c = 0; c < sb.length(); c++) {
+         char character = sb.charAt(c);
+         if (Character.isUpperCase(character)) {
+            sb.setCharAt(c, Character.toLowerCase(character));
+            sb.insert(c, '-');
+            c++;
+         }
+      }
 
-    StringBuffer b = new StringBuffer();
-    boolean backSlashSeen = false;
-    for (int i = 0; i < input.length(); ++i) {
-      char c = input.charAt(i);
-      if (!backSlashSeen) {
-        if (c == '\\') {
-          backSlashSeen = true;
-        } else {
-          b.append(c);
-        }
+      return sb.toString();
+   }
+
+   public static int parseInt(String value, int defaultValue) {
+      Matcher m = NUMBER_PATTERN.matcher(value);
+      if (m.matches()) {
+         return Integer.parseInt(m.group(1));
       } else {
-        switch (c) {
-          case '\\':
-            b.append('\\');
-            break;
-          case 'n':
-            b.append('\n');
-            break;
-          case 'r':
-            b.append('\r');
-            break;
-          case 't':
-            b.append('\t');
-            break;
-          case 'f':
-            b.append('\f');
-            break;
-          case 'b':
-            b.append('\b');
-            break;
-          default:
-            b.append(c);
-        }
-        backSlashSeen = false;
+         return defaultValue;
       }
-    }
-    return b.toString();
-  }
+   }
 
-  /**
-   * 250px => 250px 250.1px => 250.1px 250.0px => 250px
-   * 
-   * @param string
-   * @return The transformed value
-   */
-  public static String treatDoubleValue(String string) {
+   public static String resolveBackSlash(String input) {
+      if (input == null || "".equals(input.trim())) {
+         return input;
+      }
 
-    if (string == null || "".equals(string)) {
-      return string;
-    }
+      StringBuffer b = new StringBuffer();
+      boolean backSlashSeen = false;
+      for (int i = 0; i < input.length(); ++i) {
+         char c = input.charAt(i);
+         if (!backSlashSeen) {
+            if (c == '\\') {
+               backSlashSeen = true;
+            } else {
+               b.append(c);
+            }
+         } else {
+            switch (c) {
+               case '\\':
+                  b.append('\\');
+                  break;
+               case 'n':
+                  b.append('\n');
+                  break;
+               case 'r':
+                  b.append('\r');
+                  break;
+               case 't':
+                  b.append('\t');
+                  break;
+               case 'f':
+                  b.append('\f');
+                  break;
+               case 'b':
+                  b.append('\b');
+                  break;
+               default:
+                  b.append(c);
+            }
+            backSlashSeen = false;
+         }
+      }
+      return b.toString();
+   }
 
-    Matcher m = DOUBLE_PATTERN.matcher(string);
-    if (m.matches() && Double.valueOf(m.group(1)) == 0) {
-      return string.replace("." + m.group(1), "");
-    } else {
-      return string;
-    }
-  }
+   /**
+    * 250px => 250px 250.1px => 250.1px 250.0px => 250px
+    * 
+    * @param string
+    * @return The transformed value
+    */
+   public static String treatDoubleValue(String string) {
 
-  private GwtStringUtils() {
+      if (string == null || "".equals(string)) {
+         return string;
+      }
 
-  }
+      Matcher m = DOUBLE_PATTERN.matcher(string);
+      if (m.matches() && Double.valueOf(m.group(1)) == 0) {
+         return string.replace("." + m.group(1), "");
+      } else {
+         return string;
+      }
+   }
+
+   private GwtStringUtils() {
+
+   }
 }

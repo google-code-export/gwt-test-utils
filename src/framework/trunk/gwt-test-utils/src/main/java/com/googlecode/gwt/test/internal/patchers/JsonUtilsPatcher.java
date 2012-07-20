@@ -10,18 +10,18 @@ import com.googlecode.gwt.test.patchers.PatchMethod;
 @PatchClass(JsonUtils.class)
 class JsonUtilsPatcher {
 
-  @PatchMethod
-  static String escapeValue(String toEscape) {
-    return "\"" + StringEscapeUtils.escapeJavaScript(toEscape) + "\"";
-  }
+   @PatchMethod
+   static String escapeValue(String toEscape) {
+      return "\"" + StringEscapeUtils.escapeJavaScript(toEscape) + "\"";
+   }
 
-  @PatchMethod
-  static boolean hasJsonParse() {
-    return true;
-  }
+   @PatchMethod
+   static boolean hasJsonParse() {
+      return true;
+   }
 
-  @PatchMethod
-  static JavaScriptObject initEscapeTable() {
-    return null;
-  }
+   @PatchMethod
+   static JavaScriptObject initEscapeTable() {
+      return null;
+   }
 }

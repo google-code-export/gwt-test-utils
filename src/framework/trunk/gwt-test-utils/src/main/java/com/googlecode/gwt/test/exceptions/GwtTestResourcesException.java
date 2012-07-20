@@ -12,20 +12,20 @@ import com.google.gwt.resources.client.ClientBundle;
  */
 public class GwtTestResourcesException extends GwtTestException {
 
-  private static final long serialVersionUID = -7518261539641239910L;
+   private static final long serialVersionUID = -7518261539641239910L;
 
-  public GwtTestResourcesException() {
-  }
+   public GwtTestResourcesException() {
+   }
 
-  public GwtTestResourcesException(String message) {
-    super(message);
-  }
+   public GwtTestResourcesException(String message) {
+      super(message);
+   }
 
-  public GwtTestResourcesException(String message, Throwable cause) {
-    super(message, cause);
-  }
+   public GwtTestResourcesException(String message, Throwable cause) {
+      super(message, cause);
+   }
 
-  public GwtTestResourcesException(Throwable cause) {
-    super(cause);
-  }
+   public GwtTestResourcesException(Throwable cause) {
+      super(cause);
+   }
 }

@@ -19,15 +19,15 @@ package com.googlecode.gwt.test.rpc;
  */
 public interface GwtRpcSerializerHandler {
 
-  /**
-   * The callback method which is called during serialization form the client to
-   * the server and from the server back to the client.
-   * 
-   * @param <T> Type type of the object to serialize.
-   * @param o The object to serialized
-   * @return The new instance of the object, after its serialization.
-   * @throws Exception If any error occurs during the serialization process.
-   */
-  public <T> T serializeUnserialize(T o) throws Exception;
+   /**
+    * The callback method which is called during serialization form the client
+    * to the server and from the server back to the client.
+    * 
+    * @param <T> Type type of the object to serialize.
+    * @param o The object to serialized
+    * @return The new instance of the object, after its serialization.
+    * @throws Exception If any error occurs during the serialization process.
+    */
+   public <T> T serializeUnserialize(T o) throws Exception;
 
 }

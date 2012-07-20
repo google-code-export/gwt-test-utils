@@ -11,20 +11,20 @@ import com.googlecode.gwt.test.GwtTestTest;
 
 public class BRElementTest extends GwtTestTest {
 
-  private BRElement b;
+   private BRElement b;
 
-  @Test
-  public void as() {
-    // Act
-    BRElement asElement = BRElement.as(b);
+   @Test
+   public void as() {
+      // Act
+      BRElement asElement = BRElement.as(b);
 
-    // Assert
-    assertEquals(b, asElement);
-  }
+      // Assert
+      assertEquals(b, asElement);
+   }
 
-  @Before
-  public void initDocument() {
-    b = Document.get().createBRElement();
-  }
+   @Before
+   public void initDocument() {
+      b = Document.get().createBRElement();
+   }
 
 }

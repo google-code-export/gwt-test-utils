@@ -12,11 +12,11 @@ import com.googlecode.gwt.test.utils.JavassistUtils;
 @PatchClass(PopupPanel.class)
 class PopupPanelPatcher {
 
-  @InitMethod
-  static void initClass(CtClass c) throws CannotCompileException {
-    CtConstructor cons = JavassistUtils.findConstructor(c);
+   @InitMethod
+   static void initClass(CtClass c) throws CannotCompileException {
+      CtConstructor cons = JavassistUtils.findConstructor(c);
 
-    cons.insertAfter("getElement().getStyle().setProperty(\"visibility\", \"hidden\");");
-  }
+      cons.insertAfter("getElement().getStyle().setProperty(\"visibility\", \"hidden\");");
+   }
 
 }

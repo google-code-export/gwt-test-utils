@@ -15,74 +15,74 @@ import com.googlecode.gwt.test.utils.events.Browser;
 
 public class CustomDeferredBindingTest extends GwtTestTest {
 
-  @Test
-  public void create_generateWith() {
-    try {
+   @Test
+   public void create_generateWith() {
+      try {
+         // Act
+         GWT.create(IGenerateWith.class);
+         fail();
+      } catch (GwtTestConfigurationException e) {
+         // Assert
+         assertEquals(
+                  "A custom Generator should be used to instanciate 'com.googlecode.gwt.test.deferred.IGenerateWith', but gwt-test-utils does not support GWT compiler API, so you have to add our own GwtCreateHandler with 'GwtTest.addGwtCreateHandler(..)' method or to declare your tested object with @Mock",
+                  e.getMessage());
+      }
+   }
+
+   @Test
+   public void create_replaceWith_Default() {
       // Act
-      GWT.create(IGenerateWith.class);
-      fail();
-    } catch (GwtTestConfigurationException e) {
+      IReplaceWith replaceWith = GWT.create(IReplaceWith.class);
+
       // Assert
-      assertEquals(
-          "A custom Generator should be used to instanciate 'com.googlecode.gwt.test.deferred.IGenerateWith', but gwt-test-utils does not support GWT compiler API, so you have to add our own GwtCreateHandler with 'GwtTest.addGwtCreateHandler(..)' method or to declare your tested object with @Mock",
-          e.getMessage());
-    }
-  }
+      assertTrue(replaceWith instanceof ReplaceWithDefault);
+   }
 
-  @Test
-  public void create_replaceWith_Default() {
-    // Act
-    IReplaceWith replaceWith = GWT.create(IReplaceWith.class);
+   @Test
+   public void create_replaceWith_gecko() {
+      // Arrange
+      Browser.setProperty("user.agent", "gecko");
 
-    // Assert
-    assertTrue(replaceWith instanceof ReplaceWithDefault);
-  }
+      // Act
+      IReplaceWith replaceWith = GWT.create(IReplaceWith.class);
 
-  @Test
-  public void create_replaceWith_gecko() {
-    // Arrange
-    Browser.setProperty("user.agent", "gecko");
+      // Assert
+      assertTrue(replaceWith instanceof ReplaceWithMozilla);
+   }
 
-    // Act
-    IReplaceWith replaceWith = GWT.create(IReplaceWith.class);
+   @Test
+   public void create_replaceWith_gecko1_8() {
+      // Arrange
+      Browser.setProperty("user.agent", "gecko1_8");
 
-    // Assert
-    assertTrue(replaceWith instanceof ReplaceWithMozilla);
-  }
+      // Act
+      IReplaceWith replaceWith = GWT.create(IReplaceWith.class);
 
-  @Test
-  public void create_replaceWith_gecko1_8() {
-    // Arrange
-    Browser.setProperty("user.agent", "gecko1_8");
+      // Assert
+      assertTrue(replaceWith instanceof ReplaceWithMozilla);
+   }
 
-    // Act
-    IReplaceWith replaceWith = GWT.create(IReplaceWith.class);
+   @Test
+   public void create_replaceWith_ie6() {
+      // Arrange
+      Browser.setProperty("user.agent", "ie6");
 
-    // Assert
-    assertTrue(replaceWith instanceof ReplaceWithMozilla);
-  }
+      // Act
+      IReplaceWith replaceWith = GWT.create(IReplaceWith.class);
 
-  @Test
-  public void create_replaceWith_ie6() {
-    // Arrange
-    Browser.setProperty("user.agent", "ie6");
+      // Assert
+      assertTrue(replaceWith instanceof ReplaceWithIE);
+   }
 
-    // Act
-    IReplaceWith replaceWith = GWT.create(IReplaceWith.class);
+   @Test
+   public void create_replaceWith_ie8() {
+      // Arrange
+      Browser.setProperty("user.agent", "ie8");
 
-    // Assert
-    assertTrue(replaceWith instanceof ReplaceWithIE);
-  }
+      // Act
+      IReplaceWith replaceWith = GWT.create(IReplaceWith.class);
 
-  @Test
-  public void create_replaceWith_ie8() {
-    // Arrange
-    Browser.setProperty("user.agent", "ie8");
-
-    // Act
-    IReplaceWith replaceWith = GWT.create(IReplaceWith.class);
-
-    // Assert
-    assertTrue(replaceWith instanceof ReplaceWithDefault);
-  }
+      // Assert
+      assertTrue(replaceWith instanceof ReplaceWithDefault);
+   }
 }

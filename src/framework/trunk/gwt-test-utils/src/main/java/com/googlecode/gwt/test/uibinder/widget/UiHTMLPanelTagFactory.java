@@ -17,54 +17,53 @@ import com.googlecode.gwt.test.uibinder.UiObjectTagFactory;
  */
 public class UiHTMLPanelTagFactory implements UiObjectTagFactory<HTMLPanel> {
 
-  private static class UiHTMLPanelTag extends UiObjectTag<HTMLPanel> {
+   private static class UiHTMLPanelTag extends UiObjectTag<HTMLPanel> {
 
-    @Override
-    protected void appendElement(HTMLPanel wrapped, Element element,
-        String namespaceURI, List<IsWidget> childWidgets) {
+      @Override
+      protected void appendElement(HTMLPanel wrapped, Element element, String namespaceURI,
+               List<IsWidget> childWidgets) {
 
-      getElement(wrapped).appendChild(element);
-    }
-
-    @Override
-    protected void finalizeObject(HTMLPanel widget) {
-      // nothing to do
-    }
-
-    @Override
-    protected void initializeObject(HTMLPanel wrapped,
-        Map<String, Object> attributes, Object owner) {
-      // nothing to do
-    }
-
-    @Override
-    protected HTMLPanel instanciate(Class<? extends HTMLPanel> clazz,
-        Map<String, Object> attributes, Object owner) {
-
-      if (clazz == HTMLPanel.class) {
-        return new HTMLPanel("");
+         getElement(wrapped).appendChild(element);
       }
 
-      // use default instanciation system
-      return super.instanciate(clazz, attributes, owner);
-    }
+      @Override
+      protected void finalizeObject(HTMLPanel widget) {
+         // nothing to do
+      }
 
-  }
+      @Override
+      protected void initializeObject(HTMLPanel wrapped, Map<String, Object> attributes,
+               Object owner) {
+         // nothing to do
+      }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.googlecode.gwt.test.uibinder.UiObjectTagFactory#createUiObjectTag
-   * (java.lang.Class, java.util.Map)
-   */
-  public UiObjectTag<HTMLPanel> createUiObjectTag(Class<?> clazz,
-      Map<String, Object> attributes) {
+      @Override
+      protected HTMLPanel instanciate(Class<? extends HTMLPanel> clazz,
+               Map<String, Object> attributes, Object owner) {
 
-    if (HTMLPanel.class.isAssignableFrom(clazz)) {
-      return new UiHTMLPanelTag();
-    }
+         if (clazz == HTMLPanel.class) {
+            return new HTMLPanel("");
+         }
 
-    return null;
-  }
+         // use default instanciation system
+         return super.instanciate(clazz, attributes, owner);
+      }
+
+   }
+
+   /*
+    * (non-Javadoc)
+    * 
+    * @see com.googlecode.gwt.test.uibinder.UiObjectTagFactory#createUiObjectTag
+    * (java.lang.Class, java.util.Map)
+    */
+   public UiObjectTag<HTMLPanel> createUiObjectTag(Class<?> clazz, Map<String, Object> attributes) {
+
+      if (HTMLPanel.class.isAssignableFrom(clazz)) {
+         return new UiHTMLPanelTag();
+      }
+
+      return null;
+   }
 
 }

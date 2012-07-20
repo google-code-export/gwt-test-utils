@@ -39,113 +39,108 @@ import com.google.gwt.dev.shell.rewrite.HostedModeClassRewriter.InstanceMethodOr
  */
 class RewriteRefsToJsoClasses extends ClassAdapter {
 
-  /**
-   * A method body rewriter to actually rewrite call sites.
-   */
-  private class MyMethodAdapter extends MethodAdapter {
+   /**
+    * A method body rewriter to actually rewrite call sites.
+    */
+   private class MyMethodAdapter extends MethodAdapter {
 
-    private final Remapper remapper = new Remapper() {
+      private final Remapper remapper = new Remapper() {
+         @Override
+         public String map(String typeName) {
+            if (jsoDescriptors.contains(typeName)) {
+               return OverlayTypesRewriter.JAVASCRIPTOBJECT_IMPL_DESC;
+            }
+            return typeName;
+         }
+      };
+
+      public MyMethodAdapter(MethodVisitor mv) {
+         super(mv);
+      }
+
       @Override
-      public String map(String typeName) {
-        if (jsoDescriptors.contains(typeName)) {
-          return OverlayTypesRewriter.JAVASCRIPTOBJECT_IMPL_DESC;
-        }
-        return typeName;
+      public void visitFieldInsn(int opcode, String owner, String name, String desc) {
+         if (jsoDescriptors.contains(owner)) {
+            // Change the owner to the rewritten class.
+            owner += "$";
+         }
+         super.visitFieldInsn(opcode, owner, name, desc);
       }
-    };
 
-    public MyMethodAdapter(MethodVisitor mv) {
-      super(mv);
-    }
-
-    @Override
-    public void visitFieldInsn(int opcode, String owner, String name,
-        String desc) {
-      if (jsoDescriptors.contains(owner)) {
-        // Change the owner to the rewritten class.
-        owner += "$";
+      @Override
+      public void visitLdcInsn(Object cst) {
+         cst = remapper.mapValue(cst);
+         super.visitLdcInsn(cst);
       }
-      super.visitFieldInsn(opcode, owner, name, desc);
-    }
 
-    @Override
-    public void visitLdcInsn(Object cst) {
-      cst = remapper.mapValue(cst);
-      super.visitLdcInsn(cst);
-    }
-
-    @Override
-    public void visitMethodInsn(int opcode, String owner, String name,
-        String desc) {
-      if (jsoDescriptors.contains(owner)) {
-        // Find the class that actually declared the method.
-        if (opcode == Opcodes.INVOKEVIRTUAL) {
-          owner = mapper.findOriginalDeclaringClass(owner, name + desc);
-        }
-        if (!owner.equals("java/lang/Object")) {
-          if (opcode == Opcodes.INVOKEVIRTUAL
-              || opcode == Opcodes.INVOKESPECIAL) {
-            // Instance/super call to JSO; rewrite as static.
-            opcode = Opcodes.INVOKESTATIC;
-            desc = OverlayTypesRewriter.addSyntheticThisParam(owner,
-                desc);
-            name += "$";
-          }
-          // Change the owner to implementation class.
-          owner += "$";
-        }
+      @Override
+      public void visitMethodInsn(int opcode, String owner, String name, String desc) {
+         if (jsoDescriptors.contains(owner)) {
+            // Find the class that actually declared the method.
+            if (opcode == Opcodes.INVOKEVIRTUAL) {
+               owner = mapper.findOriginalDeclaringClass(owner, name + desc);
+            }
+            if (!owner.equals("java/lang/Object")) {
+               if (opcode == Opcodes.INVOKEVIRTUAL || opcode == Opcodes.INVOKESPECIAL) {
+                  // Instance/super call to JSO; rewrite as static.
+                  opcode = Opcodes.INVOKESTATIC;
+                  desc = OverlayTypesRewriter.addSyntheticThisParam(owner, desc);
+                  name += "$";
+               }
+               // Change the owner to implementation class.
+               owner += "$";
+            }
+         }
+         super.visitMethodInsn(opcode, owner, name, desc);
       }
-      super.visitMethodInsn(opcode, owner, name, desc);
-    }
 
-    @Override
-    public void visitMultiANewArrayInsn(String desc, int dims) {
-      desc = remapper.mapType(desc);
-      super.visitMultiANewArrayInsn(desc, dims);
-    }
-
-    @Override
-    public void visitTypeInsn(int opcode, String type) {
-      if (opcode == Opcodes.ANEWARRAY) {
-        type = remapper.mapType(type);
+      @Override
+      public void visitMultiANewArrayInsn(String desc, int dims) {
+         desc = remapper.mapType(desc);
+         super.visitMultiANewArrayInsn(desc, dims);
       }
-      super.visitTypeInsn(opcode, type);
-    }
-  }
 
-  /**
-   * An unmodifiable set of descriptors containing <code>JavaScriptObject</code>
-   * and all subclasses.
-   */
-  protected final Set<String> jsoDescriptors;
+      @Override
+      public void visitTypeInsn(int opcode, String type) {
+         if (opcode == Opcodes.ANEWARRAY) {
+            type = remapper.mapType(type);
+         }
+         super.visitTypeInsn(opcode, type);
+      }
+   }
 
-  /**
-   * Maps methods to the class in which they are declared.
-   */
-  private final InstanceMethodOracle mapper;
+   /**
+    * An unmodifiable set of descriptors containing
+    * <code>JavaScriptObject</code> and all subclasses.
+    */
+   protected final Set<String> jsoDescriptors;
 
-  /**
-   * Construct a new rewriter instance.
-   * 
-   * @param cv the visitor to chain to
-   * @param jsoDescriptors an unmodifiable set of descriptors containing
-   *          <code>JavaScriptObject</code> and all subclasses
-   * @param mapper maps methods to the class in which they are declared
-   */
-  public RewriteRefsToJsoClasses(ClassVisitor cv, Set<String> jsoDescriptors,
-      InstanceMethodOracle mapper) {
-    super(cv);
-    this.jsoDescriptors = jsoDescriptors;
-    this.mapper = mapper;
-  }
+   /**
+    * Maps methods to the class in which they are declared.
+    */
+   private final InstanceMethodOracle mapper;
 
-  @Override
-  public MethodVisitor visitMethod(int access, String name, String desc,
-      String signature, String[] exceptions) {
-    // Wrap the returned method visitor in my own.
-    MethodVisitor mv = super.visitMethod(access, name, desc, signature,
-        exceptions);
-    return new MyMethodAdapter(mv);
-  }
+   /**
+    * Construct a new rewriter instance.
+    * 
+    * @param cv the visitor to chain to
+    * @param jsoDescriptors an unmodifiable set of descriptors containing
+    *           <code>JavaScriptObject</code> and all subclasses
+    * @param mapper maps methods to the class in which they are declared
+    */
+   public RewriteRefsToJsoClasses(ClassVisitor cv, Set<String> jsoDescriptors,
+            InstanceMethodOracle mapper) {
+      super(cv);
+      this.jsoDescriptors = jsoDescriptors;
+      this.mapper = mapper;
+   }
+
+   @Override
+   public MethodVisitor visitMethod(int access, String name, String desc, String signature,
+            String[] exceptions) {
+      // Wrap the returned method visitor in my own.
+      MethodVisitor mv = super.visitMethod(access, name, desc, signature, exceptions);
+      return new MyMethodAdapter(mv);
+   }
 
 }

@@ -14,12 +14,11 @@ import com.googlecode.gwt.test.GwtCreateHandler;
 @SuppressWarnings("unchecked")
 public class ClientBundleCreateHandler implements GwtCreateHandler {
 
-  public Object create(Class<?> classLiteral) throws Exception {
-    if (!ClientBundle.class.isAssignableFrom(classLiteral)) {
-      return null;
-    }
-    return ClientBundleProxyFactory.getFactory(
-        (Class<? extends ClientBundle>) classLiteral).createProxy();
-  }
+   public Object create(Class<?> classLiteral) throws Exception {
+      if (!ClientBundle.class.isAssignableFrom(classLiteral)) {
+         return null;
+      }
+      return ClientBundleProxyFactory.getFactory((Class<? extends ClientBundle>) classLiteral).createProxy();
+   }
 
 }

@@ -13,46 +13,43 @@ import com.googlecode.gwt.test.GwtTestTest;
 
 public class XMLDocumentTest extends GwtTestTest {
 
-  @Test
-  public void createCDATASection() {
-    // Arrange
-    Document document = XMLParser.createDocument();
+   @Test
+   public void createCDATASection() {
+      // Arrange
+      Document document = XMLParser.createDocument();
 
-    // Act
-    CDATASection cdata = document.createCDATASection("my cdata Value");
+      // Act
+      CDATASection cdata = document.createCDATASection("my cdata Value");
 
-    // Assert
-    assertEquals("my cdata Value", cdata.getData());
-    assertEquals(document.getDocumentElement(),
-        cdata.getOwnerDocument().getDocumentElement());
-  }
+      // Assert
+      assertEquals("my cdata Value", cdata.getData());
+      assertEquals(document.getDocumentElement(), cdata.getOwnerDocument().getDocumentElement());
+   }
 
-  @Test
-  public void createElement() {
-    // Arrange
-    Document document = XMLParser.createDocument();
+   @Test
+   public void createElement() {
+      // Arrange
+      Document document = XMLParser.createDocument();
 
-    // Act
-    Element element = document.createElement("elem");
+      // Act
+      Element element = document.createElement("elem");
 
-    // Assert
-    assertEquals("elem", element.getTagName());
-    assertEquals(document.getDocumentElement(),
-        element.getOwnerDocument().getDocumentElement());
-  }
+      // Assert
+      assertEquals("elem", element.getTagName());
+      assertEquals(document.getDocumentElement(), element.getOwnerDocument().getDocumentElement());
+   }
 
-  @Test
-  public void createTextNode() {
-    // Arrange
-    Document document = XMLParser.createDocument();
+   @Test
+   public void createTextNode() {
+      // Arrange
+      Document document = XMLParser.createDocument();
 
-    // Act
-    Text text = document.createTextNode("my text");
+      // Act
+      Text text = document.createTextNode("my text");
 
-    // Assert
-    assertEquals("my text", text.getData());
-    assertEquals(document.getDocumentElement(),
-        text.getOwnerDocument().getDocumentElement());
-  }
+      // Assert
+      assertEquals("my text", text.getData());
+      assertEquals(document.getDocumentElement(), text.getOwnerDocument().getDocumentElement());
+   }
 
 }

@@ -15,40 +15,40 @@ import com.google.gwt.resources.client.TextResource;
  */
 class TextResourceCallback implements ResourcePrototypeCallback {
 
-  private static interface TextReader {
+   private static interface TextReader {
 
-    String readText() throws Exception;
-  }
+      String readText() throws Exception;
+   }
 
-  private final TextReader textReader;
+   private final TextReader textReader;
 
-  TextResourceCallback(final List<URL> resourceURLs) {
-    textReader = new TextReader() {
+   TextResourceCallback(final List<URL> resourceURLs) {
+      textReader = new TextReader() {
 
-      public String readText() throws Exception {
-        return TextResourceReader.get().readFiles(resourceURLs);
+         public String readText() throws Exception {
+            return TextResourceReader.get().readFiles(resourceURLs);
+         }
+
+      };
+   }
+
+   TextResourceCallback(final String text) {
+      textReader = new TextReader() {
+
+         public String readText() throws Exception {
+            return text;
+         }
+
+      };
+   }
+
+   public Object call(Method method, Object[] args) throws Exception {
+      if (method.getName().equals("getText")) {
+         return textReader.readText();
       }
 
-    };
-  }
+      return null;
 
-  TextResourceCallback(final String text) {
-    textReader = new TextReader() {
-
-      public String readText() throws Exception {
-        return text;
-      }
-
-    };
-  }
-
-  public Object call(Method method, Object[] args) throws Exception {
-    if (method.getName().equals("getText")) {
-      return textReader.readText();
-    }
-
-    return null;
-
-  }
+   }
 
 }

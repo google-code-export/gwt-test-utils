@@ -74,175 +74,171 @@ import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 // TODO: make package-private
 public class SerializableModifier implements JavaClassModifier {
 
-  private static final String DEFAULT_CONS_METHOD_NAME = "DEFAULT_CONS_METHOD";
-  private static final Logger LOGGER = LoggerFactory.getLogger(SerializableModifier.class);
+   private static final String DEFAULT_CONS_METHOD_NAME = "DEFAULT_CONS_METHOD";
+   private static final Logger LOGGER = LoggerFactory.getLogger(SerializableModifier.class);
 
-  public static void readObject(Serializable ex, ObjectInputStream ois) {
-    try {
-      // call the default read method
-      ois.defaultReadObject();
+   public static void readObject(Serializable ex, ObjectInputStream ois) {
+      try {
+         // call the default read method
+         ois.defaultReadObject();
 
-      // keep non transient/static/final value somhere
-      Map<Field, Object> buffer = getFieldValues(ex);
+         // keep non transient/static/final value somhere
+         Map<Field, Object> buffer = getFieldValues(ex);
 
-      // call the exported default constructor to reinitialise triansient field
-      // values
-      // which are not expected to be null
-      GwtReflectionUtils.callPrivateMethod(ex, DEFAULT_CONS_METHOD_NAME);
+         // call the exported default constructor to reinitialise triansient
+         // field
+         // values
+         // which are not expected to be null
+         GwtReflectionUtils.callPrivateMethod(ex, DEFAULT_CONS_METHOD_NAME);
 
-      // set the kept field values
-      for (Map.Entry<Field, Object> entry : buffer.entrySet()) {
-        entry.getKey().set(ex, entry.getValue());
+         // set the kept field values
+         for (Map.Entry<Field, Object> entry : buffer.entrySet()) {
+            entry.getKey().set(ex, entry.getValue());
+         }
+
+      } catch (Exception e) {
+         throw new GwtTestRpcException("Error during deserialization of object "
+                  + ex.getClass().getName(), e);
       }
 
-    } catch (Exception e) {
-      throw new GwtTestRpcException("Error during deserialization of object "
-          + ex.getClass().getName(), e);
-    }
+   }
 
-  }
+   private static Map<Field, Object> getFieldValues(Serializable o)
+            throws IllegalArgumentException, IllegalAccessException {
+      Map<Field, Object> result = new HashMap<Field, Object>();
 
-  private static Map<Field, Object> getFieldValues(Serializable o)
-      throws IllegalArgumentException, IllegalAccessException {
-    Map<Field, Object> result = new HashMap<Field, Object>();
-
-    for (Field field : GwtReflectionUtils.getFields(o.getClass())) {
-      int fieldModifier = field.getModifiers();
-      if (!Modifier.isStatic(fieldModifier)
-          && !Modifier.isTransient(fieldModifier)) {
-        result.put(field, field.get(o));
+      for (Field field : GwtReflectionUtils.getFields(o.getClass())) {
+         int fieldModifier = field.getModifiers();
+         if (!Modifier.isStatic(fieldModifier) && !Modifier.isTransient(fieldModifier)) {
+            result.put(field, field.get(o));
+         }
       }
-    }
 
-    return result;
-  }
+      return result;
+   }
 
-  private final CtClass charSequenceCtClass;
-  private final CtClass externalizableCtClass;
-  private final CtClass isSerializableCtClass;
-  private final CtClass serializableCtClass;
+   private final CtClass charSequenceCtClass;
+   private final CtClass externalizableCtClass;
+   private final CtClass isSerializableCtClass;
+   private final CtClass serializableCtClass;
 
-  public SerializableModifier() {
-    serializableCtClass = GwtClassPool.getCtClass(Serializable.class);
-    isSerializableCtClass = GwtClassPool.getCtClass(IsSerializable.class);
-    externalizableCtClass = GwtClassPool.getCtClass(Externalizable.class);
-    charSequenceCtClass = GwtClassPool.getCtClass(CharSequence.class);
-  }
+   public SerializableModifier() {
+      serializableCtClass = GwtClassPool.getCtClass(Serializable.class);
+      isSerializableCtClass = GwtClassPool.getCtClass(IsSerializable.class);
+      externalizableCtClass = GwtClassPool.getCtClass(Externalizable.class);
+      charSequenceCtClass = GwtClassPool.getCtClass(CharSequence.class);
+   }
 
-  public void modify(CtClass classToModify) throws Exception {
+   public void modify(CtClass classToModify) throws Exception {
 
-    if (classToModify.isInterface() || classToModify.isPrimitive()
-        || classToModify.isEnum() || classToModify.isArray()
-        || classToModify.isAnnotation()
-        || Modifier.isAbstract(classToModify.getModifiers())) {
-      return;
-    }
-
-    if (classToModify.subtypeOf(charSequenceCtClass)) {
-      return;
-    }
-
-    // Externalizable object which is not serialized by GWT RPC
-    if (classToModify.subtypeOf(externalizableCtClass)) {
-      return;
-    }
-
-    // substitute isSerializable with Serializable
-    if (classToModify.subtypeOf(isSerializableCtClass)
-        && !classToModify.subtypeOf(serializableCtClass)) {
-      CtClass[] interfaces = classToModify.getInterfaces();
-      for (int i = 0; i < interfaces.length; i++) {
-        if (isSerializableCtClass.equals(interfaces[i])) {
-          interfaces[i] = serializableCtClass;
-        }
+      if (classToModify.isInterface() || classToModify.isPrimitive() || classToModify.isEnum()
+               || classToModify.isArray() || classToModify.isAnnotation()
+               || Modifier.isAbstract(classToModify.getModifiers())) {
+         return;
       }
-      classToModify.setInterfaces(interfaces);
-    }
 
-    if (!classToModify.subtypeOf(serializableCtClass)) {
-      return;
-    }
+      if (classToModify.subtypeOf(charSequenceCtClass)) {
+         return;
+      }
 
-    if (getReadObjectMethod(classToModify) != null) {
-      // this class should never be serialized by GWT RPC
-      return;
-    }
+      // Externalizable object which is not serialized by GWT RPC
+      if (classToModify.subtypeOf(externalizableCtClass)) {
+         return;
+      }
 
-    // GWT RPC Serializable objects should have an empty constructor
-    CtConstructor defaultCons = getDefaultConstructor(classToModify);
-    if (defaultCons == null) {
-      return;
-    }
+      // substitute isSerializable with Serializable
+      if (classToModify.subtypeOf(isSerializableCtClass)
+               && !classToModify.subtypeOf(serializableCtClass)) {
+         CtClass[] interfaces = classToModify.getInterfaces();
+         for (int i = 0; i < interfaces.length; i++) {
+            if (isSerializableCtClass.equals(interfaces[i])) {
+               interfaces[i] = serializableCtClass;
+            }
+         }
+         classToModify.setInterfaces(interfaces);
+      }
 
-    LOGGER.debug("Apply serializable bytecode modifier");
+      if (!classToModify.subtypeOf(serializableCtClass)) {
+         return;
+      }
 
-    CtMethod defaultConstMethod = defaultCons.toMethod(
-        DEFAULT_CONS_METHOD_NAME, classToModify);
-    defaultConstMethod.setModifiers(Modifier.PUBLIC);
+      if (getReadObjectMethod(classToModify) != null) {
+         // this class should never be serialized by GWT RPC
+         return;
+      }
 
-    if (hasDefaultConstMethod(classToModify.getSuperclass())) {
-      defaultConstMethod.insertBefore("super." + DEFAULT_CONS_METHOD_NAME
-          + "();");
-    }
-    classToModify.addMethod(defaultConstMethod);
+      // GWT RPC Serializable objects should have an empty constructor
+      CtConstructor defaultCons = getDefaultConstructor(classToModify);
+      if (defaultCons == null) {
+         return;
+      }
 
-    overrideReadObject(classToModify);
-  }
+      LOGGER.debug("Apply serializable bytecode modifier");
 
-  private String callStaticReadObject() {
-    StringBuilder buffer = new StringBuilder();
-    buffer.append("{");
-    buffer.append(this.getClass().getName() + ".readObject(");
-    buffer.append("(").append(Serializable.class.getName()).append(")");
-    buffer.append(" this, $1);}");
+      CtMethod defaultConstMethod = defaultCons.toMethod(DEFAULT_CONS_METHOD_NAME, classToModify);
+      defaultConstMethod.setModifiers(Modifier.PUBLIC);
 
-    return buffer.toString();
-  }
+      if (hasDefaultConstMethod(classToModify.getSuperclass())) {
+         defaultConstMethod.insertBefore("super." + DEFAULT_CONS_METHOD_NAME + "();");
+      }
+      classToModify.addMethod(defaultConstMethod);
 
-  private CtConstructor getDefaultConstructor(CtClass ctClass) {
-    try {
-      return ctClass.getConstructor(Descriptor.ofConstructor(new CtClass[0]));
-    } catch (NotFoundException e) {
-      return null;
-    }
-  }
+      overrideReadObject(classToModify);
+   }
 
-  private CtMethod getReadObjectMethod(CtClass ctClass) {
-    CtClass[] paramTypes = new CtClass[]{GwtClassPool.getCtClass(ObjectInputStream.class)};
-    try {
-      return ctClass.getDeclaredMethod("readObject", paramTypes);
-    } catch (NotFoundException e) {
-      return null;
-    }
+   private String callStaticReadObject() {
+      StringBuilder buffer = new StringBuilder();
+      buffer.append("{");
+      buffer.append(this.getClass().getName() + ".readObject(");
+      buffer.append("(").append(Serializable.class.getName()).append(")");
+      buffer.append(" this, $1);}");
 
-  }
+      return buffer.toString();
+   }
 
-  private boolean hasDefaultConstMethod(CtClass ctClass) {
-    try {
-      CtMethod m = ctClass.getMethod(DEFAULT_CONS_METHOD_NAME,
-          Descriptor.ofMethod(CtClass.voidType, new CtClass[0]));
-      return m != null;
-    } catch (NotFoundException e) {
-      return false;
-    }
-  }
+   private CtConstructor getDefaultConstructor(CtClass ctClass) {
+      try {
+         return ctClass.getConstructor(Descriptor.ofConstructor(new CtClass[0]));
+      } catch (NotFoundException e) {
+         return null;
+      }
+   }
 
-  private void overrideReadObject(CtClass classToModify)
-      throws NotFoundException, CannotCompileException {
-    CtClass[] paramTypes = new CtClass[]{GwtClassPool.getCtClass(ObjectInputStream.class)};
-    CtMethod readObjectMethod = new CtMethod(CtClass.voidType, "readObject",
-        paramTypes, classToModify);
-    readObjectMethod.setModifiers(Modifier.PRIVATE);
+   private CtMethod getReadObjectMethod(CtClass ctClass) {
+      CtClass[] paramTypes = new CtClass[]{GwtClassPool.getCtClass(ObjectInputStream.class)};
+      try {
+         return ctClass.getDeclaredMethod("readObject", paramTypes);
+      } catch (NotFoundException e) {
+         return null;
+      }
 
-    // add exception types
-    CtClass classNotFoundException = GwtClassPool.getCtClass(ClassNotFoundException.class);
-    CtClass ioException = GwtClassPool.getCtClass(IOException.class);
-    readObjectMethod.setExceptionTypes(new CtClass[]{
-        classNotFoundException, ioException});
+   }
 
-    // set body (call static readObject(Serializable, ObjectInputStream)
-    readObjectMethod.setBody(callStaticReadObject());
+   private boolean hasDefaultConstMethod(CtClass ctClass) {
+      try {
+         CtMethod m = ctClass.getMethod(DEFAULT_CONS_METHOD_NAME,
+                  Descriptor.ofMethod(CtClass.voidType, new CtClass[0]));
+         return m != null;
+      } catch (NotFoundException e) {
+         return false;
+      }
+   }
 
-    classToModify.addMethod(readObjectMethod);
-  }
+   private void overrideReadObject(CtClass classToModify) throws NotFoundException,
+            CannotCompileException {
+      CtClass[] paramTypes = new CtClass[]{GwtClassPool.getCtClass(ObjectInputStream.class)};
+      CtMethod readObjectMethod = new CtMethod(CtClass.voidType, "readObject", paramTypes,
+               classToModify);
+      readObjectMethod.setModifiers(Modifier.PRIVATE);
+
+      // add exception types
+      CtClass classNotFoundException = GwtClassPool.getCtClass(ClassNotFoundException.class);
+      CtClass ioException = GwtClassPool.getCtClass(IOException.class);
+      readObjectMethod.setExceptionTypes(new CtClass[]{classNotFoundException, ioException});
+
+      // set body (call static readObject(Serializable, ObjectInputStream)
+      readObjectMethod.setBody(callStaticReadObject());
+
+      classToModify.addMethod(readObjectMethod);
+   }
 }

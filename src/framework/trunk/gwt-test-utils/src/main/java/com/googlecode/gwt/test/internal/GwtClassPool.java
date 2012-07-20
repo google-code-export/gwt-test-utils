@@ -14,22 +14,21 @@ import com.googlecode.gwt.test.exceptions.GwtTestPatchException;
  */
 public class GwtClassPool {
 
-  private static ClassPool classPool = ClassPool.getDefault();
+   private static ClassPool classPool = ClassPool.getDefault();
 
-  public static ClassPool get() {
-    return classPool;
-  }
+   public static ClassPool get() {
+      return classPool;
+   }
 
-  public static CtClass getClass(String className) {
-    try {
-      return GwtClassPool.get().get(className);
-    } catch (NotFoundException e) {
-      throw new GwtTestPatchException("Cannot find class in the classpath : '"
-          + className + "'");
-    }
-  }
+   public static CtClass getClass(String className) {
+      try {
+         return GwtClassPool.get().get(className);
+      } catch (NotFoundException e) {
+         throw new GwtTestPatchException("Cannot find class in the classpath : '" + className + "'");
+      }
+   }
 
-  public static CtClass getCtClass(Class<?> clazz) {
-    return getClass(clazz.getName());
-  }
+   public static CtClass getCtClass(Class<?> clazz) {
+      return getClass(clazz.getName());
+   }
 }

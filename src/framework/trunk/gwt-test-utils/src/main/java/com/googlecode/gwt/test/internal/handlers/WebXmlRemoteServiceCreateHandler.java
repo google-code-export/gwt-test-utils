@@ -19,46 +19,44 @@ import com.googlecode.gwt.test.utils.GwtReflectionUtils;
  */
 class WebXmlRemoteServiceCreateHandler extends RemoteServiceCreateHandler {
 
-  // a map with servletUrl as key and serviceImpl instance as value
-  private final Map<String, Object> servicesImplMap = new HashMap<String, Object>();
+   // a map with servletUrl as key and serviceImpl instance as value
+   private final Map<String, Object> servicesImplMap = new HashMap<String, Object>();
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see
-   * com.googlecode.gwt.test.server.RemoteServiceCreateHandler#findService(java
-   * .lang .Class, java.lang.String)
-   */
-  @Override
-  protected Object findService(Class<?> remoteServiceClass,
-      String remoteServiceRelativePath) {
+   /*
+    * (non-Javadoc)
+    * 
+    * @see
+    * com.googlecode.gwt.test.server.RemoteServiceCreateHandler#findService(java
+    * .lang .Class, java.lang.String)
+    */
+   @Override
+   protected Object findService(Class<?> remoteServiceClass, String remoteServiceRelativePath) {
 
-    String servletPath = "/" + GWT.getModuleName() + "/"
-        + remoteServiceRelativePath;
+      String servletPath = "/" + GWT.getModuleName() + "/" + remoteServiceRelativePath;
 
-    Object serviceImpl = servicesImplMap.get(servletPath);
+      Object serviceImpl = servicesImplMap.get(servletPath);
 
-    if (serviceImpl != null) {
+      if (serviceImpl != null) {
+         return serviceImpl;
+      }
+
+      String className = WebXmlUtils.get().getServletClass(servletPath);
+
+      if (className == null) {
+         return null;
+      }
+
+      try {
+         serviceImpl = GwtReflectionUtils.instantiateClass(GwtReflectionUtils.getClass(className));
+      } catch (ClassNotFoundException e) {
+         // should not happen..
+         throw new GwtTestConfigurationException(e);
+      }
+
+      // cache the implementation
+      servicesImplMap.put(servletPath, serviceImpl);
+
       return serviceImpl;
-    }
-
-    String className = WebXmlUtils.get().getServletClass(servletPath);
-
-    if (className == null) {
-      return null;
-    }
-
-    try {
-      serviceImpl = GwtReflectionUtils.instantiateClass(GwtReflectionUtils.getClass(className));
-    } catch (ClassNotFoundException e) {
-      // should not happen..
-      throw new GwtTestConfigurationException(e);
-    }
-
-    // cache the implementation
-    servicesImplMap.put(servletPath, serviceImpl);
-
-    return serviceImpl;
-  }
+   }
 
 }

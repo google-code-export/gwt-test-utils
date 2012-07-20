@@ -36,69 +36,68 @@ import javax.servlet.ServletContext;
  */
 public class MockServletConfig implements ServletConfig {
 
-  private final Map<String, String> initParameters = new LinkedHashMap<String, String>();
+   private final Map<String, String> initParameters = new LinkedHashMap<String, String>();
 
-  private final ServletContext servletContext;
+   private final ServletContext servletContext;
 
-  private final String servletName;
+   private final String servletName;
 
-  /**
-   * Create a new MockServletConfig with a default {@link MockServletContext}.
-   */
-  public MockServletConfig() {
-    this(null, "");
-  }
+   /**
+    * Create a new MockServletConfig with a default {@link MockServletContext}.
+    */
+   public MockServletConfig() {
+      this(null, "");
+   }
 
-  /**
-   * Create a new MockServletConfig.
-   * 
-   * @param servletContext the ServletContext that the servlet runs in
-   */
-  public MockServletConfig(ServletContext servletContext) {
-    this(servletContext, "");
-  }
+   /**
+    * Create a new MockServletConfig.
+    * 
+    * @param servletContext the ServletContext that the servlet runs in
+    */
+   public MockServletConfig(ServletContext servletContext) {
+      this(servletContext, "");
+   }
 
-  /**
-   * Create a new MockServletConfig.
-   * 
-   * @param servletContext the ServletContext that the servlet runs in
-   * @param servletName the name of the servlet
-   */
-  public MockServletConfig(ServletContext servletContext, String servletName) {
-    this.servletContext = (servletContext != null ? servletContext
-        : new MockServletContext());
-    this.servletName = servletName;
-  }
+   /**
+    * Create a new MockServletConfig.
+    * 
+    * @param servletContext the ServletContext that the servlet runs in
+    * @param servletName the name of the servlet
+    */
+   public MockServletConfig(ServletContext servletContext, String servletName) {
+      this.servletContext = (servletContext != null ? servletContext : new MockServletContext());
+      this.servletName = servletName;
+   }
 
-  /**
-   * Create a new MockServletConfig with a default {@link MockServletContext}.
-   * 
-   * @param servletName the name of the servlet
-   */
-  public MockServletConfig(String servletName) {
-    this(null, servletName);
-  }
+   /**
+    * Create a new MockServletConfig with a default {@link MockServletContext}.
+    * 
+    * @param servletName the name of the servlet
+    */
+   public MockServletConfig(String servletName) {
+      this(null, servletName);
+   }
 
-  public void addInitParameter(String name, String value) {
-    assertThat(name).as("Parameter name must not be null").isNotNull();
-    this.initParameters.put(name, value);
-  }
+   public void addInitParameter(String name, String value) {
+      assertThat(name).as("Parameter name must not be null").isNotNull();
+      this.initParameters.put(name, value);
+   }
 
-  public String getInitParameter(String name) {
-    assertThat(name).as("Parameter name must not be null").isNotNull();
-    return this.initParameters.get(name);
-  }
+   public String getInitParameter(String name) {
+      assertThat(name).as("Parameter name must not be null").isNotNull();
+      return this.initParameters.get(name);
+   }
 
-  public Enumeration<String> getInitParameterNames() {
-    return Collections.enumeration(this.initParameters.keySet());
-  }
+   public Enumeration<String> getInitParameterNames() {
+      return Collections.enumeration(this.initParameters.keySet());
+   }
 
-  public ServletContext getServletContext() {
-    return this.servletContext;
-  }
+   public ServletContext getServletContext() {
+      return this.servletContext;
+   }
 
-  public String getServletName() {
-    return this.servletName;
-  }
+   public String getServletName() {
+      return this.servletName;
+   }
 
 }

@@ -8,24 +8,24 @@ import com.google.gwt.http.client.URL;
 
 public class URLTest extends GwtTestTest {
 
-  @Test
-  public void encodePathSegment() {
-    // Arrange
-    String decodedURLComponent = "this\\is\\encoded%2B";
+   @Test
+   public void encodePathSegment() {
+      // Arrange
+      String decodedURLComponent = "this\\is\\encoded%2B";
 
-    // Act
-    String encoded = URL.encodePathSegment(decodedURLComponent);
+      // Act
+      String encoded = URL.encodePathSegment(decodedURLComponent);
 
-    assertEquals("this%5Cis%5Cencoded%252B", encoded);
-  }
+      assertEquals("this%5Cis%5Cencoded%252B", encoded);
+   }
 
-  @Test
-  public void encodeQueryString() {
-    // Arrange
-    String stringToEncode = "test";
+   @Test
+   public void encodeQueryString() {
+      // Arrange
+      String stringToEncode = "test";
 
-    // Act & Assert
-    assertEquals(stringToEncode, URL.encodeQueryString(stringToEncode));
-  }
+      // Act & Assert
+      assertEquals(stringToEncode, URL.encodeQueryString(stringToEncode));
+   }
 
 }

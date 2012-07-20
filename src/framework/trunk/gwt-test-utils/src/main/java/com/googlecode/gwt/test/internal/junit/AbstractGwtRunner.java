@@ -24,29 +24,29 @@ import com.googlecode.gwt.test.internal.GwtFactory;
  */
 public abstract class AbstractGwtRunner extends Runner implements Filterable {
 
-  private final Runner runner;
+   private final Runner runner;
 
-  public AbstractGwtRunner(Class<?> clazz) throws Throwable {
-    GwtFactory.initializeIfNeeded();
-    runner = getRunnerFactory().create(clazz);
-  }
+   public AbstractGwtRunner(Class<?> clazz) throws Throwable {
+      GwtFactory.initializeIfNeeded();
+      runner = getRunnerFactory().create(clazz);
+   }
 
-  public void filter(Filter filter) throws NoTestsRemainException {
-    if (Filterable.class.isInstance(runner)) {
-      ((Filterable) runner).filter(filter);
-    }
-  }
+   public void filter(Filter filter) throws NoTestsRemainException {
+      if (Filterable.class.isInstance(runner)) {
+         ((Filterable) runner).filter(filter);
+      }
+   }
 
-  @Override
-  public Description getDescription() {
-    return runner.getDescription();
-  }
+   @Override
+   public Description getDescription() {
+      return runner.getDescription();
+   }
 
-  @Override
-  public void run(RunNotifier notifier) {
-    runner.run(notifier);
-  }
+   @Override
+   public void run(RunNotifier notifier) {
+      runner.run(notifier);
+   }
 
-  protected abstract AbstractGwtRunnerFactory getRunnerFactory();
+   protected abstract AbstractGwtRunnerFactory getRunnerFactory();
 
 }

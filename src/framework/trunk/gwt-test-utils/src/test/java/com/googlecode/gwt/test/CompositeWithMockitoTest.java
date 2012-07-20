@@ -14,28 +14,28 @@ import com.google.gwt.user.client.ui.PushButton;
 @GwtModule("com.googlecode.gwt.test.GwtTestUtils")
 public class CompositeWithMockitoTest extends GwtTestWithMockito {
 
-  public class MyComposite extends Composite {
+   public class MyComposite extends Composite {
 
-    public MyComposite(CustomButton button) {
-      initWidget(button);
-    }
-  }
+      public MyComposite(CustomButton button) {
+         initWidget(button);
+      }
+   }
 
-  @com.googlecode.gwt.test.Mock
-  private Element element;
+   @com.googlecode.gwt.test.Mock
+   private Element element;
 
-  @Mock
-  private PushButton injectedButton;
+   @Mock
+   private PushButton injectedButton;
 
-  @Test
-  public void testComposite() {
-    // Arrange
-    Mockito.when(injectedButton.getElement()).thenReturn(element);
+   @Test
+   public void testComposite() {
+      // Arrange
+      Mockito.when(injectedButton.getElement()).thenReturn(element);
 
-    // Act
-    MyComposite composite = new MyComposite(injectedButton);
+      // Act
+      MyComposite composite = new MyComposite(injectedButton);
 
-    // Assert
-    assertEquals(element, composite.getElement());
-  }
+      // Assert
+      assertEquals(element, composite.getElement());
+   }
 }

@@ -21,48 +21,44 @@ import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 @PatchClass(target = "com.google.gwt.inject.rebind.adapter.GwtDotCreateProvider")
 class GwtDotCreateProviderPatcher {
 
-  private static final String BINDED_CLASS_FIELD = "gwtTestUtilsBindedClass";
+   private static final String BINDED_CLASS_FIELD = "gwtTestUtilsBindedClass";
 
-  @PatchMethod
-  static <T> ScopedBindingBuilder bind(LinkedBindingBuilder<T> builder) {
+   @PatchMethod
+   static <T> ScopedBindingBuilder bind(LinkedBindingBuilder<T> builder) {
 
-    if (!(builder instanceof AbstractBindingBuilder)) {
-      throw new GwtTestGinException("Not managed "
-          + LinkedBindingBuilder.class.getSimpleName() + " implementation : "
-          + builder.getClass().getName());
-    }
+      if (!(builder instanceof AbstractBindingBuilder)) {
+         throw new GwtTestGinException("Not managed " + LinkedBindingBuilder.class.getSimpleName()
+                  + " implementation : " + builder.getClass().getName());
+      }
 
-    Binding<T> binding = GwtReflectionUtils.<Binding<T>> getPrivateFieldValue(
-        builder, "binding");
+      Binding<T> binding = GwtReflectionUtils.<Binding<T>> getPrivateFieldValue(builder, "binding");
 
-    Type type = binding.getKey().getTypeLiteral().getType();
+      Type type = binding.getKey().getTypeLiteral().getType();
 
-    if (!(type instanceof Class)) {
-      throw new GwtTestGinException("Not managed binded type : " + type);
-    }
+      if (!(type instanceof Class)) {
+         throw new GwtTestGinException("Not managed binded type : " + type);
+      }
 
-    @SuppressWarnings("unchecked")
-    GwtDotCreateProvider<T> gwtDotCreateProvider = GwtReflectionUtils.instantiateClass(GwtDotCreateProvider.class);
+      @SuppressWarnings("unchecked")
+      GwtDotCreateProvider<T> gwtDotCreateProvider = GwtReflectionUtils.instantiateClass(GwtDotCreateProvider.class);
 
-    GwtReflectionUtils.setPrivateFieldValue(gwtDotCreateProvider,
-        BINDED_CLASS_FIELD, type);
+      GwtReflectionUtils.setPrivateFieldValue(gwtDotCreateProvider, BINDED_CLASS_FIELD, type);
 
-    return builder.toProvider(gwtDotCreateProvider);
-  }
+      return builder.toProvider(gwtDotCreateProvider);
+   }
 
-  @PatchMethod
-  static <T> T get(GwtDotCreateProvider<?> gwtDotCreateProvider) {
-    Class<T> bindedType = GwtReflectionUtils.<Class<T>> getPrivateFieldValue(
-        gwtDotCreateProvider, BINDED_CLASS_FIELD);
+   @PatchMethod
+   static <T> T get(GwtDotCreateProvider<?> gwtDotCreateProvider) {
+      Class<T> bindedType = GwtReflectionUtils.<Class<T>> getPrivateFieldValue(
+               gwtDotCreateProvider, BINDED_CLASS_FIELD);
 
-    return GWT.<T> create(bindedType);
-  }
+      return GWT.<T> create(bindedType);
+   }
 
-  @InitMethod
-  static void initClass(CtClass ctClass) throws CannotCompileException {
-    CtField field = CtField.make("private Class " + BINDED_CLASS_FIELD + ";",
-        ctClass);
-    ctClass.addField(field);
-  }
+   @InitMethod
+   static void initClass(CtClass ctClass) throws CannotCompileException {
+      CtField field = CtField.make("private Class " + BINDED_CLASS_FIELD + ";", ctClass);
+      ctClass.addField(field);
+   }
 
 }

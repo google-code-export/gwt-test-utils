@@ -11,20 +11,20 @@ import com.googlecode.gwt.test.patchers.PatchMethod;
 @PatchClass(NodeList.class)
 class NodeListPatcher {
 
-  @PatchMethod
-  static <T extends Node> T getItem(NodeList<T> nodeList, int index) {
-    List<T> innerList = JavaScriptObjects.getChildNodeInnerList(nodeList);
-    if (innerList.size() <= index) {
-      return null;
-    } else {
-      return innerList.get(index);
-    }
-  }
+   @PatchMethod
+   static <T extends Node> T getItem(NodeList<T> nodeList, int index) {
+      List<T> innerList = JavaScriptObjects.getChildNodeInnerList(nodeList);
+      if (innerList.size() <= index) {
+         return null;
+      } else {
+         return innerList.get(index);
+      }
+   }
 
-  @PatchMethod
-  static <T extends Node> int getLength(NodeList<T> nodeList) {
-    List<T> innerList = JavaScriptObjects.getChildNodeInnerList(nodeList);
-    return innerList.size();
-  }
+   @PatchMethod
+   static <T extends Node> int getLength(NodeList<T> nodeList) {
+      List<T> innerList = JavaScriptObjects.getChildNodeInnerList(nodeList);
+      return innerList.size();
+   }
 
 }

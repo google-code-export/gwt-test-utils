@@ -10,17 +10,17 @@ import com.googlecode.gwt.test.GwtTestTest;
 
 public class TextTest extends GwtTestTest {
 
-  @Test
-  public void checkToString() {
-    // Arrange
-    Text text = Document.get().createTextNode("some text");
+   @Test
+   public void checkToString() {
+      // Arrange
+      Text text = Document.get().createTextNode("some text");
 
-    // Act
-    String toString = text.toString();
+      // Act
+      String toString = text.toString();
 
-    // Assert
-    assertEquals("'some text'", toString);
+      // Assert
+      assertEquals("'some text'", toString);
 
-  }
+   }
 
 }

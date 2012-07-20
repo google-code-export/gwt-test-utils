@@ -9,29 +9,29 @@ import com.google.gwt.core.client.Duration;
 
 public class DurationTest extends GwtTestTest {
 
-  Duration duration;
+   Duration duration;
 
-  @Before
-  public void beforeDurationTest() {
-    duration = new Duration();
-  }
+   @Before
+   public void beforeDurationTest() {
+      duration = new Duration();
+   }
 
-  @Test
-  public void currentTimeMillis() {
-    // Act
-    double currentTimeMillis = Duration.currentTimeMillis();
+   @Test
+   public void currentTimeMillis() {
+      // Act
+      double currentTimeMillis = Duration.currentTimeMillis();
 
-    // Assert
-    assertTrue(currentTimeMillis > 0);
-  }
+      // Assert
+      assertTrue(currentTimeMillis > 0);
+   }
 
-  @Test
-  public void elapsedMillis() {
-    // Act
-    int elapsed = duration.elapsedMillis();
+   @Test
+   public void elapsedMillis() {
+      // Act
+      int elapsed = duration.elapsedMillis();
 
-    // Assert
-    assertTrue(elapsed > -1);
-  }
+      // Assert
+      assertTrue(elapsed > -1);
+   }
 
 }

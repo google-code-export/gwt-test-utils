@@ -21,113 +21,111 @@ import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 @PatchClass(JavaScriptObject.class)
 class JavaScriptObjectPatcher {
 
-  @PatchMethod
-  static JavaScriptObject createArray() {
-    return createObject();
-  }
+   @PatchMethod
+   static JavaScriptObject createArray() {
+      return createObject();
+   }
 
-  @PatchMethod
-  static JavaScriptObject createFunction() {
-    return createObject();
-  }
+   @PatchMethod
+   static JavaScriptObject createFunction() {
+      return createObject();
+   }
 
-  @PatchMethod
-  static JavaScriptObject createObject() {
-    try {
-      Class<?> clazz = Class.forName(JsValueGlue.JSO_IMPL_CLASS);
-      return (JavaScriptObject) GwtReflectionUtils.instantiateClass(clazz);
-    } catch (Exception e) {
-      // should never happen
-      throw new GwtTestPatchException(
-          "Error while instanciating JavaScriptObject :", e);
-    }
-  }
-
-  @PatchMethod
-  static String toString(JavaScriptObject jso) {
-    short nodeType = jso.<Node> cast().getNodeType();
-
-    switch (nodeType) {
-      case Node.DOCUMENT_NODE:
-        return "[object HTMLDocument]";
-      case Node.TEXT_NODE:
-        Text text = jso.cast();
-        return "'" + text.getData() + "'";
-      case Node.ELEMENT_NODE:
-        return elementToString(jso.<Element> cast());
-      default:
-        if (JavaScriptObjects.isNodeList(jso)) {
-          NodeList<?> nodeList = jso.cast();
-          return JavaScriptObjects.getChildNodeInnerList(nodeList).toString();
-        } else if (JavaScriptObjects.isStyle(jso)) {
-          Style style = jso.cast();
-          return styleToString(style);
-        } else {
-          return jso.getClass().getSimpleName();
-        }
-
-    }
-
-  }
-
-  private static String elementToString(Element elem) {
-    String tagName = elem.getTagName().toLowerCase();
-
-    // handle the particular case of <br> element
-    if ("br".equals(tagName)) {
-      return "<br>" + elem.getInnerText();
-    }
-
-    StringBuilder sb = new StringBuilder();
-    sb.append("<").append(tagName).append(" ");
-
-    PropertyContainer attrs = JavaScriptObjects.getDomProperties(elem);
-    for (Map.Entry<String, Object> entry : attrs.entrySet()) {
-      // special treatment for "disabled" property, which should be a empty
-      // string attribute if the DOM element is disabled
-      if ("disabled".equals(entry.getKey())) {
-        Boolean disabled = (Boolean) entry.getValue();
-        if (disabled.booleanValue()) {
-          sb.append(entry.getKey()).append("=\"\" ");
-        }
-      } else if ("className".equals(entry.getKey())) {
-        // special treatment for "className", which is mapped with DOM standard
-        // property "class"
-        sb.append("class=\"").append(entry.getValue()).append("\" ");
-      } else if ("style".equals(entry.getKey())) {
-        String style = elem.getStyle().toString();
-        if (!"".equals(style)) {
-          sb.append("style=\"").append(elem.getStyle().toString()).append("\" ");
-        }
-      } else {
-        sb.append(entry.getKey()).append("=\"").append(entry.getValue()).append(
-            "\" ");
+   @PatchMethod
+   static JavaScriptObject createObject() {
+      try {
+         Class<?> clazz = Class.forName(JsValueGlue.JSO_IMPL_CLASS);
+         return (JavaScriptObject) GwtReflectionUtils.instantiateClass(clazz);
+      } catch (Exception e) {
+         // should never happen
+         throw new GwtTestPatchException("Error while instanciating JavaScriptObject :", e);
       }
-    }
-    // remove the last space character
-    sb.replace(sb.length() - 1, sb.length(), "");
+   }
 
-    sb.append(">").append(elem.getInnerHTML());
-    sb.append("</").append(tagName).append(">");
-    return sb.toString();
-  }
+   @PatchMethod
+   static String toString(JavaScriptObject jso) {
+      short nodeType = jso.<Node> cast().getNodeType();
 
-  private static String styleToString(Style style) {
-    LinkedHashMap<String, String> styleProperties = JavaScriptObjects.getStyleProperties(style);
-    StringBuilder sb = new StringBuilder();
+      switch (nodeType) {
+         case Node.DOCUMENT_NODE:
+            return "[object HTMLDocument]";
+         case Node.TEXT_NODE:
+            Text text = jso.cast();
+            return "'" + text.getData() + "'";
+         case Node.ELEMENT_NODE:
+            return elementToString(jso.<Element> cast());
+         default:
+            if (JavaScriptObjects.isNodeList(jso)) {
+               NodeList<?> nodeList = jso.cast();
+               return JavaScriptObjects.getChildNodeInnerList(nodeList).toString();
+            } else if (JavaScriptObjects.isStyle(jso)) {
+               Style style = jso.cast();
+               return styleToString(style);
+            } else {
+               return jso.getClass().getSimpleName();
+            }
 
-    for (Map.Entry<String, String> entry : styleProperties.entrySet()) {
-      String cssPropertyValue = entry.getValue().trim();
-
-      if (!"".equals(cssPropertyValue)) {
-        String cssProperyName = GwtStringUtils.hyphenize(entry.getKey());
-        sb.append(cssProperyName).append(": ").append(cssPropertyValue).append(
-            "; ");
       }
-    }
 
-    return sb.toString();
+   }
 
-  }
+   private static String elementToString(Element elem) {
+      String tagName = elem.getTagName().toLowerCase();
+
+      // handle the particular case of <br> element
+      if ("br".equals(tagName)) {
+         return "<br>" + elem.getInnerText();
+      }
+
+      StringBuilder sb = new StringBuilder();
+      sb.append("<").append(tagName).append(" ");
+
+      PropertyContainer attrs = JavaScriptObjects.getDomProperties(elem);
+      for (Map.Entry<String, Object> entry : attrs.entrySet()) {
+         // special treatment for "disabled" property, which should be a empty
+         // string attribute if the DOM element is disabled
+         if ("disabled".equals(entry.getKey())) {
+            Boolean disabled = (Boolean) entry.getValue();
+            if (disabled.booleanValue()) {
+               sb.append(entry.getKey()).append("=\"\" ");
+            }
+         } else if ("className".equals(entry.getKey())) {
+            // special treatment for "className", which is mapped with DOM
+            // standard
+            // property "class"
+            sb.append("class=\"").append(entry.getValue()).append("\" ");
+         } else if ("style".equals(entry.getKey())) {
+            String style = elem.getStyle().toString();
+            if (!"".equals(style)) {
+               sb.append("style=\"").append(elem.getStyle().toString()).append("\" ");
+            }
+         } else {
+            sb.append(entry.getKey()).append("=\"").append(entry.getValue()).append("\" ");
+         }
+      }
+      // remove the last space character
+      sb.replace(sb.length() - 1, sb.length(), "");
+
+      sb.append(">").append(elem.getInnerHTML());
+      sb.append("</").append(tagName).append(">");
+      return sb.toString();
+   }
+
+   private static String styleToString(Style style) {
+      LinkedHashMap<String, String> styleProperties = JavaScriptObjects.getStyleProperties(style);
+      StringBuilder sb = new StringBuilder();
+
+      for (Map.Entry<String, String> entry : styleProperties.entrySet()) {
+         String cssPropertyValue = entry.getValue().trim();
+
+         if (!"".equals(cssPropertyValue)) {
+            String cssProperyName = GwtStringUtils.hyphenize(entry.getKey());
+            sb.append(cssProperyName).append(": ").append(cssPropertyValue).append("; ");
+         }
+      }
+
+      return sb.toString();
+
+   }
 
 }

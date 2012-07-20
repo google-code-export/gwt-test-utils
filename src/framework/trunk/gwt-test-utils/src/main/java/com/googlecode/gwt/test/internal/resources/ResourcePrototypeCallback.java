@@ -13,6 +13,6 @@ import com.google.gwt.resources.client.ResourcePrototype;
  */
 interface ResourcePrototypeCallback {
 
-  Object call(Method method, Object[] args) throws Exception;
+   Object call(Method method, Object[] args) throws Exception;
 
 }

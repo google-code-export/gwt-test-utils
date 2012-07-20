@@ -15,13 +15,13 @@ import com.googlecode.gwt.test.internal.junit.AbstractGwtRunnerFactory;
  */
 public class GwtRunner extends AbstractGwtRunner {
 
-  public GwtRunner(Class<?> clazz) throws Throwable {
-    super(clazz);
-  }
+   public GwtRunner(Class<?> clazz) throws Throwable {
+      super(clazz);
+   }
 
-  @Override
-  protected AbstractGwtRunnerFactory getRunnerFactory() {
-    return new GwtRunnerFactory();
-  }
+   @Override
+   protected AbstractGwtRunnerFactory getRunnerFactory() {
+      return new GwtRunnerFactory();
+   }
 
 }

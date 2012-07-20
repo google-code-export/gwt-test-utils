@@ -33,295 +33,287 @@ import com.googlecode.gwt.test.internal.utils.XmlUtils;
  */
 public class ModuleData {
 
-  public static class ReplaceWithData {
+   public static class ReplaceWithData {
 
-    private final Map<String, List<String>> anyWhenPropertyIs = new HashMap<String, List<String>>();
-    private final String replaceWith;
-    private final Map<String, String> whenPropertyIs = new HashMap<String, String>();
-    private final String whenTypeIs;
+      private final Map<String, List<String>> anyWhenPropertyIs = new HashMap<String, List<String>>();
+      private final String replaceWith;
+      private final Map<String, String> whenPropertyIs = new HashMap<String, String>();
+      private final String whenTypeIs;
 
-    public ReplaceWithData(String replaceWith, String whenTypeIs) {
-      this.replaceWith = replaceWith;
-      this.whenTypeIs = whenTypeIs;
-    }
-
-    public boolean anyMatch(String propName, String propValue) {
-      List<String> any = anyWhenPropertyIs.get(propName);
-      if (any == null) {
-        return false;
+      public ReplaceWithData(String replaceWith, String whenTypeIs) {
+         this.replaceWith = replaceWith;
+         this.whenTypeIs = whenTypeIs;
       }
 
-      for (String value : any) {
-        if (propValue.equals(value)) {
-          return true;
-        }
-      }
-      return false;
-    }
+      public boolean anyMatch(String propName, String propValue) {
+         List<String> any = anyWhenPropertyIs.get(propName);
+         if (any == null) {
+            return false;
+         }
 
-    public String getReplaceWith() {
-      return replaceWith;
-    }
-
-    public String getWhenTypeIs() {
-      return whenTypeIs;
-    }
-
-    public boolean hasAnyWhenPropertyIs() {
-      return anyWhenPropertyIs.size() > 0;
-    }
-
-    public boolean hasWhenPropertyIs() {
-      return whenPropertyIs.size() > 0;
-    }
-
-    public boolean whenPropertyIsMatch(String propName, String propValue) {
-      if (propValue == null) {
-        return false;
+         for (String value : any) {
+            if (propValue.equals(value)) {
+               return true;
+            }
+         }
+         return false;
       }
 
-      return propValue.equals(whenPropertyIs.get(propName));
-    }
-
-    void addAny(String propName, String propValue) {
-      List<String> any = anyWhenPropertyIs.get(propName);
-      if (any == null) {
-        any = new ArrayList<String>();
-        anyWhenPropertyIs.put(propName, any);
+      public String getReplaceWith() {
+         return replaceWith;
       }
-      any.add(propValue);
-    }
 
-    void addWhenPropertyIs(String propName, String propValue) {
-      whenPropertyIs.put(propName, propValue);
-    }
-  }
+      public String getWhenTypeIs() {
+         return whenTypeIs;
+      }
 
-  private static final Map<String, ModuleData> CACHE = new HashMap<String, ModuleData>();
+      public boolean hasAnyWhenPropertyIs() {
+         return anyWhenPropertyIs.size() > 0;
+      }
 
-  private static final String[] CLASSPATH_ROOTS = new String[]{
-      "src/main/java/", "src/main/resources/", "src/test/java/",
-      "src/test/resources/", "src/", "resources/", "res/"};
+      public boolean hasWhenPropertyIs() {
+         return whenPropertyIs.size() > 0;
+      }
 
-  public static ModuleData get(String moduleName) {
-    ModuleData moduleData = CACHE.get(moduleName);
-    if (moduleData == null) {
-      moduleData = new ModuleData(moduleName);
-      CACHE.put(moduleName, moduleData);
-    }
+      public boolean whenPropertyIsMatch(String propName, String propValue) {
+         if (propValue == null) {
+            return false;
+         }
 
-    return moduleData;
-  }
+         return propValue.equals(whenPropertyIs.get(propName));
+      }
 
-  private String alias;
+      void addAny(String propName, String propValue) {
+         List<String> any = anyWhenPropertyIs.get(propName);
+         if (any == null) {
+            any = new ArrayList<String>();
+            anyWhenPropertyIs.put(propName, any);
+         }
+         any.add(propValue);
+      }
 
-  private final Set<String> customGeneratedClasses;
+      void addWhenPropertyIs(String propName, String propValue) {
+         whenPropertyIs.put(propName, propValue);
+      }
+   }
 
-  private final Set<String> parsedModules;
+   private static final Map<String, ModuleData> CACHE = new HashMap<String, ModuleData>();
 
-  private final Map<String, List<ReplaceWithData>> replaceWithListMap;
+   private static final String[] CLASSPATH_ROOTS = new String[]{
+            "src/main/java/", "src/main/resources/", "src/test/java/", "src/test/resources/",
+            "src/", "resources/", "res/"};
 
-  private ModuleData(String moduleName) {
-    this.replaceWithListMap = new HashMap<String, List<ReplaceWithData>>();
-    this.customGeneratedClasses = new HashSet<String>();
-    this.parsedModules = new HashSet<String>();
+   public static ModuleData get(String moduleName) {
+      ModuleData moduleData = CACHE.get(moduleName);
+      if (moduleData == null) {
+         moduleData = new ModuleData(moduleName);
+         CACHE.put(moduleName, moduleData);
+      }
 
-    parseModule(moduleName);
-  }
+      return moduleData;
+   }
 
-  public String getAlias() {
-    return alias;
-  }
+   private String alias;
 
-  public Set<String> getCustomGeneratedClasses() {
-    return customGeneratedClasses;
-  }
+   private final Set<String> customGeneratedClasses;
 
-  public Class<?> getRemoteServiceImplClass(String remoteServicePath) {
+   private final Set<String> parsedModules;
 
-    if (!remoteServicePath.startsWith("/")) {
-      remoteServicePath = "/" + remoteServicePath;
-    }
+   private final Map<String, List<ReplaceWithData>> replaceWithListMap;
 
-    String servletClassName = GwtFactory.get().getModuleDef().findServletForPath(
-        remoteServicePath);
+   private ModuleData(String moduleName) {
+      this.replaceWithListMap = new HashMap<String, List<ReplaceWithData>>();
+      this.customGeneratedClasses = new HashSet<String>();
+      this.parsedModules = new HashSet<String>();
 
-    if (servletClassName == null) {
-      return null;
-    }
+      parseModule(moduleName);
+   }
 
-    try {
-      return Class.forName(servletClassName, true,
-          GwtFactory.get().getClassLoader());
-    } catch (ClassNotFoundException e) {
-      throw new GwtTestConfigurationException("Cannot find servlet class '"
-          + servletClassName + "' configured for servlet path '"
-          + remoteServicePath + "'");
-    }
-  }
+   public String getAlias() {
+      return alias;
+   }
 
-  public Map<String, List<ReplaceWithData>> getReplaceWithListMap() {
-    return replaceWithListMap;
-  }
+   public Set<String> getCustomGeneratedClasses() {
+      return customGeneratedClasses;
+   }
 
-  private Document createDocument(String moduleFilePath) throws Exception {
+   public Class<?> getRemoteServiceImplClass(String remoteServicePath) {
 
-    InputStream is = getModuleFileAsStream(moduleFilePath);
+      if (!remoteServicePath.startsWith("/")) {
+         remoteServicePath = "/" + remoteServicePath;
+      }
 
-    try {
-      DocumentBuilder builder = XmlUtils.newDocumentBuilder();
-      return builder.parse(is);
-    } finally {
-      // close the stream
+      String servletClassName = GwtFactory.get().getModuleDef().findServletForPath(
+               remoteServicePath);
+
+      if (servletClassName == null) {
+         return null;
+      }
+
       try {
-        is.close();
-      } catch (Exception ioException) {
-        // nothing to do
+         return Class.forName(servletClassName, true, GwtFactory.get().getClassLoader());
+      } catch (ClassNotFoundException e) {
+         throw new GwtTestConfigurationException("Cannot find servlet class '" + servletClassName
+                  + "' configured for servlet path '" + remoteServicePath + "'");
       }
-    }
-  }
+   }
 
-  private String getModuleAlias(Document document, XPath xpath)
-      throws XPathExpressionException {
-    return xpath.evaluate("/module/@rename-to", document).trim();
-  }
+   public Map<String, List<ReplaceWithData>> getReplaceWithListMap() {
+      return replaceWithListMap;
+   }
 
-  private InputStream getModuleFileAsStream(String moduleFilePath) {
-    InputStream is = this.getClass().getClassLoader().getResourceAsStream(
-        moduleFilePath);
+   private Document createDocument(String moduleFilePath) throws Exception {
 
-    if (is != null) {
-      return is;
-    }
+      InputStream is = getModuleFileAsStream(moduleFilePath);
 
-    for (String classpathRoot : CLASSPATH_ROOTS) {
       try {
-        return new FileInputStream(classpathRoot + moduleFilePath);
-      } catch (FileNotFoundException e) {
-        // try next
+         DocumentBuilder builder = XmlUtils.newDocumentBuilder();
+         return builder.parse(is);
+      } finally {
+         // close the stream
+         try {
+            is.close();
+         } catch (Exception ioException) {
+            // nothing to do
+         }
       }
-    }
+   }
 
-    throw new GwtTestConfigurationException(
-        "Cannot find GWT module configuration file '" + moduleFilePath
-            + "' in the classpath");
-  }
+   private String getModuleAlias(Document document, XPath xpath) throws XPathExpressionException {
+      return xpath.evaluate("/module/@rename-to", document).trim();
+   }
 
-  private void initializeGenerateWith(Document document, XPath xpath)
-      throws XPathExpressionException {
+   private InputStream getModuleFileAsStream(String moduleFilePath) {
+      InputStream is = this.getClass().getClassLoader().getResourceAsStream(moduleFilePath);
 
-    NodeList whenTypeAssignableList = (NodeList) xpath.evaluate(
-        "/module/generate-with/when-type-assignable[@class]", document,
-        XPathConstants.NODESET);
-
-    for (int i = 0; i < whenTypeAssignableList.getLength(); i++) {
-      Node whenTypeAssignableWith = whenTypeAssignableList.item(i);
-
-      String className = xpath.evaluate("@class", whenTypeAssignableWith);
-      customGeneratedClasses.add(className);
-    }
-  }
-
-  private void initializeInherits(Document document, XPath xpath)
-      throws Exception {
-    NodeList inherits = (NodeList) xpath.evaluate("/module/inherits", document,
-        XPathConstants.NODESET);
-
-    for (int i = 0; i < inherits.getLength(); i++) {
-      Node inherit = inherits.item(i);
-      String inheritName = xpath.evaluate("@name", inherit).trim();
-
-      if (parsedModules.contains(inheritName)
-          || inheritName.startsWith("com.google.gwt")) {
-        continue;
+      if (is != null) {
+         return is;
       }
 
-      parseModuleFile(inheritName, xpath);
-    }
-  }
-
-  private void initializeReplaceWith(Document document, XPath xpath)
-      throws XPathExpressionException {
-    NodeList replaceWithList = (NodeList) xpath.evaluate(
-        "/module/replace-with[@class]", document, XPathConstants.NODESET);
-
-    for (int i = 0; i < replaceWithList.getLength(); i++) {
-      Node replaceWith = replaceWithList.item(i);
-
-      String replaceClass = xpath.evaluate("@class", replaceWith);
-      String whenTypeIsClass = xpath.evaluate("when-type-is/@class",
-          replaceWith);
-
-      ReplaceWithData data = new ReplaceWithData(replaceClass, whenTypeIsClass);
-
-      List<ReplaceWithData> list = replaceWithListMap.get(data.whenTypeIs);
-      if (list == null) {
-        list = new ArrayList<ReplaceWithData>();
-        replaceWithListMap.put(data.whenTypeIs, list);
+      for (String classpathRoot : CLASSPATH_ROOTS) {
+         try {
+            return new FileInputStream(classpathRoot + moduleFilePath);
+         } catch (FileNotFoundException e) {
+            // try next
+         }
       }
 
-      // Handle when-property-is list
-      NodeList whenPropertyIsList = (NodeList) xpath.evaluate(
-          "when-property-is", replaceWith, XPathConstants.NODESET);
+      throw new GwtTestConfigurationException("Cannot find GWT module configuration file '"
+               + moduleFilePath + "' in the classpath");
+   }
 
-      for (int j = 0; j < whenPropertyIsList.getLength(); j++) {
-        Node whenPropertyIs = whenPropertyIsList.item(j);
-        String name = xpath.evaluate("@name", whenPropertyIs);
-        String value = xpath.evaluate("@value", whenPropertyIs);
-        data.addWhenPropertyIs(name, value);
+   private void initializeGenerateWith(Document document, XPath xpath)
+            throws XPathExpressionException {
+
+      NodeList whenTypeAssignableList = (NodeList) xpath.evaluate(
+               "/module/generate-with/when-type-assignable[@class]", document,
+               XPathConstants.NODESET);
+
+      for (int i = 0; i < whenTypeAssignableList.getLength(); i++) {
+         Node whenTypeAssignableWith = whenTypeAssignableList.item(i);
+
+         String className = xpath.evaluate("@class", whenTypeAssignableWith);
+         customGeneratedClasses.add(className);
       }
+   }
 
-      // Handle any/when-property-is list
-      NodeList anyWhenPropertyIsList = (NodeList) xpath.evaluate(
-          "any/when-property-is", replaceWith, XPathConstants.NODESET);
+   private void initializeInherits(Document document, XPath xpath) throws Exception {
+      NodeList inherits = (NodeList) xpath.evaluate("/module/inherits", document,
+               XPathConstants.NODESET);
 
-      for (int j = 0; j < anyWhenPropertyIsList.getLength(); j++) {
-        Node anyWhenPropertyIs = anyWhenPropertyIsList.item(j);
-        String name = xpath.evaluate("@name", anyWhenPropertyIs);
-        String value = xpath.evaluate("@value", anyWhenPropertyIs);
+      for (int i = 0; i < inherits.getLength(); i++) {
+         Node inherit = inherits.item(i);
+         String inheritName = xpath.evaluate("@name", inherit).trim();
 
-        data.addAny(name, value);
+         if (parsedModules.contains(inheritName) || inheritName.startsWith("com.google.gwt")) {
+            continue;
+         }
+
+         parseModuleFile(inheritName, xpath);
       }
+   }
 
-      list.add(data);
-    }
-  }
+   private void initializeReplaceWith(Document document, XPath xpath)
+            throws XPathExpressionException {
+      NodeList replaceWithList = (NodeList) xpath.evaluate("/module/replace-with[@class]",
+               document, XPathConstants.NODESET);
 
-  private void parseModule(String moduleName) {
+      for (int i = 0; i < replaceWithList.getLength(); i++) {
+         Node replaceWith = replaceWithList.item(i);
 
-    try {
-      XPath xpath = XPathFactory.newInstance().newXPath();
+         String replaceClass = xpath.evaluate("@class", replaceWith);
+         String whenTypeIsClass = xpath.evaluate("when-type-is/@class", replaceWith);
 
-      parseModuleFile(moduleName, xpath);
+         ReplaceWithData data = new ReplaceWithData(replaceClass, whenTypeIsClass);
 
-    } catch (Exception e) {
-      if (GwtTestException.class.isInstance(e)) {
-        throw (GwtTestException) e;
-      } else {
-        throw new GwtTestConfigurationException(
-            "Error while parsing GWT module '" + moduleName + "'", e);
+         List<ReplaceWithData> list = replaceWithListMap.get(data.whenTypeIs);
+         if (list == null) {
+            list = new ArrayList<ReplaceWithData>();
+            replaceWithListMap.put(data.whenTypeIs, list);
+         }
+
+         // Handle when-property-is list
+         NodeList whenPropertyIsList = (NodeList) xpath.evaluate("when-property-is", replaceWith,
+                  XPathConstants.NODESET);
+
+         for (int j = 0; j < whenPropertyIsList.getLength(); j++) {
+            Node whenPropertyIs = whenPropertyIsList.item(j);
+            String name = xpath.evaluate("@name", whenPropertyIs);
+            String value = xpath.evaluate("@value", whenPropertyIs);
+            data.addWhenPropertyIs(name, value);
+         }
+
+         // Handle any/when-property-is list
+         NodeList anyWhenPropertyIsList = (NodeList) xpath.evaluate("any/when-property-is",
+                  replaceWith, XPathConstants.NODESET);
+
+         for (int j = 0; j < anyWhenPropertyIsList.getLength(); j++) {
+            Node anyWhenPropertyIs = anyWhenPropertyIsList.item(j);
+            String name = xpath.evaluate("@name", anyWhenPropertyIs);
+            String value = xpath.evaluate("@value", anyWhenPropertyIs);
+
+            data.addAny(name, value);
+         }
+
+         list.add(data);
       }
-    }
-  }
+   }
 
-  /**
-   * parse .gwt.xml file to get fill {@link ModuleData} information
-   * 
-   * @param moduleName The module name
-   * @param xpath
-   * @throws Exception
-   */
-  private void parseModuleFile(String moduleName, XPath xpath) throws Exception {
+   private void parseModule(String moduleName) {
 
-    parsedModules.add(moduleName);
+      try {
+         XPath xpath = XPathFactory.newInstance().newXPath();
 
-    String moduleFilePath = moduleName.replaceAll("\\.", "/") + ".gwt.xml";
-    Document document = createDocument(moduleFilePath);
+         parseModuleFile(moduleName, xpath);
 
-    alias = getModuleAlias(document, xpath);
-    initializeInherits(document, xpath);
-    initializeReplaceWith(document, xpath);
-    initializeGenerateWith(document, xpath);
-  }
+      } catch (Exception e) {
+         if (GwtTestException.class.isInstance(e)) {
+            throw (GwtTestException) e;
+         } else {
+            throw new GwtTestConfigurationException("Error while parsing GWT module '" + moduleName
+                     + "'", e);
+         }
+      }
+   }
+
+   /**
+    * parse .gwt.xml file to get fill {@link ModuleData} information
+    * 
+    * @param moduleName The module name
+    * @param xpath
+    * @throws Exception
+    */
+   private void parseModuleFile(String moduleName, XPath xpath) throws Exception {
+
+      parsedModules.add(moduleName);
+
+      String moduleFilePath = moduleName.replaceAll("\\.", "/") + ".gwt.xml";
+      Document document = createDocument(moduleFilePath);
+
+      alias = getModuleAlias(document, xpath);
+      initializeInherits(document, xpath);
+      initializeReplaceWith(document, xpath);
+      initializeGenerateWith(document, xpath);
+   }
 
 }

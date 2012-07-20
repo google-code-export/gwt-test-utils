@@ -49,182 +49,182 @@ import org.slf4j.LoggerFactory;
  */
 public class MockServletContext implements ServletContext {
 
-  /**
-   * Inner factory class used to just introduce a Java Activation Framework
-   * dependency when actually asked to resolve a MIME type.
-   */
-  private static class MimeTypeResolver {
+   /**
+    * Inner factory class used to just introduce a Java Activation Framework
+    * dependency when actually asked to resolve a MIME type.
+    */
+   private static class MimeTypeResolver {
 
-    @SuppressWarnings("restriction")
-    public static String getMimeType(String filePath) {
-      return FileTypeMap.getDefaultFileTypeMap().getContentType(filePath);
-    }
-  }
+      @SuppressWarnings("restriction")
+      public static String getMimeType(String filePath) {
+         return FileTypeMap.getDefaultFileTypeMap().getContentType(filePath);
+      }
+   }
 
-  /**
-   * Standard Servlet spec context attribute that specifies a temporary
-   * directory for the current web application, of type
-   * <code>java.io.File</code>.
-   */
-  public static final String TEMP_DIR_CONTEXT_ATTRIBUTE = "javax.servlet.context.tempdir";
+   /**
+    * Standard Servlet spec context attribute that specifies a temporary
+    * directory for the current web application, of type
+    * <code>java.io.File</code>.
+    */
+   public static final String TEMP_DIR_CONTEXT_ATTRIBUTE = "javax.servlet.context.tempdir";
 
-  private final Map<String, Object> attributes = new LinkedHashMap<String, Object>();
+   private final Map<String, Object> attributes = new LinkedHashMap<String, Object>();
 
-  private String contextPath = "";
+   private String contextPath = "";
 
-  private final Map<String, ServletContext> contexts = new HashMap<String, ServletContext>();
+   private final Map<String, ServletContext> contexts = new HashMap<String, ServletContext>();
 
-  private final Map<String, String> initParameters = new LinkedHashMap<String, String>();
+   private final Map<String, String> initParameters = new LinkedHashMap<String, String>();
 
-  private final Logger logger = LoggerFactory.getLogger(getClass());
+   private final Logger logger = LoggerFactory.getLogger(getClass());
 
-  private int minorVersion = 5;
+   private int minorVersion = 5;
 
-  private String servletContextName = "MockServletContext";
+   private String servletContextName = "MockServletContext";
 
-  public void addInitParameter(String name, String value) {
-    assertThat(name).as("Parameter name must not be null").isNotNull();
-    this.initParameters.put(name, value);
-  }
+   public void addInitParameter(String name, String value) {
+      assertThat(name).as("Parameter name must not be null").isNotNull();
+      this.initParameters.put(name, value);
+   }
 
-  public Object getAttribute(String name) {
-    assertThat(name).as("Attribute name must not be null").isNotNull();
-    return this.attributes.get(name);
-  }
+   public Object getAttribute(String name) {
+      assertThat(name).as("Attribute name must not be null").isNotNull();
+      return this.attributes.get(name);
+   }
 
-  public Enumeration<String> getAttributeNames() {
-    return new Vector<String>(this.attributes.keySet()).elements();
-  }
+   public Enumeration<String> getAttributeNames() {
+      return new Vector<String>(this.attributes.keySet()).elements();
+   }
 
-  public ServletContext getContext(String contextPath) {
-    if (this.contextPath.equals(contextPath)) {
-      return this;
-    }
-    return this.contexts.get(contextPath);
-  }
+   public ServletContext getContext(String contextPath) {
+      if (this.contextPath.equals(contextPath)) {
+         return this;
+      }
+      return this.contexts.get(contextPath);
+   }
 
-  /* This is a Servlet API 2.5 method. */
-  public String getContextPath() {
-    return this.contextPath;
-  }
+   /* This is a Servlet API 2.5 method. */
+   public String getContextPath() {
+      return this.contextPath;
+   }
 
-  public String getInitParameter(String name) {
-    assertThat(name).as("Parameter name must not be null").isNotNull();
-    return this.initParameters.get(name);
-  }
+   public String getInitParameter(String name) {
+      assertThat(name).as("Parameter name must not be null").isNotNull();
+      return this.initParameters.get(name);
+   }
 
-  public Enumeration<String> getInitParameterNames() {
-    return Collections.enumeration(this.initParameters.keySet());
-  }
+   public Enumeration<String> getInitParameterNames() {
+      return Collections.enumeration(this.initParameters.keySet());
+   }
 
-  public int getMajorVersion() {
-    return 2;
-  }
+   public int getMajorVersion() {
+      return 2;
+   }
 
-  public String getMimeType(String filePath) {
-    return MimeTypeResolver.getMimeType(filePath);
-  }
+   public String getMimeType(String filePath) {
+      return MimeTypeResolver.getMimeType(filePath);
+   }
 
-  public int getMinorVersion() {
-    return this.minorVersion;
-  }
+   public int getMinorVersion() {
+      return this.minorVersion;
+   }
 
-  public RequestDispatcher getNamedDispatcher(String path) {
-    return null;
-  }
+   public RequestDispatcher getNamedDispatcher(String path) {
+      return null;
+   }
 
-  public String getRealPath(String path) {
-    return null;
-  }
+   public String getRealPath(String path) {
+      return null;
+   }
 
-  public RequestDispatcher getRequestDispatcher(String path) {
-    if (!path.startsWith("/")) {
-      throw new IllegalArgumentException(
-          "RequestDispatcher path at ServletContext level must start with '/'");
-    }
-    return new MockRequestDispatcher(path);
-  }
+   public RequestDispatcher getRequestDispatcher(String path) {
+      if (!path.startsWith("/")) {
+         throw new IllegalArgumentException(
+                  "RequestDispatcher path at ServletContext level must start with '/'");
+      }
+      return new MockRequestDispatcher(path);
+   }
 
-  public URL getResource(String path) throws MalformedURLException {
-    return null;
-  }
+   public URL getResource(String path) throws MalformedURLException {
+      return null;
+   }
 
-  public InputStream getResourceAsStream(String path) {
-    return null;
-  }
+   public InputStream getResourceAsStream(String path) {
+      return null;
+   }
 
-  public Set<String> getResourcePaths() {
-    return Collections.emptySet();
-  }
+   public Set<String> getResourcePaths() {
+      return Collections.emptySet();
+   }
 
-  public Set<?> getResourcePaths(String arg0) {
-    return Collections.emptySet();
-  }
+   public Set<?> getResourcePaths(String arg0) {
+      return Collections.emptySet();
+   }
 
-  public String getServerInfo() {
-    return "MockServletContext";
-  }
+   public String getServerInfo() {
+      return "MockServletContext";
+   }
 
-  public Servlet getServlet(String name) {
-    return null;
-  }
+   public Servlet getServlet(String name) {
+      return null;
+   }
 
-  public String getServletContextName() {
-    return this.servletContextName;
-  }
+   public String getServletContextName() {
+      return this.servletContextName;
+   }
 
-  public Enumeration<String> getServletNames() {
-    return Collections.enumeration(new HashSet<String>());
-  }
+   public Enumeration<String> getServletNames() {
+      return Collections.enumeration(new HashSet<String>());
+   }
 
-  public Enumeration<Servlet> getServlets() {
-    return Collections.enumeration(new HashSet<Servlet>());
-  }
+   public Enumeration<Servlet> getServlets() {
+      return Collections.enumeration(new HashSet<Servlet>());
+   }
 
-  public void log(Exception ex, String message) {
-    logger.info(message, ex);
-  }
+   public void log(Exception ex, String message) {
+      logger.info(message, ex);
+   }
 
-  public void log(String message) {
-    logger.info(message);
-  }
+   public void log(String message) {
+      logger.info(message);
+   }
 
-  public void log(String message, Throwable ex) {
-    logger.info(message, ex);
-  }
+   public void log(String message, Throwable ex) {
+      logger.info(message, ex);
+   }
 
-  public void registerContext(String contextPath, ServletContext context) {
-    this.contexts.put(contextPath, context);
-  }
+   public void registerContext(String contextPath, ServletContext context) {
+      this.contexts.put(contextPath, context);
+   }
 
-  public void removeAttribute(String name) {
-    assertThat(name).as("Attribute name must not be null").isNotNull();
-    this.attributes.remove(name);
-  }
-
-  public void setAttribute(String name, Object value) {
-    assertThat(name).as("Attribute name must not be null").isNotNull();
-    if (value != null) {
-      this.attributes.put(name, value);
-    } else {
+   public void removeAttribute(String name) {
+      assertThat(name).as("Attribute name must not be null").isNotNull();
       this.attributes.remove(name);
-    }
-  }
+   }
 
-  public void setContextPath(String contextPath) {
-    this.contextPath = (contextPath != null ? contextPath : "");
-  }
+   public void setAttribute(String name, Object value) {
+      assertThat(name).as("Attribute name must not be null").isNotNull();
+      if (value != null) {
+         this.attributes.put(name, value);
+      } else {
+         this.attributes.remove(name);
+      }
+   }
 
-  public void setMinorVersion(int minorVersion) {
-    if (minorVersion < 3 || minorVersion > 5) {
-      throw new IllegalArgumentException(
-          "Only Servlet minor versions between 3 and 5 are supported");
-    }
-    this.minorVersion = minorVersion;
-  }
+   public void setContextPath(String contextPath) {
+      this.contextPath = (contextPath != null ? contextPath : "");
+   }
 
-  public void setServletContextName(String servletContextName) {
-    this.servletContextName = servletContextName;
-  }
+   public void setMinorVersion(int minorVersion) {
+      if (minorVersion < 3 || minorVersion > 5) {
+         throw new IllegalArgumentException(
+                  "Only Servlet minor versions between 3 and 5 are supported");
+      }
+      this.minorVersion = minorVersion;
+   }
+
+   public void setServletContextName(String servletContextName) {
+      this.servletContextName = servletContextName;
+   }
 
 }

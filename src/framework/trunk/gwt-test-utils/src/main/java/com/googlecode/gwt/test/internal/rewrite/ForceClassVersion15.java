@@ -25,14 +25,14 @@ import com.google.gwt.dev.asm.Opcodes;
  */
 class ForceClassVersion15 extends ClassAdapter {
 
-  public ForceClassVersion15(ClassVisitor v) {
-    super(v);
-  }
+   public ForceClassVersion15(ClassVisitor v) {
+      super(v);
+   }
 
-  @Override
-  public void visit(final int version, final int access, final String name,
-      final String signature, final String superName, final String[] interfaces) {
-    assert (version >= Opcodes.V1_5 && version <= Opcodes.V1_6);
-    super.visit(Opcodes.V1_5, access, name, signature, superName, interfaces);
-  }
+   @Override
+   public void visit(final int version, final int access, final String name,
+            final String signature, final String superName, final String[] interfaces) {
+      assert (version >= Opcodes.V1_5 && version <= Opcodes.V1_6);
+      super.visit(Opcodes.V1_5, access, name, signature, superName, interfaces);
+   }
 }

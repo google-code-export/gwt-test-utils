@@ -17,55 +17,53 @@ import com.googlecode.gwt.test.uibinder.UiObjectTagFactory;
  */
 public class UiMenuItemTagFactory implements UiObjectTagFactory<MenuItem> {
 
-  private static class UiMenuItemTag extends UiObjectTag<MenuItem> {
+   private static class UiMenuItemTag extends UiObjectTag<MenuItem> {
 
-    @Override
-    protected void addWidget(MenuItem wrapped, IsWidget isWidget) {
-      if (isWidget instanceof MenuBar) {
-        wrapped.setSubMenu((MenuBar) isWidget);
-      } else {
-        super.addWidget(wrapped, isWidget);
+      @Override
+      protected void addWidget(MenuItem wrapped, IsWidget isWidget) {
+         if (isWidget instanceof MenuBar) {
+            wrapped.setSubMenu((MenuBar) isWidget);
+         } else {
+            super.addWidget(wrapped, isWidget);
+         }
       }
-    }
 
-    @Override
-    protected void finalizeObject(MenuItem uiObject) {
-      // nothing to do
-    }
-
-    @Override
-    protected void initializeObject(MenuItem wrapped,
-        Map<String, Object> attributes, Object owner) {
-      // nothing to do
-    }
-
-    @Override
-    protected MenuItem instanciate(Class<? extends MenuItem> clazz,
-        Map<String, Object> attributes, Object owner) {
-
-      if (clazz == MenuItem.class) {
-        return new MenuItem(SafeHtmlUtils.fromSafeConstant(""));
+      @Override
+      protected void finalizeObject(MenuItem uiObject) {
+         // nothing to do
       }
-      return super.instanciate(clazz, attributes, owner);
-    }
 
-  }
+      @Override
+      protected void initializeObject(MenuItem wrapped, Map<String, Object> attributes, Object owner) {
+         // nothing to do
+      }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see
-   * com.googlecode.gwt.test.uibinder.UiObjectTagFactory#createUiObjectTag(java.lang
-   * .Class, java.util.Map)
-   */
-  public UiObjectTag<MenuItem> createUiObjectTag(Class<?> clazz,
-      Map<String, Object> attributes) {
+      @Override
+      protected MenuItem instanciate(Class<? extends MenuItem> clazz,
+               Map<String, Object> attributes, Object owner) {
 
-    if (MenuItem.class.isAssignableFrom(clazz)) {
-      return new UiMenuItemTag();
-    }
+         if (clazz == MenuItem.class) {
+            return new MenuItem(SafeHtmlUtils.fromSafeConstant(""));
+         }
+         return super.instanciate(clazz, attributes, owner);
+      }
 
-    return null;
-  }
+   }
+
+   /*
+    * (non-Javadoc)
+    * 
+    * @see
+    * com.googlecode.gwt.test.uibinder.UiObjectTagFactory#createUiObjectTag(
+    * java.lang .Class, java.util.Map)
+    */
+   public UiObjectTag<MenuItem> createUiObjectTag(Class<?> clazz, Map<String, Object> attributes) {
+
+      if (MenuItem.class.isAssignableFrom(clazz)) {
+         return new UiMenuItemTag();
+      }
+
+      return null;
+   }
 
 }

@@ -11,39 +11,39 @@ import com.google.gwt.junit.client.WithProperties;
  */
 public class GwtTestDataHolder implements AfterTestCallback {
 
-  private static final GwtTestDataHolder INSTANCE = new GwtTestDataHolder();
+   private static final GwtTestDataHolder INSTANCE = new GwtTestDataHolder();
 
-  public static GwtTestDataHolder get() {
-    return INSTANCE;
-  }
+   public static GwtTestDataHolder get() {
+      return INSTANCE;
+   }
 
-  private boolean currentTestFailed;
+   private boolean currentTestFailed;
 
-  private WithProperties currentWithProperties;
+   private WithProperties currentWithProperties;
 
-  private GwtTestDataHolder() {
-    AfterTestCallbackManager.get().registerCallback(this);
-  }
+   private GwtTestDataHolder() {
+      AfterTestCallbackManager.get().registerCallback(this);
+   }
 
-  public void afterTest() throws Throwable {
-    this.currentTestFailed = false;
-    this.currentWithProperties = null;
-  }
+   public void afterTest() throws Throwable {
+      this.currentTestFailed = false;
+      this.currentWithProperties = null;
+   }
 
-  public WithProperties getCurrentWithProperties() {
-    return currentWithProperties;
-  }
+   public WithProperties getCurrentWithProperties() {
+      return currentWithProperties;
+   }
 
-  public boolean isCurrentTestFailed() {
-    return currentTestFailed;
-  }
+   public boolean isCurrentTestFailed() {
+      return currentTestFailed;
+   }
 
-  public void setCurrentTestFailed(boolean currentTestFailed) {
-    this.currentTestFailed = currentTestFailed;
-  }
+   public void setCurrentTestFailed(boolean currentTestFailed) {
+      this.currentTestFailed = currentTestFailed;
+   }
 
-  public void setCurrentWithProperties(WithProperties currentWithProperties) {
-    this.currentWithProperties = currentWithProperties;
-  }
+   public void setCurrentWithProperties(WithProperties currentWithProperties) {
+      this.currentWithProperties = currentWithProperties;
+   }
 
 }

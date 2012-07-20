@@ -22,86 +22,84 @@ import com.google.gwt.dom.client.Text;
  */
 class GwtHtmlContentHandler implements ContentHandler {
 
-  private Node currentNode;
+   private Node currentNode;
 
-  private final List<Node> nodes = new ArrayList<Node>();
+   private final List<Node> nodes = new ArrayList<Node>();
 
-  public void characters(char[] ch, int start, int length) throws SAXException {
+   public void characters(char[] ch, int start, int length) throws SAXException {
 
-    String string = String.valueOf(ch, start, length).replaceAll("\\u00A0", " ");
+      String string = String.valueOf(ch, start, length).replaceAll("\\u00A0", " ");
 
-    if (string.length() > 0) {
-      Text text = Document.get().createTextNode(string);
+      if (string.length() > 0) {
+         Text text = Document.get().createTextNode(string);
+
+         if (currentNode != null) {
+            currentNode.appendChild(text);
+         } else {
+            // root text node
+            nodes.add(text);
+         }
+      }
+   }
+
+   public void endDocument() throws SAXException {
+   }
+
+   public void endElement(String nameSpaceURI, String localName, String rawName)
+            throws SAXException {
+      currentNode = currentNode.getParentNode();
+   }
+
+   public void endPrefixMapping(String prefix) throws SAXException {
+   }
+
+   public NodeList<Node> getParsedNodes() {
+      return JavaScriptObjects.newNodeList(nodes);
+   }
+
+   public void ignorableWhitespace(char[] ch, int start, int end) throws SAXException {
+   }
+
+   public void processingInstruction(String target, String data) throws SAXException {
+   }
+
+   public void setDocumentLocator(Locator locator) {
+   }
+
+   public void skippedEntity(String arg0) throws SAXException {
+   }
+
+   public void startDocument() throws SAXException {
+   }
+
+   public void startElement(String nameSpaceURI, String localName, String rawName,
+            Attributes attributes) throws SAXException {
+
+      Element element = Document.get().createElement(localName);
 
       if (currentNode != null) {
-        currentNode.appendChild(text);
+         currentNode.appendChild(element);
       } else {
-        // root text node
-        nodes.add(text);
+         // root node
+         nodes.add(element);
       }
-    }
-  }
+      currentNode = element;
 
-  public void endDocument() throws SAXException {
-  }
+      for (int index = 0; index < attributes.getLength(); index++) {
+         String attrName = attributes.getLocalName(index);
+         String attrValue = attributes.getValue(index);
 
-  public void endElement(String nameSpaceURI, String localName, String rawName)
-      throws SAXException {
-    currentNode = currentNode.getParentNode();
-  }
+         if ("style".equalsIgnoreCase(attrName)) {
+            StyleUtils.overrideStyle(element.getStyle(), attrValue);
+         } else if ("class".equalsIgnoreCase(attrName)) {
+            element.setClassName(attrValue);
+         } else {
+            element.setAttribute(attrName, attrValue);
 
-  public void endPrefixMapping(String prefix) throws SAXException {
-  }
-
-  public NodeList<Node> getParsedNodes() {
-    return JavaScriptObjects.newNodeList(nodes);
-  }
-
-  public void ignorableWhitespace(char[] ch, int start, int end)
-      throws SAXException {
-  }
-
-  public void processingInstruction(String target, String data)
-      throws SAXException {
-  }
-
-  public void setDocumentLocator(Locator locator) {
-  }
-
-  public void skippedEntity(String arg0) throws SAXException {
-  }
-
-  public void startDocument() throws SAXException {
-  }
-
-  public void startElement(String nameSpaceURI, String localName,
-      String rawName, Attributes attributes) throws SAXException {
-
-    Element element = Document.get().createElement(localName);
-
-    if (currentNode != null) {
-      currentNode.appendChild(element);
-    } else {
-      // root node
-      nodes.add(element);
-    }
-    currentNode = element;
-
-    for (int index = 0; index < attributes.getLength(); index++) {
-      String attrName = attributes.getLocalName(index);
-      String attrValue = attributes.getValue(index);
-
-      if ("style".equalsIgnoreCase(attrName)) {
-        StyleUtils.overrideStyle(element.getStyle(), attrValue);
-      } else if ("class".equalsIgnoreCase(attrName)) {
-        element.setClassName(attrValue);
-      } else {
-        element.setAttribute(attrName, attrValue);
-
+         }
       }
-    }
-  }
+   }
 
-  public void startPrefixMapping(String prefix, String URI) throws SAXException {
-  }
+   public void startPrefixMapping(String prefix, String URI) throws SAXException {
+   }
 }

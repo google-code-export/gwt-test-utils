@@ -28,11 +28,11 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 public @interface Mock {
 
-  /**
-   * Specifies th unique identifier of the mock
-   * 
-   * @return The unique identifier of the mock
-   */
-  String value() default "";
+   /**
+    * Specifies th unique identifier of the mock
+    * 
+    * @return The unique identifier of the mock
+    */
+   String value() default "";
 
 }

@@ -34,34 +34,34 @@ import javax.servlet.ServletInputStream;
  */
 class DelegatingServletInputStream extends ServletInputStream {
 
-  private final InputStream sourceStream;
+   private final InputStream sourceStream;
 
-  /**
-   * Create a DelegatingServletInputStream for the given source stream.
-   * 
-   * @param sourceStream the source stream (never <code>null</code>)
-   */
-  public DelegatingServletInputStream(InputStream sourceStream) {
-    assertThat(sourceStream).as("Source InputStream must not be null").isNotNull();
-    this.sourceStream = sourceStream;
-  }
+   /**
+    * Create a DelegatingServletInputStream for the given source stream.
+    * 
+    * @param sourceStream the source stream (never <code>null</code>)
+    */
+   public DelegatingServletInputStream(InputStream sourceStream) {
+      assertThat(sourceStream).as("Source InputStream must not be null").isNotNull();
+      this.sourceStream = sourceStream;
+   }
 
-  @Override
-  public void close() throws IOException {
-    super.close();
-    this.sourceStream.close();
-  }
+   @Override
+   public void close() throws IOException {
+      super.close();
+      this.sourceStream.close();
+   }
 
-  /**
-   * Return the underlying source stream (never <code>null</code>).
-   */
-  public final InputStream getSourceStream() {
-    return this.sourceStream;
-  }
+   /**
+    * Return the underlying source stream (never <code>null</code>).
+    */
+   public final InputStream getSourceStream() {
+      return this.sourceStream;
+   }
 
-  @Override
-  public int read() throws IOException {
-    return this.sourceStream.read();
-  }
+   @Override
+   public int read() throws IOException {
+      return this.sourceStream.read();
+   }
 
 }

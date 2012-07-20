@@ -17,95 +17,95 @@ import com.google.gwt.core.client.JavaScriptObject;
  */
 public class PropertyContainer implements Serializable {
 
-  private static final long serialVersionUID = -5044826131951960161L;
+   private static final long serialVersionUID = -5044826131951960161L;
 
-  public static PropertyContainer newInstance(Map<String, Object> map) {
-    return new PropertyContainer(map);
-  }
+   public static PropertyContainer newInstance(Map<String, Object> map) {
+      return new PropertyContainer(map);
+   }
 
-  private final Map<String, Object> map;
+   private final Map<String, Object> map;
 
-  private PropertyContainer(Map<String, Object> map) {
-    this.map = map;
-  }
+   private PropertyContainer(Map<String, Object> map) {
+      this.map = map;
+   }
 
-  public void clear() {
-    map.clear();
-  }
+   public void clear() {
+      map.clear();
+   }
 
-  public boolean contains(String key) {
-    return map.containsKey(key);
-  }
+   public boolean contains(String key) {
+      return map.containsKey(key);
+   }
 
-  public Set<Map.Entry<String, Object>> entrySet() {
-    return map.entrySet();
-  }
+   public Set<Map.Entry<String, Object>> entrySet() {
+      return map.entrySet();
+   }
 
-  public boolean getBoolean(String key) {
-    Boolean b = (Boolean) map.get(key);
-    return b == null ? false : b;
-  }
+   public boolean getBoolean(String key) {
+      Boolean b = (Boolean) map.get(key);
+      return b == null ? false : b;
+   }
 
-  public double getDouble(String key) {
-    Double d = (Double) map.get(key);
-    return d == null ? 0 : d;
-  }
+   public double getDouble(String key) {
+      Double d = (Double) map.get(key);
+      return d == null ? 0 : d;
+   }
 
-  public int getInteger(String key) {
-    Integer i = (Integer) map.get(key);
-    return i == null ? 0 : i;
-  }
+   public int getInteger(String key) {
+      Integer i = (Integer) map.get(key);
+      return i == null ? 0 : i;
+   }
 
-  @SuppressWarnings("unchecked")
-  public <T> T getObject(String key) {
-    return (T) map.get(key);
-  }
+   @SuppressWarnings("unchecked")
+   public <T> T getObject(String key) {
+      return (T) map.get(key);
+   }
 
-  public short getShort(String key) {
-    Short s = (Short) map.get(key);
-    return s == null ? 0 : s;
-  }
+   public short getShort(String key) {
+      Short s = (Short) map.get(key);
+      return s == null ? 0 : s;
+   }
 
-  public String getString(String key) {
-    Object s = map.get(key);
-    return s == null ? "" : s.toString();
-  }
+   public String getString(String key) {
+      Object s = map.get(key);
+      return s == null ? "" : s.toString();
+   }
 
-  public Object put(String key, boolean value) {
-    return map.put(key, Boolean.valueOf(value));
-  }
+   public Object put(String key, boolean value) {
+      return map.put(key, Boolean.valueOf(value));
+   }
 
-  public Object put(String key, double value) {
-    return map.put(key, Double.valueOf(value));
-  }
+   public Object put(String key, double value) {
+      return map.put(key, Double.valueOf(value));
+   }
 
-  public Object put(String key, int value) {
-    return map.put(key, Integer.valueOf(value));
-  }
+   public Object put(String key, int value) {
+      return map.put(key, Integer.valueOf(value));
+   }
 
-  public Object put(String key, long value) {
-    return map.put(key, Long.valueOf(value));
-  }
+   public Object put(String key, long value) {
+      return map.put(key, Long.valueOf(value));
+   }
 
-  public Object put(String key, Object value) {
-    return map.put(key, value);
-  }
+   public Object put(String key, Object value) {
+      return map.put(key, value);
+   }
 
-  public Object put(String key, short value) {
-    return map.put(key, Short.valueOf(value));
-  }
+   public Object put(String key, short value) {
+      return map.put(key, Short.valueOf(value));
+   }
 
-  public Object remove(String key) {
-    return map.remove(key);
-  }
+   public Object remove(String key) {
+      return map.remove(key);
+   }
 
-  public int size() {
-    return map.size();
-  }
+   public int size() {
+      return map.size();
+   }
 
-  @Override
-  public String toString() {
-    return map.toString();
-  }
+   @Override
+   public String toString() {
+      return map.toString();
+   }
 
 }

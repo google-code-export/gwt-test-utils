@@ -33,38 +33,37 @@ import com.googlecode.gwt.test.exceptions.GwtTestException;
  */
 public class GwtTestURLClassloader extends URLClassLoader {
 
-  private static URL[] computeURLs(URL[] srcUrls, String surefireBooterJarPath) {
+   private static URL[] computeURLs(URL[] srcUrls, String surefireBooterJarPath) {
 
-    try {
-      JarFile surefireBooterJar = new JarFile(surefireBooterJarPath);
-      Manifest mf = surefireBooterJar.getManifest();
-      Attributes a = mf.getMainAttributes();
+      try {
+         JarFile surefireBooterJar = new JarFile(surefireBooterJarPath);
+         Manifest mf = surefireBooterJar.getManifest();
+         Attributes a = mf.getMainAttributes();
 
-      String[] classpathEntries = a.getValue("Class-Path").split(" ");
+         String[] classpathEntries = a.getValue("Class-Path").split(" ");
 
-      URL[] urls = new URL[classpathEntries.length + srcUrls.length];
+         URL[] urls = new URL[classpathEntries.length + srcUrls.length];
 
-      System.arraycopy(srcUrls, 0, urls, 0, srcUrls.length);
+         System.arraycopy(srcUrls, 0, urls, 0, srcUrls.length);
 
-      for (int i = 0; i < classpathEntries.length; i++) {
-        urls[i + srcUrls.length] = new URL(classpathEntries[i]);
+         for (int i = 0; i < classpathEntries.length; i++) {
+            urls[i + srcUrls.length] = new URL(classpathEntries[i]);
+         }
+
+         return urls;
+      } catch (Exception e) {
+         throw new GwtTestException("Error while parsing maven-surefire-plugin booter jar: "
+                  + surefireBooterJarPath, e);
       }
 
-      return urls;
-    } catch (Exception e) {
-      throw new GwtTestException(
-          "Error while parsing maven-surefire-plugin booter jar: "
-              + surefireBooterJarPath, e);
-    }
+   }
 
-  }
+   public GwtTestURLClassloader(URL[] urls) {
+      super(urls);
+   }
 
-  public GwtTestURLClassloader(URL[] urls) {
-    super(urls);
-  }
-
-  public GwtTestURLClassloader(URL[] urls, String surefireBooterJarPath) {
-    super(computeURLs(urls, surefireBooterJarPath));
-  }
+   public GwtTestURLClassloader(URL[] urls, String surefireBooterJarPath) {
+      super(computeURLs(urls, surefireBooterJarPath));
+   }
 
 }

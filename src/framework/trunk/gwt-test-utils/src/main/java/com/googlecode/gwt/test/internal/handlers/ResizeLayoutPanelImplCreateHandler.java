@@ -11,18 +11,18 @@ import com.googlecode.gwt.test.utils.GwtReflectionUtils;
  */
 class ResizeLayoutPanelImplCreateHandler implements GwtCreateHandler {
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.googlecode.gwt.test.GwtCreateHandler#create(java.lang.Class)
-   */
-  public Object create(Class<?> classLiteral) throws Exception {
-    if (!"com.google.gwt.user.client.ui.ResizeLayoutPanel$Impl".equals(classLiteral.getName())) {
-      return null;
-    }
+   /*
+    * (non-Javadoc)
+    * 
+    * @see com.googlecode.gwt.test.GwtCreateHandler#create(java.lang.Class)
+    */
+   public Object create(Class<?> classLiteral) throws Exception {
+      if (!"com.google.gwt.user.client.ui.ResizeLayoutPanel$Impl".equals(classLiteral.getName())) {
+         return null;
+      }
 
-    Class<?> clazz = Class.forName("com.google.gwt.user.client.ui.ResizeLayoutPanel$ImplStandard");
-    return GwtReflectionUtils.instantiateClass(clazz);
-  }
+      Class<?> clazz = Class.forName("com.google.gwt.user.client.ui.ResizeLayoutPanel$ImplStandard");
+      return GwtReflectionUtils.instantiateClass(clazz);
+   }
 
 }

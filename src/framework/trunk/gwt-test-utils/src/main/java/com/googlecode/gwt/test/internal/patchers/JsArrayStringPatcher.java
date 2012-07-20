@@ -11,95 +11,94 @@ import com.googlecode.gwt.test.patchers.PatchMethod;
 @PatchClass(JsArrayString.class)
 class JsArrayStringPatcher {
 
-  @PatchMethod
-  static String get(JsArrayString array, int index) {
-    List<String> wrapped = getWrappedList(array);
+   @PatchMethod
+   static String get(JsArrayString array, int index) {
+      List<String> wrapped = getWrappedList(array);
 
-    if (index >= wrapped.size()) {
-      return null;
-    }
-
-    return wrapped.get(index);
-  }
-
-  @PatchMethod
-  static String join(JsArrayString array, String separator) {
-    StringBuilder sb = new StringBuilder();
-
-    for (String s : getWrappedList(array)) {
-      if (s != null) {
-        sb.append(s);
+      if (index >= wrapped.size()) {
+         return null;
       }
-      sb.append(separator);
-    }
 
-    return sb.substring(0, sb.length() - separator.length());
-  }
+      return wrapped.get(index);
+   }
 
-  @PatchMethod
-  static int length(JsArrayString array) {
-    return getWrappedList(array).size();
-  }
+   @PatchMethod
+   static String join(JsArrayString array, String separator) {
+      StringBuilder sb = new StringBuilder();
 
-  @PatchMethod
-  static void push(JsArrayString array, String value) {
-    getWrappedList(array).add(value);
-  }
-
-  @PatchMethod
-  static void set(JsArrayString array, int index, String value) {
-    List<String> wrapped = getWrappedList(array);
-    int currentSize = wrapped.size();
-
-    if (index >= currentSize) {
-      for (int i = currentSize; i <= index; i++) {
-        wrapped.add(null);
+      for (String s : getWrappedList(array)) {
+         if (s != null) {
+            sb.append(s);
+         }
+         sb.append(separator);
       }
-    }
 
-    wrapped.set(index, value);
-  }
+      return sb.substring(0, sb.length() - separator.length());
+   }
 
-  @PatchMethod
-  static void setLength(JsArrayString array, int newLength) {
-    List<String> wrapped = getWrappedList(array);
+   @PatchMethod
+   static int length(JsArrayString array) {
+      return getWrappedList(array).size();
+   }
 
-    int currentSize = wrapped.size();
-    if (currentSize > newLength) {
-      for (int i = newLength; i < currentSize; i++) {
-        wrapped.remove(i - 1);
+   @PatchMethod
+   static void push(JsArrayString array, String value) {
+      getWrappedList(array).add(value);
+   }
+
+   @PatchMethod
+   static void set(JsArrayString array, int index, String value) {
+      List<String> wrapped = getWrappedList(array);
+      int currentSize = wrapped.size();
+
+      if (index >= currentSize) {
+         for (int i = currentSize; i <= index; i++) {
+            wrapped.add(null);
+         }
       }
-    } else if (currentSize < newLength) {
-      for (int i = currentSize; i <= newLength; i++) {
-        wrapped.add(null);
+
+      wrapped.set(index, value);
+   }
+
+   @PatchMethod
+   static void setLength(JsArrayString array, int newLength) {
+      List<String> wrapped = getWrappedList(array);
+
+      int currentSize = wrapped.size();
+      if (currentSize > newLength) {
+         for (int i = newLength; i < currentSize; i++) {
+            wrapped.remove(i - 1);
+         }
+      } else if (currentSize < newLength) {
+         for (int i = currentSize; i <= newLength; i++) {
+            wrapped.add(null);
+         }
       }
-    }
-  }
+   }
 
-  @PatchMethod
-  static String shift(JsArrayString array) {
-    List<String> wrapped = getWrappedList(array);
-    return (wrapped.size() > 0) ? wrapped.remove(0) : null;
-  }
+   @PatchMethod
+   static String shift(JsArrayString array) {
+      List<String> wrapped = getWrappedList(array);
+      return (wrapped.size() > 0) ? wrapped.remove(0) : null;
+   }
 
-  @PatchMethod
-  static void unshift(JsArrayString array, String value) {
-    getWrappedList(array).add(0, value);
-  }
+   @PatchMethod
+   static void unshift(JsArrayString array, String value) {
+      getWrappedList(array).add(0, value);
+   }
 
-  @SuppressWarnings("unchecked")
-  private static List<String> getWrappedList(JsArrayString array) {
+   @SuppressWarnings("unchecked")
+   private static List<String> getWrappedList(JsArrayString array) {
 
-    List<String> wrappedList = (List<String>) JavaScriptObjects.getObject(
-        array, JsArrayPatcher.JSARRAY_WRAPPED_LIST);
+      List<String> wrappedList = (List<String>) JavaScriptObjects.getObject(array,
+               JsArrayPatcher.JSARRAY_WRAPPED_LIST);
 
-    if (wrappedList == null) {
-      wrappedList = new ArrayList<String>();
-      JavaScriptObjects.setProperty(array, JsArrayPatcher.JSARRAY_WRAPPED_LIST,
-          wrappedList);
-    }
+      if (wrappedList == null) {
+         wrappedList = new ArrayList<String>();
+         JavaScriptObjects.setProperty(array, JsArrayPatcher.JSARRAY_WRAPPED_LIST, wrappedList);
+      }
 
-    return wrappedList;
-  }
+      return wrappedList;
+   }
 
 }

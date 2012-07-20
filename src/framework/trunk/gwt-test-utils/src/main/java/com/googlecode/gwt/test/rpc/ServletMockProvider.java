@@ -20,43 +20,43 @@ import com.google.gwt.user.server.rpc.AbstractRemoteServiceServlet;
  */
 public interface ServletMockProvider {
 
-  /**
-   * Method which substitutes
-   * {@link AbstractRemoteServiceServlet#getServletConfig()} to enable to
-   * provide a mocked {@link ServletConfig} configured for your
-   * {@link RemoteService} unit test.
-   * 
-   * @param remoteService The remote service being invoked
-   * @return The mocked servlet config related to the invoked remote service
-   */
-  ServletConfig getMockedConfig(AbstractRemoteServiceServlet remoteService);
+   /**
+    * Method which substitutes
+    * {@link AbstractRemoteServiceServlet#getServletConfig()} to enable to
+    * provide a mocked {@link ServletConfig} configured for your
+    * {@link RemoteService} unit test.
+    * 
+    * @param remoteService The remote service being invoked
+    * @return The mocked servlet config related to the invoked remote service
+    */
+   ServletConfig getMockedConfig(AbstractRemoteServiceServlet remoteService);
 
-  /**
-   * Method which substitutes {@link AbstractRemoteServiceServlet}'s
-   * getThreadLocalRequest to enable to provide a mocked
-   * {@link HttpServletRequest} configured for the {@link RemoteService} method
-   * being called.
-   * 
-   * @param remoteService The remote service being invoked
-   * @param remoteMethod The remote method being invoked on the remote service
-   *          instance
-   * @return The mocked http request related to the invoked remote method
-   */
-  HttpServletRequest getMockedRequest(
-      AbstractRemoteServiceServlet remoteService, Method remoteMethod);
+   /**
+    * Method which substitutes {@link AbstractRemoteServiceServlet}'s
+    * getThreadLocalRequest to enable to provide a mocked
+    * {@link HttpServletRequest} configured for the {@link RemoteService} method
+    * being called.
+    * 
+    * @param remoteService The remote service being invoked
+    * @param remoteMethod The remote method being invoked on the remote service
+    *           instance
+    * @return The mocked http request related to the invoked remote method
+    */
+   HttpServletRequest getMockedRequest(AbstractRemoteServiceServlet remoteService,
+            Method remoteMethod);
 
-  /**
-   * Method which substitutes {@link AbstractRemoteServiceServlet}'s
-   * getThreadLocalResponse to enable to provide a mocked
-   * {@link HttpServletResponse} configured for the {@link RemoteService} method
-   * being called.
-   * 
-   * @param remoteService The remote service being invoked
-   * @param remoteMethod The remote method being invoked on the remote service
-   *          instance
-   * @return The mocked http response related to the invoked remote method
-   */
-  HttpServletResponse getMockedResponse(
-      AbstractRemoteServiceServlet remoteService, Method remoteMethod);
+   /**
+    * Method which substitutes {@link AbstractRemoteServiceServlet}'s
+    * getThreadLocalResponse to enable to provide a mocked
+    * {@link HttpServletResponse} configured for the {@link RemoteService}
+    * method being called.
+    * 
+    * @param remoteService The remote service being invoked
+    * @param remoteMethod The remote method being invoked on the remote service
+    *           instance
+    * @return The mocked http response related to the invoked remote method
+    */
+   HttpServletResponse getMockedResponse(AbstractRemoteServiceServlet remoteService,
+            Method remoteMethod);
 
 }

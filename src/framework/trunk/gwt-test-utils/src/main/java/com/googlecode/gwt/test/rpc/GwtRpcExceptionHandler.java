@@ -19,13 +19,14 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
  */
 public interface GwtRpcExceptionHandler {
 
-  /**
-   * The callback method which is called if the RPC service invocation throws an
-   * exception.
-   * 
-   * @param t The thrown exception.
-   * @param callback The asynchrone callback provided by the RPC service caller.
-   */
-  void handle(Throwable t, AsyncCallback<?> callback);
+   /**
+    * The callback method which is called if the RPC service invocation throws
+    * an exception.
+    * 
+    * @param t The thrown exception.
+    * @param callback The asynchrone callback provided by the RPC service
+    *           caller.
+    */
+   void handle(Throwable t, AsyncCallback<?> callback);
 
 }

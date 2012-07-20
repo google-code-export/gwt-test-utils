@@ -13,32 +13,32 @@ import com.google.gwt.dev.util.log.PrintWriterTreeLogger;
  */
 public class TreeLoggerHolder {
 
-  private static final TreeLogger DEFAULT = new PrintWriterTreeLogger();
+   private static final TreeLogger DEFAULT = new PrintWriterTreeLogger();
 
-  private static TreeLogger treeLogger;
+   private static TreeLogger treeLogger;
 
-  /**
-   * Gets the TreeLogger to use. Never null.
-   * 
-   * @return the singleton instance
-   */
-  public static TreeLogger getTreeLogger() {
-    if (treeLogger == null) {
-      treeLogger = DEFAULT;
-    }
+   /**
+    * Gets the TreeLogger to use. Never null.
+    * 
+    * @return the singleton instance
+    */
+   public static TreeLogger getTreeLogger() {
+      if (treeLogger == null) {
+         treeLogger = DEFAULT;
+      }
 
-    return treeLogger;
-  }
+      return treeLogger;
+   }
 
-  /**
-   * Set the TreeLogger to use. Cannot be null.
-   * 
-   * @param treeLogger
-   */
-  public void setTreeLogger(TreeLogger treeLogger) {
-    assert treeLogger != null : "Custom TreeLogger cannot be null";
+   /**
+    * Set the TreeLogger to use. Cannot be null.
+    * 
+    * @param treeLogger
+    */
+   public void setTreeLogger(TreeLogger treeLogger) {
+      assert treeLogger != null : "Custom TreeLogger cannot be null";
 
-    TreeLoggerHolder.treeLogger = treeLogger;
-  }
+      TreeLoggerHolder.treeLogger = treeLogger;
+   }
 
 }

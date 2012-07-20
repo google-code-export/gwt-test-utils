@@ -8,14 +8,13 @@ import com.googlecode.gwt.test.internal.editors.SimpleBeanEditorDriverInvocation
 
 class SimpleBeanEditorDriverCreateHandler implements GwtCreateHandler {
 
-  public Object create(Class<?> classLiteral) throws Exception {
-    if (!SimpleBeanEditorDriver.class.isAssignableFrom(classLiteral)) {
-      return null;
-    }
+   public Object create(Class<?> classLiteral) throws Exception {
+      if (!SimpleBeanEditorDriver.class.isAssignableFrom(classLiteral)) {
+         return null;
+      }
 
-    return Proxy.newProxyInstance(classLiteral.getClassLoader(),
-        new Class[]{classLiteral}, new SimpleBeanEditorDriverInvocationHandler(
-            classLiteral));
-  }
+      return Proxy.newProxyInstance(classLiteral.getClassLoader(), new Class[]{classLiteral},
+               new SimpleBeanEditorDriverInvocationHandler(classLiteral));
+   }
 
 }
