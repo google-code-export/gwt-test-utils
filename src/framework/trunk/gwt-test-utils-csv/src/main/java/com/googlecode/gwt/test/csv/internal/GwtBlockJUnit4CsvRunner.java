@@ -17,31 +17,31 @@ import com.googlecode.gwt.test.utils.GwtReflectionUtils;
  */
 public class GwtBlockJUnit4CsvRunner extends GwtBlockJUnit4ClassRunner {
 
-  private DirectoryTestReader reader;
+   private DirectoryTestReader reader;
 
-  public GwtBlockJUnit4CsvRunner(Class<?> clazz) throws InitializationError,
-      ClassNotFoundException {
-    super(clazz);
-  }
+   public GwtBlockJUnit4CsvRunner(Class<?> clazz) throws InitializationError,
+            ClassNotFoundException {
+      super(clazz);
+   }
 
-  @Override
-  protected List<FrameworkMethod> computeTestMethods() {
-    if (reader == null) {
-      reader = new DirectoryTestReader(getTestClass().getJavaClass());
-    }
-    List<FrameworkMethod> frameworkMethods = new ArrayList<FrameworkMethod>();
-    for (Method csvMethod : reader.getTestMethods()) {
-      frameworkMethods.add(new FrameworkMethod(csvMethod));
-    }
+   @Override
+   protected List<FrameworkMethod> computeTestMethods() {
+      if (reader == null) {
+         reader = new DirectoryTestReader(getTestClass().getJavaClass());
+      }
+      List<FrameworkMethod> frameworkMethods = new ArrayList<FrameworkMethod>();
+      for (Method csvMethod : reader.getTestMethods()) {
+         frameworkMethods.add(new FrameworkMethod(csvMethod));
+      }
 
-    return frameworkMethods;
-  }
+      return frameworkMethods;
+   }
 
-  @Override
-  protected Object createTest() throws Exception {
-    Object testInstance = reader.createObject();
-    GwtReflectionUtils.callPrivateMethod(testInstance, "setReader", reader);
-    return testInstance;
-  }
+   @Override
+   protected Object createTest() throws Exception {
+      Object testInstance = reader.createObject();
+      GwtReflectionUtils.callPrivateMethod(testInstance, "setReader", reader);
+      return testInstance;
+   }
 
 }

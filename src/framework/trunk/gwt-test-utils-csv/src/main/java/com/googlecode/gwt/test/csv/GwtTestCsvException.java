@@ -11,20 +11,20 @@ import com.googlecode.gwt.test.exceptions.GwtTestException;
  */
 public class GwtTestCsvException extends GwtTestException {
 
-  private static final long serialVersionUID = -7518261539641239910L;
+   private static final long serialVersionUID = -7518261539641239910L;
 
-  public GwtTestCsvException() {
-  }
+   public GwtTestCsvException() {
+   }
 
-  public GwtTestCsvException(String message) {
-    super(message);
-  }
+   public GwtTestCsvException(String message) {
+      super(message);
+   }
 
-  public GwtTestCsvException(String message, Throwable cause) {
-    super(message, cause);
-  }
+   public GwtTestCsvException(String message, Throwable cause) {
+      super(message, cause);
+   }
 
-  public GwtTestCsvException(Throwable cause) {
-    super(cause);
-  }
+   public GwtTestCsvException(Throwable cause) {
+      super(cause);
+   }
 }

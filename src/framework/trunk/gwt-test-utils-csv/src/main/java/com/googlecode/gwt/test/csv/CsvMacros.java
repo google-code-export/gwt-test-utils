@@ -15,7 +15,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @Inherited
 public @interface CsvMacros {
-  String pattern() default ".+\\..*";
+   String pattern() default ".+\\..*";
 
-  String value();
+   String value();
 }

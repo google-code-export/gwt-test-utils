@@ -36,67 +36,66 @@ import com.googlecode.gwt.test.csv.GwtCsvTest;
  */
 public abstract class GwtGuiceCsvTest extends GwtCsvTest {
 
-  /**
-   * Guice test initialization method.
-   */
-  @Before
-  public void beforeGwtGuiceTest() {
+   /**
+    * Guice test initialization method.
+    */
+   @Before
+   public void beforeGwtGuiceTest() {
 
-    final Injector injector = getInjector();
-    // add a new RemoteServiceHandler which will call Guice Injector
-    addGwtCreateHandler(new RemoteServiceCreateHandler() {
+      final Injector injector = getInjector();
+      // add a new RemoteServiceHandler which will call Guice Injector
+      addGwtCreateHandler(new RemoteServiceCreateHandler() {
 
-      @Override
-      protected Object findService(Class<?> remoteServiceClass,
-          String remoteServiceRelativePath) {
-        return getRpcServiceFromInjector(injector, remoteServiceClass,
-            remoteServiceRelativePath);
+         @Override
+         protected Object findService(Class<?> remoteServiceClass, String remoteServiceRelativePath) {
+            return getRpcServiceFromInjector(injector, remoteServiceClass,
+                     remoteServiceRelativePath);
+         }
+      });
+
+      injector.injectMembers(this);
+   }
+
+   /**
+    * Get the Guice injector to use. This implementation search in web.xml for
+    * any listener assignable to {@link GuiceServletContextListener} to retrieve
+    * its internal Injector by introspection.
+    * 
+    * @return The Guice Injector to use.
+    */
+   protected Injector getInjector() {
+      Injector injector = GwtGuiceHelper.get().getInjector();
+
+      if (injector == null) {
+         throw new GwtTestConfigurationException(
+                  this.getClass().getSimpleName()
+                           + ".getInjector() default implementation is not able to localize the Guice Injector to use. You should override it to provide our own implementation");
       }
-    });
 
-    injector.injectMembers(this);
-  }
+      return injector;
+   }
 
-  /**
-   * Get the Guice injector to use. This implementation search in web.xml for
-   * any listener assignable to {@link GuiceServletContextListener} to retrieve
-   * its internal Injector by introspection.
-   * 
-   * @return The Guice Injector to use.
-   */
-  protected Injector getInjector() {
-    Injector injector = GwtGuiceHelper.get().getInjector();
+   /**
+    * Retrieve a GWT RPC service from a Guice injector. This implementation
+    * reads ServletDefinition declared in a Guice {@link ServletModule} to be
+    * able to bind object through the supplied remote service relative path of
+    * the targeted servlet.
+    * 
+    * @param injector The Guice Injector configured.
+    * @param remoteServiceClass The remote service interface of the Guice object
+    *           to retrieve.
+    * @param remoteServiceRelativePath The remote service relative path of the
+    *           Guice object to retrieve.
+    * @return The corresponding Guice object, or null if no object has been
+    *         found for this type and path.
+    * 
+    * @see GwtGuiceTest#getInjector()
+    */
+   protected Object getRpcServiceFromInjector(Injector injector, Class<?> remoteServiceClass,
+            String remoteServiceRelativePath) {
 
-    if (injector == null) {
-      throw new GwtTestConfigurationException(
-          this.getClass().getSimpleName()
-              + ".getInjector() default implementation is not able to localize the Guice Injector to use. You should override it to provide our own implementation");
-    }
-
-    return injector;
-  }
-
-  /**
-   * Retrieve a GWT RPC service from a Guice injector. This implementation reads
-   * ServletDefinition declared in a Guice {@link ServletModule} to be able to
-   * bind object through the supplied remote service relative path of the
-   * targeted servlet.
-   * 
-   * @param injector The Guice Injector configured.
-   * @param remoteServiceClass The remote service interface of the Guice object
-   *          to retrieve.
-   * @param remoteServiceRelativePath The remote service relative path of the
-   *          Guice object to retrieve.
-   * @return The corresponding Guice object, or null if no object has been found
-   *         for this type and path.
-   * 
-   * @see GwtGuiceTest#getInjector()
-   */
-  protected Object getRpcServiceFromInjector(Injector injector,
-      Class<?> remoteServiceClass, String remoteServiceRelativePath) {
-
-    return GwtGuiceHelper.get().getRpcServiceFromInjector(injector,
-        remoteServiceClass, remoteServiceRelativePath);
-  }
+      return GwtGuiceHelper.get().getRpcServiceFromInjector(injector, remoteServiceClass,
+               remoteServiceRelativePath);
+   }
 
 }
