@@ -18,7 +18,7 @@ import com.googlecode.gwt.test.exceptions.GwtTestException;
 import com.googlecode.gwt.test.internal.AfterTestCallbackManager;
 import com.googlecode.gwt.test.internal.GwtConfig;
 import com.googlecode.gwt.test.internal.GwtFactory;
-import com.googlecode.gwt.test.internal.GwtTestErrorHolder;
+import com.googlecode.gwt.test.internal.GwtTestDataHolder;
 import com.googlecode.gwt.test.utils.events.Browser.BrowserErrorHandler;
 
 /**
@@ -91,7 +91,7 @@ public abstract class GwtTest extends GwtModuleRunnerAdapter implements Test {
 
   @Before
   public final void setUpGwtTest() throws Exception {
-    GwtTestErrorHolder.get().setCurrentTestFailed(false);
+    GwtTestDataHolder.get().setCurrentTestFailed(false);
     GwtConfig.get().setup(this);
   }
 
@@ -100,10 +100,11 @@ public abstract class GwtTest extends GwtModuleRunnerAdapter implements Test {
 
     GwtReset.get().reset();
 
+    boolean currentTestFailed = GwtTestDataHolder.get().isCurrentTestFailed();
+
     List<Throwable> throwables = AfterTestCallbackManager.get().triggerCallbacks();
 
-    if (!GwtTestErrorHolder.get().isCurrentTestFailed()
-        && throwables.size() > 0) {
+    if (!currentTestFailed && throwables.size() > 0) {
       String error = (throwables.size() == 1)
           ? "One exception thrown during gwt-test-utils cleanup phase : "
           : throwables.size()
