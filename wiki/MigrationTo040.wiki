@@ -51,4 +51,8 @@ to :
 = Future =
 
 By using {{{gwt-dev}}} internal features to load modules data (see [http://code.google.com/p/google-web-toolkit/source/browse/trunk/dev/core/src/com/google/gwt/dev/cfg/ModuleDef.java ModuleDef] and [http://code.google.com/p/google-web-toolkit/source/browse/trunk/dev/core/src/com/google/gwt/dev/javac/CompilationState.java CompilationState]), we've opened the way to support some other features _gwt-test-utils_ was unable to handle, such as code Generators, which a lot of GWT APIs rely on.
-Some of those are already supported ({{{UiBinder}}}, {{{ClientBundle}}}), others not ({{{Editors}}}). In future releases, It would be great if _gwt-test-utils_ could transparently create, compile and run the Java code from every Generators !
+
+Before version 0.40, some of those features were already supported, relying on lot of custom Java proxies ({{{UiBinder}}}, {{{ClientBundle}}}), which needs to be modified whenever the API changes between two version of GWT. 
+Now, _gwt-test-utils_ can start relying on GWT's Generator to support others features (it's the case for {{{Editors}}}). 
+
+In future releases, It would be great if _gwt-test-utils_ could transparently create, compile and run the Java code from *every* Generators.It would guaranty every new GWT features would be supported by _gwt-test-utils_, without any change !
