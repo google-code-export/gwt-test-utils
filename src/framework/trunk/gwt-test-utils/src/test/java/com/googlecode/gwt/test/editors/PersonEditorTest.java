@@ -6,14 +6,11 @@ import static org.junit.Assert.assertNull;
 import org.junit.Test;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.editor.client.SimpleBeanEditorDriver;
 import com.googlecode.gwt.test.GwtTestTest;
+import com.googlecode.gwt.test.editors.PersonEditor.PersonDriver;
 import com.googlecode.gwt.test.utils.events.Browser;
 
 public class PersonEditorTest extends GwtTestTest {
-
-   interface PersonDriver extends SimpleBeanEditorDriver<Person, PersonEditor> {
-   }
 
    @Test
    public void editEmptyBean() {

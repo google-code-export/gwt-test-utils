@@ -43,7 +43,7 @@ public class UiBinderWithWidgetsTest extends GwtTestTest {
       UiBinderWithWidgets w = new UiBinderWithWidgets("gael", "eric");
 
       // Pre-Assert
-      assertEquals("We <b>strongly</b> urge you to reconsider.", w.msgLabel.getText());
+      assertEquals("We strongly urge you to reconsider.", w.msgLabel.getText());
 
       // Act
       Browser.fillText(w.textBox, "ValueChangeHandler has been triggered !");
@@ -102,7 +102,7 @@ public class UiBinderWithWidgetsTest extends GwtTestTest {
       assertEquals("some span for testing", spanElement.getInnerText());
       assertEquals("pretty", spanElement.getClassName());
 
-      assertEquals("We <b>strongly</b> urge you to reconsider.", w.msgLabel.getText());
+      assertEquals("We strongly urge you to reconsider.", w.msgLabel.getText());
 
       assertEquals("9'00", w.msgInnerWidget.getText());
       assertEquals(w.msgInnerWidget, wrappedPanel.getWidget(5));

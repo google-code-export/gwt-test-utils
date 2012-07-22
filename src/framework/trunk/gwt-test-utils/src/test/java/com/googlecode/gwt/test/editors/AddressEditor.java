@@ -5,6 +5,7 @@ import java.util.Collection;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.editor.client.Editor;
+import com.google.gwt.editor.client.SimpleBeanEditorDriver;
 import com.google.gwt.text.shared.AbstractRenderer;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -14,6 +15,9 @@ import com.google.gwt.user.client.ui.ValueListBox;
 import com.google.gwt.user.client.ui.Widget;
 
 public class AddressEditor extends Composite implements Editor<Address> {
+
+   interface AddressDriver extends SimpleBeanEditorDriver<Address, AddressEditor> {
+   }
 
    interface Binder extends UiBinder<Widget, AddressEditor> {
    }

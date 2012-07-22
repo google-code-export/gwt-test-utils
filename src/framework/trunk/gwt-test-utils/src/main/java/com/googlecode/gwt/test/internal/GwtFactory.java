@@ -14,21 +14,14 @@ import com.google.gwt.dev.cfg.ModuleDef;
 import com.google.gwt.dev.cfg.ModuleDefLoader;
 import com.google.gwt.dev.javac.CompilationState;
 import com.google.gwt.dev.javac.CompilationStateBuilder;
-import com.google.gwt.dev.javac.JsniMethod;
-import com.google.gwt.dev.javac.rebind.RebindCache;
-import com.google.gwt.dev.shell.DispatchIdOracle;
-import com.google.gwt.dev.shell.JsValue;
 import com.google.gwt.dev.shell.JsValueGlue;
-import com.google.gwt.dev.shell.ModuleSpace;
-import com.google.gwt.dev.shell.ModuleSpaceHost;
-import com.google.gwt.dev.shell.ShellModuleSpaceHost;
 import com.googlecode.gwt.test.exceptions.GwtTestConfigurationException;
 import com.googlecode.gwt.test.exceptions.GwtTestException;
 import com.googlecode.gwt.test.internal.rewrite.OverlayTypesRewriter;
 
 /**
- * An unique place for internal singleton which are ClassLoader independent and
- * can eventually be reset. <strong>For internal use only.</strong>
+ * An unique place for internal singleton which are ClassLoader independent and can eventually be
+ * reset. <strong>For internal use only.</strong>
  * 
  * @author Gael Lazzari
  * 
@@ -36,8 +29,6 @@ import com.googlecode.gwt.test.internal.rewrite.OverlayTypesRewriter;
 public class GwtFactory {
 
    private static GwtFactory instance;
-
-   private static final RebindCache REBIND_CACHE = new RebindCache();
 
    private static final Pattern SUREFIRE_BOOTER_JAR_PATTERN = Pattern.compile("^.*surefire.*\\.jar$");
 
@@ -87,7 +78,7 @@ public class GwtFactory {
    private final ConfigurationLoader configurationLoader;
    private final GwtClassLoader gwtClassLoader;
    private final ModuleDef moduleDef;
-   private final ModuleSpaceHost moduleSpaceHost;
+
    private final OverlayTypesRewriter overlayRewriter;
 
    private final URL surefireBooterJarUrl;
@@ -109,12 +100,12 @@ public class GwtFactory {
       // META-INF/gwt-test-utils.properties files
       moduleDef = createModuleDef(configurationLoader);
       compilationState = createCompilationState(moduleDef);
-      moduleSpaceHost = createModuleSpaceHost(compilationState, moduleDef);
       overlayRewriter = createOverlayRewriter(compilationState);
-      gwtClassLoader = GwtClassLoader.createClassLoader(configurationLoader, overlayRewriter);
+      gwtClassLoader = GwtClassLoader.createClassLoader(configurationLoader, compilationState,
+               overlayRewriter);
    }
 
-   public ClassLoader getClassLoader() {
+   public GwtClassLoader getClassLoader() {
       return gwtClassLoader;
    }
 
@@ -128,10 +119,6 @@ public class GwtFactory {
 
    public ModuleDef getModuleDef() {
       return moduleDef;
-   }
-
-   public ModuleSpaceHost getModuleSpaceHost() {
-      return moduleSpaceHost;
    }
 
    public OverlayTypesRewriter getOverlayRewriter() {
@@ -167,60 +154,6 @@ public class GwtFactory {
                   "Error while creating global ModuleDef for module' :", e);
       }
 
-   }
-
-   private ModuleSpace createModuleSpace(ModuleSpaceHost host) {
-
-      return new ModuleSpace(TreeLoggerHolder.getTreeLogger(), host,
-               getModuleDef().getCanonicalName()) {
-
-         public void createNativeMethods(TreeLogger logger, List<JsniMethod> jsniMethods,
-                  DispatchIdOracle dispatchIdOracle) {
-            // this method should never be called
-            throw new UnsupportedOperationException(
-                     "ModuleSpace.createNativeMethods(..) not supported by gwt-test-utils");
-         }
-
-         @Override
-         protected void createStaticDispatcher(TreeLogger logger) {
-            // this method should never be called
-            throw new UnsupportedOperationException(
-                     "ModuleSpace.createStaticDispatcher(..) not supported by gwt-test-utils");
-
-         }
-
-         @Override
-         protected JsValue doInvoke(String name, Object jthis, Class<?>[] types, Object[] args)
-                  throws Throwable {
-            // this method should never be called
-            throw new UnsupportedOperationException(
-                     "ModuleSpace.doInvoke(..) not supported by gwt-test-utils");
-         }
-
-         @Override
-         protected Object getStaticDispatcher() {
-            // this method should never be called
-            throw new UnsupportedOperationException(
-                     "ModuleSpace.getStaticDispatcher() not supported by gwt-test-utils");
-
-         }
-      };
-
-   }
-
-   private ModuleSpaceHost createModuleSpaceHost(CompilationState compilationState,
-            ModuleDef moduleDef) {
-      try {
-         ModuleSpaceHost moduleSpaceHost = new ShellModuleSpaceHost(
-                  TreeLoggerHolder.getTreeLogger(), getCompilationState(), getModuleDef(), null,
-                  null, REBIND_CACHE);
-         ModuleSpace moduleSpace = createModuleSpace(moduleSpaceHost);
-         moduleSpaceHost.onModuleReady(moduleSpace);
-
-         return moduleSpaceHost;
-      } catch (UnableToCompleteException e) {
-         throw new GwtTestConfigurationException("Error while creating global ModuleSpaceHost :", e);
-      }
    }
 
    private OverlayTypesRewriter createOverlayRewriter(CompilationState compilationState) {

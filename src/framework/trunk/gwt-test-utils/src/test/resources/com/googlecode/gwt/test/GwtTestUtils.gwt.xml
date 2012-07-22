@@ -15,6 +15,13 @@
 		<exclude name="Test1.java" />
 	</source>
 	<source path='integration.client' />
+	<source path='deferred' />
+	<source path='dom' />
+	<source path='editors' />
+	<source path='i18n' />
+	<source path='resources' />
+	<source path='uibinder' />
+	
 
 	<!-- Fall through to this rule is the browser isn't IE or Mozilla -->
 	<replace-with class="com.googlecode.gwt.test.deferred.ReplaceWithDefault">

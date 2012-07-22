@@ -35,7 +35,7 @@
 		<g:TextBox ui:field='textBox' textAlignment="justify"></g:TextBox>
 		.
 		<g:Label ui:field='msgLabel'>
-			<ui:msg description="Greeting">We <b>strongly</b> urge you to reconsider.</ui:msg>
+			<ui:msg description="Greeting">We strongly urge you to reconsider.</ui:msg>
 		</g:Label>
 		
 		<g:FlowPanel>
