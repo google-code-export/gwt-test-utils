@@ -21,8 +21,8 @@ import com.googlecode.html.filters.DefaultFilter;
 
 /**
  * 
- * HTML parser used by gwt-test-utils. It relies on htmlparser. <strong>For
- * internal use only.</strong>
+ * HTML parser used by gwt-test-utils. It relies on htmlparser. <strong>For internal use
+ * only.</strong>
  * 
  * @author Gael Lazzari
  * 
@@ -30,8 +30,7 @@ import com.googlecode.html.filters.DefaultFilter;
 public class GwtHtmlParser {
 
    /**
-    * Filter which keep "&nbsp;" and "&nbsp;" strings instead of converting them
-    * in a ' ' character.
+    * Filter which keep "&nbsp;" and "&nbsp;" strings instead of converting them in a ' ' character.
     * 
     */
    private static class NbspRemover extends DefaultFilter {

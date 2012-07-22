@@ -38,20 +38,17 @@ import com.google.gwt.dev.util.log.speedtracer.SpeedTracerLogger.Event;
 import com.googlecode.gwt.test.internal.TreeLoggerHolder;
 
 /**
- * This class performs any and all byte code rewriting needed to make Overlay
- * types work with gwt-test-utils.
+ * This class performs any and all byte code rewriting needed to make Overlay types work with
+ * gwt-test-utils.
  * <ol>
- * <li>Rewrites all JSO types into an interface type (which retains the original
- * name) and an implementation type (which has a $ appended).</li>
- * <li>All JSO interface types are empty and mirror the original type hierarchy.
- * </li>
- * <li>All JSO impl types contain the guts of the original type, except that all
- * instance methods are reimplemented as statics.</li>
- * <li>Calls sites to JSO types rewritten to dispatch to impl types. Any virtual
- * calls are also made static. Static field references to JSO types reference
- * static fields in the the impl class.</li>
- * <li>JavaScriptObject$ implements all the interface types and is the only
- * instantiable type.</li>
+ * <li>Rewrites all JSO types into an interface type (which retains the original name) and an
+ * implementation type (which has a $ appended).</li>
+ * <li>All JSO interface types are empty and mirror the original type hierarchy.</li>
+ * <li>All JSO impl types contain the guts of the original type, except that all instance methods
+ * are reimplemented as statics.</li>
+ * <li>Calls sites to JSO types rewritten to dispatch to impl types. Any virtual calls are also made
+ * static. Static field references to JSO types reference static fields in the the impl class.</li>
+ * <li>JavaScriptObject$ implements all the interface types and is the only instantiable type.</li>
  * </ol>
  * <strong>For internal use only.</strong>
  * 
@@ -61,8 +58,8 @@ import com.googlecode.gwt.test.internal.TreeLoggerHolder;
 public class OverlayTypesRewriter {
 
    /**
-    * Implements {@link InstanceMethodOracle} on behalf of the
-    * {@link HostedModeClassRewriter}. Implemented using {@link TypeOracle}.
+    * Implements {@link InstanceMethodOracle} on behalf of the {@link HostedModeClassRewriter}.
+    * Implemented using {@link TypeOracle}.
     */
    private class MyInstanceMethodOracle implements InstanceMethodOracle {
 
@@ -80,10 +77,9 @@ public class OverlayTypesRewriter {
          }
 
          /*
-          * Record the implementing types for methods defined in SingleJsoImpl
-          * interfaces. We have to make this pass because of possible variance
-          * in the return types between the abstract method declaration in the
-          * interface and the concrete method.
+          * Record the implementing types for methods defined in SingleJsoImpl interfaces. We have
+          * to make this pass because of possible variance in the return types between the abstract
+          * method declaration in the interface and the concrete method.
           */
          for (String intfName : jsoData.getSingleJsoIntfTypes()) {
             // We only store the name in the data block to keep it lightweight
@@ -137,8 +133,8 @@ public class OverlayTypesRewriter {
       }
 
       /**
-       * Record that a given JSO type contains the concrete implementation of a
-       * (possibly abstract) method.
+       * Record that a given JSO type contains the concrete implementation of a (possibly abstract)
+       * method.
        */
       private void add(JClassType type, JMethod method) {
          String signature = createSignature(method);
@@ -169,14 +165,14 @@ public class OverlayTypesRewriter {
    }
 
    /**
-    * Cook up the data we need to support JSO subtypes that implement interfaces
-    * with methods. This includes the set of SingleJsoImpl interfaces actually
-    * implemented by a JSO type, the mangled method names, and the names of the
-    * Methods that should actually implement the virtual functions.
+    * Cook up the data we need to support JSO subtypes that implement interfaces with methods. This
+    * includes the set of SingleJsoImpl interfaces actually implemented by a JSO type, the mangled
+    * method names, and the names of the Methods that should actually implement the virtual
+    * functions.
     * 
-    * Given the current implementation of JSO$ and incremental execution of
-    * rebinds, it's not possible for Generators to produce additional
-    * JavaScriptObject subtypes, so this data can remain static.
+    * Given the current implementation of JSO$ and incremental execution of rebinds, it's not
+    * possible for Generators to produce additional JavaScriptObject subtypes, so this data can
+    * remain static.
     */
    private class MySingleJsoImplData implements SingleJsoImplData {
       private final SortedSet<String> mangledNames = new TreeSet<String>();
@@ -191,9 +187,8 @@ public class OverlayTypesRewriter {
             assert type.isInterface() == type : "Expecting interfaces only";
 
             /*
-             * By preemptively adding all possible mangled names by which a
-             * method could be called, we greatly simplify the logic necessary
-             * to rewrite the call-site.
+             * By preemptively adding all possible mangled names by which a method could be called,
+             * we greatly simplify the logic necessary to rewrite the call-site.
              * 
              * interface A {void m();}
              * 
@@ -211,25 +206,23 @@ public class OverlayTypesRewriter {
                assert intfMethod.isAbstract() : "Expecting only abstract methods";
 
                /*
-                * It is necessary to locate the implementing type on a
-                * per-method basis. Consider the case of
+                * It is necessary to locate the implementing type on a per-method basis. Consider
+                * the case of
                 * 
                 * @SingleJsoImpl interface C extends A, B {}
                 * 
-                * Methods inherited from interfaces A and B must be dispatched
-                * to their respective JSO implementations.
+                * Methods inherited from interfaces A and B must be dispatched to their respective
+                * JSO implementations.
                 */
                JClassType implementingType = typeOracle.getSingleJsoImpl(intfMethod.getEnclosingType());
 
                if (implementingType == null
                         || implementingType.isAnnotationPresent(GwtScriptOnly.class)) {
                   /*
-                   * This means that there is no concrete implementation of the
-                   * interface by a JSO. Any implementation that might be
-                   * created by a Generator won't be a JSO subtype, so we'll
-                   * just ignore it as an actionable type. Were Generators ever
-                   * able to create new JSO subtypes, we'd have to speculatively
-                   * rewrite the callsite.
+                   * This means that there is no concrete implementation of the interface by a JSO.
+                   * Any implementation that might be created by a Generator won't be a JSO subtype,
+                   * so we'll just ignore it as an actionable type. Were Generators ever able to
+                   * create new JSO subtypes, we'd have to speculatively rewrite the callsite.
                    */
                   continue typeLoop;
                }
@@ -249,9 +242,8 @@ public class OverlayTypesRewriter {
                mangledNames.add(mangledName);
 
                /*
-                * Handle virtual overrides by finding the method that we would
-                * normally invoke and using its declaring class as the dispatch
-                * target.
+                * Handle virtual overrides by finding the method that we would normally invoke and
+                * using its declaring class as the dispatch target.
                 */
                JMethod implementingMethod;
                while ((implementingMethod = findOverloadUsingErasure(implementingType, intfMethod)) == null) {
@@ -260,8 +252,8 @@ public class OverlayTypesRewriter {
                // implementingmethod and implementingType cannot be null here
 
                /*
-                * Create a pseudo-method declaration for the interface method.
-                * This should look something like
+                * Create a pseudo-method declaration for the interface method. This should look
+                * something like
                 * 
                 * ReturnType method$ (ParamType, ParamType)
                 * 
@@ -281,8 +273,8 @@ public class OverlayTypesRewriter {
                }
 
                /*
-                * Cook up the a pseudo-method declaration for the concrete type.
-                * This should look something like
+                * Cook up the a pseudo-method declaration for the concrete type. This should look
+                * something like
                 * 
                 * ReturnType method$ (JsoType, ParamType, ParamType)
                 * 
@@ -537,16 +529,14 @@ public class OverlayTypesRewriter {
    }
 
    /**
-    * Returns <code>true</code> if the class is the implementation class for a
-    * JSO subtype.
+    * Returns <code>true</code> if the class is the implementation class for a JSO subtype.
     */
    public boolean isJsoImpl(String className) {
       return jsoImplDescs.contains(toDescriptor(className));
    }
 
    /**
-    * Returns <code>true</code> if the class is the interface class for a JSO
-    * subtype.
+    * Returns <code>true</code> if the class is the interface class for a JSO subtype.
     */
    public boolean isJsoIntf(String className) {
       return jsoIntfDescs.contains(toDescriptor(className));

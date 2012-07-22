@@ -22,9 +22,8 @@ import com.googlecode.gwt.test.spring.GwtSpringCsvRunner;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
 /**
- * JUnit {@link Runner} implementation for spring CSV tests. Intent to be
- * wrapped by {@link GwtSpringCsvRunner}. <strong>For internal use
- * only.</strong>
+ * JUnit {@link Runner} implementation for spring CSV tests. Intent to be wrapped by
+ * {@link GwtSpringCsvRunner}. <strong>For internal use only.</strong>
  * 
  * @author Gael Lazzari
  * 

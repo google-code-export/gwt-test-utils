@@ -1,19 +1,16 @@
 /*
  * Copyright 2002-2009 Andy Clark, Marc Guillemot
  * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License. ==============================================================
- * This file contains some code from Apache Xerces-J which is used in accordance
- * with the Apache license.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License. ============================================================== This file contains
+ * some code from Apache Xerces-J which is used in accordance with the Apache license.
  */
 
 package com.googlecode.html.parsers;
@@ -232,15 +229,13 @@ public class DOMFragmentParser implements XMLDocumentHandler {
    /**
     * Query the state of a feature.
     * 
-    * Query the current state of any feature in a SAX2 parser. The parser might
-    * not recognize the feature.
+    * Query the current state of any feature in a SAX2 parser. The parser might not recognize the
+    * feature.
     * 
     * @param featureId The unique identifier (URI) of the feature being set.
     * @return The current state of the feature.
-    * @exception org.xml.sax.SAXNotRecognizedException If the requested feature
-    *               is not known.
-    * @exception SAXNotSupportedException If the requested feature is known but
-    *               not supported.
+    * @exception org.xml.sax.SAXNotRecognizedException If the requested feature is not known.
+    * @exception SAXNotSupportedException If the requested feature is known but not supported.
     */
    public boolean getFeature(String featureId) throws SAXNotRecognizedException,
             SAXNotSupportedException {
@@ -261,15 +256,13 @@ public class DOMFragmentParser implements XMLDocumentHandler {
    /**
     * Query the value of a property.
     * 
-    * Return the current value of a property in a SAX2 parser. The parser might
-    * not recognize the property.
+    * Return the current value of a property in a SAX2 parser. The parser might not recognize the
+    * property.
     * 
     * @param propertyId The unique identifier (URI) of the property being set.
     * @return The current value of the property.
-    * @exception org.xml.sax.SAXNotRecognizedException If the requested property
-    *               is not known.
-    * @exception SAXNotSupportedException If the requested property is known but
-    *               not supported.
+    * @exception org.xml.sax.SAXNotRecognizedException If the requested property is not known.
+    * @exception SAXNotSupportedException If the requested property is known but not supported.
     */
    public Object getProperty(String propertyId) throws SAXNotRecognizedException,
             SAXNotSupportedException {
@@ -352,15 +345,14 @@ public class DOMFragmentParser implements XMLDocumentHandler {
     * Allow an application to register an error event handler.
     * 
     * <p>
-    * If the application does not register an error handler, all error events
-    * reported by the SAX parser will be silently ignored; however, normal
-    * processing may not continue. It is highly recommended that all SAX
-    * applications implement an error handler to avoid unexpected bugs.
+    * If the application does not register an error handler, all error events reported by the SAX
+    * parser will be silently ignored; however, normal processing may not continue. It is highly
+    * recommended that all SAX applications implement an error handler to avoid unexpected bugs.
     * </p>
     * 
     * <p>
-    * Applications may register a new or different handler in the middle of a
-    * parse, and the SAX parser must begin using the new handler immediately.
+    * Applications may register a new or different handler in the middle of a parse, and the SAX
+    * parser must begin using the new handler immediately.
     * </p>
     * 
     * @param errorHandler The error handler.
@@ -372,17 +364,15 @@ public class DOMFragmentParser implements XMLDocumentHandler {
    } // setErrorHandler(ErrorHandler)
 
    /**
-    * Set the state of any feature in a SAX2 parser. The parser might not
-    * recognize the feature, and if it does recognize it, it might not be able
-    * to fulfill the request.
+    * Set the state of any feature in a SAX2 parser. The parser might not recognize the feature, and
+    * if it does recognize it, it might not be able to fulfill the request.
     * 
     * @param featureId The unique identifier (URI) of the feature.
     * @param state The requested state of the feature (true or false).
     * 
-    * @exception SAXNotRecognizedException If the requested feature is not
-    *               known.
-    * @exception SAXNotSupportedException If the requested feature is known, but
-    *               the requested state is not supported.
+    * @exception SAXNotRecognizedException If the requested feature is not known.
+    * @exception SAXNotSupportedException If the requested feature is known, but the requested state
+    *               is not supported.
     */
    public void setFeature(String featureId, boolean state) throws SAXNotRecognizedException,
             SAXNotSupportedException {
@@ -401,17 +391,15 @@ public class DOMFragmentParser implements XMLDocumentHandler {
    } // setFeature(String,boolean)
 
    /**
-    * Set the value of any property in a SAX2 parser. The parser might not
-    * recognize the property, and if it does recognize it, it might not support
-    * the requested value.
+    * Set the value of any property in a SAX2 parser. The parser might not recognize the property,
+    * and if it does recognize it, it might not support the requested value.
     * 
     * @param propertyId The unique identifier (URI) of the property being set.
     * @param value The value to which the property is being set.
     * 
-    * @exception SAXNotRecognizedException If the requested property is not
-    *               known.
-    * @exception SAXNotSupportedException If the requested property is known,
-    *               but the requested value is not supported.
+    * @exception SAXNotRecognizedException If the requested property is not known.
+    * @exception SAXNotSupportedException If the requested property is known, but the requested
+    *               value is not supported.
     */
    public void setProperty(String propertyId, Object value) throws SAXNotRecognizedException,
             SAXNotSupportedException {

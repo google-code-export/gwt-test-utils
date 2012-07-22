@@ -19,21 +19,21 @@ import com.googlecode.gwt.test.patchers.PatchMethod;
 @PatchClass(DomQuery.class)
 class DomQueryPatcher {
 
-  @PatchMethod
-  static JavaScriptObject internalSelect(String selector) {
-    Element body = Document.get().getBody().cast();
-    return internalSelect(selector, body);
-  }
+   @PatchMethod
+   static JavaScriptObject internalSelect(String selector) {
+      Element body = Document.get().getBody().cast();
+      return internalSelect(selector, body);
+   }
 
-  @PatchMethod
-  static JavaScriptObject internalSelect(String selector, Element root) {
-    try {
-      Set<Node> nodeSet = new GwtNodeSelector(root).querySelectorAll(selector);
-      return JavaScriptObjects.newNodeList(new ArrayList<Node>(nodeSet));
-    } catch (NodeSelectorException e) {
-      throw new GwtTestPatchException(
-          "Error while trying to find GWT nodes matching '" + selector + "'", e);
-    }
-  }
+   @PatchMethod
+   static JavaScriptObject internalSelect(String selector, Element root) {
+      try {
+         Set<Node> nodeSet = new GwtNodeSelector(root).querySelectorAll(selector);
+         return JavaScriptObjects.newNodeList(new ArrayList<Node>(nodeSet));
+      } catch (NodeSelectorException e) {
+         throw new GwtTestPatchException("Error while trying to find GWT nodes matching '"
+                  + selector + "'", e);
+      }
+   }
 
 }

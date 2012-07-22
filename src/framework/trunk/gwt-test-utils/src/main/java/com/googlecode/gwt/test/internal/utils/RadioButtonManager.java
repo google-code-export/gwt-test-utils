@@ -10,8 +10,8 @@ import com.googlecode.gwt.test.internal.AfterTestCallback;
 import com.googlecode.gwt.test.internal.AfterTestCallbackManager;
 
 /**
- * RadioButton instance Manager, to emulate radigroup behaviour. <strong>For
- * internal use only.<strong>
+ * RadioButton instance Manager, to emulate radigroup behaviour. <strong>For internal use
+ * only.<strong>
  * 
  * @author Gael Lazzari
  * 

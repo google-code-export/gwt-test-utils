@@ -9,10 +9,9 @@ import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 @PatchClass(WidgetComponent.class)
 class WidgetComponentPatcher {
 
-  @PatchMethod
-  static void setParent(final WidgetComponent component, final Widget parent,
-      final Widget child) {
-    GwtReflectionUtils.setPrivateFieldValue(child, "parent", parent);
-  }
+   @PatchMethod
+   static void setParent(final WidgetComponent component, final Widget parent, final Widget child) {
+      GwtReflectionUtils.setPrivateFieldValue(child, "parent", parent);
+   }
 
 }

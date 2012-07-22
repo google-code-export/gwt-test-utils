@@ -4,9 +4,8 @@ import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.dev.util.log.PrintWriterTreeLogger;
 
 /**
- * The holder for the shared {@link TreeLogger} instance. If no custom logger is
- * set, a default one which prints in {@link System#out} is used. <strong>For
- * internal use only.</strong>
+ * The holder for the shared {@link TreeLogger} instance. If no custom logger is set, a default one
+ * which prints in {@link System#out} is used. <strong>For internal use only.</strong>
  * 
  * @author Gael Lazzari
  * 

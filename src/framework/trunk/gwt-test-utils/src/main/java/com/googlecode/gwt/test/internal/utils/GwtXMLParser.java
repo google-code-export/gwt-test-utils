@@ -11,8 +11,8 @@ import com.google.gwt.dom.client.Document;
 
 /**
  * 
- * XML parser used by gwt-test-utils. It relies on the SAX API. <strong>For
- * internal use only.</strong>
+ * XML parser used by gwt-test-utils. It relies on the SAX API. <strong>For internal use
+ * only.</strong>
  * 
  * @author Gael Lazzari
  * 

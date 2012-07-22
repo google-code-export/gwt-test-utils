@@ -15,8 +15,7 @@ import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
 /**
  * 
- * Internal reader for Guice Servlet definitions. <strong>For internal use
- * only.</strong>
+ * Internal reader for Guice Servlet definitions. <strong>For internal use only.</strong>
  * 
  * @author Alex Dobjanschi
  * @author Gael Lazzari

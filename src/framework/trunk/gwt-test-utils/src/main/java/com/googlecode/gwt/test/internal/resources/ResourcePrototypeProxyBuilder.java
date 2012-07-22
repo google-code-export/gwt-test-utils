@@ -16,8 +16,8 @@ import com.google.gwt.resources.client.TextResource;
 import com.googlecode.gwt.test.exceptions.GwtTestResourcesException;
 
 /**
- * Builder in charge of the creation of {@link ResourcePrototype} proxies.
- * <strong>For internal use only.</strong>
+ * Builder in charge of the creation of {@link ResourcePrototype} proxies. <strong>For internal use
+ * only.</strong>
  * 
  * @author Gael Lazzari
  * 

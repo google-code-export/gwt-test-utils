@@ -7,8 +7,7 @@ import org.springframework.context.ApplicationContext;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
 /**
- * Helper for gwt-test-utils / Spring integration. <strong>For internal use
- * only.</strong>
+ * Helper for gwt-test-utils / Spring integration. <strong>For internal use only.</strong>
  * 
  * @author Gael Lazzari
  * 

@@ -35,8 +35,7 @@ class CssResourceReader implements AfterTestCallback {
        * Returns the value of the css constant passed as parameter
        * 
        * @param name The name of the constant to retrive the value
-       * @return The value of the corresponding constants, or null if it does
-       *         not exist
+       * @return The value of the corresponding constants, or null if it does not exist
        */
       public String getConstantValue(String name) {
          return cssConstants.get(name);

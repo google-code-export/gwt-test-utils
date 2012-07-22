@@ -13,172 +13,172 @@ import com.google.gwt.user.client.ui.RootPanel;
 
 public class WindowTest extends GwtGxtTest {
 
-  private boolean activate;
-  private boolean deactivate;
-  private boolean hide;
-  private boolean maximize;
-  private boolean minimize;
-  private boolean restore;
-  private boolean show;
-  private Window window;
+   private boolean activate;
+   private boolean deactivate;
+   private boolean hide;
+   private boolean maximize;
+   private boolean minimize;
+   private boolean restore;
+   private boolean show;
+   private Window window;
 
-  @Test
-  public void activate() {
-    // Arrange
-    window.addWindowListener(new WindowListener() {
+   @Test
+   public void activate() {
+      // Arrange
+      window.addWindowListener(new WindowListener() {
 
-      @Override
-      public void windowActivate(WindowEvent we) {
-        assertEquals(window, we.getWindow());
-        activate = true;
-      }
-    });
+         @Override
+         public void windowActivate(WindowEvent we) {
+            assertEquals(window, we.getWindow());
+            activate = true;
+         }
+      });
 
-    window.show();
+      window.show();
 
-    // Act
-    window.setActive(true);
+      // Act
+      window.setActive(true);
 
-    // Assert
-    assertTrue(activate);
-  }
+      // Assert
+      assertTrue(activate);
+   }
 
-  @Before
-  public void beforeWindowTest() {
-    window = new Window();
-    RootPanel.get().add(window);
-    activate = false;
-    deactivate = false;
-    hide = false;
-    maximize = false;
-    minimize = false;
-    restore = false;
-    show = false;
-  }
+   @Before
+   public void beforeWindowTest() {
+      window = new Window();
+      RootPanel.get().add(window);
+      activate = false;
+      deactivate = false;
+      hide = false;
+      maximize = false;
+      minimize = false;
+      restore = false;
+      show = false;
+   }
 
-  @Test
-  public void deactivate() {
-    // Arrange
-    window.addWindowListener(new WindowListener() {
+   @Test
+   public void deactivate() {
+      // Arrange
+      window.addWindowListener(new WindowListener() {
 
-      @Override
-      public void windowDeactivate(WindowEvent we) {
-        assertEquals(window, we.getWindow());
-        deactivate = true;
-      }
-    });
+         @Override
+         public void windowDeactivate(WindowEvent we) {
+            assertEquals(window, we.getWindow());
+            deactivate = true;
+         }
+      });
 
-    window.show();
+      window.show();
 
-    // Act
-    window.setActive(false);
+      // Act
+      window.setActive(false);
 
-    // Assert
-    assertTrue(deactivate);
-  }
+      // Assert
+      assertTrue(deactivate);
+   }
 
-  @Test
-  public void hide() {
-    // Arrange
-    window.addWindowListener(new WindowListener() {
+   @Test
+   public void hide() {
+      // Arrange
+      window.addWindowListener(new WindowListener() {
 
-      @Override
-      public void windowHide(WindowEvent we) {
-        assertEquals(window, we.getWindow());
-        hide = true;
-      }
-    });
+         @Override
+         public void windowHide(WindowEvent we) {
+            assertEquals(window, we.getWindow());
+            hide = true;
+         }
+      });
 
-    window.show();
+      window.show();
 
-    // Act
-    window.hide();
+      // Act
+      window.hide();
 
-    // Assert
-    assertTrue(hide);
-  }
+      // Assert
+      assertTrue(hide);
+   }
 
-  @Test
-  public void maximize() {
-    // Arrange
-    window.addWindowListener(new WindowListener() {
+   @Test
+   public void maximize() {
+      // Arrange
+      window.addWindowListener(new WindowListener() {
 
-      @Override
-      public void windowMaximize(WindowEvent we) {
-        assertEquals(window, we.getWindow());
-        maximize = true;
-      }
-    });
+         @Override
+         public void windowMaximize(WindowEvent we) {
+            assertEquals(window, we.getWindow());
+            maximize = true;
+         }
+      });
 
-    window.show();
+      window.show();
 
-    // Act
-    window.maximize();
+      // Act
+      window.maximize();
 
-    // Assert
-    assertTrue(maximize);
-  }
+      // Assert
+      assertTrue(maximize);
+   }
 
-  @Test
-  public void minimize() {
-    // Arrange
-    window.addWindowListener(new WindowListener() {
+   @Test
+   public void minimize() {
+      // Arrange
+      window.addWindowListener(new WindowListener() {
 
-      @Override
-      public void windowMinimize(WindowEvent we) {
-        assertEquals(window, we.getWindow());
-        minimize = true;
-      }
-    });
+         @Override
+         public void windowMinimize(WindowEvent we) {
+            assertEquals(window, we.getWindow());
+            minimize = true;
+         }
+      });
 
-    window.show();
+      window.show();
 
-    // Act
-    window.minimize();
+      // Act
+      window.minimize();
 
-    // Assert
-    assertTrue(minimize);
-  }
+      // Assert
+      assertTrue(minimize);
+   }
 
-  @Test
-  public void restore() {
-    // Arrange
-    window.addWindowListener(new WindowListener() {
+   @Test
+   public void restore() {
+      // Arrange
+      window.addWindowListener(new WindowListener() {
 
-      @Override
-      public void windowRestore(WindowEvent we) {
-        assertEquals(window, we.getWindow());
-        restore = true;
-      }
-    });
+         @Override
+         public void windowRestore(WindowEvent we) {
+            assertEquals(window, we.getWindow());
+            restore = true;
+         }
+      });
 
-    window.show();
-    window.maximize();
+      window.show();
+      window.maximize();
 
-    // Act
-    window.restore();
+      // Act
+      window.restore();
 
-    // Assert
-    assertTrue(restore);
-  }
+      // Assert
+      assertTrue(restore);
+   }
 
-  @Test
-  public void show() {
-    // Arrange
-    window.addWindowListener(new WindowListener() {
+   @Test
+   public void show() {
+      // Arrange
+      window.addWindowListener(new WindowListener() {
 
-      @Override
-      public void windowShow(WindowEvent we) {
-        assertEquals(window, we.getWindow());
-        show = true;
-      }
-    });
+         @Override
+         public void windowShow(WindowEvent we) {
+            assertEquals(window, we.getWindow());
+            show = true;
+         }
+      });
 
-    // Act
-    window.show();
+      // Act
+      window.show();
 
-    // Assert
-    assertTrue(show);
-  }
+      // Assert
+      assertTrue(show);
+   }
 
 }

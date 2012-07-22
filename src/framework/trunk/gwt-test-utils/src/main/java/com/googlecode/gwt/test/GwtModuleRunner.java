@@ -19,11 +19,10 @@ import com.googlecode.gwt.test.utils.events.Browser.BrowserErrorHandler;
 
 /**
  * <p>
- * Base interface for gwt-test-utils tests. It provides every necessary
- * information to the framework internals to emulate GWT without any browser,
- * regardless of which unit test framework is used. <strong>Every implementation
- * must be annotated with {@link GwtModule} to provide the fully qualified name
- * of GWT module under test.</strong>
+ * Base interface for gwt-test-utils tests. It provides every necessary information to the framework
+ * internals to emulate GWT without any browser, regardless of which unit test framework is used.
+ * <strong>Every implementation must be annotated with {@link GwtModule} to provide the fully
+ * qualified name of GWT module under test.</strong>
  * </p>
  * 
  * @author Gael Lazzari
@@ -32,8 +31,8 @@ import com.googlecode.gwt.test.utils.events.Browser.BrowserErrorHandler;
 public interface GwtModuleRunner {
 
    /**
-    * Add a client's property, such as the browser 'user-agent' which could be
-    * use to simulate the 'replace-with' deferred binding mechanism.
+    * Add a client's property, such as the browser 'user-agent' which could be use to simulate the
+    * 'replace-with' deferred binding mechanism.
     * 
     * @param propertyName The name of the client's property
     * @param value The value of the client's property
@@ -43,24 +42,23 @@ public interface GwtModuleRunner {
    /**
     * Add String key/value pairs to a GWT {@link Dictionary}.
     * 
-    * @param dictionaryName The name of the {@link Dictionary} on which the
-    *           entries should be added
+    * @param dictionaryName The name of the {@link Dictionary} on which the entries should be added
     * @param entries The Dictionary's entries to add
     * 
     */
    void addDictionaryEntries(String dictionaryName, Map<String, String> entries);
 
    /**
-    * Declare a GwtCreateHandler to be a candidate for GWT deferred binding
-    * calls ({@link GWT#create(Class)}).
+    * Declare a GwtCreateHandler to be a candidate for GWT deferred binding calls (
+    * {@link GWT#create(Class)}).
     * 
     * @param gwtCreateHandler The deferred binding candidate.
     */
    void addGwtCreateHandler(GwtCreateHandler gwtCreateHandler);
 
    /**
-    * Declare a UiWidgetTagFactory to be a candidate to handle some widget
-    * declaration in a .ui.xml UiBinder file.
+    * Declare a UiWidgetTagFactory to be a candidate to handle some widget declaration in a .ui.xml
+    * UiBinder file.
     * 
     * @param factory The UiBinder Widget factory candidate.
     */
@@ -71,26 +69,21 @@ public interface GwtModuleRunner {
     * Specifies the module to run.
     * 
     * <p>
-    * If the return module name is not present in the gwt-test-utils
-    * configuration file (e.g. "META-INF/gwt-test-utils.properties"), an
-    * exception will be thrown.
+    * If the return module name is not present in the gwt-test-utils configuration file (e.g.
+    * "META-INF/gwt-test-utils.properties"), an exception will be thrown.
     * </p>
     * 
-    * @return the fully qualified name of a module. <strong>It cannot be null or
-    *         empty</strong>.
+    * @return the fully qualified name of a module. <strong>It cannot be null or empty</strong>.
     * 
-    * @deprecated Use the {@link GwtModule} annotation on your test class
-    *             instead
+    * @deprecated Use the {@link GwtModule} annotation on your test class instead
     * 
     @Deprecated String getModuleName();
     */
 
    /**
-    * Specifies if The {@link Browser} helper methods can target not attached
-    * widgets or not.
+    * Specifies if The {@link Browser} helper methods can target not attached widgets or not.
     * 
-    * @return True if {@link DomEvent} can be dispatched on detached widgets,
-    *         false otherwise.
+    * @return True if {@link DomEvent} can be dispatched on detached widgets, false otherwise.
     * 
     * @see Widget#isAttached()
     */
@@ -107,8 +100,8 @@ public interface GwtModuleRunner {
    boolean ensureDebugId();
 
    /**
-    * Specifies the callback to use when a simulated {@link Browser} action
-    * throws an error. New BrowserErrorHandler <strong>must</strong> call
+    * Specifies the callback to use when a simulated {@link Browser} action throws an error. New
+    * BrowserErrorHandler <strong>must</strong> call
     * {@link FinallyCommandTrigger#clearPendingCommands()}.
     * 
     * @return The custom browser error handler callback.
@@ -133,8 +126,8 @@ public interface GwtModuleRunner {
    Set<String> getClientPropertyNames();
 
    /**
-    * Specifies the relative path in the project of the HTML file which is used
-    * by the GWT module to run.
+    * Specifies the relative path in the project of the HTML file which is used by the GWT module to
+    * run.
     * 
     * @return The relative path of the HTML file used.
     */

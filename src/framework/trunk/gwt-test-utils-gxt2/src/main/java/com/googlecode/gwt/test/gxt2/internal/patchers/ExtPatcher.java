@@ -16,63 +16,61 @@ import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 @PatchClass(target = "com.extjs.gxt.ui.client.core.Ext")
 class ExtPatcher {
 
-  /**
-   * Place where all necessary GXT internal objects are reset after the
-   * execution of a unit test
-   */
-  static {
-    AfterTestCallbackManager.get().registerCallback(new AfterTestCallback() {
+   /**
+    * Place where all necessary GXT internal objects are reset after the execution of a unit test
+    */
+   static {
+      AfterTestCallbackManager.get().registerCallback(new AfterTestCallback() {
 
-      public void afterTest() throws Throwable {
-        GwtReflectionUtils.setStaticField(IconHelper.class, "el", null);
-        GwtReflectionUtils.setStaticField(IconHelper.class, "cacheMap", null);
+         public void afterTest() throws Throwable {
+            GwtReflectionUtils.setStaticField(IconHelper.class, "el", null);
+            GwtReflectionUtils.setStaticField(IconHelper.class, "cacheMap", null);
 
-        GwtReflectionUtils.setStaticField(WindowManager.class, "instance", null);
-        GwtReflectionUtils.setStaticField(TextMetrics.class, "instance", null);
+            GwtReflectionUtils.setStaticField(WindowManager.class, "instance", null);
+            GwtReflectionUtils.setStaticField(TextMetrics.class, "instance", null);
 
-        getStaticAndCallClear(Layer.class, "shadows");
-        getStaticAndCallClear(Layer.class, "shims");
+            getStaticAndCallClear(Layer.class, "shadows");
+            getStaticAndCallClear(Layer.class, "shims");
 
-        ComputedStyleImpl computedStyle = GWT.create(ComputedStyleImpl.class);
-        GwtReflectionUtils.setStaticField(El.class, "computedStyle",
-            computedStyle);
-      }
+            ComputedStyleImpl computedStyle = GWT.create(ComputedStyleImpl.class);
+            GwtReflectionUtils.setStaticField(El.class, "computedStyle", computedStyle);
+         }
 
-      private void getStaticAndCallClear(Class<?> clazz, String fieldName) {
-        GwtReflectionUtils.callPrivateMethod(
-            GwtReflectionUtils.getStaticFieldValue(clazz, fieldName), "clear");
-      }
+         private void getStaticAndCallClear(Class<?> clazz, String fieldName) {
+            GwtReflectionUtils.callPrivateMethod(
+                     GwtReflectionUtils.getStaticFieldValue(clazz, fieldName), "clear");
+         }
 
-    });
-  }
+      });
+   }
 
-  @PatchMethod
-  static void loadDomHelper() {
+   @PatchMethod
+   static void loadDomHelper() {
 
-  }
+   }
 
-  @PatchMethod
-  static void loadDomQuery() {
+   @PatchMethod
+   static void loadDomQuery() {
 
-  }
+   }
 
-  @PatchMethod
-  static void loadExt() {
+   @PatchMethod
+   static void loadExt() {
 
-  }
+   }
 
-  @PatchMethod
-  static void loadFormat() {
+   @PatchMethod
+   static void loadFormat() {
 
-  }
+   }
 
-  @PatchMethod
-  static void loadTemplate() {
+   @PatchMethod
+   static void loadTemplate() {
 
-  }
+   }
 
-  @PatchMethod
-  static void loadXTemplate() {
+   @PatchMethod
+   static void loadXTemplate() {
 
-  }
+   }
 }

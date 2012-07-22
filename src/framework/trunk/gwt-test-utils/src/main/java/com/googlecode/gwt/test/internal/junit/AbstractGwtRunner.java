@@ -12,9 +12,9 @@ import com.googlecode.gwt.test.internal.GwtFactory;
 
 /**
  * <p>
- * Base class for gwt-test-utils JUnit {@link Runner}, which aims to wrap
- * another custom {@link Runner} implementation loaded by {@link GwtClassLoader}
- * . <strong>For internal use only.</strong>
+ * Base class for gwt-test-utils JUnit {@link Runner}, which aims to wrap another custom
+ * {@link Runner} implementation loaded by {@link GwtClassLoader} . <strong>For internal use
+ * only.</strong>
  * </p>
  * 
  * @author Gael Lazzari

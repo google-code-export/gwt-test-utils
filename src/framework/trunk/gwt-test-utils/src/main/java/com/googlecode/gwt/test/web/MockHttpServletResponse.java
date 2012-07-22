@@ -1,16 +1,14 @@
 /*
  * Copyright 2002-2010 the original author or authors.
  * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
 
@@ -40,9 +38,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.util.LinkedCaseInsensitiveMap;
 
 /**
- * Mock implementation of the {@link javax.servlet.http.HttpServletResponse}
- * interface. Supports the Servlet 2.5 API level. Adapted from
- * <strong>spring-test</strong>.
+ * Mock implementation of the {@link javax.servlet.http.HttpServletResponse} interface. Supports the
+ * Servlet 2.5 API level. Adapted from <strong>spring-test</strong>.
  * 
  * @author Juergen Hoeller
  * @author Rod Johnson
@@ -51,8 +48,8 @@ import org.springframework.util.LinkedCaseInsensitiveMap;
 public class MockHttpServletResponse implements HttpServletResponse {
 
    /**
-    * Inner class that adapts the PrintWriter to mark the response as committed
-    * once the buffer size is exceeded.
+    * Inner class that adapts the PrintWriter to mark the response as committed once the buffer size
+    * is exceeded.
     */
    private class ResponsePrintWriter extends PrintWriter {
 
@@ -89,8 +86,8 @@ public class MockHttpServletResponse implements HttpServletResponse {
    }
 
    /**
-    * Inner class that adapts the ServletOutputStream to mark the response as
-    * committed once the buffer size is exceeded.
+    * Inner class that adapts the ServletOutputStream to mark the response as committed once the
+    * buffer size is exceeded.
     */
    private class ResponseServletOutputStream extends DelegatingServletOutputStream {
 
@@ -121,9 +118,8 @@ public class MockHttpServletResponse implements HttpServletResponse {
    private static final String CHARSET_PREFIX = "charset=";
 
    /**
-    * Default character encoding to use when
-    * <code>request.getCharacterEncoding</code> returns <code>null</code>,
-    * according to the Servlet spec.
+    * Default character encoding to use when <code>request.getCharacterEncoding</code> returns
+    * <code>null</code>, according to the Servlet spec.
     * 
     * @see ServletRequest#getCharacterEncoding
     */
@@ -204,13 +200,12 @@ public class MockHttpServletResponse implements HttpServletResponse {
    }
 
    /**
-    * The default implementation delegates to {@link #encodeURL}, returning the
-    * given URL String as-is.
+    * The default implementation delegates to {@link #encodeURL}, returning the given URL String
+    * as-is.
     * <p>
-    * Can be overridden in subclasses, appending a session id or the like in a
-    * redirect-specific fashion. For general URL encoding rules, override the
-    * common {@link #encodeURL} method instead, appyling to redirect URLs as
-    * well as to general URLs.
+    * Can be overridden in subclasses, appending a session id or the like in a redirect-specific
+    * fashion. For general URL encoding rules, override the common {@link #encodeURL} method
+    * instead, appyling to redirect URLs as well as to general URLs.
     */
    public String encodeRedirectURL(String url) {
       return encodeURL(url);
@@ -302,8 +297,8 @@ public class MockHttpServletResponse implements HttpServletResponse {
    /**
     * Return the names of all specified headers as a Set of Strings.
     * 
-    * @return the <code>Set</code> of header name <code>Strings</code>, or an
-    *         empty <code>Set</code> if none
+    * @return the <code>Set</code> of header name <code>Strings</code>, or an empty <code>Set</code>
+    *         if none
     */
    public Set<String> getHeaderNames() {
       return this.headers.keySet();

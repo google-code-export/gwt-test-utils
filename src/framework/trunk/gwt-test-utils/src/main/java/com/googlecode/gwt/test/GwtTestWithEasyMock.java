@@ -21,22 +21,22 @@ import com.googlecode.gwt.test.utils.GwtReflectionUtils.MethodCallback;
 
 /**
  * <p>
- * Base class for test classes which make use of the
- * {@link org.easymock.EasyMock EasyMock} mocking framework.
+ * Base class for test classes which make use of the {@link org.easymock.EasyMock EasyMock} mocking
+ * framework.
  * </p>
  * 
  * <p>
- * Those classes can declare fields annotated with {@link Mock @Mock}, which
- * will result in the injection of mock objects of the corresponding type.
+ * Those classes can declare fields annotated with {@link Mock @Mock}, which will result in the
+ * injection of mock objects of the corresponding type.
  * 
- * Mock objects not declared using this annotation (e.g. objects instantiated by
- * calling directly the {@link EasyMock#createMock(Class)} should be added to
- * the test context using the addMockedObject protected method.
+ * Mock objects not declared using this annotation (e.g. objects instantiated by calling directly
+ * the {@link EasyMock#createMock(Class)} should be added to the test context using the
+ * addMockedObject protected method.
  * </p>
  * 
  * <p>
- * Mock objects can then be manipulated using the standard EasyMock API, or with
- * the helper methods provided by GwtTestWithEasyMock.
+ * Mock objects can then be manipulated using the standard EasyMock API, or with the helper methods
+ * provided by GwtTestWithEasyMock.
  * </p>
  * 
  * @author Bertrand Paquet
@@ -101,8 +101,8 @@ public abstract class GwtTestWithEasyMock extends GwtTestWithMocks {
    }
 
    /**
-    * Creates a mock object for a given class, where all methods are mocked
-    * except the ones given as parameters.
+    * Creates a mock object for a given class, where all methods are mocked except the ones given as
+    * parameters.
     * 
     * @param clazz The class for which a mock object will be created
     * @param keepSetters False if setters should be mocked, true otherwise
@@ -129,8 +129,8 @@ public abstract class GwtTestWithEasyMock extends GwtTestWithMocks {
    }
 
    /**
-    * Creates a mock object for a given class, where all methods are mocked
-    * except the one with specifics name and parameter types.
+    * Creates a mock object for a given class, where all methods are mocked except the one with
+    * specifics name and parameter types.
     * 
     * @param <T> The result mock type.
     * @param clazz The result mock type.
@@ -145,11 +145,11 @@ public abstract class GwtTestWithEasyMock extends GwtTestWithMocks {
    }
 
    /**
-    * Records a call to an asynchronous service and simulates a failure by
-    * calling the onFailure() method of the corresponding AsyncCallback object.
+    * Records a call to an asynchronous service and simulates a failure by calling the onFailure()
+    * method of the corresponding AsyncCallback object.
     * 
-    * @param exception The exception thrown by the stubbed remote service and
-    *           passed to the callback onFailure() method
+    * @param exception The exception thrown by the stubbed remote service and passed to the callback
+    *           onFailure() method
     */
    protected void expectServiceAndCallbackOnFailure(final Throwable exception) {
       IAnswer<Object> answer = new FailureAnswer<Object>(exception);
@@ -157,11 +157,11 @@ public abstract class GwtTestWithEasyMock extends GwtTestWithMocks {
    }
 
    /**
-    * Records a call to an asynchronous service and simulates a success by
-    * calling the onSuccess() method of the corresponding AsyncCallback object.
+    * Records a call to an asynchronous service and simulates a success by calling the onSuccess()
+    * method of the corresponding AsyncCallback object.
     * 
-    * @param object The object returned by the stubbed remote service and passed
-    *           to the callback onSuccess() method
+    * @param object The object returned by the stubbed remote service and passed to the callback
+    *           onSuccess() method
     */
    protected <T> void expectServiceAndCallbackOnSuccess(final T object) {
       IAnswer<T> answer = new SuccessAnswer<T>(object);
@@ -187,8 +187,7 @@ public abstract class GwtTestWithEasyMock extends GwtTestWithMocks {
    }
 
    /**
-    * Verifies that all recorded behaviors for every declared mock has actually
-    * been used.
+    * Verifies that all recorded behaviors for every declared mock has actually been used.
     */
    protected void verify() {
       for (Object o : mockObjects.values()) {

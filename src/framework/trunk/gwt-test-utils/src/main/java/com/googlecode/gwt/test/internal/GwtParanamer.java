@@ -16,8 +16,8 @@ import com.thoughtworks.paranamer.JavaFileParanamer.JavaFileFinder;
 import com.thoughtworks.paranamer.Paranamer;
 
 /**
- * gwt-test-utils custom {@link Paranamer} manager, which relies on
- * {@link JavaFileParanamer}. <strong>For internal use only.</strong>
+ * gwt-test-utils custom {@link Paranamer} manager, which relies on {@link JavaFileParanamer}.
+ * <strong>For internal use only.</strong>
  * 
  * @author Gael Lazzari
  * 
@@ -37,8 +37,7 @@ public class GwtParanamer {
       /*
        * (non-Javadoc)
        * 
-       * @see
-       * com.thoughtworks.paranamer.JavaFileParanamer.JavaFileFinder#openJavaFile
+       * @see com.thoughtworks.paranamer.JavaFileParanamer.JavaFileFinder#openJavaFile
        * (java.lang.reflect.AccessibleObject)
        */
       public InputStream openJavaFile(AccessibleObject methodOrConstructor) {

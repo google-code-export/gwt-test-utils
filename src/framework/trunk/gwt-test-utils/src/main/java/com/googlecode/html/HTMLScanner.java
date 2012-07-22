@@ -1,16 +1,14 @@
 /*
  * Copyright 2002-2009 Andy Clark, Marc Guillemot
  * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
 
@@ -50,9 +48,9 @@ import org.apache.xerces.xni.parser.XMLInputSource;
 import com.googlecode.html.xercesbridge.XercesBridge;
 
 /**
- * A simple HTML scanner. This scanner makes no attempt to balance tags or fix
- * other problems in the source document &mdash; it just scans what it can and
- * generates XNI document "events", ignoring errors of all kinds.
+ * A simple HTML scanner. This scanner makes no attempt to balance tags or fix other problems in the
+ * source document &mdash; it just scans what it can and generates XNI document "events", ignoring
+ * errors of all kinds.
  * <p>
  * This component recognizes the following features:
  * <ul>
@@ -105,36 +103,31 @@ public class HTMLScanner implements XMLDocumentScanner, XMLLocator, HTMLComponen
    public static final String HTML_4_01_STRICT_PUBID = "-//W3C//DTD HTML 4.01//EN";
 
    /**
-    * HTML 4.01 strict system identifier
-    * ("http://www.w3.org/TR/html4/strict.dtd").
+    * HTML 4.01 strict system identifier ("http://www.w3.org/TR/html4/strict.dtd").
     */
    public static final String HTML_4_01_STRICT_SYSID = "http://www.w3.org/TR/html4/strict.dtd";
 
    // doctype info: HTML 4.01 loose
 
    /**
-    * HTML 4.01 transitional public identifier
-    * ("-//W3C//DTD HTML 4.01 Transitional//EN").
+    * HTML 4.01 transitional public identifier ("-//W3C//DTD HTML 4.01 Transitional//EN").
     */
    public static final String HTML_4_01_TRANSITIONAL_PUBID = "-//W3C//DTD HTML 4.01 Transitional//EN";
 
    /**
-    * HTML 4.01 transitional system identifier
-    * ("http://www.w3.org/TR/html4/loose.dtd").
+    * HTML 4.01 transitional system identifier ("http://www.w3.org/TR/html4/loose.dtd").
     */
    public static final String HTML_4_01_TRANSITIONAL_SYSID = "http://www.w3.org/TR/html4/loose.dtd";
 
    // doctype info: HTML 4.01 frameset
 
    /**
-    * HTML 4.01 frameset public identifier
-    * ("-//W3C//DTD HTML 4.01 Frameset//EN").
+    * HTML 4.01 frameset public identifier ("-//W3C//DTD HTML 4.01 Frameset//EN").
     */
    public static final String HTML_4_01_FRAMESET_PUBID = "-//W3C//DTD HTML 4.01 Frameset//EN";
 
    /**
-    * HTML 4.01 frameset system identifier
-    * ("http://www.w3.org/TR/html4/frameset.dtd").
+    * HTML 4.01 frameset system identifier ("http://www.w3.org/TR/html4/frameset.dtd").
     */
    public static final String HTML_4_01_FRAMESET_SYSID = "http://www.w3.org/TR/html4/frameset.dtd";
 
@@ -150,25 +143,22 @@ public class HTMLScanner implements XMLDocumentScanner, XMLLocator, HTMLComponen
    public static final String NOTIFY_CHAR_REFS = "http://apache.org/xml/features/scanner/notify-char-refs";
 
    /**
-    * Notify handler of built-in entity references (e.g. &amp;amp;, &amp;lt;,
-    * etc).
+    * Notify handler of built-in entity references (e.g. &amp;amp;, &amp;lt;, etc).
     * <p>
-    * <strong>Note:</strong> This only applies to the five pre-defined XML
-    * general entities. Specifically, "amp", "lt", "gt", "quot", and "apos".
-    * This is done for compatibility with the Xerces feature.
+    * <strong>Note:</strong> This only applies to the five pre-defined XML general entities.
+    * Specifically, "amp", "lt", "gt", "quot", and "apos". This is done for compatibility with the
+    * Xerces feature.
     * <p>
     * To be notified of the built-in entity references in HTML, set the
-    * <code>http://cyberneko.org/html/features/scanner/notify-builtin-refs</code>
-    * feature to <code>true</code>.
+    * <code>http://cyberneko.org/html/features/scanner/notify-builtin-refs</code> feature to
+    * <code>true</code>.
     */
    public static final String NOTIFY_XML_BUILTIN_REFS = "http://apache.org/xml/features/scanner/notify-builtin-refs";
 
    /**
-    * Notify handler of built-in entity references (e.g. &amp;nobr;, &amp;copy;,
-    * etc).
+    * Notify handler of built-in entity references (e.g. &amp;nobr;, &amp;copy;, etc).
     * <p>
-    * <strong>Note:</strong> This <em>includes</em> the five pre-defined XML
-    * general entities.
+    * <strong>Note:</strong> This <em>includes</em> the five pre-defined XML general entities.
     */
    public static final String NOTIFY_HTML_BUILTIN_REFS = "http://cyberneko.org/html/features/scanner/notify-builtin-refs";
 
@@ -176,26 +166,24 @@ public class HTMLScanner implements XMLDocumentScanner, XMLLocator, HTMLComponen
    public static final String FIX_MSWINDOWS_REFS = "http://cyberneko.org/html/features/scanner/fix-mswindows-refs";
 
    /**
-    * Strip HTML comment delimiters ("&lt;!&minus;&minus;" and
-    * "&minus;&minus;&gt;") from SCRIPT tag contents.
+    * Strip HTML comment delimiters ("&lt;!&minus;&minus;" and "&minus;&minus;&gt;") from SCRIPT tag
+    * contents.
     */
    public static final String SCRIPT_STRIP_COMMENT_DELIMS = "http://cyberneko.org/html/features/scanner/script/strip-comment-delims";
 
    /**
-    * Strip XHTML CDATA delimiters ("&lt;![CDATA[" and "]]&gt;") from SCRIPT tag
-    * contents.
+    * Strip XHTML CDATA delimiters ("&lt;![CDATA[" and "]]&gt;") from SCRIPT tag contents.
     */
    public static final String SCRIPT_STRIP_CDATA_DELIMS = "http://cyberneko.org/html/features/scanner/script/strip-cdata-delims";
 
    /**
-    * Strip HTML comment delimiters ("&lt;!&minus;&minus;" and
-    * "&minus;&minus;&gt;") from STYLE tag contents.
+    * Strip HTML comment delimiters ("&lt;!&minus;&minus;" and "&minus;&minus;&gt;") from STYLE tag
+    * contents.
     */
    public static final String STYLE_STRIP_COMMENT_DELIMS = "http://cyberneko.org/html/features/scanner/style/strip-comment-delims";
 
    /**
-    * Strip XHTML CDATA delimiters ("&lt;![CDATA[" and "]]&gt;") from STYLE tag
-    * contents.
+    * Strip XHTML CDATA delimiters ("&lt;![CDATA[" and "]]&gt;") from STYLE tag contents.
     */
    public static final String STYLE_STRIP_CDATA_DELIMS = "http://cyberneko.org/html/features/scanner/style/strip-cdata-delims";
 
@@ -469,9 +457,9 @@ public class HTMLScanner implements XMLDocumentScanner, XMLLocator, HTMLComponen
    protected Scanner fContentScanner = new ContentScanner();
 
    /**
-    * Special scanner used for elements whose content needs to be scanned as
-    * plain text, ignoring markup such as elements and entity references. For
-    * example: &lt;SCRIPT&gt; and &lt;COMMENT&gt;.
+    * Special scanner used for elements whose content needs to be scanned as plain text, ignoring
+    * markup such as elements and entity references. For example: &lt;SCRIPT&gt; and
+    * &lt;COMMENT&gt;.
     */
    protected SpecialScanner fSpecialScanner = new SpecialScanner();
 
@@ -503,13 +491,13 @@ public class HTMLScanner implements XMLDocumentScanner, XMLLocator, HTMLComponen
    //
 
    /**
-    * Pushes an input source onto the current entity stack. This enables the
-    * scanner to transparently scan new content (e.g. the output written by an
-    * embedded script). At the end of the current entity, the scanner returns
-    * where it left off at the time this entity source was pushed.
+    * Pushes an input source onto the current entity stack. This enables the scanner to
+    * transparently scan new content (e.g. the output written by an embedded script). At the end of
+    * the current entity, the scanner returns where it left off at the time this entity source was
+    * pushed.
     * <p>
-    * <strong>Note:</strong> This functionality is experimental at this time and
-    * is subject to change in future releases of NekoHTML.
+    * <strong>Note:</strong> This functionality is experimental at this time and is subject to
+    * change in future releases of NekoHTML.
     * 
     * @param inputSource The new input source to start scanning.
     * @see #evaluateInputSource(XMLInputSource)
@@ -541,8 +529,8 @@ public class HTMLScanner implements XMLDocumentScanner, XMLLocator, HTMLComponen
    }
 
    /**
-    * Immediately evaluates an input source and add the new content (e.g. the
-    * output written by an embedded script).
+    * Immediately evaluates an input source and add the new content (e.g. the output written by an
+    * embedded script).
     * 
     * @param inputSource The new input source to start evaluating.
     * @see #pushInputSource(XMLInputSource)
@@ -575,12 +563,12 @@ public class HTMLScanner implements XMLDocumentScanner, XMLLocator, HTMLComponen
    } // evaluateInputSource(XMLInputSource)
 
    /**
-    * Cleans up used resources. For example, if scanning is terminated early,
-    * then this method ensures all remaining open streams are closed.
+    * Cleans up used resources. For example, if scanning is terminated early, then this method
+    * ensures all remaining open streams are closed.
     * 
-    * @param closeall Close all streams, including the original. This is used in
-    *           cases when the application has opened the original document
-    *           stream and should be responsible for closing it.
+    * @param closeall Close all streams, including the original. This is used in cases when the
+    *           application has opened the original document stream and should be responsible for
+    *           closing it.
     */
    public void cleanup(boolean closeall) {
       int size = fCurrentEntityStack.size();
@@ -890,15 +878,14 @@ public class HTMLScanner implements XMLDocumentScanner, XMLLocator, HTMLComponen
    } // getValue(XMLAttributes,String):String
 
    /**
-    * Expands a system id and returns the system id as a URI, if it can be
-    * expanded. A return value of null means that the identifier is already
-    * expanded. An exception thrown indicates a failure to expand the id.
+    * Expands a system id and returns the system id as a URI, if it can be expanded. A return value
+    * of null means that the identifier is already expanded. An exception thrown indicates a failure
+    * to expand the id.
     * 
     * @param systemId The systemId to be expanded.
     * 
-    * @return Returns the URI string representing the expanded system
-    *         identifier. A null value indicates that the given system
-    *         identifier is already expanded.
+    * @return Returns the URI string representing the expanded system identifier. A null value
+    *         indicates that the given system identifier is already expanded.
     * 
     */
    public static String expandSystemId(String systemId, String baseSystemId) {
@@ -1035,8 +1022,8 @@ public class HTMLScanner implements XMLDocumentScanner, XMLLocator, HTMLComponen
     * Fixes Microsoft Windows&reg; specific characters.
     * <p>
     * Details about this common problem can be found at <a href=
-    * 'http://www.cs.tut.fi/~jkorpela/www/windows-chars.html'>http://www.cs.tut.fi/~jkorpela/www/windows-chars.html</a
-    * >
+    * 'http://www.cs.tut.fi/~jkorpela/www/windows-chars.html'>http://www.cs.tut.fi/~jkorpela/www/windows-chars.html</
+    * a >
     */
    protected int fixWindowsCharacter(int origChar) {
       /* PATCH: Asgeir Asgeirsson */
@@ -1574,9 +1561,8 @@ public class HTMLScanner implements XMLDocumentScanner, XMLLocator, HTMLComponen
       fResourceId.clear();
       return fResourceId;
       /***
-       * // NOTE: Unfortunately, the Xerces DOM parser classes expect a //
-       * non-null resource identifier object to be passed to //
-       * startGeneralEntity. -Ac return null; /
+       * // NOTE: Unfortunately, the Xerces DOM parser classes expect a // non-null resource
+       * identifier object to be passed to // startGeneralEntity. -Ac return null; /
        ***/
    } // resourceId():XMLResourceIdentifier
 
@@ -1610,11 +1596,10 @@ public class HTMLScanner implements XMLDocumentScanner, XMLLocator, HTMLComponen
       //
 
       /**
-       * Scans part of the document. This interface allows scanning to be
-       * performed in a pulling manner.
+       * Scans part of the document. This interface allows scanning to be performed in a pulling
+       * manner.
        * 
-       * @param complete True if the scanner should not return until scanning is
-       *           complete.
+       * @param complete True if the scanner should not return until scanning is complete.
        * 
        * @return True if additional scanning is required.
        * 
@@ -1728,8 +1713,8 @@ public class HTMLScanner implements XMLDocumentScanner, XMLLocator, HTMLComponen
       }
 
       /**
-       * Loads a new chunk of data into the buffer and returns the number of
-       * characters loaded or -1 if no additional characters were loaded.
+       * Loads a new chunk of data into the buffer and returns the number of characters loaded or -1
+       * if no additional characters were loaded.
        * 
        * @param offset The offset at which new characters should be loaded.
        */
@@ -2046,12 +2031,10 @@ public class HTMLScanner implements XMLDocumentScanner, XMLLocator, HTMLComponen
       } // scan(boolean):boolean
 
       /**
-       * Scans the content of <noscript>: it doesn't get parsed but is
-       * considered as plain text when feature
-       * {@link HTMLScanner#PARSE_NOSCRIPT_CONTENT} is set to false.
+       * Scans the content of <noscript>: it doesn't get parsed but is considered as plain text when
+       * feature {@link HTMLScanner#PARSE_NOSCRIPT_CONTENT} is set to false.
        * 
-       * @param the tag for which content is scanned (one of "noscript",
-       *           "noframes", "iframe")
+       * @param the tag for which content is scanned (one of "noscript", "noframes", "iframe")
        * @throws IOException
        */
       private void scanUntilEndTag(final String tagName) throws IOException {
@@ -2142,8 +2125,7 @@ public class HTMLScanner implements XMLDocumentScanner, XMLLocator, HTMLComponen
       }
 
       /**
-       * Reads the next characters WITHOUT impacting the buffer content up to
-       * current offset.
+       * Reads the next characters WITHOUT impacting the buffer content up to current offset.
        * 
        * @param len the number of characters to read
        * @return the read string (length may be smaller if EOF is encountered)
@@ -2505,8 +2487,8 @@ public class HTMLScanner implements XMLDocumentScanner, XMLLocator, HTMLComponen
       /**
        * Scans a start element.
        * 
-       * @param empty Is used for a second return value to indicate whether the
-       *           start element tag is empty (e.g. "/&gt;").
+       * @param empty Is used for a second return value to indicate whether the start element tag is
+       *           empty (e.g. "/&gt;").
        */
       protected String scanStartElement(boolean[] empty) throws IOException {
          String ename = scanName();
@@ -2606,8 +2588,7 @@ public class HTMLScanner implements XMLDocumentScanner, XMLLocator, HTMLComponen
       }
 
       /**
-       * Tries to change the encoding used to read the input stream to the
-       * specified one
+       * Tries to change the encoding used to read the input stream to the specified one
        * 
        * @param charset the charset that should be used
        * @return <code>true</code> when the encoding has been changed
@@ -2669,8 +2650,8 @@ public class HTMLScanner implements XMLDocumentScanner, XMLLocator, HTMLComponen
        * Scans a real attribute.
        * 
        * @param attributes The list of attributes.
-       * @param empty Is used for a second return value to indicate whether the
-       *           start element tag is empty (e.g. "/&gt;").
+       * @param empty Is used for a second return value to indicate whether the start element tag is
+       *           empty (e.g. "/&gt;").
        */
       protected boolean scanAttribute(XMLAttributesImpl attributes, boolean[] empty)
                throws IOException {
@@ -2690,10 +2671,9 @@ public class HTMLScanner implements XMLDocumentScanner, XMLLocator, HTMLComponen
        * Scans an attribute, pseudo or real.
        * 
        * @param attributes The list of attributes.
-       * @param empty Is used for a second return value to indicate whether the
-       *           start element tag is empty (e.g. "/&gt;").
-       * @param endc The end character that appears before the closing angle
-       *           bracket ('>').
+       * @param empty Is used for a second return value to indicate whether the start element tag is
+       *           empty (e.g. "/&gt;").
+       * @param endc The end character that appears before the closing angle bracket ('>').
        */
       protected boolean scanAttribute(XMLAttributesImpl attributes, boolean[] empty, char endc)
                throws IOException {
@@ -2748,14 +2728,11 @@ public class HTMLScanner implements XMLDocumentScanner, XMLLocator, HTMLComponen
             return false;
          }
          /***
-          * // REVISIT: [Q] Why is this still here? -Ac if (c == '/' || c ==
-          * '>') { if (c == '/') { fCurrentEntity.offset--;
-          * fCurrentEntity.columnNumber--; empty[0] = skipMarkup(false); }
-          * fQName.setValues(null, aname, aname, null);
-          * attributes.addAttribute(fQName, "CDATA", "");
-          * attributes.setSpecified(attributes.getLength()-1, true); if
-          * (fAugmentations) { addLocationItem(attributes,
-          * attributes.getLength() - 1); } return false; } /
+          * // REVISIT: [Q] Why is this still here? -Ac if (c == '/' || c == '>') { if (c == '/') {
+          * fCurrentEntity.offset--; fCurrentEntity.columnNumber--; empty[0] = skipMarkup(false); }
+          * fQName.setValues(null, aname, aname, null); attributes.addAttribute(fQName, "CDATA",
+          * ""); attributes.setSpecified(attributes.getLength()-1, true); if (fAugmentations) {
+          * addLocationItem(attributes, attributes.getLength() - 1); } return false; } /
           ***/
          if (c == '=') {
             skipSpaces();
@@ -2949,9 +2926,9 @@ public class HTMLScanner implements XMLDocumentScanner, XMLLocator, HTMLComponen
    } // class ContentScanner
 
    /**
-    * Special scanner used for elements whose content needs to be scanned as
-    * plain text, ignoring markup such as elements and entity references. For
-    * example: &lt;SCRIPT&gt; and &lt;COMMENT&gt;.
+    * Special scanner used for elements whose content needs to be scanned as plain text, ignoring
+    * markup such as elements and entity references. For example: &lt;SCRIPT&gt; and
+    * &lt;COMMENT&gt;.
     * 
     * @author Andy Clark
     */
@@ -3147,24 +3124,21 @@ public class HTMLScanner implements XMLDocumentScanner, XMLLocator, HTMLComponen
    } // class SpecialScanner
 
    /**
-    * A playback input stream. This class has the ability to save the bytes read
-    * from the underlying input stream and play the bytes back later. This class
-    * is used by the HTML scanner to switch encodings when a &lt;meta&gt; tag is
-    * detected that specifies a different encoding.
+    * A playback input stream. This class has the ability to save the bytes read from the underlying
+    * input stream and play the bytes back later. This class is used by the HTML scanner to switch
+    * encodings when a &lt;meta&gt; tag is detected that specifies a different encoding.
     * <p>
-    * If the encoding is changed, then the scanner calls the
-    * <code>playback</code> method and re-scans the beginning of the HTML
-    * document again. This should not be too much of a performance problem
-    * because the &lt;meta&gt; tag appears at the beginning of the document.
+    * If the encoding is changed, then the scanner calls the <code>playback</code> method and
+    * re-scans the beginning of the HTML document again. This should not be too much of a
+    * performance problem because the &lt;meta&gt; tag appears at the beginning of the document.
     * <p>
-    * If the &lt;body&gt; tag is reached without playing back the bytes, then
-    * the buffer can be cleared by calling the <code>clear</code> method. This
-    * stops the buffering of bytes and allows the memory used by the buffer to
-    * be reclaimed.
+    * If the &lt;body&gt; tag is reached without playing back the bytes, then the buffer can be
+    * cleared by calling the <code>clear</code> method. This stops the buffering of bytes and allows
+    * the memory used by the buffer to be reclaimed.
     * <p>
-    * <strong>Note:</strong> If the buffer is never played back or cleared, this
-    * input stream will continue to buffer the entire stream. Therefore, it is
-    * very important to use this stream correctly.
+    * <strong>Note:</strong> If the buffer is never played back or cleared, this input stream will
+    * continue to buffer the entire stream. Therefore, it is very important to use this stream
+    * correctly.
     * 
     * @author Andy Clark
     */
@@ -3272,10 +3246,9 @@ public class HTMLScanner implements XMLDocumentScanner, XMLLocator, HTMLComponen
       /**
        * Clears the buffer.
        * <p>
-       * <strong>Note:</strong> The buffer cannot be cleared during playback.
-       * Therefore, calling this method during playback will not do anything.
-       * However, the buffer will be cleared automatically at the end of
-       * playback.
+       * <strong>Note:</strong> The buffer cannot be cleared during playback. Therefore, calling
+       * this method during playback will not do anything. However, the buffer will be cleared
+       * automatically at the end of playback.
        */
       public void clear() {
          if (!fPlayback) {
@@ -3496,9 +3469,9 @@ public class HTMLScanner implements XMLDocumentScanner, XMLLocator, HTMLComponen
    } // class LocationItem
 
    /**
-    * To detect if 2 encoding are compatible, both must be able to read the meta
-    * tag specifying the new encoding. This means that the byte representation
-    * of some minimal html markup must be the same in both encodings
+    * To detect if 2 encoding are compatible, both must be able to read the meta tag specifying the
+    * new encoding. This means that the byte representation of some minimal html markup must be the
+    * same in both encodings
     */
    boolean isEncodingCompatible(final String encoding1, final String encoding2) {
       final String reference = "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html;charset=";
@@ -3538,8 +3511,8 @@ public class HTMLScanner implements XMLDocumentScanner, XMLLocator, HTMLComponen
    } // readPreservingBufferContent():int
 
    /**
-    * Indicates if the end comment --> is available, loading further data if
-    * needed, without to reset the buffer
+    * Indicates if the end comment --> is available, loading further data if needed, without to
+    * reset the buffer
     */
    private boolean endCommentAvailable() throws IOException {
       int nbCaret = 0;
@@ -3566,9 +3539,8 @@ public class HTMLScanner implements XMLDocumentScanner, XMLLocator, HTMLComponen
    }
 
    /**
-    * Reduces the buffer to the content between start and end marker when only
-    * whitespaces are found before the startMarker as well as after the end
-    * marker
+    * Reduces the buffer to the content between start and end marker when only whitespaces are found
+    * before the startMarker as well as after the end marker
     */
    static void reduceToContent(final XMLStringBuffer buffer, final String startMarker,
             final String endMarker) {

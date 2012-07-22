@@ -79,9 +79,8 @@ public abstract class GwtModuleRunnerAdapter implements GwtModuleRunner, AfterTe
    /*
     * (non-Javadoc)
     * 
-    * @see
-    * com.googlecode.gwt.test.GwtModuleRunner#addClientProperty(java.lang.String
-    * , java.lang.String)
+    * @see com.googlecode.gwt.test.GwtModuleRunner#addClientProperty(java.lang.String ,
+    * java.lang.String)
     */
    public final void addClientProperty(String propertyName, String value) {
       clientProperties.put(propertyName, value);
@@ -90,9 +89,8 @@ public abstract class GwtModuleRunnerAdapter implements GwtModuleRunner, AfterTe
    /*
     * (non-Javadoc)
     * 
-    * @see
-    * com.googlecode.gwt.test.GwtModuleRunner#addDictionaryEntries(java.lang.
-    * String, java.util.Map)
+    * @see com.googlecode.gwt.test.GwtModuleRunner#addDictionaryEntries(java.lang. String,
+    * java.util.Map)
     */
    public final void addDictionaryEntries(String dictionaryName, Map<String, String> entries) {
 
@@ -103,9 +101,8 @@ public abstract class GwtModuleRunnerAdapter implements GwtModuleRunner, AfterTe
    /*
     * (non-Javadoc)
     * 
-    * @see
-    * com.googlecode.gwt.test.GwtModuleRunner#addGwtCreateHandler(com.googlecode
-    * .gwt.test .GwtCreateHandler)
+    * @see com.googlecode.gwt.test.GwtModuleRunner#addGwtCreateHandler(com.googlecode .gwt.test
+    * .GwtCreateHandler)
     */
    public final void addGwtCreateHandler(GwtCreateHandler gwtCreateHandler) {
       GwtTestGWTBridge.get().addGwtCreateHandler(gwtCreateHandler);
@@ -114,9 +111,8 @@ public abstract class GwtModuleRunnerAdapter implements GwtModuleRunner, AfterTe
    /*
     * (non-Javadoc)
     * 
-    * @see
-    * com.googlecode.gwt.test.GwtModuleRunner#addUiObjectTagFactory(com.googlecode
-    * .gwt .test.uibinder.UiObjectTagFactory)
+    * @see com.googlecode.gwt.test.GwtModuleRunner#addUiObjectTagFactory(com.googlecode .gwt
+    * .test.uibinder.UiObjectTagFactory)
     */
    public final void addUiObjectTagFactory(UiObjectTagFactory<? extends IsWidget> factory) {
       GwtConfig.get().getUiObjectTagFactories().add(factory);
@@ -137,9 +133,7 @@ public abstract class GwtModuleRunnerAdapter implements GwtModuleRunner, AfterTe
    /*
     * (non-Javadoc)
     * 
-    * @see
-    * com.googlecode.gwt.test.GwtModuleRunner#canDispatchDomEventOnDetachedWidget
-    * ()
+    * @see com.googlecode.gwt.test.GwtModuleRunner#canDispatchDomEventOnDetachedWidget ()
     */
    public final boolean canDispatchDomEventOnDetachedWidget() {
       return canDispatchDomEventOnDetachedWidget;
@@ -166,9 +160,7 @@ public abstract class GwtModuleRunnerAdapter implements GwtModuleRunner, AfterTe
    /*
     * (non-Javadoc)
     * 
-    * @see
-    * com.googlecode.gwt.test.GwtModuleRunner#getClientProperty(java.lang.String
-    * )
+    * @see com.googlecode.gwt.test.GwtModuleRunner#getClientProperty(java.lang.String )
     */
    public final String getClientProperty(String propertyName) {
       return clientProperties.get(propertyName);
@@ -231,13 +223,11 @@ public abstract class GwtModuleRunnerAdapter implements GwtModuleRunner, AfterTe
    protected abstract BrowserErrorHandler getDefaultBrowserErrorHandler();
 
    /**
-    * Specifies the relative path in the project of the HTML file which is used
-    * by the corresponding GWT module.
+    * Specifies the relative path in the project of the HTML file which is used by the corresponding
+    * GWT module.
     * 
-    * @param moduleFullQualifiedName The full qualifed name of the corresponding
-    *           GWT module.
-    * @return The relative path of the HTML file used, or null if there is no
-    *         HTML file
+    * @param moduleFullQualifiedName The full qualifed name of the corresponding GWT module.
+    * @return The relative path of the HTML file used, or null if there is no HTML file
     */
    protected String getHostPagePath(String moduleFullQualifiedName) {
       // try with gwt default structure
@@ -269,8 +259,8 @@ public abstract class GwtModuleRunnerAdapter implements GwtModuleRunner, AfterTe
    }
 
    /**
-    * Specifies the callback to use when a simulated {@link Browser} action
-    * throws an error. New BrowserErrorHandler <strong>must</strong> call
+    * Specifies the callback to use when a simulated {@link Browser} action throws an error. New
+    * BrowserErrorHandler <strong>must</strong> call
     * {@link FinallyCommandTrigger#clearPendingCommands()}.
     * 
     * @param browserErrorHandler The custom browser error handler callback.
@@ -280,11 +270,10 @@ public abstract class GwtModuleRunnerAdapter implements GwtModuleRunner, AfterTe
    }
 
    /**
-    * Specifies if The {@link Browser} helper methods can target not attached
-    * widgets or not.
+    * Specifies if The {@link Browser} helper methods can target not attached widgets or not.
     * 
-    * @param canDispatchDomEventOnDetachedWidget True if {@link DomEvent} can be
-    *           dispatched on detached widgets, false otherwise.
+    * @param canDispatchDomEventOnDetachedWidget True if {@link DomEvent} can be dispatched on
+    *           detached widgets, false otherwise.
     * 
     * @see Widget#isAttached()
     */
@@ -325,8 +314,7 @@ public abstract class GwtModuleRunnerAdapter implements GwtModuleRunner, AfterTe
    /**
     * Specifies the callback to use to handle {@link Window} method calls.
     * 
-    * @param windowOperationsHandler The callback to use to handle
-    *           {@link Window} method calls.
+    * @param windowOperationsHandler The callback to use to handle {@link Window} method calls.
     */
    protected final void setWindowOperationsHandler(WindowOperationsHandler windowOperationsHandler) {
       this.windowOperationsHandler = windowOperationsHandler;

@@ -7,19 +7,17 @@ import java.lang.annotation.Target;
 
 /**
  * <p>
- * Indicates that the annotated field should be initialized as a mock instance
- * of the field type.
+ * Indicates that the annotated field should be initialized as a mock instance of the field type.
  * </p>
  * 
  * <p>
- * The class declaring such a field must extend {@link GwtTestWithEasyMock} in
- * order to make the mock injection possible.
+ * The class declaring such a field must extend {@link GwtTestWithEasyMock} in order to make the
+ * mock injection possible.
  * </p>
  * 
  * <p>
- * Mock objects initialized using this annotation will be replayed, verified and
- * reseted when calling the corresponding methods of {@link GwtTestWithEasyMock}
- * .
+ * Mock objects initialized using this annotation will be replayed, verified and reseted when
+ * calling the corresponding methods of {@link GwtTestWithEasyMock} .
  * </p>
  * 
  * @author Bertrand Paquet

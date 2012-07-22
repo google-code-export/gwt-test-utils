@@ -619,9 +619,7 @@ public abstract class GwtCsvTest extends GwtTest {
    /*
     * (non-Javadoc)
     * 
-    * @see
-    * com.googlecode.gwt.test.GwtModuleRunnerAdapter#getDefaultBrowserErrorHandler
-    * ()
+    * @see com.googlecode.gwt.test.GwtModuleRunnerAdapter#getDefaultBrowserErrorHandler ()
     */
    @Override
    protected BrowserErrorHandler getDefaultBrowserErrorHandler() {

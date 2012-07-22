@@ -7,8 +7,8 @@ import javassist.Modifier;
 
 /**
  * 
- * Some patching utility methods. Bytecode manipulation relies on javassist API.
- * <strong>For internal use only.</strong>
+ * Some patching utility methods. Bytecode manipulation relies on javassist API. <strong>For
+ * internal use only.</strong>
  * 
  * @author Bertrand Paquet
  * @author Gael Lazzari

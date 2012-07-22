@@ -1,16 +1,14 @@
 /*
  * Copyright 2002-2010 the original author or authors.
  * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
 
@@ -48,13 +46,11 @@ import javax.servlet.http.HttpSession;
 import org.springframework.util.LinkedCaseInsensitiveMap;
 
 /**
- * Mock implementation of the {@link javax.servlet.http.HttpServletRequest}
- * interface. Supports the Servlet 2.5 API level. Adapted from
- * <strong>spring-test</strong>.
+ * Mock implementation of the {@link javax.servlet.http.HttpServletRequest} interface. Supports the
+ * Servlet 2.5 API level. Adapted from <strong>spring-test</strong>.
  * 
  * <p>
- * Used for testing the web framework; also useful for testing application
- * controllers.
+ * Used for testing the web framework; also useful for testing application controllers.
  * 
  * @author Juergen Hoeller
  * @author Rod Johnson
@@ -180,8 +176,7 @@ public class MockHttpServletRequest implements HttpServletRequest {
    // ---------------------------------------------------------------------
 
    /**
-    * Create a new MockHttpServletRequest with a default
-    * {@link MockServletContext}.
+    * Create a new MockHttpServletRequest with a default {@link MockServletContext}.
     * 
     * @see MockServletContext
     */
@@ -192,8 +187,8 @@ public class MockHttpServletRequest implements HttpServletRequest {
    /**
     * Create a new MockHttpServletRequest.
     * 
-    * @param servletContext the ServletContext that the request runs in (may be
-    *           <code>null</code> to use a default MockServletContext)
+    * @param servletContext the ServletContext that the request runs in (may be <code>null</code> to
+    *           use a default MockServletContext)
     * @see MockServletContext
     */
    public MockHttpServletRequest(ServletContext servletContext) {
@@ -203,8 +198,8 @@ public class MockHttpServletRequest implements HttpServletRequest {
    /**
     * Create a new MockHttpServletRequest.
     * 
-    * @param servletContext the ServletContext that the request runs in (may be
-    *           <code>null</code> to use a default MockServletContext)
+    * @param servletContext the ServletContext that the request runs in (may be <code>null</code> to
+    *           use a default MockServletContext)
     * @param method the request method (may be <code>null</code>)
     * @param requestURI the request URI (may be <code>null</code>)
     * @see #setMethod
@@ -219,8 +214,7 @@ public class MockHttpServletRequest implements HttpServletRequest {
    }
 
    /**
-    * Create a new MockHttpServletRequest with a default
-    * {@link MockServletContext}.
+    * Create a new MockHttpServletRequest with a default {@link MockServletContext}.
     * 
     * @param method the request method (may be <code>null</code>)
     * @param requestURI the request URI (may be <code>null</code>)
@@ -239,15 +233,14 @@ public class MockHttpServletRequest implements HttpServletRequest {
    /**
     * Add a header entry for the given name.
     * <p>
-    * If there was no entry for that header name before, the value will be used
-    * as-is. In case of an existing entry, a String array will be created,
-    * adding the given value (more specifically, its toString representation) as
-    * further element.
+    * If there was no entry for that header name before, the value will be used as-is. In case of an
+    * existing entry, a String array will be created, adding the given value (more specifically, its
+    * toString representation) as further element.
     * <p>
-    * Multiple values can only be stored as list of Strings, following the
-    * Servlet spec (see <code>getHeaders</code> accessor). As alternative to
-    * repeated <code>addHeader</code> calls for individual elements, you can use
-    * a single call with an entire array or Collection of values as parameter.
+    * Multiple values can only be stored as list of Strings, following the Servlet spec (see
+    * <code>getHeaders</code> accessor). As alternative to repeated <code>addHeader</code> calls for
+    * individual elements, you can use a single call with an entire array or Collection of values as
+    * parameter.
     * 
     * @see #getHeaderNames
     * @see #getHeader
@@ -274,8 +267,8 @@ public class MockHttpServletRequest implements HttpServletRequest {
    /**
     * Add a single value for the specified HTTP parameter.
     * <p>
-    * If there are already one or more values registered for the given parameter
-    * name, the given value will be added to the end of the list.
+    * If there are already one or more values registered for the given parameter name, the given
+    * value will be added to the end of the list.
     */
    public void addParameter(String name, String value) {
       addParameter(name, new String[]{value});
@@ -284,8 +277,8 @@ public class MockHttpServletRequest implements HttpServletRequest {
    /**
     * Add an array of values for the specified HTTP parameter.
     * <p>
-    * If there are already one or more values registered for the given parameter
-    * name, the given values will be added to the end of the list.
+    * If there are already one or more values registered for the given parameter name, the given
+    * values will be added to the end of the list.
     */
    public void addParameter(String name, String[] values) {
       assertThat(name).as("Parameter name must not be null").isNotNull();
@@ -301,9 +294,8 @@ public class MockHttpServletRequest implements HttpServletRequest {
    }
 
    /**
-    * Adds all provided parameters <emphasis>without</emphasis> replacing any
-    * existing values. To replace existing values, use
-    * {@link #setParameters(java.util.Map)}.
+    * Adds all provided parameters <emphasis>without</emphasis> replacing any existing values. To
+    * replace existing values, use {@link #setParameters(java.util.Map)}.
     */
    public void addParameters(Map<?, ?> params) {
       assertThat(params).as("Parameter map must not be null").isNotNull();
@@ -561,8 +553,8 @@ public class MockHttpServletRequest implements HttpServletRequest {
    }
 
    /**
-    * Return the ServletContext that this request is associated with. (Not
-    * available in the standard HttpServletRequest interface for some reason.)
+    * Return the ServletContext that this request is associated with. (Not available in the standard
+    * HttpServletRequest interface for some reason.)
     */
    public ServletContext getServletContext() {
       return this.servletContext;
@@ -710,8 +702,8 @@ public class MockHttpServletRequest implements HttpServletRequest {
    /**
     * Set a single value for the specified HTTP parameter.
     * <p>
-    * If there are already one or more values registered for the given parameter
-    * name, they will be replaced.
+    * If there are already one or more values registered for the given parameter name, they will be
+    * replaced.
     */
    public void setParameter(String name, String value) {
       setParameter(name, new String[]{value});
@@ -720,8 +712,8 @@ public class MockHttpServletRequest implements HttpServletRequest {
    /**
     * Set an array of values for the specified HTTP parameter.
     * <p>
-    * If there are already one or more values registered for the given parameter
-    * name, they will be replaced.
+    * If there are already one or more values registered for the given parameter name, they will be
+    * replaced.
     */
    public void setParameter(String name, String[] values) {
       assertThat(name).as("Parameter name must not be null").isNotNull();
@@ -729,9 +721,9 @@ public class MockHttpServletRequest implements HttpServletRequest {
    }
 
    /**
-    * Sets all provided parameters <emphasis>replacing</emphasis> any existing
-    * values for the provided parameter names. To add without replacing existing
-    * values, use {@link #addParameters(java.util.Map)}.
+    * Sets all provided parameters <emphasis>replacing</emphasis> any existing values for the
+    * provided parameter names. To add without replacing existing values, use
+    * {@link #addParameters(java.util.Map)}.
     */
    public void setParameters(Map<?, ?> params) {
       assertThat(params).as("Parameter map must not be null").isNotNull();
@@ -831,8 +823,8 @@ public class MockHttpServletRequest implements HttpServletRequest {
    }
 
    /**
-    * Check whether this request is still active (that is, not completed yet),
-    * throwing an IllegalStateException if not active anymore.
+    * Check whether this request is still active (that is, not completed yet), throwing an
+    * IllegalStateException if not active anymore.
     */
    protected void checkActive() throws IllegalStateException {
       if (!this.active) {

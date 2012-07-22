@@ -1,16 +1,14 @@
 /*
  * Copyright 2002-2009 Andy Clark, Marc Guillemot
  * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
 
@@ -38,23 +36,20 @@ import com.googlecode.html.HTMLElements;
 import com.googlecode.html.HTMLEntities;
 
 /**
- * An HTML writer written as a filter. Besides serializing the HTML event
- * stream, the writer also passes the document events to the next stage in the
- * pipeline. This allows applications to insert writer filters between other
- * custom filters for debugging purposes.
+ * An HTML writer written as a filter. Besides serializing the HTML event stream, the writer also
+ * passes the document events to the next stage in the pipeline. This allows applications to insert
+ * writer filters between other custom filters for debugging purposes.
  * <p>
- * Since an HTML document may have specified its encoding using the &lt;META&gt;
- * tag and http-equiv/content attributes, the writer will automatically change
- * any character set specified in this tag to match the encoding of the output
- * stream. Therefore, the character encoding name used to construct the writer
- * should be an official <a
- * href='http://www.iana.org/assignments/character-sets'>IANA</a> encoding name
- * and not a Java encoding name.
+ * Since an HTML document may have specified its encoding using the &lt;META&gt; tag and
+ * http-equiv/content attributes, the writer will automatically change any character set specified
+ * in this tag to match the encoding of the output stream. Therefore, the character encoding name
+ * used to construct the writer should be an official <a
+ * href='http://www.iana.org/assignments/character-sets'>IANA</a> encoding name and not a Java
+ * encoding name.
  * <p>
- * <strong>Note:</strong> The modified character set in the &lt;META&gt; tag is
- * <em>not</em> propagated to the next stage in the pipeline. The changed value
- * is only output to the stream; the original value is sent to the next stage in
- * the pipeline.
+ * <strong>Note:</strong> The modified character set in the &lt;META&gt; tag is <em>not</em>
+ * propagated to the next stage in the pipeline. The changed value is only output to the stream; the
+ * original value is sent to the next stage in the pipeline.
  * 
  * @author Andy Clark
  * 
@@ -86,8 +81,7 @@ public class Writer extends DefaultFilter {
    protected String fEncoding;
 
    /**
-    * The print writer used for serializing the document with the appropriate
-    * character encoding.
+    * The print writer used for serializing the document with the appropriate character encoding.
     */
    protected PrintWriter fPrinter;
 
@@ -128,8 +122,8 @@ public class Writer extends DefaultFilter {
     * Constructs a writer filter using the specified output stream and encoding.
     * 
     * @param outputStream The output stream to write to.
-    * @param encoding The encoding to be used for the output. The encoding name
-    *           should be an official IANA encoding name.
+    * @param encoding The encoding to be used for the output. The encoding name should be an
+    *           official IANA encoding name.
     */
    public Writer(OutputStream outputStream, String encoding) throws UnsupportedEncodingException {
       this(new OutputStreamWriter(outputStream, encoding), encoding);
@@ -139,8 +133,8 @@ public class Writer extends DefaultFilter {
     * Constructs a writer filter using the specified Java writer and encoding.
     * 
     * @param writer The Java writer to write to.
-    * @param encoding The encoding to be used for the output. The encoding name
-    *           should be an official IANA encoding name.
+    * @param encoding The encoding to be used for the output. The encoding name should be an
+    *           official IANA encoding name.
     */
    public Writer(java.io.Writer writer, String encoding) {
       fEncoding = encoding;
@@ -221,17 +215,14 @@ public class Writer extends DefaultFilter {
       fElementDepth--;
       fNormalize = true;
       /***
-       * // NOTE: Not sure if this is what should be done in the case where //
-       * the encoding is not explitly declared within the HEAD. So // I'm
-       * leaving it commented out for now. -Ac if
-       * (element.rawname.equalsIgnoreCase("head") && !fSeenHttpEquiv) { boolean
-       * capitalize = Character.isUpperCase(element.rawname.charAt(0)); String
-       * ename = capitalize ? "META" : "meta"; QName qname = new QName(null,
-       * ename, ename, null); XMLAttributes attrs = new XMLAttributesImpl();
-       * QName aname = new QName(null, "http-equiv", "http-equiv", null);
-       * attrs.addAttribute(aname, "CDATA", "Content-Type");
-       * aname.setValues(null, "content", "content", null);
-       * attrs.addAttribute(aname, "CDATA", "text/html; charset="+fEncoding);
+       * // NOTE: Not sure if this is what should be done in the case where // the encoding is not
+       * explitly declared within the HEAD. So // I'm leaving it commented out for now. -Ac if
+       * (element.rawname.equalsIgnoreCase("head") && !fSeenHttpEquiv) { boolean capitalize =
+       * Character.isUpperCase(element.rawname.charAt(0)); String ename = capitalize ? "META" :
+       * "meta"; QName qname = new QName(null, ename, ename, null); XMLAttributes attrs = new
+       * XMLAttributesImpl(); QName aname = new QName(null, "http-equiv", "http-equiv", null);
+       * attrs.addAttribute(aname, "CDATA", "Content-Type"); aname.setValues(null, "content",
+       * "content", null); attrs.addAttribute(aname, "CDATA", "text/html; charset="+fEncoding);
        * super.emptyElement(qname, attrs, null); } /
        ***/
       printEndElement(element);

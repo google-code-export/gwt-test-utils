@@ -8,9 +8,9 @@ import com.googlecode.gwt.test.patchers.PatchMethod;
 @PatchClass(GXT.class)
 class GXTPatcher {
 
-  @PatchMethod
-  static String getUserAgent() {
-    return Navigator.getUserAgent();
-  }
+   @PatchMethod
+   static String getUserAgent() {
+      return Navigator.getUserAgent();
+   }
 
 }

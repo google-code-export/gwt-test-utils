@@ -7,15 +7,15 @@ import com.google.gwt.core.client.GWT;
 
 public class DesktopAppTest extends GwtGxtTest {
 
-  @Test
-  public void onModuleLoad() {
-    // Arrange
-    DesktopApp app = GWT.create(DesktopApp.class);
+   @Test
+   public void onModuleLoad() {
+      // Arrange
+      DesktopApp app = GWT.create(DesktopApp.class);
 
-    // Act
-    app.onModuleLoad();
+      // Act
+      app.onModuleLoad();
 
-    // Assert
-  }
+      // Assert
+   }
 
 }

@@ -12,17 +12,16 @@ import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 @PatchClass(GridView.class)
 class GridViewPatcher {
 
-  // TODO : remove this when overlay type will be handled nicely
-  @PatchMethod
-  static NodeList<Element> getRows(GridView gridView) {
-    boolean hasRows = (Boolean) GwtReflectionUtils.callPrivateMethod(gridView,
-        "hasRows");
-    if (!hasRows) {
-      return JavaScriptObjects.newNodeList();
-    }
+   // TODO : remove this when overlay type will be handled nicely
+   @PatchMethod
+   static NodeList<Element> getRows(GridView gridView) {
+      boolean hasRows = (Boolean) GwtReflectionUtils.callPrivateMethod(gridView, "hasRows");
+      if (!hasRows) {
+         return JavaScriptObjects.newNodeList();
+      }
 
-    El mainBody = GwtReflectionUtils.getPrivateFieldValue(gridView, "mainBody");
-    return mainBody.dom.getChildNodes().cast();
-  }
+      El mainBody = GwtReflectionUtils.getPrivateFieldValue(gridView, "mainBody");
+      return mainBody.dom.getChildNodes().cast();
+   }
 
 }

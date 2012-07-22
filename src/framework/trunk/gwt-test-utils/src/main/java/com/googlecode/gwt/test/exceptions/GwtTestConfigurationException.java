@@ -1,8 +1,7 @@
 package com.googlecode.gwt.test.exceptions;
 
 /**
- * Exception thrown when gwt-test-utils detects an error in a test
- * configuration.
+ * Exception thrown when gwt-test-utils detects an error in a test configuration.
  * 
  * @author Gael Lazzari
  * 

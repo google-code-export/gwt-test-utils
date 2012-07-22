@@ -111,13 +111,11 @@ public class WidgetUtils {
    }
 
    /**
-    * Check if the current widget and its possible parents are visible.
-    * <strong>NOTE</strong> : if the current widget is a Popup, it is the
-    * isShowing() flag which would be evaluate.
+    * Check if the current widget and its possible parents are visible. <strong>NOTE</strong> : if
+    * the current widget is a Popup, it is the isShowing() flag which would be evaluate.
     * 
     * @param object The widget to check.
-    * @return True if the widget and its possible parents are visible, false
-    *         otherwise.
+    * @return True if the widget and its possible parents are visible, false otherwise.
     */
    public static boolean isWidgetVisible(UIObject object) {
       // FIXME : remove this hack which is required for googlecode main GWT
@@ -139,8 +137,7 @@ public class WidgetUtils {
     * set a CheckBox value without firing any {@link ValueChangeEvent}.
     * 
     * @param checkBox the targeted checkBox
-    * @param newValue the new value, which could be retrieve through
-    *           {@link CheckBox#getValue()}
+    * @param newValue the new value, which could be retrieve through {@link CheckBox#getValue()}
     */
    public static void setCheckBoxValueSilent(CheckBox checkBox, boolean newValue) {
       InputElement inputElem = GwtReflectionUtils.getPrivateFieldValue(checkBox, "inputElem");

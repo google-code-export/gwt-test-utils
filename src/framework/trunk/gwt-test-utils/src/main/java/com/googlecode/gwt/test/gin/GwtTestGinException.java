@@ -3,8 +3,7 @@ package com.googlecode.gwt.test.gin;
 import com.googlecode.gwt.test.exceptions.GwtTestException;
 
 /**
- * Exception thrown when gwt-test-utils detects an error in a google-gin
- * configuration
+ * Exception thrown when gwt-test-utils detects an error in a google-gin configuration
  * 
  * @author Gael Lazzari
  * 

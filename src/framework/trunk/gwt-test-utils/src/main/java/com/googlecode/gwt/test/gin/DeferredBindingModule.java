@@ -31,9 +31,9 @@ import com.googlecode.gwt.test.exceptions.GwtTestPatchException;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
 /**
- * Additional Guice module class which must be added when replacing a GIN
- * Injector with a Guice Injector, in order to add all required bindings to call
- * GWT's deferred binding fallback which happens in GIN.
+ * Additional Guice module class which must be added when replacing a GIN Injector with a Guice
+ * Injector, in order to add all required bindings to call GWT's deferred binding fallback which
+ * happens in GIN.
  * 
  * @author Alex Dobjanschi
  * @author Gael Lazzari

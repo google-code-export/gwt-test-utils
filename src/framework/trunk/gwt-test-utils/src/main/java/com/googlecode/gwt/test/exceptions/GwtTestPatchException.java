@@ -1,8 +1,7 @@
 package com.googlecode.gwt.test.exceptions;
 
 /**
- * Exception thrown when an error occurs during the bytecode modification of a
- * class to patch.
+ * Exception thrown when an error occurs during the bytecode modification of a class to patch.
  * 
  * @author Gael Lazzari
  * 

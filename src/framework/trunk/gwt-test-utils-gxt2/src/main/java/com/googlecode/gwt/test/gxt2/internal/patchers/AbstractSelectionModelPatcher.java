@@ -13,19 +13,19 @@ import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 @PatchClass(AbstractSelectionModel.class)
 class AbstractSelectionModelPatcher {
 
-  @SuppressWarnings("unchecked")
-  @PatchMethod
-  static ContainerEvent<Container<Component>, Component> createContainerEvent(
-      AbstractSelectionModel<Container<Component>, Component> absm,
-      Container<Component> container) {
+   @SuppressWarnings("unchecked")
+   @PatchMethod
+   static ContainerEvent<Container<Component>, Component> createContainerEvent(
+            AbstractSelectionModel<Container<Component>, Component> absm,
+            Container<Component> container) {
 
-    for (Method m : Container.class.getDeclaredMethods()) {
-      if ("createContainerEvent".equals(m.getName())) {
-        return (ContainerEvent<Container<Component>, Component>) GwtReflectionUtils.callPrivateMethod(
-            container, m, (Component) null);
+      for (Method m : Container.class.getDeclaredMethods()) {
+         if ("createContainerEvent".equals(m.getName())) {
+            return (ContainerEvent<Container<Component>, Component>) GwtReflectionUtils.callPrivateMethod(
+                     container, m, (Component) null);
+         }
       }
-    }
-    return null;
-  }
+      return null;
+   }
 
 }

@@ -83,8 +83,8 @@ public class UiCellPanelTagFactory implements UiObjectTagFactory<CellPanel> {
    /*
     * (non-Javadoc)
     * 
-    * @see com.googlecode.gwt.test.uibinder.UiObjectTagFactory#createUiObjectTag
-    * (java.lang.Class, java.util.Map)
+    * @see com.googlecode.gwt.test.uibinder.UiObjectTagFactory#createUiObjectTag (java.lang.Class,
+    * java.util.Map)
     */
    public UiObjectTag<CellPanel> createUiObjectTag(Class<?> clazz, Map<String, Object> attributes) {
       if (!CellPanel.class.isAssignableFrom(clazz)) {

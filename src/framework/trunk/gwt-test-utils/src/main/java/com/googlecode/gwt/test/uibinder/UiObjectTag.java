@@ -24,10 +24,9 @@ import com.googlecode.gwt.test.internal.utils.JavaScriptObjects;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
 /**
- * Base handler for any object tag (e.g. &lt;g:Xxx /> tags, where Xxx is either
- * {@link UIObject} subclass or a {@link IsWidget} subtype. This class is
- * expected to be extended to add custom code to handle specific widget /
- * attributes.
+ * Base handler for any object tag (e.g. &lt;g:Xxx /> tags, where Xxx is either {@link UIObject}
+ * subclass or a {@link IsWidget} subtype. This class is expected to be extended to add custom code
+ * to handle specific widget / attributes.
  * 
  * @author Gael Lazzari
  * 
@@ -52,9 +51,7 @@ public abstract class UiObjectTag<T> implements UiTag<T> {
    /*
     * (non-Javadoc)
     * 
-    * @see
-    * com.googlecode.gwt.test.uibinder.UiTag#addElement(com.google.gwt.dom.client
-    * .Element )
+    * @see com.googlecode.gwt.test.uibinder.UiTag#addElement(com.google.gwt.dom.client .Element )
     */
    public final void addElement(Element element) {
 
@@ -67,9 +64,8 @@ public abstract class UiObjectTag<T> implements UiTag<T> {
    /*
     * (non-Javadoc)
     * 
-    * @see
-    * com.googlecode.gwt.test.uibinder.UiTag#addUiObject(com.google.gwt.user.
-    * client .ui.UIObject)
+    * @see com.googlecode.gwt.test.uibinder.UiTag#addUiObject(com.google.gwt.user. client
+    * .ui.UIObject)
     */
    public final void addUiObject(UIObject uiObject) {
       addUIObject(this.wrapped, uiObject);
@@ -78,9 +74,8 @@ public abstract class UiObjectTag<T> implements UiTag<T> {
    /*
     * (non-Javadoc)
     * 
-    * @see
-    * com.googlecode.gwt.test.uibinder.UiTag#addWidget(com.google.gwt.user.client
-    * .ui .IsWidget)
+    * @see com.googlecode.gwt.test.uibinder.UiTag#addWidget(com.google.gwt.user.client .ui
+    * .IsWidget)
     */
    public final void addWidget(IsWidget isWidget) {
       addWidget(this.wrapped, isWidget);
@@ -117,13 +112,11 @@ public abstract class UiObjectTag<T> implements UiTag<T> {
    }
 
    /**
-    * Add a new UIObject which is not a {@link IsWidget} instance as a child to
-    * this uiObject. This implementation does nothing, the method is expected to
-    * be overridden.
+    * Add a new UIObject which is not a {@link IsWidget} instance as a child to this uiObject. This
+    * implementation does nothing, the method is expected to be overridden.
     * 
     * @param wrapped The wrapped uiObject of this tag.
-    * @param uiObject The UIObject instance to add, which is not a
-    *           {@link IsWidget} instance.
+    * @param uiObject The UIObject instance to add, which is not a {@link IsWidget} instance.
     * 
     */
    protected void addUIObject(T wrapped, UIObject uiObject) {
@@ -131,10 +124,10 @@ public abstract class UiObjectTag<T> implements UiTag<T> {
    }
 
    /**
-    * Add a new Widget as a child to this uiObject. This implementation just
-    * calls {@link ForIsWidget#add(IsWidget)} or
-    * {@link HasWidgets#add(com.google.gwt.user.client.ui.Widget)} according to
-    * which interface the wrapped uiObject is implementing.
+    * Add a new Widget as a child to this uiObject. This implementation just calls
+    * {@link ForIsWidget#add(IsWidget)} or
+    * {@link HasWidgets#add(com.google.gwt.user.client.ui.Widget)} according to which interface the
+    * wrapped uiObject is implementing.
     * 
     * @param wrapped The wrapped uiObject of this tag.
     * @param isWidget The child widget to be added.
@@ -149,25 +142,22 @@ public abstract class UiObjectTag<T> implements UiTag<T> {
    }
 
    /**
-    * Append an element declared in the .ui.xml to this uiObject, which is
-    * supposed to be its parent. This implementation has one of the following
-    * behavior :
+    * Append an element declared in the .ui.xml to this uiObject, which is supposed to be its
+    * parent. This implementation has one of the following behavior :
     * <ul>
-    * <li>If a {@link UiChild} annotated method which correspond to the element
-    * to append is found, it will be called with the element's first child
-    * Widget.</li>
-    * <li>Else if the wrapped {@link UIObject} implements {@link HasHTML}, the
-    * child would be appended through
-    * {@link Element#appendChild(com.google.gwt.dom.client.Node)}</li>
-    * <li>Otherwise, a {@link GwtTestUiBinderException} would be thrown with
-    * message: 'Found unexpected child element : <x:xxxx>'</li>
+    * <li>If a {@link UiChild} annotated method which correspond to the element to append is found,
+    * it will be called with the element's first child Widget.</li>
+    * <li>Else if the wrapped {@link UIObject} implements {@link HasHTML}, the child would be
+    * appended through {@link Element#appendChild(com.google.gwt.dom.client.Node)}</li>
+    * <li>Otherwise, a {@link GwtTestUiBinderException} would be thrown with message: 'Found
+    * unexpected child element : <x:xxxx>'</li>
     * </ul>
     * 
     * @param wrapped The wrapped uiObject of this tag.
     * @param element The child element to be appended.
     * @param namespaceURI The namespace URI of the child element.
-    * @param childWidgets The element's childs widgets, which could be empty if
-    *           no child has been added to it.
+    * @param childWidgets The element's childs widgets, which could be empty if no child has been
+    *           added to it.
     */
    protected void appendElement(T wrapped, Element element, String namespaceURI,
             List<IsWidget> childWidgets) {
@@ -187,10 +177,9 @@ public abstract class UiObjectTag<T> implements UiTag<T> {
    }
 
    /**
-    * Append text to this uiObject. This implementation calls
-    * {@link HasText#setText(String)} if the current uiObject is implementing
-    * the {@link HasText} interface, or append a new {@link Text} node wrapping
-    * the data value to the Widget's element.
+    * Append text to this uiObject. This implementation calls {@link HasText#setText(String)} if the
+    * current uiObject is implementing the {@link HasText} interface, or append a new {@link Text}
+    * node wrapping the data value to the Widget's element.
     * 
     * @param wrapped The wrapped uiObject of this tag.
     * @param data The string value.
@@ -206,9 +195,8 @@ public abstract class UiObjectTag<T> implements UiTag<T> {
    }
 
    /**
-    * A callback executed after every standard uiObject properties have been
-    * setup to be able to process any custom finalization on the wrapped
-    * uiObject.
+    * A callback executed after every standard uiObject properties have been setup to be able to
+    * process any custom finalization on the wrapped uiObject.
     * 
     * @param uiObject The uiObject to finalize.
     */
@@ -228,32 +216,27 @@ public abstract class UiObjectTag<T> implements UiTag<T> {
    }
 
    /**
-    * A callback method executed just after the corresponding UiBinder tag was
-    * opened to be able to process any custom initialization on the wrapped
-    * uiObject.
+    * A callback method executed just after the corresponding UiBinder tag was opened to be able to
+    * process any custom initialization on the wrapped uiObject.
     * 
     * @param wrapped The uiObject to initialize
-    * @param attributes map of attributes of the wrapped uiObject, with
-    *           attribute XML names as keys, corresponding objects as values.
-    *           This map will be used to populate the wrapped uiObject just
-    *           after this callback would be executed.
-    * @param owner The owner of the UiBinder template, with {@link UiField}
-    *           fields.
+    * @param attributes map of attributes of the wrapped uiObject, with attribute XML names as keys,
+    *           corresponding objects as values. This map will be used to populate the wrapped
+    *           uiObject just after this callback would be executed.
+    * @param owner The owner of the UiBinder template, with {@link UiField} fields.
     */
    protected abstract void initializeObject(T wrapped, Map<String, Object> attributes, Object owner);
 
    /**
-    * Method responsible for the uiObject instanciation. It is called only if
-    * the uiBinder tag is not a provided {@link UiField} and not annotated with
-    * either {@link UiFactory} nor {@link UiConstructor}. This implementation
-    * simply check for a zero-arg constructor to call and would throw an
-    * exception if it does not exist.
+    * Method responsible for the uiObject instanciation. It is called only if the uiBinder tag is
+    * not a provided {@link UiField} and not annotated with either {@link UiFactory} nor
+    * {@link UiConstructor}. This implementation simply check for a zero-arg constructor to call and
+    * would throw an exception if it does not exist.
     * 
     * @param clazz The uiObject class to instanciate.
-    * @param attributes map of attributes of the wrapped uiObject, with
-    *           attribute XML names as keys, corresponding objects as values.
-    * @param owner The owner of the UiBinder template, with {@link UiField}
-    *           fields.
+    * @param attributes map of attributes of the wrapped uiObject, with attribute XML names as keys,
+    *           corresponding objects as values.
+    * @param owner The owner of the UiBinder template, with {@link UiField} fields.
     * @return The created instance.
     */
    protected T instanciate(Class<? extends T> clazz, Map<String, Object> attributes, Object owner) {
@@ -270,16 +253,15 @@ public abstract class UiObjectTag<T> implements UiTag<T> {
    }
 
    /**
-    * Callback method called whenever a new uiBinder tag is opened, so
-    * implementation could apply some custom initialization.
+    * Callback method called whenever a new uiBinder tag is opened, so implementation could apply
+    * some custom initialization.
     * 
     * @param clazz The class of the object to be wrapped in this UiTag.
     * @param namespaceURI The namespace URI of the opened tag
-    * @param attributes map of attributes of the wrapped uiObject, with
-    *           attribute XML names as keys, corresponding objects as values.
+    * @param attributes map of attributes of the wrapped uiObject, with attribute XML names as keys,
+    *           corresponding objects as values.
     * @param parentTag The parent tag
-    * @param owner The owner of the UiBinder template, with {@link UiField}
-    *           fields.
+    * @param owner The owner of the UiBinder template, with {@link UiField} fields.
     */
    final void startTag(Class<? extends T> clazz, Map<String, Object> attributes,
             UiTag<?> parentTag, Object owner) {

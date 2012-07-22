@@ -101,8 +101,7 @@ class HistoryImplPatcher {
       /**
        * Return the current token in history
        * 
-       * @return the current token in history or an empty String if no token is
-       *         set in the URL
+       * @return the current token in history or an empty String if no token is set in the URL
        */
       public String getCurrentToken() {
          return (currentIndex == -1) ? "" : stack.get(currentIndex);

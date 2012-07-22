@@ -8,8 +8,8 @@ import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 @PatchClass(XTemplate.class)
 class XTemplatePatcher {
 
-  @PatchMethod
-  static XTemplate create(String html) {
-    return GwtReflectionUtils.instantiateClass(XTemplate.class);
-  }
+   @PatchMethod
+   static XTemplate create(String html) {
+      return GwtReflectionUtils.instantiateClass(XTemplate.class);
+   }
 }

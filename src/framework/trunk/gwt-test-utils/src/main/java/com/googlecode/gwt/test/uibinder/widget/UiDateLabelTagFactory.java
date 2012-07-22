@@ -64,8 +64,8 @@ public class UiDateLabelTagFactory implements UiObjectTagFactory<DateLabel> {
    /*
     * (non-Javadoc)
     * 
-    * @see com.googlecode.gwt.test.uibinder.UiObjectTagFactory#createUiObjectTag
-    * (java.lang.Class, java.util.Map)
+    * @see com.googlecode.gwt.test.uibinder.UiObjectTagFactory#createUiObjectTag (java.lang.Class,
+    * java.util.Map)
     */
    public UiObjectTag<DateLabel> createUiObjectTag(Class<?> clazz, Map<String, Object> attributes) {
 

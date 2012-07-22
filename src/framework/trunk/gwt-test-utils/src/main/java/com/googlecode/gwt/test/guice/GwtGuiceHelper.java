@@ -9,8 +9,7 @@ import com.googlecode.gwt.test.internal.utils.WebXmlUtils;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
 /**
- * Helper for gwt-test-utils / Guice integration. <strong>For internal use
- * only.</strong>
+ * Helper for gwt-test-utils / Guice integration. <strong>For internal use only.</strong>
  * 
  * @author Alex Dobjanschi
  * @author Gael Lazzari

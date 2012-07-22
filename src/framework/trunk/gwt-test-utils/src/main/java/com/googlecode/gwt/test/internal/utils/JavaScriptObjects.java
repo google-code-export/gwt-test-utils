@@ -22,8 +22,7 @@ import com.googlecode.gwt.test.finder.GwtFinder;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
 /**
- * Utilities for Overlay types support in gwt-test-utils. <strong>For internal
- * use only.<strong>
+ * Utilities for Overlay types support in gwt-test-utils. <strong>For internal use only.<strong>
  * 
  * @author Gael Lazzari
  * 
@@ -33,8 +32,8 @@ public class JavaScriptObjects {
    public static final String ID = "id";
 
    /**
-    * The name of the internal {@link PropertyContainer} which is add in
-    * {@link JavaScriptObject} class during class rewrite process
+    * The name of the internal {@link PropertyContainer} which is add in {@link JavaScriptObject}
+    * class during class rewrite process
     */
    public static final String PROPERTIES = "properties";
 
@@ -47,20 +46,17 @@ public class JavaScriptObjects {
       {
          /*
           * 
-          * Parse HTML standard attributes here :
-          * http://www.w3.org/TR/html4/index/attributes.html
+          * Parse HTML standard attributes here : http://www.w3.org/TR/html4/index/attributes.html
           * 
           * With this jQuery script :
           * 
           * <script language="Javascript"> var array = new Array();
-          * $('td[title=Name]').each(function() { var text =
-          * $(this).text().trim(); if (jQuery.inArray(text, array) == -1) {
-          * array.push(text); } });
+          * $('td[title=Name]').each(function() { var text = $(this).text().trim(); if
+          * (jQuery.inArray(text, array) == -1) { array.push(text); } });
           * 
           * var java = '<p>'; var length = array.length;
           * 
-          * for (var i=0; i < length; i++) { java += 'add("' + array[i] +
-          * '");<br/>'; }
+          * for (var i=0; i < length; i++) { java += 'add("' + array[i] + '");<br/>'; }
           * 
           * java += '</p>';
           * 

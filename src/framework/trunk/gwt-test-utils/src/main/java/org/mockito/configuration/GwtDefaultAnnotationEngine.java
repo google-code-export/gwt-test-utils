@@ -18,8 +18,8 @@ import com.googlecode.gwt.test.exceptions.GwtTestPatchException;
 import com.googlecode.gwt.test.internal.GwtFactory;
 
 /**
- * Overrides Mockito's DefaultAnnotationEngine to create mock for Overlay types
- * and to handle {@link com.googlecode.gwt.test.Mock} annotation.
+ * Overrides Mockito's DefaultAnnotationEngine to create mock for Overlay types and to handle
+ * {@link com.googlecode.gwt.test.Mock} annotation.
  * 
  * 
  * @author Gael Lazzari

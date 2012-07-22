@@ -17,16 +17,13 @@ import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 /**
  * <p>
  * Base class for test classes which make use of a mocking framework, such as
- * {@link org.easymock.EasyMock EasyMock} or {@link org.mockito.Mockito Mockito}
- * .
+ * {@link org.easymock.EasyMock EasyMock} or {@link org.mockito.Mockito Mockito} .
  * </p>
  * 
  * <p>
- * This class provides methods to register mock objects into the context of a
- * test class. This is required so that application calls to
- * {@link com.google.gwt.core.client.GWT#create(Class)
- * GWT.Create(MyClassToMock)} will return the corresponding mock object of type
- * MyClassToMock.
+ * This class provides methods to register mock objects into the context of a test class. This is
+ * required so that application calls to {@link com.google.gwt.core.client.GWT#create(Class)
+ * GWT.Create(MyClassToMock)} will return the corresponding mock object of type MyClassToMock.
  * </p>
  * 
  * @author Eric Therond
@@ -69,8 +66,7 @@ public abstract class GwtTestWithMocks extends GwtTest {
    }
 
    /**
-    * Adds a mock object to the list of mocks used in the context of this test
-    * class.
+    * Adds a mock object to the list of mocks used in the context of this test class.
     * 
     * @param createClass The class for which a mock object is being defined
     * @param mock the mock instance

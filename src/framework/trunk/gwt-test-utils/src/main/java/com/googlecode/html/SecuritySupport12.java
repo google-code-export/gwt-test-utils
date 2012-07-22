@@ -1,16 +1,14 @@
 /*
  * Copyright 2002-2008 The Apache Software Foundation.
  * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
 
@@ -26,8 +24,8 @@ import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
 
 /**
- * This class is duplicated for each JAXP subpackage so keep it in sync. It is
- * package private and therefore is not exposed as part of the JAXP API.
+ * This class is duplicated for each JAXP subpackage so keep it in sync. It is package private and
+ * therefore is not exposed as part of the JAXP API.
  * 
  * Security related methods that only work on J2SE 1.2 and newer.
  */

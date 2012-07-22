@@ -11,17 +11,16 @@ import com.google.gwt.user.client.ui.MenuBar.Resources;
 
 public class FormPanelTest extends GwtGxtTest {
 
-  @Test
-  public void add() {
-    // Arrange
-    Resources resources = GWT.create(Resources.class);
-    FormPanel panel = new FormPanel();
+   @Test
+   public void add() {
+      // Arrange
+      Resources resources = GWT.create(Resources.class);
+      FormPanel panel = new FormPanel();
 
-    // Act
-    panel.add(new Image(resources.menuBarSubMenuIcon()));
+      // Act
+      panel.add(new Image(resources.menuBarSubMenuIcon()));
 
-    // Assert
-    assertTrue(((Image) panel.getWidget(0)).getUrl().contains(
-        "menuBarSubMenuIcon"));
-  }
+      // Assert
+      assertTrue(((Image) panel.getWidget(0)).getUrl().contains("menuBarSubMenuIcon"));
+   }
 }

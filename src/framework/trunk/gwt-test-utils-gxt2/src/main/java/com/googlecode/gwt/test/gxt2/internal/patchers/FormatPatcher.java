@@ -8,14 +8,14 @@ import com.googlecode.gwt.test.patchers.PatchMethod;
 @PatchClass(Format.class)
 class FormatPatcher {
 
-  @PatchMethod
-  static String camelize(String s) {
-    return GwtStringUtils.camelize(s);
-  }
+   @PatchMethod
+   static String camelize(String s) {
+      return GwtStringUtils.camelize(s);
+   }
 
-  @PatchMethod
-  static String hyphenize(String name) {
-    return GwtStringUtils.hyphenize(name);
-  }
+   @PatchMethod
+   static String hyphenize(String name) {
+      return GwtStringUtils.hyphenize(name);
+   }
 
 }

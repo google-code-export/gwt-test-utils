@@ -59,14 +59,13 @@ public class JavassistUtils {
    }
 
    /**
-    * Retrieve the String value of an annotation which is not available at
-    * runtime.
+    * Retrieve the String value of an annotation which is not available at runtime.
     * 
     * @param clazz The annotated class
     * @param annotation The annotation which is not visible at runtime
     * @param name The name of the String property of the annotation to retrieve
-    * @return The String value of the annotation or null if the annotation or
-    *         its property is not present
+    * @return The String value of the annotation or null if the annotation or its property is not
+    *         present
     */
    public static String getInvisibleAnnotationStringValue(Class<?> clazz,
             Class<? extends Annotation> annotation, String name) {
@@ -91,14 +90,13 @@ public class JavassistUtils {
    }
 
    /**
-    * Retrieve the String value of an annotation which is not available at
-    * runtime.
+    * Retrieve the String value of an annotation which is not available at runtime.
     * 
     * @param method The annotated method
     * @param annotation The annotation which is not visible at runtime
     * @param name The name of the String property of the annotation to retrieve
-    * @return The String value of the annotation or null if the annotation or
-    *         its property is not present
+    * @return The String value of the annotation or null if the annotation or its property is not
+    *         present
     */
    public static String getInvisibleAnnotationStringValue(Method method,
             Class<? extends Annotation> annotation, String name) {

@@ -8,9 +8,8 @@ import com.google.gwt.uibinder.client.UiField;
 import com.googlecode.gwt.test.GwtCreateHandler;
 
 /**
- * GwtCreateHandler in charge of creating UiBinder objects through deferred
- * binding, parsing .ui.xml files and binding to java {@link UiField}.
- * <strong>For internal use only.</strong>
+ * GwtCreateHandler in charge of creating UiBinder objects through deferred binding, parsing .ui.xml
+ * files and binding to java {@link UiField}. <strong>For internal use only.</strong>
  * 
  * @author Gael Lazzari
  * 

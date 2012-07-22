@@ -17,8 +17,8 @@ import com.googlecode.gwt.test.internal.AfterTestCallbackManager;
 
 /**
  * 
- * Some .properties files utility methods. It enables the caching of resources.
- * <strong>For internal use only.</strong>
+ * Some .properties files utility methods. It enables the caching of resources. <strong>For internal
+ * use only.</strong>
  * 
  * @author Bertrand Paquet
  * @author Gael Lazzari
@@ -27,10 +27,10 @@ import com.googlecode.gwt.test.internal.AfterTestCallbackManager;
 public class GwtPropertiesHelper implements AfterTestCallback {
 
    /*
-    * Read in a "logical line" from an InputStream/Reader, skip all comment and
-    * blank lines and filter out those leading whitespace characters ( , and )
-    * from the beginning of a "natural line". Method returns the char length of
-    * the "logical line" and stores the line in "lineBuf".
+    * Read in a "logical line" from an InputStream/Reader, skip all comment and blank lines and
+    * filter out those leading whitespace characters ( , and ) from the beginning of a
+    * "natural line". Method returns the char length of the "logical line" and stores the line in
+    * "lineBuf".
     */
    static class LineReader {
       byte[] inByteBuf;
@@ -304,8 +304,8 @@ public class GwtPropertiesHelper implements AfterTestCallback {
    }
 
    /*
-    * Converts encoded &#92;uxxxx to unicode chars and changes special saved
-    * chars to their original forms
+    * Converts encoded &#92;uxxxx to unicode chars and changes special saved chars to their original
+    * forms
     */
    private String loadConvert(char[] in, int off, int len, char[] convtBuf) {
       if (convtBuf.length < len) {

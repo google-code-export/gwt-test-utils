@@ -11,8 +11,8 @@ import org.mockito.internal.configuration.SpyAnnotationEngine;
 import org.mockito.internal.util.MockUtil;
 
 /**
- * Overrides Mockito's SpyAnnotationEngine to handle
- * {@link com.googlecode.gwt.test.Mock} annotation.
+ * Overrides Mockito's SpyAnnotationEngine to handle {@link com.googlecode.gwt.test.Mock}
+ * annotation.
  * 
  * @author Gael Lazzari
  * 

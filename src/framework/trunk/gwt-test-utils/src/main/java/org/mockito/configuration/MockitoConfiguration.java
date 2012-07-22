@@ -10,9 +10,8 @@ import org.mockito.stubbing.Answer;
 import com.googlecode.gwt.test.Mock;
 
 /**
- * Custom Mockito configuration which relies on a custom AnnotationEngine to be
- * able to mock GWT overlay types and to support {@link Mock} annotation as well
- * as Mockito's ones.
+ * Custom Mockito configuration which relies on a custom AnnotationEngine to be able to mock GWT
+ * overlay types and to support {@link Mock} annotation as well as Mockito's ones.
  * 
  * @author Gael Lazzari
  * 

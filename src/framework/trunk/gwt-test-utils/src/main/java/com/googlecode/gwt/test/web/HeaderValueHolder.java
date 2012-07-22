@@ -1,16 +1,14 @@
 /*
  * Copyright 2002-2009 the original author or authors.
  * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
 
@@ -27,8 +25,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Internal helper class that serves as value holder for request headers.
- * Adapted from <strong>spring-test</strong>.
+ * Internal helper class that serves as value holder for request headers. Adapted from
+ * <strong>spring-test</strong>.
  * 
  * @author Juergen Hoeller
  * @author Rick Evans
@@ -41,8 +39,7 @@ class HeaderValueHolder {
     * 
     * @param headers the Map of header names to HeaderValueHolders
     * @param name the name of the desired header
-    * @return the corresponding HeaderValueHolder, or <code>null</code> if none
-    *         found
+    * @return the corresponding HeaderValueHolder, or <code>null</code> if none found
     */
    public static HeaderValueHolder getByName(Map<String, HeaderValueHolder> headers, String name) {
       assertThat(name).as("Header name must not be null").isNotNull();
@@ -71,11 +68,10 @@ class HeaderValueHolder {
    }
 
    /**
-    * Convert the given array (which may be a primitive array) to an object
-    * array (if necessary of primitive wrapper objects).
+    * Convert the given array (which may be a primitive array) to an object array (if necessary of
+    * primitive wrapper objects).
     * <p>
-    * A <code>null</code> source value will be converted to an empty Object
-    * array.
+    * A <code>null</code> source value will be converted to an empty Object array.
     * 
     * @param source the (potentially primitive) array
     * @return the corresponding object array (never <code>null</code>)

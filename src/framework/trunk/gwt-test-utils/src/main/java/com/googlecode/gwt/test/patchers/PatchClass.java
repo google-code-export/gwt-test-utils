@@ -6,8 +6,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Indicates that the annotated class is used to generate a JVM-compliant
- * version of a particular class.
+ * Indicates that the annotated class is used to generate a JVM-compliant version of a particular
+ * class.
  * 
  * @author Bertrand Paquet
  * @author Gael Lazzari

@@ -1,6 +1,5 @@
 /*
- * Ext GWT 2.2.1 - Ext for GWT Copyright(c) 2007-2010, Ext JS, LLC.
- * licensing@extjs.com
+ * Ext GWT 2.2.1 - Ext for GWT Copyright(c) 2007-2010, Ext JS, LLC. licensing@extjs.com
  * 
  * http://extjs.com/license
  */
@@ -52,299 +51,298 @@ import com.google.gwt.user.client.ui.AbstractImagePrototype;
 
 public class DesktopApp implements EntryPoint {
 
-  private Desktop desktop = new Desktop();
+   private Desktop desktop = new Desktop();
 
-  public void onModuleLoad() {
-    SelectionListener<MenuEvent> menuListener = new SelectionListener<MenuEvent>() {
-      @Override
-      public void componentSelected(MenuEvent me) {
-        itemSelected(me);
-      }
-    };
+   public void onModuleLoad() {
+      SelectionListener<MenuEvent> menuListener = new SelectionListener<MenuEvent>() {
+         @Override
+         public void componentSelected(MenuEvent me) {
+            itemSelected(me);
+         }
+      };
 
-    SelectionListener<ComponentEvent> shortcutListener = new SelectionListener<ComponentEvent>() {
-      @Override
-      public void componentSelected(ComponentEvent ce) {
-        itemSelected(ce);
-      }
-    };
+      SelectionListener<ComponentEvent> shortcutListener = new SelectionListener<ComponentEvent>() {
+         @Override
+         public void componentSelected(ComponentEvent ce) {
+            itemSelected(ce);
+         }
+      };
 
-    Window gridWindow = createGridWindow();
-    Window accordionWindow = createAccordionWindow();
+      Window gridWindow = createGridWindow();
+      Window accordionWindow = createAccordionWindow();
 
-    Shortcut s1 = new Shortcut();
-    s1.setText("Grid Window");
-    s1.setId("grid-win-shortcut");
-    s1.setData("window", gridWindow);
-    s1.addSelectionListener(shortcutListener);
-    desktop.addShortcut(s1);
+      Shortcut s1 = new Shortcut();
+      s1.setText("Grid Window");
+      s1.setId("grid-win-shortcut");
+      s1.setData("window", gridWindow);
+      s1.addSelectionListener(shortcutListener);
+      desktop.addShortcut(s1);
 
-    Shortcut s2 = new Shortcut();
-    s2.setText("Accordion Window");
-    s2.setId("acc-win-shortcut");
-    s2.setData("window", accordionWindow);
-    s2.addSelectionListener(shortcutListener);
-    desktop.addShortcut(s2);
+      Shortcut s2 = new Shortcut();
+      s2.setText("Accordion Window");
+      s2.setId("acc-win-shortcut");
+      s2.setData("window", accordionWindow);
+      s2.addSelectionListener(shortcutListener);
+      desktop.addShortcut(s2);
 
-    TaskBar taskBar = desktop.getTaskBar();
+      TaskBar taskBar = desktop.getTaskBar();
 
-    StartMenu menu = taskBar.getStartMenu();
-    menu.setHeading("Darrell Meyer");
-    menu.setIconStyle("user");
+      StartMenu menu = taskBar.getStartMenu();
+      menu.setHeading("Darrell Meyer");
+      menu.setIconStyle("user");
 
-    MenuItem menuItem = new MenuItem("Grid Window");
-    menuItem.setData("window", gridWindow);
-    menuItem.setIcon(IconHelper.createStyle("icon-grid"));
-    menuItem.addSelectionListener(menuListener);
-    menu.add(menuItem);
+      MenuItem menuItem = new MenuItem("Grid Window");
+      menuItem.setData("window", gridWindow);
+      menuItem.setIcon(IconHelper.createStyle("icon-grid"));
+      menuItem.addSelectionListener(menuListener);
+      menu.add(menuItem);
 
-    menuItem = new MenuItem("Tab Window");
-    menuItem.setIcon(IconHelper.createStyle("tabs"));
-    menuItem.addSelectionListener(menuListener);
-    menuItem.setData("window", createTabWindow());
-    menu.add(menuItem);
+      menuItem = new MenuItem("Tab Window");
+      menuItem.setIcon(IconHelper.createStyle("tabs"));
+      menuItem.addSelectionListener(menuListener);
+      menuItem.setData("window", createTabWindow());
+      menu.add(menuItem);
 
-    menuItem = new MenuItem("Accordion Window");
-    menuItem.setIcon(IconHelper.createStyle("accordion"));
-    menuItem.addSelectionListener(menuListener);
-    menuItem.setData("window", accordionWindow);
-    menu.add(menuItem);
+      menuItem = new MenuItem("Accordion Window");
+      menuItem.setIcon(IconHelper.createStyle("accordion"));
+      menuItem.addSelectionListener(menuListener);
+      menuItem.setData("window", accordionWindow);
+      menu.add(menuItem);
 
-    menuItem = new MenuItem("Bogus Submenu");
-    menuItem.setIcon(IconHelper.createStyle("bogus"));
+      menuItem = new MenuItem("Bogus Submenu");
+      menuItem.setIcon(IconHelper.createStyle("bogus"));
 
-    Menu sub = new Menu();
+      Menu sub = new Menu();
 
-    for (int i = 0; i < 5; i++) {
-      MenuItem item = new MenuItem("Bogus Window " + (i + 1));
-      item.setData("window", createBogusWindow(i));
-      item.addSelectionListener(menuListener);
-      sub.add(item);
-    }
-
-    menuItem.setSubMenu(sub);
-    menu.add(menuItem);
-
-    // tools
-    MenuItem tool = new MenuItem("Settings");
-    tool.setIcon(IconHelper.createStyle("settings"));
-    tool.addSelectionListener(new SelectionListener<MenuEvent>() {
-      @Override
-      public void componentSelected(MenuEvent ce) {
-        Info.display("Event", "The 'Settings' tool was clicked");
-      }
-    });
-    menu.addTool(tool);
-
-    menu.addToolSeperator();
-
-    tool = new MenuItem("Logout");
-    tool.setIcon(IconHelper.createStyle("logout"));
-    tool.addSelectionListener(new SelectionListener<MenuEvent>() {
-      @Override
-      public void componentSelected(MenuEvent ce) {
-        Info.display("Event", "The 'Logout' tool was clicked");
-      }
-    });
-    menu.addTool(tool);
-  }
-
-  private Window createAccordionWindow() {
-    final Window w = new Window();
-    w.setMinimizable(true);
-    w.setMaximizable(true);
-    w.setIcon(IconHelper.createStyle("accordion"));
-    w.setHeading("Accordion Window");
-    w.setWidth(200);
-    w.setHeight(350);
-
-    ToolBar toolBar = new ToolBar();
-    Button item = new Button();
-    item.setIcon(IconHelper.createStyle("icon-connect"));
-    toolBar.add(item);
-
-    toolBar.add(new SeparatorToolItem());
-    w.setTopComponent(toolBar);
-
-    item = new Button();
-    item.setIcon(IconHelper.createStyle("icon-user-add"));
-    toolBar.add(item);
-
-    item = new Button();
-    item.setIcon(IconHelper.createStyle("icon-user-delete"));
-    toolBar.add(item);
-
-    w.setLayout(new AccordionLayout());
-
-    ContentPanel cp = new ContentPanel();
-    cp.setAnimCollapse(false);
-    cp.setHeading("Online Users");
-    cp.setScrollMode(Scroll.AUTO);
-    cp.getHeader().addTool(new ToolButton("x-tool-refresh"));
-
-    w.add(cp);
-
-    TreeStore<ModelData> store = new TreeStore<ModelData>();
-    TreePanel<ModelData> tree = new TreePanel<ModelData>(store);
-    tree.setIconProvider(new ModelIconProvider<ModelData>() {
-
-      public AbstractImagePrototype getIcon(ModelData model) {
-        if (model.get("icon") != null) {
-          return IconHelper.createStyle((String) model.get("icon"));
-        } else {
-          return null;
-        }
+      for (int i = 0; i < 5; i++) {
+         MenuItem item = new MenuItem("Bogus Window " + (i + 1));
+         item.setData("window", createBogusWindow(i));
+         item.addSelectionListener(menuListener);
+         sub.add(item);
       }
 
-    });
-    tree.setDisplayProperty("name");
+      menuItem.setSubMenu(sub);
+      menu.add(menuItem);
 
-    ModelData m = newItem("Family", null);
-    store.add(m, false);
-    tree.setExpanded(m, true);
+      // tools
+      MenuItem tool = new MenuItem("Settings");
+      tool.setIcon(IconHelper.createStyle("settings"));
+      tool.addSelectionListener(new SelectionListener<MenuEvent>() {
+         @Override
+         public void componentSelected(MenuEvent ce) {
+            Info.display("Event", "The 'Settings' tool was clicked");
+         }
+      });
+      menu.addTool(tool);
 
-    store.add(m, newItem("Darrell", "user"), false);
-    store.add(m, newItem("Maro", "user-girl"), false);
-    store.add(m, newItem("Lia", "user-kid"), false);
-    store.add(m, newItem("Alec", "user-kid"), false);
-    store.add(m, newItem("Andrew", "user-kid"), false);
+      menu.addToolSeperator();
 
-    m = newItem("Friends", null);
-    store.add(m, false);
-    tree.setExpanded(m, true);
-    store.add(m, newItem("Bob", "user"), false);
-    store.add(m, newItem("Mary", "user-girl"), false);
-    store.add(m, newItem("Sally", "user-girl"), false);
-    store.add(m, newItem("Jack", "user"), false);
+      tool = new MenuItem("Logout");
+      tool.setIcon(IconHelper.createStyle("logout"));
+      tool.addSelectionListener(new SelectionListener<MenuEvent>() {
+         @Override
+         public void componentSelected(MenuEvent ce) {
+            Info.display("Event", "The 'Logout' tool was clicked");
+         }
+      });
+      menu.addTool(tool);
+   }
 
-    cp.add(tree);
+   private Window createAccordionWindow() {
+      final Window w = new Window();
+      w.setMinimizable(true);
+      w.setMaximizable(true);
+      w.setIcon(IconHelper.createStyle("accordion"));
+      w.setHeading("Accordion Window");
+      w.setWidth(200);
+      w.setHeight(350);
 
-    cp = new ContentPanel();
-    cp.setAnimCollapse(false);
-    cp.setHeading("Settings");
-    cp.setBodyStyleName("pad-text");
-    cp.addText(ResourcesData.DUMMY_TEXT_SHORT);
-    w.add(cp);
+      ToolBar toolBar = new ToolBar();
+      Button item = new Button();
+      item.setIcon(IconHelper.createStyle("icon-connect"));
+      toolBar.add(item);
 
-    cp = new ContentPanel();
-    cp.setAnimCollapse(false);
-    cp.setHeading("Stuff");
-    cp.setBodyStyleName("pad-text");
-    cp.addText(ResourcesData.DUMMY_TEXT_SHORT);
-    w.add(cp);
+      toolBar.add(new SeparatorToolItem());
+      w.setTopComponent(toolBar);
 
-    cp = new ContentPanel();
-    cp.setAnimCollapse(false);
-    cp.setHeading("More Stuff");
-    cp.setBodyStyleName("pad-text");
-    cp.addText(ResourcesData.DUMMY_TEXT_SHORT);
-    w.add(cp);
-    return w;
-  }
+      item = new Button();
+      item.setIcon(IconHelper.createStyle("icon-user-add"));
+      toolBar.add(item);
 
-  private Window createBogusWindow(int index) {
-    Window w = new Window();
-    w.setIcon(IconHelper.createStyle("bogus"));
-    w.setMinimizable(true);
-    w.setMaximizable(true);
-    w.setHeading("Bogus Window " + ++index);
-    w.setSize(400, 300);
-    return w;
-  }
+      item = new Button();
+      item.setIcon(IconHelper.createStyle("icon-user-delete"));
+      toolBar.add(item);
 
-  private Window createGridWindow() {
-    Window w = new Window();
-    w.setIcon(IconHelper.createStyle("icon-grid"));
-    w.setMinimizable(true);
-    w.setMaximizable(true);
-    w.setHeading("Grid Window");
-    w.setSize(500, 400);
-    w.setLayout(new FitLayout());
+      w.setLayout(new AccordionLayout());
 
-    GroupingStore<Stock> store = new GroupingStore<Stock>();
-    store.add(ResourcesData.getCompanies());
-    store.groupBy("industry");
+      ContentPanel cp = new ContentPanel();
+      cp.setAnimCollapse(false);
+      cp.setHeading("Online Users");
+      cp.setScrollMode(Scroll.AUTO);
+      cp.getHeader().addTool(new ToolButton("x-tool-refresh"));
 
-    ColumnConfig company = new ColumnConfig("name", "Company", 60);
-    ColumnConfig price = new ColumnConfig("open", "Price", 20);
-    price.setNumberFormat(NumberFormat.getCurrencyFormat());
-    ColumnConfig change = new ColumnConfig("change", "Change", 20);
-    ColumnConfig industry = new ColumnConfig("industry", "Industry", 20);
-    ColumnConfig last = new ColumnConfig("date", "Last Updated", 20);
-    last.setDateTimeFormat(DateTimeFormat.getFormat("MM/dd/y"));
+      w.add(cp);
 
-    List<ColumnConfig> config = new ArrayList<ColumnConfig>();
-    config.add(company);
-    config.add(price);
-    config.add(change);
-    config.add(industry);
-    config.add(last);
+      TreeStore<ModelData> store = new TreeStore<ModelData>();
+      TreePanel<ModelData> tree = new TreePanel<ModelData>(store);
+      tree.setIconProvider(new ModelIconProvider<ModelData>() {
 
-    final ColumnModel cm = new ColumnModel(config);
+         public AbstractImagePrototype getIcon(ModelData model) {
+            if (model.get("icon") != null) {
+               return IconHelper.createStyle((String) model.get("icon"));
+            } else {
+               return null;
+            }
+         }
 
-    GroupingView view = new GroupingView();
-    view.setForceFit(true);
-    view.setGroupRenderer(new GridGroupRenderer() {
-      public String render(GroupColumnData data) {
-        String f = cm.getColumnById(data.field).getHeader();
-        String l = data.models.size() == 1 ? "Item" : "Items";
-        return f + ": " + data.group + " (" + data.models.size() + " " + l
-            + ")";
+      });
+      tree.setDisplayProperty("name");
+
+      ModelData m = newItem("Family", null);
+      store.add(m, false);
+      tree.setExpanded(m, true);
+
+      store.add(m, newItem("Darrell", "user"), false);
+      store.add(m, newItem("Maro", "user-girl"), false);
+      store.add(m, newItem("Lia", "user-kid"), false);
+      store.add(m, newItem("Alec", "user-kid"), false);
+      store.add(m, newItem("Andrew", "user-kid"), false);
+
+      m = newItem("Friends", null);
+      store.add(m, false);
+      tree.setExpanded(m, true);
+      store.add(m, newItem("Bob", "user"), false);
+      store.add(m, newItem("Mary", "user-girl"), false);
+      store.add(m, newItem("Sally", "user-girl"), false);
+      store.add(m, newItem("Jack", "user"), false);
+
+      cp.add(tree);
+
+      cp = new ContentPanel();
+      cp.setAnimCollapse(false);
+      cp.setHeading("Settings");
+      cp.setBodyStyleName("pad-text");
+      cp.addText(ResourcesData.DUMMY_TEXT_SHORT);
+      w.add(cp);
+
+      cp = new ContentPanel();
+      cp.setAnimCollapse(false);
+      cp.setHeading("Stuff");
+      cp.setBodyStyleName("pad-text");
+      cp.addText(ResourcesData.DUMMY_TEXT_SHORT);
+      w.add(cp);
+
+      cp = new ContentPanel();
+      cp.setAnimCollapse(false);
+      cp.setHeading("More Stuff");
+      cp.setBodyStyleName("pad-text");
+      cp.addText(ResourcesData.DUMMY_TEXT_SHORT);
+      w.add(cp);
+      return w;
+   }
+
+   private Window createBogusWindow(int index) {
+      Window w = new Window();
+      w.setIcon(IconHelper.createStyle("bogus"));
+      w.setMinimizable(true);
+      w.setMaximizable(true);
+      w.setHeading("Bogus Window " + ++index);
+      w.setSize(400, 300);
+      return w;
+   }
+
+   private Window createGridWindow() {
+      Window w = new Window();
+      w.setIcon(IconHelper.createStyle("icon-grid"));
+      w.setMinimizable(true);
+      w.setMaximizable(true);
+      w.setHeading("Grid Window");
+      w.setSize(500, 400);
+      w.setLayout(new FitLayout());
+
+      GroupingStore<Stock> store = new GroupingStore<Stock>();
+      store.add(ResourcesData.getCompanies());
+      store.groupBy("industry");
+
+      ColumnConfig company = new ColumnConfig("name", "Company", 60);
+      ColumnConfig price = new ColumnConfig("open", "Price", 20);
+      price.setNumberFormat(NumberFormat.getCurrencyFormat());
+      ColumnConfig change = new ColumnConfig("change", "Change", 20);
+      ColumnConfig industry = new ColumnConfig("industry", "Industry", 20);
+      ColumnConfig last = new ColumnConfig("date", "Last Updated", 20);
+      last.setDateTimeFormat(DateTimeFormat.getFormat("MM/dd/y"));
+
+      List<ColumnConfig> config = new ArrayList<ColumnConfig>();
+      config.add(company);
+      config.add(price);
+      config.add(change);
+      config.add(industry);
+      config.add(last);
+
+      final ColumnModel cm = new ColumnModel(config);
+
+      GroupingView view = new GroupingView();
+      view.setForceFit(true);
+      view.setGroupRenderer(new GridGroupRenderer() {
+         public String render(GroupColumnData data) {
+            String f = cm.getColumnById(data.field).getHeader();
+            String l = data.models.size() == 1 ? "Item" : "Items";
+            return f + ": " + data.group + " (" + data.models.size() + " " + l + ")";
+         }
+      });
+
+      Grid<Stock> grid = new Grid<Stock>(store, cm);
+      grid.setView(view);
+      grid.setBorders(true);
+
+      w.add(grid);
+      return w;
+   }
+
+   private Window createTabWindow() {
+      Window w = new Window();
+      w.setMinimizable(true);
+      w.setMaximizable(true);
+      w.setSize(740, 480);
+      w.setIcon(IconHelper.createStyle("tabs"));
+      w.setHeading("Tab Window");
+
+      w.setLayout(new FitLayout());
+
+      TabPanel panel = new TabPanel();
+
+      for (int i = 0; i < 4; i++) {
+         TabItem item = new TabItem("Tab Item " + (i + 1));
+         item.addText("Something useful would be here");
+         panel.add(item);
       }
-    });
 
-    Grid<Stock> grid = new Grid<Stock>(store, cm);
-    grid.setView(view);
-    grid.setBorders(true);
+      w.add(panel);
+      return w;
+   }
 
-    w.add(grid);
-    return w;
-  }
+   private void itemSelected(ComponentEvent ce) {
+      Window w;
+      if (ce instanceof MenuEvent) {
+         MenuEvent me = (MenuEvent) ce;
+         w = me.getItem().getData("window");
+      } else {
+         w = ce.getComponent().getData("window");
+      }
+      if (!desktop.getWindows().contains(w)) {
+         desktop.addWindow(w);
+      }
+      if (w != null && !w.isVisible()) {
+         w.show();
+      } else {
+         w.toFront();
+      }
+   }
 
-  private Window createTabWindow() {
-    Window w = new Window();
-    w.setMinimizable(true);
-    w.setMaximizable(true);
-    w.setSize(740, 480);
-    w.setIcon(IconHelper.createStyle("tabs"));
-    w.setHeading("Tab Window");
-
-    w.setLayout(new FitLayout());
-
-    TabPanel panel = new TabPanel();
-
-    for (int i = 0; i < 4; i++) {
-      TabItem item = new TabItem("Tab Item " + (i + 1));
-      item.addText("Something useful would be here");
-      panel.add(item);
-    }
-
-    w.add(panel);
-    return w;
-  }
-
-  private void itemSelected(ComponentEvent ce) {
-    Window w;
-    if (ce instanceof MenuEvent) {
-      MenuEvent me = (MenuEvent) ce;
-      w = me.getItem().getData("window");
-    } else {
-      w = ce.getComponent().getData("window");
-    }
-    if (!desktop.getWindows().contains(w)) {
-      desktop.addWindow(w);
-    }
-    if (w != null && !w.isVisible()) {
-      w.show();
-    } else {
-      w.toFront();
-    }
-  }
-
-  private ModelData newItem(String text, String iconStyle) {
-    ModelData m = new BaseModelData();
-    m.set("name", text);
-    m.set("icon", iconStyle);
-    return m;
-  }
+   private ModelData newItem(String text, String iconStyle) {
+      ModelData m = new BaseModelData();
+      m.set("name", text);
+      m.set("icon", iconStyle);
+      return m;
+   }
 }

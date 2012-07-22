@@ -6,8 +6,8 @@ import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.InitializationError;
 
 /**
- * gwt-test-utils {@link Runner}, which adds a {@link GwtRunListener} before
- * running each test. <strong>For internal use only.</strong>
+ * gwt-test-utils {@link Runner}, which adds a {@link GwtRunListener} before running each test.
+ * <strong>For internal use only.</strong>
  * 
  * @author Gael Lazzari
  * 

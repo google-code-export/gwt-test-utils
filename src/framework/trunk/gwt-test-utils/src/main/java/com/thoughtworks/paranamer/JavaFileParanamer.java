@@ -21,8 +21,8 @@ import java.util.Map;
 
 /**
  * .java parser implementation of Paranamer. It relies on <a
- * href="http://code.google.com/p/javaparser/">javaparser library</a> 1.0.8+ to
- * parse java files retrieved by a {@link JavaFileFinder} implementation.
+ * href="http://code.google.com/p/javaparser/">javaparser library</a> 1.0.8+ to parse java files
+ * retrieved by a {@link JavaFileFinder} implementation.
  * 
  * @author Gael Lazzari
  * 
@@ -30,8 +30,8 @@ import java.util.Map;
 public class JavaFileParanamer implements Paranamer {
 
    /**
-    * Interface in charge of retrieving .java file where a specific
-    * {@link Method} or {@link Constructor} is declared.
+    * Interface in charge of retrieving .java file where a specific {@link Method} or
+    * {@link Constructor} is declared.
     * 
     * @author Gael Lazzari
     * 
@@ -40,13 +40,12 @@ public class JavaFileParanamer implements Paranamer {
 
       /**
        * 
-       * Retrieve and open the .java file where the specified {@link Method} or
-       * {@link Constructor} is declared
+       * Retrieve and open the .java file where the specified {@link Method} or {@link Constructor}
+       * is declared
        * 
-       * @param methodOrConstructor the {@link Method} or {@link Constructor}
-       *           for which the parameter names are looked up.
-       * @return an opened input stream on the corresponding .java file, or null
-       *         if not found.
+       * @param methodOrConstructor the {@link Method} or {@link Constructor} for which the
+       *           parameter names are looked up.
+       * @return an opened input stream on the corresponding .java file, or null if not found.
        */
       InputStream openJavaFile(AccessibleObject methodOrConstructor);
 
@@ -180,8 +179,8 @@ public class JavaFileParanamer implements Paranamer {
 
    /**
     * 
-    * @param javaFileFinder Object responsible for opening .java files where
-    *           requested {@link Method} or {@link Constructor} are declared.
+    * @param javaFileFinder Object responsible for opening .java files where requested
+    *           {@link Method} or {@link Constructor} are declared.
     */
    public JavaFileParanamer(JavaFileFinder javaFileFinder) {
       this.javaFileFinder = javaFileFinder;
@@ -191,8 +190,7 @@ public class JavaFileParanamer implements Paranamer {
    /*
     * (non-Javadoc)
     * 
-    * @see
-    * com.thoughtworks.paranamer.Paranamer#lookupParameterNames(java.lang.reflect
+    * @see com.thoughtworks.paranamer.Paranamer#lookupParameterNames(java.lang.reflect
     * .AccessibleObject)
     */
    public String[] lookupParameterNames(AccessibleObject methodOrConstructor) {
@@ -202,8 +200,7 @@ public class JavaFileParanamer implements Paranamer {
    /*
     * (non-Javadoc)
     * 
-    * @see
-    * com.thoughtworks.paranamer.Paranamer#lookupParameterNames(java.lang.reflect
+    * @see com.thoughtworks.paranamer.Paranamer#lookupParameterNames(java.lang.reflect
     * .AccessibleObject, boolean)
     */
    public String[] lookupParameterNames(AccessibleObject methodOrConstructor,

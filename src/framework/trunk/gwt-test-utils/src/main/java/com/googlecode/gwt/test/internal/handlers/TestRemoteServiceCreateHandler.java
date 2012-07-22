@@ -11,8 +11,8 @@ import com.googlecode.gwt.test.rpc.RemoteServiceCreateHandler;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
 /**
- * GwtCreateHandler for {@link RemoteService} instances which would have been
- * declared in the module .ui.xml configuration file with the <servlet> tag.
+ * GwtCreateHandler for {@link RemoteService} instances which would have been declared in the module
+ * .ui.xml configuration file with the <servlet> tag.
  * 
  * @author Gael Lazzari
  * 
@@ -34,9 +34,8 @@ class TestRemoteServiceCreateHandler extends RemoteServiceCreateHandler {
    /*
     * (non-Javadoc)
     * 
-    * @see
-    * com.googlecode.gwt.test.server.RemoteServiceCreateHandler#findService(java
-    * .lang .Class, java.lang.String)
+    * @see com.googlecode.gwt.test.server.RemoteServiceCreateHandler#findService(java .lang .Class,
+    * java.lang.String)
     */
    @Override
    protected Object findService(Class<?> remoteServiceClass, String remoteServiceRelativePath) {

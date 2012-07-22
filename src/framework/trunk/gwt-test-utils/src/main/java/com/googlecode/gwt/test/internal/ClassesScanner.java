@@ -17,8 +17,7 @@ import org.slf4j.LoggerFactory;
 import com.googlecode.gwt.test.exceptions.GwtTestPatchException;
 
 /**
- * The class used to scan and filter classes. <strong>For internal use
- * only.</strong>
+ * The class used to scan and filter classes. <strong>For internal use only.</strong>
  * 
  * @author Gael Lazzari
  * 

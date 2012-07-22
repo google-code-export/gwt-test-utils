@@ -43,8 +43,8 @@ import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 import com.googlecode.gwt.test.utils.WidgetUtils;
 
 /**
- * Provides several methods to simulate the occurring of browser events
- * (onClick, onKeyDown, onChange, etc.) caused by the interaction with a widget.
+ * Provides several methods to simulate the occurring of browser events (onClick, onKeyDown,
+ * onChange, etc.) caused by the interaction with a widget.
  * 
  * @author Gael Lazzari
  * 
@@ -52,8 +52,7 @@ import com.googlecode.gwt.test.utils.WidgetUtils;
 public class Browser {
 
    /**
-    * A callback interface to handle error when dispatching a browser
-    * {@link Event}.
+    * A callback interface to handle error when dispatching a browser {@link Event}.
     * 
     * @author Gael Lazzari
     * 
@@ -70,23 +69,21 @@ public class Browser {
 
    /**
     * <p>
-    * Add some text in a text widget, starting at
-    * {@link ValueBoxBase#getCursorPos()} index and deleting
-    * {@link ValueBoxBase#getSelectedText()}.
+    * Add some text in a text widget, starting at {@link ValueBoxBase#getCursorPos()} index and
+    * deleting {@link ValueBoxBase#getSelectedText()}.
     * </p>
     * <p>
     * <ul>
     * <li>Like {@link Browser#fillText(HasText, String)}, {@link KeyDownEvent},
-    * {@link KeyPressEvent} and {@link KeyUpEvent} are triggered for each
-    * character in the value to add. They can be prevented with normal effect.</li>
+    * {@link KeyPressEvent} and {@link KeyUpEvent} are triggered for each character in the value to
+    * add. They can be prevented with normal effect.</li>
     * 
-    * <li>Contrary to {@link Browser#fillText(HasText, String)}, neither
-    * {@link BlurEvent} nor {@link ChangeEvent} are triggered.
+    * <li>Contrary to {@link Browser#fillText(HasText, String)}, neither {@link BlurEvent} nor
+    * {@link ChangeEvent} are triggered.
     * </ul>
     * </p>
     * 
-    * @param valueBox The widget to fill. <strong>It has to be attached and
-    *           visible</strong>
+    * @param valueBox The widget to fill. <strong>It has to be attached and visible</strong>
     * @param value The value to fill. Cannot be null or empty.
     * 
     * @throws IllegalArgumentException if the value to fill is null or empty.
@@ -167,8 +164,7 @@ public class Browser {
    }
 
    /**
-    * Simulates a click event on the widget with the given index inside a
-    * ComplexPanel.
+    * Simulates a click event on the widget with the given index inside a ComplexPanel.
     * 
     * @param panel The targeted panel.
     * @param index The index of the child widget to click inside the panel.
@@ -194,8 +190,7 @@ public class Browser {
     * Simulates a click event on the item of a MenuBar with the given index.
     * 
     * @param parent The targeted menu bar.
-    * @param clickedItemIndex The index of the child widget to click inside the
-    *           menu bar.
+    * @param clickedItemIndex The index of the child widget to click inside the menu bar.
     */
    public static void click(MenuBar parent, int clickedItemIndex) {
       click(parent, WidgetUtils.getMenuItems(parent).get(clickedItemIndex));
@@ -215,8 +210,7 @@ public class Browser {
     * Simulates a click event on the item of a SuggestBox with the given index.
     * 
     * @param suggestBox The targeted suggest box.
-    * @param clickedItemIndex The index of the child widget to click inside the
-    *           suggest box.
+    * @param clickedItemIndex The index of the child widget to click inside the suggest box.
     */
    public static void click(SuggestBox suggestBox, int clickedItemIndex) {
       click(suggestBox, WidgetUtils.getMenuItems(suggestBox).get(clickedItemIndex));
@@ -309,8 +303,7 @@ public class Browser {
    }
 
    /**
-    * Simulates an occurring of the given event due to an interaction with the
-    * target widget.
+    * Simulates an occurring of the given event due to an interaction with the target widget.
     * 
     * @param target The targeted widget.
     * @param events Some events to dispatch.
@@ -321,26 +314,25 @@ public class Browser {
 
    /**
     * <p>
-    * Remove the text within a widget which implements HasText interface by
-    * simulating a long backspace key press.
+    * Remove the text within a widget which implements HasText interface by simulating a long
+    * backspace key press.
     * </p>
     * <p>
     * <ul>
-    * <li>For each character in the text value of the widget, a
-    * {@link KeyDownEvent} is triggered with value
-    * {@link KeyCodes#KEY_BACKSPACE} . It can be prevented with normal effect.</li>
+    * <li>For each character in the text value of the widget, a {@link KeyDownEvent} is triggered
+    * with value {@link KeyCodes#KEY_BACKSPACE} . It can be prevented with normal effect.</li>
     * <li><strong>Only one</strong> {@link KeyUpEvent} is triggered with value
     * {@link KeyCodes#KEY_BACKSPACE}.</li>
     * <li>Than, a {@link BlurEvent} is triggered.</li>
-    * <li>Finally, if at least one on the KeyDown events has not been prevented,
-    * a {@link ChangeEvent} is triggered.</li>
+    * <li>Finally, if at least one on the KeyDown events has not been prevented, a
+    * {@link ChangeEvent} is triggered.</li>
     * </p>
     * <p>
     * Note that no {@link KeyPressEvent} would be triggered.
     * </p>
     * 
-    * @param hasTextWidget The widget to fill. If this implementation actually
-    *           isn't a {@link Widget} instance, nothing would be done.
+    * @param hasTextWidget The widget to fill. If this implementation actually isn't a
+    *           {@link Widget} instance, nothing would be done.
     */
    public static void emptyText(HasText hasTextWidget) {
       boolean changed = false;
@@ -380,24 +372,22 @@ public class Browser {
     * </p>
     * <p>
     * <ul>
-    * <li>For each character in the text value of the widget, a
-    * {@link KeyDownEvent} is triggered with value
-    * {@link KeyCodes#KEY_BACKSPACE} . It can be prevented with normal effect.</li>
-    * <li>Either one or x {@link KeyUpEvent} are triggered with value
-    * {@link KeyCodes#KEY_BACKSPACE}, according to the chosen empty text
-    * simulation (with x the number of character in the text value).</li>
+    * <li>For each character in the text value of the widget, a {@link KeyDownEvent} is triggered
+    * with value {@link KeyCodes#KEY_BACKSPACE} . It can be prevented with normal effect.</li>
+    * <li>Either one or x {@link KeyUpEvent} are triggered with value {@link KeyCodes#KEY_BACKSPACE}
+    * , according to the chosen empty text simulation (with x the number of character in the text
+    * value).</li>
     * <li>Than, a {@link BlurEvent} is triggered.</li>
-    * <li>Finally, if at least one on the KeyDown events has not been prevented,
-    * a {@link ChangeEvent} is triggered.</li>
+    * <li>Finally, if at least one on the KeyDown events has not been prevented, a
+    * {@link ChangeEvent} is triggered.</li>
     * </p>
     * <p>
     * Note that no {@link KeyPressEvent} would be triggered.
     * </p>
     * 
-    * @param hasTextWidget The widget to fill. If this implementation actually
-    *           isn't a {@link Widget} instance, nothing would be done.
-    * @param longBackPress True if it should simulate a long backspace press or
-    *           not.
+    * @param hasTextWidget The widget to fill. If this implementation actually isn't a
+    *           {@link Widget} instance, nothing would be done.
+    * @param longBackPress True if it should simulate a long backspace press or not.
     */
    public static void emptyText(HasText hasTextWidget, boolean longBackPress) {
       if (longBackPress) {
@@ -413,24 +403,23 @@ public class Browser {
     * </p>
     * <p>
     * <ul>
-    * <li>For each character in the value to fill, {@link KeyDownEvent},
-    * {@link KeyPressEvent} and {@link KeyUpEvent} are triggered. They can be
-    * prevented with normal effect.</li>
+    * <li>For each character in the value to fill, {@link KeyDownEvent}, {@link KeyPressEvent} and
+    * {@link KeyUpEvent} are triggered. They can be prevented with normal effect.</li>
     * <li>After typing, a {@link BlurEvent} is triggered.</li>
-    * <li>Than, if at least one of the KeyDown or KeyPress events has not been
-    * prevented, a {@link ChangeEvent} would be triggered.</li>
+    * <li>Than, if at least one of the KeyDown or KeyPress events has not been prevented, a
+    * {@link ChangeEvent} would be triggered.</li>
     * </ul>
     * </p>
     * 
     * <p>
-    * <strong>Do not use this method to remove text by calling it with an empty
-    * string. Use {@link Browser#emptyText(HasText, boolean)} instead.</strong>
+    * <strong>Do not use this method to remove text by calling it with an empty string. Use
+    * {@link Browser#emptyText(HasText, boolean)} instead.</strong>
     * </p>
     * 
-    * @param hasTextWidget The widget to fill. If this implementation actually
-    *           isn't a {@link Widget} instance, nothing would be done.
-    * @param check Indicate if the method should check if the hasText Widget to
-    *           fill is attached, visible and enabled before applying any event.
+    * @param hasTextWidget The widget to fill. If this implementation actually isn't a
+    *           {@link Widget} instance, nothing would be done.
+    * @param check Indicate if the method should check if the hasText Widget to fill is attached,
+    *           visible and enabled before applying any event.
     * @param value The value to fill. Cannot be null or empty.
     * @throws IllegalArgumentException if the value to fill is null or empty.
     */
@@ -445,25 +434,23 @@ public class Browser {
     * </p>
     * <p>
     * <ul>
-    * <li>For each character in the value to fill, {@link KeyDownEvent},
-    * {@link KeyPressEvent} and {@link KeyUpEvent} are triggered. They can be
-    * prevented with normal effect.</li>
+    * <li>For each character in the value to fill, {@link KeyDownEvent}, {@link KeyPressEvent} and
+    * {@link KeyUpEvent} are triggered. They can be prevented with normal effect.</li>
     * </ul>
     * </p>
     * 
     * <p>
-    * <strong>Do not use this method to remove text by calling it with an empty
-    * string. Use {@link Browser#emptyText(HasText, boolean)} instead.</strong>
+    * <strong>Do not use this method to remove text by calling it with an empty string. Use
+    * {@link Browser#emptyText(HasText, boolean)} instead.</strong>
     * </p>
     * 
-    * @param hasTextWidget The widget to fill. If this implementation actually
-    *           isn't a {@link Widget} instance, nothing would be done.
-    * @param check Indicate if the method should check if the hasText Widget to
-    *           fill is attached, visible and enabled before applying any event.
+    * @param hasTextWidget The widget to fill. If this implementation actually isn't a
+    *           {@link Widget} instance, nothing would be done.
+    * @param check Indicate if the method should check if the hasText Widget to fill is attached,
+    *           visible and enabled before applying any event.
     * @param value The value to fill. Cannot be null or empty.
-    * @param blur Specify if a blur event must be triggered. If
-    *           <strong>true</strong> and at least one on the KeyDown or
-    *           KeyPress events has not been prevented, a {@link ChangeEvent}
+    * @param blur Specify if a blur event must be triggered. If <strong>true</strong> and at least
+    *           one on the KeyDown or KeyPress events has not been prevented, a {@link ChangeEvent}
     *           would be triggered too.
     * @throws IllegalArgumentException if the value to fill is null or empty.
     */
@@ -531,22 +518,21 @@ public class Browser {
     * </p>
     * <p>
     * <ul>
-    * <li>For each character in the value to fill, {@link KeyDownEvent},
-    * {@link KeyPressEvent} and {@link KeyUpEvent} are triggered. They can be
-    * prevented with normal effect.</li>
+    * <li>For each character in the value to fill, {@link KeyDownEvent}, {@link KeyPressEvent} and
+    * {@link KeyUpEvent} are triggered. They can be prevented with normal effect.</li>
     * <li>After typing, a {@link BlurEvent} is triggered.</li>
-    * <li>Than, if at least one on the KeyDown or KeyPress events has not been
-    * prevented, a {@link ChangeEvent} would be triggered.</li>
+    * <li>Than, if at least one on the KeyDown or KeyPress events has not been prevented, a
+    * {@link ChangeEvent} would be triggered.</li>
     * </ul>
     * </p>
     * 
     * <p>
-    * <strong>Do not use this method to remove text by calling it with an empty
-    * string. Use {@link Browser#emptyText(HasText, boolean)} instead.</strong>
+    * <strong>Do not use this method to remove text by calling it with an empty string. Use
+    * {@link Browser#emptyText(HasText, boolean)} instead.</strong>
     * </p>
     * 
-    * @param hasTextWidget The widget to fill. If this implementation actually
-    *           isn't a {@link Widget} instance, nothing would be done.
+    * @param hasTextWidget The widget to fill. If this implementation actually isn't a
+    *           {@link Widget} instance, nothing would be done.
     * @param value The value to fill. Cannot be null or empty.
     * @throws IllegalArgumentException if the value to fill is null or empty.
     */
@@ -560,23 +546,21 @@ public class Browser {
     * </p>
     * <p>
     * <ul>
-    * <li>For each character in the value to fill, {@link KeyDownEvent},
-    * {@link KeyPressEvent} and {@link KeyUpEvent} are triggered. They can be
-    * prevented with normal effect.</li>
+    * <li>For each character in the value to fill, {@link KeyDownEvent}, {@link KeyPressEvent} and
+    * {@link KeyUpEvent} are triggered. They can be prevented with normal effect.</li>
     * </ul>
     * </p>
     * 
     * <p>
-    * <strong>Do not use this method to remove text by calling it with an empty
-    * string. Use {@link Browser#emptyText(HasText, boolean)} instead.</strong>
+    * <strong>Do not use this method to remove text by calling it with an empty string. Use
+    * {@link Browser#emptyText(HasText, boolean)} instead.</strong>
     * </p>
     * 
-    * @param hasTextWidget The widget to fill. If this implementation actually
-    *           isn't a {@link Widget} instance, nothing would be done.
+    * @param hasTextWidget The widget to fill. If this implementation actually isn't a
+    *           {@link Widget} instance, nothing would be done.
     * @param value The value to fill. Cannot be null or empty.
-    * @param blur Specify if a blur event must be triggered. If
-    *           <strong>true</strong> and at least one on the KeyDown or
-    *           KeyPress events has not been prevented, a {@link ChangeEvent}
+    * @param blur Specify if a blur event must be triggered. If <strong>true</strong> and at least
+    *           one on the KeyDown or KeyPress events has not been prevented, a {@link ChangeEvent}
     *           would be triggered too.
     * @throws IllegalArgumentException if the value to fill is null or empty.
     */
@@ -752,27 +736,25 @@ public class Browser {
 
    /**
     * <p>
-    * Remove a fixed number of character from the text within a widget which
-    * implements HasText interface by simulating a backspace key press.
+    * Remove a fixed number of character from the text within a widget which implements HasText
+    * interface by simulating a backspace key press.
     * </p>
     * <p>
     * <ul>
-    * <li>x {@link KeyDownEvent} are triggered with value
-    * {@link KeyCodes#KEY_BACKSPACE}, with x the number of backspace press
-    * passed as parameter. It can be prevented with normal effect.</li>
-    * <li>Than, x {@link KeyUpEvent} are triggered with value
-    * {@link KeyCodes#KEY_BACKSPACE}, with x the number of backspace press
-    * passed as parameter.</li>
+    * <li>x {@link KeyDownEvent} are triggered with value {@link KeyCodes#KEY_BACKSPACE}, with x the
+    * number of backspace press passed as parameter. It can be prevented with normal effect.</li>
+    * <li>Than, x {@link KeyUpEvent} are triggered with value {@link KeyCodes#KEY_BACKSPACE}, with x
+    * the number of backspace press passed as parameter.</li>
     * <li>Than, a {@link BlurEvent} is triggered.</li>
-    * <li>Finally, if at least one on the KeyDown events has not been prevented,
-    * a {@link ChangeEvent} is triggered.</li>
+    * <li>Finally, if at least one on the KeyDown events has not been prevented, a
+    * {@link ChangeEvent} is triggered.</li>
     * </p>
     * <p>
     * Note that no {@link KeyPressEvent} would be triggered.
     * </p>
     * 
-    * @param hasTextWidget The targeted widget. If this implementation actually
-    *           isn't a {@link Widget} instance, nothing would be done.
+    * @param hasTextWidget The targeted widget. If this implementation actually isn't a
+    *           {@link Widget} instance, nothing would be done.
     * @param backspacePressNumber The number of backspace key press to simulate.
     */
    public static void removeText(HasText hasTextWidget, int backspacePressNumber) {
@@ -807,8 +789,8 @@ public class Browser {
     * <p>
     * DEPRECATED : use {@link GwtModuleRunner#addClientProperty(String, String)}
     * </p>
-    * instead Set a browser property, like its 'user-agent', which could be use
-    * for deferred binding, like 'replace-with' mechanism.
+    * instead Set a browser property, like its 'user-agent', which could be use for deferred
+    * binding, like 'replace-with' mechanism.
     * 
     * @param name The name of the property.
     * @param value The value of the property.
@@ -820,8 +802,8 @@ public class Browser {
    }
 
    /**
-    * Simulate the submission of a form with the expected html result from the
-    * server. The targeted form is expected to be attached to the DOM.
+    * Simulate the submission of a form with the expected html result from the server. The targeted
+    * form is expected to be attached to the DOM.
     * 
     * @param form The form to submit
     * @param resultsHtml The mocked results to return from submitting the form

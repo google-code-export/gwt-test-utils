@@ -19,18 +19,16 @@ import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
 /**
  * <p>
- * The {@link GwtCreateHandler} class used to create {@link RemoteService}
- * sub-interface instances. It returns an asynchrone proxy of the service and
- * handles the simulation of GWT-RPC serialization through a
- * {@link GwtRpcInvocationHandler} and the exception management through a
+ * The {@link GwtCreateHandler} class used to create {@link RemoteService} sub-interface instances.
+ * It returns an asynchrone proxy of the service and handles the simulation of GWT-RPC serialization
+ * through a {@link GwtRpcInvocationHandler} and the exception management through a
  * {@link GwtRpcExceptionHandler}.
  * </p>
  * 
  * <p>
  * Before delegating the remote service object instantiation to the abstract
- * {@link RemoteServiceCreateHandler#findService(Class, String)} method, this
- * class ensure that a corresponding async interface is available for the
- * RemoteService subinterface to create.
+ * {@link RemoteServiceCreateHandler#findService(Class, String)} method, this class ensure that a
+ * corresponding async interface is available for the RemoteService subinterface to create.
  * </p>
  * 
  * @author Bertrand Paquet
@@ -95,13 +93,12 @@ public abstract class RemoteServiceCreateHandler implements GwtCreateHandler {
    }
 
    /**
-    * Method which actually is responsible for getting the {@link RemoteService}
-    * sub-interface implementation.
+    * Method which actually is responsible for getting the {@link RemoteService} sub-interface
+    * implementation.
     * 
-    * @param remoteServiceClass {@link RemoteService} sub-interface to get an
-    *           implementation.
-    * @param remoteServiceRelativePath the associated relative path, which is
-    *           provided in {@link RemoteServiceRelativePath} annotation.
+    * @param remoteServiceClass {@link RemoteService} sub-interface to get an implementation.
+    * @param remoteServiceRelativePath the associated relative path, which is provided in
+    *           {@link RemoteServiceRelativePath} annotation.
     * @return The corresponding remote service implementation.
     */
    protected abstract Object findService(Class<?> remoteServiceClass,

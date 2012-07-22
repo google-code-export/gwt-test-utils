@@ -6,8 +6,8 @@ import com.google.gwt.resources.client.DataResource;
 import com.google.gwt.safehtml.shared.UriUtils;
 
 /**
- * Callback interface where {@link DataResource } methods calls are redirected.
- * <strong>For internal use only.</strong>
+ * Callback interface where {@link DataResource } methods calls are redirected. <strong>For internal
+ * use only.</strong>
  * 
  * @author Gael Lazzari
  * 

@@ -4,8 +4,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 /**
- * ByteArrayOutputStream implementation that doesn't synchronize methods and
- * doesn't copy the data on toByteArray().
+ * ByteArrayOutputStream implementation that doesn't synchronize methods and doesn't copy the data
+ * on toByteArray().
  */
 class FastByteArrayOutputStream extends OutputStream {
    /**
@@ -30,8 +30,8 @@ class FastByteArrayOutputStream extends OutputStream {
    }
 
    /**
-    * Returns the byte array containing the written data. Note that this array
-    * will almost always be larger than the amount of data actually written.
+    * Returns the byte array containing the written data. Note that this array will almost always be
+    * larger than the amount of data actually written.
     */
    public byte[] getByteArray() {
       return buf;

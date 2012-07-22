@@ -1,16 +1,14 @@
 /*
  * Copyright 2008 Google Inc.
  * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
 package com.googlecode.gwt.test.internal.rewrite;
@@ -29,12 +27,11 @@ import com.google.gwt.dev.shell.rewrite.HostedModeClassRewriter.InstanceMethodOr
  * Rewrites references to modified JSO subtypes.
  * 
  * <ol>
- * <li>Changes the owner type for instructions that reference items in a JSO
- * class to the implementation class.</li>
+ * <li>Changes the owner type for instructions that reference items in a JSO class to the
+ * implementation class.</li>
  * <li>Rewrites instance calls to JSO classes into static calls.</li>
- * <li>Updates the descriptor for such call sites to includes a synthetic
- * <code>this</code> parameter. This modified method has same stack behavior as
- * the original instance method.</li>
+ * <li>Updates the descriptor for such call sites to includes a synthetic <code>this</code>
+ * parameter. This modified method has same stack behavior as the original instance method.</li>
  * </ol>
  */
 class RewriteRefsToJsoClasses extends ClassAdapter {
@@ -110,8 +107,8 @@ class RewriteRefsToJsoClasses extends ClassAdapter {
    }
 
    /**
-    * An unmodifiable set of descriptors containing
-    * <code>JavaScriptObject</code> and all subclasses.
+    * An unmodifiable set of descriptors containing <code>JavaScriptObject</code> and all
+    * subclasses.
     */
    protected final Set<String> jsoDescriptors;
 

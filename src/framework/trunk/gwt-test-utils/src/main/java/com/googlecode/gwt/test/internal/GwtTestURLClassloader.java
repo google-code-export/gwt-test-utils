@@ -12,18 +12,17 @@ import com.googlecode.gwt.test.exceptions.GwtTestException;
 
 /**
  * <p>
- * Custom URLClassLoader designed to retrieve every classpath entries necessary
- * to run gwt-test-utils tests, regardless of how tests are runned. It has to be
- * bound to the current thread at the very beginning of gwt-test-utils static
- * initialization. <strong>For internal use only.</strong>
+ * Custom URLClassLoader designed to retrieve every classpath entries necessary to run
+ * gwt-test-utils tests, regardless of how tests are runned. It has to be bound to the current
+ * thread at the very beginning of gwt-test-utils static initialization. <strong>For internal use
+ * only.</strong>
  * </p>
  * 
  * <p>
- * During its instanciation, this classloader checks if tests are launched by
- * maven-surefire-plugin, which bring an isolate classloader, also called
- * "booter" (see : http://maven.apache.org/plugins/maven-surefire
- * -plugin/examples/class-loading.html). This classloader hides classpath
- * resources required by GWT to build module {@link CompilationState}.
+ * During its instanciation, this classloader checks if tests are launched by maven-surefire-plugin,
+ * which bring an isolate classloader, also called "booter" (see :
+ * http://maven.apache.org/plugins/maven-surefire -plugin/examples/class-loading.html). This
+ * classloader hides classpath resources required by GWT to build module {@link CompilationState}.
  * </p>
  * 
  * @author Gael Lazzari

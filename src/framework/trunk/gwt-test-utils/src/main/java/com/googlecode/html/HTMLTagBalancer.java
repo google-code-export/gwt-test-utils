@@ -1,16 +1,14 @@
 /*
  * Copyright 2002-2009 Andy Clark, Marc Guillemot
  * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
 
@@ -39,9 +37,8 @@ import com.googlecode.html.filters.NamespaceBinder;
 import com.googlecode.html.xercesbridge.XercesBridge;
 
 /**
- * Balances tags in an HTML document. This component receives document events
- * and tries to correct many common mistakes that human (and computer) HTML
- * document authors make. This tag balancer can:
+ * Balances tags in an HTML document. This component receives document events and tries to correct
+ * many common mistakes that human (and computer) HTML document authors make. This tag balancer can:
  * <ul>
  * <li>add missing parent elements;
  * <li>automatically close elements with optional end tags; and
@@ -119,8 +116,8 @@ public class HTMLTagBalancer implements XMLDocumentFilter, HTMLComponent {
 
    /**
     * <font color="red">EXPERIMENTAL: may change in next release</font><br/>
-    * Name of the property holding the stack of elements in which context a
-    * document fragment should be parsed.
+    * Name of the property holding the stack of elements in which context a document fragment should
+    * be parsed.
     **/
    public static final String FRAGMENT_CONTEXT_STACK = "http://cyberneko.org/html/properties/balance-tags/fragment-context-stack";
 
@@ -211,10 +208,10 @@ public class HTMLTagBalancer implements XMLDocumentFilter, HTMLComponent {
    protected boolean fSeenRootElement;
 
    /**
-    * True if seen the end of the document element. In other words, this
-    * variable is set to false <em>until</em> the end &lt;/HTML&gt; tag is seen
-    * (or synthesized). This is used to ensure that extraneous events after the
-    * end of the document element do not make the document stream ill-formed.
+    * True if seen the end of the document element. In other words, this variable is set to false
+    * <em>until</em> the end &lt;/HTML&gt; tag is seen (or synthesized). This is used to ensure that
+    * extraneous events after the end of the document element do not make the document stream
+    * ill-formed.
     */
    protected boolean fSeenRootElementEnd;
 
@@ -245,8 +242,7 @@ public class HTMLTagBalancer implements XMLDocumentFilter, HTMLComponent {
    private boolean forcedEndElement_ = false;
 
    /**
-    * Stack of elements determining the context in which a document fragment
-    * should be parsed
+    * Stack of elements determining the context in which a document fragment should be parsed
     */
    private QName[] fragmentContextStack_ = null;
    private int fragmentContextStackSize_ = 0; // not 0 only when a fragment is
@@ -481,8 +477,8 @@ public class HTMLTagBalancer implements XMLDocumentFilter, HTMLComponent {
    } // endDocument(Augmentations)
 
    /**
-    * Consume elements that have been buffered, like </body></html> that are
-    * first consumed at the end of document
+    * Consume elements that have been buffered, like </body></html> that are first consumed at the
+    * end of document
     */
    private void consumeBufferedEndElements() {
       final List toConsume = new ArrayList(endElementsBuffer_);
@@ -730,11 +726,11 @@ public class HTMLTagBalancer implements XMLDocumentFilter, HTMLComponent {
    } // startElement(QName,XMLAttributes,Augmentations)
 
    /**
-    * Forces an element start, taking care to set the information to allow
-    * startElement to "see" that's the element has been forced.
+    * Forces an element start, taking care to set the information to allow startElement to "see"
+    * that's the element has been forced.
     * 
-    * @return <code>true</code> if creation could be done (TABLE's creation for
-    *         instance can't be forced)
+    * @return <code>true</code> if creation could be done (TABLE's creation for instance can't be
+    *         forced)
     */
    private boolean forceStartElement(final QName elem, XMLAttributes attrs, final Augmentations augs)
             throws XNIException {
@@ -1116,8 +1112,8 @@ public class HTMLTagBalancer implements XMLDocumentFilter, HTMLComponent {
    } // callEndElement(QName,Augmentations)
 
    /**
-    * Returns the depth of the open tag associated with the specified element
-    * name or -1 if no matching element is found.
+    * Returns the depth of the open tag associated with the specified element name or -1 if no
+    * matching element is found.
     * 
     * @param element The element.
     */
@@ -1144,8 +1140,8 @@ public class HTMLTagBalancer implements XMLDocumentFilter, HTMLComponent {
    } // getElementDepth(HTMLElements.Element)
 
    /**
-    * Returns the depth of the open tag associated with the specified element
-    * parent names or -1 if no matching element is found.
+    * Returns the depth of the open tag associated with the specified element parent names or -1 if
+    * no matching element is found.
     * 
     * @param parents The parent elements.
     */
@@ -1220,17 +1216,17 @@ public class HTMLTagBalancer implements XMLDocumentFilter, HTMLComponent {
    //
 
    /**
-    * Element info for each start element. This information is used when closing
-    * unbalanced inline elements. For example:
+    * Element info for each start element. This information is used when closing unbalanced inline
+    * elements. For example:
     * 
     * <pre>
      * &lt;i>unbalanced &lt;b>HTML&lt;/i> content&lt;/b>
      * </pre>
     * <p>
-    * It seems that it is a waste of processing and memory to copy the
-    * attributes for every start element even if there are no unbalanced inline
-    * elements in the document. However, if the attributes are <em>not</em>
-    * saved, then important attributes such as style information would be lost.
+    * It seems that it is a waste of processing and memory to copy the attributes for every start
+    * element even if there are no unbalanced inline elements in the document. However, if the
+    * attributes are <em>not</em> saved, then important attributes such as style information would
+    * be lost.
     * 
     * @author Andy Clark
     */
@@ -1256,8 +1252,7 @@ public class HTMLTagBalancer implements XMLDocumentFilter, HTMLComponent {
       /**
        * Creates an element information object.
        * <p>
-       * <strong>Note:</strong> This constructor makes a copy of the element
-       * information.
+       * <strong>Note:</strong> This constructor makes a copy of the element information.
        * 
        * @param element The element qualified name.
        */
@@ -1268,8 +1263,7 @@ public class HTMLTagBalancer implements XMLDocumentFilter, HTMLComponent {
       /**
        * Creates an element information object.
        * <p>
-       * <strong>Note:</strong> This constructor makes a copy of the element
-       * information.
+       * <strong>Note:</strong> This constructor makes a copy of the element information.
        * 
        * @param element The element qualified name.
        * @param attributes The element attributes.
@@ -1380,8 +1374,7 @@ public class HTMLTagBalancer implements XMLDocumentFilter, HTMLComponent {
    }
 
    /**
-    * Structure to hold information about an element placed in buffer to be
-    * comsumed later
+    * Structure to hold information about an element placed in buffer to be comsumed later
     */
    static class ElementEntry {
       private final QName name_;

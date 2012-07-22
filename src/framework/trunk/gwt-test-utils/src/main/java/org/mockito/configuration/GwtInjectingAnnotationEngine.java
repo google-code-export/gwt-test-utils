@@ -17,8 +17,8 @@ import org.mockito.internal.configuration.InjectingAnnotationEngine;
 import org.mockito.internal.util.reflection.FieldReader;
 
 /**
- * Adapted from {@link InjectingAnnotationEngine} to be able to mock GWT overlay
- * types and to support {@link Mock} annotation as well as Mockito's ones.
+ * Adapted from {@link InjectingAnnotationEngine} to be able to mock GWT overlay types and to
+ * support {@link Mock} annotation as well as Mockito's ones.
  * 
  * @author Gael Lazzari
  * 
@@ -75,9 +75,8 @@ class GwtInjectingAnnotationEngine implements AnnotationEngine {
    /*
     * (non-Javadoc)
     * 
-    * @see
-    * org.mockito.AnnotationEngine#createMockFor(java.lang.annotation.Annotation
-    * , java.lang.reflect.Field)
+    * @see org.mockito.AnnotationEngine#createMockFor(java.lang.annotation.Annotation ,
+    * java.lang.reflect.Field)
     */
    public Object createMockFor(Annotation annotation, Field field) {
       return delegate.createMockFor(annotation, field);
@@ -102,8 +101,8 @@ class GwtInjectingAnnotationEngine implements AnnotationEngine {
    }
 
    /**
-    * Initializes mock/spies dependencies for objects annotated with
-    * &#064;InjectMocks for given testClass.
+    * Initializes mock/spies dependencies for objects annotated with &#064;InjectMocks for given
+    * testClass.
     * <p>
     * See examples in javadoc for {@link MockitoAnnotations} class.
     * 

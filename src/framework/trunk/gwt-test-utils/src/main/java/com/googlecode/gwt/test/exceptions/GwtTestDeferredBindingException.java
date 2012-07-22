@@ -1,8 +1,8 @@
 package com.googlecode.gwt.test.exceptions;
 
 /**
- * Exception thrown when an error occurs during a deferred binding call
- * simulation (e.g. GWT.create(..))
+ * Exception thrown when an error occurs during a deferred binding call simulation (e.g.
+ * GWT.create(..))
  * 
  * @author Gael Lazzari
  * 

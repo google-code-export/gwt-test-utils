@@ -49,12 +49,11 @@ public class UiBinderXmlUtils {
    private static final String WITH_TAG = "with";
 
    /**
-    * Retrieve all child widgets contained in a UiBinder custom Element (for
-    * example : <g:stack>, <g:east>...).
+    * Retrieve all child widgets contained in a UiBinder custom Element (for example : <g:stack>,
+    * <g:east>...).
     * 
     * @param element The UiBinder custom Element.
-    * @return The list of child widget, which would be empty if the element has
-    *         no child.
+    * @return The list of child widget, which would be empty if the element has no child.
     */
    public static List<IsWidget> getChildWidgets(Element element) {
       List<IsWidget> childWidgets = JavaScriptObjects.getObject(element,

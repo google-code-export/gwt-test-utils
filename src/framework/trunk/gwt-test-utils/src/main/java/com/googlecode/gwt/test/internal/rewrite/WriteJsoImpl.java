@@ -1,16 +1,14 @@
 /*
  * Copyright 2008 Google Inc.
  * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
 package com.googlecode.gwt.test.internal.rewrite;
@@ -37,9 +35,8 @@ import com.googlecode.gwt.test.internal.utils.JavaScriptObjects;
  * Changes made by the base class:
  * <ol>
  * <li>The new type has the same name as the old type with a '$' appended.</li>
- * <li>All instance methods in the original type become static methods taking an
- * explicit <code>this</code> parameter. Such methods have the same stack
- * behavior as the original.</li>
+ * <li>All instance methods in the original type become static methods taking an explicit
+ * <code>this</code> parameter. Such methods have the same stack behavior as the original.</li>
  * </ol>
  */
 abstract class WriteJsoImpl extends ClassAdapter {
@@ -48,18 +45,17 @@ abstract class WriteJsoImpl extends ClassAdapter {
     * This type implements JavaScriptObject.
     * 
     * <ol>
-    * <li>JavaScriptObject itself gets a new synthetic field to store its
-    * internal properties.</li>
-    * <li>Instance methods are added so that JavaScriptObject implements all
-    * SingleJsoImpl interfaces.</li>
+    * <li>JavaScriptObject itself gets a new synthetic field to store its internal properties.</li>
+    * <li>Instance methods are added so that JavaScriptObject implements all SingleJsoImpl
+    * interfaces.</li>
     * </ol>
     * 
     */
    private static class ForJsoDollar extends WriteJsoImpl {
       private final SingleJsoImplData jsoData;
       /**
-       * An unmodifiable set of descriptors containing
-       * <code>JavaScriptObject</code> and all subclasses.
+       * An unmodifiable set of descriptors containing <code>JavaScriptObject</code> and all
+       * subclasses.
        */
       private final Set<String> jsoDescriptors;
 
@@ -81,8 +77,8 @@ abstract class WriteJsoImpl extends ClassAdapter {
          super.visit(version, access, name, signature, superName, interfaces);
 
          /*
-          * Generate the synthetic "properties" field to contain every
-          * properties of the JavaScript object.
+          * Generate the synthetic "properties" field to contain every properties of the JavaScript
+          * object.
           */
          FieldVisitor fv = visitField(Opcodes.ACC_PROTECTED | Opcodes.ACC_SYNTHETIC,
                   JavaScriptObjects.PROPERTIES,
@@ -119,11 +115,10 @@ abstract class WriteJsoImpl extends ClassAdapter {
       }
 
       /**
-       * JSO methods are implemented as flyweight style, with the instance being
-       * passed as the first parameter. This loop create instance methods on
-       * JSO$ for all of the mangled SingleJsoImpl interface method names. These
-       * instance methods simply turn around and call the static-dispatch
-       * methods. In Java, it might look like:
+       * JSO methods are implemented as flyweight style, with the instance being passed as the first
+       * parameter. This loop create instance methods on JSO$ for all of the mangled SingleJsoImpl
+       * interface method names. These instance methods simply turn around and call the
+       * static-dispatch methods. In Java, it might look like:
        * 
        * <pre>
      * interface Interface {
@@ -137,8 +132,7 @@ abstract class WriteJsoImpl extends ClassAdapter {
      * }
      * </pre>
        * 
-       * @param mangledName
-       *           {@code com_google_gwt_sample_hello_client_Interface_a}
+       * @param mangledName {@code com_google_gwt_sample_hello_client_Interface_a}
        * @param interfaceMethod {@code java.lang.String a(int, double)}
        * @param implementingMethod {@code static final java.lang.String
        *          a$(com.google.gwt.sample.hello.client.Jso, ...);}
@@ -148,15 +142,14 @@ abstract class WriteJsoImpl extends ClassAdapter {
          assert implementingMethod.getArgumentTypes().length > 0;
 
          /*
-          * The local descriptor is the same as the descriptor from the abstract
-          * method in the interface.
+          * The local descriptor is the same as the descriptor from the abstract method in the
+          * interface.
           */
          String localDescriptor = interfaceMethod.getDescriptor();
          Method localMethod = new Method(mangledName, localDescriptor);
 
          /*
-          * We also use the first argument to know which type to statically
-          * dispatch to.
+          * We also use the first argument to know which type to statically dispatch to.
           */
          Type implementingType = Type.getType("L"
                   + implementingMethod.getArgumentTypes()[0].getInternalName() + "$;");
@@ -170,9 +163,8 @@ abstract class WriteJsoImpl extends ClassAdapter {
             mv.visitCode();
 
             /*
-             * It just so happens that the stack and local variable sizes are
-             * the same, but they're kept distinct to aid in clarity should the
-             * dispatch logic change.
+             * It just so happens that the stack and local variable sizes are the same, but they're
+             * kept distinct to aid in clarity should the dispatch logic change.
              */
             int var = 0;
             int size = 0;
@@ -231,9 +223,9 @@ abstract class WriteJsoImpl extends ClassAdapter {
    }
 
    /**
-    * Creates a ClassVisitor to implement a JavaScriptObject subtype. This will
-    * select between a simple implementation for user-defined JSO subtypes and
-    * the complex implementation for implementing JavaScriptObject$.
+    * Creates a ClassVisitor to implement a JavaScriptObject subtype. This will select between a
+    * simple implementation for user-defined JSO subtypes and the complex implementation for
+    * implementing JavaScriptObject$.
     */
    public static ClassVisitor create(ClassVisitor cv, String classDescriptor,
             Set<String> jsoDescriptors, InstanceMethodOracle mapper,

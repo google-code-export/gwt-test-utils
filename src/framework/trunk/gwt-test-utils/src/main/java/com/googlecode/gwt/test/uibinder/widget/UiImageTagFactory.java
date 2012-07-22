@@ -55,8 +55,8 @@ public class UiImageTagFactory implements UiObjectTagFactory<Image> {
    /*
     * (non-Javadoc)
     * 
-    * @see com.googlecode.gwt.test.uibinder.UiObjectTagFactory#createUiObjectTag
-    * (java.lang.Class, java.util.Map)
+    * @see com.googlecode.gwt.test.uibinder.UiObjectTagFactory#createUiObjectTag (java.lang.Class,
+    * java.util.Map)
     */
    public UiObjectTag<Image> createUiObjectTag(Class<?> clazz, Map<String, Object> attributes) {
 

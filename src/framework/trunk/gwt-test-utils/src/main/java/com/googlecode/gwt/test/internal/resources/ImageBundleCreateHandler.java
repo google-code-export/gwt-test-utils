@@ -15,9 +15,8 @@ import com.googlecode.gwt.test.GwtCreateHandler;
 import com.googlecode.gwt.test.exceptions.GwtTestResourcesException;
 
 /**
- * Class in charge of the instanciation of all {@link ImageBundle}
- * sub-interfaces through deferred binding. <strong>For internal use
- * only.</strong>
+ * Class in charge of the instanciation of all {@link ImageBundle} sub-interfaces through deferred
+ * binding. <strong>For internal use only.</strong>
  * 
  * @author Gael Lazzari
  * 

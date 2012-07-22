@@ -5,9 +5,9 @@ import com.googlecode.gwt.test.internal.junit.AbstractGwtRunnerFactory;
 
 /**
  * <p>
- * The gwt-test-utils basic JUnit Runner allowing to run tests classes which
- * reference, directly or indirectly, GWT components. It works by annotating
- * your test class with <strong>&#064;RunWith(GwtRunner.class)</strong>.
+ * The gwt-test-utils basic JUnit Runner allowing to run tests classes which reference, directly or
+ * indirectly, GWT components. It works by annotating your test class with
+ * <strong>&#064;RunWith(GwtRunner.class)</strong>.
  * </p>
  * 
  * @author Gael Lazzari

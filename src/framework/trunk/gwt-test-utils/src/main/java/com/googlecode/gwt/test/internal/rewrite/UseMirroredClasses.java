@@ -1,16 +1,14 @@
 /*
  * Copyright 2010 Google Inc.
  * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
 
@@ -27,15 +25,13 @@ import com.google.gwt.dev.asm.Opcodes;
 import com.google.gwt.dev.asm.Type;
 
 /**
- * A general Class Visitor which will take any of the method calls in it's list
- * and replace them with static calls to another method (the "mirrored" method)
- * in another class (the "mirrored" class). This method should take the original
- * object as it's first argument, followed by the rest of the arguments to the
- * method. The "mirrored" class will not be rewritten, allowing the "mirrored"
- * method to do whatever modifications are necessary before calling the original
- * method (if desired). Methods which should be rewritten are listed in the
- * mirroredMethods map below. Note that our mirroring process is not robust
- * enough to rewrite methods on subtypes.
+ * A general Class Visitor which will take any of the method calls in it's list and replace them
+ * with static calls to another method (the "mirrored" method) in another class (the "mirrored"
+ * class). This method should take the original object as it's first argument, followed by the rest
+ * of the arguments to the method. The "mirrored" class will not be rewritten, allowing the
+ * "mirrored" method to do whatever modifications are necessary before calling the original method
+ * (if desired). Methods which should be rewritten are listed in the mirroredMethods map below. Note
+ * that our mirroring process is not robust enough to rewrite methods on subtypes.
  */
 class UseMirroredClasses extends ClassAdapter {
    private static class MethodInterceptor extends MethodAdapter {

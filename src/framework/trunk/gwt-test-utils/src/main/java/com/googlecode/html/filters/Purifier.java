@@ -1,16 +1,14 @@
 /*
  * Copyright 2004-2008 Andy Clark
  * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
 
@@ -33,8 +31,8 @@ import com.googlecode.html.HTMLEventInfo;
 import com.googlecode.html.xercesbridge.XercesBridge;
 
 /**
- * This filter purifies the HTML input to ensure XML well-formedness. The
- * purification process includes:
+ * This filter purifies the HTML input to ensure XML well-formedness. The purification process
+ * includes:
  * <ul>
  * <li>fixing illegal characters in the document, including
  * <ul>
@@ -43,26 +41,23 @@ import com.googlecode.html.xercesbridge.XercesBridge;
  * <li>document text;
  * </ul>
  * <li>ensuring the string "--" does not appear in the content of a comment;
- * <li>ensuring the string "]]>" does not appear in the content of a CDATA
- * section;
- * <li>ensuring that the XML declaration has required pseudo-attributes and that
- * the values are correct; and
+ * <li>ensuring the string "]]>" does not appear in the content of a CDATA section;
+ * <li>ensuring that the XML declaration has required pseudo-attributes and that the values are
+ * correct; and
  * <li>synthesized missing namespace bindings.
  * </ul>
  * <p>
- * Illegal characters in XML names are converted to the character sequence
- * "_u####_" where "####" is the value of the Unicode character represented in
- * hexadecimal. Whereas illegal characters appearing in document content is
- * converted to the character sequence "\\u####".
+ * Illegal characters in XML names are converted to the character sequence "_u####_" where "####" is
+ * the value of the Unicode character represented in hexadecimal. Whereas illegal characters
+ * appearing in document content is converted to the character sequence "\\u####".
  * <p>
- * In comments, the character '-' is replaced by the character sequence "- " to
- * prevent "--" from ever appearing in the comment content. For CDATA sections,
- * the character ']' is replaced by the character sequence "] " to prevent "]]"
- * from appearing.
+ * In comments, the character '-' is replaced by the character sequence "- " to prevent "--" from
+ * ever appearing in the comment content. For CDATA sections, the character ']' is replaced by the
+ * character sequence "] " to prevent "]]" from appearing.
  * <p>
  * The URI used for synthesized namespace bindings is
- * "http://cyberneko.org/html/ns/synthesized/<i>number</i>" where <i>number</i>
- * is generated to ensure uniqueness.
+ * "http://cyberneko.org/html/ns/synthesized/<i>number</i>" where <i>number</i> is generated to
+ * ensure uniqueness.
  * 
  * @author Andy Clark
  * 

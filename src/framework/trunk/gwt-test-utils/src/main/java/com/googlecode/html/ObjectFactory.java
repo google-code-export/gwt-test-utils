@@ -1,16 +1,14 @@
 /*
  * Copyright 2001-2008 The Apache Software Foundation.
  * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
 
@@ -25,13 +23,12 @@ import java.io.InputStreamReader;
 import java.util.Properties;
 
 /**
- * This class is duplicated for each JAXP subpackage so keep it in sync. It is
- * package private and therefore is not exposed as part of the JAXP API.
+ * This class is duplicated for each JAXP subpackage so keep it in sync. It is package private and
+ * therefore is not exposed as part of the JAXP API.
  * <p>
- * This code is designed to implement the JAXP 1.1 spec pluggability feature and
- * is designed to run on JDK version 1.1 and later, and to compile on JDK 1.2
- * and onward. The code also runs both as part of an unbundled jar file and when
- * bundled as part of the JDK.
+ * This code is designed to implement the JAXP 1.1 spec pluggability feature and is designed to run
+ * on JDK version 1.1 and later, and to compile on JDK 1.2 and onward. The code also runs both as
+ * part of an unbundled jar file and when bundled as part of the JDK.
  * <p>
  * 
  * @version $Id: ObjectFactory.java,v 1.1 2004/03/31 20:00:21 andyc Exp $
@@ -54,15 +51,15 @@ class ObjectFactory {
    private static final int DEFAULT_LINE_LENGTH = 80;
 
    /**
-    * cache the contents of the xerces.properties file. Until an attempt has
-    * been made to read this file, this will be null; if the file does not exist
-    * or we encounter some other error during the read, this will be empty.
+    * cache the contents of the xerces.properties file. Until an attempt has been made to read this
+    * file, this will be null; if the file does not exist or we encounter some other error during
+    * the read, this will be empty.
     */
    private static Properties fXercesProperties = null;
 
    /***
-    * Cache the time stamp of the xerces.properties file so that we know if it's
-    * been modified and can invalidate the cache when necessary.
+    * Cache the time stamp of the xerces.properties file so that we know if it's been modified and
+    * can invalidate the cache when necessary.
     */
    private static long fLastModified = -1;
 
@@ -71,8 +68,8 @@ class ObjectFactory {
    //
 
    /**
-    * Finds the implementation Class object in the specified order. The
-    * specified order is the following:
+    * Finds the implementation Class object in the specified order. The specified order is the
+    * following:
     * <ol>
     * <li>query the system property using <code>System.getProperty</code>
     * <li>read <code>META-INF/services/<i>factoryId</i></code> file
@@ -82,8 +79,8 @@ class ObjectFactory {
     * @return Class object of factory, never null
     * 
     * @param factoryId Name of the factory to find, same as a property name
-    * @param fallbackClassName Implementation class name, if nothing else is
-    *           found. Use null to mean no fallback.
+    * @param fallbackClassName Implementation class name, if nothing else is found. Use null to mean
+    *           no fallback.
     * 
     * @exception ObjectFactory.ConfigurationError
     */
@@ -92,8 +89,8 @@ class ObjectFactory {
    } // createObject(String,String):Object
 
    /**
-    * Finds the implementation Class object in the specified order. The
-    * specified order is the following:
+    * Finds the implementation Class object in the specified order. The specified order is the
+    * following:
     * <ol>
     * <li>query the system property using <code>System.getProperty</code>
     * <li>read <code>$java.home/lib/<i>propertiesFilename</i></code> file
@@ -104,11 +101,10 @@ class ObjectFactory {
     * @return Class object of factory, never null
     * 
     * @param factoryId Name of the factory to find, same as a property name
-    * @param propertiesFilename The filename in the $java.home/lib directory of
-    *           the properties file. If none specified,
-    *           ${java.home}/lib/xerces.properties will be used.
-    * @param fallbackClassName Implementation class name, if nothing else is
-    *           found. Use null to mean no fallback.
+    * @param propertiesFilename The filename in the $java.home/lib directory of the properties file.
+    *           If none specified, ${java.home}/lib/xerces.properties will be used.
+    * @param fallbackClassName Implementation class name, if nothing else is found. Use null to mean
+    *           no fallback.
     * 
     * @exception ObjectFactory.ConfigurationError
     */
@@ -239,8 +235,7 @@ class ObjectFactory {
    } // debugPrintln(String)
 
    /**
-    * Figure out which ClassLoader to use. For JDK 1.2 and later use the context
-    * ClassLoader.
+    * Figure out which ClassLoader to use. For JDK 1.2 and later use the context ClassLoader.
     */
    static ClassLoader findClassLoader() throws ConfigurationError {
       SecuritySupport ss = SecuritySupport.getInstance();
@@ -474,8 +469,7 @@ class ObjectFactory {
       //
 
       /**
-       * Construct a new instance with the specified detail string and
-       * exception.
+       * Construct a new instance with the specified detail string and exception.
        */
       ConfigurationError(String msg, Exception x) {
          super(msg);

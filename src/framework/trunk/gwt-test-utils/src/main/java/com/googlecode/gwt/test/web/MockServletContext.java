@@ -1,16 +1,14 @@
 /*
  * Copyright 2002-2010 the original author or authors.
  * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
 
@@ -39,8 +37,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Mock implementation of the {@link javax.servlet.ServletContext} interface.
- * Adapted from <strong>spring-test</strong>.
+ * Mock implementation of the {@link javax.servlet.ServletContext} interface. Adapted from
+ * <strong>spring-test</strong>.
  * 
  * 
  * @author Rod Johnson
@@ -50,8 +48,8 @@ import org.slf4j.LoggerFactory;
 public class MockServletContext implements ServletContext {
 
    /**
-    * Inner factory class used to just introduce a Java Activation Framework
-    * dependency when actually asked to resolve a MIME type.
+    * Inner factory class used to just introduce a Java Activation Framework dependency when
+    * actually asked to resolve a MIME type.
     */
    private static class MimeTypeResolver {
 
@@ -62,9 +60,8 @@ public class MockServletContext implements ServletContext {
    }
 
    /**
-    * Standard Servlet spec context attribute that specifies a temporary
-    * directory for the current web application, of type
-    * <code>java.io.File</code>.
+    * Standard Servlet spec context attribute that specifies a temporary directory for the current
+    * web application, of type <code>java.io.File</code>.
     */
    public static final String TEMP_DIR_CONTEXT_ATTRIBUTE = "javax.servlet.context.tempdir";
 

@@ -3,8 +3,7 @@ package com.googlecode.gwt.test.csv;
 import com.googlecode.gwt.test.exceptions.GwtTestException;
 
 /**
- * Exception thrown when an error occurs during the manipulation of the
- * gwt-test-utils CSV API.
+ * Exception thrown when an error occurs during the manipulation of the gwt-test-utils CSV API.
  * 
  * @author Gael Lazzari
  * 

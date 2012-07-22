@@ -10,8 +10,8 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
 /**
- * Class in charge of reseting all necessary GWT internal objects after the
- * execution of a unit test. <strong>For internal use only.</strong>
+ * Class in charge of reseting all necessary GWT internal objects after the execution of a unit
+ * test. <strong>For internal use only.</strong>
  * 
  * @author Bertrand Paquet
  * @author Gael Lazzari

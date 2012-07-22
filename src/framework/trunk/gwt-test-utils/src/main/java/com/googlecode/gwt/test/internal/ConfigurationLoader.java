@@ -29,8 +29,8 @@ import com.googlecode.gwt.test.patchers.PatchClass;
 import com.googlecode.gwt.test.utils.JavassistUtils;
 
 /**
- * Class in charge of parsing META-INF/gwt-test-utils.properties configuration
- * files. <strong>For internal use only.</strong>
+ * Class in charge of parsing META-INF/gwt-test-utils.properties configuration files. <strong>For
+ * internal use only.</strong>
  * 
  * @author Bertrand Paquet
  * @author Gael Lazzari

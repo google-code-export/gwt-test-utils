@@ -130,8 +130,7 @@ public class WebXmlUtils {
    }
 
    /**
-    * Retrieve servlets informations in the web.xml file.to retrieve its
-    * servlets information.
+    * Retrieve servlets informations in the web.xml file.to retrieve its servlets information.
     * 
     * @param document Object representing the web.xml file
     * @param xpath

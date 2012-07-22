@@ -9,8 +9,8 @@ import com.googlecode.gwt.test.internal.GwtClassLoader;
 import com.googlecode.gwt.test.internal.GwtFactory;
 
 /**
- * Internal {@link Runner} factory which load the runner and the test class
- * through {@link GwtClassLoader}. <strong>For internal use only.</strong>
+ * Internal {@link Runner} factory which load the runner and the test class through
+ * {@link GwtClassLoader}. <strong>For internal use only.</strong>
  * 
  * @author Gael Lazzari
  * 
@@ -38,11 +38,10 @@ public abstract class AbstractGwtRunnerFactory {
    }
 
    /**
-    * Get the full qualified name of the JUnit {@link Runner} to use to run test
-    * class according to the JUnit version available in the classpath.
+    * Get the full qualified name of the JUnit {@link Runner} to use to run test class according to
+    * the JUnit version available in the classpath.
     * 
-    * @param hasJUnit45OrHigher True if JUnit 4.5 or higher is available, false
-    *           otherwise.
+    * @param hasJUnit45OrHigher True if JUnit 4.5 or higher is available, false otherwise.
     * @return The full qualified name of the JUnit {@link Runner} to use.
     */
    protected abstract String getRunnerClassName(boolean hasJUnit45OrHigher);

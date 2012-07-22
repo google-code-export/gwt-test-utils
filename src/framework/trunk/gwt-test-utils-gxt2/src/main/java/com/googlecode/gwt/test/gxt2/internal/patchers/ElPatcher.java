@@ -15,81 +15,79 @@ import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 @PatchClass(El.class)
 class ElPatcher {
 
-  private static Pattern UNIT_PATTERN = Pattern.compile("^(\\d+)[(px|em|%|en|ex|pt|in|cm|mm|pc)]{0,1}$");
+   private static Pattern UNIT_PATTERN = Pattern.compile("^(\\d+)[(px|em|%|en|ex|pt|in|cm|mm|pc)]{0,1}$");
 
-  @PatchMethod
-  static String addUnits(String v, String defaultUnit) {
-    if (v == null)
-      return "";
+   @PatchMethod
+   static String addUnits(String v, String defaultUnit) {
+      if (v == null)
+         return "";
 
-    v = v.replaceAll(" ", "");
+      v = v.replaceAll(" ", "");
 
-    if ("undefined".equals(v))
-      return "";
+      if ("undefined".equals(v))
+         return "";
 
-    Matcher m = UNIT_PATTERN.matcher(v);
-    if (m.matches()) {
-      String unit = (m.groupCount() == 3) ? m.group(2)
-          : (defaultUnit != null && !"".equals(defaultUnit)) ? defaultUnit
-              : "px";
+      Matcher m = UNIT_PATTERN.matcher(v);
+      if (m.matches()) {
+         String unit = (m.groupCount() == 3) ? m.group(2)
+                  : (defaultUnit != null && !"".equals(defaultUnit)) ? defaultUnit : "px";
 
-      return m.group(1) + unit;
-    }
+         return m.group(1) + unit;
+      }
 
-    return v;
-  }
+      return v;
+   }
 
-  @PatchMethod
-  static El applyStyles(El el, String styles) {
-    Element elem = getWrappedElement(el);
-    LinkedHashMap<String, String> styleProperties = StyleUtils.getStyleProperties(elem.getAttribute("style"));
+   @PatchMethod
+   static El applyStyles(El el, String styles) {
+      Element elem = getWrappedElement(el);
+      LinkedHashMap<String, String> styleProperties = StyleUtils.getStyleProperties(elem.getAttribute("style"));
 
-    for (Map.Entry<String, String> entry : styleProperties.entrySet()) {
-      elem.getStyle().setProperty(entry.getKey(), entry.getValue());
-    }
+      for (Map.Entry<String, String> entry : styleProperties.entrySet()) {
+         elem.getStyle().setProperty(entry.getKey(), entry.getValue());
+      }
 
-    return el;
-  }
+      return el;
+   }
 
-  @PatchMethod
-  static void disableTextSelectInternal(com.google.gwt.user.client.Element e,
-      boolean disable) {
+   @PatchMethod
+   static void disableTextSelectInternal(com.google.gwt.user.client.Element e, boolean disable) {
 
-  }
+   }
 
-  @PatchMethod
-  static boolean isLeftorRight(El el, String s) {
-    return s != null && (s.contains("Left") || s.contains("Right"));
-  }
+   @PatchMethod
+   static boolean isLeftorRight(El el, String s) {
+      return s != null && (s.contains("Left") || s.contains("Right"));
+   }
 
-  @PatchMethod
-  static El removeStyleName(El el, String styleName) {
-    Element elem = getWrappedElement(el);
-    elem.removeClassName(styleName);
+   @PatchMethod
+   static El removeStyleName(El el, String styleName) {
+      Element elem = getWrappedElement(el);
+      elem.removeClassName(styleName);
 
-    return el;
-  }
+      return el;
+   }
 
-  @PatchMethod
-  static El repaint(El el) {
-    return el;
-  }
+   @PatchMethod
+   static El repaint(El el) {
+      return el;
+   }
 
-  @PatchMethod
-  static El setFocus(El el, boolean focus) {
-    Element dom = getWrappedElement(el);
+   @PatchMethod
+   static El setFocus(El el, boolean focus) {
+      Element dom = getWrappedElement(el);
 
-    if (focus) {
-      dom.focus();
-    } else {
-      dom.blur();
-    }
+      if (focus) {
+         dom.focus();
+      } else {
+         dom.blur();
+      }
 
-    return el;
-  }
+      return el;
+   }
 
-  private static Element getWrappedElement(El el) {
-    return GwtReflectionUtils.getPrivateFieldValue(el, "dom");
-  }
+   private static Element getWrappedElement(El el) {
+      return GwtReflectionUtils.getPrivateFieldValue(el, "dom");
+   }
 
 }

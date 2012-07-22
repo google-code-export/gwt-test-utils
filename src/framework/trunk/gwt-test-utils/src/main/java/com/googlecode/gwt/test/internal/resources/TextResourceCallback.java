@@ -7,8 +7,8 @@ import java.util.List;
 import com.google.gwt.resources.client.TextResource;
 
 /**
- * Callback interface where {@link TextResource } methods calls are redirected.
- * <strong>For internal use only.</strong>
+ * Callback interface where {@link TextResource } methods calls are redirected. <strong>For internal
+ * use only.</strong>
  * 
  * @author Gael Lazzari
  * 

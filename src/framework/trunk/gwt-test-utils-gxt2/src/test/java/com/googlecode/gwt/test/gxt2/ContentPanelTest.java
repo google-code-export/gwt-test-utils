@@ -12,30 +12,30 @@ import com.extjs.gxt.ui.client.widget.button.Button;
 // TODO: complete tests..
 public class ContentPanelTest extends GwtGxtTest {
 
-  private ContentPanel panel;
+   private ContentPanel panel;
 
-  @Before
-  public void beforeContentPanel() {
-    panel = new ContentPanel();
-  }
+   @Before
+   public void beforeContentPanel() {
+      panel = new ContentPanel();
+   }
 
-  @Test
-  public void parent() {
-    // Arrange
-    Button b = new Button();
+   @Test
+   public void parent() {
+      // Arrange
+      Button b = new Button();
 
-    // Act 1
-    panel.add(b);
+      // Act 1
+      panel.add(b);
 
-    // Assert 1
-    assertEquals(panel, b.getParent());
+      // Assert 1
+      assertEquals(panel, b.getParent());
 
-    // Act 2
-    panel.removeAll();
+      // Act 2
+      panel.removeAll();
 
-    // Assert 2
-    assertEquals(0, panel.getItemCount());
-    assertNull(b.getParent());
-  }
+      // Assert 2
+      assertEquals(0, panel.getItemCount());
+      assertNull(b.getParent());
+   }
 
 }

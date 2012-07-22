@@ -3,8 +3,7 @@ package com.googlecode.gwt.test.exceptions;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
 /**
- * Exception thrown when an error occurs during the manipulation of
- * gwt-test-utils reflection API.
+ * Exception thrown when an error occurs during the manipulation of gwt-test-utils reflection API.
  * 
  * @author Gael Lazzari
  * 

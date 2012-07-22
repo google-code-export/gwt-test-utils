@@ -19,9 +19,8 @@ import com.googlecode.gwt.test.internal.GwtConfig;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
 /**
- * Class in charge of the instanciation of all {@link LocalizableResource}
- * sub-interfaces through deferred binding. <strong>For internal use
- * only.</strong>
+ * Class in charge of the instanciation of all {@link LocalizableResource} sub-interfaces through
+ * deferred binding. <strong>For internal use only.</strong>
  * 
  * @author Gael Lazzari
  * 

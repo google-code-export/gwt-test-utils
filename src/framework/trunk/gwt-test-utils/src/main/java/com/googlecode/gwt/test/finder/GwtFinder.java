@@ -22,9 +22,8 @@ import com.googlecode.gwt.test.internal.AfterTestCallbackManager;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
 /**
- * Helper class which expose some static methods to retrieve Widgets (or widget
- * properties) that are attached to the {@link RootPanel} or
- * {@link RootLayoutPanel}.
+ * Helper class which expose some static methods to retrieve Widgets (or widget properties) that are
+ * attached to the {@link RootPanel} or {@link RootLayoutPanel}.
  * 
  * @author Gael Lazzari
  * 
@@ -32,8 +31,8 @@ import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 public class GwtFinder implements AfterTestCallback {
 
    /**
-    * The default ObjectFinder, which is responsible for delegating find request
-    * to registered {@link NodeObjectFinder} instances.
+    * The default ObjectFinder, which is responsible for delegating find request to registered
+    * {@link NodeObjectFinder} instances.
     * 
     * @author Gael Lazzari
     * 
@@ -74,10 +73,9 @@ public class GwtFinder implements AfterTestCallback {
    }
 
    /**
-    * An ObjectFinder implementation which find objects in a map of instanciated
-    * widget, indexed with theirs id. Widgets which implements {@link HasText},
-    * {@link HasHTML} and/or {@link HasName} are also indexed with theirs text,
-    * html and/or name.
+    * An ObjectFinder implementation which find objects in a map of instanciated widget, indexed
+    * with theirs id. Widgets which implements {@link HasText}, {@link HasHTML} and/or
+    * {@link HasName} are also indexed with theirs text, html and/or name.
     * 
     * @author Gael Lazzari
     * 
@@ -126,13 +124,12 @@ public class GwtFinder implements AfterTestCallback {
    private static GwtFinder INSTANCE = new GwtFinder();
 
    /**
-    * Find an attached widget or a property of an attached widget in the DOM
-    * which matchs the given introspection Node.
+    * Find an attached widget or a property of an attached widget in the DOM which matchs the given
+    * introspection Node.
     * 
     * @param o The root object to apply the introspection path
     * @param node The node introspection path
-    * @return The corresponding widget (or one of its properties), or null if
-    *         nothing was found.
+    * @return The corresponding widget (or one of its properties), or null if nothing was found.
     */
    @SuppressWarnings("unchecked")
    public static <T> T find(Object o, Node node) {
@@ -140,15 +137,13 @@ public class GwtFinder implements AfterTestCallback {
    }
 
    /**
-    * Find an attached widget or a property of an attached widget in the DOM
-    * which matchs the given params.
+    * Find an attached widget or a property of an attached widget in the DOM which matchs the given
+    * params.
     * 
-    * @param params An array of params, which could be either an introspection
-    *           path, a DOM id, a random text (for {@link HasText} widgets), a
-    *           random html (for {@link HasHTML} widget) or a name attribute
-    *           (for {@link HasName} widget).
-    * @return The corresponding widget (or one of its properties), or null if
-    *         nothing was found.
+    * @param params An array of params, which could be either an introspection path, a DOM id, a
+    *           random text (for {@link HasText} widgets), a random html (for {@link HasHTML}
+    *           widget) or a name attribute (for {@link HasName} widget).
+    * @return The corresponding widget (or one of its properties), or null if nothing was found.
     */
    @SuppressWarnings("unchecked")
    public static <T> T find(String... params) {
@@ -167,22 +162,20 @@ public class GwtFinder implements AfterTestCallback {
 
    /**
     * Register a custom {@link NodeObjectFinder} implementation to handle
-    * {@link GwtFinder#find(Object, Node)} calls with a specific root
-    * introspection path.
+    * {@link GwtFinder#find(Object, Node)} calls with a specific root introspection path.
     * 
-    * @param prefix The root of the introspection path the custom
-    *           {@link NodeObjectFinder} is responsible for
-    * @param nodeObjectFinder The custom implementation which would be used
-    *           whenever the root label of the introspection node does equals
-    *           the registered prefix.
+    * @param prefix The root of the introspection path the custom {@link NodeObjectFinder} is
+    *           responsible for
+    * @param nodeObjectFinder The custom implementation which would be used whenever the root label
+    *           of the introspection node does equals the registered prefix.
     */
    public static void registerNodeFinder(String prefix, NodeObjectFinder nodeObjectFinder) {
       INSTANCE.defaultObjectFinder.nodeObjectFinders.put(prefix, nodeObjectFinder);
    }
 
    /*
-    * Callback method which is made public by GwtFinderPatcher to be called by
-    * others internal patchers
+    * Callback method which is made public by GwtFinderPatcher to be called by others internal
+    * patchers
     */
    protected static void onAttach(Widget widget) {
 
@@ -214,8 +207,8 @@ public class GwtFinder implements AfterTestCallback {
    }
 
    /*
-    * Callback method which is made public by GwtFinderPatcher to be called by
-    * others internal patchers
+    * Callback method which is made public by GwtFinderPatcher to be called by others internal
+    * patchers
     */
    protected static void onDetach(Widget widget) {
 
@@ -244,8 +237,8 @@ public class GwtFinder implements AfterTestCallback {
    }
 
    /*
-    * Callback method which is made public by GwtFinderPatcher to be called by
-    * others internal patchers
+    * Callback method which is made public by GwtFinderPatcher to be called by others internal
+    * patchers
     */
    protected static void onSetHTML(HasHTML hasHTML, String newHTML, String oldHTML) {
       if (!(hasHTML instanceof Widget) || ((Widget) hasHTML).isAttached()) {
@@ -255,8 +248,8 @@ public class GwtFinder implements AfterTestCallback {
    }
 
    /*
-    * Callback method which is made public by GwtFinderPatcher to be called by
-    * others internal patchers
+    * Callback method which is made public by GwtFinderPatcher to be called by others internal
+    * patchers
     */
    protected static void onSetId(UIObject o, String newId, String oldId) {
       if (!(o instanceof Widget) || ((Widget) o).isAttached()) {
@@ -266,8 +259,8 @@ public class GwtFinder implements AfterTestCallback {
    }
 
    /*
-    * Callback method which is made public by GwtFinderPatcher to be called by
-    * others internal patchers
+    * Callback method which is made public by GwtFinderPatcher to be called by others internal
+    * patchers
     */
    protected static void onSetName(HasName hasName, String newName, String oldName) {
       if (!(hasName instanceof Widget) || ((Widget) hasName).isAttached()) {
@@ -277,8 +270,8 @@ public class GwtFinder implements AfterTestCallback {
    }
 
    /*
-    * Callback method which is made public by GwtFinderPatcher to be called by
-    * others internal patchers
+    * Callback method which is made public by GwtFinderPatcher to be called by others internal
+    * patchers
     */
    protected static void onSetText(HasText hasText, String newText, String oldText) {
       if (!(hasText instanceof Widget) || ((Widget) hasText).isAttached()) {

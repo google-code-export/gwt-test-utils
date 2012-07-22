@@ -1,16 +1,14 @@
 /*
  * Copyright 2002-2009 Andy Clark, Marc Guillemot
  * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
 
@@ -42,10 +40,9 @@ import com.googlecode.html.filters.NamespaceBinder;
 import com.googlecode.html.xercesbridge.XercesBridge;
 
 /**
- * An XNI-based parser configuration that can be used to parse HTML documents.
- * This configuration can be used directly in order to parse HTML documents or
- * can be used in conjunction with any XNI based tools, such as the Xerces2
- * implementation.
+ * An XNI-based parser configuration that can be used to parse HTML documents. This configuration
+ * can be used directly in order to parse HTML documents or can be used in conjunction with any XNI
+ * based tools, such as the Xerces2 implementation.
  * <p>
  * This configuration recognizes the following features:
  * <ul>
@@ -154,8 +151,7 @@ public class HTMLConfiguration extends ParserConfigurationSettings implements
    // state
 
    /**
-    * Stream opened by parser. Therefore, must close stream manually upon
-    * termination of parsing.
+    * Stream opened by parser. Therefore, must close stream manually upon termination of parsing.
     */
    protected boolean fCloseStream;
 
@@ -295,15 +291,14 @@ public class HTMLConfiguration extends ParserConfigurationSettings implements
    //
 
    /**
-    * Pushes an input source onto the current entity stack. This enables the
-    * scanner to transparently scan new content (e.g. the output written by an
-    * embedded script). At the end of the current entity, the scanner returns
-    * where it left off at the time this entity source was pushed.
+    * Pushes an input source onto the current entity stack. This enables the scanner to
+    * transparently scan new content (e.g. the output written by an embedded script). At the end of
+    * the current entity, the scanner returns where it left off at the time this entity source was
+    * pushed.
     * <p>
-    * <strong>Hint:</strong> To use this feature to insert the output of
-    * &lt;SCRIPT&gt; tags, remember to buffer the <em>entire</em> output of the
-    * processed instructions before pushing a new input source. Otherwise,
-    * events may appear out of sequence.
+    * <strong>Hint:</strong> To use this feature to insert the output of &lt;SCRIPT&gt; tags,
+    * remember to buffer the <em>entire</em> output of the processed instructions before pushing a
+    * new input source. Otherwise, events may appear out of sequence.
     * 
     * @param inputSource The new input source to start scanning.
     * @see #evaluateInputSource(XMLInputSource)
@@ -314,8 +309,8 @@ public class HTMLConfiguration extends ParserConfigurationSettings implements
 
    /**
     * <font color="red">EXPERIMENTAL: may change in next release</font><br/>
-    * Immediately evaluates an input source and add the new content (e.g. the
-    * output written by an embedded script).
+    * Immediately evaluates an input source and add the new content (e.g. the output written by an
+    * embedded script).
     * 
     * @param inputSource The new input source to start scanning.
     * @see #pushInputSource(XMLInputSource)
@@ -443,8 +438,8 @@ public class HTMLConfiguration extends ParserConfigurationSettings implements
     * 
     * @param inputSource The document's input source.
     * 
-    * @exception XMLConfigurationException Thrown if there is a configuration
-    *               error when initializing the parser.
+    * @exception XMLConfigurationException Thrown if there is a configuration error when
+    *               initializing the parser.
     * @exception IOException Thrown on I/O error.
     * 
     * @see #parse(boolean)
@@ -460,15 +455,13 @@ public class HTMLConfiguration extends ParserConfigurationSettings implements
    /**
     * Parses the document in a pull parsing fashion.
     * 
-    * @param complete True if the pull parser should parse the remaining
-    *           document completely.
+    * @param complete True if the pull parser should parse the remaining document completely.
     * 
     * @return True if there is more document to parse.
     * 
-    * @exception XNIException Any XNI exception, possibly wrapping another
-    *               exception.
-    * @exception IOException An IO exception from the parser, possibly from a
-    *               byte stream or character stream supplied by the parser.
+    * @exception XNIException Any XNI exception, possibly wrapping another exception.
+    * @exception IOException An IO exception from the parser, possibly from a byte stream or
+    *               character stream supplied by the parser.
     * 
     * @see #setInputSource
     */
@@ -489,9 +482,9 @@ public class HTMLConfiguration extends ParserConfigurationSettings implements
    } // parse(boolean):boolean
 
    /**
-    * If the application decides to terminate parsing before the xml document is
-    * fully parsed, the application should call this method to free any resource
-    * allocated during parsing. For example, close all opened streams.
+    * If the application decides to terminate parsing before the xml document is fully parsed, the
+    * application should call this method to free any resource allocated during parsing. For
+    * example, close all opened streams.
     */
    public void cleanup() {
       fDocumentScanner.cleanup(fCloseStream);
@@ -571,21 +564,19 @@ public class HTMLConfiguration extends ParserConfigurationSettings implements
    //
 
    /**
-    * Defines an error reporter for reporting HTML errors. There is no such
-    * thing as a fatal error in parsing HTML. I/O errors are fatal but should
-    * throw an <code>IOException</code> directly instead of reporting an error.
+    * Defines an error reporter for reporting HTML errors. There is no such thing as a fatal error
+    * in parsing HTML. I/O errors are fatal but should throw an <code>IOException</code> directly
+    * instead of reporting an error.
     * <p>
-    * When used in a configuration, the error reporter instance should be set as
-    * a property with the following property identifier:
+    * When used in a configuration, the error reporter instance should be set as a property with the
+    * following property identifier:
     * 
     * <pre>
      * "http://cyberneko.org/html/internal/error-reporter" in the
      * </pre>
-    * Components in the configuration can query the error reporter using this
-    * property identifier.
+    * Components in the configuration can query the error reporter using this property identifier.
     * <p>
-    * <strong>Note:</strong> All reported errors are within the domain
-    * "http://cyberneko.org/html".
+    * <strong>Note:</strong> All reported errors are within the domain "http://cyberneko.org/html".
     * 
     * @author Andy Clark
     */

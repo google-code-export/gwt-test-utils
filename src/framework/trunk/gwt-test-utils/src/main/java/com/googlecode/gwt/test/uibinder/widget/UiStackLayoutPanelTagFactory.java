@@ -90,9 +90,8 @@ public class UiStackLayoutPanelTagFactory implements UiObjectTagFactory<StackLay
    /*
     * (non-Javadoc)
     * 
-    * @see
-    * com.googlecode.gwt.test.uibinder.UiWidgetTagFactory#createUiObjectTag(
-    * java.lang .Class, java.util.Map)
+    * @see com.googlecode.gwt.test.uibinder.UiWidgetTagFactory#createUiObjectTag( java.lang .Class,
+    * java.util.Map)
     */
    public UiObjectTag<StackLayoutPanel> createUiObjectTag(Class<?> clazz,
             Map<String, Object> attributes) {

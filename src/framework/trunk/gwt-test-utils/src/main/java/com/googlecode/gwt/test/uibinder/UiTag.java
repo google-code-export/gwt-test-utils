@@ -7,8 +7,8 @@ import com.google.gwt.user.client.ui.Widget;
 
 /**
  * 
- * Base interface for a XML tag in a .ui.xml file. An UiTag should wrap an
- * object which correspond to a ui element declaration.
+ * Base interface for a XML tag in a .ui.xml file. An UiTag should wrap an object which correspond
+ * to a ui element declaration.
  * 
  * @author Gael Lazzari
  * 
@@ -43,11 +43,10 @@ public interface UiTag<T> {
    void appendText(String text);
 
    /**
-    * Callback method called when the UiBinder tag is closed, so implementation
-    * could apply some custom configuration if necessary.
+    * Callback method called when the UiBinder tag is closed, so implementation could apply some
+    * custom configuration if necessary.
     * 
-    * @return The UiBinder tag's wrapped object (Widget, Resource, DOM
-    *         element...)
+    * @return The UiBinder tag's wrapped object (Widget, Resource, DOM element...)
     */
    T endTag();
 

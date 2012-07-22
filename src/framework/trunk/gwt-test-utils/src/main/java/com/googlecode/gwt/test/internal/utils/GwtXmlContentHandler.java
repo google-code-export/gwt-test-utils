@@ -13,8 +13,7 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
 
 /**
- * SAX handler for GWT DOM parsing from an XML source. <strong>For internal use
- * only.</strong>
+ * SAX handler for GWT DOM parsing from an XML source. <strong>For internal use only.</strong>
  * 
  * @author Gael Lazzari
  * 

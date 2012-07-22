@@ -11,8 +11,7 @@ import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 class LayoutCommandPatcher {
 
    /*
-    * To replace Scheduler.get().scheduleFinally(this) by
-    * Scheduler.get().scheduleDeferred(this)
+    * To replace Scheduler.get().scheduleFinally(this) by Scheduler.get().scheduleDeferred(this)
     * 
     * @param cmd
     * 

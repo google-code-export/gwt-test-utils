@@ -27,10 +27,10 @@ import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
 /**
  * <p>
- * The default class for implementing {@link Patcher} methods. It relies on
- * convenient annotations {@link InitMethod} which marks a method to be a
- * bytecode initialization callback and {link PatchMethod} which marks a method
- * to be a substitution for another one following a simple convention.
+ * The default class for implementing {@link Patcher} methods. It relies on convenient annotations
+ * {@link InitMethod} which marks a method to be a bytecode initialization callback and {link
+ * PatchMethod} which marks a method to be a substitution for another one following a simple
+ * convention.
  * </p>
  * <p>
  * <strong>For internal use only.</strong>

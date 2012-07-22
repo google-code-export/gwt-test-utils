@@ -18,8 +18,8 @@ import com.googlecode.gwt.test.internal.GwtParanamer;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
 /**
- * Class responsible for Object instantiations. It handles provided
- * {@link UiField}, {@link UiFactory} fields and {@link UiConstructor} fields.
+ * Class responsible for Object instantiations. It handles provided {@link UiField},
+ * {@link UiFactory} fields and {@link UiConstructor} fields.
  * 
  * @author Gael Lazzari
  * 

@@ -14,8 +14,7 @@ import com.googlecode.gwt.test.uibinder.UiObjectTagFactory;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
 /**
- * Internal configuration of gwt-test-utils. <strong>For internal use
- * only.</strong>
+ * Internal configuration of gwt-test-utils. <strong>For internal use only.</strong>
  * 
  * @author Gael Lazzari
  * 
@@ -63,8 +62,8 @@ public class GwtConfig implements AfterTestCallback {
    }
 
    /**
-    * Setup a GWT module to be run. <strong>This method must be run only once,
-    * at the very beginning of the GWT module emulation.</strong>
+    * Setup a GWT module to be run. <strong>This method must be run only once, at the very beginning
+    * of the GWT module emulation.</strong>
     * 
     * @param gwtModuleRunner The configuration of the module to be run.
     */

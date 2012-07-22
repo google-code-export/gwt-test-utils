@@ -69,8 +69,8 @@ class UiBinderInvocationHandler implements InvocationHandler {
    }
 
    /**
-    * This method is in charge of the instanciation of DOM object / GWT widget
-    * and their binding with @UiField in the owner
+    * This method is in charge of the instanciation of DOM object / GWT widget and their binding
+    * with @UiField in the owner
     * 
     * @param owner The owner UiBinder subclass instance.
     * @return The root component, initially returned by {@link Link

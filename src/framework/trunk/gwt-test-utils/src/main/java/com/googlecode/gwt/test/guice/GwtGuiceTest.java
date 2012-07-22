@@ -12,20 +12,17 @@ import com.googlecode.gwt.test.rpc.RemoteServiceCreateHandler;
 
 /**
  * <p>
- * Base class for tests that needs to be run with a backend configured with
- * Google Guice.
+ * Base class for tests that needs to be run with a backend configured with Google Guice.
  * </p>
  * <p>
- * You can inject any object in subclasses. For {@link RemoteService} objects,
- * see the
- * {@link GwtGuiceTest#getRpcServiceFromInjector(Injector, Class, String)}
- * method which you might want to override to get deferred binding working as
- * you need in test mode.
+ * You can inject any object in subclasses. For {@link RemoteService} objects, see the
+ * {@link GwtGuiceTest#getRpcServiceFromInjector(Injector, Class, String)} method which you might
+ * want to override to get deferred binding working as you need in test mode.
  * </p>
  * 
  * <p>
- * The {@link GwtGuiceTest#getInjector()} also provides a default way to get a
- * working Guice {@link Injector} for your test.
+ * The {@link GwtGuiceTest#getInjector()} also provides a default way to get a working Guice
+ * {@link Injector} for your test.
  * </p>
  * 
  * @author Alex Dobjanschi
@@ -55,9 +52,9 @@ public abstract class GwtGuiceTest extends GwtTest {
    }
 
    /**
-    * Get the Guice injector to use. This implementation search in web.xml for
-    * any listener assignable to {@link GuiceServletContextListener} to retrieve
-    * its internal Injector by introspection.
+    * Get the Guice injector to use. This implementation search in web.xml for any listener
+    * assignable to {@link GuiceServletContextListener} to retrieve its internal Injector by
+    * introspection.
     * 
     * @return The Guice Injector to use.
     */
@@ -74,18 +71,16 @@ public abstract class GwtGuiceTest extends GwtTest {
    }
 
    /**
-    * Retrieve a GWT RPC service from a Guice injector. This implementation
-    * reads ServletDefinition declared in a Guice {@link ServletModule} to be
-    * able to bind object through the supplied remote service relative path of
-    * the targeted servlet.
+    * Retrieve a GWT RPC service from a Guice injector. This implementation reads ServletDefinition
+    * declared in a Guice {@link ServletModule} to be able to bind object through the supplied
+    * remote service relative path of the targeted servlet.
     * 
     * @param injector The Guice Injector configured.
-    * @param remoteServiceClass The remote service interface of the Guice object
-    *           to retrieve.
-    * @param remoteServiceRelativePath The remote service relative path of the
-    *           Guice object to retrieve.
-    * @return The corresponding Guice object, or null if no object has been
-    *         found for this type and path.
+    * @param remoteServiceClass The remote service interface of the Guice object to retrieve.
+    * @param remoteServiceRelativePath The remote service relative path of the Guice object to
+    *           retrieve.
+    * @return The corresponding Guice object, or null if no object has been found for this type and
+    *         path.
     * 
     * @see GwtGuiceTest#getInjector()
     */

@@ -6,8 +6,7 @@ import java.lang.reflect.Method;
 import com.google.inject.Injector;
 
 /**
- * InvocationHandler where calls to an proxified Gin {@link Injector} are
- * redirected.
+ * InvocationHandler where calls to an proxified Gin {@link Injector} are redirected.
  * 
  * @author Alex Dobjanschi
  * @author Gael Lazzari

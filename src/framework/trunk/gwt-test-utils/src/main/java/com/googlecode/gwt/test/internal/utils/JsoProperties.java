@@ -4,8 +4,7 @@ import com.google.gwt.core.client.JavaScriptObject;
 
 /**
  * 
- * List of {@link JavaScriptObject} properties. <strong>For internal use
- * only.</strong>
+ * List of {@link JavaScriptObject} properties. <strong>For internal use only.</strong>
  * 
  * @author Gael Lazzari
  * 

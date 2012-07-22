@@ -3,8 +3,7 @@ package com.googlecode.gwt.test.internal;
 import com.google.gwt.junit.client.WithProperties;
 
 /**
- * Testing framework independent error listener. <strong>For internal use
- * only.</strong>
+ * Testing framework independent error listener. <strong>For internal use only.</strong>
  * 
  * @author Gael Lazzari
  * 

@@ -12,9 +12,8 @@ import com.googlecode.gwt.test.internal.utils.JavaScriptObjects;
 
 /**
  * 
- * {@link Patcher} decorator to use for all {@link JavaScriptObject} subclasses
- * (also known as "overlay types"). It automatically adds an implementation for
- * getter and setter written in JSNI.
+ * {@link Patcher} decorator to use for all {@link JavaScriptObject} subclasses (also known as
+ * "overlay types"). It automatically adds an implementation for getter and setter written in JSNI.
  * 
  * @author Gael Lazzari
  * 

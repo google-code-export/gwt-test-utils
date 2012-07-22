@@ -25,8 +25,8 @@ import com.googlecode.gwt.test.exceptions.GwtTestException;
 import com.googlecode.gwt.test.internal.utils.XmlUtils;
 
 /**
- * Class which provide all necessary information about a GWT module. <strong>For
- * internal use only.</strong>
+ * Class which provide all necessary information about a GWT module. <strong>For internal use
+ * only.</strong>
  * 
  * @author Gael Lazzari
  * 

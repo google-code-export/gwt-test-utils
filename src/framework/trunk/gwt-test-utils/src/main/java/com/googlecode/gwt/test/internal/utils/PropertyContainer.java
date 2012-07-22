@@ -8,8 +8,8 @@ import com.google.gwt.core.client.JavaScriptObject;
 
 /**
  * 
- * An object which is added to all {@link JavaScriptObject} instance to store
- * its native properties. <strong>For internal use only.</strong>
+ * An object which is added to all {@link JavaScriptObject} instance to store its native properties.
+ * <strong>For internal use only.</strong>
  * 
  * @author Gael Lazzari
  * @author Bertrand Paquet

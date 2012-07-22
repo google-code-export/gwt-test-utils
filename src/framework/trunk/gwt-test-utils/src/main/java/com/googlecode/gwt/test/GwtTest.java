@@ -23,20 +23,17 @@ import com.googlecode.gwt.test.utils.events.Browser.BrowserErrorHandler;
 
 /**
  * <p>
- * Base class for test classes which need to manipulate (directly or indirectly)
- * GWT components.
+ * Base class for test classes which need to manipulate (directly or indirectly) GWT components.
  * </p>
  * 
  * <p>
- * It provides the mechanism which allows the instantiation of GWT components in
- * the Java Virtual Machine, by beeing launched with the {@link GwtRunner} JUnit
- * Runner.
+ * It provides the mechanism which allows the instantiation of GWT components in the Java Virtual
+ * Machine, by beeing launched with the {@link GwtRunner} JUnit Runner.
  * </p>
  * 
  * <p>
- * Class loading parameters used to instantiate classes referenced in tests can
- * be configured using the META-INF\gwt-test-utils.properties file of your
- * application.
+ * Class loading parameters used to instantiate classes referenced in tests can be configured using
+ * the META-INF\gwt-test-utils.properties file of your application.
  * </p>
  * 
  * @author Gael Lazzari
@@ -61,8 +58,8 @@ public abstract class GwtTest extends GwtModuleRunnerAdapter implements Test {
    }
 
    /**
-    * Unbind the static classloader instance from the current thread by binding
-    * the system classloader instead.
+    * Unbind the static classloader instance from the current thread by binding the system
+    * classloader instead.
     */
    @AfterClass
    public static final void unbindClassLoader() {
@@ -114,8 +111,8 @@ public abstract class GwtTest extends GwtModuleRunnerAdapter implements Test {
    }
 
    /**
-    * Create a test instance compatible with JUnit 3 {@link Test} so that the
-    * current <code>GwtTest</code> can be added to a {@link TestSuite}.
+    * Create a test instance compatible with JUnit 3 {@link Test} so that the current
+    * <code>GwtTest</code> can be added to a {@link TestSuite}.
     * 
     * @return A JUnit Test adapter for this test.
     */
@@ -126,9 +123,7 @@ public abstract class GwtTest extends GwtModuleRunnerAdapter implements Test {
    /*
     * (non-Javadoc)
     * 
-    * @see
-    * com.googlecode.gwt.test.GwtModuleRunnerAdapter#getDefaultBrowserErrorHandler
-    * ()
+    * @see com.googlecode.gwt.test.GwtModuleRunnerAdapter#getDefaultBrowserErrorHandler ()
     */
    @Override
    protected BrowserErrorHandler getDefaultBrowserErrorHandler() {

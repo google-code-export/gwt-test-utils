@@ -9,8 +9,8 @@ import com.google.gwt.resources.client.CssResource;
 import com.googlecode.gwt.test.internal.resources.CssResourceReader.CssParsingResult;
 
 /**
- * Callback interface where {@link CssResource } methods calls are redirected.
- * <strong>For internal use only.</strong>
+ * Callback interface where {@link CssResource } methods calls are redirected. <strong>For internal
+ * use only.</strong>
  * 
  * @author Gael Lazzari
  * 

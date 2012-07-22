@@ -21,8 +21,8 @@ import com.googlecode.gwt.test.internal.resources.ResourcePrototypeProxyBuilder;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
 /**
- * Class responsible for managing declared resources, e.g. <ui:with />,
- * <ui:style />, <ui:image /> and <ui:data /> tags.
+ * Class responsible for managing declared resources, e.g. <ui:with />, <ui:style />, <ui:image />
+ * and <ui:data /> tags.
  * 
  * @author Gael Lazzari
  * 
@@ -349,8 +349,7 @@ class UiResourceManager {
    }
 
    /**
-    * Handles <ui:style /> tags with a "type" attribute to specify a
-    * {@link CssResource} subtype.
+    * Handles <ui:style /> tags with a "type" attribute to specify a {@link CssResource} subtype.
     */
    private static class UiStyleTag extends UiResourceTag {
 
@@ -415,10 +414,8 @@ class UiResourceManager {
    /**
     * Constructs a new UiResourceManager associated with a widget.
     * 
-    * @param owner The {@link UiBinder} owner widget to be associated with the
-    *           UiResourceManager, which calls the
-    *           {@link UiBinder#createAndBindUi(Object)} method to initialize
-    *           itself
+    * @param owner The {@link UiBinder} owner widget to be associated with the UiResourceManager,
+    *           which calls the {@link UiBinder#createAndBindUi(Object)} method to initialize itself
     * @return The new instance
     */
    static final UiResourceManager newInstance(Object owner) {
@@ -433,11 +430,9 @@ class UiResourceManager {
    }
 
    /**
-    * Get a resource declared in the .ui.xml file with the <with res="alias" />
-    * tag.
+    * Get a resource declared in the .ui.xml file with the <with res="alias" /> tag.
     * 
-    * @param alias The alias of the resource ('res' attribute in the .ui.xml
-    *           file)
+    * @param alias The alias of the resource ('res' attribute in the .ui.xml file)
     * @return The corresponding resource, or null if it does not exist
     */
    @SuppressWarnings("unchecked")
@@ -446,16 +441,14 @@ class UiResourceManager {
    }
 
    /**
-    * Register some new resources which should correspond to a <ui:import> tag
-    * in the .ui.xml file.
+    * Register some new resources which should correspond to a <ui:import> tag in the .ui.xml file.
     * 
     * @param attributes Map of attributes parsed from the tag
     * @param parentTag The parent tag if any
     * @param owner The {@link UiBinder} owner widget, which calls the
-    *           {@link UiBinder#createAndBindUi(Object)} method to initialize
-    *           itself.
-    * @return The UiBinderTag which has registered the imported object instances
-    *         in the {@link UiResourceManager}.
+    *           {@link UiBinder#createAndBindUi(Object)} method to initialize itself.
+    * @return The UiBinderTag which has registered the imported object instances in the
+    *         {@link UiResourceManager}.
     */
    UiTag<?> registerImport(Map<String, Object> attributes, UiTag<?> parentTag, Object owner) {
       return new UiImportTag(attributes, parentTag, resources, owner);
@@ -467,30 +460,26 @@ class UiResourceManager {
     * @param attributes Map of attributes parsed from the tag
     * @param parentTag The parent tag if any
     * @param owner The {@link UiBinder} owner widget, which calls the
-    *           {@link UiBinder#createAndBindUi(Object)} method to initialize
-    *           itself.
-    * @return The UiBinderTag which has registered the imported object instances
-    *         in the {@link UiResourceManager}.
+    *           {@link UiBinder#createAndBindUi(Object)} method to initialize itself.
+    * @return The UiBinderTag which has registered the imported object instances in the
+    *         {@link UiResourceManager}.
     */
    UiTag<String> registerMsg(Map<String, Object> attributes, UiTag<?> parentTag, Object owner) {
       return new UiMsgTag(parentTag);
    }
 
    /**
-    * Register a new resource which should correspond to a resource tag in the
-    * .ui.xml file.
+    * Register a new resource which should correspond to a resource tag in the .ui.xml file.
     * 
-    * @param localName The type of the resource ('with', 'style', 'image' or
-    *           'data')
+    * @param localName The type of the resource ('with', 'style', 'image' or 'data')
     * @param attributes Map of attributes parsed from the tag
     * @param parentTag The parent tag if any
     * @param owner The {@link UiBinder} owner widget, which calls the
-    *           {@link UiBinder#createAndBindUi(Object)} method to initialize
-    *           itself.
+    *           {@link UiBinder#createAndBindUi(Object)} method to initialize itself.
     * @return The UiBinderTag which wraps the Resource instance.
     * 
-    * @throws GwtTestUiBinderException If the localName is not managed or if the
-    *            alias is already binded to another Resource object
+    * @throws GwtTestUiBinderException If the localName is not managed or if the alias is already
+    *            binded to another Resource object
     */
    UiTag<?> registerResource(String localName, Map<String, Object> attributes, UiTag<?> parentTag,
             Object owner) throws GwtTestUiBinderException {

@@ -43,8 +43,7 @@ public class GwtReflectionUtils {
    }
 
    /**
-    * Callback optionally used to filter fields to be operated on by a field
-    * callback.
+    * Callback optionally used to filter fields to be operated on by a field callback.
     */
    public interface FieldFilter {
 
@@ -70,8 +69,7 @@ public class GwtReflectionUtils {
    }
 
    /**
-    * Callback optionally used to method fields to be operated on by a method
-    * callback.
+    * Callback optionally used to method fields to be operated on by a method callback.
     */
    public interface MethodFilter {
 
@@ -183,8 +181,8 @@ public class GwtReflectionUtils {
    }
 
    /**
-    * Invoke the given callback on all fields in the target class, going up the
-    * class hierarchy to get all declared fields.
+    * Invoke the given callback on all fields in the target class, going up the class hierarchy to
+    * get all declared fields.
     * 
     * @param clazz the target class to analyze
     * @param fc the callback to invoke for each field
@@ -195,8 +193,8 @@ public class GwtReflectionUtils {
    }
 
    /**
-    * Invoke the given callback on all fields in the target class, going up the
-    * class hierarchy to get all declared fields.
+    * Invoke the given callback on all fields in the target class, going up the class hierarchy to
+    * get all declared fields.
     * 
     * @param clazz the target class to analyze
     * @param fc the callback to invoke for each field
@@ -226,11 +224,11 @@ public class GwtReflectionUtils {
    }
 
    /**
-    * Perform the given callback operation on all matching methods of the given
-    * class and superclasses.
+    * Perform the given callback operation on all matching methods of the given class and
+    * superclasses.
     * <p>
-    * The same named method occurring on subclass and superclass will appear
-    * twice, unless excluded by a {@link MethodFilter}.
+    * The same named method occurring on subclass and superclass will appear twice, unless excluded
+    * by a {@link MethodFilter}.
     * 
     * @param clazz class to start looking at
     * @param mc the callback to invoke for each method
@@ -242,11 +240,11 @@ public class GwtReflectionUtils {
    }
 
    /**
-    * Perform the given callback operation on all matching methods of the given
-    * class and superclasses (or given interface and super-interfaces).
+    * Perform the given callback operation on all matching methods of the given class and
+    * superclasses (or given interface and super-interfaces).
     * <p>
-    * The same named method occurring on subclass and superclass will appear
-    * twice, unless excluded by the specified {@link MethodFilter}.
+    * The same named method occurring on subclass and superclass will appear twice, unless excluded
+    * by the specified {@link MethodFilter}.
     * 
     * @param clazz class to start looking at
     * @param mc the callback to invoke for each method
@@ -314,8 +312,8 @@ public class GwtReflectionUtils {
    }
 
    /**
-    * Get all declared methods on the leaf class and all superclasses. Leaf
-    * class methods are included first.
+    * Get all declared methods on the leaf class and all superclasses. Leaf class methods are
+    * included first.
     */
    public static Method[] getAllDeclaredMethods(Class<?> leafClass) throws IllegalArgumentException {
       final List<Method> methods = new ArrayList<Method>(32);
@@ -374,9 +372,8 @@ public class GwtReflectionUtils {
    }
 
    /**
-    * Get the class corresponding to the String passed as param. This method is
-    * better than {@link Class#forName(String)} because it can handle inner
-    * class when necessary.
+    * Get the class corresponding to the String passed as param. This method is better than
+    * {@link Class#forName(String)} because it can handle inner class when necessary.
     * 
     * @param type The class name
     * @return The corresponding class object
@@ -398,9 +395,8 @@ public class GwtReflectionUtils {
    }
 
    /**
-    * Get all fields from a class and its superclasses, being carefull not to
-    * add multiple '$assertionsDisabled' fields which are added when a class
-    * contains java assertions.
+    * Get all fields from a class and its superclasses, being carefull not to add multiple
+    * '$assertionsDisabled' fields which are added when a class contains java assertions.
     * 
     * @param clazz The class to introspect.
     * @return The set of field of the class
@@ -474,12 +470,11 @@ public class GwtReflectionUtils {
    }
 
    /**
-    * Convenience method to instantiate a class using its no-arg constructor. As
-    * this method doesn't try to load classes by name, it should avoid
-    * class-loading issues.
+    * Convenience method to instantiate a class using its no-arg constructor. As this method doesn't
+    * try to load classes by name, it should avoid class-loading issues.
     * <p>
-    * Note that this method tries to set the constructor accessible if given a
-    * non-accessible (that is, non-public) constructor.
+    * Note that this method tries to set the constructor accessible if given a non-accessible (that
+    * is, non-public) constructor.
     * 
     * @param <T> the type of object to instanciate
     * @param clazz class to instantiate
@@ -502,12 +497,11 @@ public class GwtReflectionUtils {
    }
 
    /**
-    * Convenience method to instantiate a class using the given constructor. As
-    * this method doesn't try to load classes by name, it should avoid
-    * class-loading issues.
+    * Convenience method to instantiate a class using the given constructor. As this method doesn't
+    * try to load classes by name, it should avoid class-loading issues.
     * <p>
-    * Note that this method tries to set the constructor accessible if given a
-    * non-accessible (that is, non-public) constructor.
+    * Note that this method tries to set the constructor accessible if given a non-accessible (that
+    * is, non-public) constructor.
     * 
     * @param <T> The object type
     * @param ctor the constructor to instantiate
@@ -547,10 +541,9 @@ public class GwtReflectionUtils {
    }
 
    /**
-    * Make the given constructor accessible, explicitly setting it accessible if
-    * necessary. The <code>setAccessible(true)</code> method is only called when
-    * actually necessary, to avoid unnecessary conflicts with a JVM
-    * SecurityManager (if active).
+    * Make the given constructor accessible, explicitly setting it accessible if necessary. The
+    * <code>setAccessible(true)</code> method is only called when actually necessary, to avoid
+    * unnecessary conflicts with a JVM SecurityManager (if active).
     * 
     * @param ctor the constructor to make accessible
     * @see java.lang.reflect.Constructor#setAccessible
@@ -563,10 +556,9 @@ public class GwtReflectionUtils {
    }
 
    /**
-    * Make the given field accessible, explicitly setting it accessible if
-    * necessary. The <code>setAccessible(true)</code> method is only called when
-    * actually necessary, to avoid unnecessary conflicts with a JVM
-    * SecurityManager (if active).
+    * Make the given field accessible, explicitly setting it accessible if necessary. The
+    * <code>setAccessible(true)</code> method is only called when actually necessary, to avoid
+    * unnecessary conflicts with a JVM SecurityManager (if active).
     * 
     * @param field the field to make accessible
     * @see java.lang.reflect.Field#setAccessible
@@ -579,10 +571,9 @@ public class GwtReflectionUtils {
    }
 
    /**
-    * Make the given method accessible, explicitly setting it accessible if
-    * necessary. The <code>setAccessible(true)</code> method is only called when
-    * actually necessary, to avoid unnecessary conflicts with a JVM
-    * SecurityManager (if active).
+    * Make the given method accessible, explicitly setting it accessible if necessary. The
+    * <code>setAccessible(true)</code> method is only called when actually necessary, to avoid
+    * unnecessary conflicts with a JVM SecurityManager (if active).
     * 
     * @param method the method to make accessible
     * @see java.lang.reflect.Method#setAccessible
@@ -646,13 +637,12 @@ public class GwtReflectionUtils {
    }
 
    /**
-    * Get all fields from a class, being carefull not to add multiple
-    * '$assertionsDisabled' fields which are added when a class contains java
-    * assertions.
+    * Get all fields from a class, being carefull not to add multiple '$assertionsDisabled' fields
+    * which are added when a class contains java assertions.
     * 
     * @param clazz The class to introspect.
-    * @param hasAssertionField A token to remember if an '$assertionDisabled'
-    *           field had already been added to the class.
+    * @param hasAssertionField A token to remember if an '$assertionDisabled' field had already been
+    *           added to the class.
     * @return The set of field of the class
     */
    private static Set<Field> getFields(Class<?> clazz, boolean hasAssertionField) {

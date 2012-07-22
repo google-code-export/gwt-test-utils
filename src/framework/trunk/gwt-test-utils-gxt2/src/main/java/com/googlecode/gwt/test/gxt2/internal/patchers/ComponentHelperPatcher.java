@@ -9,19 +9,19 @@ import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 @PatchClass(ComponentHelper.class)
 class ComponentHelperPatcher {
 
-  @PatchMethod
-  static void doAttachNative(Widget widget) {
-    GwtReflectionUtils.callPrivateMethod(widget, "onAttach");
-  }
+   @PatchMethod
+   static void doAttachNative(Widget widget) {
+      GwtReflectionUtils.callPrivateMethod(widget, "onAttach");
+   }
 
-  @PatchMethod
-  static void doDetachNative(Widget widget) {
-    GwtReflectionUtils.callPrivateMethod(widget, "onDetach");
-  }
+   @PatchMethod
+   static void doDetachNative(Widget widget) {
+      GwtReflectionUtils.callPrivateMethod(widget, "onDetach");
+   }
 
-  @PatchMethod
-  static void setParent(Widget parent, Widget child) {
-    GwtReflectionUtils.callPrivateMethod(child, "setParent", parent);
-  }
+   @PatchMethod
+   static void setParent(Widget parent, Widget child) {
+      GwtReflectionUtils.callPrivateMethod(child, "setParent", parent);
+   }
 
 }

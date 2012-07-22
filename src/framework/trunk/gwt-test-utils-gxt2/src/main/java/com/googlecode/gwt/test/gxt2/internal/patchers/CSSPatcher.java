@@ -10,22 +10,22 @@ import com.googlecode.gwt.test.patchers.PatchMethod;
 @PatchClass(CSS.class)
 class CSSPatcher {
 
-  /**
-   * Adds a rules string in a <code>&ltdstyle&gt&ltd/style&gt</code> element.
-   * 
-   * @param style the <code>&ltdstyle&gt&ltd/style&gt</code> element
-   * @param cssStr the rules string
-   */
-  @PatchMethod
-  static void setRules(Element style, String cssStr) {
-    style.setAttribute("type", "text/css");
+   /**
+    * Adds a rules string in a <code>&ltdstyle&gt&ltd/style&gt</code> element.
+    * 
+    * @param style the <code>&ltdstyle&gt&ltd/style&gt</code> element
+    * @param cssStr the rules string
+    */
+   @PatchMethod
+   static void setRules(Element style, String cssStr) {
+      style.setAttribute("type", "text/css");
 
-    while (style.hasChildNodes()) {
-      style.removeChild(style.getChild(0));
-    }
+      while (style.hasChildNodes()) {
+         style.removeChild(style.getChild(0));
+      }
 
-    Text text = Document.get().createTextNode(cssStr);
-    style.appendChild(text);
-  }
+      Text text = Document.get().createTextNode(cssStr);
+      style.appendChild(text);
+   }
 
 }

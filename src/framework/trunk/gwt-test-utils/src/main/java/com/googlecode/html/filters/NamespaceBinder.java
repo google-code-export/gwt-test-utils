@@ -1,16 +1,14 @@
 /*
  * Copyright 2004-2008 Andy Clark
  * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
 
@@ -32,9 +30,8 @@ import com.googlecode.html.HTMLElements;
 import com.googlecode.html.xercesbridge.XercesBridge;
 
 /**
- * This filter binds namespaces if namespace processing is turned on by setting
- * the feature "http://xml.org/sax/features/namespaces" is set to
- * <code>true</code>.
+ * This filter binds namespaces if namespace processing is turned on by setting the feature
+ * "http://xml.org/sax/features/namespaces" is set to <code>true</code>.
  * <p>
  * This configuration recognizes the following features:
  * <ul>
@@ -153,17 +150,16 @@ public class NamespaceBinder extends DefaultFilter {
    //
 
    /**
-    * Returns a list of feature identifiers that are recognized by this
-    * component. This method may return null if no features are recognized by
-    * this component.
+    * Returns a list of feature identifiers that are recognized by this component. This method may
+    * return null if no features are recognized by this component.
     */
    public String[] getRecognizedFeatures() {
       return merge(super.getRecognizedFeatures(), RECOGNIZED_FEATURES);
    } // getRecognizedFeatures():String[]
 
    /**
-    * Returns the default state for a feature, or null if this component does
-    * not want to report a default value for this feature.
+    * Returns the default state for a feature, or null if this component does not want to report a
+    * default value for this feature.
     */
    public Boolean getFeatureDefault(String featureId) {
       for (int i = 0; i < RECOGNIZED_FEATURES.length; i++) {
@@ -175,17 +171,16 @@ public class NamespaceBinder extends DefaultFilter {
    } // getFeatureDefault(String):Boolean
 
    /**
-    * Returns a list of property identifiers that are recognized by this
-    * component. This method may return null if no properties are recognized by
-    * this component.
+    * Returns a list of property identifiers that are recognized by this component. This method may
+    * return null if no properties are recognized by this component.
     */
    public String[] getRecognizedProperties() {
       return merge(super.getRecognizedProperties(), RECOGNIZED_PROPERTIES);
    } // getRecognizedProperties():String[]
 
    /**
-    * Returns the default value for a property, or null if this component does
-    * not want to report a default value for this property.
+    * Returns the default value for a property, or null if this component does not want to report a
+    * default value for this property.
     */
    public Object getPropertyDefault(String propertyId) {
       for (int i = 0; i < RECOGNIZED_PROPERTIES.length; i++) {
@@ -197,8 +192,8 @@ public class NamespaceBinder extends DefaultFilter {
    } // getPropertyDefault(String):Object
 
    /**
-    * Resets the component. The component can query the component manager about
-    * any features and properties that affect the operation of the component.
+    * Resets the component. The component can query the component manager about any features and
+    * properties that affect the operation of the component.
     * 
     * @param manager The component manager.
     * 
@@ -465,9 +460,8 @@ public class NamespaceBinder extends DefaultFilter {
    //
 
    /**
-    * This namespace context object implements the old and new XNI
-    * <code>NamespaceContext</code> interface methods so that it can be used
-    * across all versions of Xerces2.
+    * This namespace context object implements the old and new XNI <code>NamespaceContext</code>
+    * interface methods so that it can be used across all versions of Xerces2.
     */
    public static class NamespaceSupport implements NamespaceContext {
 

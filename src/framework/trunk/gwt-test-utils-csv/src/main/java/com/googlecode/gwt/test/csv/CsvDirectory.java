@@ -7,8 +7,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Markup annotation for integration test classes to specify where related
- * scenario files can be found.
+ * Markup annotation for integration test classes to specify where related scenario files can be
+ * found.
  * 
  */
 @Retention(RetentionPolicy.RUNTIME)

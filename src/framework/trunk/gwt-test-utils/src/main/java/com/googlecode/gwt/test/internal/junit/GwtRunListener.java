@@ -10,11 +10,10 @@ import com.googlecode.gwt.test.internal.AfterTestCallbackManager;
 import com.googlecode.gwt.test.internal.GwtTestDataHolder;
 
 /**
- * gwt-test-utils custom {@link RunListener} to be used for every custom JUnit
- * {@link Runner}. It registers {@link WithProperties} for the running test,
- * potential assertion errors and failures not to throw
- * {@link AfterTestCallbackManager#triggerCallbacks() errors in addition}.
- * <strong>For internal use only.</strong>
+ * gwt-test-utils custom {@link RunListener} to be used for every custom JUnit {@link Runner}. It
+ * registers {@link WithProperties} for the running test, potential assertion errors and failures
+ * not to throw {@link AfterTestCallbackManager#triggerCallbacks() errors in addition}. <strong>For
+ * internal use only.</strong>
  * 
  * @author Gael Lazzari
  * 

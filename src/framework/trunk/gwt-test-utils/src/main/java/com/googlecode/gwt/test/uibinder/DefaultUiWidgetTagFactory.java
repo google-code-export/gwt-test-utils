@@ -20,9 +20,8 @@ import com.googlecode.gwt.test.uibinder.widget.UiStackLayoutPanelTagFactory;
 import com.googlecode.gwt.test.uibinder.widget.UiTabLayoutPanelTagFactory;
 
 /**
- * Default UiWidgetTagFactory, which try to delegate {@link UiObjectTag}
- * instanciation to UiWidgetTagFactories added by users before using those
- * implemented in gwt-test-utils.
+ * Default UiWidgetTagFactory, which try to delegate {@link UiObjectTag} instanciation to
+ * UiWidgetTagFactories added by users before using those implemented in gwt-test-utils.
  * 
  * @author Gael Lazzari
  * 
@@ -58,9 +57,8 @@ class DefaultUiWidgetTagFactory implements UiObjectTagFactory<Object> {
    /*
     * (non-Javadoc)
     * 
-    * @see
-    * com.googlecode.gwt.test.uibinder.UiObjectTagFactory#createUiObjectTag(java
-    * .lang .Class, java.util.Map)
+    * @see com.googlecode.gwt.test.uibinder.UiObjectTagFactory#createUiObjectTag(java .lang .Class,
+    * java.util.Map)
     */
    public UiObjectTag<Object> createUiObjectTag(Class<?> clazz, Map<String, Object> attributes) {
 

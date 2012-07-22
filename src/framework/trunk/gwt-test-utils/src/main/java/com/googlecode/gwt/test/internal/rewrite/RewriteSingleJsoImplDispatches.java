@@ -1,16 +1,14 @@
 /*
  * Copyright 2009 Google Inc.
  * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
 package com.googlecode.gwt.test.internal.rewrite;
@@ -38,21 +36,18 @@ import com.google.gwt.dev.util.collect.Maps;
 import com.google.gwt.dev.util.collect.Sets;
 
 /**
- * Effects the renaming of {@code @SingleJsoImpl} methods from their original
- * name to their mangled name. Let us call the original method an "unmangled
- * method" and the new method a "mangled method". There are three steps in this
- * process:
+ * Effects the renaming of {@code @SingleJsoImpl} methods from their original name to their mangled
+ * name. Let us call the original method an "unmangled method" and the new method a "mangled
+ * method". There are three steps in this process:
  * <ol>
- * <li>Within {@code @SingleJsoImpl} interfaces rename all unmangled methods to
- * become mangled methods.</li>
- * <li>Within non-JSO classes containing a concrete implementation of an
- * unmangled method, add a mangled method which is implemented as a simple
- * trampoline to the unmangled method. (We don't do this in JSO classes here
- * because the one-and-only trampoline lives in JavaScriptObject$ and is emitted
- * in {@link WriteJsoImpl}).
- * <li>Update all call sites targeting unmangled methods to target mangled
- * methods instead, provided the caller is binding to the interface rather than
- * a concrete type.</li>
+ * <li>Within {@code @SingleJsoImpl} interfaces rename all unmangled methods to become mangled
+ * methods.</li>
+ * <li>Within non-JSO classes containing a concrete implementation of an unmangled method, add a
+ * mangled method which is implemented as a simple trampoline to the unmangled method. (We don't do
+ * this in JSO classes here because the one-and-only trampoline lives in JavaScriptObject$ and is
+ * emitted in {@link WriteJsoImpl}).
+ * <li>Update all call sites targeting unmangled methods to target mangled methods instead, provided
+ * the caller is binding to the interface rather than a concrete type.</li>
  * </ol>
  */
 class RewriteSingleJsoImplDispatches extends ClassAdapter {
@@ -87,21 +82,19 @@ class RewriteSingleJsoImplDispatches extends ClassAdapter {
                outer : for (String intf : computeAllInterfaces(owner)) {
                   if (jsoData.getSingleJsoIntfTypes().contains(intf)) {
                      /*
-                      * Check that it really should be mangled and is not a
-                      * reference to a method defined in a non-singleJso
-                      * super-interface. If there are two super-interfaces that
-                      * define methods with identical names and descriptors, the
-                      * choice of implementation is undefined.
+                      * Check that it really should be mangled and is not a reference to a method
+                      * defined in a non-singleJso super-interface. If there are two
+                      * super-interfaces that define methods with identical names and descriptors,
+                      * the choice of implementation is undefined.
                       */
                      String maybeMangled = intf.replace('/', '_') + "_" + name;
                      List<Method> methods = jsoData.getImplementations(maybeMangled);
                      if (methods != null) {
                         for (Method method : methods) {
                            /*
-                            * Found a method with the right name, but we need to
-                            * check the parameters and the return type. In order
-                            * to do this, we'll look at the arguments and return
-                            * type of the target method, removing the first
+                            * Found a method with the right name, but we need to check the
+                            * parameters and the return type. In order to do this, we'll look at the
+                            * arguments and return type of the target method, removing the first
                             * argument, which is the instance.
                             */
                            assert method.getArgumentTypes().length >= 1;
@@ -146,9 +139,9 @@ class RewriteSingleJsoImplDispatches extends ClassAdapter {
       super.visit(version, access, name, signature, superName, interfaces);
 
       /*
-       * This visitor would mangle JSO$ since it acts as a roll-up of all
-       * SingleJso types and the result would be repeated method definitions due
-       * to the trampoline methods this visitor would create.
+       * This visitor would mangle JSO$ since it acts as a roll-up of all SingleJso types and the
+       * result would be repeated method definitions due to the trampoline methods this visitor
+       * would create.
        */
       if (name.equals(OverlayTypesRewriter.JAVASCRIPTOBJECT_IMPL_DESC)) {
          return;
@@ -158,10 +151,9 @@ class RewriteSingleJsoImplDispatches extends ClassAdapter {
       inSingleJsoImplInterfaceType = jsoData.getSingleJsoIntfTypes().contains(name);
 
       /*
-       * Implements objective #2: non-JSO types that implement a SingleJsoImpl
-       * interface don't have their original instance methods altered. Instead,
-       * we add trampoline methods with mangled names that simply call over to
-       * the original methods.
+       * Implements objective #2: non-JSO types that implement a SingleJsoImpl interface don't have
+       * their original instance methods altered. Instead, we add trampoline methods with mangled
+       * names that simply call over to the original methods.
        */
       if (interfaces != null && (access & Opcodes.ACC_INTERFACE) == 0) {
          Set<String> toStub = computeAllInterfaces(interfaces);
@@ -176,8 +168,8 @@ class RewriteSingleJsoImplDispatches extends ClassAdapter {
    @Override
    public void visitEnd() {
       /*
-       * Add any missing methods that are defined by a super-interface, but that
-       * may be referenced via a more specific interface.
+       * Add any missing methods that are defined by a super-interface, but that may be referenced
+       * via a more specific interface.
        */
       if (inSingleJsoImplInterfaceType) {
          for (String mangledName : toImplement(currentTypeName)) {
@@ -194,8 +186,8 @@ class RewriteSingleJsoImplDispatches extends ClassAdapter {
             String[] exceptions) {
 
       /*
-       * Implements objective #2: Rename unmangled methods in a @SingleJsoImpl
-       * into mangled methods (except for clinit, LOL).
+       * Implements objective #2: Rename unmangled methods in a @SingleJsoImpl into mangled methods
+       * (except for clinit, LOL).
        */
       if (inSingleJsoImplInterfaceType && !"<clinit>".equals(name)) {
          name = currentTypeName.replace('/', '_') + "_" + name;
@@ -221,8 +213,8 @@ class RewriteSingleJsoImplDispatches extends ClassAdapter {
       JClassType intf = typeOracle.findType(intfName.replace('/', '.').replace('$', '.'));
 
       /*
-       * If the interface's compilation unit wasn't retained due to an error,
-       * then it won't be available in the typeOracle for us to rewrite
+       * If the interface's compilation unit wasn't retained due to an error, then it won't be
+       * available in the typeOracle for us to rewrite
        */
       if (intf != null) {
          q.add(intf);
@@ -257,8 +249,7 @@ class RewriteSingleJsoImplDispatches extends ClassAdapter {
    }
 
    /**
-    * Given a resource name of a class, find all mangled method names that must
-    * be implemented.
+    * Given a resource name of a class, find all mangled method names that must be implemented.
     */
    private SortedSet<String> toImplement(String typeName) {
       String name = typeName.replace('/', '_');
@@ -280,16 +271,14 @@ class RewriteSingleJsoImplDispatches extends ClassAdapter {
    }
 
    /**
-    * For regular Java objects that implement a SingleJsoImpl interface, write
-    * instance trampoline dispatchers for mangled method names to the
-    * implementing method.
+    * For regular Java objects that implement a SingleJsoImpl interface, write instance trampoline
+    * dispatchers for mangled method names to the implementing method.
     */
    private void writeTrampoline(String stubIntr) {
       /*
-       * This is almost the same kind of trampoline as the ones generated in
-       * WriteJsoImpl, however there are enough small differences between the
-       * semantics of the dispatches that would make a common implementation far
-       * more awkward than the duplication of code.
+       * This is almost the same kind of trampoline as the ones generated in WriteJsoImpl, however
+       * there are enough small differences between the semantics of the dispatches that would make
+       * a common implementation far more awkward than the duplication of code.
        */
       for (String mangledName : toImplement(stubIntr)) {
          for (Method method : jsoData.getDeclarations(mangledName)) {
@@ -303,9 +292,8 @@ class RewriteSingleJsoImplDispatches extends ClassAdapter {
                mv.visitCode();
 
                /*
-                * It just so happens that the stack and local variable sizes are
-                * the same, but they're kept distinct to aid in clarity should
-                * the dispatch logic change.
+                * It just so happens that the stack and local variable sizes are the same, but
+                * they're kept distinct to aid in clarity should the dispatch logic change.
                 * 
                 * These start at 1 because we need to load "this" onto the stack
                 */

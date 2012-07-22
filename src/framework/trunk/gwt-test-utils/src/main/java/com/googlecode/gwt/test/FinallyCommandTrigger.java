@@ -11,8 +11,8 @@ import com.googlecode.gwt.test.internal.AfterTestCallback;
 import com.googlecode.gwt.test.internal.AfterTestCallbackManager;
 
 /**
- * Trigger {@link ScheduledCommand} and {@link RepeatingCommand} which were
- * scheduled after all DOM manipulation.
+ * Trigger {@link ScheduledCommand} and {@link RepeatingCommand} which were scheduled after all DOM
+ * manipulation.
  * 
  * @see Scheduler#scheduleFinally(ScheduledCommand)
  * @see Scheduler#scheduleFinally(RepeatingCommand)
@@ -74,8 +74,7 @@ public class FinallyCommandTrigger implements AfterTestCallback {
    }
 
    /**
-    * Check there is no pending command to execute. A
-    * {@link GwtTestPatchException} would we thrown.
+    * Check there is no pending command to execute. A {@link GwtTestPatchException} would we thrown.
     */
    public void afterTest() throws Throwable {
 

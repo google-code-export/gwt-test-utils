@@ -34,8 +34,8 @@ public class XmlUtils {
    }
 
    /**
-    * Creates a new DocumentBuilder which does not validate document an is not
-    * aware of XML namespaces.
+    * Creates a new DocumentBuilder which does not validate document an is not aware of XML
+    * namespaces.
     * 
     * @return The created DocumentBuilder
     */

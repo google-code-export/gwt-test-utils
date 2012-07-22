@@ -6,9 +6,8 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Class responsible for triggering {@link AfterTestCallback#afterTest()}
- * callback methods from registered callbacks. <strong>For internal use
- * only.</strong>
+ * Class responsible for triggering {@link AfterTestCallback#afterTest()} callback methods from
+ * registered callbacks. <strong>For internal use only.</strong>
  * 
  * @author Gael Lazzari
  * 
@@ -46,8 +45,8 @@ public class AfterTestCallbackManager {
    }
 
    /**
-    * Register a callback to triggered after a test execution. This callback
-    * will be removed at the end of the test execution.
+    * Register a callback to triggered after a test execution. This callback will be removed at the
+    * end of the test execution.
     * 
     * @param removeableCallback The callback to register
     * @return <tt>true</tt> if the callback was not already registered.
@@ -57,11 +56,9 @@ public class AfterTestCallbackManager {
    }
 
    /**
-    * Trigger all the registered callbacks and collect all the exception that
-    * may be thrown.
+    * Trigger all the registered callbacks and collect all the exception that may be thrown.
     * 
-    * @return A list of exceptions that has been thrown when triggering the
-    *         different callbacks.
+    * @return A list of exceptions that has been thrown when triggering the different callbacks.
     */
    public List<Throwable> triggerCallbacks() {
       List<Throwable> throwables = new ArrayList<Throwable>();

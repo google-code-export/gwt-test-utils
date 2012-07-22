@@ -13,8 +13,8 @@ import com.googlecode.gwt.test.uibinder.UiObjectTag;
 import com.googlecode.gwt.test.uibinder.UiObjectTagFactory;
 
 /**
- * Handles subclasses of {@link Grid} (which declare &lt;g:row>, &lt;g:cell> and
- * &lt;g:customCell> tags).
+ * Handles subclasses of {@link Grid} (which declare &lt;g:row>, &lt;g:cell> and &lt;g:customCell>
+ * tags).
  * 
  * @author Gael Lazzari
  * 
@@ -117,9 +117,8 @@ public class UiGridTagFactory implements UiObjectTagFactory<Grid> {
    /*
     * (non-Javadoc)
     * 
-    * @see
-    * com.googlecode.gwt.test.uibinder.UiObjectTagFactory#createUiObjectTag(
-    * java.lang .Class, java.util.Map)
+    * @see com.googlecode.gwt.test.uibinder.UiObjectTagFactory#createUiObjectTag( java.lang .Class,
+    * java.util.Map)
     */
    public UiObjectTag<Grid> createUiObjectTag(Class<?> clazz, Map<String, Object> attributes) {
 

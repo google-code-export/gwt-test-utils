@@ -14,20 +14,16 @@ import com.googlecode.gwt.test.rpc.RemoteServiceCreateHandler;
 
 /**
  * <p>
- * Base class for tests that needs to be run with <code>spring-test</code>
- * module.
+ * Base class for tests that needs to be run with <code>spring-test</code> module.
  * </p>
  * <p>
- * Subclasses <strong>must be annotated</strong> with the spring
- * {@link ContextConfiguration} annotation to configure the spring files
- * location to use to build the test context.
+ * Subclasses <strong>must be annotated</strong> with the spring {@link ContextConfiguration}
+ * annotation to configure the spring files location to use to build the test context.
  * </p>
  * <p>
- * You can autowire any spring bean in subclasses. For {@link RemoteService}
- * beans, see the
- * {@link GwtSpringCsvTest#findRpcServiceInSpringContext(ApplicationContext, Class, String)}
- * method which you might want to override to get deferred binding working as
- * you need in test mode.
+ * You can autowire any spring bean in subclasses. For {@link RemoteService} beans, see the
+ * {@link GwtSpringCsvTest#findRpcServiceInSpringContext(ApplicationContext, Class, String)} method
+ * which you might want to override to get deferred binding working as you need in test mode.
  * </p>
  * 
  * @author Gael Lazzari
@@ -57,8 +53,7 @@ public abstract class GwtSpringCsvTest extends GwtCsvTest implements Application
    /*
     * (non-Javadoc)
     * 
-    * @see
-    * org.springframework.context.ApplicationContextAware#setApplicationContext
+    * @see org.springframework.context.ApplicationContextAware#setApplicationContext
     * (org.springframework.context.ApplicationContext)
     */
    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
@@ -66,21 +61,19 @@ public abstract class GwtSpringCsvTest extends GwtCsvTest implements Application
    }
 
    /**
-    * Retrieve a GWT RPC service from a spring context. This implementation
-    * collects all assignable beans in the context. If no assignable bean can be
-    * found, it would returns <code>null</code>. If one an only one assignable
-    * bean can be found, it would be returned. If many assignable beans are
-    * found, this implementation would check if one of it has a matching
-    * {@link RemoteServiceRelativePath} annotation on its class. If so, it is
-    * returned. Otherwise, <code>null</code> is returned.
+    * Retrieve a GWT RPC service from a spring context. This implementation collects all assignable
+    * beans in the context. If no assignable bean can be found, it would returns <code>null</code>.
+    * If one an only one assignable bean can be found, it would be returned. If many assignable
+    * beans are found, this implementation would check if one of it has a matching
+    * {@link RemoteServiceRelativePath} annotation on its class. If so, it is returned. Otherwise,
+    * <code>null</code> is returned.
     * 
     * @param applicationContext The Spring context.
-    * @param remoteServiceClass The remote service interface of the Spring bean
-    *           to retrieve.
-    * @param remoteServiceRelativePath The remote service relative path of the
-    *           Spring bean to retrieve.
-    * @return The corresponding Spring bean, or null if no bean has been found
-    *         for this type and path.
+    * @param remoteServiceClass The remote service interface of the Spring bean to retrieve.
+    * @param remoteServiceRelativePath The remote service relative path of the Spring bean to
+    *           retrieve.
+    * @return The corresponding Spring bean, or null if no bean has been found for this type and
+    *         path.
     */
    protected Object findRpcServiceInSpringContext(ApplicationContext applicationContext,
             Class<?> remoteServiceClass, String remoteServiceRelativePath) {

@@ -83,18 +83,17 @@ class MessagesInvocationHandler extends LocalizableResourceInvocationHandler {
    }
 
    /**
-    * Get the {@link PluralCount} and/or {@link Select} value which correspond
-    * to the method call. if there are many @PluralCount and/or @Select
-    * annotated args, the corresponding values are appended with the '|'
-    * separator.
+    * Get the {@link PluralCount} and/or {@link Select} value which correspond to the method call.
+    * if there are many @PluralCount and/or @Select annotated args, the corresponding values are
+    * appended with the '|' separator.
     * 
     * @param messageAnnotation The annotation which has been detected. Can be a
     *           {@link AlternateMessage} or a {@link PluralText}
     * @param method The i18n called method
     * @param args The parameter passed to the i18n method during the call
     * @param locale The locale to use
-    * @return A String in which are appended all the {@link PluralCount} and
-    *         {@link Select} value, or null if there is no such annotations
+    * @return A String in which are appended all the {@link PluralCount} and {@link Select} value,
+    *         or null if there is no such annotations
     */
    @SuppressWarnings("unchecked")
    private String extractPluralCountAndSelectValues(Annotation messageAnnotation, Method method,
@@ -156,11 +155,11 @@ class MessagesInvocationHandler extends LocalizableResourceInvocationHandler {
    }
 
    /**
-    * Convert the {@link AlternateMessage#value()} or {@link PluralText#value()}
-    * string array to a map of possible values
+    * Convert the {@link AlternateMessage#value()} or {@link PluralText#value()} string array to a
+    * map of possible values
     * 
-    * @param annotationValues the array value returned by
-    *           {@link AlternateMessage#value()} or {@link PluralText#value()}
+    * @param annotationValues the array value returned by {@link AlternateMessage#value()} or
+    *           {@link PluralText#value()}
     * @return a map of named values
     */
    private Map<String, String> getAnnotationValues(String[] annotationValues) {
@@ -174,12 +173,12 @@ class MessagesInvocationHandler extends LocalizableResourceInvocationHandler {
    }
 
    /**
-    * Return an instance of {@link AlternateMessage} or {@link PluralText} if
-    * the i18n method is annotated, null otherwise.
+    * Return an instance of {@link AlternateMessage} or {@link PluralText} if the i18n method is
+    * annotated, null otherwise.
     * 
     * @param method The current processed i18n method
-    * @return an instance of {@link AlternateMessage} or {@link PluralText} if
-    *         the i18n method is annotated, null otherwise.
+    * @return an instance of {@link AlternateMessage} or {@link PluralText} if the i18n method is
+    *         annotated, null otherwise.
     */
    private Annotation getMessageAnnotation(Method method) {
       Annotation specificMessageAnnotation = method.getAnnotation(AlternateMessage.class);

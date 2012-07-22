@@ -17,8 +17,8 @@ import com.googlecode.gwt.test.internal.utils.XmlUtils;
 import com.googlecode.gwt.test.utils.JavassistUtils;
 
 /**
- * Class in charge of parsing the .ui.xml file and filling both root
- * element/widget and all {@link UiField} in the owner object.
+ * Class in charge of parsing the .ui.xml file and filling both root element/widget and all
+ * {@link UiField} in the owner object.
  * 
  * @author Gael Lazzari
  * 
@@ -28,11 +28,9 @@ class UiBinderParser {
    /**
     * Parse the .ui.xml file to fill the corresponding objects.
     * 
-    * @param rootComponentClass the root component's class that UiBinder has to
-    *           instanciated.
+    * @param rootComponentClass the root component's class that UiBinder has to instanciated.
     * @param uiBinderClass the UiBinder subinterface which is used
-    * @param owner The owner of the UiBinder template, with {@link UiField}
-    *           fields.
+    * @param owner The owner of the UiBinder template, with {@link UiField} fields.
     */
    <T> T createUiComponent(Class<UiBinder<?, ?>> uiBinderClass, Object owner) {
       @SuppressWarnings("unchecked")

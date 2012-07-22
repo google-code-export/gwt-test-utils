@@ -16,13 +16,13 @@ import com.googlecode.gwt.test.utils.JavassistUtils;
 
 /**
  * <p>
- * Handler for trying to automatically instanciate abstract classes, by
- * subclassing them and replace each abstract method by a default implementation
- * which would throws an {@link UnsupportedOperationException}.
+ * Handler for trying to automatically instanciate abstract classes, by subclassing them and replace
+ * each abstract method by a default implementation which would throws an
+ * {@link UnsupportedOperationException}.
  * </p>
  * <p>
- * It has been introducted to make possible the instanciation of abstract
- * classes that gwt-test-utils doesn't patch right now.
+ * It has been introducted to make possible the instanciation of abstract classes that
+ * gwt-test-utils doesn't patch right now.
  * </p>
  * 
  * @see GwtPatcherUtils#patch(CtClass, com.googlecode.gwt.test.internal.Patcher)
