@@ -9,6 +9,7 @@ import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.googlecode.gwt.test.internal.GwtConfig;
 import com.googlecode.gwt.test.internal.junit.GwtRunListener;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
@@ -24,6 +25,7 @@ public class GwtSpring3CsvJUnit4ClassRunner extends SpringJUnit4ClassRunner {
    @Override
    public void run(RunNotifier notifier) {
       notifier.addListener(new GwtRunListener());
+      GwtConfig.get().setupGwtModule(getTestClass().getJavaClass());
       super.run(notifier);
    }
 

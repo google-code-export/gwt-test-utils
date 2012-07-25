@@ -5,6 +5,8 @@ import org.junit.internal.runners.JUnit4ClassRunner;
 import org.junit.runner.Runner;
 import org.junit.runner.notification.RunNotifier;
 
+import com.googlecode.gwt.test.internal.GwtConfig;
+
 /**
  * 
  * gwt-test-utils {@link Runner}, which adds a {@link GwtRunListener} before running each test.
@@ -25,6 +27,7 @@ public class GwtJUnit4ClassRunner extends JUnit4ClassRunner {
    @Override
    public void run(RunNotifier notifier) {
       notifier.addListener(new GwtRunListener());
+      GwtConfig.get().setupGwtModule(getTestClass().getJavaClass());
       super.run(notifier);
    }
 

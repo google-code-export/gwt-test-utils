@@ -4,7 +4,6 @@ import java.util.List;
 
 import junit.framework.JUnit4TestAdapter;
 import junit.framework.Test;
-import junit.framework.TestResult;
 import junit.framework.TestSuite;
 
 import org.fest.assertions.Fail;
@@ -40,7 +39,7 @@ import com.googlecode.gwt.test.utils.events.Browser.BrowserErrorHandler;
  * 
  */
 @RunWith(GwtRunner.class)
-public abstract class GwtTest extends GwtModuleRunnerAdapter implements Test {
+public abstract class GwtTest extends GwtModuleRunnerAdapter {
 
    private static final BrowserErrorHandler FEST_BROWSER_ERROR_HANDLER = new BrowserErrorHandler() {
 
@@ -66,28 +65,14 @@ public abstract class GwtTest extends GwtModuleRunnerAdapter implements Test {
       Thread.currentThread().setContextClassLoader(GwtFactory.get().getClassLoader().getParent());
    }
 
-   private final Test test;
-
    public GwtTest() {
-      this.test = createJUnit4TestAdapter();
       this.setCanDispatchDomEventOnDetachedWidget(true);
-   }
-
-   public int countTestCases() {
-      return test.countTestCases();
-   }
-
-   /**
-    * Runs a test and collects its result in a TestResult instance.
-    */
-   public void run(TestResult result) {
-      test.run(result);
    }
 
    @Before
    public final void setUpGwtTest() throws Exception {
       GwtTestDataHolder.get().setCurrentTestFailed(false);
-      GwtConfig.get().setup(this);
+      GwtConfig.get().setupInstance(this);
    }
 
    @After

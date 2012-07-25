@@ -162,7 +162,9 @@ public class ModuleData {
       return replaceWithListMap;
    }
 
-   private Document createDocument(String moduleFilePath) throws Exception {
+   private Document createDocument(String moduleName) throws Exception {
+
+      String moduleFilePath = moduleName.replaceAll("\\.", "/") + ".gwt.xml";
 
       InputStream is = getModuleFileAsStream(moduleFilePath);
 
@@ -229,7 +231,7 @@ public class ModuleData {
             continue;
          }
 
-         parseModuleFile(inheritName, xpath);
+         parseModuleFile(inheritName, createDocument(inheritName), xpath);
       }
    }
 
@@ -282,9 +284,12 @@ public class ModuleData {
    private void parseModule(String moduleName) {
 
       try {
-         XPath xpath = XPathFactory.newInstance().newXPath();
 
-         parseModuleFile(moduleName, xpath);
+         Document document = createDocument(moduleName);
+         XPath xpath = XPathFactory.newInstance().newXPath();
+         parseModuleFile(moduleName, document, xpath);
+
+         alias = getModuleAlias(document, xpath);
 
       } catch (Exception e) {
          if (GwtTestException.class.isInstance(e)) {
@@ -303,14 +308,10 @@ public class ModuleData {
     * @param xpath
     * @throws Exception
     */
-   private void parseModuleFile(String moduleName, XPath xpath) throws Exception {
+   private void parseModuleFile(String moduleName, Document document, XPath xpath) throws Exception {
 
       parsedModules.add(moduleName);
 
-      String moduleFilePath = moduleName.replaceAll("\\.", "/") + ".gwt.xml";
-      Document document = createDocument(moduleFilePath);
-
-      alias = getModuleAlias(document, xpath);
       initializeInherits(document, xpath);
       initializeReplaceWith(document, xpath);
       initializeGenerateWith(document, xpath);

@@ -61,24 +61,12 @@ public class GwtConfig implements AfterTestCallback {
       return uiObjectTagFactories;
    }
 
-   /**
-    * Setup a GWT module to be run. <strong>This method must be run only once, at the very beginning
-    * of the GWT module emulation.</strong>
-    * 
-    * @param gwtModuleRunner The configuration of the module to be run.
-    */
-   public void setup(GwtModuleRunner gwtModuleRunner) {
-      if (this.gwtModuleRunner != null) {
-         throw new GwtTestException(
-                  "Because of the single-threaded nature of the GWT environment, gwt-test-utils tests can not be run in multiple thread at the same time");
-      }
-
-      GwtModule gwtModule = gwtModuleRunner.getClass().getAnnotation(GwtModule.class);
+   public void setupGwtModule(Class<?> testClass) {
+      GwtModule gwtModule = testClass.getAnnotation(GwtModule.class);
 
       if (gwtModule == null) {
-         throw new GwtTestConfigurationException("The test class "
-                  + gwtModuleRunner.getClass().getName() + " must be annotated with @"
-                  + GwtModule.class.getSimpleName()
+         throw new GwtTestConfigurationException("The test class " + testClass.getName()
+                  + " must be annotated with @" + GwtModule.class.getSimpleName()
                   + " to specify the fully qualified name of the GWT module to test");
       }
 
@@ -86,8 +74,8 @@ public class GwtConfig implements AfterTestCallback {
 
       if (moduleName == null || "".equals(moduleName.trim())) {
          throw new GwtTestConfigurationException("Incorrect value for @"
-                  + GwtModule.class.getSimpleName() + " on " + gwtModuleRunner.getClass().getName()
-                  + ": " + moduleName);
+                  + GwtModule.class.getSimpleName() + " on " + testClass.getName() + ": "
+                  + moduleName);
       }
 
       if (!GwtFactory.get().getConfigurationLoader().getGwtModules().contains(moduleName)) {
@@ -95,11 +83,24 @@ public class GwtConfig implements AfterTestCallback {
                   "The tested @GwtModule '"
                            + moduleName
                            + "' configured in "
-                           + gwtModuleRunner.getClass().getName()
+                           + testClass.getName()
                            + " has not been found. Did you forget to declare a 'gwt-module' property in your 'META-INF/gwt-test-utils.properties' configuration file ?");
       }
 
       this.testedModuleName = moduleName;
+   }
+
+   /**
+    * Setup a GWT module to be run. <strong>This method must be run only once, at the very beginning
+    * of the GWT module emulation.</strong>
+    * 
+    * @param gwtModuleRunner The configuration of the module to be run.
+    */
+   public void setupInstance(GwtModuleRunner gwtModuleRunner) {
+      if (this.gwtModuleRunner != null) {
+         throw new GwtTestException(
+                  "Because of the single-threaded nature of the GWT environment, gwt-test-utils tests can not be run in multiple thread at the same time");
+      }
 
       this.gwtModuleRunner = gwtModuleRunner;
       this.moduleAlias = ModuleData.get(testedModuleName).getAlias();

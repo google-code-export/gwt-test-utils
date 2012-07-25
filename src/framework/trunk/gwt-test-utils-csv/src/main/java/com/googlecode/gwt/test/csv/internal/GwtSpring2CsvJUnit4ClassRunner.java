@@ -17,6 +17,7 @@ import org.junit.runner.Runner;
 import org.junit.runner.notification.RunNotifier;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.googlecode.gwt.test.internal.GwtConfig;
 import com.googlecode.gwt.test.internal.junit.GwtRunListener;
 import com.googlecode.gwt.test.spring.GwtSpringCsvRunner;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
@@ -106,6 +107,7 @@ public class GwtSpring2CsvJUnit4ClassRunner extends SpringJUnit4ClassRunner {
    @Override
    public void run(RunNotifier notifier) {
       notifier.addListener(new GwtRunListener());
+      GwtConfig.get().setupGwtModule(hackyGetTestClass().getJavaClass());
       super.run(notifier);
    }
 

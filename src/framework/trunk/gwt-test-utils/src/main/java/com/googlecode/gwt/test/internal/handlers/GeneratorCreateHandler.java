@@ -119,14 +119,6 @@ public class GeneratorCreateHandler implements GwtCreateHandler {
       return propertyOracle;
    }
 
-   protected void printClassLoaderChain(ClassLoader loader) {
-      while (loader != null) {
-         System.out.print("- " + loader.getClass().getCanonicalName());
-         loader = loader.getParent();
-      }
-      System.out.println();
-   }
-
    private CompiledClass compile(String literalName) throws UnableToCompleteException {
       CompiledClass compiledClass = compiledClassMap.get(literalName);
       if (compiledClass != null) {

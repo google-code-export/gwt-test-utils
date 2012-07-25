@@ -5,6 +5,8 @@ import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.InitializationError;
 
+import com.googlecode.gwt.test.internal.GwtConfig;
+
 /**
  * gwt-test-utils {@link Runner}, which adds a {@link GwtRunListener} before running each test.
  * <strong>For internal use only.</strong>
@@ -21,6 +23,7 @@ public class GwtBlockJUnit4ClassRunner extends BlockJUnit4ClassRunner {
    @Override
    public void run(RunNotifier notifier) {
       notifier.addListener(new GwtRunListener());
+      GwtConfig.get().setupGwtModule(getTestClass().getJavaClass());
       super.run(notifier);
    }
 

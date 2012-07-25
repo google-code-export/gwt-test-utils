@@ -80,8 +80,8 @@ public class GwtTestGWTBridge extends GWTBridge implements AfterTestCallback {
       AfterTestCallbackManager.get().registerCallback(this);
    }
 
-   public boolean addGwtCreateHandler(GwtCreateHandler gwtCreateHandler) {
-      return addedHandlers.add(gwtCreateHandler);
+   public void addGwtCreateHandler(GwtCreateHandler gwtCreateHandler) {
+      addedHandlers.add(0, gwtCreateHandler);
    }
 
    public void afterTest() throws Throwable {

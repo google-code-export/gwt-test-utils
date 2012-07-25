@@ -837,7 +837,7 @@ public class Browser {
                && !GwtConfig.get().getModuleRunner().canDispatchDomEventOnDetachedWidget()) {
          GwtConfig.get().getModuleRunner().getBrowserErrorHandler().onError(
                   "Cannot dispatch '" + event.getType()
-                           + "' event : the targeted widget has to be attached to the DOM");
+                           + "' event : the targeted widget is not attached to the DOM");
          return false;
       }
 
@@ -845,9 +845,8 @@ public class Browser {
 
       if (!WidgetUtils.isWidgetVisible(target) && isVisible(target, targetElement)) {
          GwtConfig.get().getModuleRunner().getBrowserErrorHandler().onError(
-                  "Cannot dispatch '"
-                           + event.getType()
-                           + "' event : the targeted element and its possible parents have to be visible");
+                  "Cannot dispatch '" + event.getType()
+                           + "' event : the targeted element or one of its parents is not visible");
 
          return false;
       } else if (isDisabled(targetElement)) {

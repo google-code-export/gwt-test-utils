@@ -65,22 +65,6 @@ public interface GwtModuleRunner {
    void addUiObjectTagFactory(UiObjectTagFactory<? extends IsWidget> factory);
 
    /**
-    * <p>
-    * Specifies the module to run.
-    * 
-    * <p>
-    * If the return module name is not present in the gwt-test-utils configuration file (e.g.
-    * "META-INF/gwt-test-utils.properties"), an exception will be thrown.
-    * </p>
-    * 
-    * @return the fully qualified name of a module. <strong>It cannot be null or empty</strong>.
-    * 
-    * @deprecated Use the {@link GwtModule} annotation on your test class instead
-    * 
-    @Deprecated String getModuleName();
-    */
-
-   /**
     * Specifies if The {@link Browser} helper methods can target not attached widgets or not.
     * 
     * @return True if {@link DomEvent} can be dispatched on detached widgets, false otherwise.
