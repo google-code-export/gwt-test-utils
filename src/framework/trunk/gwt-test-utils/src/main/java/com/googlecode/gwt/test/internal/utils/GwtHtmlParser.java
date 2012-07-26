@@ -17,6 +17,8 @@ import org.xml.sax.helpers.XMLReaderFactory;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
 import com.googlecode.gwt.test.exceptions.GwtTestPatchException;
+import com.googlecode.gwt.test.internal.AfterTestCallback;
+import com.googlecode.gwt.test.internal.AfterTestCallbackManager;
 import com.googlecode.html.filters.DefaultFilter;
 
 /**
@@ -27,7 +29,7 @@ import com.googlecode.html.filters.DefaultFilter;
  * @author Gael Lazzari
  * 
  */
-public class GwtHtmlParser {
+public class GwtHtmlParser implements AfterTestCallback {
 
    /**
     * Filter which keep "&nbsp;" and "&nbsp;" strings instead of converting them in a ' ' character.
@@ -82,40 +84,58 @@ public class GwtHtmlParser {
       }
    }
 
+   private static GwtHtmlParser INSTANCE = new GwtHtmlParser();
+
    public static NodeList<Node> parse(String html) {
+      return INSTANCE.parseInternal(html);
+   }
+
+   private XMLReader reader;
+
+   private GwtHtmlParser() {
+      AfterTestCallbackManager.get().registerCallback(this);
+   }
+
+   public void afterTest() throws Throwable {
+      reader = null;
+   }
+
+   private XMLReader getXMLReader() throws SAXException {
+      if (reader == null) {
+
+         reader = XMLReaderFactory.createXMLReader("com.googlecode.html.parsers.SAXParser");
+
+         // FIXME : this feature does not work with the NekoHTML version included in gwt-dev.jar
+         // (1.9.13) that's why we had to copy neko 1.9.15 sources in gwt-test-utils
+         reader.setFeature("http://cyberneko.org/html/features/balance-tags/document-fragment",
+                  true);
+
+         reader.setFeature("http://cyberneko.org/html/features/scanner/notify-builtin-refs", true);
+
+         reader.setProperty("http://cyberneko.org/html/properties/default-encoding", "UTF-8");
+
+         XMLDocumentFilter[] filters = {new NbspRemover()};
+
+         reader.setProperty("http://cyberneko.org/html/properties/filters", filters);
+      }
+      return reader;
+
+   }
+
+   private NodeList<Node> parseInternal(String html) {
       if (html == null || html.trim().length() == 0) {
          return JavaScriptObjects.newNodeList(Collections.<Node> emptyList());
       }
 
       try {
-         XMLReader saxReader = createParser();
+         XMLReader xmlReader = getXMLReader();
          GwtHtmlContentHandler contentHandler = new GwtHtmlContentHandler();
-         saxReader.setContentHandler(contentHandler);
-         saxReader.parse(new InputSource(new StringReader(html)));
+         xmlReader.setContentHandler(contentHandler);
+         xmlReader.parse(new InputSource(new StringReader(html)));
          return contentHandler.getParsedNodes();
       } catch (Exception e) {
          throw new GwtTestPatchException("Error while parsing HTML '" + html + "'", e);
       }
-   }
-
-   private static XMLReader createParser() throws SAXException {
-
-      XMLReader parser = XMLReaderFactory.createXMLReader("com.googlecode.html.parsers.SAXParser");
-
-      // FIXME : this feature does not work with the NekoHTML version included in gwt-dev.jar
-      // (1.9.13) that's why we had to copy neko 1.9.15 sources in gwt-test-utils
-      parser.setFeature("http://cyberneko.org/html/features/balance-tags/document-fragment", true);
-
-      parser.setFeature("http://cyberneko.org/html/features/scanner/notify-builtin-refs", true);
-
-      parser.setProperty("http://cyberneko.org/html/properties/default-encoding", "UTF-8");
-
-      XMLDocumentFilter[] filters = {new NbspRemover()};
-
-      parser.setProperty("http://cyberneko.org/html/properties/filters", filters);
-
-      return parser;
-
    }
 
 }

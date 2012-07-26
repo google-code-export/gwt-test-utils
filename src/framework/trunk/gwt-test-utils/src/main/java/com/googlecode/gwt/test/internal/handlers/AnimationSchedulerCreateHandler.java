@@ -4,7 +4,7 @@ import com.google.gwt.animation.client.AnimationScheduler;
 import com.googlecode.gwt.test.GwtCreateHandler;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
-public class AnimationSchedulerCreateHandler implements GwtCreateHandler {
+class AnimationSchedulerCreateHandler implements GwtCreateHandler {
 
    public Object create(Class<?> classLiteral) throws Exception {
       if (!AnimationScheduler.class.equals(classLiteral)) {
