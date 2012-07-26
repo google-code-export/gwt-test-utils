@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>gwt-test-utils</artifactId>
 	<packaging>jar</packaging>
@@ -17,20 +18,23 @@
 			<groupId>com.google.gwt</groupId>
 			<artifactId>gwt-servlet</artifactId>
 		</dependency>
-		<!-- Add gwt-dev just to be sure gwt-test-utils is compatible with GWTTestCase -->
-		<!-- gwt-dev includes its the NekoHTML classes, in version 1.9.13, which 
-			is bugged with fragment parsing -->
 		<dependency>
 			<groupId>com.google.gwt</groupId>
 			<artifactId>gwt-dev</artifactId>
+		</dependency>
+		<!-- needed by AutoBean -->
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.javassist</groupId>
 			<artifactId>javassist</artifactId>
 		</dependency>
 		<dependency>
-		    <groupId>org.easytesting</groupId>
-		    <artifactId>fest-assert</artifactId>
+			<groupId>org.easytesting</groupId>
+			<artifactId>fest-assert</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.thoughtworks.paranamer</groupId>
