@@ -227,7 +227,8 @@ public class ModuleData {
          Node inherit = inherits.item(i);
          String inheritName = xpath.evaluate("@name", inherit).trim();
 
-         if (parsedModules.contains(inheritName) || inheritName.startsWith("com.google.gwt")) {
+         if (parsedModules.contains(inheritName) || inheritName.startsWith("com.google.gwt")
+                  || inheritName.startsWith("com.google.web.bindery.")) {
             continue;
          }
 

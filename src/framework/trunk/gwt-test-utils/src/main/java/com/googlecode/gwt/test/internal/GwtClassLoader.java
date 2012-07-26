@@ -122,7 +122,6 @@ public class GwtClassLoader extends Loader {
          delegateLoadingOf(s);
       }
 
-      addTranslator(GwtClassPool.get(), new GwtTranslator(configurationLoader));
    }
 
    @Override

@@ -3,6 +3,7 @@ package com.googlecode.gwt.test;
 import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.i18n.shared.DateTimeFormat;
+import com.google.gwt.user.cellview.client.AbstractCellTable;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
@@ -36,8 +37,10 @@ public class GwtReset {
    public void reset() throws Exception {
       getStaticAndCallClear(Timer.class, "timers");
       getStaticAndCallClear(RootPanel.class, "rootPanels");
-      GwtReflectionUtils.setStaticField(RootLayoutPanel.class, "singleton", null);
       getStaticAndCallClear(RootPanel.class, "widgetsToDetach");
+      GwtReflectionUtils.setStaticField(RootLayoutPanel.class, "singleton", null);
+
+      GwtReflectionUtils.setStaticField(AbstractCellTable.class, "TABLE_IMPL", null);
 
       Object commandExecutor = GwtReflectionUtils.getStaticFieldValue(
                Class.forName("com.google.gwt.user.client.DeferredCommand"), "commandExecutor");

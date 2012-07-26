@@ -82,15 +82,13 @@ public class GwtHtmlParser {
       }
    }
 
-   private static XMLReader PARSER;
-
    public static NodeList<Node> parse(String html) {
       if (html == null || html.trim().length() == 0) {
          return JavaScriptObjects.newNodeList(Collections.<Node> emptyList());
       }
 
       try {
-         XMLReader saxReader = getParser();
+         XMLReader saxReader = createParser();
          GwtHtmlContentHandler contentHandler = new GwtHtmlContentHandler();
          saxReader.setContentHandler(contentHandler);
          saxReader.parse(new InputSource(new StringReader(html)));
@@ -100,28 +98,23 @@ public class GwtHtmlParser {
       }
    }
 
-   private static XMLReader getParser() throws SAXException {
-      if (PARSER == null) {
-         PARSER = XMLReaderFactory.createXMLReader("com.googlecode.html.parsers.SAXParser");
+   private static XMLReader createParser() throws SAXException {
 
-         // FIXME : this feature does not work with the NekoHTML version
-         // included
-         // in
-         // gwt-dev.jar (1.9.13)
-         // need to use the boolean "innerHTML)
-         PARSER.setFeature("http://cyberneko.org/html/features/balance-tags/document-fragment",
-                  true);
+      XMLReader parser = XMLReaderFactory.createXMLReader("com.googlecode.html.parsers.SAXParser");
 
-         PARSER.setFeature("http://cyberneko.org/html/features/scanner/notify-builtin-refs", true);
+      // FIXME : this feature does not work with the NekoHTML version included in gwt-dev.jar
+      // (1.9.13) that's why we had to copy neko 1.9.15 sources in gwt-test-utils
+      parser.setFeature("http://cyberneko.org/html/features/balance-tags/document-fragment", true);
 
-         PARSER.setProperty("http://cyberneko.org/html/properties/default-encoding", "UTF-8");
+      parser.setFeature("http://cyberneko.org/html/features/scanner/notify-builtin-refs", true);
 
-         XMLDocumentFilter[] filters = {new NbspRemover()};
+      parser.setProperty("http://cyberneko.org/html/properties/default-encoding", "UTF-8");
 
-         PARSER.setProperty("http://cyberneko.org/html/properties/filters", filters);
-      }
+      XMLDocumentFilter[] filters = {new NbspRemover()};
 
-      return PARSER;
+      parser.setProperty("http://cyberneko.org/html/properties/filters", filters);
+
+      return parser;
 
    }
 

@@ -28,7 +28,8 @@ class GwtTranslator implements Translator {
    }
 
    public void onLoad(ClassPool pool, String className) throws NotFoundException {
-      patchClass(pool.get(className));
+      CtClass classToLoad = pool.get(className);
+      patchClass(classToLoad);
    }
 
    public void start(ClassPool pool) throws NotFoundException {
@@ -37,12 +38,6 @@ class GwtTranslator implements Translator {
 
    private void applyJavaClassModifiers(CtClass ctClass) {
       try {
-         // Apply remove-method
-         // configurationLoader.getMethodRemover().modify(ctClass);
-
-         // Apply substitute-class
-         // configurationLoader.getClassSubstituer().modify(ctClass);
-
          // Apply internal modifiers
          serializableModifier.modify(ctClass);
          hasHTMLModifier.modify(ctClass);
