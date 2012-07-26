@@ -4,6 +4,7 @@
 	<inherits name='com.google.gwt.user.User' />
 	<inherits name="com.google.gwt.i18n.I18N" />
 	<inherits name='com.google.gwt.user.theme.standard.Standard' />
+	<inherits name="com.google.web.bindery.autobean.AutoBean"/>
 	
 	<entry-point class='com.googlecode.gwt.test.client.GwtTestEntryPoint'/>
 
@@ -15,6 +16,7 @@
 		<exclude name="Test1.java" />
 	</source>
 	<source path='integration.client' />
+	<source path='autobean' />
 	<source path='deferred' />
 	<source path='dom' />
 	<source path='editors' />

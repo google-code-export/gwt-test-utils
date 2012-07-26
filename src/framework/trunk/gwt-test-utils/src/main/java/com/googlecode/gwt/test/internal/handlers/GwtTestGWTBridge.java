@@ -40,6 +40,7 @@ public class GwtTestGWTBridge extends GWTBridge implements AfterTestCallback {
 
    private final List<GwtCreateHandler> addedHandlers;
    private final GwtCreateHandler animationSchedulerCreateHandler;
+   private final GwtCreateHandler autoBeanCreateHandler;
    private final GwtCreateHandler cellBasedWidgetImplCreateHandler;
    private final GwtCreateHandler clientBundleCreateHander;
    private final GwtCreateHandler defaultGwtCreateHandler;
@@ -63,6 +64,7 @@ public class GwtTestGWTBridge extends GWTBridge implements AfterTestCallback {
       abstractClassCreateHandler = new AbstractClassCreateHandler();
       addedHandlers = new ArrayList<GwtCreateHandler>();
       animationSchedulerCreateHandler = new AnimationSchedulerCreateHandler();
+      autoBeanCreateHandler = new AutoBeanCreateHandler();
       cellBasedWidgetImplCreateHandler = new CellBasedWidgetImplCreateHandler();
       clientBundleCreateHander = new ClientBundleCreateHandler();
       defaultGwtCreateHandler = new DefaultGwtCreateHandler();
@@ -170,6 +172,7 @@ public class GwtTestGWTBridge extends GWTBridge implements AfterTestCallback {
       list.add(abstractClassCreateHandler);
       list.add(safeHtmlTemplatesCreateHandler);
       list.add(placeHistoryMapperCreateHandler);
+      list.add(autoBeanCreateHandler);
 
       list.add(generatorCreateHandler);
 
