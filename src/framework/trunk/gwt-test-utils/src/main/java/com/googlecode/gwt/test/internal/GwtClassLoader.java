@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.ProtectionDomain;
+import java.util.regex.Pattern;
 
 import javassist.CannotCompileException;
 import javassist.ClassPool;
@@ -107,8 +108,13 @@ public class GwtClassLoader extends Loader {
    }
 
    private final CompilationState compilationState;
+
+   private final Pattern delegatePattern;
+
    private ProtectionDomain domain;
+
    private final ClassPool source;
+
    private final Translator translator;
 
    private GwtClassLoader(ConfigurationLoader configurationLoader, CompilationState compilationState)
@@ -118,10 +124,26 @@ public class GwtClassLoader extends Loader {
       this.source = GwtClassPool.get();
       this.translator = new GwtTranslator(configurationLoader);
 
+      StringBuilder sb = new StringBuilder("^(");
+      sb = appendPackageToDelegate(sb, "java.");
+      sb = appendPackageToDelegate(sb, "javax.");
+      sb = appendPackageToDelegate(sb, "sun.");
+      sb = appendPackageToDelegate(sb, "com.sun.");
+      sb = appendPackageToDelegate(sb, "org.w3c.");
+      sb = appendPackageToDelegate(sb, "org.xml.");
+
       for (String s : configurationLoader.getDelegates()) {
-         delegateLoadingOf(s);
+         if (s.endsWith(".")) {
+            sb = appendPackageToDelegate(sb, s);
+         } else {
+            sb = appendClassToDelegate(sb, s);
+         }
       }
 
+      sb.replace(sb.length() - 1, sb.length(), "");
+      sb.append(")$");
+
+      delegatePattern = Pattern.compile(sb.toString());
    }
 
    @Override
@@ -190,6 +212,11 @@ public class GwtClassLoader extends Loader {
       }
    }
 
+   @Override
+   protected Class<?> loadClassByDelegation(String name) throws ClassNotFoundException {
+      return (delegatePattern.matcher(name).matches()) ? delegateToParent(name) : null;
+   }
+
    private void addCompiledClass(CompiledClass compiledClass) {
       InputStream is = new ByteArrayInputStream(compiledClass.getBytes());
 
@@ -205,6 +232,15 @@ public class GwtClassLoader extends Loader {
             // don't care
          }
       }
+   }
+
+   private StringBuilder appendClassToDelegate(StringBuilder sb, String className) {
+      return sb.append(className.replaceAll("\\.", "\\\\\\.").replaceAll("\\$", "\\\\\\$")).append(
+               "|");
+   }
+
+   private StringBuilder appendPackageToDelegate(StringBuilder sb, String packageName) {
+      return sb.append(packageName.replaceAll("\\.", "\\\\\\.")).append(".+|");
    }
 
    private byte[] applyPatchers(String className) throws NotFoundException, CannotCompileException,

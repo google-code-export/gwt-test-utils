@@ -253,6 +253,14 @@ public class JavaScriptObjects {
       return getJsoProperties(jso, propName).getBoolean(propName);
    }
 
+   public static byte getByte(JavaScriptObject jso, String propName) {
+      return getJsoProperties(jso, propName).getByte(propName);
+   }
+
+   public static char getChar(JavaScriptObject jso, String propName) {
+      return getJsoProperties(jso, propName).getChar(propName);
+   }
+
    @SuppressWarnings("unchecked")
    public static List<Node> getChildNodeInnerList(Node node) {
       NodeList<Node> nodeList = getChildNodes(node);
@@ -295,6 +303,10 @@ public class JavaScriptObjects {
 
    public static double getDouble(JavaScriptObject jso, String propName) {
       return getJsoProperties(jso, propName).getDouble(propName);
+   }
+
+   public static float getFloat(JavaScriptObject jso, String propName) {
+      return getJsoProperties(jso, propName).getFloat(propName);
    }
 
    public static int getInteger(JavaScriptObject jso, String propName) {

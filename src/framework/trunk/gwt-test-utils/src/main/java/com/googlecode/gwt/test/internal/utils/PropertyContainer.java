@@ -46,9 +46,24 @@ public class PropertyContainer implements Serializable {
       return b == null ? false : b;
    }
 
+   public byte getByte(String key) {
+      Byte b = (Byte) map.get(key);
+      return b == null ? 0 : b;
+   }
+
+   public char getChar(String key) {
+      Character c = (Character) map.get(key);
+      return c == null ? 0 : c;
+   }
+
    public double getDouble(String key) {
       Double d = (Double) map.get(key);
       return d == null ? 0 : d;
+   }
+
+   public float getFloat(String key) {
+      Float f = (Float) map.get(key);
+      return f == null ? 0 : f;
    }
 
    public int getInteger(String key) {
