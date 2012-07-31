@@ -15,6 +15,7 @@ import com.google.gwt.dev.cfg.ModuleDefLoader;
 import com.google.gwt.dev.javac.CompilationState;
 import com.google.gwt.dev.javac.CompilationStateBuilder;
 import com.google.gwt.dev.shell.JsValueGlue;
+import com.googlecode.gwt.test.GwtTreeLogger;
 import com.googlecode.gwt.test.exceptions.GwtTestConfigurationException;
 import com.googlecode.gwt.test.exceptions.GwtTestException;
 import com.googlecode.gwt.test.internal.rewrite.OverlayTypesRewriter;
@@ -127,7 +128,7 @@ public class GwtFactory {
 
    private CompilationState createCompilationState(ModuleDef moduleDef) {
       try {
-         TreeLogger treeLogger = TreeLoggerHolder.getTreeLogger();
+         TreeLogger treeLogger = GwtTreeLogger.get();
 
          File target = new File("target");
          if (!target.exists()) {
@@ -136,7 +137,7 @@ public class GwtFactory {
             target = new File(".");
          }
          CompilationStateBuilder.init(treeLogger, target);
-         return moduleDef.getCompilationState(TreeLoggerHolder.getTreeLogger());
+         return moduleDef.getCompilationState(GwtTreeLogger.get());
       } catch (UnableToCompleteException e) {
          throw new GwtTestConfigurationException("Error while creating global CompilationState :",
                   e);
@@ -147,7 +148,7 @@ public class GwtFactory {
       try {
          List<String> gwtModules = configurationLoader.getGwtModules();
          String[] inherits = gwtModules.toArray(new String[gwtModules.size()]);
-         return ModuleDefLoader.createSyntheticModule(TreeLoggerHolder.getTreeLogger(),
+         return ModuleDefLoader.createSyntheticModule(GwtTreeLogger.get(),
                   "com.googlecode.gwt.test.Aggregator", inherits, false);
       } catch (UnableToCompleteException e) {
          throw new GwtTestConfigurationException(

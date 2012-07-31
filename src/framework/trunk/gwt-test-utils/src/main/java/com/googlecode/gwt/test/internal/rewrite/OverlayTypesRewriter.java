@@ -35,7 +35,7 @@ import com.google.gwt.dev.util.collect.Lists;
 import com.google.gwt.dev.util.log.speedtracer.DevModeEventType;
 import com.google.gwt.dev.util.log.speedtracer.SpeedTracerLogger;
 import com.google.gwt.dev.util.log.speedtracer.SpeedTracerLogger.Event;
-import com.googlecode.gwt.test.internal.TreeLoggerHolder;
+import com.googlecode.gwt.test.GwtTreeLogger;
 
 /**
  * This class performs any and all byte code rewriting needed to make Overlay types work with
@@ -297,7 +297,7 @@ public class OverlayTypesRewriter {
             }
          }
 
-         TreeLogger logger = TreeLoggerHolder.getTreeLogger();
+         TreeLogger logger = GwtTreeLogger.get();
          if (logger.isLoggable(TreeLogger.SPAM)) {
             TreeLogger dumpLogger = logger.branch(TreeLogger.SPAM, "SingleJsoImpl method mappings");
             for (Map.Entry<String, List<com.google.gwt.dev.asm.commons.Method>> entry : mangledNamesToImplementations.entrySet()) {

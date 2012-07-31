@@ -41,10 +41,10 @@ import com.google.gwt.dev.util.Name;
 import com.google.gwt.junit.client.WithProperties;
 import com.google.gwt.junit.client.WithProperties.Property;
 import com.googlecode.gwt.test.GwtCreateHandler;
+import com.googlecode.gwt.test.GwtTreeLogger;
 import com.googlecode.gwt.test.exceptions.GwtTestConfigurationException;
 import com.googlecode.gwt.test.internal.GwtFactory;
 import com.googlecode.gwt.test.internal.GwtTestDataHolder;
-import com.googlecode.gwt.test.internal.TreeLoggerHolder;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
 /**
@@ -59,7 +59,7 @@ public class GeneratorCreateHandler implements GwtCreateHandler {
    protected Map<String, CompiledClass> compiledClassMap = new HashMap<String, CompiledClass>();
 
    private final CompilationState compilationState;
-   private final TreeLogger logger = TreeLoggerHolder.getTreeLogger();
+   private final TreeLogger logger = GwtTreeLogger.get();
 
    private final ModuleDef moduleDef;
 
@@ -148,7 +148,7 @@ public class GeneratorCreateHandler implements GwtCreateHandler {
 
    private ModuleSpace createModuleSpace(ModuleSpaceHost host) {
 
-      return new ModuleSpace(TreeLoggerHolder.getTreeLogger(), host, moduleDef.getCanonicalName()) {
+      return new ModuleSpace(GwtTreeLogger.get(), host, moduleDef.getCanonicalName()) {
 
          public void createNativeMethods(TreeLogger logger, List<JsniMethod> jsniMethods,
                   DispatchIdOracle dispatchIdOracle) {
@@ -188,7 +188,7 @@ public class GeneratorCreateHandler implements GwtCreateHandler {
             ModuleDef moduleDef) {
       try {
          ModuleSpaceHost moduleSpaceHost = new GwtTestModuleSpaceHost(
-                  TreeLoggerHolder.getTreeLogger(), compilationState, moduleDef, null, null,
+                  GwtTreeLogger.get(), compilationState, moduleDef, null, null,
                   REBIND_CACHE);
          ModuleSpace moduleSpace = createModuleSpace(moduleSpaceHost);
          moduleSpaceHost.onModuleReady(moduleSpace);
