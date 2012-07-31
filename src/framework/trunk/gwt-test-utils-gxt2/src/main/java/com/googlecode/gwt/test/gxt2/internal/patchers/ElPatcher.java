@@ -62,9 +62,10 @@ class ElPatcher {
 
    @PatchMethod
    static El removeStyleName(El el, String styleName) {
-      Element elem = getWrappedElement(el);
-      elem.removeClassName(styleName);
-
+      if (styleName != null) {
+         Element elem = getWrappedElement(el);
+         elem.removeClassName(styleName);
+      }
       return el;
    }
 
