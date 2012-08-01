@@ -22,6 +22,7 @@
 	<source path='editors' />
 	<source path='i18n' />
 	<source path='resources' />
+	<source path='template' />
 	<source path='uibinder' />
 	
 

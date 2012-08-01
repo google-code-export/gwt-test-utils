@@ -36,8 +36,6 @@ public class GwtTestGWTBridge extends GWTBridge implements AfterTestCallback {
       return INSTANCE;
    }
 
-   private final GwtCreateHandler abstractClassCreateHandler;
-
    private final List<GwtCreateHandler> addedHandlers;
    private final GwtCreateHandler animationSchedulerCreateHandler;
    private final GwtCreateHandler autoBeanCreateHandler;
@@ -52,7 +50,6 @@ public class GwtTestGWTBridge extends GWTBridge implements AfterTestCallback {
    private GwtCreateHandler mockCreateHandler;
    private final GwtCreateHandler placeHistoryMapperCreateHandler;
    private final GwtCreateHandler resizeLayoutPanelImplCreateHandler;
-   private final GwtCreateHandler safeHtmlTemplatesCreateHandler;
    private final TestRemoteServiceCreateHandler testRemoteServiceCreateHandler;
    private final GwtCreateHandler uiBinderCreateHandler;
    private final WebXmlRemoteServiceCreateHandler webXmlRemoteServiceCreateHandler;
@@ -61,7 +58,6 @@ public class GwtTestGWTBridge extends GWTBridge implements AfterTestCallback {
       // TODO : all createHandler should be singleton ?
       generatorCreateHandler = new GeneratorCreateHandler(GwtFactory.get().getCompilationState(),
                GwtFactory.get().getModuleDef());
-      abstractClassCreateHandler = new AbstractClassCreateHandler();
       addedHandlers = new ArrayList<GwtCreateHandler>();
       animationSchedulerCreateHandler = new AnimationSchedulerCreateHandler();
       autoBeanCreateHandler = new AutoBeanCreateHandler();
@@ -74,7 +70,6 @@ public class GwtTestGWTBridge extends GWTBridge implements AfterTestCallback {
       localizableResourceCreateHandler = new LocalizableResourceCreateHandler();
       placeHistoryMapperCreateHandler = new PlaceHistoryMapperCreateHandler();
       resizeLayoutPanelImplCreateHandler = new ResizeLayoutPanelImplCreateHandler();
-      safeHtmlTemplatesCreateHandler = new SafeHtmlTemplatesCreateHandler();
       uiBinderCreateHandler = UiBinderCreateHandler.get();
       testRemoteServiceCreateHandler = TestRemoteServiceCreateHandler.get();
       webXmlRemoteServiceCreateHandler = new WebXmlRemoteServiceCreateHandler();
@@ -169,8 +164,6 @@ public class GwtTestGWTBridge extends GWTBridge implements AfterTestCallback {
       list.add(cellBasedWidgetImplCreateHandler);
       list.add(animationSchedulerCreateHandler);
       list.add(defaultGwtCreateHandler);
-      list.add(abstractClassCreateHandler);
-      list.add(safeHtmlTemplatesCreateHandler);
       list.add(placeHistoryMapperCreateHandler);
       list.add(autoBeanCreateHandler);
 
