@@ -13,18 +13,18 @@ import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.Statement;
 
 /**
- * gwt-test-utils {@link Runner} with support for JUnitParams <strong>For internal use
+ * gwt-test-utils {@link Runner} with support for Spring and JUnitParams <strong>For internal use
  * only.</strong>
  * 
  * @author Gael Lazzari
  * 
  */
-public class GwtBlockJUnitParamsClassRunner extends GwtBlockJUnit4ClassRunner {
+public class GwtSpringJUnitParamsClassRunner extends GwtSpringJUnit4ClassRunner {
 
    private Description description;
    private final ParameterisedTestClassRunner parameterisedRunner;
 
-   public GwtBlockJUnitParamsClassRunner(Class<?> klass) throws InitializationError {
+   public GwtSpringJUnitParamsClassRunner(Class<?> klass) throws InitializationError {
       super(klass);
       parameterisedRunner = new ParameterisedTestClassRunner(getTestClass());
    }
@@ -91,5 +91,4 @@ public class GwtBlockJUnitParamsClassRunner extends GwtBlockJUnit4ClassRunner {
 
       return testMethod.isIgnored();
    }
-
 }
