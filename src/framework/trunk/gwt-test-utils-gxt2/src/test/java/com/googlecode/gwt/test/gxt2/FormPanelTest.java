@@ -47,7 +47,6 @@ public class FormPanelTest extends GwtGxtTest {
       window.show();
 
       // Assert
-      assertThat(formContainer.getElement().getInnerHTML()).isEqualTo(
-               "<div role=\"presentation\" class=\"x-form-item \" tabindex=\"-1\"><label for=\"x-auto-13-input\" class=\"x-form-item-label\">Test:</label><div role=\"presentation\" class=\"x-form-element x-form-el-x-auto-13\" id=\"x-form-el-x-auto-13\"><div role=\"presentation\" class=\"x-form-field-wrap x-component\" id=\"x-auto-13\" style=\"width: 200px; \"><input type=\"text\" class=\" x-form-field x-form-text\" id=\"x-auto-13-input\" name=\"test\" tabIndex=\"0\" style=\"width: 200px; \"></input></div></div><div class=\"x-form-clear-left\" role=\"presentation\"></div></div>");
+      assertThat(formContainer.getWidget(0)).isEqualTo(field);
    }
 }
