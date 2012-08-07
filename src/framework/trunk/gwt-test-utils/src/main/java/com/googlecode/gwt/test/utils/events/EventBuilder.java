@@ -1,12 +1,12 @@
 package com.googlecode.gwt.test.utils.events;
 
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.EventTarget;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.UIObject;
 import com.googlecode.gwt.test.internal.utils.JavaScriptObjects;
 import com.googlecode.gwt.test.internal.utils.JsoProperties;
-import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
 /**
  * Builder for complex {@link Event}.
@@ -33,7 +33,7 @@ public class EventBuilder {
    private final Event event;
 
    private EventBuilder() {
-      event = GwtReflectionUtils.instantiateClass(Event.class);
+      event = JavaScriptObject.createObject().cast();
    }
 
    /**

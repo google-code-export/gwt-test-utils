@@ -450,6 +450,10 @@ public class JavaScriptObjects {
       getJsoProperties(jso, propName).put(propName, Double.valueOf(value));
    }
 
+   public static void setProperty(JavaScriptObject jso, String propName, float value) {
+      getJsoProperties(jso, propName).put(propName, Float.valueOf(value));
+   }
+
    public static void setProperty(JavaScriptObject jso, String propName, int value) {
       getJsoProperties(jso, propName).put(propName, Integer.valueOf(value));
    }

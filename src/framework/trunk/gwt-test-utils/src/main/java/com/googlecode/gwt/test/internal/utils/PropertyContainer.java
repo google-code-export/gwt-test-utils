@@ -42,8 +42,8 @@ public class PropertyContainer implements Serializable {
    }
 
    public boolean getBoolean(String key) {
-      Boolean b = (Boolean) map.get(key);
-      return b == null ? false : b;
+      Object o = map.get(key);
+      return o == null ? false : Boolean.valueOf(o.toString());
    }
 
    public byte getByte(String key) {
@@ -57,18 +57,18 @@ public class PropertyContainer implements Serializable {
    }
 
    public double getDouble(String key) {
-      Double d = (Double) map.get(key);
-      return d == null ? 0 : d;
+      Object o = map.get(key);
+      return o == null ? 0 : Double.valueOf(o.toString());
    }
 
    public float getFloat(String key) {
-      Float f = (Float) map.get(key);
-      return f == null ? 0 : f;
+      Object o = map.get(key);
+      return o == null ? 0 : Float.valueOf(o.toString());
    }
 
    public int getInteger(String key) {
-      Integer i = (Integer) map.get(key);
-      return i == null ? 0 : i;
+      Object o = map.get(key);
+      return o == null ? 0 : Integer.valueOf(o.toString());
    }
 
    @SuppressWarnings("unchecked")
@@ -77,13 +77,13 @@ public class PropertyContainer implements Serializable {
    }
 
    public short getShort(String key) {
-      Short s = (Short) map.get(key);
-      return s == null ? 0 : s;
+      Object o = map.get(key);
+      return o == null ? 0 : Short.valueOf(o.toString());
    }
 
    public String getString(String key) {
-      Object s = map.get(key);
-      return s == null ? "" : s.toString();
+      Object o = map.get(key);
+      return o == null ? "" : o.toString();
    }
 
    public Object put(String key, boolean value) {
