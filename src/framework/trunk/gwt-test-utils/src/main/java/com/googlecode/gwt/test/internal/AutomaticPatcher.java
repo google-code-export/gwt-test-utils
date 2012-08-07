@@ -297,7 +297,8 @@ class AutomaticPatcher implements Patcher {
       boolean isStatic = Modifier.isStatic(methodFound.getModifiers());
 
       if (!isStatic
-               && !methodFound.getDeclaringClass().subtypeOf(patchMethod.getParameterTypes()[0])) {
+               && (patchMethod.getParameterTypes().length == 0 || !methodFound.getDeclaringClass().subtypeOf(
+                        patchMethod.getParameterTypes()[0]))) {
 
          return false;
       }

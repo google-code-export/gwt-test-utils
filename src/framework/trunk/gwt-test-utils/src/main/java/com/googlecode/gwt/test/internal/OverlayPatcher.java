@@ -84,6 +84,10 @@ class OverlayPatcher implements Patcher {
       } else if (returnType == CtClass.doubleType) {
          return JavaScriptObjects.class.getName() + ".getDouble(" + object + ", \"" + fieldName
                   + "\")";
+      } else if (returnType == CtClass.floatType) {
+         return JavaScriptObjects.class.getName() + ".getFloat(" + object + ", \"" + fieldName
+                  + "\")";
+
       } else if (returnType == CtClass.shortType) {
          return JavaScriptObjects.class.getName() + ".getShort(" + object + ", \"" + fieldName
                   + "\")";
