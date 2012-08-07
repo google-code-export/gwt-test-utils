@@ -22,6 +22,11 @@
 			<groupId>com.google.gwt</groupId>
 			<artifactId>gwt-dev</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>pl.pragmatists</groupId>
+			<artifactId>JUnitParams</artifactId>
+			<scope>provided</scope>
+		</dependency>
 		<!-- needed by AutoBean -->
 		<dependency>
 			<groupId>org.json</groupId>

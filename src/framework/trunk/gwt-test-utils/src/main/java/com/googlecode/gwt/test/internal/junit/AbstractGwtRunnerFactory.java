@@ -18,6 +18,7 @@ import com.googlecode.gwt.test.internal.GwtFactory;
 public abstract class AbstractGwtRunnerFactory {
 
    private static boolean hasJUnit45OrHigher;
+   private static boolean hasJUnitParams;
 
    static {
       try {
@@ -26,11 +27,18 @@ public abstract class AbstractGwtRunnerFactory {
       } catch (Throwable t) {
          hasJUnit45OrHigher = false;
       }
+
+      try {
+         Class.forName("junitparams.JUnitParamsRunner");
+         hasJUnitParams = true;
+      } catch (Throwable t) {
+         hasJUnitParams = false;
+      }
    }
 
    public Runner create(Class<?> clazz) throws Throwable {
       try {
-         String runnerClassName = getRunnerClassName(hasJUnit45OrHigher);
+         String runnerClassName = getRunnerClassName(hasJUnit45OrHigher, hasJUnitParams);
          return newInstance(runnerClassName, clazz);
       } catch (InvocationTargetException e) {
          throw e.getTargetException();
@@ -42,9 +50,10 @@ public abstract class AbstractGwtRunnerFactory {
     * the JUnit version available in the classpath.
     * 
     * @param hasJUnit45OrHigher True if JUnit 4.5 or higher is available, false otherwise.
+    * @param hasJUnitParams True if JUnitParams is available, false otherwise.
     * @return The full qualified name of the JUnit {@link Runner} to use.
     */
-   protected abstract String getRunnerClassName(boolean hasJUnit45OrHigher);
+   protected abstract String getRunnerClassName(boolean hasJUnit45OrHigher, boolean hasJUnitParams);
 
    private Runner newInstance(String runnerClassName, Class<?> constructorParam) throws Exception {
       Constructor<?> constructor;

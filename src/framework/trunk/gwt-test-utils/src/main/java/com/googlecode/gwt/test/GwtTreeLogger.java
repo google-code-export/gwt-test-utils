@@ -51,8 +51,7 @@ public class GwtTreeLogger extends AbstractTreeLogger {
             }
             break;
          case ERROR:
-            // do not log errors from client incompatible classes such as GwtTest subclasses
-            if (LOGGER.isErrorEnabled() && caught != null) {
+            if (LOGGER.isErrorEnabled()) {
                LOGGER.error(msg, caught);
             }
             break;

@@ -5,7 +5,7 @@ import com.googlecode.gwt.test.internal.junit.AbstractGwtRunnerFactory;
 class GwtSpringRunnerFactory extends AbstractGwtRunnerFactory {
 
    @Override
-   protected String getRunnerClassName(boolean hasJUnit45OrHigher) {
+   protected String getRunnerClassName(boolean hasJUnit45OrHigher, boolean hasJUnitParams) {
       return "com.googlecode.gwt.test.internal.junit.GwtSpringJUnit4ClassRunner";
    }
 
