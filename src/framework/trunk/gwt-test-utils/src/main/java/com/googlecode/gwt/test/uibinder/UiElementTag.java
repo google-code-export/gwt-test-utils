@@ -10,8 +10,8 @@ import com.google.gwt.dom.client.Text;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.UIObject;
 import com.googlecode.gwt.test.exceptions.ReflectionException;
-import com.googlecode.gwt.test.internal.utils.JavaScriptObjects;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
+import com.googlecode.gwt.test.utils.JavaScriptObjects;
 
 /**
  * Handles all HTML element tags declared in a .ui.xml file.

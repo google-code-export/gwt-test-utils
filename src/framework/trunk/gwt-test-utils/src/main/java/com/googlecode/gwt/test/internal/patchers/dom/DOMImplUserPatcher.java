@@ -5,10 +5,10 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.impl.DOMImpl;
 import com.googlecode.gwt.test.internal.utils.EventUtils;
-import com.googlecode.gwt.test.internal.utils.JavaScriptObjects;
 import com.googlecode.gwt.test.internal.utils.JsoProperties;
 import com.googlecode.gwt.test.patchers.PatchClass;
 import com.googlecode.gwt.test.patchers.PatchMethod;
+import com.googlecode.gwt.test.utils.JavaScriptObjects;
 
 @PatchClass(DOMImpl.class)
 class DOMImplUserPatcher {

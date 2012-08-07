@@ -13,6 +13,7 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Text;
+import com.googlecode.gwt.test.utils.JavaScriptObjects;
 
 /**
  * SAX handler for GWT DOM parsing. <strong>For internal use only.</strong>

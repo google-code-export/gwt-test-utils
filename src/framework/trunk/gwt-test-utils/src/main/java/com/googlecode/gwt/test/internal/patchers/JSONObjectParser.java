@@ -7,9 +7,9 @@ import java.util.Map;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONValue;
-import com.googlecode.gwt.test.internal.utils.JavaScriptObjects;
 import com.googlecode.gwt.test.patchers.PatchClass;
 import com.googlecode.gwt.test.patchers.PatchMethod;
+import com.googlecode.gwt.test.utils.JavaScriptObjects;
 
 @PatchClass(JSONObject.class)
 class JSONObjectParser {

@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsonUtils;
-import com.googlecode.gwt.test.internal.utils.JavaScriptObjects;
+import com.googlecode.gwt.test.utils.JavaScriptObjects;
 
 /**
  * Helper class for JsArrayXXXPatcher
@@ -133,8 +133,14 @@ class JsArrayHelper {
             }
 
             public String serialize(Object o) {
-               // FIXME : implement a correct JSON serialization
-               return o != null ? o.toString() : "";
+               if (o == null) {
+                  return "";
+               } else if (o instanceof JavaScriptObject) {
+                  JavaScriptObject jso = (JavaScriptObject) o;
+                  return JavaScriptObjects.serialize(jso);
+               } else {
+                  return o.toString();
+               }
             }
          };
       }
@@ -147,11 +153,23 @@ class JsArrayHelper {
          stringConverter = new Converter<String>() {
 
             public String convert(Object o) {
-               return (o != null) ? o.toString() : null;
+               if (o == null) {
+                  return null;
+               } else if (o instanceof JavaScriptObject) {
+                  return JavaScriptObjects.serialize((JavaScriptObject) o);
+               } else {
+                  return o.toString();
+               }
             }
 
             public String serialize(Object o) {
-               return (o != null) ? o.toString() : "";
+               if (o == null) {
+                  return "";
+               } else if (o instanceof JavaScriptObject) {
+                  return JavaScriptObjects.serialize((JavaScriptObject) o);
+               } else {
+                  return o.toString();
+               }
             }
          };
       }

@@ -9,12 +9,12 @@ import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Style;
 import com.googlecode.gwt.test.internal.utils.GwtHtmlParser;
 import com.googlecode.gwt.test.internal.utils.GwtStringUtils;
-import com.googlecode.gwt.test.internal.utils.JavaScriptObjects;
 import com.googlecode.gwt.test.internal.utils.JsoProperties;
 import com.googlecode.gwt.test.internal.utils.PropertyContainer;
 import com.googlecode.gwt.test.internal.utils.StyleUtils;
 import com.googlecode.gwt.test.patchers.PatchClass;
 import com.googlecode.gwt.test.patchers.PatchMethod;
+import com.googlecode.gwt.test.utils.JavaScriptObjects;
 
 @PatchClass(Element.class)
 class ElementPatcher {

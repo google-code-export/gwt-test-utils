@@ -20,7 +20,7 @@ import com.google.gwt.dom.client.OptionElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Text;
 import com.googlecode.gwt.test.GwtTestTest;
-import com.googlecode.gwt.test.internal.utils.JavaScriptObjects;
+import com.googlecode.gwt.test.utils.JavaScriptObjects;
 
 public class NodeTest extends GwtTestTest {
 

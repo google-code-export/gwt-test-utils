@@ -22,7 +22,7 @@ import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Style.Float;
 import com.googlecode.gwt.test.GwtTestTest;
-import com.googlecode.gwt.test.internal.utils.JavaScriptObjects;
+import com.googlecode.gwt.test.utils.JavaScriptObjects;
 
 public class ElementTest extends GwtTestTest {
 

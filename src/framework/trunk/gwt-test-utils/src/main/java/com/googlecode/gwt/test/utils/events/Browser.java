@@ -36,10 +36,10 @@ import com.google.gwt.view.client.HasData;
 import com.googlecode.gwt.test.FinallyCommandTrigger;
 import com.googlecode.gwt.test.GwtModuleRunner;
 import com.googlecode.gwt.test.internal.GwtConfig;
-import com.googlecode.gwt.test.internal.utils.JavaScriptObjects;
 import com.googlecode.gwt.test.internal.utils.JsoProperties;
 import com.googlecode.gwt.test.internal.utils.RadioButtonManager;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
+import com.googlecode.gwt.test.utils.JavaScriptObjects;
 import com.googlecode.gwt.test.utils.WidgetUtils;
 
 /**

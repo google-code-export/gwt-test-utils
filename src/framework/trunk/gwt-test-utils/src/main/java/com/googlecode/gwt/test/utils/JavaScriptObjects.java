@@ -1,4 +1,4 @@
-package com.googlecode.gwt.test.internal.utils;
+package com.googlecode.gwt.test.utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,10 +19,11 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.ui.UIObject;
 import com.googlecode.gwt.test.finder.GwtFinder;
-import com.googlecode.gwt.test.utils.GwtReflectionUtils;
+import com.googlecode.gwt.test.internal.utils.JsoProperties;
+import com.googlecode.gwt.test.internal.utils.PropertyContainer;
 
 /**
- * Utilities for Overlay types support in gwt-test-utils. <strong>For internal use only.<strong>
+ * Utilities for Overlay types support in gwt-test-utils.
  * 
  * @author Gael Lazzari
  * 
@@ -436,6 +437,26 @@ public class JavaScriptObjects {
 
    public static void remove(JavaScriptObject jso, String propName) {
       getJsoProperties(jso, propName).remove(propName);
+   }
+
+   public static String serialize(JavaScriptObject jso) {
+      if (Node.is(jso)) {
+         return jso.toString();
+      } else {
+         StringBuilder sb = new StringBuilder();
+         // FIXME : provide support for JavaScriptObject arrays
+         sb.append("{ ");
+
+         for (Map.Entry<String, Object> entry : entrySet(jso)) {
+            sb.append("\"").append(entry.getKey()).append("\": ");
+            sb.append(entry.getValue()).append(", ");
+         }
+
+         sb.replace(sb.length() - 2, sb.length(), "");
+         sb.append(" }");
+
+         return sb.toString();
+      }
    }
 
    public static void setParentNode(Node child, Node parent) {

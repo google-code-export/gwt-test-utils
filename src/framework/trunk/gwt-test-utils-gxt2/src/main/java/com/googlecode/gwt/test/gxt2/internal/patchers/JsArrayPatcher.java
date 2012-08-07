@@ -5,10 +5,10 @@ import java.util.List;
 
 import com.extjs.gxt.ui.client.js.JsArray;
 import com.google.gwt.core.client.JavaScriptObject;
-import com.googlecode.gwt.test.internal.utils.JavaScriptObjects;
 import com.googlecode.gwt.test.patchers.PatchClass;
 import com.googlecode.gwt.test.patchers.PatchMethod;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
+import com.googlecode.gwt.test.utils.JavaScriptObjects;
 
 @PatchClass(JsArray.class)
 class JsArrayPatcher {

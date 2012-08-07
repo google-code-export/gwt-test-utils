@@ -13,11 +13,11 @@ import com.google.gwt.dom.client.Text;
 import com.google.gwt.xml.client.impl.XMLParserImpl;
 import com.googlecode.gwt.test.exceptions.GwtTestPatchException;
 import com.googlecode.gwt.test.internal.utils.GwtXMLParser;
-import com.googlecode.gwt.test.internal.utils.JavaScriptObjects;
 import com.googlecode.gwt.test.internal.utils.JsoProperties;
 import com.googlecode.gwt.test.internal.utils.PropertyContainer;
 import com.googlecode.gwt.test.patchers.PatchClass;
 import com.googlecode.gwt.test.patchers.PatchMethod;
+import com.googlecode.gwt.test.utils.JavaScriptObjects;
 
 @PatchClass(XMLParserImpl.class)
 class XMLParserImplPatcher {

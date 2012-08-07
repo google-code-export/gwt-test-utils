@@ -5,8 +5,8 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.EventTarget;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.UIObject;
-import com.googlecode.gwt.test.internal.utils.JavaScriptObjects;
 import com.googlecode.gwt.test.internal.utils.JsoProperties;
+import com.googlecode.gwt.test.utils.JavaScriptObjects;
 
 /**
  * Builder for complex {@link Event}.

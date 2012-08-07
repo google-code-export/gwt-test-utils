@@ -19,6 +19,7 @@ import com.google.gwt.dom.client.NodeList;
 import com.googlecode.gwt.test.exceptions.GwtTestPatchException;
 import com.googlecode.gwt.test.internal.AfterTestCallback;
 import com.googlecode.gwt.test.internal.AfterTestCallbackManager;
+import com.googlecode.gwt.test.utils.JavaScriptObjects;
 import com.googlecode.html.filters.DefaultFilter;
 
 /**

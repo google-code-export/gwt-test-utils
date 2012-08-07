@@ -7,9 +7,9 @@ import com.extjs.gxt.ui.client.core.Template;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.user.client.Element;
-import com.googlecode.gwt.test.internal.utils.JavaScriptObjects;
 import com.googlecode.gwt.test.patchers.PatchClass;
 import com.googlecode.gwt.test.patchers.PatchMethod;
+import com.googlecode.gwt.test.utils.JavaScriptObjects;
 
 @SuppressWarnings("unchecked")
 @PatchClass(Template.class)

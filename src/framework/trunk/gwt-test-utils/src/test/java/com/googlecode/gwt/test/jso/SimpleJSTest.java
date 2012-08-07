@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.googlecode.gwt.test.GwtTestTest;
-import com.googlecode.gwt.test.internal.utils.JavaScriptObjects;
+import com.googlecode.gwt.test.utils.JavaScriptObjects;
 
 public class SimpleJSTest extends GwtTestTest {
 

@@ -2,9 +2,9 @@ package com.googlecode.gwt.test.internal.patchers.dom;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.SelectElement;
-import com.googlecode.gwt.test.internal.utils.JavaScriptObjects;
 import com.googlecode.gwt.test.patchers.PatchClass;
 import com.googlecode.gwt.test.patchers.PatchMethod;
+import com.googlecode.gwt.test.utils.JavaScriptObjects;
 
 @PatchClass(SelectElement.class)
 class SelectElementPatcher {

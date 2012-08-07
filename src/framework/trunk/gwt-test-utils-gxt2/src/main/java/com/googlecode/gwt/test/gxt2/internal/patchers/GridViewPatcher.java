@@ -4,10 +4,10 @@ import com.extjs.gxt.ui.client.core.El;
 import com.extjs.gxt.ui.client.widget.grid.GridView;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NodeList;
-import com.googlecode.gwt.test.internal.utils.JavaScriptObjects;
 import com.googlecode.gwt.test.patchers.PatchClass;
 import com.googlecode.gwt.test.patchers.PatchMethod;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
+import com.googlecode.gwt.test.utils.JavaScriptObjects;
 
 @PatchClass(GridView.class)
 class GridViewPatcher {

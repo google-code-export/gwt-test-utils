@@ -1,7 +1,6 @@
 package com.googlecode.gwt.test.utils;
 
 import com.google.gwt.dom.client.Element;
-import com.googlecode.gwt.test.internal.utils.JavaScriptObjects;
 import com.googlecode.gwt.test.internal.utils.JsoProperties;
 
 /**

@@ -12,9 +12,9 @@ import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.user.client.Element;
 import com.googlecode.gwt.test.exceptions.GwtTestPatchException;
-import com.googlecode.gwt.test.internal.utils.JavaScriptObjects;
 import com.googlecode.gwt.test.patchers.PatchClass;
 import com.googlecode.gwt.test.patchers.PatchMethod;
+import com.googlecode.gwt.test.utils.JavaScriptObjects;
 
 @PatchClass(DomQuery.class)
 class DomQueryPatcher {

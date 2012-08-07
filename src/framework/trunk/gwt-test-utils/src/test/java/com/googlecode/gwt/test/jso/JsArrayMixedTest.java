@@ -7,6 +7,7 @@ import org.junit.Test;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArrayMixed;
+import com.google.gwt.core.client.JsonUtils;
 import com.google.gwt.dom.client.AnchorElement;
 import com.google.gwt.dom.client.Document;
 import com.googlecode.gwt.test.GwtTestTest;
@@ -45,6 +46,19 @@ public class JsArrayMixedTest extends GwtTestTest {
 
       // Assert
       assertThat(elementToString).isEqualTo("<a href=\"http://lost.com\"></a>");
+   }
+
+   @Test
+   public void getStringJSON() {
+      // Arrange
+      JavaScriptObject json = JsonUtils.safeEval("{test: true}");
+      jsArrayMixed.set(2, json);
+
+      // Act
+      String elementToString = jsArrayMixed.getString(2);
+
+      // Assert
+      assertThat(elementToString).isEqualTo("{ \"test\": true }");
    }
 
    @Test
@@ -174,6 +188,19 @@ public class JsArrayMixedTest extends GwtTestTest {
       // Assert
       assertThat(jsArrayMixed.length()).isEqualTo(6);
       assertThat(jsArrayMixed.join()).isEqualTo("<a href=\"http://lost.com\"></a>,,,,,true");
+   }
+
+   @Test
+   public void unshiftJSON() {
+      // Arrange
+      JavaScriptObject json = JsonUtils.safeEval("{test: true}");
+
+      // Act
+      jsArrayMixed.unshift(json);
+
+      // Assert
+      assertThat(jsArrayMixed.length()).isEqualTo(6);
+      assertThat(jsArrayMixed.join()).isEqualTo("{ \"test\": true },,,,,true");
    }
 
    @Test

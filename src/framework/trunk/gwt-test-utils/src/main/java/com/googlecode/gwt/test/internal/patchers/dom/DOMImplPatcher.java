@@ -20,11 +20,11 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.EventListener;
 import com.googlecode.gwt.test.internal.utils.EventUtils;
-import com.googlecode.gwt.test.internal.utils.JavaScriptObjects;
 import com.googlecode.gwt.test.internal.utils.JsoProperties;
 import com.googlecode.gwt.test.internal.utils.PropertyContainer;
 import com.googlecode.gwt.test.patchers.PatchClass;
 import com.googlecode.gwt.test.patchers.PatchMethod;
+import com.googlecode.gwt.test.utils.JavaScriptObjects;
 import com.googlecode.gwt.test.utils.events.EventBuilder;
 
 @PatchClass(target = "com.google.gwt.dom.client.DOMImpl")

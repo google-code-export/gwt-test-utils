@@ -2,10 +2,10 @@ package com.googlecode.gwt.test.internal.patchers;
 
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.impl.TextBoxImpl;
-import com.googlecode.gwt.test.internal.utils.JavaScriptObjects;
 import com.googlecode.gwt.test.internal.utils.JsoProperties;
 import com.googlecode.gwt.test.patchers.PatchClass;
 import com.googlecode.gwt.test.patchers.PatchMethod;
+import com.googlecode.gwt.test.utils.JavaScriptObjects;
 
 @PatchClass(TextBoxImpl.class)
 class TextBoxImplPatcher {

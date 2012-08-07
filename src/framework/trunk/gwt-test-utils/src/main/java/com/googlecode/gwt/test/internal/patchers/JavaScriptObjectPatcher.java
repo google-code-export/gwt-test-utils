@@ -12,11 +12,11 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Text;
 import com.googlecode.gwt.test.exceptions.GwtTestPatchException;
 import com.googlecode.gwt.test.internal.utils.GwtStringUtils;
-import com.googlecode.gwt.test.internal.utils.JavaScriptObjects;
 import com.googlecode.gwt.test.internal.utils.PropertyContainer;
 import com.googlecode.gwt.test.patchers.PatchClass;
 import com.googlecode.gwt.test.patchers.PatchMethod;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
+import com.googlecode.gwt.test.utils.JavaScriptObjects;
 
 @PatchClass(JavaScriptObject.class)
 class JavaScriptObjectPatcher {

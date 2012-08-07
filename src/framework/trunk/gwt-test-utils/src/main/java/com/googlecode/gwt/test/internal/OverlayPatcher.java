@@ -8,7 +8,7 @@ import javassist.NotFoundException;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.googlecode.gwt.test.exceptions.GwtTestPatchException;
-import com.googlecode.gwt.test.internal.utils.JavaScriptObjects;
+import com.googlecode.gwt.test.utils.JavaScriptObjects;
 
 /**
  * 

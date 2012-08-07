@@ -26,10 +26,10 @@ import com.googlecode.gwt.test.internal.AfterTestCallbackManager;
 import com.googlecode.gwt.test.internal.GwtConfig;
 import com.googlecode.gwt.test.internal.utils.DoubleMap;
 import com.googlecode.gwt.test.internal.utils.GwtHtmlParser;
-import com.googlecode.gwt.test.internal.utils.JavaScriptObjects;
 import com.googlecode.gwt.test.patchers.PatchClass;
 import com.googlecode.gwt.test.patchers.PatchMethod;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
+import com.googlecode.gwt.test.utils.JavaScriptObjects;
 
 @PatchClass(Document.class)
 class DocumentPatcher {

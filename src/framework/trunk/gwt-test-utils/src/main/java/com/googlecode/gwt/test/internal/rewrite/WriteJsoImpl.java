@@ -27,7 +27,7 @@ import com.google.gwt.dev.asm.Type;
 import com.google.gwt.dev.asm.commons.Method;
 import com.google.gwt.dev.shell.rewrite.HostedModeClassRewriter.InstanceMethodOracle;
 import com.google.gwt.dev.shell.rewrite.HostedModeClassRewriter.SingleJsoImplData;
-import com.googlecode.gwt.test.internal.utils.JavaScriptObjects;
+import com.googlecode.gwt.test.utils.JavaScriptObjects;
 
 /**
  * Writes the implementation classes for JSO and its subtypes.
