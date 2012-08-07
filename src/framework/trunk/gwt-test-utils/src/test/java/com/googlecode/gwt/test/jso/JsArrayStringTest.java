@@ -1,4 +1,4 @@
-package com.googlecode.gwt.test;
+package com.googlecode.gwt.test.jso;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArrayString;
+import com.googlecode.gwt.test.GwtTestTest;
 
 public class JsArrayStringTest extends GwtTestTest {
 
