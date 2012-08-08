@@ -11,6 +11,7 @@ import com.google.gwt.dom.client.TableCaptionElement;
 import com.google.gwt.dom.client.TableElement;
 import com.google.gwt.dom.client.TableRowElement;
 import com.google.gwt.dom.client.TableSectionElement;
+import com.googlecode.gwt.test.internal.utils.JsoUtils;
 import com.googlecode.gwt.test.patchers.PatchClass;
 import com.googlecode.gwt.test.patchers.PatchMethod;
 import com.googlecode.gwt.test.utils.JavaScriptObjects;
@@ -217,6 +218,6 @@ class TableElementPatcher {
          }
       }
 
-      return JavaScriptObjects.newNodeList(list);
+      return JsoUtils.newNodeList(list);
    }
 }

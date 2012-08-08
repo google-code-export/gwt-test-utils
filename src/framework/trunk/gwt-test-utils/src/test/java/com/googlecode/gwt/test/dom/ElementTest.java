@@ -22,7 +22,7 @@ import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Style.Float;
 import com.googlecode.gwt.test.GwtTestTest;
-import com.googlecode.gwt.test.utils.JavaScriptObjects;
+import com.googlecode.gwt.test.internal.utils.JsoUtils;
 
 public class ElementTest extends GwtTestTest {
 
@@ -270,9 +270,9 @@ public class ElementTest extends GwtTestTest {
       ButtonElement be0 = Document.get().createPushButtonElement();
       ButtonElement be1 = Document.get().createPushButtonElement();
       e.appendChild(be0);
-      e.appendChild(JavaScriptObjects.newText("test1", Document.get()));
+      e.appendChild(JsoUtils.newText("test1", Document.get()));
       e.appendChild(be1);
-      e.appendChild(JavaScriptObjects.newText("test2", Document.get()));
+      e.appendChild(JsoUtils.newText("test2", Document.get()));
 
       // Act & Assert
       assertEquals(be1, be0.getNextSiblingElement());

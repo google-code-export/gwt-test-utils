@@ -34,7 +34,6 @@ import com.google.gwt.user.client.ui.ValueBoxBase;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.HasData;
 import com.googlecode.gwt.test.FinallyCommandTrigger;
-import com.googlecode.gwt.test.GwtModuleRunner;
 import com.googlecode.gwt.test.internal.GwtConfig;
 import com.googlecode.gwt.test.internal.utils.JsoProperties;
 import com.googlecode.gwt.test.internal.utils.RadioButtonManager;
@@ -782,23 +781,6 @@ public class Browser {
       if (changed) {
          dispatchEvent((Widget) hasTextWidget, EventBuilder.create(Event.ONCHANGE).build());
       }
-   }
-
-   /**
-    * 
-    * <p>
-    * DEPRECATED : use {@link GwtModuleRunner#addClientProperty(String, String)}
-    * </p>
-    * instead Set a browser property, like its 'user-agent', which could be use for deferred
-    * binding, like 'replace-with' mechanism.
-    * 
-    * @param name The name of the property.
-    * @param value The value of the property.
-    * 
-    */
-   @Deprecated
-   public static void setProperty(String name, String value) {
-      GwtConfig.get().getModuleRunner().addClientProperty(name, value);
    }
 
    /**

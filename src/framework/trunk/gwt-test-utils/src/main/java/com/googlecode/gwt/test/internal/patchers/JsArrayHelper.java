@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsonUtils;
+import com.googlecode.gwt.test.internal.utils.JsoUtils;
 import com.googlecode.gwt.test.utils.JavaScriptObjects;
 
 /**
@@ -137,7 +138,7 @@ class JsArrayHelper {
                   return "";
                } else if (o instanceof JavaScriptObject) {
                   JavaScriptObject jso = (JavaScriptObject) o;
-                  return JavaScriptObjects.serialize(jso);
+                  return JsoUtils.serialize(jso);
                } else {
                   return o.toString();
                }
@@ -156,7 +157,7 @@ class JsArrayHelper {
                if (o == null) {
                   return null;
                } else if (o instanceof JavaScriptObject) {
-                  return JavaScriptObjects.serialize((JavaScriptObject) o);
+                  return JsoUtils.serialize((JavaScriptObject) o);
                } else {
                   return o.toString();
                }
@@ -166,7 +167,7 @@ class JsArrayHelper {
                if (o == null) {
                   return "";
                } else if (o instanceof JavaScriptObject) {
-                  return JavaScriptObjects.serialize((JavaScriptObject) o);
+                  return JsoUtils.serialize((JavaScriptObject) o);
                } else {
                   return o.toString();
                }

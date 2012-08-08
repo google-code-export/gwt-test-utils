@@ -20,7 +20,7 @@ import com.google.gwt.dom.client.OptionElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Text;
 import com.googlecode.gwt.test.GwtTestTest;
-import com.googlecode.gwt.test.utils.JavaScriptObjects;
+import com.googlecode.gwt.test.internal.utils.JsoUtils;
 
 public class NodeTest extends GwtTestTest {
 
@@ -226,7 +226,7 @@ public class NodeTest extends GwtTestTest {
    @Test
    public void is() {
       // Arrange
-      NodeList<OptionElement> list = JavaScriptObjects.newNodeList();
+      NodeList<OptionElement> list = JsoUtils.newNodeList();
 
       // Act & Assert
       assertFalse("null is not a DOM node", Node.is(null));
@@ -269,7 +269,7 @@ public class NodeTest extends GwtTestTest {
       assertEquals("#document", Document.get().getNodeName());
       assertEquals("HTML", Document.get().getDocumentElement().getNodeName());
       assertEquals("a", Document.get().createAnchorElement().getNodeName());
-      assertEquals("#text", JavaScriptObjects.newText("test", Document.get()).getNodeName());
+      assertEquals("#text", JsoUtils.newText("test", Document.get()).getNodeName());
    }
 
    @Test
@@ -278,7 +278,7 @@ public class NodeTest extends GwtTestTest {
       assertEquals(Node.DOCUMENT_NODE, Document.get().getNodeType());
       assertEquals(Node.ELEMENT_NODE, Document.get().getDocumentElement().getNodeType());
       assertEquals(Node.ELEMENT_NODE, Document.get().createAnchorElement().getNodeType());
-      assertEquals(Node.TEXT_NODE, JavaScriptObjects.newText("test", Document.get()).getNodeType());
+      assertEquals(Node.TEXT_NODE, JsoUtils.newText("test", Document.get()).getNodeType());
    }
 
    @Test

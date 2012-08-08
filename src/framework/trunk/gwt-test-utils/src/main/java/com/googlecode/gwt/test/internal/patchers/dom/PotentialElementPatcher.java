@@ -5,6 +5,7 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.user.client.ui.PotentialElement;
 import com.google.gwt.user.client.ui.UIObject;
+import com.googlecode.gwt.test.internal.utils.JsoUtils;
 import com.googlecode.gwt.test.patchers.PatchClass;
 import com.googlecode.gwt.test.patchers.PatchMethod;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
@@ -19,9 +20,8 @@ class PotentialElementPatcher {
 
    @PatchMethod
    static PotentialElement build(UIObject o, String tagName) {
-      PotentialElement e = JavaScriptObjects.newNode(Node.ELEMENT_NODE).cast();
-      Element wrappedElement = JavaScriptObjects.newElement(tagName,
-               o.getElement().getOwnerDocument());
+      PotentialElement e = JsoUtils.newNode(Node.ELEMENT_NODE).cast();
+      Element wrappedElement = JsoUtils.newElement(tagName, o.getElement().getOwnerDocument());
       JavaScriptObjects.setProperty(e, POTENTIALELEMENT_TAG, true);
       JavaScriptObjects.setProperty(e, POTENTIALELEMENT_WRAPPED_ELEMENT, wrappedElement);
       JavaScriptObjects.setProperty(e, POTENTIALELEMENT_UIOBJECT, o);

@@ -45,6 +45,7 @@ import org.slf4j.LoggerFactory;
  * @author Juergen Hoeller
  * @author Gael Lazzari
  */
+@SuppressWarnings("deprecation")
 public class MockServletContext implements ServletContext {
 
    /**

@@ -6,10 +6,9 @@ import java.util.Map;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Float;
 import com.google.gwt.dom.client.Style.Unit;
-import com.googlecode.gwt.test.internal.utils.GwtStringUtils;
+import com.googlecode.gwt.test.internal.utils.GwtStyleUtils;
 import com.googlecode.gwt.test.patchers.PatchClass;
 import com.googlecode.gwt.test.patchers.PatchMethod;
-import com.googlecode.gwt.test.utils.JavaScriptObjects;
 
 @PatchClass(Style.class)
 class StylePatcher {
@@ -31,7 +30,7 @@ class StylePatcher {
 
    @PatchMethod
    static void clearBorderWidth(Style style) {
-      Map<String, String> properties = JavaScriptObjects.getStyleProperties(style);
+      Map<String, String> properties = GwtStyleUtils.getStyleProperties(style);
       properties.remove(STYLE_BORDER_BOTTOM_WIDTH);
       properties.remove(STYLE_BORDER_LEFT_WIDTH);
       properties.remove(STYLE_BORDER_RIGHT_WIDTH);
@@ -40,7 +39,7 @@ class StylePatcher {
 
    @PatchMethod
    static void clearFloat(Style style) {
-      JavaScriptObjects.getStyleProperties(style).remove("float");
+      GwtStyleUtils.getStyleProperties(style).remove("float");
    }
 
    @PatchMethod
@@ -50,7 +49,7 @@ class StylePatcher {
 
    @PatchMethod
    static String getPropertyImpl(Style style, String propertyName) {
-      String value = JavaScriptObjects.getStyleProperties(style).get(propertyName);
+      String value = GwtStyleUtils.getStyleProperties(style).get(propertyName);
 
       if (value == null) {
          String defaultValue = DEFAULT_STYLE_VALUES.get(propertyName);
@@ -65,27 +64,20 @@ class StylePatcher {
       double modulo = value % 1;
       String completeValue = modulo == 0 ? Integer.toString((int) value) + unit.getType()
                : Double.toString(value) + unit.getType();
-      setPropertyImpl(style, STYLE_BORDER_BOTTOM_WIDTH, completeValue);
-      setPropertyImpl(style, STYLE_BORDER_LEFT_WIDTH, completeValue);
-      setPropertyImpl(style, STYLE_BORDER_RIGHT_WIDTH, completeValue);
-      setPropertyImpl(style, STYLE_BORDER_TOP_WIDTH, completeValue);
+      GwtStyleUtils.setProperty(style, STYLE_BORDER_BOTTOM_WIDTH, completeValue);
+      GwtStyleUtils.setProperty(style, STYLE_BORDER_LEFT_WIDTH, completeValue);
+      GwtStyleUtils.setProperty(style, STYLE_BORDER_RIGHT_WIDTH, completeValue);
+      GwtStyleUtils.setProperty(style, STYLE_BORDER_TOP_WIDTH, completeValue);
    }
 
    @PatchMethod
    static void setFloat(Style style, Float value) {
-      setPropertyImpl(style, "float", value.getCssName());
+      GwtStyleUtils.setProperty(style, "float", value.getCssName());
    }
 
    @PatchMethod
    static void setPropertyImpl(Style style, String propertyName, String propertyValue) {
-      // treat case when propertyValue = "250.0px" => "250px" instead
-      propertyValue = GwtStringUtils.treatDoubleValue(propertyValue);
-
-      Map<String, String> styleProperties = JavaScriptObjects.getStyleProperties(style);
-
-      // ensure the style will be added at the end of the LinkedHashMap
-      styleProperties.remove(propertyName);
-      styleProperties.put(propertyName, propertyValue);
+      GwtStyleUtils.setProperty(style, propertyName, propertyValue);
    }
 
 }

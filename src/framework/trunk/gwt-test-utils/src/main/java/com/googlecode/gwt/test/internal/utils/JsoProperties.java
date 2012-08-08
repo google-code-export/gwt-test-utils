@@ -31,7 +31,16 @@ public abstract class JsoProperties {
    public static final String EVENT_TARGET = "EVENT_target";
    public static final String EVENT_TYPE = "EVENT_type";
 
+   public static final String ID = "id";
+
+   /**
+    * The name of the internal {@link PropertyContainer} which is add in {@link JavaScriptObject}
+    * class during class rewrite process
+    */
+   public static final String JSO_PROPERTIES = "properties";
+
    public static final String NODE_NAMESPACE_URI = "namespaceURI";
+
    public static final String NODE_OWNER_DOCUMENT = "NODE_OWNER_DOCUMENT";
 
    public static final String SELECTION_END = "SELECTION_END";

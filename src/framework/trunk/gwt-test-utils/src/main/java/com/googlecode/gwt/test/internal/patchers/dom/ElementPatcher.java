@@ -7,11 +7,12 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Style;
+import com.googlecode.gwt.test.internal.utils.JsoUtils;
 import com.googlecode.gwt.test.internal.utils.GwtHtmlParser;
 import com.googlecode.gwt.test.internal.utils.GwtStringUtils;
+import com.googlecode.gwt.test.internal.utils.GwtStyleUtils;
 import com.googlecode.gwt.test.internal.utils.JsoProperties;
 import com.googlecode.gwt.test.internal.utils.PropertyContainer;
-import com.googlecode.gwt.test.internal.utils.StyleUtils;
 import com.googlecode.gwt.test.patchers.PatchClass;
 import com.googlecode.gwt.test.patchers.PatchMethod;
 import com.googlecode.gwt.test.utils.JavaScriptObjects;
@@ -75,19 +76,19 @@ class ElementPatcher {
 
    @PatchMethod
    static boolean getPropertyBoolean(Element element, String propertyName) {
-      PropertyContainer properties = JavaScriptObjects.getDomProperties(element);
+      PropertyContainer properties = JsoUtils.getDomProperties(element);
       return properties.getBoolean(propertyName);
    }
 
    @PatchMethod
    static double getPropertyDouble(Element element, String propertyName) {
-      PropertyContainer properties = JavaScriptObjects.getDomProperties(element);
+      PropertyContainer properties = JsoUtils.getDomProperties(element);
       return properties.getDouble(propertyName);
    }
 
    @PatchMethod
    static int getPropertyInt(Element element, String propertyName) {
-      PropertyContainer properties = JavaScriptObjects.getDomProperties(element);
+      PropertyContainer properties = JsoUtils.getDomProperties(element);
       return properties.getInteger(propertyName);
    }
 
@@ -104,7 +105,7 @@ class ElementPatcher {
          return element.getStyle();
       }
 
-      PropertyContainer properties = JavaScriptObjects.getDomProperties(element);
+      PropertyContainer properties = JsoUtils.getDomProperties(element);
 
       return properties.getObject(propertyName);
    }
@@ -116,7 +117,7 @@ class ElementPatcher {
 
       // null (javascript undefined) is a possible value here if not a DOM
       // standard property
-      if (value == null && JavaScriptObjects.isStandardDOMProperty(propertyName)) {
+      if (value == null && JsoUtils.isStandardDOMProperty(propertyName)) {
          return "";
       } else if (value == null) {
          return null;
@@ -129,26 +130,26 @@ class ElementPatcher {
    @PatchMethod
    static Style getStyle(Element element) {
       // mark the style as being modified
-      PropertyContainer properties = JavaScriptObjects.getDomProperties(element);
+      PropertyContainer properties = JsoUtils.getDomProperties(element);
       properties.put("style", "");
 
-      return JavaScriptObjects.getStyle(element);
+      return GwtStyleUtils.getStyle(element);
    }
 
    @PatchMethod
    static void removeAttribute(Element element, String name) {
-      PropertyContainer properties = JavaScriptObjects.getDomProperties(element);
+      PropertyContainer properties = JsoUtils.getDomProperties(element);
       String propertyName = DOMImplPatcher.getDOMPropertyName(name);
       properties.remove(propertyName);
    }
 
    @PatchMethod
    static void setAttribute(Element element, String attributeName, String value) {
-      if (JavaScriptObjects.ID.equals(attributeName)) {
-         JavaScriptObjects.onSetId(element, value, getPropertyString(element, JavaScriptObjects.ID));
+      if (JsoProperties.ID.equals(attributeName)) {
+         JsoUtils.onSetId(element, value, getPropertyString(element, JsoProperties.ID));
       }
 
-      PropertyContainer properties = JavaScriptObjects.getDomProperties(element);
+      PropertyContainer properties = JsoUtils.getDomProperties(element);
 
       String propertyName = DOMImplPatcher.getDOMPropertyName(attributeName);
 
@@ -158,7 +159,7 @@ class ElementPatcher {
    @PatchMethod
    static void setInnerHTML(Element element, String html) {
       // clear old childs
-      List<Node> innerList = JavaScriptObjects.getChildNodeInnerList(element);
+      List<Node> innerList = JsoUtils.getChildNodeInnerList(element);
       innerList.clear();
 
       // parse new childs
@@ -193,15 +194,15 @@ class ElementPatcher {
    @PatchMethod
    static void setPropertyObject(Element element, String name, Object value) {
 
-      if (JavaScriptObjects.ID.equals(name)) {
-         JavaScriptObjects.onSetId(element, value.toString(),
-                  getPropertyString(element, JavaScriptObjects.ID));
+      if (JsoProperties.ID.equals(name)) {
+         JsoUtils.onSetId(element, value.toString(),
+                  getPropertyString(element, JsoProperties.ID));
       }
 
-      PropertyContainer properties = JavaScriptObjects.getDomProperties(element);
+      PropertyContainer properties = JsoUtils.getDomProperties(element);
 
       if ("style".equals(value)) {
-         StyleUtils.overrideStyle(element.getStyle(), value.toString());
+         GwtStyleUtils.overrideStyle(element.getStyle(), value.toString());
          // add an empty style to preserve the insert order of DOM attribute in
          // the
          // wrapped LinkedHashMap

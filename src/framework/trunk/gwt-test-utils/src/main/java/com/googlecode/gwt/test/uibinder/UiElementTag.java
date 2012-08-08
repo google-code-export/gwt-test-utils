@@ -10,6 +10,7 @@ import com.google.gwt.dom.client.Text;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.UIObject;
 import com.googlecode.gwt.test.exceptions.ReflectionException;
+import com.googlecode.gwt.test.internal.utils.JsoUtils;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 import com.googlecode.gwt.test.utils.JavaScriptObjects;
 
@@ -31,7 +32,7 @@ class UiElementTag implements UiTag<Element> {
 
    UiElementTag(String nsURI, String tagName, Map<String, Object> attributes, UiTag<?> parentTag,
             Object owner) {
-      this.wrapped = JavaScriptObjects.newElement(tagName, Document.get());
+      this.wrapped = JsoUtils.newElement(tagName, Document.get());
       this.parentTag = parentTag;
 
       JavaScriptObjects.setProperty(wrapped, UIBINDER_XML_NAMESPACE, nsURI);
@@ -102,7 +103,7 @@ class UiElementTag implements UiTag<Element> {
    }
 
    protected void appendText(Element wrapped, String data) {
-      Text text = JavaScriptObjects.newText(data, wrapped.getOwnerDocument());
+      Text text = JsoUtils.newText(data, wrapped.getOwnerDocument());
       wrapped.appendChild(text);
    }
 

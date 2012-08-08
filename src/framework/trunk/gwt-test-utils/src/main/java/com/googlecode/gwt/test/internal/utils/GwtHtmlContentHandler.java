@@ -13,7 +13,6 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Text;
-import com.googlecode.gwt.test.utils.JavaScriptObjects;
 
 /**
  * SAX handler for GWT DOM parsing. <strong>For internal use only.</strong>
@@ -55,7 +54,7 @@ class GwtHtmlContentHandler implements ContentHandler {
    }
 
    public NodeList<Node> getParsedNodes() {
-      return JavaScriptObjects.newNodeList(nodes);
+      return JsoUtils.newNodeList(nodes);
    }
 
    public void ignorableWhitespace(char[] ch, int start, int end) throws SAXException {
@@ -91,7 +90,7 @@ class GwtHtmlContentHandler implements ContentHandler {
          String attrValue = attributes.getValue(index);
 
          if ("style".equalsIgnoreCase(attrName)) {
-            StyleUtils.overrideStyle(element.getStyle(), attrValue);
+            GwtStyleUtils.overrideStyle(element.getStyle(), attrValue);
          } else if ("class".equalsIgnoreCase(attrName)) {
             element.setClassName(attrValue);
          } else {

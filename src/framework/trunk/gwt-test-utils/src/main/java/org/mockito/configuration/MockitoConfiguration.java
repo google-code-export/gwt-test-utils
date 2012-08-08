@@ -18,6 +18,7 @@ import com.googlecode.gwt.test.Mock;
  * @see GwtInjectingAnnotationEngine
  * 
  */
+@SuppressWarnings("deprecation")
 public class MockitoConfiguration implements IMockitoConfiguration {
 
    @SuppressWarnings({"unchecked", "rawtypes"})
@@ -46,7 +47,6 @@ public class MockitoConfiguration implements IMockitoConfiguration {
       return delegate.getDefaultAnswer();
    }
 
-   @SuppressWarnings("deprecation")
    public ReturnValues getReturnValues() {
       return delegate.getReturnValues();
    }

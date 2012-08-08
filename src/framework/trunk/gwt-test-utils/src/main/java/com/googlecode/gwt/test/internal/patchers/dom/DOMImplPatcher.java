@@ -20,6 +20,7 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.EventListener;
 import com.googlecode.gwt.test.internal.utils.EventUtils;
+import com.googlecode.gwt.test.internal.utils.JsoUtils;
 import com.googlecode.gwt.test.internal.utils.JsoProperties;
 import com.googlecode.gwt.test.internal.utils.PropertyContainer;
 import com.googlecode.gwt.test.patchers.PatchClass;
@@ -72,7 +73,7 @@ class DOMImplPatcher {
 
    @PatchMethod
    static Element createElement(Object domImpl, Document doc, String tag) {
-      return JavaScriptObjects.newElement(tag, doc);
+      return JsoUtils.newElement(tag, doc);
    }
 
    @PatchMethod
@@ -257,7 +258,7 @@ class DOMImplPatcher {
          return elem.getStyle().toString();
       }
 
-      PropertyContainer properties = JavaScriptObjects.getDomProperties(elem);
+      PropertyContainer properties = JsoUtils.getDomProperties(elem);
 
       String propertyName = getDOMPropertyName(name);
 
@@ -372,12 +373,12 @@ class DOMImplPatcher {
 
    @PatchMethod
    static String getTagName(Object domImpl, Element elem) {
-      return JavaScriptObjects.getTagName(elem);
+      return JsoUtils.getTagName(elem);
    }
 
    @PatchMethod
    static boolean hasAttribute(Object domImpl, Element elem, String name) {
-      PropertyContainer properties = JavaScriptObjects.getDomProperties(elem);
+      PropertyContainer properties = JsoUtils.getDomProperties(elem);
 
       String propertyName = getDOMPropertyName(name);
 
@@ -444,12 +445,12 @@ class DOMImplPatcher {
          }
       }
 
-      return JavaScriptObjects.newNodeList(innerList);
+      return JsoUtils.newNodeList(innerList);
    }
 
    @PatchMethod
    static void selectRemoveOption(Object domImpl, SelectElement select, int index) {
-      List<Node> list = JavaScriptObjects.getChildNodeInnerList(select);
+      List<Node> list = JsoUtils.getChildNodeInnerList(select);
       list.remove(index);
       refreshSelect(select);
    }
@@ -457,7 +458,7 @@ class DOMImplPatcher {
    @PatchMethod
    static void setInnerText(Object domImpl, Element elem, String text) {
       clearChildNodes(elem);
-      elem.appendChild(JavaScriptObjects.newText(text, elem.getOwnerDocument()));
+      elem.appendChild(JsoUtils.newText(text, elem.getOwnerDocument()));
    }
 
    @PatchMethod
@@ -491,7 +492,7 @@ class DOMImplPatcher {
    }
 
    private static void clearChildNodes(Element elem) {
-      List<Node> innerList = JavaScriptObjects.getChildNodeInnerList(elem);
+      List<Node> innerList = JsoUtils.getChildNodeInnerList(elem);
       innerList.clear();
    }
 

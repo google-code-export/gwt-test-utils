@@ -1,6 +1,5 @@
 package com.googlecode.gwt.test.internal.patchers;
 
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 import com.google.gwt.core.client.JavaScriptObject;
@@ -11,12 +10,12 @@ import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Text;
 import com.googlecode.gwt.test.exceptions.GwtTestPatchException;
-import com.googlecode.gwt.test.internal.utils.GwtStringUtils;
+import com.googlecode.gwt.test.internal.utils.JsoUtils;
+import com.googlecode.gwt.test.internal.utils.GwtStyleUtils;
 import com.googlecode.gwt.test.internal.utils.PropertyContainer;
 import com.googlecode.gwt.test.patchers.PatchClass;
 import com.googlecode.gwt.test.patchers.PatchMethod;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
-import com.googlecode.gwt.test.utils.JavaScriptObjects;
 
 @PatchClass(JavaScriptObject.class)
 class JavaScriptObjectPatcher {
@@ -55,12 +54,12 @@ class JavaScriptObjectPatcher {
          case Node.ELEMENT_NODE:
             return elementToString(jso.<Element> cast());
          default:
-            if (JavaScriptObjects.isNodeList(jso)) {
+            if (JsoUtils.isNodeList(jso)) {
                NodeList<?> nodeList = jso.cast();
-               return JavaScriptObjects.getChildNodeInnerList(nodeList).toString();
-            } else if (JavaScriptObjects.isStyle(jso)) {
+               return JsoUtils.getChildNodeInnerList(nodeList).toString();
+            } else if (GwtStyleUtils.isStyle(jso)) {
                Style style = jso.cast();
-               return styleToString(style);
+               return GwtStyleUtils.toString(style);
             } else {
                return jso.getClass().getSimpleName();
             }
@@ -80,7 +79,7 @@ class JavaScriptObjectPatcher {
       StringBuilder sb = new StringBuilder();
       sb.append("<").append(tagName).append(" ");
 
-      PropertyContainer attrs = JavaScriptObjects.getDomProperties(elem);
+      PropertyContainer attrs = JsoUtils.getDomProperties(elem);
       for (Map.Entry<String, Object> entry : attrs.entrySet()) {
          // special treatment for "disabled" property, which should be a empty
          // string attribute if the DOM element is disabled
@@ -109,23 +108,6 @@ class JavaScriptObjectPatcher {
       sb.append(">").append(elem.getInnerHTML());
       sb.append("</").append(tagName).append(">");
       return sb.toString();
-   }
-
-   private static String styleToString(Style style) {
-      LinkedHashMap<String, String> styleProperties = JavaScriptObjects.getStyleProperties(style);
-      StringBuilder sb = new StringBuilder();
-
-      for (Map.Entry<String, String> entry : styleProperties.entrySet()) {
-         String cssPropertyValue = entry.getValue().trim();
-
-         if (!"".equals(cssPropertyValue)) {
-            String cssProperyName = GwtStringUtils.hyphenize(entry.getKey());
-            sb.append(cssProperyName).append(": ").append(cssPropertyValue).append("; ");
-         }
-      }
-
-      return sb.toString();
-
    }
 
 }

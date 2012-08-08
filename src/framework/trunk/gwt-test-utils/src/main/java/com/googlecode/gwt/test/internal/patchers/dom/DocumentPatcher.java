@@ -26,6 +26,7 @@ import com.googlecode.gwt.test.internal.AfterTestCallbackManager;
 import com.googlecode.gwt.test.internal.GwtConfig;
 import com.googlecode.gwt.test.internal.utils.DoubleMap;
 import com.googlecode.gwt.test.internal.utils.GwtHtmlParser;
+import com.googlecode.gwt.test.internal.utils.JsoUtils;
 import com.googlecode.gwt.test.patchers.PatchClass;
 import com.googlecode.gwt.test.patchers.PatchMethod;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
@@ -43,23 +44,10 @@ class DocumentPatcher {
       }
 
       public void afterTest() throws Throwable {
-         // recursiveClearDom(document);
          document = null;
 
          Class<?> documentClass = Class.forName("com.google.gwt.dom.client.Document$");
          GwtReflectionUtils.setStaticField(documentClass, "doc", null);
-      }
-
-      private void recursiveClearDom(Node node) {
-         if (node == null) {
-            return;
-         }
-         NodeList<Node> childs = node.getChildNodes();
-         for (int i = 0; i < childs.getLength(); i++) {
-            recursiveClearDom(node.getChild(i));
-         }
-         JavaScriptObjects.clearProperties(node);
-         node = null;
       }
    }
 
@@ -77,7 +65,7 @@ class DocumentPatcher {
 
    @PatchMethod
    static Text createTextNode(Document document, String data) {
-      return JavaScriptObjects.newText(data, document);
+      return JsoUtils.newText(data, document);
    }
 
    @PatchMethod
@@ -108,7 +96,7 @@ class DocumentPatcher {
 
    @PatchMethod
    static Element getElementById(Node document, String elementId) {
-      List<Node> childs = JavaScriptObjects.getChildNodeInnerList(document);
+      List<Node> childs = JsoUtils.getChildNodeInnerList(document);
 
       for (Node n : childs) {
          if (Node.ELEMENT_NODE == n.getNodeType()) {
@@ -131,7 +119,7 @@ class DocumentPatcher {
       List<Element> result = new ArrayList<Element>();
       inspectDomForTag(node, tagName, result);
 
-      return JavaScriptObjects.newNodeList(result);
+      return JsoUtils.newNodeList(result);
    }
 
    @PatchMethod
@@ -143,7 +131,7 @@ class DocumentPatcher {
    static Document nativeGet() {
       if (DOCUMENT_HOLDER.document == null) {
          try {
-            DOCUMENT_HOLDER.document = JavaScriptObjects.newDocument();
+            DOCUMENT_HOLDER.document = JsoUtils.newDocument();
             Element e = parseHTMLElement(DOCUMENT_HOLDER.document);
             DOCUMENT_HOLDER.document.appendChild(e);
             JavaScriptObjects.setProperty(DOCUMENT_HOLDER.document, DOCUMENT_ELEMENT, e);
@@ -225,7 +213,7 @@ class DocumentPatcher {
    }
 
    private static void inspectDomForTag(Node node, String tagName, List<Element> result) {
-      List<Node> childs = JavaScriptObjects.getChildNodeInnerList(node);
+      List<Node> childs = JsoUtils.getChildNodeInnerList(node);
 
       for (Node n : childs) {
          if (Node.ELEMENT_NODE == n.getNodeType()) {
@@ -244,8 +232,8 @@ class DocumentPatcher {
 
       if (hostPagePath == null) {
          // return a default empty HTML element
-         Element defaultHTMLElement = JavaScriptObjects.newElement("HTML", document);
-         defaultHTMLElement.appendChild(JavaScriptObjects.newElement("body", document));
+         Element defaultHTMLElement = JsoUtils.newElement("HTML", document);
+         defaultHTMLElement.appendChild(JsoUtils.newElement("body", document));
          return defaultHTMLElement;
       }
 

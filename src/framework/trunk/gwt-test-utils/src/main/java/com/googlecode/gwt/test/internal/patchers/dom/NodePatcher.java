@@ -9,6 +9,7 @@ import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Text;
 import com.googlecode.gwt.test.exceptions.GwtTestDomException;
+import com.googlecode.gwt.test.internal.utils.JsoUtils;
 import com.googlecode.gwt.test.internal.utils.JsoProperties;
 import com.googlecode.gwt.test.patchers.PatchClass;
 import com.googlecode.gwt.test.patchers.PatchMethod;
@@ -24,17 +25,17 @@ class NodePatcher {
 
    @PatchMethod
    static Node cloneNode(Node node, boolean deep) {
-      return JavaScriptObjects.cloneJso(node, deep).cast();
+      return JsoUtils.cloneJso(node, deep).cast();
    }
 
    @PatchMethod
    static NodeList<Node> getChildNodes(Node node) {
-      return JavaScriptObjects.getChildNodes(node);
+      return JsoUtils.getChildNodes(node);
    }
 
    @PatchMethod
    static Node getFirstChild(Node node) {
-      List<Node> list = JavaScriptObjects.getChildNodeInnerList(node);
+      List<Node> list = JsoUtils.getChildNodeInnerList(node);
 
       if (list.size() == 0) {
          return null;
@@ -45,7 +46,7 @@ class NodePatcher {
 
    @PatchMethod
    static Node getLastChild(Node node) {
-      List<Node> list = JavaScriptObjects.getChildNodeInnerList(node);
+      List<Node> list = JsoUtils.getChildNodeInnerList(node);
 
       if (list.size() == 0) {
          return null;
@@ -61,7 +62,7 @@ class NodePatcher {
          return null;
       }
 
-      List<Node> list = JavaScriptObjects.getChildNodeInnerList(parent);
+      List<Node> list = JsoUtils.getChildNodeInnerList(parent);
 
       for (int i = 0; i < list.size(); i++) {
          Node current = list.get(i);
@@ -94,7 +95,7 @@ class NodePatcher {
 
    @PatchMethod
    static short getNodeType(Node node) {
-      return JavaScriptObjects.getNodeType(node);
+      return JsoUtils.getNodeType(node);
    }
 
    @PatchMethod
@@ -125,7 +126,7 @@ class NodePatcher {
          return null;
       }
 
-      List<Node> list = JavaScriptObjects.getChildNodeInnerList(parent);
+      List<Node> list = JsoUtils.getChildNodeInnerList(parent);
 
       for (int i = 0; i < list.size(); i++) {
          Node current = list.get(i);
@@ -139,11 +140,11 @@ class NodePatcher {
 
    @PatchMethod
    static boolean hasChildNodes(Node node) {
-      return JavaScriptObjects.getChildNodeInnerList(node).size() > 0;
+      return JsoUtils.getChildNodeInnerList(node).size() > 0;
    }
 
    static Node insertAtIndex(Node parent, Node newChild, int index) {
-      List<Node> list = JavaScriptObjects.getChildNodeInnerList(parent);
+      List<Node> list = JsoUtils.getChildNodeInnerList(parent);
 
       // First, remove from old parent
       Node oldParent = newChild.getParentNode();
@@ -159,14 +160,14 @@ class NodePatcher {
       }
 
       // Manage getParentNode()
-      JavaScriptObjects.setParentNode(newChild, parent);
+      JsoUtils.setParentNode(newChild, parent);
 
       return newChild;
    }
 
    @PatchMethod
    static Node insertBefore(Node parent, Node newChild, Node refChild) {
-      List<Node> list = JavaScriptObjects.getChildNodeInnerList(parent);
+      List<Node> list = JsoUtils.getChildNodeInnerList(parent);
 
       // get the index of refChild
       int index = -1;
@@ -196,7 +197,7 @@ class NodePatcher {
 
    @PatchMethod
    static Node removeChild(Node oldParent, Node oldChild) {
-      List<Node> list = JavaScriptObjects.getChildNodeInnerList(oldParent);
+      List<Node> list = JsoUtils.getChildNodeInnerList(oldParent);
 
       return (list.remove(oldChild)) ? oldChild : null;
    }
@@ -207,7 +208,7 @@ class NodePatcher {
       if (oldChild == null) {
          return null;
       }
-      List<Node> list = JavaScriptObjects.getChildNodeInnerList(parent);
+      List<Node> list = JsoUtils.getChildNodeInnerList(parent);
 
       for (int i = 0; i < list.size(); i++) {
          if (list.get(i).equals(oldChild)) {

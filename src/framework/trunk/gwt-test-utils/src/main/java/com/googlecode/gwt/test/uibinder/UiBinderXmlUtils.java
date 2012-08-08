@@ -22,6 +22,7 @@ import com.googlecode.gwt.test.utils.JavaScriptObjects;
  * @author Gael Lazzari
  * 
  */
+@SuppressWarnings("deprecation")
 public class UiBinderXmlUtils {
 
    public static final String CLIENTUI_NSURI = "urn:import:com.google.gwt.user.client.ui";
@@ -113,7 +114,6 @@ public class UiBinderXmlUtils {
                horizontalAlignment);
    }
 
-   @SuppressWarnings("deprecation")
    public static TextAlignConstant parseTextAlignConstant(String string) {
       string = string.toLowerCase();
 

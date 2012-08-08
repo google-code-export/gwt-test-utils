@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.i18n.client.Dictionary;
+import com.googlecode.gwt.test.internal.utils.JsoUtils;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 import com.googlecode.gwt.test.utils.JavaScriptObjects;
 
@@ -23,7 +24,7 @@ public class DictionaryUtils {
    }
 
    public static void attach(Dictionary dictionary, String name) {
-      JavaScriptObject dict = JavaScriptObjects.newNode(0);
+      JavaScriptObject dict = JsoUtils.newNode(0);
 
       Map<String, String> entries = new HashMap<String, String>();
       JavaScriptObjects.setProperty(dict, DICTIONARY_ENTRIES, entries);

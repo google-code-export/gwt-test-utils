@@ -39,6 +39,7 @@ import javax.servlet.http.HttpSessionContext;
  * @author Mark Fisher
  * @author Gael Lazzari
  */
+@SuppressWarnings("deprecation")
 public class MockHttpSession implements HttpSession {
 
    public static final String SESSION_COOKIE_NAME = "JSESSION";

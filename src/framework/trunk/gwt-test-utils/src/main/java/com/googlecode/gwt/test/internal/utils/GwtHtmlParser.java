@@ -19,7 +19,6 @@ import com.google.gwt.dom.client.NodeList;
 import com.googlecode.gwt.test.exceptions.GwtTestPatchException;
 import com.googlecode.gwt.test.internal.AfterTestCallback;
 import com.googlecode.gwt.test.internal.AfterTestCallbackManager;
-import com.googlecode.gwt.test.utils.JavaScriptObjects;
 import com.googlecode.html.filters.DefaultFilter;
 
 /**
@@ -125,7 +124,7 @@ public class GwtHtmlParser implements AfterTestCallback {
 
    private NodeList<Node> parseInternal(String html) {
       if (html == null || html.trim().length() == 0) {
-         return JavaScriptObjects.newNodeList(Collections.<Node> emptyList());
+         return JsoUtils.newNodeList(Collections.<Node> emptyList());
       }
 
       try {

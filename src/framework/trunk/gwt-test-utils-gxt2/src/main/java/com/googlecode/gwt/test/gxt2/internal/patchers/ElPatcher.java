@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 
 import com.extjs.gxt.ui.client.core.El;
 import com.google.gwt.dom.client.Element;
-import com.googlecode.gwt.test.internal.utils.StyleUtils;
+import com.googlecode.gwt.test.internal.utils.GwtStyleUtils;
 import com.googlecode.gwt.test.patchers.PatchClass;
 import com.googlecode.gwt.test.patchers.PatchMethod;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
@@ -41,7 +41,7 @@ class ElPatcher {
    @PatchMethod
    static El applyStyles(El el, String styles) {
       Element elem = getWrappedElement(el);
-      LinkedHashMap<String, String> styleProperties = StyleUtils.getStyleProperties(elem.getAttribute("style"));
+      LinkedHashMap<String, String> styleProperties = GwtStyleUtils.getStyleProperties(elem.getAttribute("style"));
 
       for (Map.Entry<String, String> entry : styleProperties.entrySet()) {
          elem.getStyle().setProperty(entry.getKey(), entry.getValue());

@@ -12,6 +12,7 @@ import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Text;
 import com.google.gwt.xml.client.impl.XMLParserImpl;
 import com.googlecode.gwt.test.exceptions.GwtTestPatchException;
+import com.googlecode.gwt.test.internal.utils.JsoUtils;
 import com.googlecode.gwt.test.internal.utils.GwtXMLParser;
 import com.googlecode.gwt.test.internal.utils.JsoProperties;
 import com.googlecode.gwt.test.internal.utils.PropertyContainer;
@@ -35,7 +36,7 @@ class XMLParserImplPatcher {
    static JavaScriptObject createCDATASection(JavaScriptObject jsObject, String data) {
       Document document = jsObject.cast();
 
-      Text text = JavaScriptObjects.newNode(com.google.gwt.xml.client.Node.CDATA_SECTION_NODE).cast();
+      Text text = JsoUtils.newNode(com.google.gwt.xml.client.Node.CDATA_SECTION_NODE).cast();
       JavaScriptObjects.setProperty(text, JsoProperties.NODE_OWNER_DOCUMENT, document);
 
       text.setData(data);
@@ -45,7 +46,7 @@ class XMLParserImplPatcher {
 
    @PatchMethod
    static JavaScriptObject createDocumentImpl(XMLParserImpl xmlParserImpl) {
-      return JavaScriptObjects.newNode(com.google.gwt.xml.client.Node.DOCUMENT_NODE);
+      return JsoUtils.newNode(com.google.gwt.xml.client.Node.DOCUMENT_NODE);
    }
 
    @PatchMethod
@@ -63,7 +64,7 @@ class XMLParserImplPatcher {
    @PatchMethod
    static String getAttribute(JavaScriptObject o, String name) {
       // Attribute return by XML node can be null
-      PropertyContainer properties = JavaScriptObjects.getDomProperties(o.<Element> cast());
+      PropertyContainer properties = JsoUtils.getDomProperties(o.<Element> cast());
 
       // special treatement for 'class' attribute, which is automatically stored
       // in the PropertyContainer with 'className' key
@@ -79,7 +80,7 @@ class XMLParserImplPatcher {
       String value = getAttribute(o, name);
 
       // create the JavaScriptObject which will simulate an google.xml.Attr
-      Node attrJSO = JavaScriptObjects.newNode(com.google.gwt.xml.client.Node.ATTRIBUTE_NODE).cast();
+      Node attrJSO = JsoUtils.newNode(com.google.gwt.xml.client.Node.ATTRIBUTE_NODE).cast();
       JavaScriptObjects.setProperty(attrJSO, JsoProperties.XML_ATTR_NAME, name);
       JavaScriptObjects.setProperty(attrJSO, XML_ATTR_VALUE, value);
       JavaScriptObjects.setProperty(attrJSO, JsoProperties.NODE_NAMESPACE_URI, getNamespaceURI(o));
@@ -98,7 +99,7 @@ class XMLParserImplPatcher {
          list.add(attrNode);
       }
 
-      return JavaScriptObjects.newNodeList(list);
+      return JsoUtils.newNodeList(list);
    }
 
    @PatchMethod
@@ -142,7 +143,7 @@ class XMLParserImplPatcher {
             nodeList = element.getElementsByTagName(tagName);
             break;
          default:
-            nodeList = JavaScriptObjects.newNodeList();
+            nodeList = JsoUtils.newNodeList();
             break;
       }
 
@@ -271,7 +272,7 @@ class XMLParserImplPatcher {
 
    @PatchMethod
    static void setAttribute(JavaScriptObject o, String name, String value) {
-      PropertyContainer properties = JavaScriptObjects.getDomProperties(o.<Element> cast());
+      PropertyContainer properties = JsoUtils.getDomProperties(o.<Element> cast());
       properties.put(name, value);
    }
 

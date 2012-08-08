@@ -20,6 +20,7 @@ import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.UIObject;
 import com.googlecode.gwt.test.exceptions.GwtTestUiBinderException;
 import com.googlecode.gwt.test.exceptions.ReflectionException;
+import com.googlecode.gwt.test.internal.utils.JsoUtils;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 import com.googlecode.gwt.test.utils.JavaScriptObjects;
 
@@ -189,7 +190,7 @@ public abstract class UiObjectTag<T> implements UiTag<T> {
          ((HasText) wrapped).setText(data);
       } else {
          Element element = getElement(wrapped);
-         Text text = JavaScriptObjects.newText(data, element.getOwnerDocument());
+         Text text = JsoUtils.newText(data, element.getOwnerDocument());
          element.appendChild(text);
       }
    }
